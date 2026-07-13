@@ -12,6 +12,9 @@ type ExplorationResult = {
   topic: string
   title: string
   summary: string
+  // Full entity list is already provided by the existing API response.
+  // We now consume it (no API change) to resolve related-entity names.
+  entities: MainEntity[]
   timeline: TimelineItem[]
   connections: ConnectionItem[]
   exploration: {
@@ -74,7 +77,12 @@ function App() {
             <div className="result">
               <SummaryPanel title={result.title} summary={result.summary} />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
-              <RelatedEntityList relatedEntities={result.exploration.related_entities} />
+              <RelatedEntityList
+                relatedEntities={result.exploration.related_entities}
+                nameById={Object.fromEntries(
+                  (result.entities ?? []).map((e) => [e.id, e.name]),
+                )}
+              />
               <TimelinePanel timeline={result.timeline} />
               <ConnectionsPanel connections={result.connections} />
             </div>
