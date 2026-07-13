@@ -128,7 +128,6 @@ body {
   color: #8a6d3b;
 }
 
-.timeline-list,
 .connections-list {
   list-style: none;
   display: flex;
@@ -136,20 +135,62 @@ body {
   gap: 0.5rem;
 }
 
-.timeline-list li {
+/* Timeline exploration flow (S5-004): vertical Time -> Event sequence */
+.timeline-flow {
   display: flex;
-  gap: 0.75rem;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
 }
 
-.period {
+.timeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.timeline-period {
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #1a1a1a;
-  min-width: 72px;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: #8a6d3b;
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
 }
 
-.event {
-  color: #444;
+.timeline-connector {
+  color: #c2b8a3;
+  font-size: 1rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.timeline-link {
+  margin: 0.1rem 0;
+}
+
+.timeline-event {
+  max-width: 360px;
+  text-align: center;
+  font-size: 1.05rem;
+  color: #1a1a1a;
+  background: #f7f3ea;
+  border: 1px solid #e2ddd2;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-family: inherit;
+}
+
+.timeline-event.is-clickable {
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.timeline-event.is-clickable:hover {
+  background: #efe7d6;
+  border-color: #d8cfbe;
 }
 
 .connections-list li {
