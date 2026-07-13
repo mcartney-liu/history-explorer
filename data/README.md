@@ -1,16 +1,28 @@
-# Data
-
-Historical data management for History Explorer.
+# History Explorer Data Layer
 
 ## Purpose
 
-The data module manages historical datasets and the knowledge structures that power exploration.
+Historical knowledge data foundation.
+
+**Data principle:** High-quality structured knowledge is more important than
+large amounts of data.
 
 ## Future Responsibilities
 
-- Historical datasets.
-- Entity data.
-- Knowledge graph data.
+- Data management.
+- Entity modeling.
+- Knowledge graph preparation.
 - Data processing.
 
-> This directory is in initialization. No datasets have been added yet.
+## Directory Structure
+
+- `raw/` — Original historical data sources.
+- `processed/` — Processed and cleaned historical data.
+- `schemas/` — Data structure definitions.
+- `examples/` — Sample historical data examples.
+
+## Current Status
+
+Foundation only.
+
+No real datasets imported yet. No databases created yet.
