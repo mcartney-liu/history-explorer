@@ -50,29 +50,26 @@ def _load_topic_data(topic: str) -> dict | None:
 
 
 def _exploration_from_data(topic: str, data: dict) -> dict:
-    """Map structured example data to the stable API response shape."""
-    timeline = []
-    if data.get("event"):
-        timeline.append(
-            {
-                "period": data["event"].get("period", "Unknown"),
-                "event": data["event"].get("name", ""),
-            }
-        )
+    """Map structured entities/relationships to the stable API response shape.
+
+    Source JSON now carries explicit `entities` and `relationships` (with
+    entity ids), replacing the old text-only `connections`. A derived
+    `connections` compatibility field is kept so the existing frontend keeps
+    working unchanged.
+    """
+    entities = data.get("entities", [])
+    relationships = data.get("relationships", [])
+    timeline = data.get("timeline", [])
+
+    entity_name = {e.get("id"): e.get("name", "") for e in entities}
 
     connections = []
-    if data.get("person"):
-        connections.append(
-            {
-                "type": "person",
-                "name": data["person"].get("name", ""),
-            }
-        )
-    for rel in data.get("relationships", []):
+    for rel in relationships:
+        target_id = rel.get("target", "")
         connections.append(
             {
                 "type": rel.get("type", "related_to"),
-                "name": rel.get("target", ""),
+                "name": entity_name.get(target_id, target_id),
             }
         )
 
@@ -80,18 +77,26 @@ def _exploration_from_data(topic: str, data: dict) -> dict:
         "topic": topic,
         "title": data.get("title", topic.replace("-", " ").title()),
         "summary": data.get("summary", "A historical exploration example."),
+        "entities": entities,
+        "relationships": relationships,
         "timeline": timeline,
         "connections": connections,
     }
 
 
 def _generic_exploration(topic: str) -> dict:
-    """Fallback for topics without loaded example data (still hardcoded)."""
+    """Fallback for topics without loaded example data (still hardcoded).
+
+    Keeps the same response shape (entities/relationships/timeline/connections)
+    so the frontend contract stays stable.
+    """
     title = topic.replace("-", " ").replace("_", " ").title()
     return {
         "topic": topic,
         "title": title,
         "summary": "A historical exploration example.",
+        "entities": [],
+        "relationships": [],
         "timeline": [
             {"period": "Unknown", "event": f"{title} historical period"},
         ],

@@ -1,22 +1,59 @@
 {
   "title": "Roman Empire",
-  "summary": "A historical civilization example.",
-  "event": {
-    "name": "Roman Empire Established",
-    "period": "27 BC",
-    "location": "Rome"
-  },
-  "person": {
-    "name": "Augustus",
-    "role": "First Roman Emperor"
-  },
-  "civilization": {
-    "name": "Roman Civilization"
-  },
+  "summary": "A historical civilization whose empire dominated the Mediterranean world for centuries.",
+  "entities": [
+    {
+      "id": "event-roman-empire-established",
+      "type": "Event",
+      "name": "Roman Empire Established",
+      "description": "The Roman Empire was founded in 27 BC under Augustus."
+    },
+    {
+      "id": "person-augustus",
+      "type": "Person",
+      "name": "Augustus",
+      "description": "First Roman emperor, reigned from 27 BC."
+    },
+    {
+      "id": "civ-roman",
+      "type": "Civilization",
+      "name": "Roman Civilization",
+      "description": "A Mediterranean civilization that dominated the ancient world."
+    },
+    {
+      "id": "loc-rome",
+      "type": "Location",
+      "name": "Rome",
+      "description": "Capital city of the Roman Empire."
+    },
+    {
+      "id": "tp-27bc",
+      "type": "Time Period",
+      "name": "27 BC",
+      "description": "Year the Roman Empire was founded."
+    }
+  ],
   "relationships": [
     {
-      "type": "related_to",
-      "target": "Roman Civilization"
+      "source": "person-augustus",
+      "target": "event-roman-empire-established",
+      "type": "participated_in"
+    },
+    {
+      "source": "event-roman-empire-established",
+      "target": "civ-roman",
+      "type": "related_to"
+    },
+    {
+      "source": "event-roman-empire-established",
+      "target": "loc-rome",
+      "type": "located_at"
+    }
+  ],
+  "timeline": [
+    {
+      "period": "27 BC",
+      "event": "Roman Empire Established"
     }
   ]
 }
