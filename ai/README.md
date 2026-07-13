@@ -1,16 +1,35 @@
-# AI
-
-AI capabilities for History Explorer.
+# History Explorer AI Layer
 
 ## Purpose
 
-The AI module provides the historical exploration guide and intelligent interpretation layer.
+AI capabilities layer for historical exploration.
 
-## Future Responsibilities
+The AI module supports future capabilities:
 
-- AI exploration guide.
-- Retrieval system.
-- Prompt management.
-- AI service integration.
+- Historical explanation.
+- Context understanding.
+- Exploration recommendation.
+- Knowledge retrieval assistance.
+- AI guide functionality.
 
-> This directory is in initialization. No AI service has been implemented yet.
+**AI principle:** AI is a guide and interpretation layer, not the final authority.
+
+## Technology Direction
+
+- LLM integration.
+- Retrieval systems.
+- Knowledge assistance.
+- AI exploration guidance.
+
+## Directory Structure
+
+- `prompts/` — AI prompts and prompt templates.
+- `services/` — AI service implementations.
+- `config/` — AI configuration management.
+
+## Current Status
+
+Foundation only.
+
+No external AI provider integrated yet. No AI reasoning or generation logic
+implemented yet.
