@@ -39,3 +39,20 @@ Development tools.
 4. Commit changes clearly.
 
 5. Update documentation when architecture changes.
+
+
+## Running Development Environment
+
+Frontend:
+
+```bash
+npm install
+npm run dev
+```
+
+Backend:
+
+```bash
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
