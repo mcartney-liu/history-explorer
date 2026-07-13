@@ -82,6 +82,7 @@ function App() {
                 nameById={Object.fromEntries(
                   (result.entities ?? []).map((e) => [e.id, e.name]),
                 )}
+                mainEntityName={result.exploration.main_entity.name}
               />
               <TimelinePanel timeline={result.timeline} />
               <ConnectionsPanel connections={result.connections} />
