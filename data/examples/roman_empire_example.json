@@ -1,0 +1,20 @@
+{
+  "event": {
+    "name": "Roman Empire Established",
+    "period": "27 BC",
+    "location": "Rome"
+  },
+  "person": {
+    "name": "Augustus",
+    "role": "First Roman Emperor"
+  },
+  "civilization": {
+    "name": "Roman Civilization"
+  },
+  "relationships": [
+    {
+      "type": "related_to",
+      "target": "Roman Civilization"
+    }
+  ]
+}
