@@ -12,12 +12,29 @@ type ConnectionItem = {
   name: string
 }
 
+type MainEntity = {
+  id: string
+  type: string
+  name: string
+  description: string
+}
+
+type RelatedEntity = {
+  id: string
+  type: string
+  relationship: string
+}
+
 type ExplorationResult = {
   topic: string
   title: string
   summary: string
   timeline: TimelineItem[]
   connections: ConnectionItem[]
+  exploration: {
+    main_entity: MainEntity
+    related_entities: RelatedEntity[]
+  }
 }
 
 function App() {
@@ -84,6 +101,34 @@ function App() {
             <div className="result">
               <h2 className="result-title">{result.title}</h2>
               <p className="result-summary">{result.summary}</p>
+
+              {result.exploration?.main_entity?.id && (
+                <div className="result-section">
+                  <h3>Main Entity</h3>
+                  <div className="main-entity">
+                    <span className="me-name">{result.exploration.main_entity.name}</span>
+                    <span className="me-type">{result.exploration.main_entity.type}</span>
+                    <p className="me-desc">{result.exploration.main_entity.description}</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="result-section">
+                <h3>Related Entities</h3>
+                {result.exploration.related_entities.length > 0 ? (
+                  <ul className="related-list">
+                    {result.exploration.related_entities.map((item) => (
+                      <li key={item.id}>
+                        <span className="re-name">{item.id}</span>
+                        <span className="re-type">{item.type}</span>
+                        <span className="re-rel">{item.relationship}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="empty">No related entities.</p>
+                )}
+              </div>
 
               <div className="result-section">
                 <h3>Timeline</h3>

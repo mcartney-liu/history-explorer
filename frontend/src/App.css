@@ -176,3 +176,72 @@ body {
   color: #999;
   font-size: 0.9rem;
 }
+
+/* Exploration layer */
+.main-entity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.85rem 1rem;
+  background: #f7f3ea;
+  border: 1px solid #e2ddd2;
+  border-left: 4px solid #8a6d3b;
+  border-radius: 8px;
+}
+
+.me-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.me-type {
+  align-self: flex-start;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #8a6d3b;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+
+.me-desc {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.related-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.related-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.re-name {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.re-type {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #5c6b73;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+
+.re-rel {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #8a6d3b;
+}
