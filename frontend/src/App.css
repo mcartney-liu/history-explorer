@@ -245,3 +245,85 @@ body {
   font-style: italic;
   color: #8a6d3b;
 }
+
+/* Relationship Network (S5-003 lightweight prototype, pure CSS tree) */
+.rel-network {
+  display: flex;
+  flex-direction: column;
+}
+
+.rel-root {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-self: flex-start;
+  padding: 0.7rem 1rem;
+  background: #f7f3ea;
+  border: 1px solid #e2ddd2;
+  border-left: 4px solid #8a6d3b;
+  border-radius: 8px;
+}
+
+.rel-root-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.rel-root-type {
+  align-self: flex-start;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #8a6d3b;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+
+.rel-branches {
+  list-style: none;
+  margin: 0.4rem 0 0 1.6rem;
+  padding: 0;
+  border-left: 2px solid #d8cfbe;
+}
+
+.rel-branch {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.rel-branch::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.05rem;
+  width: 0.9rem;
+  height: 2px;
+  background: #d8cfbe;
+}
+
+.rel-target-name {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.rel-target-type {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #5c6b73;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+
+.rel-edge {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #8a6d3b;
+}

@@ -3,6 +3,7 @@ import SearchBox from './components/SearchBox'
 import SummaryPanel from './components/SummaryPanel'
 import MainEntityCard, { MainEntity } from './components/MainEntityCard'
 import RelatedEntityList, { RelatedEntity } from './components/RelatedEntityList'
+import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
 
@@ -77,6 +78,13 @@ function App() {
             <div className="result">
               <SummaryPanel title={result.title} summary={result.summary} />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
+              <RelationshipView
+                mainEntity={result.exploration.main_entity}
+                relatedEntities={result.exploration.related_entities}
+                nameById={Object.fromEntries(
+                  (result.entities ?? []).map((e) => [e.id, e.name]),
+                )}
+              />
               <RelatedEntityList
                 relatedEntities={result.exploration.related_entities}
                 nameById={Object.fromEntries(
