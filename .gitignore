@@ -1,0 +1,5 @@
+# WorkBuddy internal memory / runtime — not part of the project
+.workbuddy/
+
+# Generated task report artifacts
+REPOSITORY_INIT_REPORT.html
