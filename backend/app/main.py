@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,28 +28,65 @@ def root():
     }
 
 
-# In-memory mock exploration data.
-# Rules (S3-001): no database, no external API, no AI, no file loading.
-MOCK_EXPLORATIONS = {
-    "roman-empire": {
-        "topic": "roman-empire",
-        "title": "Roman Empire",
-        "summary": "A historical civilization example.",
-        "timeline": [
-            {"period": "27 BC", "event": "Roman Empire established"},
-        ],
-        "connections": [
-            {"type": "person", "name": "Augustus"},
-        ],
-    },
-}
+# --- Structured exploration data source (S3-004) ---
+# Exploration content is loaded from a local JSON file under data/examples/
+# instead of being hardcoded here. Rules: no database, no ORM, no external
+# API, no data pipeline — simple file reading only.
+EXPLORATION_DATA_DIR = (
+    Path(__file__).resolve().parent.parent.parent / "data" / "examples"
+)
 
 
-def _mock_exploration(topic: str) -> dict:
-    if topic in MOCK_EXPLORATIONS:
-        return MOCK_EXPLORATIONS[topic]
+def _load_topic_data(topic: str) -> dict | None:
+    """Load structured example data for a topic from the data/examples dir."""
+    file_path = EXPLORATION_DATA_DIR / f"{topic.replace('-', '_')}_example.json"
+    if not file_path.exists():
+        return None
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        return None
 
-    # Generic mock response for any other topic (still hardcoded, no data source).
+
+def _exploration_from_data(topic: str, data: dict) -> dict:
+    """Map structured example data to the stable API response shape."""
+    timeline = []
+    if data.get("event"):
+        timeline.append(
+            {
+                "period": data["event"].get("period", "Unknown"),
+                "event": data["event"].get("name", ""),
+            }
+        )
+
+    connections = []
+    if data.get("person"):
+        connections.append(
+            {
+                "type": "person",
+                "name": data["person"].get("name", ""),
+            }
+        )
+    for rel in data.get("relationships", []):
+        connections.append(
+            {
+                "type": rel.get("type", "related_to"),
+                "name": rel.get("target", ""),
+            }
+        )
+
+    return {
+        "topic": topic,
+        "title": data.get("title", topic.replace("-", " ").title()),
+        "summary": data.get("summary", "A historical exploration example."),
+        "timeline": timeline,
+        "connections": connections,
+    }
+
+
+def _generic_exploration(topic: str) -> dict:
+    """Fallback for topics without loaded example data (still hardcoded)."""
     title = topic.replace("-", " ").replace("_", " ").title()
     return {
         "topic": topic,
@@ -63,5 +103,12 @@ def _mock_exploration(topic: str) -> dict:
 
 @app.get("/explore/{topic}")
 def explore(topic: str):
-    """Return historical exploration results for a given topic (mock only)."""
-    return _mock_exploration(topic)
+    """Return historical exploration results for a given topic.
+
+    Data is sourced from the structured example file when available,
+    otherwise a generic fallback is returned.
+    """
+    data = _load_topic_data(topic)
+    if data is not None:
+        return _exploration_from_data(topic, data)
+    return _generic_exploration(topic)

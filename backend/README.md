@@ -97,6 +97,14 @@ Example response:
 
 **Future:** Will connect AI Layer and Data Layer.
 
+## Data Source
+
+**Current:**
+Exploration API reads structured example data from `data/examples`.
+
+**Future:**
+Will connect to historical knowledge database.
+
 ## Future Responsibilities
 
 - API services.

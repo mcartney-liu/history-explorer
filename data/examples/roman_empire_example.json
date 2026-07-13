@@ -1,4 +1,6 @@
 {
+  "title": "Roman Empire",
+  "summary": "A historical civilization example.",
   "event": {
     "name": "Roman Empire Established",
     "period": "27 BC",
