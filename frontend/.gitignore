@@ -1,6 +1,9 @@
 # Dependencies
 node_modules
 
+# Lockfile (install locally for reproducible deps)
+package-lock.json
+
 # Production build output
 dist
 
