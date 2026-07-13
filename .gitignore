@@ -3,3 +3,25 @@
 
 # Generated task report artifacts
 REPOSITORY_INIT_REPORT.html
+
+# Environment files
+.env
+.env.*
+
+# Node dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
