@@ -49,6 +49,56 @@ def _load_topic_data(topic: str) -> dict | None:
         return None
 
 
+def _build_exploration(entities: list, relationships: list) -> dict:
+    """Lightweight transformation from raw entity-relationship data into an
+    exploration-friendly view.
+
+    - main_entity: the primary entity to explore. Heuristic: prefer the first
+      Event, otherwise the first entity.
+    - related_entities: entities directly linked to the main entity via a
+      relationship, each annotated with the relationship `type`.
+
+    Transformation only — no database, ORM, AI, external API, or new
+    dependency.
+    """
+    if not entities:
+        return {"main_entity": {}, "related_entities": []}
+
+    entity_by_id = {e.get("id"): e for e in entities}
+
+    main_entity = next((e for e in entities if e.get("type") == "Event"), entities[0])
+    main_id = main_entity.get("id")
+
+    related_entities = []
+    for rel in relationships:
+        source = rel.get("source")
+        target = rel.get("target")
+        rel_type = rel.get("type", "related_to")
+        if source == main_id and target in entity_by_id:
+            other = entity_by_id[target]
+            related_entities.append(
+                {
+                    "id": other.get("id"),
+                    "type": other.get("type"),
+                    "relationship": rel_type,
+                }
+            )
+        elif target == main_id and source in entity_by_id:
+            other = entity_by_id[source]
+            related_entities.append(
+                {
+                    "id": other.get("id"),
+                    "type": other.get("type"),
+                    "relationship": rel_type,
+                }
+            )
+
+    return {
+        "main_entity": main_entity,
+        "related_entities": related_entities,
+    }
+
+
 def _exploration_from_data(topic: str, data: dict) -> dict:
     """Map structured entities/relationships to the stable API response shape.
 
@@ -73,6 +123,8 @@ def _exploration_from_data(topic: str, data: dict) -> dict:
             }
         )
 
+    exploration = _build_exploration(entities, relationships)
+
     return {
         "topic": topic,
         "title": data.get("title", topic.replace("-", " ").title()),
@@ -81,6 +133,7 @@ def _exploration_from_data(topic: str, data: dict) -> dict:
         "relationships": relationships,
         "timeline": timeline,
         "connections": connections,
+        "exploration": exploration,
     }
 
 
@@ -103,6 +156,7 @@ def _generic_exploration(topic: str) -> dict:
         "connections": [
             {"type": "person", "name": "Historical figure"},
         ],
+        "exploration": {"main_entity": {}, "related_entities": []},
     }
 
 

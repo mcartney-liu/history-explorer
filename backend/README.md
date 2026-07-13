@@ -89,7 +89,20 @@ Example response:
   ],
   "connections": [
     { "type": "related_to", "name": "Roman Civilization" }
-  ]
+  ],
+  "exploration": {
+    "main_entity": {
+      "id": "event-roman-empire-established",
+      "type": "Event",
+      "name": "Roman Empire Established",
+      "description": "..."
+    },
+    "related_entities": [
+      { "id": "person-augustus", "type": "Person", "relationship": "participated_in" },
+      { "id": "civ-roman", "type": "Civilization", "relationship": "related_to" },
+      { "id": "loc-rome", "type": "Location", "relationship": "located_at" }
+    ]
+  }
 }
 ```
 
@@ -117,6 +130,31 @@ plain text connections.
 This structure is the first step toward a Knowledge Graph. Today the data is
 read from local JSON files under `data/examples`; in the future it can migrate
 to a dedicated Knowledge Graph database without changing the API contract.
+
+## Exploration Response
+
+In addition to the raw `entities`, `relationships`, and `connections`, the
+exploration endpoint now exposes an `exploration` block that groups the data
+into an exploration-friendly view:
+
+- **entities** — full typed node list (Event, Person, Civilization, Location,
+  Time Period).
+- **relationships** — full typed edge list linking entity `id`s.
+- **exploration** — a derived context for exploration UI:
+  - `main_entity` — the primary entity to explore. Heuristic: the first
+    `Event` entity, otherwise the first entity.
+  - `related_entities` — entities directly connected to `main_entity` via a
+    relationship, each annotated with the `relationship` type (e.g.
+    `participated_in`, `related_to`, `located_at`).
+
+The `exploration` block is built by a lightweight transformation layer in
+`app/main.py` (simple filtering/JSON transformation only). It introduces no
+database, ORM, AI, external API, or new dependency, and existing fields
+(`summary`, `timeline`, `connections`) are untouched so the frontend keeps
+working unchanged.
+
+**Future:** the same `exploration` structure can be extended to power richer
+knowledge graph exploration without breaking the API contract.
 
 ## Data Source
 
