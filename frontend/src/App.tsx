@@ -1,29 +1,12 @@
 import { useState } from 'react'
+import SearchBox from './components/SearchBox'
+import SummaryPanel from './components/SummaryPanel'
+import MainEntityCard, { MainEntity } from './components/MainEntityCard'
+import RelatedEntityList, { RelatedEntity } from './components/RelatedEntityList'
+import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
+import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
 
 const API_BASE = 'http://localhost:8000'
-
-type TimelineItem = {
-  period: string
-  event: string
-}
-
-type ConnectionItem = {
-  type: string
-  name: string
-}
-
-type MainEntity = {
-  id: string
-  type: string
-  name: string
-  description: string
-}
-
-type RelatedEntity = {
-  id: string
-  type: string
-  relationship: string
-}
 
 type ExplorationResult = {
   topic: string
@@ -79,88 +62,21 @@ function App() {
         </p>
 
         <div className="explorer">
-          <div className="explorer-controls">
-            <input
-              className="topic-input"
-              type="text"
-              value={topic}
-              placeholder="Enter a historical topic"
-              onChange={(e) => setTopic(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleExplore()
-              }}
-            />
-            <button className="explore-button" onClick={handleExplore} disabled={loading}>
-              {loading ? 'Exploring…' : 'Explore'}
-            </button>
-          </div>
-
-          {error && <p className="explorer-error">{error}</p>}
+          <SearchBox
+            topic={topic}
+            loading={loading}
+            error={error}
+            onTopicChange={setTopic}
+            onExplore={handleExplore}
+          />
 
           {result && (
             <div className="result">
-              <h2 className="result-title">{result.title}</h2>
-              <p className="result-summary">{result.summary}</p>
-
-              {result.exploration?.main_entity?.id && (
-                <div className="result-section">
-                  <h3>Main Entity</h3>
-                  <div className="main-entity">
-                    <span className="me-name">{result.exploration.main_entity.name}</span>
-                    <span className="me-type">{result.exploration.main_entity.type}</span>
-                    <p className="me-desc">{result.exploration.main_entity.description}</p>
-                  </div>
-                </div>
-              )}
-
-              <div className="result-section">
-                <h3>Related Entities</h3>
-                {result.exploration.related_entities.length > 0 ? (
-                  <ul className="related-list">
-                    {result.exploration.related_entities.map((item) => (
-                      <li key={item.id}>
-                        <span className="re-name">{item.id}</span>
-                        <span className="re-type">{item.type}</span>
-                        <span className="re-rel">{item.relationship}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="empty">No related entities.</p>
-                )}
-              </div>
-
-              <div className="result-section">
-                <h3>Timeline</h3>
-                {result.timeline.length > 0 ? (
-                  <ul className="timeline-list">
-                    {result.timeline.map((item, idx) => (
-                      <li key={idx}>
-                        <span className="period">{item.period}</span>
-                        <span className="event">{item.event}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="empty">No timeline data.</p>
-                )}
-              </div>
-
-              <div className="result-section">
-                <h3>Connections</h3>
-                {result.connections.length > 0 ? (
-                  <ul className="connections-list">
-                    {result.connections.map((item, idx) => (
-                      <li key={idx}>
-                        <span className="conn-type">{item.type}</span>
-                        <span className="conn-name">{item.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="empty">No connections.</p>
-                )}
-              </div>
+              <SummaryPanel title={result.title} summary={result.summary} />
+              <MainEntityCard mainEntity={result.exploration.main_entity} />
+              <RelatedEntityList relatedEntities={result.exploration.related_entities} />
+              <TimelinePanel timeline={result.timeline} />
+              <ConnectionsPanel connections={result.connections} />
             </div>
           )}
         </div>
