@@ -6,6 +6,7 @@ import RelatedEntityList, { RelatedEntity } from './components/RelatedEntityList
 import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
+import ExplorationState from './components/ExplorationState'
 
 const API_BASE = 'http://localhost:8000'
 
@@ -29,6 +30,10 @@ function App() {
   const [result, setResult] = useState<ExplorationResult | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  // Lightweight exploration state (session only): the immediately previous
+  // exploration topic, kept so users stay aware of where they are in the
+  // journey. No persistence, no backend — just in-memory useState.
+  const [previousExploration, setPreviousExploration] = useState('')
 
   async function handleExplore() {
     const trimmed = topic.trim()
@@ -36,6 +41,12 @@ function App() {
       setError('Please enter a historical topic.')
       setResult(null)
       return
+    }
+
+    // Capture the current exploration as "previous" before replacing it,
+    // but only when the new topic actually differs from the current one.
+    if (result && result.topic.toLowerCase() !== trimmed.toLowerCase()) {
+      setPreviousExploration(result.title)
     }
 
     setLoading(true)
@@ -76,6 +87,10 @@ function App() {
 
           {result && (
             <div className="result">
+              <ExplorationState
+                current={result.title}
+                previous={previousExploration || undefined}
+              />
               <SummaryPanel title={result.title} summary={result.summary} />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
               <RelationshipView
