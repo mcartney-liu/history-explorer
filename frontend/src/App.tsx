@@ -7,6 +7,7 @@ import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
 import ExplorationState from './components/ExplorationState'
+import AIGuidePanel from './components/AIGuidePanel'
 
 const API_BASE = 'http://localhost:8000'
 
@@ -109,6 +110,7 @@ function App() {
               />
               <TimelinePanel timeline={result.timeline} />
               <ConnectionsPanel connections={result.connections} />
+              <AIGuidePanel />
             </div>
           )}
         </div>
