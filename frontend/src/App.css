@@ -326,6 +326,25 @@ body {
   flex-wrap: wrap;
 }
 
+/* Clickable related entities (M-H1): close the Explore -> Connect -> Continue loop */
+.related-list li.is-clickable {
+  cursor: pointer;
+  padding: 0.4rem 0.55rem;
+  margin: -0.4rem -0.55rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.related-list li.is-clickable:hover {
+  background: #efe7d6;
+}
+
+.related-list li.is-clickable:focus-visible {
+  outline: 2px solid #8a6d3b;
+  outline-offset: 2px;
+  background: #efe7d6;
+}
+
 .re-name {
   font-weight: 700;
   color: #1a1a1a;

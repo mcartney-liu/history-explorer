@@ -12,21 +12,40 @@ type RelatedEntityListProps = {
   // Name of the current main entity, used to express the connection explicitly
   // (answers "what relationships connect them").
   mainEntityName?: string
+  // Click handler so a related entity can be explored further, closing the
+  // Explore -> Connect -> Continue loop (M-H1 / M1-005 A1).
+  onEntityClick?: (id: string) => void
 }
 
 function RelatedEntityList({
   relatedEntities,
   nameById,
   mainEntityName,
+  onEntityClick,
 }: RelatedEntityListProps) {
   return (
     <div className="result-section">
       <h3>Related Exploration</h3>
       {relatedEntities.length > 0 ? (
         <ul className="related-list">
-          {relatedEntities.map((item) => (
-            <li key={item.id}>
-              <span className="re-name">{nameById?.[item.id] ?? item.id}</span>
+          {relatedEntities.map((item) => {
+            const displayName = nameById?.[item.id] ?? item.id
+            return (
+            <li
+              key={item.id}
+              className="is-clickable"
+              role="button"
+              tabIndex={0}
+              aria-label={`Explore ${displayName}`}
+              onClick={() => onEntityClick?.(item.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onEntityClick?.(item.id)
+                }
+              }}
+            >
+              <span className="re-name">{displayName}</span>
               <span className="re-type">{item.type}</span>
               <span className="re-rel">
                 {mainEntityName
@@ -34,7 +53,8 @@ function RelatedEntityList({
                   : item.relationship}
               </span>
             </li>
-          ))}
+            )
+          })}
         </ul>
       ) : (
         <p className="empty">No related entities.</p>

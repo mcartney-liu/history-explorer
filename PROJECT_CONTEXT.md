@@ -93,19 +93,34 @@ The product architecture and documentation should support continuous growth.
 
 Current Phase:
 
-Sprint 0 - Project Foundation
+M1 Foundation Validation Completed (Closure Revision)
+
+Status:
+
+M1 Closure Revision Completed / Preparing for M2
 
 
-Completed:
+Completed (M1 Foundation Validation):
 
-- Repository initialization
-- Git workflow setup
-- Basic project structure
+- Product Foundation (PRD, Product DNA, Product Constitution)
+- Architecture Foundation (Technical Architecture, frozen)
+- Knowledge Model Prototype (generic entity / relationship / timeline)
+- Exploration UI Prototype (React 18 + TypeScript + Vite, 9 components)
+- API Prototype (FastAPI, GET /explore/{topic})
+- Test Baseline (pytest API contract tests + vitest frontend smoke test)
+
+
+M1 Closure Revision (Completed):
+
+- M-H1 Exploration Loop Closure — related entities are clickable
+- M-H2 Minimum Test Gate — backend + frontend test baseline
+- M-H3 Topic Input Validation — safe topic input (no path traversal)
+- M-H4 Document Closure — documentation aligned with code (M-H4 task)
 
 
 Current Focus:
 
-Establish product documentation, development workflow, and AI collaboration standards.
+Preparing for M2: navigation shell, CI/Docker/observability, API versioning, knowledge model v2.
 
 
 ---

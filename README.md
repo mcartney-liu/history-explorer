@@ -49,22 +49,36 @@ Discover Civilization.
 
 Current Phase:
 
-Sprint 0 - Project Foundation
+M1 Foundation Validation Completed (Closure Revision)
+
+Status:
+
+M1 Closure Revision Completed / Preparing for M2
 
 
-Completed:
+Completed (M1 Foundation Validation):
 
-- Repository initialization
-- Git workflow setup
-- Project structure
-- Initial project context
+- Product Foundation (PRD, Product DNA, Product Constitution)
+- Architecture Foundation (Technical Architecture, frozen)
+- Knowledge Model Prototype (generic entity / relationship / timeline)
+- Exploration UI Prototype (React 18 + TypeScript + Vite, 9 components)
+- API Prototype (FastAPI, `GET /explore/{topic}`)
+- Test Baseline (pytest API contract tests + vitest frontend smoke test)
 
 
-In Progress:
+M1 Closure Revision (Completed):
 
-- Product documentation
-- Product definition
-- Architecture planning
+- M-H1 Exploration Loop Closure — related entities are clickable
+- M-H2 Minimum Test Gate — backend + frontend test baseline
+- M-H3 Topic Input Validation — safe topic input (no path traversal)
+- M-H4 Document Closure — documentation aligned with code (this task)
+
+
+Not in M1 scope (deferred to M2 / M3):
+
+- Knowledge Graph / GIS Map / AI Historian / Search Engine
+- API versioning (`/api/v1`), rich knowledge model v2
+- CI / Docker / observability (accepted as debt, fast-follow in M2)
 
 
 ## Documentation

@@ -36,13 +36,17 @@ function App() {
   // journey. No persistence, no backend — just in-memory useState.
   const [previousExploration, setPreviousExploration] = useState('')
 
-  async function handleExplore() {
-    const trimmed = topic.trim()
+  async function handleExplore(topicValue?: string) {
+    const trimmed = (topicValue ?? topic).trim()
     if (!trimmed) {
       setError('Please enter a historical topic.')
       setResult(null)
       return
     }
+
+    // Keep the search box in sync when exploration is triggered by a click
+    // on a related entity (rather than the text input).
+    setTopic(trimmed)
 
     // Capture the current exploration as "previous" before replacing it,
     // but only when the new topic actually differs from the current one.
@@ -66,6 +70,10 @@ function App() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleEntityClick(id: string) {
+    handleExplore(id)
   }
 
   return (
@@ -107,6 +115,7 @@ function App() {
                   (result.entities ?? []).map((e) => [e.id, e.name]),
                 )}
                 mainEntityName={result.exploration.main_entity.name}
+                onEntityClick={handleEntityClick}
               />
               <TimelinePanel timeline={result.timeline} />
               <ConnectionsPanel connections={result.connections} />

@@ -1,0 +1,4 @@
+# Dev / test dependencies for the History Explorer backend.
+# These are NOT runtime deps — the production app only needs fastapi + uvicorn.
+pytest>=8.0
+httpx>=0.27

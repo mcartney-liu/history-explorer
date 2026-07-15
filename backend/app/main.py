@@ -1,7 +1,8 @@
 import json
+import re
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -35,6 +36,13 @@ def root():
 EXPLORATION_DATA_DIR = (
     Path(__file__).resolve().parent.parent.parent / "data" / "examples"
 )
+
+# --- Input validation (M-H3) ---
+# The topic is used to build a file path, so it must be strictly constrained
+# before any filesystem access. Only lowercase letters, digits, underscores
+# and hyphens are allowed — this blocks path traversal (e.g. "../", ".",
+# absolute segments) and keeps the generated path confined to the data dir.
+TOPIC_PATTERN = re.compile(r"^[a-z0-9_-]+$")
 
 
 def _load_topic_data(topic: str) -> dict | None:
@@ -167,6 +175,15 @@ def explore(topic: str):
     Data is sourced from the structured example file when available,
     otherwise a generic fallback is returned.
     """
+    # Validate BEFORE any file access (M-H3). Reject malformed topics so they
+    # can never reach the path-building / filesystem layer.
+    if not TOPIC_PATTERN.match(topic):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid topic. Use only lowercase letters, digits, "
+            "underscores and hyphens (e.g. roman_empire).",
+        )
+
     data = _load_topic_data(topic)
     if data is not None:
         return _exploration_from_data(topic, data)

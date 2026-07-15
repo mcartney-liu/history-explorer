@@ -25,3 +25,11 @@ build/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Vite temporary config files
+vite.config.ts.timestamp-*.mjs
