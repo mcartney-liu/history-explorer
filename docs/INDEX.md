@@ -2,7 +2,7 @@
 
 > 用途：新人进入项目后，从这里快速定位所有核心文档。
 > 维护原则：只索引真实存在的文档；不存在的文档不编造，相关主题指向其实际所在文件。
-> 最后更新：2026-07-14（M-H4 Document Closure）。
+> 最后更新：2026-07-15（M2-006 Documentation Sync）。
 
 ---
 
@@ -45,13 +45,13 @@
 | 文档 | 说明 |
 |------|------|
 | 知识模型（Knowledge Model） | 定义并入 [Technical_Architecture.md](../Technical_Architecture.md)（实体泛型化 / 关系三元组 / 扁平时间线）；v2 规划见 `docs/SUGGESTIONS.md` §I |
-| 数据 Schema / 示例 | `data/examples/{topic}_example.json`（当前示例：`roman_empire_example.json`） |
+| 数据 Schema / 示例 | `data/examples/{topic}_example.json`（当前示例：`roman_empire_example.json`、`egypt_technology_religion_example.json`）；Schema 定义见 `data/schemas/exploration_schema.md`（已落地 v2：7 实体类型 / 结构化时间 / global_id / 关系元数据 `citation`） |
 
 ## 5. API（接口）
 
 | 文档 | 说明 |
 |------|------|
-| [exploration_api.md](api/exploration_api.md) | `GET /explore/{topic}` 接口文档（契约 / 兜底行为） |
+| [exploration_api.md](api/exploration_api.md) | 接口契约（v2.1）：`GET /explore/{topic}`、`GET /search`、`GET /entity/{id}`、`GET /health` |
 
 ## 6. Review（评审）
 
@@ -67,7 +67,7 @@
 |------|------|
 | [DEVELOPMENT.md](../DEVELOPMENT.md) | 开发指南（启动前端 / 后端） |
 | [DEVELOPMENT_ENVIRONMENT.md](../DEVELOPMENT_ENVIRONMENT.md) | 开发环境说明 |
-| Testing（测试） | 后端 `backend/tests/test_explore.py`（pytest）；前端 `frontend/src/__tests__/App.smoke.test.tsx`（vitest）；命令见 `DEVELOPMENT.md` 与各 `package.json` / `requirements-dev.txt` |
+| Testing（测试） | 后端 `backend/tests/`（pytest：`test_explore.py`、`test_search_entity.py`、`test_search_index.py`、`test_validation.py`，共 50 例）；前端 `frontend/src/__tests__/`（vitest：`App.smoke`、`M2_003`、`SearchEntity`、`navigation`、`searchNav`，共 38 例）；命令见 `DEVELOPMENT.md` 与各 `package.json` / `requirements-dev.txt` |
 | Release（发布就绪） | 见 [M1_Final_Assessment.md](../M1_Final_Assessment.md) §4 阻塞项与 §5 Closure 计划；部署/CI 仍为 M1 债（见 `SUGGESTIONS.md` §L4 / M-H6） |
 
 ---

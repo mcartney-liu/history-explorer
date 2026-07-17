@@ -106,7 +106,7 @@
 - **内容**：把"补充几个互相连接的示例主题（不止罗马帝国）"作为产品就绪目标，以在 MVP 广度上验证"互联探索"价值主张。
 - **价值**：当前仅 1 个示例主题，无法演示多主题连接探索。
 - **成本 / 风险**：低-中，需补数据文件。
-- **状态**：⚪ 待定（已批准追加，待统筹排期）
+- **状态**：🔵 已实现 / 已关闭（M3-003 已落地：新增 `hellenistic_world` + `silk_road` 两主题，4 主题互联、26 实体、29 关系、6 条跨主题边；详见 `docs/M3-003_Interconnected_Data.md`）
 
 ---
 
@@ -272,3 +272,156 @@
 | M-H7 | API 版本前缀 /api/v1 + 统一信封 | J1 / J2 | 延后 M2 | P2 | ⚪ 待定（M2） |
 | M-H8 | 知识模型 v2（富属性/时间/地理/来源/多语） | I1–I4 | 延后 M2/M3 | P2 | ⚪ 待定（M2/M3） |
 | M-H9 | 版本管理（CHANGELOG+tag）+ 技术债文档 | L6 / L7 | M1 签收前可顺带做 | P2 | ⚪ 待定 |
+
+---
+
+## N. M2 数据质量与一致性建议（2026-07-15 追加）
+
+> 来源：M2-005 启动校验（`GET /health` / `backend/app/validation.py`）+ M2-006 文档同步。
+> 详细说明见 `M2_Planning.md`（as-executed v2.0）与 M2 Final Report。
+
+### N1. 消除 `tp-27bc` 孤立实体（数据质量）
+- **内容**：`roman_empire` 中 `tp-27bc`（Time Period "27 BC"）无任何关系，启动校验报 `ORPHAN_ENTITY` 警告。可二选一：① 给它补一条关系（如 `event-roman-empire-established — contemporary_with — tp-27bc`）；② 确认其为纯时间锚点、接受该警告并在 `validation.py` 中对 `Time Period` 类型降权（不报 orphan）。
+- **价值**：消除健康报告噪音，让"0 warning"成为可达目标。
+- **成本 / 风险**：低（改一个 JSON 或一行校验规则）。
+- **状态**：⚪ 待定（当前为已知 warning，不影响运行）
+
+### N2. 消解 `Kemet` 重复别名（数据质量）
+- **内容**：`egypt_technology_religion` 中 `civ-egypt` 与 `loc-ancient-egypt` 都带别名 `Kemet`，启动校验报 `DUPLICATE_ALIAS` 警告。可二选一：① 去掉其一的 `Kemet` 别名（如 Location 改用 `Ancient Egypt` 为主名、保留 `Kemet` 仅给 Civilization）；② 若确为同一实体的两种视角，改为共享实体 + `part_of` 关系，而非两个实体重复别名。
+- **价值**：避免搜索/消歧时把两个实体混为同一。
+- **成本 / 风险**：低。
+- **状态**：⚪ 待定（当前为已知 warning，不影响运行）
+
+### N3. 前端 Hero 文案与"无 AI"实现不一致（一致性）
+- **内容**：`frontend/src/App.tsx` 的 hero 原写 "An AI-powered global history exploration platform."，与 M2 无 AI 运行时（`AIGuidePanel` 为占位）不符。`README.md` 标题已改为 "Global History Exploration Platform" 并加 M2 说明。M2-006 已将该 hero 文案改为 "A data-driven global history exploration platform."，使 UI 文案与 README、实现三者一致（改一行静态文案，非功能/非重设计）。
+- **价值**：文档/实现/UI 文案三者一致，避免评审误解。
+- **成本 / 风险**：极低。
+- **状态**：🔵 已实现 / 已关闭（M2-006 修正）
+
+### N4. M2-004 原范围的部分能力延后（架构一致性）
+- **内容**：原 M2-004（KG Ready）计划的交叉主题索引 + 统一 `findById/findByGlobalId/findByAlias/findByName` 查找服务 + relationship/timeline 索引（outgoing/incoming、year/century/period）**未实现**；其校验意图已并入 M2-005，但索引/查找服务部分**延后到 M3 图工作**。当前 `_ENTITY_INDEX`（M2-002.5）已覆盖全局 id 查找，单主题遍历足够，故 M2 无功能缺口；仅记录以备 M3 不重复造轮子。
+- **价值**：明确"已做 / 延后"边界，避免 M3 误以为这些能力已存在。
+- **成本 / 风险**：无（记录项）。
+- **状态**：🔵 已记录（M2-004 标记 superseded，详见 `M2_Planning.md` §Appendix A/B）
+
+### N5. 基础设施类 M2 债（CI/Docker/版本化）显式延后
+- **内容**：原 `M2_Planning.md` v1.0 把 CI / Dockerfile / `/healthz` / `/api/v1` / 统一错误信封 / `CHANGELOG` / `TECHNICAL_DEBT` 放在 M2-006。实际执行的 M2-006 是 **Alpha Ready 清理**（明确禁止新增功能/依赖），故上述项**均未做**，记录为 M3+ 债。其中 `/health`（M2-005）已提供数据健康面，但非运维 `/healthz`（存活探针）。
+- **价值**：诚实反映范围，避免"声称已部署就绪"的错觉。
+- **成本 / 风险**：无（记录项）。
+- **状态**：🔵 已记录（详见 `M2_Planning.md` Out of Scope / §Appendix B）
+
+### N6. E1（关系树 + 关联列表合并）仍未处置
+- **内容**：`App.tsx` 在 topic 视图同时渲染 `RelationshipView`（关系树）与 `RelatedEntityList`（扁平关联列表），二者展示同一批 `related_entities`（见 §E1）。M2-003 未合并。M2-006 按"禁止重新设计 UI"未动。
+- **价值**：消除重复展示、聚焦页面（符合 Avoid Overload）。
+- **成本 / 风险**：低-中，纯前端。
+- **状态**：⚪ 待定（同 §E1，建议 M3 前统筹）
+
+> 以上 N1–N6 为 M2 收尾的后续建议，全部不阻塞 M2 Alpha Ready；是否处置由你统筹决定。
+
+---
+
+## O. M3-001 Knowledge Core Foundation 后续（2026-07-16 追加）
+
+> 来源：M3-001 架构升级完成（`backend/app/core/` 知识核心 + `KnowledgeService` Facade + 全局 Registry + Graph/Traversal + 可替换 `SearchProvider` + Validation 消费 `KnowledgeService`）。全部 60 后端测试通过，`/health` 与 M2-005 逐字节兼容。
+> 原则：超出 M3-001 范围的需求（AI/Neo4j/GIS/Recommendation/Graph UI 等）只记录，不提前实现。本次改动未提交 git（"统筹考虑"约定延续）。
+
+### O1. M3-002 API & Ops Hardening（架构已就绪）
+- **内容**：`TopicRepository` + `KnowledgeService` 已就位，下一步可做 `/api/v1` 前缀 + 统一响应信封（J1/J2）、结构化错误、CI/Dockerfile/`/healthz`（L4）、`CHANGELOG`+tag（L6）。同时建议移除 `main.py` 的兼容 shim（`_ENTITY_INDEX`/`_get_entity_index`/`_load_topic_data`），把测试改为直接 import `core` / `knowledge_service`。
+- **价值**：从"本地能跑"提升到"可部署、可运维 + 版本保护"。
+- **成本 / 风险**：低-中。
+- **状态**：🔵 已实现 / 已关闭（M3-002 已落地：见 §P 与 `docs/M3-002_Architecture.md`）。注：本次已做 `/api/v1` 路由体系（J1）+ `/healthz` 存活探针 + 配置外部化（`config.py`）+ `logging` 替换 `print`（L4 部分）；统一信封（J2）/ shim 移除 / `CHANGELOG`+tag 等显式延后，见 §P。
+
+### O2. M3-003 Interconnected Data（架构已支持，数据待补）
+- **内容**：当前数据 **0 条跨主题边**。架构已原生支持 `global_id` 跨主题解析与 `find_related`/`find_by_alias`；下一步补"互联主题"示例数据（G4）+ 跨主题关系（他主题实体用 `topic:id` 引用）+ 前端跨主题导航。届时 `validation._validate_cross_topic` 的跨主题校验会真正生效（当前无数据故 0 条）。
+- **价值**：验证"互联探索"产品主张（当前仅 2 个孤立主题）。
+- **成本 / 风险**：低-中，需补数据文件 + 前端。
+- **状态**：🔵 已实现 / 已关闭（M3-003 已落地：4 主题互联、26 实体、29 关系、6 条跨主题边，`/health` 由 2 warning→0 warning；新增 `docs/M3-003_Interconnected_Data.md` + `backend/tests/test_interconnected.py`）。注：跨主题关系用 `namespace:id` 全局 id 表达，已由 `validation.py` 全局解析（避免误判 dangling）。
+
+### O7. 跨主题图遍历（Knowledge Layer 增强，M3-003 发现）
+- **内容**：M3-003 验证发现——`KnowledgeService.find_related` / `get_graph` 是**单主题**图（M3-001 `graph.py` 的 per-topic 邻接），跨主题 `global_id` 边在构图时被跳过（dropped as dangling-by-design）。因此"点击罗马→直接看到埃及邻居"在**图层面**目前做不到；但**注册表层**（`find_by_global_id` / `resolve_entity` + 关系数据）已能完整解析跨主题网络（已用测试证明：Rome→(Hellenistic)→Egypt、Rome→Silk Road→Han China 均可达）。
+- **价值**：明确"数据已互联、图遍历需补"的边界，避免误以为单主题 `neighbors()` 已跨主题。
+- **成本 / 风险**：低-中。建议作为 **M3-004 或 M3-005 的 Knowledge Layer 增强**：在 `core/` 新增 `GlobalGraph`（基于现有 per-topic 图 + 全局 `resolve_entity` 合并跨主题边）与 `KnowledgeService.find_related_global(topic, id)`，保持 Additive、不改公共 API 形状、不动 Repository。
+- **状态**：🔵 已实现 / 已关闭（M3.5-001 已落地：`core/global_graph.py` 统一跨主题图 + `KnowledgeService` 接线 `get_global_graph`/`find_global_path`/`global_neighbors`/`global_subgraph`；纯 Knowledge Layer 增强、未独立成 Service、未改公共 API/前端、零新依赖。跨主题 `neighbors()` 现已可用；排序/推荐在 M3.5-002/003）
+
+### O3. M3-004 Search v2（Provider 已可替换）
+- **内容**：`SearchProvider` 已与存储/Knowledge Core 解耦；下一步扩展 `TimelineIndex` 的 year/century/period 查询、模糊/语义检索、结果分页。
+- **价值**：搜索从"字符串匹配"升级为结构化检索。
+- **成本 / 风险**：低-中。
+- **状态**：⚪ 待定（建议 M3-004）
+
+### O4. M3-005 UI Depth（Graph 能力已在核心，UI 未做）
+- **内容**：Graph / traversal 已在 Knowledge Layer（`find_related` / `get_graph`）；**Graph 可视化（Graph UI）属于此 Checkpoint，M3-001 未做**。
+- **价值**：把"连接发现"从列表升级为可视化。
+- **成本 / 风险**：中，纯前端。
+- **状态**：⚪ 待定（建议 M3-005）
+
+### O5. M3-006 Release & CI
+- **内容**：补齐 CI/Docker、commit 当前 M2/M3 未提交改动（"统筹考虑"约定延续至今）。
+- **价值**：消除长期未提交债。
+- **成本 / 风险**：低。
+- **状态**：⚪ 待定（建议 M3-006）
+
+### O6. 明确不提前实现（M4+）
+- **内容**：AI / LLM、Neo4j、GIS/地图、Recommendation、第三方图库——全 M4+。Repository 抽象即为未来切 Neo4j 的接缝：新增 `Neo4jTopicRepository` 并替换组合根一处即可，公共 API 与前端契约不变。
+- **状态**：🔵 已记录（架构预留，不实现）
+
+---
+
+## P. M3-002 API & Ops Hardening 后续（2026-07-16 追加）
+
+> 来源：M3-002 已完成（`/api/v1` 路由体系 + 冻结 legacy 兼容、`config.py` 环境配置、`logging` 替换 `print`、`/health`(readiness) 与 `/healthz`(liveness) 分离、响应硬化头 `X-API-Version`/`X-Content-Type-Options`）。全部 **68 后端测试 + 38 前端测试 + build 51 modules 0 error** 通过。未提交 git（"统筹考虑"约定延续）。
+
+### P1. 前端切换到 /api/v1（可选）
+- **内容**：前端当前仍走 legacy 路由（`/explore` 等），因 M3-002 保留了 legacy 兼容路由。可在前端把请求统一拼 `/api/v1` 前缀（如 `API_BASE + '/api/v1'`）以正式指向 canonical API；legacy 路由继续保留以防回退。
+- **价值**：让前端明确消费版本化 API，体现版本保护意图。
+- **成本 / 风险**：低（前端 fetch 路径前缀 + 回归测试）。
+- **状态**：⚪ 待定（可选；M3-002 保留 legacy 故非必须）
+
+### P2. 统一响应信封 + 结构化错误（J2）显式延后
+- **内容**：M3-002 为保冻结契约**未引入**统一 envelope，仅加响应头硬化。若未来要统一 `{ data, error, meta }` 信封，需专用 API-evolution checkpoint，并支持双读（旧裸体 + 新信封）过渡期，避免破坏 M2/M3 已冻结端点。
+- **价值**：版本演进可控。
+- **成本 / 风险**：中（需兼容策略）。
+- **状态**：⚪ 待定（M4+ 或专门 checkpoint）
+
+### P3. 移除 main.py 兼容 shim（技术债）
+- **内容**：M3-002 为不破坏既有测试**保留**了 `_ENTITY_INDEX`/`_get_entity_index`/`_load_topic_data`/`_exploration_from_data` shim；这些已冗余（v1 路由 + KnowledgeService 已覆盖）。建议下一个清理 checkpoint 把 `test_search_index.py`/`test_explore.py` 改为直接 import `core`/`knowledge_service`，再删除 shim。
+- **价值**：消除组合根冗余。
+- **成本 / 风险**：低。
+- **状态**：⚪ 待定
+
+### P4. 版本号 0.1.0 → 0.2.0-alpha（发布相关）
+- **内容**：M3-002 把 `APP_VERSION` 外部化为环境变量，默认仍 `0.1.0`（M2 发布评审要求 bump 到 `0.2.0-alpha`）。该 bump 属发布动作，留到 M3-006 Release 随 `CHANGELOG`+tag 一起做。
+- **价值**：版本与发布一致。
+- **成本 / 风险**：低。
+- **状态**：⚪ 待定（M3-006）
+
+### P5. 结构化错误文档 + 变更日志（J4/L6）
+- **内容**：`/healthz`、配置外部化已就位；仍缺 `CHANGELOG.md` + tag、显式 4xx/5xx 文档。属 M3-006 Release & CI。
+- **成本 / 风险**：低。
+- **状态**：⚪ 待定（M3-006）
+
+> 以上 O1–O6 为 M3-001 收尾、P1–P5 为 M3-002 收尾的后续建议；全部不阻塞 M3-002 完成，推进顺序由你统筹决定。
+
+---
+
+## Q. M3.5 Exploration Engine 系列（2026-07-16 起）
+
+### Q1. M3.5-002 Exploration Engine = 已实现
+- **内容**：`core/exploration_engine.py`（确定性、可解释引擎）+ `KnowledgeService` additive 接线（`explore_connections`/`explore_from`）。评分=0.35·relationship_meaning+0.25·temporal_coherence+0.20·entity_importance+0.20·path_simplicity；不引入 AI/GIS/Neo4j/第三方图库，未改 schema 枚举与 global_id 规则，未新增 API/前端。
+- **价值**：补全 M3.5-001 GlobalGraph 之上的"为何相关"解释能力，纯算法+单测驱动。
+- **状态**：🔵 已实施（backend 94 / frontend 38 全通过；未提交 git）。
+
+### Q2. M3.5-003 Exploration API（建议下一步）
+- **内容**：把引擎暴露给客户端，**方案 A（推荐）**=additive 补全 `/entity`、`/explore` 响应（`other.global_id`+`other.topic` + `connections_explained` 块，由 `explore_connections` 构建），不动路由形状；**方案 B**=新增 `GET /api/v1/explore/{id}/path`（仅当 A 不满足 UI 时）。
+- **价值**：在不破冻结契约下让前端拿到可解释连接。
+- **成本 / 风险**：低（纯投影 + 契约决策）。
+- **状态**：⚪ 待定（建议批准后由 Backend Agent 先行，锁定响应契约后再开 M3.5-004 前端）。
+
+### Q3. M3.5-004 UI Prototype（依赖 Q2 契约）
+- **内容**：前端消费 M3.5-003 连接数据，做探索路径可视化（非地图、非推荐）。
+- **依赖**：必须等 Q2 响应契约锁定。
+- **状态**：⚪ 待定（建议 M3.5-003 完成后）。
+
+### Q4. M3.5-002 评分权重可调（未来）
+- **内容**：评分权重（relationship/temporal/importance/simplicity 四项系数与 RELATIONSHIP_MEANING 映射）已集中在 `exploration_engine.py` 顶部常量，未来可按产品反馈微调，不影响算法结构。
+- **状态**：🔵 已预留（常量集中，未调）。
