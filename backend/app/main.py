@@ -1,23 +1,58 @@
-import json
-import re
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+# M3-002: configuration is externalized to environment variables (config.py).
+# No hardcoded API base / CORS / version / data dir remain in this file.
+from .config import LOGGER_NAME, configure_logging, get_settings
+from .core.repository import TOPIC_PATTERN, JsonTopicRepository
+from .core.knowledge_service import KnowledgeService
+from .core.exploration import build_exploration_response as _exploration_from_data
+
+# M2-005: data-quality validation is a pure library kept separate from the
+# app wiring (single responsibility, no import cycle, easy to unit-test).
+from .validation import (
+    build_global_validation_report,
+    format_developer_report,
+)
+
+# --- Configuration (env-driven, M3-002) -----------------------------------
+settings = get_settings()
+logger = configure_logging(settings.log_level)
+
 app = FastAPI(
-    title="History Explorer API",
+    title=settings.app_name,
     description="Backend API service foundation for History Explorer.",
-    version="0.1.0",
+    version=settings.app_version,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# --- Ops middleware: unified error logging + response hardening (M3-002) --
+@app.middleware("http")
+async def ops_middleware(request, call_next):
+    """Log unhandled exceptions once (with traceback) and stamp every response
+    with hardening headers. The body is never altered, so frozen API contracts
+    stay intact.
+    """
+    try:
+        response = await call_next(request)
+    except Exception:
+        logger.exception(
+            "Unhandled error on %s %s", request.method, request.url.path
+        )
+        raise
+    response.headers.setdefault("X-API-Version", settings.api_version_tag)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    return response
 
 
 @app.get("/")
@@ -29,120 +64,31 @@ def root():
     }
 
 
-# --- Structured exploration data source (S3-004) ---
-# Exploration content is loaded from a local JSON file under data/examples/
-# instead of being hardcoded here. Rules: no database, no ORM, no external
-# API, no data pipeline — simple file reading only.
-EXPLORATION_DATA_DIR = (
-    Path(__file__).resolve().parent.parent.parent / "data" / "examples"
-)
+# --- Knowledge Core wiring (composition root) ------------------------------
+# Exploration content is loaded from a local JSON directory (no DB / ORM /
+# external API / pipeline — simple file reading only). The path is config;
+# the Repository Layer decides how to read it.
+EXPLORATION_DATA_DIR = Path(settings.data_dir)
 
-# --- Input validation (M-H3) ---
-# The topic is used to build a file path, so it must be strictly constrained
-# before any filesystem access. Only lowercase letters, digits, underscores
-# and hyphens are allowed — this blocks path traversal (e.g. "../", ".",
-# absolute segments) and keeps the generated path confined to the data dir.
-TOPIC_PATTERN = re.compile(r"^[a-z0-9_-]+$")
+_repository = JsonTopicRepository(EXPLORATION_DATA_DIR)
+knowledge_service = KnowledgeService(_repository)
 
 
-def _load_topic_data(topic: str) -> dict | None:
-    """Load structured example data for a topic from the data/examples dir."""
-    file_path = EXPLORATION_DATA_DIR / f"{topic.replace('-', '_')}_example.json"
-    if not file_path.exists():
-        return None
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        return None
+# Backward-compatible module-level shims. Existing tests import these names
+# from `app.main`; they now delegate to the Knowledge Core instead of holding
+# duplicated data-access logic. (Removal is deferred to a dedicated cleanup
+# checkpoint — see docs/SUGGESTIONS.md — to avoid touching passing tests.)
+_ENTITY_INDEX = knowledge_service.get_search_index()
 
 
-def _build_exploration(entities: list, relationships: list) -> dict:
-    """Lightweight transformation from raw entity-relationship data into an
-    exploration-friendly view.
-
-    - main_entity: the primary entity to explore. Heuristic: prefer the first
-      Event, otherwise the first entity.
-    - related_entities: entities directly linked to the main entity via a
-      relationship, each annotated with the relationship `type`.
-
-    Transformation only — no database, ORM, AI, external API, or new
-    dependency.
-    """
-    if not entities:
-        return {"main_entity": {}, "related_entities": []}
-
-    entity_by_id = {e.get("id"): e for e in entities}
-
-    main_entity = next((e for e in entities if e.get("type") == "Event"), entities[0])
-    main_id = main_entity.get("id")
-
-    related_entities = []
-    for rel in relationships:
-        source = rel.get("source")
-        target = rel.get("target")
-        rel_type = rel.get("type", "related_to")
-        if source == main_id and target in entity_by_id:
-            other = entity_by_id[target]
-            related_entities.append(
-                {
-                    "id": other.get("id"),
-                    "type": other.get("type"),
-                    "relationship": rel_type,
-                }
-            )
-        elif target == main_id and source in entity_by_id:
-            other = entity_by_id[source]
-            related_entities.append(
-                {
-                    "id": other.get("id"),
-                    "type": other.get("type"),
-                    "relationship": rel_type,
-                }
-            )
-
-    return {
-        "main_entity": main_entity,
-        "related_entities": related_entities,
-    }
+def _get_entity_index() -> list:
+    """Return the shared search index (built once at startup)."""
+    return _ENTITY_INDEX
 
 
-def _exploration_from_data(topic: str, data: dict) -> dict:
-    """Map structured entities/relationships to the stable API response shape.
-
-    Source JSON now carries explicit `entities` and `relationships` (with
-    entity ids), replacing the old text-only `connections`. A derived
-    `connections` compatibility field is kept so the existing frontend keeps
-    working unchanged.
-    """
-    entities = data.get("entities", [])
-    relationships = data.get("relationships", [])
-    timeline = data.get("timeline", [])
-
-    entity_name = {e.get("id"): e.get("name", "") for e in entities}
-
-    connections = []
-    for rel in relationships:
-        target_id = rel.get("target", "")
-        connections.append(
-            {
-                "type": rel.get("type", "related_to"),
-                "name": entity_name.get(target_id, target_id),
-            }
-        )
-
-    exploration = _build_exploration(entities, relationships)
-
-    return {
-        "topic": topic,
-        "title": data.get("title", topic.replace("-", " ").title()),
-        "summary": data.get("summary", "A historical exploration example."),
-        "entities": entities,
-        "relationships": relationships,
-        "timeline": timeline,
-        "connections": connections,
-        "exploration": exploration,
-    }
+def _load_topic_data(topic: str):
+    """Compatibility shim: delegate topic loading to the repository."""
+    return _repository.load_topic(topic)
 
 
 def _generic_exploration(topic: str) -> dict:
@@ -168,15 +114,33 @@ def _generic_exploration(topic: str) -> dict:
     }
 
 
-@app.get("/explore/{topic}")
+# --- Handlers (single source of truth, mounted under /api/v1 AND legacy) ---
+# Each handler is defined once; the v1 router and the legacy router both point
+# at the same function with distinct operation_ids, so there is no behavior
+# fork and the OpenAPI document stays clean.
+def _connections_explained_for(body: dict) -> list:
+    """M3.5-003 (additive): explainable connections from the centered entity.
+
+    Surfaces the Exploration Engine's ranked, explainable reachable nodes for
+    the response's main entity (resolved via its `global_id`). Empty list when
+    there is no centered entity / no global_id (e.g. the generic fallback).
+    Kept as a pure projection so the frozen body shape is only ever *extended*.
+    """
+    main = (body.get("exploration") or {}).get("main_entity") or {}
+    global_id = main.get("global_id")
+    if not global_id:
+        return []
+    return knowledge_service.explore_from(global_id)
+
+
 def explore(topic: str):
     """Return historical exploration results for a given topic.
 
-    Data is sourced from the structured example file when available,
-    otherwise a generic fallback is returned.
+    Data is sourced from the Knowledge Core (repository -> registry), otherwise
+    a generic fallback is returned. M3.5-003 additively enriches the response
+    with a `connections_explained` block (explainable connections from the
+    centered entity) — no existing field is changed.
     """
-    # Validate BEFORE any file access (M-H3). Reject malformed topics so they
-    # can never reach the path-building / filesystem layer.
     if not TOPIC_PATTERN.match(topic):
         raise HTTPException(
             status_code=400,
@@ -184,7 +148,145 @@ def explore(topic: str):
             "underscores and hyphens (e.g. roman_empire).",
         )
 
-    data = _load_topic_data(topic)
+    data = knowledge_service.get_topic_data(topic)
     if data is not None:
-        return _exploration_from_data(topic, data)
-    return _generic_exploration(topic)
+        body = _exploration_from_data(topic, data)
+    else:
+        body = _generic_exploration(topic)
+    body["connections_explained"] = _connections_explained_for(body)
+    return body
+
+
+def search(q: str = ""):
+    """Search entities across all topics using the in-memory Knowledge Core.
+
+    Exact id/name match, alias match, then substring (contains) match, ranked
+    best-first. No AI, no DB — the index is built once at startup and reused
+    for every request.
+    """
+    query = (q or "").strip()
+    if not query:
+        return {"query": q, "results": [], "count": 0}
+
+    results = knowledge_service.search(query)
+    return {"query": q, "results": results, "count": len(results)}
+
+
+def entity(entity_id: str):
+    """Return one entity's summary, timeline, relationships and an
+    entity-centered exploration view.
+
+    The id may be a LOCAL id (e.g. `person-augustus`) or a GLOBAL id
+    (e.g. `roman_empire:person-augustus`) — both resolve to the same local
+    entity via the Knowledge Core registry. 404 when no entity carries that id.
+
+    M3.5-003 (additive): every `relationships[].other` now carries `global_id`
+    and `topic` (resolved cross-topic), and a `connections_explained` block
+    surfaces the Exploration Engine's ranked, explainable connections from this
+    entity. No existing field is removed or renamed.
+    """
+    ref = knowledge_service.resolve_entity(entity_id)
+    if ref is None:
+        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
+
+    target = knowledge_service.find_by_id(ref.topic, ref.local_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
+
+    global_id = target.get("global_id")
+    return {
+        "id": target.get("id"),
+        "type": target.get("type", ""),
+        "name": target.get("name", ""),
+        "summary": target,
+        "timeline": knowledge_service.get_timeline_index(ref.topic),
+        "relationships": knowledge_service.get_entity_relationships(ref.topic, ref.local_id),
+        "exploration": knowledge_service.get_exploration_view(ref.topic, ref.local_id),
+        "connections_explained": (
+            knowledge_service.explore_from(global_id) if global_id else []
+        ),
+    }
+
+
+_VALIDATION_REPORT = None
+
+
+def health():
+    """Readiness check: surfaces the startup validation report.
+
+    Returns detailed data-quality counts and the warning/error tally. 200 in
+    every case — validation never crashes the service; problems are reported,
+    not raised. Response shape is frozen (M2-005 contract).
+    """
+    if _VALIDATION_REPORT is None:
+        return {"status": "unknown", "health": {}}
+    return _VALIDATION_REPORT.to_dict()
+
+
+def healthz():
+    """Liveness probe: cheap, dependency-free "is the process up?" check.
+
+    Distinct from /health (readiness) so orchestrators can restart a hung
+    process without waiting on data-quality checks. No heavy work here.
+    """
+    return {
+        "status": "ok",
+        "service": settings.app_name,
+        "version": settings.app_version,
+    }
+
+
+# --- Router wiring: canonical /api/v1 + frozen legacy compat -------------
+v1_router = APIRouter()
+v1_router.add_api_route(
+    "/explore/{topic}", explore, methods=["GET"], operation_id="v1_explore"
+)
+v1_router.add_api_route(
+    "/entity/{entity_id}", entity, methods=["GET"], operation_id="v1_entity"
+)
+v1_router.add_api_route(
+    "/search", search, methods=["GET"], operation_id="v1_search"
+)
+v1_router.add_api_route(
+    "/health", health, methods=["GET"], operation_id="v1_health"
+)
+v1_router.add_api_route(
+    "/healthz", healthz, methods=["GET"], operation_id="v1_healthz"
+)
+
+legacy_router = APIRouter()
+legacy_router.add_api_route(
+    "/explore/{topic}", explore, methods=["GET"], operation_id="explore"
+)
+legacy_router.add_api_route(
+    "/entity/{entity_id}", entity, methods=["GET"], operation_id="entity"
+)
+legacy_router.add_api_route(
+    "/search", search, methods=["GET"], operation_id="search"
+)
+legacy_router.add_api_route(
+    "/health", health, methods=["GET"], operation_id="health"
+)
+legacy_router.add_api_route(
+    "/healthz", healthz, methods=["GET"], operation_id="healthz"
+)
+
+app.include_router(v1_router, prefix=settings.api_v1_prefix)
+app.include_router(legacy_router)
+
+
+# --- Startup: build the in-memory Knowledge Core once ---------------------
+# All example datasets are read a single time here (via the repository),
+# populating the registries, graph, search index and timeline indexes. Every
+# subsequent request runs purely from memory — no per-request JSON loading or
+# filesystem scan. The validation report (per-topic + cross-topic) is built
+# from the same core and emitted through the unified logger.
+_VALIDATION_REPORT = build_global_validation_report(knowledge_service)
+logger.info(format_developer_report(_VALIDATION_REPORT))
+logger.info(
+    "History Explorer API ready | version=%s | env=%s | v1_prefix=%s | topics=%d",
+    settings.app_version,
+    settings.environment,
+    settings.api_v1_prefix,
+    _VALIDATION_REPORT.topic_count,
+)
