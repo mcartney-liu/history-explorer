@@ -3,6 +3,7 @@ export type MainEntity = {
   type: string
   name: string
   description: string
+  global_id?: string
 }
 
 type MainEntityCardProps = {

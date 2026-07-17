@@ -1,80 +1,306 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SearchBox from './components/SearchBox'
+import EntitySearchBox from './components/EntitySearchBox'
 import SummaryPanel from './components/SummaryPanel'
 import MainEntityCard, { MainEntity } from './components/MainEntityCard'
 import RelatedEntityList, { RelatedEntity } from './components/RelatedEntityList'
 import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
-import ExplorationState from './components/ExplorationState'
+import ConnectionsExplainedPanel from './components/ConnectionsExplainedPanel'
+import ExplorationPathsPanel from './components/ExplorationPathsPanel'
+import ThemesPanel from './components/ThemesPanel'
 import AIGuidePanel from './components/AIGuidePanel'
+import SearchResults, { SearchResultItem } from './components/SearchResults'
+import EntityPage, { EntityDetail, EntityRelationship } from './components/EntityPage'
+import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
+import { nextSelectionIndex } from './components/searchNav'
+import {
+  NavNode,
+  pushHistory,
+  canBack,
+  canForward,
+  backCursor,
+  forwardCursor,
+  crumbCursor,
+  buildBreadcrumb,
+} from './components/navigation'
+import { loadRecent, pushRecent, saveRecent } from './components/recentStore'
+import Breadcrumb from './components/Breadcrumb'
+import HistoryBar from './components/HistoryBar'
+import LoadingSkeleton from './components/LoadingSkeleton'
+import ErrorCard, { ErrorKind } from './components/ErrorCard'
+import RecentExplorations from './components/RecentExplorations'
 
-const API_BASE = 'http://localhost:8000'
+// Backend base URL is externalized via Vite env (config, M3-002). Falls back
+// to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
+const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
 type ExplorationResult = {
   topic: string
   title: string
   summary: string
-  // Full entity list is already provided by the existing API response.
-  // We now consume it (no API change) to resolve related-entity names.
   entities: MainEntity[]
   timeline: TimelineItem[]
   connections: ConnectionItem[]
+  connections_explained?: ConnectionExplained[]
+  relationships?: EntityRelationship[]
   exploration: {
     main_entity: MainEntity
     related_entities: RelatedEntity[]
   }
 }
 
+function prettifyTopic(t: string): string {
+  return t
+    .replace(/[_-]/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 function App() {
   const [topic, setTopic] = useState('')
   const [result, setResult] = useState<ExplorationResult | null>(null)
-  const [error, setError] = useState('')
+  const [error, setError] = useState('') // topic-input validation only
   const [loading, setLoading] = useState(false)
-  // Lightweight exploration state (session only): the immediately previous
-  // exploration topic, kept so users stay aware of where they are in the
-  // journey. No persistence, no backend — just in-memory useState.
-  const [previousExploration, setPreviousExploration] = useState('')
 
-  async function handleExplore(topicValue?: string) {
-    const trimmed = (topicValue ?? topic).trim()
-    if (!trimmed) {
-      setError('Please enter a historical topic.')
-      setResult(null)
-      return
-    }
+  // M2-002: cross-dataset entity search.
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<SearchResultItem[] | null>(null)
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [searchError, setSearchError] = useState('')
+  const [searchSelected, setSearchSelected] = useState(-1)
 
-    // Keep the search box in sync when exploration is triggered by a click
-    // on a related entity (rather than the text input).
-    setTopic(trimmed)
+  // M2-002: entity detail page (GET /entity/{id}).
+  const [entityData, setEntityData] = useState<EntityDetail | null>(null)
 
-    // Capture the current exploration as "previous" before replacing it,
-    // but only when the new topic actually differs from the current one.
-    if (result && result.topic.toLowerCase() !== trimmed.toLowerCase()) {
-      setPreviousExploration(result.title)
-    }
+  // M2-003: own exploration history (not the browser URL). The history stack
+  // plus a cursor power back/forward; the derived `current` node drives what
+  // we render. Recent explorations persist to localStorage.
+  const [history, setHistory] = useState<NavNode[]>([])
+  const [cursor, setCursor] = useState(-1)
+  const [recent, setRecent] = useState<NavNode[]>([])
+  const [errorKind, setErrorKind] = useState<ErrorKind | ''>('')
 
+  // Load persisted recent explorations once on mount.
+  useEffect(() => {
+    setRecent(loadRecent())
+  }, [])
+
+  const current: NavNode | null =
+    cursor >= 0 && cursor < history.length ? history[cursor] : null
+
+  // Fetch a node's data and update view state. Pure I/O; history navigation
+  // decides *which* node, this decides *how* to load it.
+  async function fetchNode(node: NavNode, targetCursor: number) {
     setLoading(true)
-    setError('')
-    setResult(null)
-
+    setErrorKind('')
+    setSearchResults(null)
     try {
-      const response = await fetch(`${API_BASE}/explore/${encodeURIComponent(trimmed)}`)
-      if (!response.ok) {
-        throw new Error(`Request failed (${response.status})`)
+      let data: unknown
+      if (node.type === 'topic') {
+        const resp = await fetch(`${API_BASE}/explore/${encodeURIComponent(node.topic)}`)
+        if (!resp.ok) throw new Error(`status:${resp.status}`)
+        data = await resp.json()
+        setResult(data as ExplorationResult)
+        setEntityData(null)
+        // Refine the breadcrumb label with the real title.
+        setHistory((h) =>
+          h.map((n, i) => (i === targetCursor && n.type === 'topic' ? { ...n, title: (data as ExplorationResult).title } : n)),
+        )
+      } else {
+        const resp = await fetch(`${API_BASE}/entity/${encodeURIComponent(node.id)}`)
+        if (!resp.ok) throw new Error(`status:${resp.status}`)
+        data = await resp.json()
+        setEntityData(data as EntityDetail)
+        setResult(null)
+        setHistory((h) =>
+          h.map((n, i) => (i === targetCursor && n.type === 'entity' ? { ...n, name: (data as EntityDetail).name } : n)),
+        )
       }
-      const data: ExplorationResult = await response.json()
-      setResult(data)
-    } catch (err) {
-      setError('Unable to load exploration result. Is the backend running?')
+      setRecent((r) => pushRecent(r, node))
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      const status = msg.includes(':') ? msg.split(':')[1] : ''
+      setErrorKind(status === '404' ? 'notfound' : 'network')
+      setResult(null)
+      setEntityData(null)
     } finally {
       setLoading(false)
     }
   }
 
-  function handleEntityClick(id: string) {
-    handleExplore(id)
+  // Push a node onto the history and load it.
+  function navigateTo(node: NavNode) {
+    const { history: h, cursor: c } = pushHistory(history, cursor, node)
+    setHistory(h)
+    setCursor(c)
+    fetchNode(node, c)
   }
+
+  // Open an entity by id (with a display name for the breadcrumb).
+  function openEntity(id: string, name?: string) {
+    navigateTo({ type: 'entity', id, name: name || id })
+  }
+
+  function goTo(newCursor: number) {
+    if (newCursor < 0 || newCursor >= history.length) return
+    setCursor(newCursor)
+    fetchNode(history[newCursor], newCursor)
+  }
+
+  function goBack() {
+    if (canBack(cursor)) goTo(backCursor(cursor))
+  }
+
+  function goForward() {
+    if (canForward(cursor, history.length)) goTo(forwardCursor(cursor, history.length))
+  }
+
+  function goHome() {
+    setHistory([])
+    setCursor(-1)
+    setResult(null)
+    setEntityData(null)
+    setSearchResults(null)
+    setErrorKind('')
+    setLoading(false)
+  }
+
+  function onCrumbClick(index: number) {
+    if (index <= 0) {
+      goHome()
+      return
+    }
+    goTo(crumbCursor(index))
+  }
+
+  function handleExplore(topicValue?: string) {
+    const trimmed = (topicValue ?? topic).trim()
+    if (!trimmed) {
+      setError('Please enter a historical topic.')
+      return
+    }
+    setError('')
+    navigateTo({ type: 'topic', topic: trimmed, title: prettifyTopic(trimmed) })
+  }
+
+  async function handleSearch(q: string) {
+    setSearchQuery(q)
+    setSearchError('')
+    setSearchLoading(true)
+    setSearchSelected(-1)
+    // A fresh search replaces any open entity page / explore result, but keeps
+    // the history (the user can still go Back to where they were).
+    setEntityData(null)
+    setResult(null)
+
+    try {
+      const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`)
+      if (!response.ok) {
+        throw new Error(`Search failed (${response.status})`)
+      }
+      const data = await response.json()
+      setSearchResults(data.results as SearchResultItem[])
+    } catch (err) {
+      setSearchError('Unable to search. Is the backend running?')
+      setSearchResults([])
+    } finally {
+      setSearchLoading(false)
+    }
+  }
+
+  function handleResultSelect(id: string) {
+    const item = searchResults?.find((r) => r.id === id)
+    openEntity(id, item?.name)
+  }
+
+  // M2-002.5 keyboard navigation handlers (wired to the search box).
+  function handleSearchNav(direction: 'up' | 'down') {
+    if (!searchResults || searchResults.length === 0) return
+    setSearchSelected((cur) =>
+      nextSelectionIndex(cur, direction === 'down' ? 1 : -1, searchResults.length),
+    )
+  }
+
+  function handleSearchEnterSelect() {
+    if (!searchResults || searchResults.length === 0) return
+    const idx = searchSelected >= 0 ? searchSelected : 0
+    handleResultSelect(searchResults[idx].id)
+  }
+
+  function handleSearchEscape() {
+    clearSearch()
+    setSearchSelected(-1)
+  }
+
+  function clearSearch() {
+    setSearchResults(null)
+    setSearchQuery('')
+    setSearchSelected(-1)
+  }
+
+  // Name lookups for the active exploration, so relationships / related
+  // entities / timeline events can resolve and navigate to the right entity.
+  const exploreNameById: Record<string, string> = result
+    ? Object.fromEntries(result.entities.map((e) => [e.id, e.name]))
+    : {}
+  const exploreNameToId: Record<string, string> = result
+    ? Object.fromEntries(result.entities.map((e) => [e.name, e.id]))
+    : {}
+  const entityNameById: Record<string, string> = entityData
+    ? Object.fromEntries(entityData.relationships.map((r) => [r.other.id, r.other.name]))
+    : {}
+
+  // M3.5-004 cross-topic clickable (entity page): map each related entity's
+  // local id to its cross-topic global_id ("topic:localid") when the backend
+  // supplied one, so clicking a chip can open an entity from another topic.
+  const entityGlobalIdById: Record<string, string> = entityData
+    ? Object.fromEntries(
+        entityData.relationships
+          .filter((r) => r.other?.global_id || r.other?.topic)
+          .map((r) => [
+            r.other.id,
+            r.other.global_id ?? `${r.other.topic}:${r.other.id}`,
+          ]),
+      )
+    : {}
+
+  // M3.5-004 cross-topic clickable (explore page): the explore result's
+  // relationships are RAW {source, target, type} with no `other`, so the owning
+  // topic comes from the main entity's global_id (falling back to result.topic).
+  const exploreTopic: string =
+    result?.exploration?.main_entity?.global_id?.split(':')[0] || result?.topic || ''
+
+  // M3.5-004 (explore page): the raw `result.relationships` have no `other`, so
+  // we project the main entity's direct neighbors (exploration.related_entities)
+  // into EntityRelationship[] for the Themes panel, resolving names + global_ids
+  // from the entity list. Each node already gets a full global_id so the new
+  // panels pass it through WITHOUT re-prefixing (the legacy onEntityClick below
+  // still prefixes local ids into `${exploreTopic}:${id}`).
+  const exploreEntityGlobalById: Record<string, string> = result
+    ? Object.fromEntries(
+        result.entities.map((e) => [e.id, e.global_id ?? `${exploreTopic}:${e.id}`]),
+      )
+    : {}
+  const exploreThemesRelationships: EntityRelationship[] = result
+    ? result.exploration.related_entities.map((re) => ({
+        type: re.relationship,
+        source: result.exploration.main_entity.id,
+        target: re.id,
+        direction: 'outgoing',
+        other: {
+          id: re.id,
+          name: exploreNameById[re.id] ?? re.id,
+          type: re.type,
+          global_id: exploreEntityGlobalById[re.id],
+          topic: exploreEntityGlobalById[re.id]
+            ? exploreEntityGlobalById[re.id].split(':')[0]
+            : undefined,
+        },
+      }))
+    : []
+
+  const crumbs = buildBreadcrumb(history, cursor)
 
   return (
     <main className="app">
@@ -82,7 +308,7 @@ function App() {
         <h1 className="title">History Explorer</h1>
         <p className="tagline">Explore History. Discover Civilization.</p>
         <p className="description">
-          An AI-powered global history exploration platform.
+          A data-driven global history exploration platform.
         </p>
 
         <div className="explorer">
@@ -94,33 +320,109 @@ function App() {
             onExplore={handleExplore}
           />
 
-          {result && (
-            <div className="result">
-              <ExplorationState
-                current={result.title}
-                previous={previousExploration || undefined}
+          <EntitySearchBox
+            onSearch={handleSearch}
+            loading={searchLoading}
+            error={searchError}
+            resultsActive={!!searchResults && searchResults.length > 0}
+            onArrow={handleSearchNav}
+            onEnterSelect={handleSearchEnterSelect}
+            onEscape={handleSearchEscape}
+          />
+
+          {searchResults && (
+            <SearchResults
+              query={searchQuery}
+              results={searchResults}
+              onSelect={handleResultSelect}
+              onClear={clearSearch}
+              selectedIndex={searchSelected}
+            />
+          )}
+
+          {current && (
+            <>
+              <Breadcrumb crumbs={crumbs} onCrumbClick={onCrumbClick} />
+              <HistoryBar
+                canBack={canBack(cursor)}
+                canForward={canForward(cursor, history.length)}
+                onBack={goBack}
+                onForward={goForward}
               />
+            </>
+          )}
+
+          {loading && (
+            <LoadingSkeleton
+              label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'}
+            />
+          )}
+
+          {!loading && errorKind && (
+            <ErrorCard
+              kind={errorKind}
+              onRetry={current ? () => fetchNode(current, cursor) : undefined}
+            />
+          )}
+
+          {!loading && !errorKind && current?.type === 'topic' && result && (
+            <div className="result">
               <SummaryPanel title={result.title} summary={result.summary} />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
               <RelationshipView
                 mainEntity={result.exploration.main_entity}
                 relatedEntities={result.exploration.related_entities}
-                nameById={Object.fromEntries(
-                  (result.entities ?? []).map((e) => [e.id, e.name]),
-                )}
+                nameById={exploreNameById}
+                onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
               />
               <RelatedEntityList
                 relatedEntities={result.exploration.related_entities}
-                nameById={Object.fromEntries(
-                  (result.entities ?? []).map((e) => [e.id, e.name]),
-                )}
+                nameById={exploreNameById}
                 mainEntityName={result.exploration.main_entity.name}
-                onEntityClick={handleEntityClick}
+                onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
               />
-              <TimelinePanel timeline={result.timeline} />
+              <TimelinePanel
+                timeline={result.timeline}
+                nameToId={exploreNameToId}
+                onEventClick={(id) => openEntity(id, exploreNameById[id])}
+              />
               <ConnectionsPanel connections={result.connections} />
+              <ConnectionsExplainedPanel connections={result.connections_explained} />
+              <ExplorationPathsPanel
+                connections={result.connections_explained}
+                onNodeClick={(gid) =>
+                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+                }
+              />
+              <ThemesPanel
+                relationships={exploreThemesRelationships}
+                onNodeClick={(gid) =>
+                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+                }
+              />
               <AIGuidePanel />
             </div>
+          )}
+
+          {!loading && !errorKind && current?.type === 'entity' && entityData && (
+            <EntityPage
+              entity={entityData}
+              onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
+              onNodeClick={(gid) =>
+                openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
+              }
+            />
+          )}
+
+          {!current && (
+            <RecentExplorations
+              items={recent}
+              onSelect={navigateTo}
+              onClear={() => {
+                setRecent([])
+                saveRecent([])
+              }}
+            />
           )}
         </div>
       </section>

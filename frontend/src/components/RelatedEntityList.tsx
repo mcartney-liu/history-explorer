@@ -1,3 +1,5 @@
+import EmptyState from './EmptyState'
+
 export type RelatedEntity = {
   id: string
   type: string
@@ -57,7 +59,7 @@ function RelatedEntityList({
           })}
         </ul>
       ) : (
-        <p className="empty">No related entities.</p>
+        <EmptyState message="No related entities." />
       )}
     </div>
   )

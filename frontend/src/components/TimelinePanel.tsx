@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import EmptyState from './EmptyState'
 
 export type TimelineItem = {
   period: string
@@ -7,13 +8,16 @@ export type TimelineItem = {
 
 type TimelinePanelProps = {
   timeline: TimelineItem[]
-  // Optional handler kept for future compatibility (clickable events).
-  // When omitted, events render as static text with no interaction.
-  onEventClick?: (item: TimelineItem, index: number) => void
+  // M2-003: when both handlers are supplied and a timeline event's name
+  // matches a known entity, the event becomes clickable and navigates to that
+  // entity (Timeline -> Entity -> Timeline loop). Events without a match stay
+  // static, so only "associated" time points are interactive.
+  nameToId?: Record<string, string>
+  onEventClick?: (entityId: string) => void
 }
 
-function TimelinePanel({ timeline, onEventClick }: TimelinePanelProps) {
-  const clickable = typeof onEventClick === 'function'
+function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps) {
+  const clickable = typeof onEventClick === 'function' && !!nameToId
 
   return (
     <div className="result-section">
@@ -21,17 +25,20 @@ function TimelinePanel({ timeline, onEventClick }: TimelinePanelProps) {
       {timeline.length > 0 ? (
         <div className="timeline-flow">
           {timeline.map((item, idx) => {
+            const entityId = clickable ? nameToId![item.event] : undefined
+            const interactive = clickable && !!entityId
             const node = (
               <div className="timeline-node" key={`node-${idx}`}>
                 <div className="timeline-period">{item.period}</div>
                 <div className="timeline-connector" aria-hidden="true">
                   &#8595;
                 </div>
-                {clickable ? (
+                {interactive ? (
                   <button
                     type="button"
                     className="timeline-event is-clickable"
-                    onClick={() => onEventClick!(item, idx)}
+                    aria-label={`Open ${item.event}`}
+                    onClick={() => onEventClick!(entityId!)}
                   >
                     {item.event}
                   </button>
@@ -59,7 +66,7 @@ function TimelinePanel({ timeline, onEventClick }: TimelinePanelProps) {
           })}
         </div>
       ) : (
-        <p className="empty">No timeline data.</p>
+        <EmptyState message="No timeline data." />
       )}
     </div>
   )

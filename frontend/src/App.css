@@ -193,48 +193,6 @@ body {
   border-color: #d8cfbe;
 }
 
-/* Exploration state (S5-005): current / previous exploration awareness */
-.exploration-state {
-  background: #f7f3ea;
-  border: 1px solid #e2ddd2;
-  border-left: 4px solid #8a6d3b;
-  border-radius: 8px;
-  padding: 0.85rem 1rem;
-}
-
-.exploration-state h3 {
-  color: #8a6d3b;
-  margin-bottom: 0.5rem;
-}
-
-.exp-state-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  margin-bottom: 0.5rem;
-}
-
-.exp-state-row:last-child {
-  margin-bottom: 0;
-}
-
-.exp-state-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #8a6d3b;
-}
-
-.exp-state-topic {
-  font-size: 1.05rem;
-  color: #555;
-}
-
-.exp-state-current {
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
 /* AI Guide placeholder (S5-006): future integration boundary, no AI logic */
 .ai-guide {
   border: 1px dashed #d8cfbe;
@@ -446,4 +404,446 @@ body {
   font-size: 0.85rem;
   font-style: italic;
   color: #8a6d3b;
+}
+
+/* M2-002: search results panel */
+.search-results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #8a6d3b;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.link-button:hover {
+  color: #6f5630;
+}
+
+.search-list li .re-rel {
+  text-transform: capitalize;
+}
+
+/* M2-002.5: keyboard navigation highlight + card enrichment fields */
+.search-list li.is-selected {
+  background: #efe7d6;
+  outline: 2px solid #8a6d3b;
+  outline-offset: -2px;
+}
+
+.re-desc {
+  flex-basis: 100%;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.re-meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+}
+
+.re-period,
+.re-loc {
+  font-size: 0.82rem;
+  color: #5c6b73;
+  border: 1px solid #d8cfbe;
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+}
+
+/* M2-002: entity page header */
+.entity-page-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.entity-page-head h3 {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   M2-003 Navigation — shared design tokens & components
+   Kept in the existing parchment / bronze visual language.
+   ============================================================ */
+:root {
+  --he-radius: 10px;
+  --he-pad: 1.25rem;
+  --he-gap: 1rem;
+  --he-accent: #8a6d3b;
+  --he-accent-dark: #6f5630;
+  --he-muted: #5c6b73;
+  --he-border: #e2ddd2;
+  --he-surface: #fff;
+  --he-surface-soft: #f7f3ea;
+  --he-danger: #b00020;
+  --he-transition: 0.15s ease;
+}
+
+/* M3.5-004: Explainable Connections panel (additive; reuses existing tokens) */
+.ce-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ce-item + .ce-item {
+  margin-top: 0.6rem;
+}
+
+.ce-head {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+/* M3.5-004: Exploration Paths panel — a left-to-right chain of clickable
+   node chips joined by relationship edges (e.g. rome —[conquered outgoing]→ egypt).
+   Reuses the parchment / bronze design tokens. */
+.ep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ep-item {
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  padding: 0.75rem 0.9rem;
+}
+
+.ep-chain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.ep-node {
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  color: var(--he-accent-dark);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.ep-node:hover,
+.ep-node:focus-visible {
+  background: var(--he-accent);
+  color: #fff;
+  outline: none;
+}
+
+.ep-edge {
+  color: var(--he-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.ep-edge-label {
+  font-style: italic;
+  color: var(--he-accent);
+  padding: 0 0.15rem;
+}
+
+/* M3.5-004: Themes panel — client-derived cross-civilization threads. Each
+   theme is a card of cross-topic clickable chips. Reuses parchment / bronze. */
+.th-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.th-group {
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  padding: 0.7rem 0.9rem;
+}
+
+.th-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  color: var(--he-accent-dark);
+  font-weight: 600;
+}
+
+.th-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--he-accent);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.th-subhead {
+  margin: 0.2rem 0 -0.3rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--he-muted);
+}
+
+.th-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.th-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.th-chip:hover,
+.th-chip:focus-visible {
+  background: var(--he-accent);
+  outline: none;
+}
+
+.th-chip-name {
+  color: var(--he-accent-dark);
+  font-size: 0.92rem;
+}
+
+.th-chip:hover .th-chip-name,
+.th-chip:focus-visible .th-chip-name {
+  color: #fff;
+}
+
+.th-chip-type {
+  color: var(--he-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.th-chip:hover .th-chip-type,
+.th-chip:focus-visible .th-chip-type {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Breadcrumb */
+.he-breadcrumb {
+  margin-top: 0.25rem;
+}
+
+.he-breadcrumb-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  margin: 0;
+}
+
+.he-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.he-breadcrumb-link {
+  background: none;
+  border: none;
+  color: var(--he-accent);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+  border-radius: 6px;
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.he-breadcrumb-link:hover {
+  color: var(--he-accent-dark);
+  background: var(--he-surface-soft);
+}
+
+.he-breadcrumb-current {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.he-breadcrumb-sep {
+  color: #b9ad97;
+  user-select: none;
+}
+
+/* History bar (Back / Forward) */
+.he-history-bar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.he-history-btn {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--he-accent);
+  border: none;
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  transition: background var(--he-transition), opacity var(--he-transition);
+}
+
+.he-history-btn:hover:not(:disabled) {
+  background: var(--he-accent-dark);
+}
+
+.he-history-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Recent explorations */
+.he-recent-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.he-recent-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: background var(--he-transition), border-color var(--he-transition);
+}
+
+.he-recent-chip:hover {
+  background: var(--he-surface-soft);
+  border-color: #d8cfbe;
+}
+
+.he-recent-kind {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--he-muted);
+  border-radius: 4px;
+  padding: 0.12rem 0.45rem;
+}
+
+.he-recent-label {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Loading skeleton (unified) */
+.he-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: var(--he-pad);
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+}
+
+.he-skeleton-line {
+  height: 0.85rem;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #ece6da 25%, #f4efe6 50%, #ece6da 75%);
+  background-size: 200% 100%;
+  animation: he-shimmer 1.2s infinite;
+}
+
+.he-skeleton-line--title {
+  height: 1.3rem;
+  width: 55%;
+}
+
+.he-skeleton-line--short {
+  width: 70%;
+}
+
+.he-skeleton-label {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--he-muted);
+}
+
+@keyframes he-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Error card (unified) */
+.he-error-card {
+  padding: var(--he-pad);
+  background: #fdf3f4;
+  border: 1px solid #eccfd2;
+  border-left: 4px solid var(--he-danger);
+  border-radius: var(--he-radius);
+}
+
+.he-error-title {
+  color: var(--he-danger);
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+}
+
+.he-error-message {
+  color: #6b4950;
+  margin-bottom: 0.85rem;
+}
+
+.he-error-retry {
+  background: var(--he-danger);
+}
+
+.he-error-retry:hover {
+  background: #8c001a;
+}
+
+/* Empty state tweak (kept consistent with .empty) */
+.he-empty {
+  padding: 0.5rem 0;
 }
