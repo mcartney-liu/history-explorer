@@ -11,6 +11,9 @@ import ConnectionsExplainedPanel from './components/ConnectionsExplainedPanel'
 import ExplorationPathsPanel from './components/ExplorationPathsPanel'
 import ThemesPanel from './components/ThemesPanel'
 import AIGuidePanel from './components/AIGuidePanel'
+import CrossTopicTopicList from './components/CrossTopicTopicList'
+import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
+import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
 import SearchResults, { SearchResultItem } from './components/SearchResults'
 import EntityPage, { EntityDetail, EntityRelationship } from './components/EntityPage'
 import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
@@ -45,9 +48,11 @@ type ExplorationResult = {
   connections: ConnectionItem[]
   connections_explained?: ConnectionExplained[]
   relationships?: EntityRelationship[]
+  related_topics?: RelatedTopic[]
   exploration: {
     main_entity: MainEntity
     related_entities: RelatedEntity[]
+    cross_topic_related?: CrossTopicRelated[]
   }
 }
 
@@ -375,6 +380,14 @@ function App() {
                 nameById={exploreNameById}
                 onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
               />
+              <CrossTopicConnectionsPanel
+                connections={result.exploration.cross_topic_related}
+                onEntityClick={(gid) => openEntity(gid)}
+              />
+              <CrossTopicTopicList
+                relatedTopics={result.related_topics}
+                onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+              />
               <RelatedEntityList
                 relatedEntities={result.exploration.related_entities}
                 nameById={exploreNameById}
@@ -411,6 +424,7 @@ function App() {
               onNodeClick={(gid) =>
                 openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
               }
+              onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
             />
           )}
 

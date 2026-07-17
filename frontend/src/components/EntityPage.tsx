@@ -6,6 +6,8 @@ import TimelinePanel, { TimelineItem } from './TimelinePanel'
 import ConnectionsExplainedPanel, { ConnectionExplained } from './ConnectionsExplainedPanel'
 import ExplorationPathsPanel from './ExplorationPathsPanel'
 import ThemesPanel from './ThemesPanel'
+import CrossTopicTopicList from './CrossTopicTopicList'
+import { RelatedTopic } from './crossTopic'
 
 export type EntityRelationship = {
   type: string
@@ -23,6 +25,7 @@ export type EntityDetail = {
   timeline: TimelineItem[]
   relationships: EntityRelationship[]
   connections_explained?: ConnectionExplained[]
+  related_topics?: RelatedTopic[]
   exploration: {
     main_entity: MainEntity
     related_entities: RelatedEntity[]
@@ -37,13 +40,14 @@ type EntityPageProps = {
   // so they are passed through WITHOUT re-prefixing (unlike onEntityClick,
   // which prefixes local ids into topic:localid).
   onNodeClick?: (globalId: string) => void
+  onTopicClick?: (topic: string) => void
 }
 
 // M2-002 entity page: renders the four sections the backend returns for
 // GET /entity/{id} — summary, timeline, relationships, exploration. Every
 // related entity stays clickable so the Explore -> Connect -> Continue loop
 // keeps working from inside an entity page.
-function EntityPage({ entity, onEntityClick, onNodeClick }: EntityPageProps) {
+function EntityPage({ entity, onEntityClick, onNodeClick, onTopicClick }: EntityPageProps) {
   const summaryObj = entity.summary ?? {}
   const description =
     typeof summaryObj.description === 'string' ? summaryObj.description : ''
@@ -77,6 +81,10 @@ function EntityPage({ entity, onEntityClick, onNodeClick }: EntityPageProps) {
         nameById={nameById}
         onEntityClick={onEntityClick}
       />
+
+      {onTopicClick && (
+        <CrossTopicTopicList relatedTopics={entity.related_topics} onTopicClick={onTopicClick} />
+      )}
 
       <RelatedEntityList
         relatedEntities={entity.exploration.related_entities}
