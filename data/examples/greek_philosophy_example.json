@@ -1,0 +1,450 @@
+{
+  "title": "Greek Philosophy — Socrates to Aristotle",
+  "summary": "The Athenian lineage of reason whose ideas spread to Rome and shaped Hellenistic thought.",
+  "entities": [
+    {
+      "id": "person-socrates",
+      "type": "Person",
+      "name": "Socrates",
+      "description": "Athenian philosopher who pioneered the elenchus and mentored Plato.",
+      "global_id": "greek_philosophy:person-socrates",
+      "aliases": [],
+      "labels": {
+        "en": "Socrates",
+        "el": "Sōkratēs"
+      },
+      "start_date": {
+        "value": -470,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 470 BC"
+      },
+      "end_date": {
+        "value": -399,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "399 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -470,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 470 BC"
+      },
+      "death": {
+        "value": -399,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "399 BC"
+      },
+      "roles": [
+        "Philosopher"
+      ],
+      "related_events": []
+    },
+    {
+      "id": "person-plato",
+      "type": "Person",
+      "name": "Plato",
+      "description": "Student of Socrates and author of the Theory of Forms; founded the Academy.",
+      "global_id": "greek_philosophy:person-plato",
+      "aliases": [],
+      "labels": {
+        "en": "Plato",
+        "el": "Platōn"
+      },
+      "start_date": {
+        "value": -428,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 428 BC"
+      },
+      "end_date": {
+        "value": -348,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 348 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -428,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 428 BC"
+      },
+      "death": {
+        "value": -348,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 348 BC"
+      },
+      "roles": [
+        "Philosopher"
+      ]
+    },
+    {
+      "id": "person-aristotle",
+      "type": "Person",
+      "name": "Aristotle",
+      "description": "Student of Plato who systematized logic and tutored Alexander the Great.",
+      "global_id": "greek_philosophy:person-aristotle",
+      "aliases": [],
+      "labels": {
+        "en": "Aristotle",
+        "el": "Aristotelēs"
+      },
+      "start_date": {
+        "value": -384,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "384 BC"
+      },
+      "end_date": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -384,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "384 BC"
+      },
+      "death": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BC"
+      },
+      "roles": [
+        "Philosopher",
+        "Tutor"
+      ]
+    },
+    {
+      "id": "person-pythagoras",
+      "type": "Person",
+      "name": "Pythagoras",
+      "description": "Samian thinker whose school fused mathematics, music, and mysticism.",
+      "global_id": "greek_philosophy:person-pythagoras",
+      "aliases": [],
+      "labels": {
+        "en": "Pythagoras",
+        "el": "Pythagoras"
+      },
+      "start_date": {
+        "value": -570,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 570 BC"
+      },
+      "end_date": {
+        "value": -495,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 495 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -570,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 570 BC"
+      },
+      "death": {
+        "value": -495,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 495 BC"
+      },
+      "roles": [
+        "Philosopher"
+      ]
+    },
+    {
+      "id": "loc-athens",
+      "type": "Location",
+      "name": "Athens",
+      "description": "The city where Socrates, Plato, and Aristotle taught and democracy was born.",
+      "global_id": "greek_philosophy:loc-athens",
+      "aliases": [],
+      "labels": {
+        "en": "Athens",
+        "el": "Athēnai"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 37.9838,
+        "lng": 23.7275
+      },
+      "region": "Attica"
+    },
+    {
+      "id": "event-academy-founded",
+      "type": "Event",
+      "name": "Plato's Academy Founded",
+      "description": "Plato established the Academy, a school that shaped Western thought for centuries.",
+      "global_id": "greek_philosophy:event-academy-founded",
+      "aliases": [],
+      "labels": {
+        "en": "Plato's Academy Founded"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-athens",
+      "participants": [
+        "person-plato"
+      ],
+      "causes": [],
+      "consequences": []
+    },
+    {
+      "id": "idea-theory-forms",
+      "type": "Idea",
+      "name": "Theory of Forms",
+      "description": "Plato's doctrine that perfect abstract Forms underlie the sensible world.",
+      "global_id": "greek_philosophy:idea-theory-forms",
+      "aliases": [
+        "Forms",
+        "Ideai"
+      ],
+      "labels": {
+        "en": "Theory of Forms"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    },
+    {
+      "id": "idea-logic",
+      "type": "Idea",
+      "name": "Logic and Syllogism",
+      "description": "Aristotle's formal system of valid inference, the root of Western logic.",
+      "global_id": "greek_philosophy:idea-logic",
+      "aliases": [
+        "Syllogism"
+      ],
+      "labels": {
+        "en": "Logic and Syllogism"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    },
+    {
+      "id": "loc-lyceum",
+      "type": "Location",
+      "name": "Lyceum",
+      "description": "Aristotle's Peripatetic school in Athens, rival to the Academy.",
+      "global_id": "greek_philosophy:loc-lyceum",
+      "aliases": [],
+      "labels": {
+        "en": "Lyceum"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 37.9734,
+        "lng": 23.7324
+      },
+      "region": "Athens"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "person-socrates",
+      "target": "loc-athens",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-plato",
+      "target": "loc-athens",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-aristotle",
+      "target": "loc-athens",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-socrates",
+      "target": "person-plato",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-plato",
+      "target": "person-aristotle",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-plato",
+      "target": "event-academy-founded",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-academy-founded",
+      "target": "loc-athens",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-plato",
+      "target": "idea-theory-forms",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-aristotle",
+      "target": "idea-logic",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-pythagoras",
+      "target": "idea-theory-forms",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-aristotle",
+      "target": "loc-lyceum",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-aristotle",
+      "target": "hellenistic_world:person-alexander",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-socrates",
+      "target": "hellenistic_world:idea-democracy",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "idea-theory-forms",
+      "target": "hellenistic_world:idea-stoicism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "idea-logic",
+      "target": "roman_empire:civ-roman",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    }
+  ],
+  "timeline": [
+    {
+      "period": {
+        "value": -387,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "387 BC"
+      },
+      "event": "Plato founds the Academy in Athens"
+    },
+    {
+      "period": {
+        "value": -335,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "335 BC"
+      },
+      "event": "Aristotle founds the Lyceum"
+    }
+  ]
+}

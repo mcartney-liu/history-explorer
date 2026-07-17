@@ -1,0 +1,502 @@
+{
+  "title": "Persian Empire — Cyrus to Alexander",
+  "summary": "The Achaemenid superpower that linked the Near East to Greece, Egypt, and the Silk Road.",
+  "entities": [
+    {
+      "id": "civ-persian",
+      "type": "Civilization",
+      "name": "Achaemenid Persian Empire",
+      "description": "The first Persian Empire (c. 550-330 BC), founded by Cyrus and the largest of the ancient Near East.",
+      "global_id": "persian_empire:civ-persian",
+      "aliases": [
+        "Persia",
+        "Achaemenid Empire"
+      ],
+      "labels": {
+        "en": "Achaemenid Persian Empire",
+        "fa": "Shāhanshāhī-ye Hakhāmaneshi"
+      },
+      "start_date": {
+        "value": -550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 550 BC"
+      },
+      "end_date": {
+        "value": -330,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "330 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": "tp-achaemenid",
+      "region": "loc-persepolis",
+      "related_events": [
+        "event-cyrus-conquests"
+      ]
+    },
+    {
+      "id": "person-cyrus",
+      "type": "Person",
+      "name": "Cyrus the Great",
+      "description": "Founder of the Achaemenid Empire, who conquered Media, Lydia, and Babylon.",
+      "global_id": "persian_empire:person-cyrus",
+      "aliases": [
+        "Cyrus II"
+      ],
+      "labels": {
+        "en": "Cyrus the Great",
+        "fa": "Kūrosh-e Bozorg"
+      },
+      "start_date": {
+        "value": -600,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 600 BC"
+      },
+      "end_date": {
+        "value": -530,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 530 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -600,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 600 BC"
+      },
+      "death": {
+        "value": -530,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 530 BC"
+      },
+      "roles": [
+        "Persian king",
+        "Conqueror"
+      ],
+      "related_events": [
+        "event-cyrus-conquests"
+      ]
+    },
+    {
+      "id": "person-darius",
+      "type": "Person",
+      "name": "Darius I",
+      "description": "Third Achaemenid king who reorganized the empire and fought the Greeks at Marathon.",
+      "global_id": "persian_empire:person-darius",
+      "aliases": [
+        "Darius the Great"
+      ],
+      "labels": {
+        "en": "Darius I"
+      },
+      "start_date": {
+        "value": -550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 550 BC"
+      },
+      "end_date": {
+        "value": -486,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "486 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 550 BC"
+      },
+      "death": {
+        "value": -486,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "486 BC"
+      },
+      "roles": [
+        "Persian king"
+      ]
+    },
+    {
+      "id": "person-xerxes",
+      "type": "Person",
+      "name": "Xerxes I",
+      "description": "Son of Darius who invaded Greece and was checked at Salamis and Plataea.",
+      "global_id": "persian_empire:person-xerxes",
+      "aliases": [
+        "Xerxes the Great"
+      ],
+      "labels": {
+        "en": "Xerxes I"
+      },
+      "start_date": {
+        "value": -519,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 519 BC"
+      },
+      "end_date": {
+        "value": -465,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "465 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -519,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 519 BC"
+      },
+      "death": {
+        "value": -465,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "465 BC"
+      },
+      "roles": [
+        "Persian king"
+      ]
+    },
+    {
+      "id": "loc-persepolis",
+      "type": "Location",
+      "name": "Persepolis",
+      "description": "Ceremonial capital of the Achaemenid Empire in Fars, burned by Alexander in 330 BC.",
+      "global_id": "persian_empire:loc-persepolis",
+      "aliases": [
+        "Takht-e Jamshid"
+      ],
+      "labels": {
+        "en": "Persepolis"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 29.9375,
+        "lng": 52.8894
+      },
+      "region": "Fars, Iran"
+    },
+    {
+      "id": "religion-zoroastrianism",
+      "type": "Religion",
+      "name": "Zoroastrianism",
+      "description": "The dualistic monotheistic faith of ancient Persia, founded by Zarathustra.",
+      "global_id": "persian_empire:religion-zoroastrianism",
+      "aliases": [
+        "Mazdayasna"
+      ],
+      "labels": {
+        "en": "Zoroastrianism"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "practiced_by": "civ-persian",
+      "practiced_in": "loc-persepolis",
+      "texts": [
+        "Avesta"
+      ]
+    },
+    {
+      "id": "person-zarathustra",
+      "type": "Person",
+      "name": "Zarathustra (Zoroaster)",
+      "description": "The prophet who revealed the Gathas and the worship of Ahura Mazda.",
+      "global_id": "persian_empire:person-zarathustra",
+      "aliases": [
+        "Zoroaster"
+      ],
+      "labels": {
+        "en": "Zarathustra"
+      },
+      "start_date": {
+        "value": -1000,
+        "precision": "year",
+        "certainty": "uncertain",
+        "label": "c. 1000 BC"
+      },
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "roles": [
+        "Prophet"
+      ],
+      "related_events": []
+    },
+    {
+      "id": "tech-royal-road",
+      "type": "Technology",
+      "name": "Royal Road",
+      "description": "The Persian courier highway from Susa to Sardis enabling rapid communication.",
+      "global_id": "persian_empire:tech-royal-road",
+      "aliases": [],
+      "labels": {
+        "en": "Royal Road"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "invented_by": "civ-persian",
+      "invented_in": {
+        "value": -500,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 500 BC"
+      },
+      "category": "infrastructure"
+    },
+    {
+      "id": "event-cyrus-conquests",
+      "type": "Event",
+      "name": "Cyrus's Conquests",
+      "description": "Cyrus's campaigns that built the empire spanning Anatolia to Central Asia.",
+      "global_id": "persian_empire:event-cyrus-conquests",
+      "aliases": [],
+      "labels": {
+        "en": "Cyrus's Conquests"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-persepolis",
+      "participants": [
+        "person-cyrus"
+      ],
+      "causes": [],
+      "consequences": []
+    },
+    {
+      "id": "tp-achaemenid",
+      "type": "Time Period",
+      "name": "Achaemenid Era",
+      "description": "The period of Persian imperial dominance between Cyrus and Alexander.",
+      "global_id": "persian_empire:tp-achaemenid",
+      "aliases": [],
+      "labels": {
+        "en": "Achaemenid Era"
+      },
+      "start_date": {
+        "value": -550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 550 BC"
+      },
+      "end_date": {
+        "value": -330,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "330 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    }
+  ],
+  "relationships": [
+    {
+      "source": "person-cyrus",
+      "target": "event-cyrus-conquests",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-cyrus-conquests",
+      "target": "civ-persian",
+      "type": "caused",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-cyrus",
+      "target": "civ-persian",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-darius",
+      "target": "civ-persian",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-xerxes",
+      "target": "civ-persian",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "loc-persepolis",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "religion-zoroastrianism",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zarathustra",
+      "target": "religion-zoroastrianism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "tech-royal-road",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "tp-achaemenid",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-zoroastrianism",
+      "target": "loc-persepolis",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "hellenistic_world:person-alexander",
+      "type": "conquered",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "hellenistic_world:civ-greek",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "silk_road:silk_road",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-persian",
+      "target": "egypt_technology_religion:civ-egypt",
+      "type": "conquered",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-zoroastrianism",
+      "target": "egypt_technology_religion:idea-monotheism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    }
+  ],
+  "timeline": [
+    {
+      "period": {
+        "value": -550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 550 BC"
+      },
+      "event": "Cyrus founds the Achaemenid Empire"
+    },
+    {
+      "period": {
+        "value": -330,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "330 BC"
+      },
+      "event": "Alexander burns Persepolis; Achaemenid fall"
+    }
+  ]
+}

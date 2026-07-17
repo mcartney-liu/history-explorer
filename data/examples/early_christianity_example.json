@@ -1,0 +1,379 @@
+{
+  "title": "Early Christianity — Jesus to Paul",
+  "summary": "How a Jewish messianic movement became a world faith carried across the Roman world.",
+  "entities": [
+    {
+      "id": "person-jesus",
+      "type": "Person",
+      "name": "Jesus of Nazareth",
+      "description": "A Jewish teacher whose followers proclaimed him the Christ; central to Christianity.",
+      "global_id": "early_christianity:person-jesus",
+      "aliases": [
+        "Jesus Christ"
+      ],
+      "labels": {
+        "en": "Jesus of Nazareth"
+      },
+      "start_date": {
+        "value": 4,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 4 BC"
+      },
+      "end_date": {
+        "value": 30,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 30 CE"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": 4,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 4 BC"
+      },
+      "death": {
+        "value": 30,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 30 CE"
+      },
+      "roles": [
+        "Teacher",
+        "Prophet"
+      ],
+      "related_events": [
+        "event-crucifixion"
+      ]
+    },
+    {
+      "id": "person-paul",
+      "type": "Person",
+      "name": "Paul the Apostle",
+      "description": "Former persecutor who became the chief missionary carrying the faith to the Gentiles.",
+      "global_id": "early_christianity:person-paul",
+      "aliases": [
+        "Saul of Tarsus"
+      ],
+      "labels": {
+        "en": "Paul the Apostle"
+      },
+      "start_date": {
+        "value": 5,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 5 CE"
+      },
+      "end_date": {
+        "value": 67,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 67 CE"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": 5,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 5 CE"
+      },
+      "death": {
+        "value": 67,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 67 CE"
+      },
+      "roles": [
+        "Apostle",
+        "Missionary"
+      ],
+      "related_events": [
+        "event-paul-mission"
+      ]
+    },
+    {
+      "id": "loc-jerusalem",
+      "type": "Location",
+      "name": "Jerusalem",
+      "description": "The city of Jesus's ministry, death, and the early church's birth at Pentecost.",
+      "global_id": "early_christianity:loc-jerusalem",
+      "aliases": [],
+      "labels": {
+        "en": "Jerusalem"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 31.7683,
+        "lng": 35.2137
+      },
+      "region": "Judea"
+    },
+    {
+      "id": "event-crucifixion",
+      "type": "Event",
+      "name": "Crucifixion of Jesus",
+      "description": "The execution of Jesus under Pontius Pilate, the pivotal event of the faith.",
+      "global_id": "early_christianity:event-crucifixion",
+      "aliases": [],
+      "labels": {
+        "en": "Crucifixion of Jesus"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-jerusalem",
+      "participants": [
+        "person-jesus"
+      ],
+      "causes": [],
+      "consequences": []
+    },
+    {
+      "id": "event-paul-mission",
+      "type": "Event",
+      "name": "Paul's Missionary Journeys",
+      "description": "Paul's travels founding congregations across Asia Minor and Greece.",
+      "global_id": "early_christianity:event-paul-mission",
+      "aliases": [],
+      "labels": {
+        "en": "Paul's Missionary Journeys"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-antioch",
+      "participants": [
+        "person-paul"
+      ],
+      "causes": [],
+      "consequences": []
+    },
+    {
+      "id": "religion-early-church",
+      "type": "Religion",
+      "name": "Early Christian Church",
+      "description": "The first communities of Jesus's followers, from Jerusalem to the Gentile world.",
+      "global_id": "early_christianity:religion-early-church",
+      "aliases": [
+        "Primitive Church"
+      ],
+      "labels": {
+        "en": "Early Christian Church"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "practiced_by": "person-paul",
+      "practiced_in": "loc-jerusalem",
+      "texts": [
+        "New Testament"
+      ]
+    },
+    {
+      "id": "idea-resurrection",
+      "type": "Idea",
+      "name": "Resurrection",
+      "description": "The belief in bodily rising from the dead, central to Christian hope.",
+      "global_id": "early_christianity:idea-resurrection",
+      "aliases": [
+        "Rising from the dead"
+      ],
+      "labels": {
+        "en": "Resurrection"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    },
+    {
+      "id": "loc-antioch",
+      "type": "Location",
+      "name": "Antioch",
+      "description": "A major hub where the followers of Jesus were first called 'Christians'.",
+      "global_id": "early_christianity:loc-antioch",
+      "aliases": [],
+      "labels": {
+        "en": "Antioch"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 36.2021,
+        "lng": 36.1585
+      },
+      "region": "Syria"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "person-jesus",
+      "target": "event-crucifixion",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-crucifixion",
+      "target": "loc-jerusalem",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-paul",
+      "target": "event-paul-mission",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-paul-mission",
+      "target": "loc-antioch",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-jesus",
+      "target": "idea-resurrection",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-paul",
+      "target": "religion-early-church",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-early-church",
+      "target": "loc-jerusalem",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-early-church",
+      "target": "loc-antioch",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-jesus",
+      "target": "loc-jerusalem",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-jesus",
+      "target": "roman_empire:religion-christianity",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-early-church",
+      "target": "roman_empire:religion-christianity",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-early-church",
+      "target": "roman_empire:civ-roman",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "idea-resurrection",
+      "target": "egypt_technology_religion:idea-monotheism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    }
+  ],
+  "timeline": [
+    {
+      "period": {
+        "value": 30,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 30 CE"
+      },
+      "event": "Crucifixion of Jesus"
+    },
+    {
+      "period": {
+        "value": 50,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 50 CE"
+      },
+      "event": "Paul's missionary journeys spread the faith"
+    }
+  ]
+}

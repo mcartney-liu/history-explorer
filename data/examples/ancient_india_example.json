@@ -1,0 +1,474 @@
+{
+  "title": "Ancient India — Maurya and the Spread of Buddhism",
+  "summary": "The first Indian empire and the Buddhist idea that traveled the Silk Road to Han China.",
+  "entities": [
+    {
+      "id": "civ-maurya",
+      "type": "Civilization",
+      "name": "Maurya Empire",
+      "description": "The first empire to unify most of the Indian subcontinent (c. 322-185 BC).",
+      "global_id": "ancient_india:civ-maurya",
+      "aliases": [
+        "Mauryan Empire"
+      ],
+      "labels": {
+        "en": "Maurya Empire"
+      },
+      "start_date": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BC"
+      },
+      "end_date": {
+        "value": -185,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "185 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": "tp-maurya",
+      "region": "loc-pataliputra",
+      "related_events": [
+        "event-kalinga-war"
+      ]
+    },
+    {
+      "id": "person-chandragupta",
+      "type": "Person",
+      "name": "Chandragupta Maurya",
+      "description": "Founder of the Maurya dynasty who overthrew the Nandas with Chanakya's aid.",
+      "global_id": "ancient_india:person-chandragupta",
+      "aliases": [],
+      "labels": {
+        "en": "Chandragupta Maurya"
+      },
+      "start_date": {
+        "value": -340,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 340 BC"
+      },
+      "end_date": {
+        "value": -297,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "297 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -340,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 340 BC"
+      },
+      "death": {
+        "value": -297,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "297 BC"
+      },
+      "roles": [
+        "Mauryan emperor"
+      ]
+    },
+    {
+      "id": "person-ashoka",
+      "type": "Person",
+      "name": "Ashoka the Great",
+      "description": "Mauryan emperor who, after the Kalinga War, embraced Buddhism and spread dhamma.",
+      "global_id": "ancient_india:person-ashoka",
+      "aliases": [
+        "Aśoka"
+      ],
+      "labels": {
+        "en": "Ashoka the Great"
+      },
+      "start_date": {
+        "value": -304,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 304 BC"
+      },
+      "end_date": {
+        "value": -232,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "232 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -304,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 304 BC"
+      },
+      "death": {
+        "value": -232,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "232 BC"
+      },
+      "roles": [
+        "Mauryan emperor"
+      ]
+    },
+    {
+      "id": "loc-pataliputra",
+      "type": "Location",
+      "name": "Pataliputra",
+      "description": "The Mauryan capital at the confluence of the Ganges and Son rivers.",
+      "global_id": "ancient_india:loc-pataliputra",
+      "aliases": [
+        "Patna"
+      ],
+      "labels": {
+        "en": "Pataliputra"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 25.6114,
+        "lng": 85.1384
+      },
+      "region": "Magadha"
+    },
+    {
+      "id": "religion-buddhism",
+      "type": "Religion",
+      "name": "Buddhism",
+      "description": "The teaching of Siddhartha Gautama on the cessation of suffering, spread across Asia.",
+      "global_id": "ancient_india:religion-buddhism",
+      "aliases": [
+        "Buddha Dharma"
+      ],
+      "labels": {
+        "en": "Buddhism"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "practiced_by": "person-siddhartha",
+      "practiced_in": "loc-pataliputra",
+      "texts": [
+        "Tipitaka"
+      ]
+    },
+    {
+      "id": "person-siddhartha",
+      "type": "Person",
+      "name": "Siddhartha Gautama",
+      "description": "The historical Buddha who attained enlightenment under the Bodhi tree.",
+      "global_id": "ancient_india:person-siddhartha",
+      "aliases": [
+        "The Buddha",
+        "Gautama"
+      ],
+      "labels": {
+        "en": "Siddhartha Gautama"
+      },
+      "start_date": {
+        "value": -563,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 563 BC"
+      },
+      "end_date": {
+        "value": -483,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 483 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -563,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 563 BC"
+      },
+      "death": {
+        "value": -483,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 483 BC"
+      },
+      "roles": [
+        "Teacher"
+      ]
+    },
+    {
+      "id": "loc-indus-valley",
+      "type": "Location",
+      "name": "Indus Valley",
+      "description": "The riverine heartland of early Indian civilization in modern Pakistan.",
+      "global_id": "ancient_india:loc-indus-valley",
+      "aliases": [
+        "Sindhu"
+      ],
+      "labels": {
+        "en": "Indus Valley"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 27.0,
+        "lng": 70.0
+      },
+      "region": "South Asia"
+    },
+    {
+      "id": "event-kalinga-war",
+      "type": "Event",
+      "name": "Kalinga War",
+      "description": "Ashoka's brutal conquest of Kalinga that turned him to non-violence.",
+      "global_id": "ancient_india:event-kalinga-war",
+      "aliases": [],
+      "labels": {
+        "en": "Kalinga War"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-pataliputra",
+      "participants": [
+        "person-ashoka"
+      ],
+      "causes": [],
+      "consequences": []
+    },
+    {
+      "id": "idea-dharma",
+      "type": "Idea",
+      "name": "Dharma",
+      "description": "The cosmic law and duty at the heart of Indian religious and ethical thought.",
+      "global_id": "ancient_india:idea-dharma",
+      "aliases": [
+        "Dhamma"
+      ],
+      "labels": {
+        "en": "Dharma"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    },
+    {
+      "id": "tp-maurya",
+      "type": "Time Period",
+      "name": "Maurya Era",
+      "description": "The age of the first Indian empire and its Buddhist flowering.",
+      "global_id": "ancient_india:tp-maurya",
+      "aliases": [],
+      "labels": {
+        "en": "Maurya Era"
+      },
+      "start_date": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BC"
+      },
+      "end_date": {
+        "value": -185,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "185 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    }
+  ],
+  "relationships": [
+    {
+      "source": "person-chandragupta",
+      "target": "civ-maurya",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-ashoka",
+      "target": "civ-maurya",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-maurya",
+      "target": "loc-pataliputra",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-maurya",
+      "target": "religion-buddhism",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-siddhartha",
+      "target": "religion-buddhism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-ashoka",
+      "target": "event-kalinga-war",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-kalinga-war",
+      "target": "loc-pataliputra",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-siddhartha",
+      "target": "idea-dharma",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-ashoka",
+      "target": "idea-dharma",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-maurya",
+      "target": "tp-maurya",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-buddhism",
+      "target": "loc-pataliputra",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-siddhartha",
+      "target": "loc-indus-valley",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-buddhism",
+      "target": "silk_road:han_dynasty",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-buddhism",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-maurya",
+      "target": "persian_empire:civ-persian",
+      "type": "contemporary_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    }
+  ],
+  "timeline": [
+    {
+      "period": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BC"
+      },
+      "event": "Chandragupta founds the Maurya Empire"
+    },
+    {
+      "period": {
+        "value": -261,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "261 BC"
+      },
+      "event": "Ashoka's Kalinga War; turn to Buddhism"
+    }
+  ]
+}
