@@ -10,6 +10,8 @@ AI-powered Global History Exploration Platform
 
 ---
 
+> **Team Operating Specification:** `Team Operating Specification v1.2 (Frozen)` 是本项目的**唯一团队规范**。所有后续开发（组织、角色、Checkpoint、决策权、知识库）均遵循 [`docs/TEAM_OPERATING_SPEC_v1.2.md`](docs/TEAM_OPERATING_SPEC_v1.2.md)。规范变更走其 §14 Specification Versioning。
+
 # 1. Project Identity
 
 ## Project Name
@@ -166,3 +168,4 @@ Future related documents:
 - PRD.md
 - Architecture Documents
 - Decision Logs
+- Team Operating Specification v1.2 (Frozen): docs/TEAM_OPERATING_SPEC_v1.2.md
