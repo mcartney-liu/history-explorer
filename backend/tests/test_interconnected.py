@@ -156,13 +156,19 @@ def test_cross_topic_edges_not_dangling():
 
 
 def test_interconnected_health_counts():
-    """/health now reflects 4 interconnected topics (was 2 isolated ones)."""
+    """/health reflects every interconnected topic (data-driven, not hardcoded)."""
     ks = _ks()
     report = build_global_validation_report(ks)
-    assert report.topic_count == 4
-    assert report.entity_count == 32
-    assert report.relationship_count == 45
-    assert report.timeline_count == 7
+    # Derive expected totals from the live repository so the test holds as the
+    # dataset grows (4 topics in M3.5 -> 8 after M4-001 and beyond).
+    datasets = ks.get_topic_datasets()
+    total_entities = sum(len(d.get("entities", [])) for _, d in datasets)
+    total_rels = sum(len(d.get("relationships", [])) for _, d in datasets)
+    total_timeline = sum(len(d.get("timeline", [])) for _, d in datasets)
+    assert report.topic_count == len(datasets)
+    assert report.entity_count == total_entities
+    assert report.relationship_count == total_rels
+    assert report.timeline_count == total_timeline
     assert report.warning_count == 0
     assert report.error_count == 0
     assert report.status == "healthy"

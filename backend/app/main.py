@@ -154,6 +154,16 @@ def explore(topic: str):
     else:
         body = _generic_exploration(topic)
     body["connections_explained"] = _connections_explained_for(body)
+    # M4-002 (additive): expose direct cross-topic neighbors of the centered
+    # entity + per-topic connection statistics. Pure projections over the
+    # GlobalGraph; existing fields (related_entities / connections_explained /
+    # relationships[].other) are unchanged. No new endpoint; v1==legacy holds.
+    _main = (body.get("exploration") or {}).get("main_entity") or {}
+    _main_gid = _main.get("global_id")
+    body["exploration"]["cross_topic_related"] = (
+        knowledge_service.cross_topic_related(_main_gid) if _main_gid else []
+    )
+    body["related_topics"] = knowledge_service.related_topics_for_topic(topic)
     return body
 
 
@@ -204,6 +214,11 @@ def entity(entity_id: str):
         "exploration": knowledge_service.get_exploration_view(ref.topic, ref.local_id),
         "connections_explained": (
             knowledge_service.explore_from(global_id) if global_id else []
+        ),
+        # M4-002 (additive): topic-level cross-topic connection stats for this
+        # entity. Existing `relationships[].other` is unchanged.
+        "related_topics": (
+            knowledge_service.related_topics_for_entity(global_id) if global_id else []
         ),
     }
 

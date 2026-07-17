@@ -22,10 +22,14 @@ def _ks() -> KnowledgeService:
 # 1. Global node registration
 # ---------------------------------------------------------------------------
 def test_global_graph_registers_every_entity():
-    """Every entity across all topics becomes a global node (32 total)."""
-    gg = _ks().get_global_graph()
+    """Every entity across all topics becomes a global node."""
+    ks = _ks()
+    gg = ks.get_global_graph()
     assert isinstance(gg, GlobalGraph)
-    assert gg.node_count == 32
+    # Correctness invariant: one global node per entity in the repository.
+    # Derived from live data so the test survives future dataset growth.
+    total_entities = sum(len(d.get("entities", [])) for _, d in ks.get_topic_datasets())
+    assert gg.node_count == total_entities
     # A foreign (cross-topic) node is reachable as a first-class node.
     assert gg.get_node("silk_road:silk_road") is not None
     assert gg.get_node("hellenistic_world:civ-greek") is not None
@@ -35,10 +39,13 @@ def test_global_graph_registers_every_entity():
 # 2. Cross-topic edges are INCLUDED (the core M3.5-001 property)
 # ---------------------------------------------------------------------------
 def test_global_graph_includes_cross_topic_edges():
-    """All 45 relationships become edges — cross-topic (global_id) edges are
+    """Every relationship becomes an edge — cross-topic (global_id) edges are
     kept, unlike the per-topic KnowledgeGraph which drops them."""
-    gg = _ks().get_global_graph()
-    assert gg.edge_count == 45
+    ks = _ks()
+    gg = ks.get_global_graph()
+    # Correctness invariant: one global edge per relationship in the repository.
+    total_rels = sum(len(d.get("relationships", [])) for _, d in ks.get_topic_datasets())
+    assert gg.edge_count == total_rels
 
     # The roman_empire -> silk_road:silk_road (traded_with) edge is present.
     out = gg.out_neighbors("roman_empire:civ-roman")

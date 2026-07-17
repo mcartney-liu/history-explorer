@@ -209,6 +209,86 @@ class KnowledgeService:
         """Unified subgraph scoped to `roots` within `max_depth` BFS hops."""
         return self._global_graph.subgraph(roots, max_depth)
 
+    # --- M4-002: Cross-topic Enrichment (projection layer) ----------------
+    # Pure projections over the existing GlobalGraph. They add NO ranking, NO
+    # new storage, NO new index, and never call the ExplorationEngine — so the
+    # deterministic engine (M3.5-002) and the Schema Freeze (M3.5-000) stay
+    # untouched. These are library methods only (no REST endpoint added), which
+    # keeps the public API contract frozen.
+    def cross_topic_related(self, global_id: str) -> list[dict]:
+        """Direct cross-topic neighbors of `global_id`.
+
+        Returns the other endpoint of every edge touching `global_id` whose
+        owning topic differs from `global_id`'s own topic. Sourced from
+        `global_neighbors` (raw adjacency over the one-time-built GlobalGraph)
+        and filtered — no rebuild, no sort, no engine call. The existing
+        `global_neighbors` is unchanged.
+
+        Stable shape:
+            [{"id","name","type","global_id","topic","relationship","direction"}]
+        """
+        node = self._global_graph.get_node(global_id)
+        if node is None:
+            return []
+        source_topic = node.topic
+        result: list[dict] = []
+        for n in self.global_neighbors(global_id, "both"):
+            if n.get("topic") != source_topic:
+                result.append(
+                    {
+                        "id": n.get("id"),
+                        "name": n.get("name"),
+                        "type": n.get("type"),
+                        "global_id": n.get("global_id"),
+                        "topic": n.get("topic"),
+                        "relationship": n.get("relationship"),
+                        "direction": n.get("direction"),
+                    }
+                )
+        return result
+
+    def related_topics_for_entity(self, global_id: str) -> list[dict]:
+        """Topics connected to `global_id` via direct cross-topic edges.
+
+        Returns [{topic, cross_topic_edge_count}], each edge counted exactly
+        once (an edge has exactly one endpoint in `global_id`'s topic, so it is
+        never double-counted from the source side).
+        """
+        node = self._global_graph.get_node(global_id)
+        if node is None:
+            return []
+        source_topic = node.topic
+        counts: dict[str, int] = {}
+        for n in self.global_neighbors(global_id, "both"):
+            other_topic = n.get("topic")
+            if other_topic is not None and other_topic != source_topic:
+                counts[other_topic] = counts.get(other_topic, 0) + 1
+        return [
+            {"topic": t, "cross_topic_edge_count": c}
+            for t, c in sorted(counts.items())
+        ]
+
+    def related_topics_for_topic(self, topic: str) -> list[dict]:
+        """Topic-level cross-topic connection statistics for `topic`.
+
+        Counts each cross-topic edge exactly once: every such edge touches
+        `topic` at exactly one node, so iterating `topic`'s nodes and their
+        global neighbors sums each edge a single time. No new topic index is
+        created — it reads the existing GlobalGraph directly.
+        """
+        counts: dict[str, int] = {}
+        for node in self._global_graph.all_nodes():
+            if node.topic != topic:
+                continue
+            for n in self.global_neighbors(node.global_id, "both"):
+                other_topic = n.get("topic")
+                if other_topic is not None and other_topic != topic:
+                    counts[other_topic] = counts.get(other_topic, 0) + 1
+        return [
+            {"topic": t, "cross_topic_edge_count": c}
+            for t, c in sorted(counts.items())
+        ]
+
     # --- Exploration Engine (M3.5-002): deterministic, explainable --------
     # These wrappers delegate to the ExplorationEngine and are library methods
     # only — they add NO REST endpoint, so the public API contract stays

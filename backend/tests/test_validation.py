@@ -10,7 +10,15 @@ if str(BACKEND_DIR) not in sys.path:
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.validation import build_validation_report
+from app.validation import build_validation_report, build_global_validation_report
+from app.core.repository import JsonTopicRepository
+from app.core.knowledge_service import KnowledgeService
+
+DATA_DIR = BACKEND_DIR.parent / "data" / "examples"
+
+
+def _ks() -> KnowledgeService:
+    return KnowledgeService(JsonTopicRepository(DATA_DIR))
 
 
 def _ds(topic, entities=None, relationships=None, timeline=None, **extra):
@@ -239,11 +247,14 @@ def test_health_endpoint_returns_real_data_summary():
     res = client.get("/health")
     assert res.status_code == 200
     body = res.json()
-    # M3.5: 4 interconnected topics, 32 entities, 45 relationships, 7 timeline.
-    assert body["health"]["topic_count"] == 4
-    assert body["health"]["entity_count"] == 32
-    assert body["health"]["relationship_count"] == 45
-    assert body["health"]["timeline_count"] == 7
+    # The /health endpoint must reflect the REAL repository, not a fixed
+    # snapshot. Derive the expected totals from a freshly built KnowledgeService
+    # over the same data dir the app loads from.
+    live = build_global_validation_report(_ks())
+    assert body["health"]["topic_count"] == live.topic_count
+    assert body["health"]["entity_count"] == live.entity_count
+    assert body["health"]["relationship_count"] == live.relationship_count
+    assert body["health"]["timeline_count"] == live.timeline_count
     # Interconnected dataset: no integrity errors, no quality warnings -> healthy.
     assert body["health"]["error_count"] == 0
     assert body["health"]["warning_count"] == 0
@@ -257,7 +268,8 @@ def test_health_endpoint_returns_real_data_summary():
 def test_health_endpoint_structure_has_topics():
     client = TestClient(app)
     body = client.get("/health").json()
-    assert len(body["topics"]) == 4
+    # One entry per real topic in the repository (data-driven).
+    assert len(body["topics"]) == len(_ks().list_topics())
     for t in body["topics"]:
         for key in ("topic", "entity_count", "relationship_count",
                     "timeline_count", "summary", "warning_count", "error_count"):

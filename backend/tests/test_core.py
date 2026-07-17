@@ -92,11 +92,18 @@ def test_search_uses_core():
 def test_global_validation_compatible_with_m2():
     ks = _ks()
     report = build_global_validation_report(ks)
-    # M3.5: 4 interconnected topics (was 2 isolated ones in M2).
-    assert report.topic_count == 4
-    assert report.entity_count == 32
-    assert report.relationship_count == 45
-    assert report.timeline_count == 7
+    # Counts must reflect the ACTUAL repository, not a hardcoded snapshot.
+    # The dataset keeps growing (4 topics in M3.5 -> 8 after M4-001); asserting
+    # against a fixed number would break on every future expansion. So derive
+    # the expected totals from the live datasets the report was built over.
+    datasets = ks.get_topic_datasets()
+    total_entities = sum(len(d.get("entities", [])) for _, d in datasets)
+    total_rels = sum(len(d.get("relationships", [])) for _, d in datasets)
+    total_timeline = sum(len(d.get("timeline", [])) for _, d in datasets)
+    assert report.topic_count == len(datasets)
+    assert report.entity_count == total_entities
+    assert report.relationship_count == total_rels
+    assert report.timeline_count == total_timeline
     assert report.error_count == 0
     assert report.status == "healthy"
     # The two legacy M2 quality warnings (Kemet duplicate alias, tp-27bc
