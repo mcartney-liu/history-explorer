@@ -6,53 +6,342 @@
       "id": "event-roman-empire-established",
       "type": "Event",
       "name": "Roman Empire Established",
-      "description": "The Roman Empire was founded in 27 BC under Augustus."
+      "description": "The Roman Empire was founded in 27 BC under Augustus.",
+      "global_id": "roman_empire:event-roman-empire-established",
+      "aliases": [],
+      "labels": {
+        "en": "Roman Empire Established",
+        "la": "Imperium Romanum Conditum"
+      },
+      "start_date": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      },
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-rome",
+      "participants": [
+        "person-augustus"
+      ],
+      "causes": [],
+      "consequences": []
     },
     {
       "id": "person-augustus",
       "type": "Person",
       "name": "Augustus",
-      "description": "First Roman emperor, reigned from 27 BC."
+      "description": "First Roman emperor, reigned from 27 BC.",
+      "global_id": "roman_empire:person-augustus",
+      "aliases": [
+        "Octavian",
+        "Imperator Caesar Divi Filius"
+      ],
+      "labels": {
+        "en": "Augustus",
+        "zh": "奥古斯都",
+        "la": "Imperator Caesar"
+      },
+      "start_date": {
+        "value": -63,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "63 BC"
+      },
+      "end_date": {
+        "value": 14,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "14 CE"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "birth": {
+        "value": -63,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "63 BC"
+      },
+      "death": {
+        "value": 14,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "14 CE"
+      },
+      "roles": [
+        "Roman Emperor",
+        "Pontifex Maximus"
+      ],
+      "related_events": [
+        "event-roman-empire-established"
+      ]
     },
     {
       "id": "civ-roman",
       "type": "Civilization",
       "name": "Roman Civilization",
-      "description": "A Mediterranean civilization that dominated the ancient world."
+      "description": "A Mediterranean civilization that dominated the ancient world.",
+      "global_id": "roman_empire:civ-roman",
+      "aliases": [
+        "Rome",
+        "Romanitas"
+      ],
+      "labels": {
+        "en": "Roman Civilization",
+        "la": "Civilitas Romana"
+      },
+      "start_date": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      },
+      "end_date": {
+        "value": 476,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "476 CE"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": "tp-27bc",
+      "region": "loc-rome",
+      "related_events": [
+        "event-roman-empire-established"
+      ]
     },
     {
       "id": "loc-rome",
       "type": "Location",
       "name": "Rome",
-      "description": "Capital city of the Roman Empire."
+      "description": "Capital city of the Roman Empire.",
+      "global_id": "roman_empire:loc-rome",
+      "aliases": [
+        "Roma"
+      ],
+      "labels": {
+        "en": "Rome",
+        "it": "Roma"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 41.9028,
+        "lng": 12.4964
+      },
+      "region": "Italian Peninsula",
+      "related_events": [
+        "event-roman-empire-established"
+      ]
     },
     {
       "id": "tp-27bc",
       "type": "Time Period",
       "name": "27 BC",
-      "description": "Year the Roman Empire was founded."
+      "description": "Year the Roman Empire was founded.",
+      "global_id": "roman_empire:tp-27bc",
+      "aliases": [],
+      "labels": {
+        "en": "27 BC"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "start": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      },
+      "end": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      }
+    },
+    {
+      "id": "roman_egypt",
+      "type": "Civilization",
+      "name": "Roman Egypt (Aegyptus)",
+      "description": "The Roman province established in 30 BC after the fall of Cleopatra, linking the Nile valley to the Mediterranean empire.",
+      "global_id": "roman_empire:roman_egypt",
+      "aliases": ["Aegyptus", "Roman Province of Egypt"],
+      "labels": {"en": "Roman Egypt (Aegyptus)"},
+      "start_date": {"value": -30, "precision": "year", "certainty": "exact", "label": "30 BC"},
+      "end_date": {"value": 641, "precision": "year", "certainty": "approximate", "label": "641 CE"},
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": null,
+      "region": "loc-rome",
+      "related_events": []
+    },
+    {
+      "id": "civ-byzantine",
+      "type": "Civilization",
+      "name": "Byzantine Empire",
+      "description": "The Eastern Roman continuation that inherited Roman law, administration, and Greek learning after the fall of the western empire.",
+      "global_id": "roman_empire:civ-byzantine",
+      "aliases": ["Eastern Roman Empire", "Byzantium"],
+      "labels": {"en": "Byzantine Empire", "el": "Vasileia Rhomaion"},
+      "start_date": {"value": 330, "precision": "year", "certainty": "approximate", "label": "330 CE"},
+      "end_date": {"value": 1453, "precision": "year", "certainty": "exact", "label": "1453 CE"},
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": null,
+      "region": "loc-rome",
+      "related_events": []
+    },
+    {
+      "id": "religion-christianity",
+      "type": "Religion",
+      "name": "Christianity",
+      "description": "A monotheistic faith that spread through the Roman Empire and was adopted as its state religion, carrying forward the monotheistic idea across civilizations.",
+      "global_id": "roman_empire:religion-christianity",
+      "aliases": ["Christian faith"],
+      "labels": {"en": "Christianity"},
+      "start_date": {"value": 30, "precision": "year", "certainty": "approximate", "label": "c. 30 CE"},
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "practiced_by": "civ-roman",
+      "practiced_in": "loc-rome",
+      "texts": ["Bible"]
     }
   ],
   "relationships": [
     {
       "source": "person-augustus",
       "target": "event-roman-empire-established",
-      "type": "participated_in"
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
     },
     {
       "source": "event-roman-empire-established",
       "target": "civ-roman",
-      "type": "related_to"
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
     },
     {
       "source": "event-roman-empire-established",
       "target": "loc-rome",
-      "type": "located_at"
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-roman-empire-established",
+      "target": "tp-27bc",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-roman",
+      "target": "roman_egypt",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-roman",
+      "target": "hellenistic_world:civ-greek",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-roman",
+      "target": "silk_road:silk_road",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-roman",
+      "target": "hellenistic_world:civ-greek",
+      "type": "conquered",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-byzantine",
+      "target": "civ-roman",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-roman",
+      "target": "religion-christianity",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-christianity",
+      "target": "egypt_technology_religion:idea-monotheism",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
     }
   ],
   "timeline": [
     {
-      "period": "27 BC",
+      "period": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      },
       "event": "Roman Empire Established"
     }
   ]

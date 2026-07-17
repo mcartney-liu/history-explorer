@@ -1,0 +1,299 @@
+{
+  "title": "Ancient Egypt — Technology & Religion",
+  "summary": "A Nile-valley civilization whose writing materials, monuments, and polytheistic religion developed alongside contemporary Mesopotamia.",
+  "entities": [
+    {
+      "id": "event-great-pyramid-built",
+      "type": "Event",
+      "name": "Great Pyramid of Giza Built",
+      "description": "The Great Pyramid was constructed during the Old Kingdom as a tomb for Pharaoh Khufu.",
+      "global_id": "egypt_technology_religion:event-great-pyramid-built",
+      "aliases": [
+        "Pyramid of Khufu"
+      ],
+      "labels": {
+        "en": "Great Pyramid of Giza Built"
+      },
+      "start_date": {
+        "value": -2560,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 2560 BC"
+      },
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "location": "loc-ancient-egypt",
+      "participants": [
+        "civ-egypt"
+      ],
+      "causes": [],
+      "consequences": []
+    },
+    {
+      "id": "civ-egypt",
+      "type": "Civilization",
+      "name": "Ancient Egyptian Civilization",
+      "description": "A civilization along the Nile that flourished for millennia with writing, monuments, and a polytheistic religion.",
+      "global_id": "egypt_technology_religion:civ-egypt",
+      "aliases": [
+        "Kemet"
+      ],
+      "labels": {
+        "en": "Ancient Egyptian Civilization"
+      },
+      "start_date": {
+        "value": -3100,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 3100 BC (Unification)"
+      },
+      "end_date": {
+        "value": -332,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "332 BC (conquest by Alexander)"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": null,
+      "region": "loc-ancient-egypt",
+      "related_events": [
+        "event-great-pyramid-built"
+      ]
+    },
+    {
+      "id": "loc-ancient-egypt",
+      "type": "Location",
+      "name": "Ancient Egypt (Nile Valley)",
+      "description": "The Nile River valley and delta where Egyptian civilization developed.",
+      "global_id": "egypt_technology_religion:loc-ancient-egypt",
+      "aliases": [
+        "The Two Lands"
+      ],
+      "labels": {
+        "en": "Ancient Egypt"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "coordinates": {
+        "lat": 26.8206,
+        "lng": 30.8025
+      },
+      "region": "Northeast Africa",
+      "related_events": [
+        "event-great-pyramid-built"
+      ]
+    },
+    {
+      "id": "tech-papyrus",
+      "type": "Technology",
+      "name": "Papyrus Papermaking",
+      "description": "A writing material made from the papyrus plant, central to Egyptian administration and record-keeping.",
+      "global_id": "egypt_technology_religion:tech-papyrus",
+      "aliases": [],
+      "labels": {
+        "en": "Papyrus Papermaking"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "invented_by": "civ-egypt",
+      "invented_in": {
+        "value": -3000,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 3000 BC"
+      },
+      "category": "writing-materials"
+    },
+    {
+      "id": "religion-ancient-egyptian",
+      "type": "Religion",
+      "name": "Ancient Egyptian Religion",
+      "description": "A polytheistic belief system centered on gods, the afterlife, and temple ritual.",
+      "global_id": "egypt_technology_religion:religion-ancient-egyptian",
+      "aliases": [
+        "Kemetic religion"
+      ],
+      "labels": {
+        "en": "Ancient Egyptian Religion"
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "practiced_by": "civ-egypt",
+      "practiced_in": "loc-ancient-egypt",
+      "texts": [
+        "Pyramid Texts",
+        "Book of the Dead"
+      ]
+    },
+    {
+      "id": "civ-mesopotamia",
+      "type": "Civilization",
+      "name": "Mesopotamian Civilization",
+      "description": "A contemporary river-valley civilization between the Tigris and Euphrates.",
+      "global_id": "egypt_technology_religion:civ-mesopotamia",
+      "aliases": [
+        "Sumer"
+      ],
+      "labels": {
+        "en": "Mesopotamian Civilization"
+      },
+      "start_date": {
+        "value": -3500,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 3500 BC"
+      },
+      "end_date": {
+        "value": -539,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "539 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "",
+      "period": null,
+      "region": "Mesopotamia (modern Iraq)",
+      "related_events": []
+    },
+    {
+      "id": "idea-monotheism",
+      "type": "Idea",
+      "name": "Monotheism",
+      "description": "The idea of a single god, first expressed in Egyptian pharaoh Akhenaten's worship of Aten, which traveled and shaped later monotheistic faiths.",
+      "global_id": "egypt_technology_religion:idea-monotheism",
+      "aliases": ["Belief in one god"],
+      "labels": {"en": "Monotheism"},
+      "start_date": {"value": -1350, "precision": "year", "certainty": "approximate", "label": "c. 1350 BC (Aten cult)"},
+      "end_date": null,
+      "source": "",
+      "evidence": [],
+      "reliability": ""
+    }
+  ],
+  "relationships": [
+    {
+      "source": "civ-egypt",
+      "target": "tech-papyrus",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-egypt",
+      "target": "religion-ancient-egyptian",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-great-pyramid-built",
+      "target": "loc-ancient-egypt",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-papyrus",
+      "target": "religion-ancient-egyptian",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-egypt",
+      "target": "civ-mesopotamia",
+      "type": "contemporary_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-egypt",
+      "target": "idea-monotheism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-papyrus",
+      "target": "hellenistic_world:civ-greek",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-papyrus",
+      "target": "roman_empire:civ-roman",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "idea-monotheism",
+      "target": "hellenistic_world:civ-ptolemaic-egypt",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    }
+  ],
+  "timeline": [
+    {
+      "period": {
+        "value": -3100,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 3100 BC"
+      },
+      "event": "Unification of Egypt"
+    },
+    {
+      "period": {
+        "value": -2560,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 2560 BC"
+      },
+      "event": "Great Pyramid of Giza Built"
+    }
+  ]
+}
