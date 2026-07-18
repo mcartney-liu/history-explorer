@@ -167,18 +167,21 @@ def explore(topic: str):
     return body
 
 
-def search(q: str = ""):
-    """Search entities across all topics using the in-memory Knowledge Core.
+def search(q: str = "", topic: str = None):
+    """Search entities AND topics across all topics using the in-memory
+    Knowledge Core (M4-004 Search v2).
 
     Exact id/name match, alias match, then substring (contains) match, ranked
-    best-first. No AI, no DB — the index is built once at startup and reused
-    for every request.
+    best-first — for both entities and topics. The optional `topic` param
+    scopes the whole result set to a single topic. No AI, no DB — the index is
+    built once at startup and reused for every request. Same handler is mounted
+    under /api/v1 and the legacy path (v1 == legacy); no new endpoint.
     """
     query = (q or "").strip()
     if not query:
         return {"query": q, "results": [], "count": 0}
 
-    results = knowledge_service.search(query)
+    results = knowledge_service.search(query, topic)
     return {"query": q, "results": results, "count": len(results)}
 
 

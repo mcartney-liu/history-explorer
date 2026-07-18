@@ -14,7 +14,11 @@ import AIGuidePanel from './components/AIGuidePanel'
 import CrossTopicTopicList from './components/CrossTopicTopicList'
 import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
-import SearchResults, { SearchResultItem } from './components/SearchResults'
+import SearchResults, {
+  SearchResultItem,
+  orderSearchResults,
+  resolveSearchResultTarget,
+} from './components/SearchResults'
 import EntityPage, { EntityDetail, EntityRelationship } from './components/EntityPage'
 import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
 import { nextSelectionIndex } from './components/searchNav'
@@ -214,23 +218,40 @@ function App() {
     }
   }
 
-  function handleResultSelect(id: string) {
-    const item = searchResults?.find((r) => r.id === id)
-    openEntity(id, item?.name)
+  function handleResultSelect(item: SearchResultItem) {
+    const target = resolveSearchResultTarget(item)
+    if (!target) return
+    if (target.kind === 'topic') {
+      navigateTo({
+        type: 'topic',
+        topic: target.topic,
+        title: item.name || prettifyTopic(target.topic),
+      })
+    } else {
+      openEntity(target.id, item.name)
+    }
   }
+
+  // M4-004: the unified list is rendered Topics-first, so keyboard navigation
+  // must index against the same ordered view the UI renders.
+  const orderedSearchResults = orderSearchResults(searchResults)
 
   // M2-002.5 keyboard navigation handlers (wired to the search box).
   function handleSearchNav(direction: 'up' | 'down') {
-    if (!searchResults || searchResults.length === 0) return
+    if (orderedSearchResults.length === 0) return
     setSearchSelected((cur) =>
-      nextSelectionIndex(cur, direction === 'down' ? 1 : -1, searchResults.length),
+      nextSelectionIndex(
+        cur,
+        direction === 'down' ? 1 : -1,
+        orderedSearchResults.length,
+      ),
     )
   }
 
   function handleSearchEnterSelect() {
-    if (!searchResults || searchResults.length === 0) return
+    if (orderedSearchResults.length === 0) return
     const idx = searchSelected >= 0 ? searchSelected : 0
-    handleResultSelect(searchResults[idx].id)
+    handleResultSelect(orderedSearchResults[idx])
   }
 
   function handleSearchEscape() {
@@ -338,8 +359,8 @@ function App() {
           {searchResults && (
             <SearchResults
               query={searchQuery}
-              results={searchResults}
-              onSelect={handleResultSelect}
+              results={orderedSearchResults}
+              onSelectItem={handleResultSelect}
               onClear={clearSearch}
               selectedIndex={searchSelected}
             />

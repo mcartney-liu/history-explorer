@@ -46,7 +46,9 @@ describe('M2-002 search & entity UI', () => {
     const html = renderToStaticMarkup(
       <SearchResults query="zzz" results={[]} onSelect={() => {}} />,
     )
-    expect(html).toContain('No entities found.')
+    // M4-004: unified results[] -> generic empty message (covers both
+    // entity and topic queries), not the entity-only "No entities found."
+    expect(html).toContain('No results found.')
   })
 
   it('EntityPage renders summary, relationships and timeline', () => {

@@ -25,7 +25,7 @@ from .registry import KnowledgeRegistry, EntityRef
 from .graph import KnowledgeGraph, DirectedGraph
 from .global_graph import GlobalGraph
 from .exploration_engine import ExplorationEngine
-from .search import build_search_index, SearchProvider
+from .search import build_search_index, build_topic_index, SearchProvider
 from .timeline import TimelineIndex
 from .exploration import build_exploration_view
 
@@ -47,7 +47,8 @@ class KnowledgeService:
             self._global_graph, self._registry, self._topic_datasets
         )
         self._search_index = build_search_index(self._registry)
-        self._search_provider = SearchProvider(self._search_index)
+        self._topic_index = build_topic_index(self._registry)
+        self._search_provider = SearchProvider(self._search_index, self._topic_index)
         self._timelines: dict[str, TimelineIndex] = {
             topic: TimelineIndex(data.get("timeline", []))
             for topic, data in self._topic_datasets
@@ -334,8 +335,12 @@ class KnowledgeService:
         return idx.get_all() if idx else []
 
     # --- Search (delegates to search provider) ---------------------------
-    def search(self, q: str) -> list[dict]:
-        return self._search_provider.search(q)
+    def search(self, q: str, topic: Optional[str] = None) -> list[dict]:
+        """Unified Search v2: entity + topic results, optional topic scope.
+
+        Pure delegation to the (deterministic, stateless) SearchProvider.
+        """
+        return self._search_provider.search(q, topic)
 
     def get_search_index(self) -> list[dict]:
         return self._search_index
