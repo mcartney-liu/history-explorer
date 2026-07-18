@@ -37,7 +37,7 @@ import Breadcrumb from './components/Breadcrumb'
 import HistoryBar from './components/HistoryBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
-import RecentExplorations from './components/RecentExplorations'
+import LandingPage, { TopicSummary } from './components/LandingPage'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -93,6 +93,37 @@ function App() {
   // Load persisted recent explorations once on mount.
   useEffect(() => {
     setRecent(loadRecent())
+  }, [])
+
+  // M5-A-2: load the topic catalog from GET /topics to power the curated
+  // landing page. Pure I/O; all loading / error state stays in App so the
+  // LandingPage component stays presentational (and reusable / testable).
+  const [topics, setTopics] = useState<TopicSummary[]>([])
+  const [topicsLoading, setTopicsLoading] = useState(true)
+  const [topicsError, setTopicsError] = useState<ErrorKind | ''>('')
+
+  useEffect(() => {
+    const controller = new AbortController()
+    setTopicsLoading(true)
+    setTopicsError('')
+    fetch(`${API_BASE}/topics`, { signal: controller.signal })
+      .then((resp) => {
+        if (!resp.ok) throw new Error(`status:${resp.status}`)
+        return resp.json()
+      })
+      .then((data: { topics?: unknown }) => {
+        setTopics(Array.isArray(data?.topics) ? (data.topics as TopicSummary[]) : [])
+      })
+      .catch(() => {
+        if (controller.signal.aborted) return
+        setTopicsError('network')
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setTopicsLoading(false)
+      })
+    return () => {
+      controller.abort()
+    }
   }, [])
 
   const current: NavNode | null =
@@ -191,6 +222,19 @@ function App() {
     }
     setError('')
     navigateTo({ type: 'topic', topic: trimmed, title: prettifyTopic(trimmed) })
+  }
+
+  // M5-A-2: a catalog topic click reuses the existing exploration flow.
+  // Same node shape as SearchResults / CrossTopicTopicList topic clicks, so
+  // there is exactly one navigation path (navigateTo) — no duplicated logic,
+  // no second navigation mechanism.
+  function handleTopicClick(t: string) {
+    navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
+  }
+
+  function clearRecent() {
+    setRecent([])
+    saveRecent([])
   }
 
   async function handleSearch(q: string) {
@@ -450,13 +494,14 @@ function App() {
           )}
 
           {!current && (
-            <RecentExplorations
-              items={recent}
-              onSelect={navigateTo}
-              onClear={() => {
-                setRecent([])
-                saveRecent([])
-              }}
+            <LandingPage
+              topics={topics}
+              loading={topicsLoading}
+              error={topicsError}
+              onTopicClick={handleTopicClick}
+              recent={recent}
+              onRecentSelect={navigateTo}
+              onRecentClear={clearRecent}
             />
           )}
         </div>

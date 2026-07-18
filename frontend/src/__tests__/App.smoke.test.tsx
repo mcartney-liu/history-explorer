@@ -19,5 +19,10 @@ describe('App smoke test', () => {
 
     // Exploration trigger: the Explore button is rendered
     expect(html).toContain('Explore')
+
+    // M5-A-2: the empty first-visit screen is replaced by the curated
+    // landing page (catalog heading + loading state on first paint).
+    expect(html).toContain('Pick a topic to begin')
+    expect(html).toContain('Loading topics…')
   })
 })
