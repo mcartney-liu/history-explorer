@@ -148,6 +148,33 @@ def search(q: str = "", topic: str = None):
     return {"query": q, "results": results, "count": len(results)}
 
 
+def topics():
+    """List every available topic for the catalog / directory surfaces.
+
+    Pure projection over the Knowledge Core's topic registry — reuses
+    `KnowledgeService.list_topics()` + `get_topic_meta()` (no new storage, no
+    engine call, no new dependency). Returns exactly {topic, title, summary};
+    the `summary` is already truncated to 160 chars by the registry. Additive
+    only: no existing endpoint or field is changed. Mounted under /api/v1 AND
+    the frozen legacy path so v1 == legacy holds.
+    """
+    result = []
+    for topic in knowledge_service.list_topics():
+        meta = knowledge_service.get_topic_meta(topic)
+        if meta is None:
+            # Registry guarantees meta for every listed topic; skip defensively
+            # rather than raise on a partial dataset.
+            continue
+        result.append(
+            {
+                "topic": meta.get("topic", topic),
+                "title": meta.get("title", topic),
+                "summary": meta.get("summary", ""),
+            }
+        )
+    return {"topics": result}
+
+
 def entity(entity_id: str):
     """Return one entity's summary, timeline, relationships and an
     entity-centered exploration view.
@@ -229,6 +256,9 @@ v1_router.add_api_route(
     "/search", search, methods=["GET"], operation_id="v1_search"
 )
 v1_router.add_api_route(
+    "/topics", topics, methods=["GET"], operation_id="v1_topics"
+)
+v1_router.add_api_route(
     "/health", health, methods=["GET"], operation_id="v1_health"
 )
 v1_router.add_api_route(
@@ -244,6 +274,9 @@ legacy_router.add_api_route(
 )
 legacy_router.add_api_route(
     "/search", search, methods=["GET"], operation_id="search"
+)
+legacy_router.add_api_route(
+    "/topics", topics, methods=["GET"], operation_id="topics"
 )
 legacy_router.add_api_route(
     "/health", health, methods=["GET"], operation_id="health"
