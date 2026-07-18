@@ -119,3 +119,29 @@ def build_exploration_response(topic: str, data: dict) -> dict:
         "connections": connections,
         "exploration": exploration,
     }
+
+
+def build_generic_exploration(topic: str) -> dict:
+    """Placeholder exploration for a topic with no loaded dataset.
+
+    Returns the same stable response shape as `build_exploration_response`
+    (entities/relationships/timeline/connections/exploration) so the frontend
+    contract stays intact when an unknown-but-valid topic is requested. This is
+    a static fallback owned by the Knowledge Layer (no AI, no data access) — not
+    a duplicated index or loader living in the API layer.
+    """
+    title = topic.replace("-", " ").replace("_", " ").title()
+    return {
+        "topic": topic,
+        "title": title,
+        "summary": "A historical exploration example.",
+        "entities": [],
+        "relationships": [],
+        "timeline": [
+            {"period": "Unknown", "event": f"{title} historical period"},
+        ],
+        "connections": [
+            {"type": "person", "name": "Historical figure"},
+        ],
+        "exploration": {"main_entity": {}, "related_entities": []},
+    }

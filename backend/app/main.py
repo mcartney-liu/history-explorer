@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import LOGGER_NAME, configure_logging, get_settings
 from .core.repository import TOPIC_PATTERN, JsonTopicRepository
 from .core.knowledge_service import KnowledgeService
-from .core.exploration import build_exploration_response as _exploration_from_data
+from .core.exploration import build_exploration_response as _exploration_from_data, build_generic_exploration
 
 # M2-005: data-quality validation is a pure library kept separate from the
 # app wiring (single responsibility, no import cycle, easy to unit-test).
@@ -74,45 +74,8 @@ _repository = JsonTopicRepository(EXPLORATION_DATA_DIR)
 knowledge_service = KnowledgeService(_repository)
 
 
-# Backward-compatible module-level shims. Existing tests import these names
-# from `app.main`; they now delegate to the Knowledge Core instead of holding
-# duplicated data-access logic. (Removal is deferred to a dedicated cleanup
-# checkpoint — see docs/SUGGESTIONS.md — to avoid touching passing tests.)
-_ENTITY_INDEX = knowledge_service.get_search_index()
-
-
-def _get_entity_index() -> list:
-    """Return the shared search index (built once at startup)."""
-    return _ENTITY_INDEX
-
-
-def _load_topic_data(topic: str):
-    """Compatibility shim: delegate topic loading to the repository."""
-    return _repository.load_topic(topic)
-
-
-def _generic_exploration(topic: str) -> dict:
-    """Fallback for topics without loaded example data (still hardcoded).
-
-    Keeps the same response shape (entities/relationships/timeline/connections)
-    so the frontend contract stays stable.
-    """
-    title = topic.replace("-", " ").replace("_", " ").title()
-    return {
-        "topic": topic,
-        "title": title,
-        "summary": "A historical exploration example.",
-        "entities": [],
-        "relationships": [],
-        "timeline": [
-            {"period": "Unknown", "event": f"{title} historical period"},
-        ],
-        "connections": [
-            {"type": "person", "name": "Historical figure"},
-        ],
-        "exploration": {"main_entity": {}, "related_entities": []},
-    }
-
+# M4-005: legacy compatibility shims removed; all topic/entity lookups now
+# route through KnowledgeService.
 
 # --- Handlers (single source of truth, mounted under /api/v1 AND legacy) ---
 # Each handler is defined once; the v1 router and the legacy router both point
@@ -152,7 +115,7 @@ def explore(topic: str):
     if data is not None:
         body = _exploration_from_data(topic, data)
     else:
-        body = _generic_exploration(topic)
+        body = build_generic_exploration(topic)
     body["connections_explained"] = _connections_explained_for(body)
     # M4-002 (additive): expose direct cross-topic neighbors of the centered
     # entity + per-topic connection statistics. Pure projections over the

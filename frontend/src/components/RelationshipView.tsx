@@ -16,6 +16,11 @@ type RelationshipViewProps = {
 // Lightweight relationship visualization prototype (S5-003).
 // Pure CSS tree: current main entity at the root, connected entities branching
 // below it. No graph engine, SVG, D3, canvas, or animation library.
+// RESPONSIBILITY (M4-005 C2): relationship explanation via a lightweight CSS
+// tree rooted at the main entity, showing how connected entities branch off
+// (relationship type per branch). It is the structured/explanation view — NOT
+// a duplicate of RelatedEntityList. For flat quick-browse, see
+// RelatedEntityList. No graph engine / SVG / D3; pure CSS, per S5-003.
 function RelationshipView({
   mainEntity,
   relatedEntities,

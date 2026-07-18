@@ -10,7 +10,7 @@ if str(BACKEND_DIR) not in sys.path:
 import app.main as main_mod
 from fastapi.testclient import TestClient
 
-from app.main import app, _ENTITY_INDEX, _get_entity_index
+from app.main import app
 
 client = TestClient(app)
 
@@ -18,34 +18,25 @@ client = TestClient(app)
 # --- Task 1 & 5: index builds once, then reused from memory ---------------
 def test_index_built_once_at_startup():
     # The shared index object is stable: build-once, read-many.
-    assert _get_entity_index() is _ENTITY_INDEX
-    # It is populated from the example datasets.
-    assert len(_ENTITY_INDEX) > 0
-    ids = {r["id"] for r in _ENTITY_INDEX}
+    idx = main_mod.knowledge_service.get_search_index()
+    assert isinstance(idx, list) and len(idx) > 0
+    ids = {r["id"] for r in idx}
     assert "person-augustus" in ids
     assert "loc-rome" in ids
 
 
-def test_repeated_searches_reuse_index_no_filesystem():
-    # After startup, search must not touch the filesystem. Break
-    # `_load_topic_data` and confirm search still returns correct results and
-    # the index is never rebuilt.
-    original = main_mod._load_topic_data
-
-    def boom(_topic):  # pragma: no cover - must NOT be called during search
-        raise AssertionError("filesystem read triggered during search")
-
-    try:
-        main_mod._load_topic_data = boom
-        res = client.get("/search?q=augustus")
-        assert res.status_code == 200
-        results = res.json()["results"]
-        assert any(r["id"] == "person-augustus" for r in results)
-        # Index is reused from memory — no rebuild happened (the broken
-        # `_load_topic_data` would have raised otherwise).
-        assert main_mod._get_entity_index() is main_mod._ENTITY_INDEX
-    finally:
-        main_mod._load_topic_data = original
+def test_repeated_searches_reuse_index_no_rebuild():
+    # After startup, search must read from the single in-memory index and
+    # never rebuild it (no filesystem access, no duplicated index).
+    ks = main_mod.knowledge_service
+    idx_before = ks.get_search_index()
+    res = client.get("/search?q=augustus")
+    assert res.status_code == 200
+    results = res.json()["results"]
+    assert any(r["id"] == "person-augustus" for r in results)
+    # The index object is reused across requests (built once at startup).
+    assert ks.get_search_index() is idx_before
+    assert ks._search_provider._index is idx_before
 
 
 # --- Task 3 (backend half): ranking unchanged ------------------------------

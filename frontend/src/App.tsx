@@ -10,7 +10,7 @@ import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
 import ConnectionsExplainedPanel from './components/ConnectionsExplainedPanel'
 import ExplorationPathsPanel from './components/ExplorationPathsPanel'
 import ThemesPanel from './components/ThemesPanel'
-import AIGuidePanel from './components/AIGuidePanel'
+import InterpretationPanel from './components/InterpretationPanel'
 import CrossTopicTopicList from './components/CrossTopicTopicList'
 import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
@@ -434,7 +434,7 @@ function App() {
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
                 }
               />
-              <AIGuidePanel />
+              <InterpretationPanel />
             </div>
           )}
 

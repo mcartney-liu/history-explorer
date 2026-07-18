@@ -19,6 +19,11 @@ type RelatedEntityListProps = {
   onEntityClick?: (id: string) => void
 }
 
+// RESPONSIBILITY (M4-005 C2): quick browsing of related entities with simple
+// click-to-explore navigation. Renders a flat, lightweight list — it does NOT
+// attempt relationship explanation/structure. For the structured relationship
+// tree, see RelationshipView. The two components are intentionally distinct
+// presentations of the same data, not duplicated logic.
 function RelatedEntityList({
   relatedEntities,
   nameById,
