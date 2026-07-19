@@ -39,7 +39,7 @@ import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
 import LandingPage, { TopicSummary } from './components/LandingPage'
 import FirstExplorationGuide from './components/FirstExplorationGuide'
-import { resolveStarters } from './data/explorationStarters'
+import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -513,6 +513,10 @@ function App() {
           {!loading && !errorKind && current?.type === 'entity' && entityData && (
             <EntityPage
               entity={entityData}
+              entityId={current.id}
+              entityName={entityData.name}
+              entityStarters={resolveEntityStarters(current.id)}
+              onStarterClick={(t) => navigateTo(t)}
               onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
               onNodeClick={(gid) =>
                 openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)

@@ -7,6 +7,9 @@ import ConnectionsExplainedPanel, { ConnectionExplained } from './ConnectionsExp
 import ExplorationPathsPanel from './ExplorationPathsPanel'
 import ThemesPanel from './ThemesPanel'
 import CrossTopicTopicList from './CrossTopicTopicList'
+import EntityExplorationGuide from './EntityExplorationGuide'
+import type { NavNode } from './navigation'
+import type { StarterItem } from '../data/explorationStarters'
 import { RelatedTopic } from './crossTopic'
 
 export type EntityRelationship = {
@@ -41,13 +44,30 @@ type EntityPageProps = {
   // which prefixes local ids into topic:localid).
   onNodeClick?: (globalId: string) => void
   onTopicClick?: (topic: string) => void
+  // M5-A-5: Entity-level First Exploration Guide. `entityId` is the entity's
+  // global_id (passed by App as current.id); `entityStarters` are already
+  // resolved by App from data/explorationStarters.ts; `onStarterClick` is
+  // wired by App to the SAME navigateTo used everywhere.
+  entityId?: string
+  entityName?: string
+  entityStarters?: StarterItem[]
+  onStarterClick?: (target: NavNode) => void
 }
 
 // M2-002 entity page: renders the four sections the backend returns for
 // GET /entity/{id} — summary, timeline, relationships, exploration. Every
 // related entity stays clickable so the Explore -> Connect -> Continue loop
 // keeps working from inside an entity page.
-function EntityPage({ entity, onEntityClick, onNodeClick, onTopicClick }: EntityPageProps) {
+function EntityPage({
+  entity,
+  onEntityClick,
+  onNodeClick,
+  onTopicClick,
+  entityId,
+  entityName,
+  entityStarters,
+  onStarterClick,
+}: EntityPageProps) {
   const summaryObj = entity.summary ?? {}
   const description =
     typeof summaryObj.description === 'string' ? summaryObj.description : ''
@@ -73,6 +93,16 @@ function EntityPage({ entity, onEntityClick, onNodeClick, onTopicClick }: Entity
       </div>
 
       <SummaryPanel title={entity.name} summary={description} />
+
+      {onStarterClick && entityStarters && entityStarters.length > 0 ? (
+        <EntityExplorationGuide
+          entityId={entityId ?? entity.id}
+          entityName={entityName ?? entity.name}
+          starters={entityStarters}
+          onStarterClick={onStarterClick}
+        />
+      ) : null}
+
       <MainEntityCard mainEntity={entity.exploration.main_entity} />
 
       <RelationshipView

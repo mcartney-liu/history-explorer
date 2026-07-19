@@ -190,3 +190,290 @@ export const DEFAULT_STARTERS: StarterItem[] = []
 export function resolveStarters(slug: string): StarterItem[] {
   return TOPIC_STARTERS[slug] ?? DEFAULT_STARTERS
 }
+
+// ---------------------------------------------------------------------------
+// M5-A-5: Entity-level First Exploration Guide starter mapping.
+//
+// Mirrors TOPIC_STARTERS but keyed by ENTITY global_id (the value App passes
+// as `current.id` when a visitor opens an entity). Every target is GROUNDED in
+// the real relationship graph under data/examples/*_example.json:
+//  - Same-topic targets use their entity's real `global_id`
+//    (source/target local ids resolve to `{topic}:{local_id}`).
+//  - Cross-topic targets use the verbatim cross-topic `global_id` already
+//    present in the relationships (e.g. `hellenistic_world:civ-greek`).
+// No fabricated ids: resolveEntityStarters falls back to
+// DEFAULT_ENTITY_STARTERS (empty → the guide renders intro copy only) when a
+// visited entity has no curated mapping.
+// ---------------------------------------------------------------------------
+
+export const ENTITY_STARTERS: Record<string, StarterItem[]> = {
+  'roman_empire:civ-roman': [
+    {
+      id: 'roman_empire:event-roman-empire-established',
+      label: 'Roman Empire Established',
+      description: 'How the empire began, in 27 BC.',
+      target: { type: 'entity', id: 'roman_empire:event-roman-empire-established', name: 'Roman Empire Established' },
+    },
+    {
+      id: 'roman_empire:loc-rome',
+      label: 'Rome',
+      description: 'The capital at the heart of the empire.',
+      target: { type: 'entity', id: 'roman_empire:loc-rome', name: 'Rome' },
+    },
+    {
+      id: 'hellenistic_world:civ-greek',
+      label: 'Ancient Greek Civilization',
+      description: 'The Greek world Rome inherited and conquered.',
+      target: { type: 'entity', id: 'hellenistic_world:civ-greek', name: 'Ancient Greek Civilization' },
+    },
+  ],
+  'hellenistic_world:person-alexander': [
+    {
+      id: 'hellenistic_world:event-gaugamela',
+      label: 'Battle of Gaugamela',
+      description: 'Alexander’s decisive victory over Persia.',
+      target: { type: 'entity', id: 'hellenistic_world:event-gaugamela', name: 'Battle of Gaugamela' },
+    },
+    {
+      id: 'hellenistic_world:civ-greek',
+      label: 'Ancient Greek Civilization',
+      description: 'The culture Alexander carried east.',
+      target: { type: 'entity', id: 'hellenistic_world:civ-greek', name: 'Ancient Greek Civilization' },
+    },
+    {
+      id: 'egypt_technology_religion:civ-egypt',
+      label: 'Ancient Egyptian Civilization',
+      description: 'Conquered by Alexander and ruled by his successors.',
+      target: { type: 'entity', id: 'egypt_technology_religion:civ-egypt', name: 'Ancient Egyptian Civilization' },
+    },
+  ],
+  'hellenistic_world:civ-greek': [
+    {
+      id: 'hellenistic_world:idea-stoicism',
+      label: 'Stoicism',
+      description: 'A Greek school of reason and virtue.',
+      target: { type: 'entity', id: 'hellenistic_world:idea-stoicism', name: 'Stoicism' },
+    },
+    {
+      id: 'hellenistic_world:idea-democracy',
+      label: 'Democracy',
+      description: 'The Greek idea of citizen rule.',
+      target: { type: 'entity', id: 'hellenistic_world:idea-democracy', name: 'Democracy' },
+    },
+  ],
+  'greek_philosophy:person-socrates': [
+    {
+      id: 'greek_philosophy:person-plato',
+      label: 'Plato',
+      description: 'Socrates’ student and the Academy’s founder.',
+      target: { type: 'entity', id: 'greek_philosophy:person-plato', name: 'Plato' },
+    },
+    {
+      id: 'greek_philosophy:loc-athens',
+      label: 'Athens',
+      description: 'The city where Socrates taught.',
+      target: { type: 'entity', id: 'greek_philosophy:loc-athens', name: 'Athens' },
+    },
+    {
+      id: 'hellenistic_world:idea-democracy',
+      label: 'Democracy',
+      description: 'A political idea born in the Greek city-states.',
+      target: { type: 'entity', id: 'hellenistic_world:idea-democracy', name: 'Democracy' },
+    },
+  ],
+  'greek_philosophy:person-plato': [
+    {
+      id: 'greek_philosophy:person-aristotle',
+      label: 'Aristotle',
+      description: 'Plato’s student who systematized logic.',
+      target: { type: 'entity', id: 'greek_philosophy:person-aristotle', name: 'Aristotle' },
+    },
+    {
+      id: 'greek_philosophy:event-academy-founded',
+      label: "Plato's Academy Founded",
+      description: 'Plato established the Academy in Athens.',
+      target: { type: 'entity', id: 'greek_philosophy:event-academy-founded', name: "Plato's Academy Founded" },
+    },
+    {
+      id: 'greek_philosophy:idea-theory-forms',
+      label: 'Theory of Forms',
+      description: 'Plato’s doctrine of perfect abstract Forms.',
+      target: { type: 'entity', id: 'greek_philosophy:idea-theory-forms', name: 'Theory of Forms' },
+    },
+  ],
+  'greek_philosophy:person-aristotle': [
+    {
+      id: 'hellenistic_world:person-alexander',
+      label: 'Alexander the Great',
+      description: 'Aristotle’s pupil and a future conqueror.',
+      target: { type: 'entity', id: 'hellenistic_world:person-alexander', name: 'Alexander the Great' },
+    },
+    {
+      id: 'greek_philosophy:idea-logic',
+      label: 'Logic and Syllogism',
+      description: 'Aristotle’s formal system of valid inference.',
+      target: { type: 'entity', id: 'greek_philosophy:idea-logic', name: 'Logic and Syllogism' },
+    },
+    {
+      id: 'greek_philosophy:loc-lyceum',
+      label: 'Lyceum',
+      description: 'Aristotle’s Peripatetic school in Athens.',
+      target: { type: 'entity', id: 'greek_philosophy:loc-lyceum', name: 'Lyceum' },
+    },
+  ],
+  'persian_empire:civ-persian': [
+    {
+      id: 'persian_empire:religion-zoroastrianism',
+      label: 'Zoroastrianism',
+      description: 'The monotheistic faith of ancient Persia.',
+      target: { type: 'entity', id: 'persian_empire:religion-zoroastrianism', name: 'Zoroastrianism' },
+    },
+    {
+      id: 'hellenistic_world:person-alexander',
+      label: 'Alexander the Great',
+      description: 'Who conquered the Persian Empire.',
+      target: { type: 'entity', id: 'hellenistic_world:person-alexander', name: 'Alexander the Great' },
+    },
+    {
+      id: 'silk_road:silk_road',
+      label: 'Silk Road',
+      description: 'The routes that carried Persian goods east and west.',
+      target: { type: 'entity', id: 'silk_road:silk_road', name: 'Silk Road' },
+    },
+  ],
+  'egypt_technology_religion:civ-egypt': [
+    {
+      id: 'egypt_technology_religion:tech-papyrus',
+      label: 'Papyrus Papermaking',
+      description: 'Egypt’s writing material, spread across civilizations.',
+      target: { type: 'entity', id: 'egypt_technology_religion:tech-papyrus', name: 'Papyrus Papermaking' },
+    },
+    {
+      id: 'egypt_technology_religion:religion-ancient-egyptian',
+      label: 'Ancient Egyptian Religion',
+      description: 'The polytheistic faith of the Nile valley.',
+      target: { type: 'entity', id: 'egypt_technology_religion:religion-ancient-egyptian', name: 'Ancient Egyptian Religion' },
+    },
+    {
+      id: 'egypt_technology_religion:idea-monotheism',
+      label: 'Monotheism',
+      description: 'The idea of one god, first expressed in Egypt.',
+      target: { type: 'entity', id: 'egypt_technology_religion:idea-monotheism', name: 'Monotheism' },
+    },
+  ],
+  'egypt_technology_religion:tech-papyrus': [
+    {
+      id: 'egypt_technology_religion:religion-ancient-egyptian',
+      label: 'Ancient Egyptian Religion',
+      description: 'Papyrus sustained temple and administrative record-keeping.',
+      target: { type: 'entity', id: 'egypt_technology_religion:religion-ancient-egyptian', name: 'Ancient Egyptian Religion' },
+    },
+    {
+      id: 'hellenistic_world:civ-greek',
+      label: 'Ancient Greek Civilization',
+      description: 'Papyrus spread to the Greek world.',
+      target: { type: 'entity', id: 'hellenistic_world:civ-greek', name: 'Ancient Greek Civilization' },
+    },
+    {
+      id: 'roman_empire:civ-roman',
+      label: 'Roman Civilization',
+      description: 'Papyrus spread to Rome.',
+      target: { type: 'entity', id: 'roman_empire:civ-roman', name: 'Roman Civilization' },
+    },
+  ],
+  'ancient_india:civ-maurya': [
+    {
+      id: 'ancient_india:religion-buddhism',
+      label: 'Buddhism',
+      description: 'The faith that flourished under the Mauryas.',
+      target: { type: 'entity', id: 'ancient_india:religion-buddhism', name: 'Buddhism' },
+    },
+    {
+      id: 'ancient_india:loc-pataliputra',
+      label: 'Pataliputra',
+      description: 'The Mauryan capital.',
+      target: { type: 'entity', id: 'ancient_india:loc-pataliputra', name: 'Pataliputra' },
+    },
+    {
+      id: 'persian_empire:civ-persian',
+      label: 'Achaemenid Persian Empire',
+      description: 'A contemporary of the Mauryan world.',
+      target: { type: 'entity', id: 'persian_empire:civ-persian', name: 'Achaemenid Persian Empire' },
+    },
+  ],
+  'ancient_india:religion-buddhism': [
+    {
+      id: 'ancient_india:loc-pataliputra',
+      label: 'Pataliputra',
+      description: 'A center of the Buddhist world.',
+      target: { type: 'entity', id: 'ancient_india:loc-pataliputra', name: 'Pataliputra' },
+    },
+    {
+      id: 'silk_road:silk_road',
+      label: 'Silk Road',
+      description: 'The routes that carried Buddhism across Asia.',
+      target: { type: 'entity', id: 'silk_road:silk_road', name: 'Silk Road' },
+    },
+    {
+      id: 'silk_road:han_dynasty',
+      label: 'Han Dynasty',
+      description: 'A civilization that received Buddhism via the routes.',
+      target: { type: 'entity', id: 'silk_road:han_dynasty', name: 'Han Dynasty' },
+    },
+  ],
+  'early_christianity:person-jesus': [
+    {
+      id: 'early_christianity:event-crucifixion',
+      label: 'Crucifixion of Jesus',
+      description: 'The pivotal event of the faith.',
+      target: { type: 'entity', id: 'early_christianity:event-crucifixion', name: 'Crucifixion of Jesus' },
+    },
+    {
+      id: 'early_christianity:loc-jerusalem',
+      label: 'Jerusalem',
+      description: 'The city of Jesus’s ministry and death.',
+      target: { type: 'entity', id: 'early_christianity:loc-jerusalem', name: 'Jerusalem' },
+    },
+    {
+      id: 'roman_empire:religion-christianity',
+      label: 'Christianity',
+      description: 'The faith that took root in the Roman world.',
+      target: { type: 'entity', id: 'roman_empire:religion-christianity', name: 'Christianity' },
+    },
+  ],
+  'early_christianity:religion-early-church': [
+    {
+      id: 'early_christianity:loc-jerusalem',
+      label: 'Jerusalem',
+      description: 'Where the first church was born.',
+      target: { type: 'entity', id: 'early_christianity:loc-jerusalem', name: 'Jerusalem' },
+    },
+    {
+      id: 'roman_empire:religion-christianity',
+      label: 'Christianity',
+      description: 'The faith the early church carried forward.',
+      target: { type: 'entity', id: 'roman_empire:religion-christianity', name: 'Christianity' },
+    },
+    {
+      id: 'roman_empire:civ-roman',
+      label: 'Roman Civilization',
+      description: 'The empire into which the church spread.',
+      target: { type: 'entity', id: 'roman_empire:civ-roman', name: 'Roman Civilization' },
+    },
+  ],
+  'silk_road:silk_road': [
+    {
+      id: 'roman_empire:civ-roman',
+      label: 'Roman Civilization',
+      description: 'The Mediterranean terminus of the routes.',
+      target: { type: 'entity', id: 'roman_empire:civ-roman', name: 'Roman Civilization' },
+    },
+  ],
+}
+
+// Safety net for any entity global_id without a curated mapping.
+export const DEFAULT_ENTITY_STARTERS: StarterItem[] = []
+
+export function resolveEntityStarters(globalId: string): StarterItem[] {
+  return ENTITY_STARTERS[globalId] ?? DEFAULT_ENTITY_STARTERS
+}
