@@ -15,6 +15,7 @@ import CrossTopicTopicList from './components/CrossTopicTopicList'
 import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
 import ExplorationTrail from './components/ExplorationTrail'
+import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
 import SearchResults, {
   SearchResultItem,
@@ -531,6 +532,14 @@ function App() {
                 seenGlobalIds={seenGlobalIds}
                 onNodeClick={(gid) =>
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+                }
+                onTopicClick={(t) => navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })}
+              />
+              <TopicComparisonPanel
+                key={result?.topic ?? current.topic}
+                crossTopicRelated={result.exploration.cross_topic_related}
+                onNodeClick={(gid) =>
+                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
                 }
                 onTopicClick={(t) => navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })}
               />
