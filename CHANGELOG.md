@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.4.0] - 2026-07-19
+
+Continuous Discovery milestone (**M5-B**). Turns a single exploration session into a continuous, self-directed journey. All changes are additive and freeze-safe; the frozen schema (8 entity types / 18 relationship types) and public API contract are preserved.
+
+### Added
+
+- **Continuous Discovery (M5-B)**
+  - Continue Exploring panel (`ContinueExploringPanel.tsx`): re-presents the engine's already-ranked `connections_explained` as top-N next-step actions after a Topic/Entity view. Already-visited nodes are softened via the local `recent` store (no re-sort, no recommender, no score — engine order preserved verbatim).
+  - Exploration Trail (`ExplorationTrail.tsx`): renders the full exploration footprint from `history`/`cursor`; clicking a past step reuses the existing `goTo` to jump back and continue. Uses a local `TrailNode` type (no `navigation.ts` import).
+  - Dead-end fallback (B-3): when direct connections are sparse, the panel falls back to `cross_topic_related` / `related_topics` so discovery never dead-ends.
+
+### Changed
+
+- **Frontend**
+  - `App.tsx`: additive mount of `ContinueExploringPanel` (topic + entity views) and `ExplorationTrail` (after `HistoryBar`); `seenGlobalIds` derived from `recentStore` for seen-aware softening.
+  - `App.css`: appended `.he-continue*` / `.he-trail*` rules reusing existing `--he-*` design tokens; no existing class modified.
+
+### Freeze Compliance
+
+- No backend / `exploration_engine.py` / `navigation.ts` / Knowledge Model change.
+- No AI / LLM / Provider / Recommendation / score introduced.
+- No new dependency (`package.json` / `requirements.txt` unchanged).
+- Frontend tests: `107 passed` (19 files); backend: `115 passed`; `vite build` 0 errors; `tsc --noEmit` 0 errors.
+
+---
+
+## [0.3.0] - 2026-07-18
+
+Discovery & Onboarding milestone (**M5-A**). The entry journey a first-time user takes from landing to a connected, interpretable exploration session. All changes are additive and freeze-safe.
+
+### Added
+
+- **A-1 Topic Catalog API** — `GET /topics` returning `{topic,title,summary}`, mounted under both `/api/v1` and the legacy route (`v1 == legacy`).
+- **A-2 Landing Catalog** — curated landing page topic grid with loading/empty/error states, single navigation path.
+- **A-3 Featured Topics** — editorial "Start here" strip (4 real topic slugs) derived as a filtered view of the catalog.
+- **A-4 First Exploration Guide** — presentational nudge on the topic page with 3 real, grounded starters; session-only dismissible.
+- **A-5 Entity Exploration Guide** — entity-level exploration starters in a frozen-safe dedicated component.
+- **A-6 Interpretation Layer** — rule-based "why these connections are worth exploring" panel rendering the backend's verbatim `explanation`; ordered after Connections Explained (WHAT → WHY → HOW). The old "future AI layer" placeholder was deleted.
+
+### Freeze Compliance
+
+- No change to `exploration_engine.py`, `navigation.ts`, Knowledge Model, or backend core.
+- No AI / LLM / Provider / Prompt introduced.
+- No new dependency (`package.json` / `requirements.txt` unchanged).
+- Frontend tests: `97 passed` (17 files); backend: `115 passed`; `vite build` 0 errors.
+
+---
+
 ## [0.2.0] - 2026-07-18
 
 First formal changelog entry. Cumulative changes for milestones **M1 → M4** since `v0.1.0`. All changes are additive or non-breaking; the frozen schema (8 entity types / 18 relationship types) and public API contract are preserved.
