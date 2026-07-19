@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.6.0] - 2026-07-19
+
+Historical Meaning Layer milestone (**M5-D**). Adds a deterministic, rule-based "Historical Meaning" layer that explains *why* a connection exists and *what it meant* — derived purely from existing relationship data (type + direction) via fixed templates, with no AI/LLM, no new dependencies, and no backend change. All changes are additive and freeze-safe; the frozen schema (8 entity types / 18 relationship types) and public API contract are preserved.
+
+### Added
+
+- **Historical Meaning Layer (M5-D)**
+  - Understanding rule engine (`understandingRules.ts`): pure `filter`/`map`/`transform` + fixed templates with `{actor}`/`{target}`/`{type}` substitution, covering all 18 `RELATIONSHIP_TYPES` plus a guaranteed fallback. No scoring, ranking, similarity, or recommendation logic. Exposes `buildUnderstanding`, `buildUnderstandingsFromRelationships`, `buildUnderstandingsFromConnectionsExplained`.
+  - InterpretationPanel enhancement: optional `understandings?` prop appends a "Historical Meaning" block (meaning + perspective tag) after the existing M5-A interpretation list. When absent/empty, behavior is 100% unchanged. No `navigation.ts` import.
+  - EntityPage wiring: derives understandings from `entity.relationships` and passes them to InterpretationPanel.
+  - Topic view wiring: derives understandings from `result.connections_explained` + a local `global_id→name` map; no new API endpoint, no backend contract change.
+
+### Changed
+
+- **Frontend**
+  - `App.tsx`: additive `understandings` prop on the Topic-view InterpretationPanel, sourced from already-fetched `connections_explained` / `entities`.
+  - `App.css`: appended `.he-meaning*` rules reusing existing `--he-*` design tokens; no existing class modified.
+
+### Freeze Compliance
+
+- No backend / `exploration_engine.py` / `validation.py` / `navigation.ts` / Knowledge Model change.
+- No AI / LLM / Provider / Recommendation / score / similarity introduced.
+- No new dependency (`package.json` / `requirements.txt` unchanged; only `version` / `APP_VERSION` bumped).
+- Frontend tests: `127 passed` (22 files); backend: `115 passed`; `vite build` 0 errors; `tsc --noEmit` 0 errors.
+
+---
+
 ## [0.5.0] - 2026-07-19
 
 Cross-Topic Comparative Synthesis milestone (**M5-C**). Lets a user compare the current topic against the topics it connects to and jump straight into the bridging entities — using the already-present `cross_topic_related` data, with no ranking, scoring, or AI. All changes are additive and freeze-safe; the frozen schema (8 entity types / 18 relationship types) and public API contract are preserved.
