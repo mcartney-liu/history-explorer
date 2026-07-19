@@ -13,6 +13,8 @@ import ThemesPanel from './components/ThemesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import CrossTopicTopicList from './components/CrossTopicTopicList'
 import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
+import ContinueExploringPanel from './components/ContinueExploringPanel'
+import ExplorationTrail from './components/ExplorationTrail'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
 import SearchResults, {
   SearchResultItem,
@@ -395,6 +397,14 @@ function App() {
 
   const crumbs = buildBreadcrumb(history, cursor)
 
+  // M5-B-1: global ids the user has already visited, derived from the recent
+  // explorations list. Entity nodes carry a global_id in `.id` (that is what
+  // openEntity is always called with), so this set lets the "Continue
+  // Exploring" panel weakly mark already-seen next steps — WITHOUT reordering.
+  const seenGlobalIds = new Set(
+    recent.filter((n) => n.type === 'entity').map((n) => (n as { id: string }).id),
+  )
+
   return (
     <main className="app">
       <section className="hero">
@@ -442,6 +452,7 @@ function App() {
                 onBack={goBack}
                 onForward={goForward}
               />
+              <ExplorationTrail history={history} cursor={cursor} onStepClick={goTo} />
             </>
           )}
 
@@ -513,22 +524,43 @@ function App() {
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
                 }
               />
+              <ContinueExploringPanel
+                connections={result.connections_explained}
+                crossTopicRelated={result.exploration.cross_topic_related}
+                relatedTopics={result.related_topics}
+                seenGlobalIds={seenGlobalIds}
+                onNodeClick={(gid) =>
+                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+                }
+                onTopicClick={(t) => navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })}
+              />
             </div>
           )}
 
           {!loading && !errorKind && current?.type === 'entity' && entityData && (
-            <EntityPage
-              entity={entityData}
-              entityId={current.id}
-              entityName={entityData.name}
-              entityStarters={resolveEntityStarters(current.id)}
-              onStarterClick={(t) => navigateTo(t)}
-              onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
-              onNodeClick={(gid) =>
-                openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
-              }
-              onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
-            />
+            <>
+              <EntityPage
+                entity={entityData}
+                entityId={current.id}
+                entityName={entityData.name}
+                entityStarters={resolveEntityStarters(current.id)}
+                onStarterClick={(t) => navigateTo(t)}
+                onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
+                onNodeClick={(gid) =>
+                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
+                }
+                onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+              />
+              <ContinueExploringPanel
+                connections={entityData.connections_explained}
+                relatedTopics={entityData.related_topics}
+                seenGlobalIds={seenGlobalIds}
+                onNodeClick={(gid) =>
+                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
+                }
+                onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+              />
+            </>
           )}
 
           {!current && (

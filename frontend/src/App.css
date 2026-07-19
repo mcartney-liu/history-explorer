@@ -1139,3 +1139,175 @@ body {
   margin: 0.4rem 0 0;
   color: var(--he-muted);
 }
+
+/* M5-B-1: Continue Exploring (Stage 5, Continuous Discovery) */
+.he-continue-hint {
+  margin: 0 0 0.6rem;
+  color: var(--he-muted);
+  font-size: 0.9rem;
+}
+
+.he-continue-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.he-continue-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.he-continue-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  padding: 0.45rem 0.8rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.he-continue-node:hover,
+.he-continue-node:focus-visible {
+  background: var(--he-accent);
+  color: #fff;
+  outline: none;
+}
+
+.he-continue-node.is-seen {
+  opacity: 0.6;
+  border-color: var(--he-border);
+  color: var(--he-muted);
+}
+
+.he-continue-name {
+  font-weight: 600;
+}
+
+.he-continue-seen {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--he-muted);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.he-continue-topic {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--he-muted);
+}
+
+.he-continue-why {
+  margin: 0;
+  color: var(--he-muted);
+  font-size: 0.88rem;
+}
+
+.he-continue-topics {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0.6rem 0 0;
+}
+
+.he-continue-topic-chip {
+  padding: 0.4rem 0.8rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), border-color var(--he-transition);
+}
+
+.he-continue-topic-chip:hover,
+.he-continue-topic-chip:focus-visible {
+  background: var(--he-surface);
+  border-color: var(--he-accent);
+  outline: none;
+}
+
+/* M5-B-2: Exploration Trail (full-journey footprint log) */
+.he-trail-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.he-trail-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.he-trail-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: background var(--he-transition), border-color var(--he-transition);
+}
+
+.he-trail-node:hover,
+.he-trail-node:focus-visible {
+  background: var(--he-surface-soft);
+  border-color: var(--he-accent);
+  outline: none;
+}
+
+.he-trail-node.is-current {
+  border-color: var(--he-accent);
+  background: var(--he-surface-soft);
+}
+
+.he-trail-kind {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--he-muted);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.he-trail-node.is-current .he-trail-kind {
+  background: var(--he-accent);
+}
+
+.he-trail-label {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.he-trail-arrow {
+  color: var(--he-muted);
+}
