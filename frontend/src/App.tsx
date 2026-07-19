@@ -43,6 +43,19 @@ import LandingPage, { TopicSummary } from './components/LandingPage'
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
 const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
+// M5-A-3: curated "start here" topics. Editorially chosen, REAL slugs only
+// (must match the backend topic registry — see JsonTopicRepository.list_topics
+// over data/examples/*_example.json). This is purely frontend curation; the
+// underlying data is still fetched from GET /topics. Slugs absent from the
+// catalog are dropped at render time, so the list stays safe if a topic is
+// later renamed or removed.
+const FEATURED_SLUGS = [
+  'roman_empire',
+  'greek_philosophy',
+  'persian_empire',
+  'ancient_india',
+]
+
 type ExplorationResult = {
   topic: string
   title: string
@@ -101,6 +114,13 @@ function App() {
   const [topics, setTopics] = useState<TopicSummary[]>([])
   const [topicsLoading, setTopicsLoading] = useState(true)
   const [topicsError, setTopicsError] = useState<ErrorKind | ''>('')
+
+  // M5-A-3: derive the curated "start here" subset from the loaded catalog.
+  // No extra fetch / API / state — purely a filtered, order-preserving view of
+  // `topics` keyed by FEATURED_SLUGS. Empty until the catalog loads.
+  const featuredTopics: TopicSummary[] = FEATURED_SLUGS.map(
+    (slug) => topics.find((t) => t.topic === slug),
+  ).filter((t): t is TopicSummary => Boolean(t))
 
   useEffect(() => {
     const controller = new AbortController()
@@ -499,6 +519,7 @@ function App() {
               loading={topicsLoading}
               error={topicsError}
               onTopicClick={handleTopicClick}
+              featured={featuredTopics}
               recent={recent}
               onRecentSelect={navigateTo}
               onRecentClear={clearRecent}

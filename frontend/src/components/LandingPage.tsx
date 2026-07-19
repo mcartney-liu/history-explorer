@@ -1,4 +1,4 @@
-// Curated Landing Page (M5-A-2).
+// Curated Landing Page (M5-A-2), extended with a Featured strip (M5-A-3).
 // Replaces the previous empty first-visit screen (a bare, often-empty
 // "Recent Explorations" list) with an immediate entry point: a topic catalog
 // fetched from GET /topics, plus loading / empty / error states.
@@ -8,8 +8,8 @@
 //    loading/error state, and the click→explore wiring) lives in App.
 //  - Clicking a topic calls `onTopicClick(topic)`, which App wires to the
 //    SAME `navigateTo` the rest of the app uses (SearchResults,
-//    CrossTopicTopicList). No second navigation mechanism, no duplicated
-//    explore logic.
+//    CrossTopicTopicList, FeaturedTopics). No second navigation mechanism,
+//    no duplicated explore logic.
 //  - It reuses the unified LoadingSkeleton / EmptyState / ErrorCard and the
 //    existing RecentExplorations chip list (shown only for returning users
 //    who have history), so no capability is lost.
@@ -18,6 +18,7 @@ import LoadingSkeleton from './LoadingSkeleton'
 import EmptyState from './EmptyState'
 import ErrorCard, { ErrorKind } from './ErrorCard'
 import RecentExplorations from './RecentExplorations'
+import FeaturedTopics from './FeaturedTopics'
 import { NavNode } from './navigation'
 
 export type TopicSummary = {
@@ -31,6 +32,11 @@ type LandingPageProps = {
   loading: boolean
   error: '' | ErrorKind
   onTopicClick: (topic: string) => void
+  // Curated "start here" subset (M5-A-3). Optional: when present and
+  // non-empty it renders a highlighted FeaturedTopics strip above the full
+  // catalog. Purely additive — when omitted the landing page behaves exactly
+  // as M5-A-2 did.
+  featured?: TopicSummary[]
   // Returning-user quick links. Optional: only rendered when present and non-empty,
   // so the first-visit experience stays focused on the catalog.
   recent?: NavNode[]
@@ -43,6 +49,7 @@ function LandingPage({
   loading,
   error,
   onTopicClick,
+  featured,
   recent,
   onRecentSelect,
   onRecentClear,
@@ -66,24 +73,29 @@ function LandingPage({
       )}
 
       {!loading && !error && topics.length > 0 && (
-        <ul className="he-topic-grid">
-          {topics.map((t) => (
-            <li key={t.topic}>
-              <button
-                type="button"
-                className="he-topic-card"
-                data-topic={t.topic}
-                aria-label={`Explore ${t.title}`}
-                onClick={() => onTopicClick(t.topic)}
-              >
-                <span className="he-topic-title">{t.title}</span>
-                {t.summary ? (
-                  <span className="he-topic-summary">{t.summary}</span>
-                ) : null}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <>
+          {featured && featured.length > 0 && (
+            <FeaturedTopics topics={featured} onTopicClick={onTopicClick} />
+          )}
+          <ul className="he-topic-grid">
+            {topics.map((t) => (
+              <li key={t.topic}>
+                <button
+                  type="button"
+                  className="he-topic-card"
+                  data-topic={t.topic}
+                  aria-label={`Explore ${t.title}`}
+                  onClick={() => onTopicClick(t.topic)}
+                >
+                  <span className="he-topic-title">{t.title}</span>
+                  {t.summary ? (
+                    <span className="he-topic-summary">{t.summary}</span>
+                  ) : null}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       {recent && recent.length > 0 && onRecentSelect ? (

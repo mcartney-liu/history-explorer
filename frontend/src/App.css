@@ -931,3 +931,62 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ============================================================
+   M5-A-3: Featured "start here" strip.
+   Reuses the same --he-* tokens and the .he-topic-title /
+   .he-topic-summary classes as the normal catalog cards so the
+   cards read identically; only the container + border use the
+   accent color to make the curated set stand out slightly.
+   ============================================================ */
+.he-featured {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  padding: 0.9rem 1rem;
+}
+
+.he-featured-heading {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--he-accent-dark);
+}
+
+.he-featured-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+}
+
+.he-featured-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  transition: background var(--he-transition), border-color var(--he-transition),
+    transform var(--he-transition);
+}
+
+.he-featured-card:hover,
+.he-featured-card:focus-visible {
+  background: #efe7d6;
+  border-color: var(--he-accent-dark);
+  outline: none;
+  transform: translateY(-1px);
+}

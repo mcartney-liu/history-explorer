@@ -95,3 +95,43 @@ describe('LandingPage — returning-user recent explorations', () => {
     expect(html).not.toContain('Recent Explorations')
   })
 })
+
+describe('LandingPage — featured strip (M5-A-3)', () => {
+  // Real slugs from the backend topic registry (data/examples/*_example.json).
+  const FEATURED: TopicSummary[] = [
+    { topic: 'roman_empire', title: 'Roman Empire', summary: 'From republic to empire across the Mediterranean.' },
+    { topic: 'greek_philosophy', title: 'Greek Philosophy', summary: 'Reason, virtue, and the examined life.' },
+  ]
+  const ALL: TopicSummary[] = [
+    ...FEATURED,
+    { topic: 'silk_road', title: 'Silk Road', summary: 'The network of trade routes linking East and West.' },
+    { topic: 'ancient_india', title: 'Ancient India', summary: 'From the Indus Valley to the Gupta golden age.' },
+  ]
+
+  it('renders the featured strip above the full catalog when featured is provided', () => {
+    const html = renderToStaticMarkup(
+      <LandingPage
+        topics={ALL}
+        loading={false}
+        error=""
+        onTopicClick={() => {}}
+        featured={FEATURED}
+      />,
+    )
+    expect(html).toContain('he-featured') // featured strip present
+    expect(html).toContain('he-topic-grid') // full catalog still present
+    // A featured slug and a grid-only slug are both reachable
+    expect(html).toContain('data-topic="roman_empire"')
+    expect(html).toContain('data-topic="silk_road"')
+    expect(html).toContain('Start here')
+  })
+
+  it('behaves exactly like M5-A-2 when featured is omitted (no strip, catalog intact)', () => {
+    const html = renderToStaticMarkup(
+      <LandingPage topics={SAMPLE} loading={false} error="" onTopicClick={() => {}} />,
+    )
+    expect(html).not.toContain('he-featured') // no featured strip in A-2 mode
+    expect(html).toContain('he-topic-grid') // full catalog intact
+    expect(html).toContain('Roman Empire')
+  })
+})
