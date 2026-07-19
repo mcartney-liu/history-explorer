@@ -1451,3 +1451,30 @@ body {
   letter-spacing: 0.03em;
   color: var(--he-muted);
 }
+
+/* M5-D: Historical Meaning block (rule-based understanding layer) */
+.he-meaning-block {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--he-border, #e2e2e2);
+}
+.he-meaning-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--he-accent, #6b4f2a);
+}
+.he-interpret-tag {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--he-muted, #888);
+  background: var(--he-chip, #f2f2f2);
+  border-radius: 0.5rem;
+}
+.he-meaning-item .he-interpret-why {
+  margin-top: 0.15rem;
+}

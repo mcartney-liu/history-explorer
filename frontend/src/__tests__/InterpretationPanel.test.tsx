@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import InterpretationPanel from '../components/InterpretationPanel'
 import { InterpretationViewModel } from '../data/interpretationFormatter'
+import type { UnderstandingViewModel } from '../data/understandingRules'
 
 // M5-A-6: InterpretationPanel is a pure presentational component. As with the
 // other panels, we assert on the static markup (no jsdom, no snapshot). Click
@@ -64,5 +65,46 @@ describe('InterpretationPanel (M5-A-6)', () => {
     expect(html).not.toContain('data-node')
     // static name still shown
     expect(html).toContain('han_dynasty')
+  })
+
+  // --- M5-D: Historical Meaning layer (additive) -------------------------
+  const understandings: UnderstandingViewModel[] = [
+    {
+      relationType: 'conquered',
+      direction: 'forward',
+      actor: 'Rome',
+      target: 'Greece',
+      targetType: 'polity',
+      meaning: 'Rome conquered Greece, imposing its order and reshaping it.',
+      perspective: 'as conqueror',
+    },
+  ]
+
+  it('M5-D Case6: renders Historical Meaning block AND preserves existing interpretations (additive)', () => {
+    const html = renderToStaticMarkup(
+      <InterpretationPanel interpretations={vms} understandings={understandings} onNodeClick={() => {}} />,
+    )
+    // New Historical Meaning layer present
+    expect(html).toContain('Historical Meaning')
+    expect(html).toContain('Rome conquered Greece')
+    expect(html).toContain('as conqueror')
+    // Existing interpretation layer still rendered (additive, not replacing)
+    expect(html).toContain('data-node="silk_road:han_dynasty"')
+    expect(html).toContain('han_dynasty')
+    expect(html).toContain('Connected through overland trade routes.')
+  })
+
+  it('M5-D Case7: empty understandings array renders nothing (no empty shell)', () => {
+    expect(renderToStaticMarkup(<InterpretationPanel understandings={[]} />)).toBe('')
+  })
+
+  it('M5-D Case8: old behavior preserved when understandings absent', () => {
+    // Re-run the original Case1 assertion shape to guard against regression.
+    const html = renderToStaticMarkup(
+      <InterpretationPanel interpretations={vms} />,
+    )
+    expect(html).toContain('Why these connections are worth exploring')
+    expect(html).toContain('han_dynasty')
+    expect(html).not.toContain('Historical Meaning')
   })
 })
