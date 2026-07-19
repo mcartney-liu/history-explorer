@@ -990,3 +990,95 @@ body {
   outline: none;
   transform: translateY(-1px);
 }
+
+/* M5-A-4: First Exploration Guide — a lightweight nudge at the top of a Topic
+   Explore page (after SummaryPanel). Reuses the parchment / bronze tokens. */
+.he-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  padding: var(--he-pad);
+}
+
+.he-guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.he-guide-heading {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--he-accent-dark);
+}
+
+.he-guide-dismiss {
+  border: none;
+  background: transparent;
+  color: var(--he-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.he-guide-dismiss:hover,
+.he-guide-dismiss:focus-visible {
+  background: #efe7d6;
+  color: var(--he-accent-dark);
+  outline: none;
+}
+
+.he-guide-intro {
+  margin: 0;
+  color: #555;
+  font-size: 0.98rem;
+}
+
+.he-guide-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+}
+
+.he-guide-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  text-align: left;
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  padding: 0.8rem 0.95rem;
+  cursor: pointer;
+  font: inherit;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), border-color var(--he-transition), transform var(--he-transition);
+}
+
+.he-guide-card:hover,
+.he-guide-card:focus-visible {
+  background: #efe7d6;
+  border-color: var(--he-accent-dark);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.he-guide-label {
+  font-weight: 600;
+}
+
+.he-guide-desc {
+  font-size: 0.85rem;
+  color: var(--he-muted);
+}

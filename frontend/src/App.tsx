@@ -38,6 +38,8 @@ import HistoryBar from './components/HistoryBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
 import LandingPage, { TopicSummary } from './components/LandingPage'
+import FirstExplorationGuide from './components/FirstExplorationGuide'
+import { resolveStarters } from './data/explorationStarters'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -458,6 +460,12 @@ function App() {
           {!loading && !errorKind && current?.type === 'topic' && result && (
             <div className="result">
               <SummaryPanel title={result.title} summary={result.summary} />
+              <FirstExplorationGuide
+                topic={current.topic}
+                title={result.title}
+                starters={resolveStarters(current.topic)}
+                onStarterClick={(t) => navigateTo(t)}
+              />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
               <RelationshipView
                 mainEntity={result.exploration.main_entity}
