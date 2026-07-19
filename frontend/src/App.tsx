@@ -40,6 +40,7 @@ import ErrorCard, { ErrorKind } from './components/ErrorCard'
 import LandingPage, { TopicSummary } from './components/LandingPage'
 import FirstExplorationGuide from './components/FirstExplorationGuide'
 import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
+import { toInterpretationViewModels } from './data/interpretationFormatter'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -494,6 +495,12 @@ function App() {
               />
               <ConnectionsPanel connections={result.connections} />
               <ConnectionsExplainedPanel connections={result.connections_explained} />
+              <InterpretationPanel
+                interpretations={toInterpretationViewModels(result.connections_explained)}
+                onNodeClick={(gid) =>
+                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+                }
+              />
               <ExplorationPathsPanel
                 connections={result.connections_explained}
                 onNodeClick={(gid) =>
@@ -506,7 +513,6 @@ function App() {
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
                 }
               />
-              <InterpretationPanel />
             </div>
           )}
 

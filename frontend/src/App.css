@@ -1082,3 +1082,60 @@ body {
   font-size: 0.85rem;
   color: var(--he-muted);
 }
+
+/* M5-A-6: Interpretation layer (WHY these connections are worth exploring).
+   Additive only — reuses existing --he-* tokens, adds no new palette. */
+.he-interpret-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--he-gap);
+  margin-top: 0.75rem;
+}
+
+.he-interpret-item {
+  padding: 0.75rem var(--he-pad);
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-left: 4px solid var(--he-accent);
+  border-radius: var(--he-radius);
+}
+
+.he-interpret-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.he-interpret-name {
+  font-weight: 600;
+  color: var(--he-accent-dark);
+}
+
+.he-interpret-node {
+  font-weight: 600;
+  color: var(--he-accent-dark);
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.he-interpret-node:hover,
+.he-interpret-node:focus-visible {
+  background: var(--he-accent);
+  color: var(--he-surface);
+  outline: none;
+}
+
+.he-interpret-score {
+  font-size: 0.8rem;
+  color: var(--he-muted);
+}
+
+.he-interpret-why {
+  margin: 0.4rem 0 0;
+  color: var(--he-muted);
+}

@@ -5,6 +5,8 @@ import RelatedEntityList, { RelatedEntity } from './RelatedEntityList'
 import TimelinePanel, { TimelineItem } from './TimelinePanel'
 import ConnectionsExplainedPanel, { ConnectionExplained } from './ConnectionsExplainedPanel'
 import ExplorationPathsPanel from './ExplorationPathsPanel'
+import InterpretationPanel from './InterpretationPanel'
+import { toInterpretationViewModels } from '../data/interpretationFormatter'
 import ThemesPanel from './ThemesPanel'
 import CrossTopicTopicList from './CrossTopicTopicList'
 import EntityExplorationGuide from './EntityExplorationGuide'
@@ -124,6 +126,11 @@ function EntityPage({
       />
 
       <ConnectionsExplainedPanel connections={entity.connections_explained} />
+
+      <InterpretationPanel
+        interpretations={toInterpretationViewModels(entity.connections_explained)}
+        onNodeClick={onNodeClick}
+      />
 
       <ExplorationPathsPanel
         connections={entity.connections_explained}
