@@ -7,6 +7,7 @@ import ConnectionsExplainedPanel, { ConnectionExplained } from './ConnectionsExp
 import ExplorationPathsPanel from './ExplorationPathsPanel'
 import InterpretationPanel from './InterpretationPanel'
 import { toInterpretationViewModels } from '../data/interpretationFormatter'
+import { buildUnderstandingsFromRelationships } from '../data/understandingRules'
 import ThemesPanel from './ThemesPanel'
 import CrossTopicTopicList from './CrossTopicTopicList'
 import EntityExplorationGuide from './EntityExplorationGuide'
@@ -129,6 +130,10 @@ function EntityPage({
 
       <InterpretationPanel
         interpretations={toInterpretationViewModels(entity.connections_explained)}
+        understandings={buildUnderstandingsFromRelationships(
+          entity.relationships,
+          entity.name,
+        )}
         onNodeClick={onNodeClick}
       />
 

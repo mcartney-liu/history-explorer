@@ -44,6 +44,7 @@ import LandingPage, { TopicSummary } from './components/LandingPage'
 import FirstExplorationGuide from './components/FirstExplorationGuide'
 import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
+import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -509,6 +510,16 @@ function App() {
               <ConnectionsExplainedPanel connections={result.connections_explained} />
               <InterpretationPanel
                 interpretations={toInterpretationViewModels(result.connections_explained)}
+                understandings={buildUnderstandingsFromConnectionsExplained(
+                  result.connections_explained,
+                  result.exploration.main_entity.name,
+                  Object.fromEntries(
+                    (result.entities ?? []).map((e) => [
+                      e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`,
+                      e.name,
+                    ]),
+                  ),
+                )}
                 onNodeClick={(gid) =>
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
                 }
