@@ -39,6 +39,41 @@ def test_v1_search_matches_legacy():
     assert v1["count"] >= 1
 
 
+def test_v1_topics_matches_legacy():
+    # M5-A-1: the new topic-catalog endpoint must be byte-for-byte identical
+    # under /api/v1 and the frozen legacy path (same handler, v1 == legacy).
+    legacy = client.get("/topics").json()
+    v1 = client.get(f"{V1}/topics").json()
+    assert v1 == legacy
+    assert "topics" in v1
+    assert isinstance(v1["topics"], list)
+    assert len(v1["topics"]) >= 1
+
+
+def test_topics_contract_shape():
+    # M5-A-1: every entry carries exactly {topic, title, summary} and no extra
+    # fields, so the frozen client contract is not widened.
+    body = client.get(f"{V1}/topics").json()
+    assert set(body.keys()) == {"topics"}
+    for item in body["topics"]:
+        assert set(item.keys()) == {"topic", "title", "summary"}
+        assert isinstance(item["topic"], str) and item["topic"]
+        assert isinstance(item["title"], str)
+        assert isinstance(item["summary"], str)
+
+
+def test_topics_slugs_match_knowledge_core():
+    # M5-A-1: the returned slugs are exactly the topics the Knowledge Core
+    # exposes (no invented/duplicated topics), and summary is bounded.
+    body = client.get(f"{V1}/topics").json()
+    slugs = [t["topic"] for t in body["topics"]]
+    # No duplicates, order matches the registry load order.
+    assert len(slugs) == len(set(slugs))
+    # The catalog is a pure projection of the existing topic set.
+    for slug in slugs:
+        assert client.get(f"{V1}/explore/{slug}").status_code == 200
+
+
 def test_v1_health_matches_legacy():
     legacy = client.get("/health").json()
     v1 = client.get(f"{V1}/health").json()

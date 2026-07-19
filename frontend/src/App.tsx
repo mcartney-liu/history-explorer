@@ -37,11 +37,27 @@ import Breadcrumb from './components/Breadcrumb'
 import HistoryBar from './components/HistoryBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
-import RecentExplorations from './components/RecentExplorations'
+import LandingPage, { TopicSummary } from './components/LandingPage'
+import FirstExplorationGuide from './components/FirstExplorationGuide'
+import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
+import { toInterpretationViewModels } from './data/interpretationFormatter'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
 const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+
+// M5-A-3: curated "start here" topics. Editorially chosen, REAL slugs only
+// (must match the backend topic registry — see JsonTopicRepository.list_topics
+// over data/examples/*_example.json). This is purely frontend curation; the
+// underlying data is still fetched from GET /topics. Slugs absent from the
+// catalog are dropped at render time, so the list stays safe if a topic is
+// later renamed or removed.
+const FEATURED_SLUGS = [
+  'roman_empire',
+  'greek_philosophy',
+  'persian_empire',
+  'ancient_india',
+]
 
 type ExplorationResult = {
   topic: string
@@ -93,6 +109,44 @@ function App() {
   // Load persisted recent explorations once on mount.
   useEffect(() => {
     setRecent(loadRecent())
+  }, [])
+
+  // M5-A-2: load the topic catalog from GET /topics to power the curated
+  // landing page. Pure I/O; all loading / error state stays in App so the
+  // LandingPage component stays presentational (and reusable / testable).
+  const [topics, setTopics] = useState<TopicSummary[]>([])
+  const [topicsLoading, setTopicsLoading] = useState(true)
+  const [topicsError, setTopicsError] = useState<ErrorKind | ''>('')
+
+  // M5-A-3: derive the curated "start here" subset from the loaded catalog.
+  // No extra fetch / API / state — purely a filtered, order-preserving view of
+  // `topics` keyed by FEATURED_SLUGS. Empty until the catalog loads.
+  const featuredTopics: TopicSummary[] = FEATURED_SLUGS.map(
+    (slug) => topics.find((t) => t.topic === slug),
+  ).filter((t): t is TopicSummary => Boolean(t))
+
+  useEffect(() => {
+    const controller = new AbortController()
+    setTopicsLoading(true)
+    setTopicsError('')
+    fetch(`${API_BASE}/topics`, { signal: controller.signal })
+      .then((resp) => {
+        if (!resp.ok) throw new Error(`status:${resp.status}`)
+        return resp.json()
+      })
+      .then((data: { topics?: unknown }) => {
+        setTopics(Array.isArray(data?.topics) ? (data.topics as TopicSummary[]) : [])
+      })
+      .catch(() => {
+        if (controller.signal.aborted) return
+        setTopicsError('network')
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setTopicsLoading(false)
+      })
+    return () => {
+      controller.abort()
+    }
   }, [])
 
   const current: NavNode | null =
@@ -191,6 +245,19 @@ function App() {
     }
     setError('')
     navigateTo({ type: 'topic', topic: trimmed, title: prettifyTopic(trimmed) })
+  }
+
+  // M5-A-2: a catalog topic click reuses the existing exploration flow.
+  // Same node shape as SearchResults / CrossTopicTopicList topic clicks, so
+  // there is exactly one navigation path (navigateTo) — no duplicated logic,
+  // no second navigation mechanism.
+  function handleTopicClick(t: string) {
+    navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
+  }
+
+  function clearRecent() {
+    setRecent([])
+    saveRecent([])
   }
 
   async function handleSearch(q: string) {
@@ -394,6 +461,12 @@ function App() {
           {!loading && !errorKind && current?.type === 'topic' && result && (
             <div className="result">
               <SummaryPanel title={result.title} summary={result.summary} />
+              <FirstExplorationGuide
+                topic={current.topic}
+                title={result.title}
+                starters={resolveStarters(current.topic)}
+                onStarterClick={(t) => navigateTo(t)}
+              />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
               <RelationshipView
                 mainEntity={result.exploration.main_entity}
@@ -422,6 +495,12 @@ function App() {
               />
               <ConnectionsPanel connections={result.connections} />
               <ConnectionsExplainedPanel connections={result.connections_explained} />
+              <InterpretationPanel
+                interpretations={toInterpretationViewModels(result.connections_explained)}
+                onNodeClick={(gid) =>
+                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+                }
+              />
               <ExplorationPathsPanel
                 connections={result.connections_explained}
                 onNodeClick={(gid) =>
@@ -434,13 +513,16 @@ function App() {
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
                 }
               />
-              <InterpretationPanel />
             </div>
           )}
 
           {!loading && !errorKind && current?.type === 'entity' && entityData && (
             <EntityPage
               entity={entityData}
+              entityId={current.id}
+              entityName={entityData.name}
+              entityStarters={resolveEntityStarters(current.id)}
+              onStarterClick={(t) => navigateTo(t)}
               onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
               onNodeClick={(gid) =>
                 openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
@@ -450,13 +532,15 @@ function App() {
           )}
 
           {!current && (
-            <RecentExplorations
-              items={recent}
-              onSelect={navigateTo}
-              onClear={() => {
-                setRecent([])
-                saveRecent([])
-              }}
+            <LandingPage
+              topics={topics}
+              loading={topicsLoading}
+              error={topicsError}
+              onTopicClick={handleTopicClick}
+              featured={featuredTopics}
+              recent={recent}
+              onRecentSelect={navigateTo}
+              onRecentClear={clearRecent}
             />
           )}
         </div>
