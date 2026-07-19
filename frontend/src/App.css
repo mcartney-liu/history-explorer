@@ -1311,3 +1311,143 @@ body {
 .he-trail-arrow {
   color: var(--he-muted);
 }
+
+/* M5-C: Cross-Topic Comparison Panel (C-1 + C-3).
+   Additive only — reuses the existing parchment / bronze --he-* tokens,
+   matching the .he-continue* / .he-trail* visual language. */
+.he-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: var(--he-pad);
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+}
+
+.he-comparison-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--he-accent-dark);
+}
+
+.he-comparison-empty {
+  margin: 0.25rem 0 0;
+  color: var(--he-muted);
+  font-size: 0.9rem;
+}
+
+.he-comparison-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.he-comparison-target {
+  padding: 0.4rem 0.8rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), border-color var(--he-transition), color var(--he-transition);
+}
+
+.he-comparison-target:hover,
+.he-comparison-target:focus-visible {
+  background: var(--he-surface);
+  border-color: var(--he-accent);
+  outline: none;
+}
+
+.he-comparison-target.is-active {
+  background: var(--he-accent);
+  border-color: var(--he-accent);
+  color: #fff;
+}
+
+.he-comparison-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.he-comparison-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.he-comparison-explore {
+  align-self: flex-start;
+  padding: 0.45rem 0.85rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), border-color var(--he-transition), color var(--he-transition);
+}
+
+.he-comparison-explore:hover,
+.he-comparison-explore:focus-visible {
+  background: var(--he-accent);
+  color: #fff;
+  outline: none;
+}
+
+.he-comparison-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--he-muted);
+}
+
+.he-comparison-bridges {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.he-comparison-bridge-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.he-comparison-bridge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.45rem 0.8rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.he-comparison-bridge:hover,
+.he-comparison-bridge:focus-visible {
+  background: var(--he-accent);
+  color: #fff;
+  outline: none;
+}
+
+.he-comparison-rel {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--he-muted);
+}
