@@ -61,7 +61,7 @@ def get_settings() -> Settings:
 
     return Settings(
         app_name=os.getenv("APP_NAME", "History Explorer API"),
-        app_version=os.getenv("APP_VERSION", "0.3.0"),
+        app_version=os.getenv("APP_VERSION", "0.4.0"),
         api_v1_prefix=os.getenv("API_V1_PREFIX", "/api/v1").strip() or "/api/v1",
         cors_origins=_csv_list(
             os.getenv("CORS_ORIGINS"), ["http://localhost:5173"]
