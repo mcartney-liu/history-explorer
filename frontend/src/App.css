@@ -1503,3 +1503,98 @@ body {
   font-weight: 600;
   margin-right: 0.25rem;
 }
+
+/* ============================================================
+   M7-P2: Cross-Entity Temporal Comparison panel (Explore page).
+   Additive only — reuses the existing parchment / bronze --he-* tokens,
+   matching sibling panels. No existing timeline styles are modified.
+   ============================================================ */
+.temporal-comparison-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.temporal-comparison-selects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.temporal-comparison-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 200px;
+}
+
+.temporal-comparison-field-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--he-muted);
+}
+
+.temporal-comparison-select {
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: 8px;
+}
+
+.temporal-comparison-select:focus {
+  outline: none;
+  border-color: var(--he-accent);
+}
+
+.temporal-comparison-entities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.temporal-comparison-entity {
+  flex: 1 1 200px;
+  padding: 0.6rem 0.8rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-left: 4px solid var(--he-accent);
+  border-radius: 8px;
+}
+
+.temporal-comparison-entity-name {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.temporal-comparison-entity-range {
+  font-size: 0.9rem;
+  color: var(--he-muted);
+}
+
+.temporal-comparison-facts {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.temporal-comparison-fact {
+  padding: 0.55rem 0.8rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-size: 0.95rem;
+}
+
+.temporal-comparison-empty {
+  margin: 0.25rem 0 0;
+  color: var(--he-muted);
+  font-size: 0.9rem;
+}
