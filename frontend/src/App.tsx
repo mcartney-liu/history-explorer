@@ -11,6 +11,7 @@ import ConnectionsExplainedPanel from './components/ConnectionsExplainedPanel'
 import ExplorationPathsPanel from './components/ExplorationPathsPanel'
 import ThemesPanel from './components/ThemesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
+import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import CrossTopicTopicList from './components/CrossTopicTopicList'
 import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
@@ -515,6 +516,7 @@ function App() {
                 nameToId={exploreNameToId}
                 onEventClick={(id) => openEntity(id, exploreNameById[id])}
               />
+              <TemporalComparisonPanel entities={result.entities} />
               <ConnectionsPanel connections={result.connections} />
               <ConnectionsExplainedPanel connections={result.connections_explained} />
               <InterpretationPanel
