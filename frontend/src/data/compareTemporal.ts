@@ -51,7 +51,9 @@ export interface TemporalComparison {
 }
 
 // Extract a finite numeric value from a TimeValue, or undefined when absent/NaN.
-function numericValue(tv?: TimeValue): number | undefined {
+// M8-P1: exported (additive) so temporalAxis.ts can reuse the exact same
+// bound-extraction rule. Behavior is unchanged for existing callers.
+export function numericValue(tv?: TimeValue): number | undefined {
   if (tv && typeof tv.value === 'number' && !Number.isNaN(tv.value)) return tv.value
   return undefined
 }

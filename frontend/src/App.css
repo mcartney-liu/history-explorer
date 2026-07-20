@@ -1598,3 +1598,146 @@ body {
   color: var(--he-muted);
   font-size: 0.9rem;
 }
+
+/* ============================================================
+   M8-P1: Multi-Entity Temporal Timeline (Explore page).
+   Additive only — reuses the existing parchment / bronze --he-* tokens.
+   Implements a CSS-positioned Gantt (no canvas / SVG / chart library).
+   No existing timeline / temporal-comparison styles are modified.
+   ============================================================ */
+.multi-entity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.multi-entity-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--he-muted);
+}
+
+.multi-entity-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.multi-entity-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.multi-entity-label {
+  flex: 0 0 160px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.multi-entity-name {
+  font-weight: 700;
+  color: #1a1a1a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multi-entity-range {
+  font-size: 0.82rem;
+  color: var(--he-muted);
+}
+
+.multi-entity-track {
+  position: relative;
+  flex: 1 1 auto;
+  height: 22px;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.multi-entity-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--he-border);
+}
+
+.multi-entity-bar {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  min-width: 2px;
+  background: var(--he-accent);
+  border-radius: 4px;
+}
+
+.multi-entity-bar.is-point {
+  width: 6px;
+  border-radius: 50%;
+  background: var(--he-accent-dark);
+}
+
+.multi-entity-nodate {
+  position: absolute;
+  left: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--he-muted);
+}
+
+.multi-entity-scale {
+  position: relative;
+  height: 1.2rem;
+  margin-left: calc(160px + 0.75rem);
+}
+
+.multi-entity-scale-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  color: var(--he-muted);
+  white-space: nowrap;
+}
+
+.multi-entity-overlaps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+
+.multi-entity-overlaps-title {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--he-muted);
+}
+
+.multi-entity-overlap-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+}
+
+.multi-entity-overlap {
+  padding: 0.5rem 0.75rem;
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-size: 0.92rem;
+}
