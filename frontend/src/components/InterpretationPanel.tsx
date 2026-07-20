@@ -78,6 +78,11 @@ function InterpretationPanel({
                   <span className="he-interpret-tag">{u.perspective}</span>
                 </div>
                 <p className="he-interpret-why">{u.meaning}</p>
+                {u.timeContext && (
+                  <p className="he-meaning-time">
+                    <span className="he-meaning-time-label">Time:</span> {u.timeContext}
+                  </p>
+                )}
               </div>
             ))}
           </div>

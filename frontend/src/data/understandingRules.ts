@@ -283,7 +283,14 @@ export function buildUnderstandingsFromRelationships(
       actorName,
       targetName,
       targetType: r.other?.type,
-      timeContext: timeByTarget ? timeByTarget[targetName] : undefined,
+      // M6-P1 (Temporal Context Injection): prefer the TARGET entity's dates
+      // when known; fall back to the actor (centered) entity's own dates. The
+      // actor fallback is what makes the Entity-page path work, where only the
+      // centered entity's own dates are available (the API does not return the
+      // relationship target's dates). No date -> undefined -> no Time line.
+      timeContext: timeByTarget
+        ? timeByTarget[targetName] ?? timeByTarget[actorName]
+        : undefined,
     })
   })
 }
@@ -307,6 +314,11 @@ export function buildUnderstandingsFromConnectionsExplained(
   connections: ConnectionExplained[] | undefined,
   actorName: string,
   globalIdToName?: Record<string, string>,
+  // M6-P1 (Temporal Context Injection): name -> formatted date-range string,
+  // built by the caller from result.entities (explore path). Purely additive;
+  // when absent the Time line is omitted. Lookup mirrors the relationships
+  // builder: prefer the resolved target name, fall back to the actor name.
+  timeByTarget?: Record<string, string>,
 ): UnderstandingViewModel[] {
   if (!connections || connections.length === 0) return []
   const out: UnderstandingViewModel[] = []
@@ -323,6 +335,9 @@ export function buildUnderstandingsFromConnectionsExplained(
         direction: step.direction ?? 'forward',
         actorName,
         targetName,
+        timeContext: timeByTarget
+          ? timeByTarget[targetName] ?? timeByTarget[actorName]
+          : undefined,
       }),
     )
   }

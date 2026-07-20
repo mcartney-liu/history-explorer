@@ -1478,3 +1478,14 @@ body {
 .he-meaning-item .he-interpret-why {
   margin-top: 0.15rem;
 }
+/* M6-P1: Temporal Context Injection — additive "Time" sub-line under each
+   Historical Meaning. Distinct, muted style; does not alter existing layout. */
+.he-meaning-time {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: var(--he-muted, #6b7280);
+}
+.he-meaning-time-label {
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
