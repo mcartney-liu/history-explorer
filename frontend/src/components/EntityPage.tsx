@@ -8,6 +8,7 @@ import ExplorationPathsPanel from './ExplorationPathsPanel'
 import InterpretationPanel from './InterpretationPanel'
 import { toInterpretationViewModels } from '../data/interpretationFormatter'
 import { buildUnderstandingsFromRelationships } from '../data/understandingRules'
+import { buildEntityTimeMap, type TimeValue } from '../data/temporalUtils'
 import ThemesPanel from './ThemesPanel'
 import CrossTopicTopicList from './CrossTopicTopicList'
 import EntityExplorationGuide from './EntityExplorationGuide'
@@ -88,6 +89,19 @@ function EntityPage({
     }
   }
 
+  // M6-P1 (Temporal Context Injection): the /entity response only exposes the
+  // CENTERED entity's own dates (relationship targets' dates are not returned
+  // by the API). So we build a single-entry time map keyed by the centered
+  // entity's name; the relationships builder resolves it via the actor-name
+  // fallback. Target-side dates remain a documented Future Scope item.
+  const centerTimeMap: Record<string, string> = buildEntityTimeMap([
+    {
+      name: entity.name,
+      start_date: entity.summary.start_date as TimeValue | undefined,
+      end_date: entity.summary.end_date as TimeValue | undefined,
+    },
+  ])
+
   return (
     <div className="result">
       <div className="result-section entity-page-head">
@@ -133,6 +147,7 @@ function EntityPage({
         understandings={buildUnderstandingsFromRelationships(
           entity.relationships,
           entity.name,
+          centerTimeMap,
         )}
         onNodeClick={onNodeClick}
       />

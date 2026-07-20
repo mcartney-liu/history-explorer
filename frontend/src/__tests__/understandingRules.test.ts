@@ -118,6 +118,73 @@ describe('understandingRules (M5-D)', () => {
     expect(vms[0].meaning).toContain('traded with')
   })
 
+  // --- M6-P1: Temporal Context Injection ---------------------------------
+  it('M6-P1: relationships builder injects target timeContext when known', () => {
+    const vms = buildUnderstandingsFromRelationships(
+      [rel('conquered', 'forward', 'Greece')],
+      'Rome',
+      { Greece: '30 BC' },
+    )
+    expect(vms).toHaveLength(1)
+    expect(vms[0].timeContext).toBe('30 BC')
+  })
+
+  it('M6-P1: relationships builder falls back to actor (centered) timeContext', () => {
+    // On an entity page only the centered entity's own dates are available,
+    // so the map is keyed by the actor name; the target ("Egypt") is not in it.
+    const vms = buildUnderstandingsFromRelationships(
+      [rel('conquered', 'forward', 'Egypt')],
+      'Rome',
+      { Rome: '753 BC - 476 CE' },
+    )
+    expect(vms).toHaveLength(1)
+    expect(vms[0].timeContext).toBe('753 BC - 476 CE')
+  })
+
+  it('M6-P1: relationships builder leaves timeContext undefined when no map', () => {
+    const vms = buildUnderstandingsFromRelationships(
+      [rel('conquered', 'forward', 'Greece')],
+      'Rome',
+    )
+    expect(vms).toHaveLength(1)
+    expect(vms[0].timeContext).toBeUndefined()
+  })
+
+  it('M6-P1: connections_explained builder injects timeContext (4th arg)', () => {
+    const conn: ConnectionExplained = {
+      global_id: 'topic:b',
+      depth: 1,
+      path: [],
+      steps: [{ relationship: 'traded_with', direction: 'outgoing', to_global_id: 'topic:b' }],
+      score: 0.9,
+      score_breakdown: {},
+      explanation: 'x',
+    }
+    const vms = buildUnderstandingsFromConnectionsExplained(
+      [conn],
+      'Rome',
+      { 'topic:b': 'Carthage' },
+      { Carthage: '500 BC - 400 BC' },
+    )
+    expect(vms).toHaveLength(1)
+    expect(vms[0].timeContext).toBe('500 BC - 400 BC')
+  })
+
+  it('M6-P1: connections_explained builder leaves timeContext undefined without 4th arg', () => {
+    const conn: ConnectionExplained = {
+      global_id: 'topic:b',
+      depth: 1,
+      path: [],
+      steps: [{ relationship: 'traded_with', direction: 'outgoing', to_global_id: 'topic:b' }],
+      score: 0.9,
+      score_breakdown: {},
+      explanation: 'x',
+    }
+    const vms = buildUnderstandingsFromConnectionsExplained([conn], 'Rome', { 'topic:b': 'Carthage' })
+    expect(vms).toHaveLength(1)
+    expect(vms[0].timeContext).toBeUndefined()
+  })
+
   it('deterministic: same input yields identical output (no random/AI)', () => {
     const input: UnderstandingInput = {
       relationType: 'inherited',

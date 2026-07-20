@@ -107,4 +107,40 @@ describe('InterpretationPanel (M5-A-6)', () => {
     expect(html).toContain('han_dynasty')
     expect(html).not.toContain('Historical Meaning')
   })
+
+  // --- M6-P1: Temporal Context Injection (additive Time sub-line) ---------
+  const understandingsWithTime: UnderstandingViewModel[] = [
+    {
+      relationType: 'conquered',
+      direction: 'forward',
+      actor: 'Rome',
+      target: 'Egypt',
+      targetType: 'polity',
+      timeContext: '30 BC',
+      meaning: 'Rome conquered Egypt, imposing its order and reshaping it.',
+      perspective: 'as conqueror',
+    },
+  ]
+
+  it('M6-P1 Case9: renders Time sub-line when timeContext present', () => {
+    const html = renderToStaticMarkup(
+      <InterpretationPanel understandings={understandingsWithTime} />,
+    )
+    // Historical Meaning block still present (additive, not replacing)
+    expect(html).toContain('Historical Meaning')
+    expect(html).toContain('Rome conquered Egypt')
+    // New Time sub-line
+    expect(html).toContain('Time:')
+    expect(html).toContain('30 BC')
+    expect(html).toContain('he-meaning-time')
+  })
+
+  it('M6-P1 Case10: no Time sub-line when timeContext absent (old behavior)', () => {
+    const html = renderToStaticMarkup(
+      <InterpretationPanel understandings={understandings} />,
+    )
+    expect(html).toContain('Historical Meaning')
+    expect(html).not.toContain('Time:')
+    expect(html).not.toContain('he-meaning-time')
+  })
 })

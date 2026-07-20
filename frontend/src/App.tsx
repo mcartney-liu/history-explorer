@@ -45,6 +45,7 @@ import FirstExplorationGuide from './components/FirstExplorationGuide'
 import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
+import { buildEntityTimeMap } from './data/temporalUtils'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -397,6 +398,14 @@ function App() {
       }))
     : []
 
+  // M6-P1 (Temporal Context Injection, explore path): build a name -> date-range
+  // map from the current topic's entities. The backend returns the full entity
+  // objects at runtime (including start_date/end_date), which the relationships
+  // builder consumes via the target-name key. Pure frontend; no new API field.
+  const exploreEntityTimeByName: Record<string, string> = result
+    ? buildEntityTimeMap(result.entities)
+    : {}
+
   const crumbs = buildBreadcrumb(history, cursor)
 
   // M5-B-1: global ids the user has already visited, derived from the recent
@@ -519,6 +528,7 @@ function App() {
                       e.name,
                     ]),
                   ),
+                  exploreEntityTimeByName,
                 )}
                 onNodeClick={(gid) =>
                   openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)

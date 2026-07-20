@@ -1,9 +1,14 @@
 import { Fragment } from 'react'
 import EmptyState from './EmptyState'
+import { sortTimeline, groupTimeline } from '../data/timelineUtils'
+import type { TimeValue } from '../data/temporalUtils'
 
 export type TimelineItem = {
   period: string
   event: string
+  // M6-P4: optional backend-provided date used for sorting + bucket grouping.
+  // Optional so pre-existing { period, event } items stay fully compatible.
+  date?: TimeValue
 }
 
 type TimelinePanelProps = {
@@ -19,12 +24,27 @@ type TimelinePanelProps = {
 function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps) {
   const clickable = typeof onEventClick === 'function' && !!nameToId
 
+  // M6-P4: deterministic ordering + fixed time-bucket grouping.
+  // sortTimeline -> groupTimeline are pure; the original node/connector
+  // rendering below is unchanged (period / event / navigation preserved).
+  const groups = groupTimeline(sortTimeline(timeline))
+  const flatItems = groups.flatMap((g) => g.items)
+  // Bucket header shown immediately before each group's first item.
+  const headerBefore = new Map<number, string>()
+  {
+    let acc = 0
+    for (const g of groups) {
+      if (g.items.length > 0) headerBefore.set(acc, g.bucket)
+      acc += g.items.length
+    }
+  }
+
   return (
     <div className="result-section">
       <h3>Timeline</h3>
       {timeline.length > 0 ? (
         <div className="timeline-flow">
-          {timeline.map((item, idx) => {
+          {flatItems.map((item, idx) => {
             const entityId = clickable ? nameToId![item.event] : undefined
             const interactive = clickable && !!entityId
             const node = (
@@ -48,7 +68,7 @@ function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps)
               </div>
             )
             const link =
-              idx < timeline.length - 1 ? (
+              idx < flatItems.length - 1 ? (
                 <div
                   className="timeline-connector timeline-link"
                   aria-hidden="true"
@@ -57,8 +77,14 @@ function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps)
                   &#8595;
                 </div>
               ) : null
+            const header = headerBefore.get(idx)
             return (
               <Fragment key={idx}>
+                {header && (
+                  <div className="timeline-bucket-header" key={`h-${idx}`}>
+                    {header}
+                  </div>
+                )}
                 {node}
                 {link}
               </Fragment>
