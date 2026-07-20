@@ -49,13 +49,17 @@ Discover Civilization.
 
 ## Project Status
 
-Current Phase:
+Current milestone:
 
-**M2 — Exploration MVP: COMPLETED (Alpha Ready, pending human review)**
+**M8 — Multi Entity Temporal Visualization: COMPLETED (released v0.9.0)**
 
-Status:
+Latest release:
 
-M2 delivered: Knowledge Model v2, cross-dataset search, entity pages, a navigation shell that closes the Exploration Loop, and a startup data-quality validation surfaced via `GET /health`. No AI, no graph database, no search engine, no new dependency.
+**v0.9.0** (2026-07-20)
+
+Engineering status:
+
+**Foundation cleanup in progress (M8.6)** — establishing version-source single source of truth, CI foundation, and engineering workflow automation.
 
 
 Completed (M1 Foundation Validation):
