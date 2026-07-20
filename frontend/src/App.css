@@ -143,6 +143,20 @@ body {
   gap: 0;
 }
 
+/* M6-P4: fixed time-bucket header (Before 500 BCE / 500 BCE - 1 CE / ...).
+   Decorative divider only; no era / civilization inference. */
+.timeline-bucket-header {
+  margin: 0.85rem 0 0.35rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #5b5345;
+  background: #efe9dd;
+  border: 1px solid #e2ddd2;
+  border-radius: 999px;
+}
+
 .timeline-node {
   display: flex;
   flex-direction: column;
