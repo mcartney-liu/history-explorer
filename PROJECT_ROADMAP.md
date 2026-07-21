@@ -1,174 +1,64 @@
 # History Explorer - Project Roadmap
 
-Version: 1.0
-
+Version: 1.1
 Status: Active
 
 
 # 1. Overview
 
-History Explorer aims to become an AI-powered global history exploration platform.
+History Explorer evolves from a deterministic exploration foundation toward the long-term vision (历史版 Google Maps): Graph + Timeline + Map + AI guiding infinite exploration.
 
-The development follows:
-
-Foundation → Prototype → MVP → Expansion → Platform
-
-
-Each phase validates and expands the core exploration experience.
-
-
-# 2. Development Philosophy
-
-
-The project follows:
-
+Development philosophy:
 
 1. Product clarity before implementation.
-
 2. Small iterations before large expansion.
-
 3. User exploration value before feature quantity.
-
 4. Knowledge quality before data scale.
-
 5. Long-term architecture before short-term optimization.
 
 
-# 3. Phase 0 - Foundation
+# 2. Completed Milestones
 
+- **M1** Foundation Validation (PRD / DNA / Constitution / prototype).
+- **M2** Exploration MVP (Knowledge Model v2, search, entity pages, navigation shell, exploration loop, data quality).
+- **M3** Knowledge Core Foundation (repository / registry / graph / search / timeline / exploration_service; composition root).
+- **M3.5** Schema Freeze + Global Graph + Deterministic Exploration Engine + Five-Zone UI. *Established the Current Architecture Freeze Baseline.*
+- **M4** Data Scale & Quality + Architecture.
+- **M5** AI-Readiness Gating (concluded: AI layer deferred pending data / retrieval / flow / readiness).
+- **M6** Temporal Understanding Layer (v0.7.0).
+- **M7** (v0.8.0).
+- **M8** Multi-Entity Temporal Visualization (v0.9.0).
+- **M8.6** Release & Engineering Foundation - CI, Playbook, version single-source, freeze-check (v0.10.0).
 
-Status:
 
-Completed.
+# 3. Near-Term (within Current Architecture Freeze Baseline)
 
+Constraints: deterministic, in-memory, no Neo4j / LLM / GIS / new dependencies.
 
-Goals:
+Examples (scoped per milestone):
 
-Establish project foundation.
+- Richer deterministic exploration flow and Next-Node-style recommendations (within the explainable engine).
+- Enhanced relationship / timeline / theme presentation in the Five-Zone UI.
+- Data depth & quality; documentation-system maturity (this M8.8 Documentation Architecture work).
+- Expanded cross-topic connections.
 
 
-Achievements:
+# 4. Future (post Freeze Revision Gate)
 
-- GitHub repository setup.
-- Project documentation system.
-- Product principles.
-- Product requirements foundation.
-- AI collaboration workflow.
+Requires ADR + freeze-baseline revision (Product Owner approval). Examples from PRD v1.0:
 
+- **AI Guidance Layer:** History Guide / Next Node / Graph Builder / Explanation Engine / Path Navigator.
+- **Knowledge Graph upgrade:** Neo4j (graph) + PostgreSQL (relational) + Elasticsearch (search).
+- **Spatial dimension:** GIS historical map (territory / war routes / city markers).
+- **User persistence & accounts; community / creator features.**
+- **Clients:** Flutter mobile + Web.
 
-# 4. Phase 1 - Product Design
 
-
-Status:
-
-Completed.
-
-
-Goals:
-
-Define product direction and architecture.
-
-
-Achievements:
-
-- Product Architecture.
-- User Journey.
-- Information Architecture.
-- MVP Scope.
-- Technical Architecture.
-
-
-# 5. Phase 2 - Prototype Development
-
-
-Status:
-
-Next.
-
-
-Goal:
-
-Build a working exploration prototype.
-
-
-Objectives:
-
-- Initialize frontend.
-- Initialize backend.
-- Create basic data model.
-- Implement basic exploration flow.
-- Connect AI capability.
-
-
-Expected Result:
-
-Users can explore a small amount of historical knowledge.
-
-
-# 6. Phase 3 - MVP Development
-
-
-Goal:
-
-Validate the core product experience.
-
-
-Objectives:
-
-- Expand historical data.
-- Improve AI guide.
-- Add timeline exploration.
-- Add relationship visualization.
-- Improve user experience.
-
-
-Success Criteria:
-
-Users can naturally explore historical connections.
-
-
-# 7. Phase 4 - Knowledge Expansion
-
-
-Goal:
-
-Increase historical depth and coverage.
-
-
-Objectives:
-
-- More civilizations.
-- More historical periods.
-- More languages.
-- Better knowledge graph.
-- Better data quality.
-
-
-# 8. Phase 5 - Platform Evolution
-
-
-Goal:
-
-Build a global historical exploration platform.
-
-
-Possible directions:
-
-- Expert participation.
-- Community features.
-- Creator ecosystem.
-- Advanced visualization.
-- Educational applications.
-
-
-# 9. Long-Term Vision
-
+# 5. Long-Term Vision
 
 History Explorer should become:
 
-
 A global exploration engine for understanding human civilization.
-
 
 The platform helps people discover:
 
@@ -178,14 +68,7 @@ The platform helps people discover:
 - How history connects across time and space.
 
 
-# 10. Related Documents
+# 6. Related Documents
 
-
-- PROJECT_CONTEXT.md
-- PROJECT_CHARTER.md
-- Product_DNA.md
-- Product_Constitution.md
-- PRD.md
-- Product_Architecture.md
-- Technical_Architecture.md
-- MVP_Scope.md
+- `PROJECT_CONTEXT.md` (current state) - `PRD.md` (vision mirror) - `docs/INDEX.md`
+- Freeze Baseline: `docs/M3.5-000_Schema_Freeze_Review.md`

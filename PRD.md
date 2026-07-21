@@ -1,170 +1,51 @@
-# History Explorer - Product Requirements Document (PRD)
+> ## ⚠️ Derived Product Vision Mirror — NOT the Source of Truth
+>
+> **Sole Source of Truth:** *History Explorer PRD v1.0* (original document `History_Explorer_PRD_完整版_v1.0.docx`, 2026-07-01).
+> This file is a version-controlled **markdown mirror**, kept in sync for git / Agent readability.
+> **No dual source:** if this mirror and the `.docx` diverge, the `.docx` wins.
+> Synced: 2026-07-21 (PRD v1.0).
 
-Version: 1.0
+# History Explorer — Product Vision (Derived Mirror)
 
-Status: Foundation
+## Vision
+**History Explorer = 历史版 Google Maps** — 让历史脉络可探索、可点击、可沉浸。
+A *history cognition OS*, not a content app: users build their own understanding by navigating relationships.
 
+## Positioning — History Exploration Engine
+Analogy: Google Maps lets you navigate a city and discover places; History Explorer lets you navigate history and discover connections.
+Core capability: from any historical node, find a path to any other node.
 
-# 1. Product Overview
+## Four-Element Synergy (equal dimensions, all serve Exploration Experience)
+- **Graph = Relationship Structure** — clickable network of people / events / wars / places / institutions.
+- **Timeline = Time Dimension** — personal / world-synchronous / dynastic timelines.
+- **Map = Spatial Dimension** — territory change, war routes, city markers.
+- **AI = Interpretation & Guidance Layer** — explains the current node and suggests the next.
 
-## Product Name
+These four are co-equal building blocks that together deliver the Exploration Experience. **There is no value hierarchy among them.**
 
-History Explorer（历史探索）
+## Core Philosophy (from PRD v1.0)
+1. **Graph-first (presentation principle):** relationships are shown with priority — relationship lists before prose, related nodes clickable, timeline events jump between connections.
+2. **Infinite Exploration (soul):** no "reading finished" — only continuous clicking. Every Entity page always shows 2–3 Next Node recommendations, a clickable relationship list, related timeline events, and marked map locations.
+3. **AI as Guide, not Map:** AI explains *why* a node matters and *what* to explore next; it does **not** replace the graph structure, evidence, or critical thinking.
+4. **Everything Is Connected:** knowledge is meaningful relationships, not isolated articles.
 
+## Target Users
+- **Explorer** — curiosity-driven, infinite roaming.
+- **Learner** — builds structured historical understanding.
+- **Creator** — gathers / exports historical material.
+- **Expert** — verifies relationships and traces sources.
 
-## Product Position
-
-History Explorer is an AI-powered global history exploration platform.
-
-The product transforms history learning from passive information consumption into active exploration and discovery.
-
-
-# 2. Background
-
-Traditional history learning and information products often provide fragmented knowledge.
-
-Users can find individual facts, but it is difficult to understand:
-
-- Historical causes.
-- Relationships between events.
-- Connections between civilizations.
-- Global context across time and space.
-
-
-History Explorer aims to solve this through connected historical exploration.
-
-
-# 3. User Problems
-
-Users need to answer:
-
-## What happened?
-
-Understand historical events and facts.
-
-
-## Why did it happen?
-
-Understand causes, motivations, and consequences.
-
-
-## What happened elsewhere?
-
-Understand simultaneous global historical developments.
-
-
-## How are things connected?
-
-Discover relationships between people, events, places, and civilizations.
-
-
-# 4. Target Users
-
-
-## Explorer
-
-Primary users.
-
-Characteristics:
-
-- Curious about history.
-- Enjoy discovering connections.
-- Prefer exploration over memorization.
-
-
-## Learner
-
-Users who want structured historical understanding.
-
-
-## Creator
-
-Users who create historical content or share discoveries.
-
-
-## Expert
-
-Users who need deeper research and knowledge organization.
-
-
-# 5. Core User Experience
-
-The core experience:
-
+## Core Experience Loop
 Explore → Connect → Understand → Discover
 
+## Long-Term Technical Direction (FUTURE target, not current)
+PRD v1.0 specifies a long-term stack: Neo4j (graph) + PostgreSQL (relational) + Elasticsearch (search) + LLM+RAG (AI) + Flutter/Web (clients).
+> This is the **vision target**. The *current* architecture is a deterministic, in-memory Knowledge Core (see `PROJECT_CONTEXT.md`). Transition happens only via the Freeze Revision Gate.
 
-Users should be able to:
+## AI System (vision target — five roles)
+History Guide · Next Node · Graph Builder · Explanation Engine · Path Navigator. AI usage is cost-bounded (≤300 chars explanation, 2–3 nodes, no book-generation).
 
-- Start from a historical topic.
-- Explore related entities.
-- Discover connections.
-- Continue exploration.
-
-
-# 6. Product Goals
-
-
-## Primary Goals
-
-- Make history easier to explore.
-- Improve understanding of historical relationships.
-- Encourage curiosity-driven learning.
-
-
-## Long-term Goals
-
-- Build a global historical knowledge exploration platform.
-- Create scalable historical knowledge connections.
-
-
-# 7. Product Scope
-
-
-Included:
-
-- Historical exploration.
-- AI-assisted explanation.
-- Timeline exploration.
-- Geographic exploration.
-- Relationship discovery.
-
-
-Not Included:
-
-- General chatbot.
-- Social media.
-- News platform.
-- Simple historical article database.
-
-
-# 8. Product Principles
-
-The product follows:
-
-- Exploration over searching.
-- Connections over isolated information.
-- Understanding over memorization.
-- AI as guide, not authority.
-- Documentation before implementation.
-
-
-# 9. Future PRD Expansion
-
-Future versions will define:
-
-- Detailed features.
-- User stories.
-- User flows.
-- Functional requirements.
-- Acceptance criteria.
-- Product metrics.
-
-
-# 10. Related Documents
-
-- PROJECT_CONTEXT.md
-- PROJECT_CHARTER.md
-- Product_DNA.md
-- Product_Constitution.md
-- README.md
+## Related Documents
+- Product DNA (`Product_DNA.md`, L2) · Product Constitution (`Product_Constitution.md`, L3)
+- Current Reality (`PROJECT_CONTEXT.md`, L4) · Roadmap (`PROJECT_ROADMAP.md`, L5)
+- Documentation Map (`docs/INDEX.md`) · Team Spec (`docs/TEAM_OPERATING_SPEC_v1.2.md`)

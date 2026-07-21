@@ -1,7 +1,6 @@
 # History Explorer - Product DNA
 
-Version: 1.0
-
+Version: 1.1 (synced to PRD v1.0)
 Status: Active
 
 
@@ -18,12 +17,11 @@ The core value is not only providing answers, but enabling continuous discovery.
 
 The fundamental user experience is:
 
-Explore → Connect → Understand → Discover
-
+Explore -> Connect -> Understand -> Discover
 
 Users should be able to:
 
-- Start from one historical event.
+- Start from one historical node.
 - Discover related people, civilizations, locations, and time periods.
 - Understand causes and consequences.
 - Continue exploring naturally.
@@ -39,66 +37,69 @@ Not:
 
 "Let me search for a fact."
 
-
 The product encourages curiosity-driven exploration.
 
 
 # 4. Core Product Principles
 
 
-## 4.1 Time First
+## 4.1 Graph-first (presentation principle)
 
-Time is the primary dimension of historical understanding.
+Relationships are the primary lens. Any page or feature prioritizes relationship display:
 
-Users should easily explore:
+- Relationship lists before prose.
+- Related nodes are clickable.
+- Timeline events jump between connections.
 
-- What happened before?
-- What happened after?
-- What happened at the same time elsewhere?
-
-
-## 4.2 Space Second
-
-Geography provides context.
-
-Historical events should connect with:
-
-- Locations.
-- Regions.
-- Civilizations.
-- Cultural environments.
+This is a *presentation* priority, not a ranking of element value (see Section 4.4).
 
 
-## 4.3 Everything Is Connected
+## 4.2 Infinite Exploration (soul)
 
-Historical knowledge should not exist as isolated articles.
+Infinite exploration is the product's soul.
 
-Events, people, places, and civilizations should form meaningful relationships.
+There is no "reading finished" - only continuous clicking. At any Entity page the user always sees:
+
+- 2-3 Next Node recommendations.
+- A clickable relationship list.
+- Related timeline events.
+- Marked map locations.
 
 
-## 4.4 AI As Guide
+## 4.3 AI As Guide (Interpretation & Guidance Layer)
 
-AI acts as a historical exploration guide.
-
-AI should:
+AI acts as a historical exploration guide. AI should:
 
 - Explain.
 - Connect.
 - Provide context.
-- Suggest exploration paths.
+- Suggest exploration paths (Next Node).
 
-AI should not replace historical evidence or critical thinking.
+AI should not replace the graph structure, historical evidence, or critical thinking.
+
+
+## 4.4 Four-Element Synergy (equal dimensions)
+
+Graph, Timeline, Map, and AI are co-equal dimensions that together serve the Exploration Experience:
+
+- **Graph = Relationship Structure**
+- **Timeline = Time Dimension**
+- **Map = Spatial Dimension**
+- **AI = Interpretation & Guidance Layer**
+
+There is no value hierarchy among them; all exist to make exploration deeper and more meaningful.
 
 
 # 5. Differentiation
 
 History Explorer is different from traditional history products because it combines:
 
-- AI interpretation.
-- Knowledge connections.
+- Relationship structure.
+- AI interpretation (guidance layer).
 - Timeline exploration.
-- Geographic exploration.
-- Interactive discovery.
+- Spatial exploration.
+
+Into one interactive discovery experience.
 
 
 # 6. User Experience Principles
@@ -130,3 +131,5 @@ Future development should continuously improve:
 - Knowledge connections.
 - Historical understanding.
 - User discovery experience.
+
+Without violating Section 4.

@@ -1,34 +1,34 @@
-# History Explorer - Project Context
+# History Explorer - Project Context (Current Reality)
 
-Version: 1.0
-
+Version: 1.1
 Status: Active
 
-Project Type:
-AI-powered Global History Exploration Platform
-
-
----
-
-> **Team Operating Specification:** `Team Operating Specification v1.2 (Frozen)` 是本项目的**唯一团队规范**。所有后续开发（组织、角色、Checkpoint、决策权、知识库）均遵循 [`docs/TEAM_OPERATING_SPEC_v1.2.md`](docs/TEAM_OPERATING_SPEC_v1.2.md)。规范变更走其 §14 Specification Versioning。
+> **Team Operating Specification:** `Team Operating Specification v1.2 (Frozen)` is the single team norm. All development follows [`docs/TEAM_OPERATING_SPEC_v1.2.md`](docs/TEAM_OPERATING_SPEC_v1.2.md). Changes via its Section 14 Versioning.
 
 # 1. Project Identity
 
-## Project Name
+History Explorer（历史探索）- an AI-powered global history exploration platform.
 
-History Explorer（历史探索）
+It combines Knowledge Graph, Timeline, Spatial Exploration, and AI interpretation to help users explore, connect, and understand human history.
 
+# 2. Product Position
 
-## Product Position
+History Explorer is NOT:
 
-History Explorer is an AI-powered global history exploration platform.
+- A traditional encyclopedia.
+- A digital history book.
+- A simple search engine.
+- A general AI chatbot.
 
-It combines Artificial Intelligence, Knowledge Graph, Timeline, and Spatial Exploration to help users explore, connect, and understand human history.
+History Explorer IS:
 
+An exploration engine for historical knowledge.
 
----
+The core experience is:
 
-# 2. Project Mission
+Explore -> Connect -> Understand -> Discover
+
+# 3. Mission
 
 The mission of History Explorer is:
 
@@ -41,93 +41,47 @@ The product helps users understand:
 - What happened elsewhere at the same time?
 - How are historical events connected?
 
-
----
-
-# 3. Product Position
-
-History Explorer is NOT:
-
-- A traditional encyclopedia.
-- A digital history book.
-- A simple search engine.
-- A general AI chatbot.
-
-
-History Explorer IS:
-
-An exploration engine for historical knowledge.
-
-The core experience is:
-
-Explore → Connect → Understand → Discover
-
-
----
-
 # 4. Core Principles
 
-## Explore First
+- **Explore First** - discover through exploration, not only search.
+- **Everything Is Connected** - meaningful relationships among events / people / civilizations / places / periods.
+- **Graph-first (presentation)** - relationships shown with priority.
+- **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
+- **Long-term Scalability** - architecture and docs support continuous growth.
 
-Users should discover history through exploration rather than only searching for answers.
+# 5. Current State (v0.10.0 / M8.6)
 
+Released: **v0.10.0** (M8.6, 2026-07-21).
 
-## Everything Is Connected
+Implemented (deterministic, no AI runtime):
 
-Historical events, people, civilizations, locations, and time periods should be connected through meaningful relationships.
+- Knowledge Core (in-memory): entities + typed relationships + structured time.
+- Global Graph (cross-topic edges) and Deterministic Exploration Engine (four-dimensional weighted scoring; static, explainable, no ML).
+- Multi-entity temporal visualization (M6 / M7 / M8): time understanding, comparison, multi-axis.
+- Cross-topic connections (M4); data scale & quality (8 topics / 69 entities / 104 relations / 31 cross-topic edges / 0 warnings).
+- Five-Zone UI (Related / Explained / Paths / Timeline / Themes) rendering real data.
+- Basic search (`/search`); deterministic rule-based explanation (`connections_explained`).
+- Engineering foundation (M8.6): CI, Engineering Playbook, version-source single truth, freeze-check guard.
 
+Deferred / Not yet built (per Freeze Baseline):
 
-## AI As Interpretation Layer
+- AI guidance layer (History Guide / Next Node / Graph Builder).
+- GIS Map / spatial visualization.
+- Neo4j-level knowledge model; PostgreSQL; Elasticsearch.
+- User persistence / accounts.
+- Force-directed graph visualization.
 
-AI helps users understand and explore history.
+# 6. Current Architecture Freeze Baseline
 
-AI does not replace historical sources or independent verification.
+The current architecture is **frozen as a baseline** - *not* a permanent freeze. In code it prohibits the introduction of: Neo4j / PostgreSQL / Elasticsearch / LLM+RAG runtime / GIS / login / permissions / new dependencies. The deterministic in-memory Knowledge Core and Exploration Engine are the agreed foundation.
 
+**Evolution path - Freeze Revision Gate:**
 
-## Long-term Scalability
+Any change that touches the freeze boundary (e.g., adding AI runtime, Neo4j, GIS) MUST pass the Freeze Revision Gate: an ADR + a revision of the freeze baseline ([`docs/M3.5-000_Schema_Freeze_Review.md`](docs/M3.5-000_Schema_Freeze_Review.md), now elevated to [`docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md`](docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md)), approved by Product Owner. It is never bypassed silently in implementation.
 
-The product architecture and documentation should support continuous growth.
+Code guard: `scripts/freeze-check.mjs` (runs in CI).
 
-
----
-
-# 5. Current Project Stage
-
-Current Phase:
-
-M1 Foundation Validation Completed (Closure Revision)
-
-Status:
-
-M1 Closure Revision Completed / Preparing for M2
-
-
-Completed (M1 Foundation Validation):
-
-- Product Foundation (PRD, Product DNA, Product Constitution)
-- Architecture Foundation (Technical Architecture, frozen)
-- Knowledge Model Prototype (generic entity / relationship / timeline)
-- Exploration UI Prototype (React 18 + TypeScript + Vite, 9 components)
-- API Prototype (FastAPI, GET /explore/{topic})
-- Test Baseline (pytest API contract tests + vitest frontend smoke test)
-
-
-M1 Closure Revision (Completed):
-
-- M-H1 Exploration Loop Closure — related entities are clickable
-- M-H2 Minimum Test Gate — backend + frontend test baseline
-- M-H3 Topic Input Validation — safe topic input (no path traversal)
-- M-H4 Document Closure — documentation aligned with code (M-H4 task)
-
-
-Current Focus:
-
-Preparing for M2: navigation shell, CI/Docker/observability, API versioning, knowledge model v2.
-
-
----
-
-# 6. Development Rules
+# 7. Development Rules
 
 All development follows these principles:
 
@@ -138,10 +92,7 @@ All development follows these principles:
 5. Avoid unnecessary complexity.
 6. Preserve long-term maintainability.
 
-
----
-
-# 7. AI Agent Collaboration Rules
+# 8. AI Agent Collaboration Rules
 
 AI Agents working on this project must follow:
 
@@ -150,22 +101,15 @@ AI Agents working on this project must follow:
 3. Do not change product direction.
 4. Do not invent requirements.
 5. Do not modify unrelated files.
-6. Commit changes with meaningful messages.
-7. Push completed work to GitHub.
-8. Report completed changes clearly.
+6. Respect the Current Architecture Freeze Baseline; propose freeze revisions via the Gate, never by silent code change.
+7. Commit changes with meaningful messages.
+8. Push completed work to GitHub.
+9. Report completed changes clearly.
 
+# 9. Related Documents
 
----
-
-# 8. Related Documents
-
-Future related documents:
-
-- PROJECT_CHARTER.md
-- README.md
-- Product_DNA.md
-- Product_Constitution.md
-- PRD.md
-- Architecture Documents
-- Decision Logs
-- Team Operating Specification v1.2 (Frozen): docs/TEAM_OPERATING_SPEC_v1.2.md
+- Vision (mirror): `PRD.md` (source: `History_Explorer_PRD_完整版_v1.0.docx`)
+- `Product_DNA.md` (L2) - `Product_Constitution.md` (L3)
+- `PROJECT_ROADMAP.md` (L5) - `docs/INDEX.md` (Documentation Map)
+- Freeze Baseline: `docs/M3.5-000_Schema_Freeze_Review.md`
+- Team Spec: `docs/TEAM_OPERATING_SPEC_v1.2.md`

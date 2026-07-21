@@ -21,6 +21,8 @@ History should not be presented as isolated facts.
 
 Events, people, civilizations, locations, and time periods should be connected through meaningful relationships.
 
+This is expressed through the **Graph-first** presentation principle and the four co-equal dimensions - Graph (Relationship Structure), Timeline (Time Dimension), Map (Spatial Dimension), AI (Interpretation & Guidance Layer) - all serving the Exploration Experience (see `Product_DNA.md` Section 4).
+
 
 ## 2.2 Exploration Is The Core Experience
 
@@ -41,18 +43,18 @@ The product should prioritize:
 More information does not automatically create better understanding.
 
 
-## 2.4 AI Is A Guide, Not The Authority
+## 2.4 AI Is A Guide, Not The Authority (Interpretation & Guidance Layer)
 
-AI should help users explore and understand history.
+AI should help users explore and understand history. AI is the **Interpretation & Guidance Layer** - it explains why a node matters and suggests what to explore next.
 
 AI should:
 
 - Explain.
 - Connect.
 - Provide context.
-- Suggest exploration paths.
+- Suggest exploration paths (Next Node).
 
-AI should not replace evidence, sources, or critical thinking.
+AI should **not** replace the graph structure, evidence, sources, or critical thinking. AI is a guide, not the map.
 
 
 # 3. Product Boundaries

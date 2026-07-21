@@ -1,82 +1,80 @@
-# History Explorer — 文档索引（INDEX）
+# History Explorer — Documentation Map (INDEX)
 
-> 用途：新人进入项目后，从这里快速定位所有核心文档。
-> 维护原则：只索引真实存在的文档；不存在的文档不编造，相关主题指向其实际所在文件。
-> 最后更新：2026-07-15（M2-006 Documentation Sync）。
+> Single navigation + freshness index for all project documentation. Read this first to avoid cognitive drift.
 
----
+## Layer Model (6 product layers + meta)
 
-## 1. Project（项目总览）
+| Layer | Name | Answers | Source of Truth | Mutability | Owner |
+|---|---|---|---|---|---|
+| **L1** | Product Vision Source | Why we exist / what we become | `History_Explorer_PRD_完整版_v1.0.docx` (original). `PRD.md` = derived mirror | Only via version bump (Product Owner) | Product Owner |
+| **L2** | Product DNA | What can never be violated (identity contract) | Distilled from L1 | Extremely rare | Product Owner |
+| **L3** | Product Constitution | How we decide / what we refuse to become | Governance rules | Major (Product Owner) | Product Owner + Lead |
+| **L4** | Current Reality / Project Context | What is true right now | Code + git tags + CHANGELOG | **Every release (living doc)** | Lead |
+| **L5** | Roadmap | How we evolve | Milestone planning | Per milestone | Lead + Product Owner |
+| **L6** | Architecture / Engineering | How it is built | Code (fact) | Per milestone | Lead / Backend |
+| *Meta* | Documentation Map / Team Spec / Repository Memory | Navigation + team governance + project KB | This file / `TEAM_OPERATING_SPEC_v1.2.md` / `.workbuddy/memory` | As needed | Lead |
+| **15_DECISIONS** | Decisions (ADR) | Why a specific architecture/feature/tech decision was made | `docs/15_DECISIONS/` | Per decision | Lead + Product Owner |
 
-| 文档 | 说明 |
-|------|------|
-| [README.md](../README.md) | 项目入口、产品定位、当前阶段状态 |
-| [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md) | 项目背景与当前阶段上下文 |
-| [PROJECT_CHARTER.md](../PROJECT_CHARTER.md) | 项目章程（目标 / 边界 / 原则） |
-| [PROJECT_ROADMAP.md](../PROJECT_ROADMAP.md) | 里程碑路线图（M1 → M2 → M3） |
+## Document Registry
 
-## 2. Product Design（产品设计）
+| File | Layer | Owner | Mutability | Updated | Notes |
+|---|---|---|---|---|---|
+| `PRD.md` | L1 (mirror) | Product Owner | Version bump only | 2026-07-21 | Derived from docx; docx wins on conflict |
+| `Product_DNA.md` | L2 | Product Owner | Rare | 2026-07-21 | Identity contract; Graph-first + infinite exploration + AI guide |
+| `Product_Constitution.md` | L3 | Product Owner | Major | 2026-07-21 | Boundaries + decision tests + AI Agent rules |
+| `PROJECT_CONTEXT.md` | L4 | Lead | Every release | 2026-07-21 | v0.10.0 / M8.6; Freeze Baseline stated |
+| `PROJECT_ROADMAP.md` | L5 | Lead + Product Owner | Per milestone | 2026-07-21 | M-system; Near-term vs Future (Gate) |
+| `README.md` | Landing/Index | Lead | Per release | 2026-07-21 | GitHub entry; points here |
+| `docs/INDEX.md` | Meta | Lead | As needed | 2026-07-21 | This file |
+| `docs/00_VISION/README.md` | L1 support | Product Owner | Rare | 2026-07-21 | Source-of-truth declaration |
+| `docs/10_ARCHITECTURE/README.md` | L6a support | Lead | As needed | 2026-07-21 | Freeze Baseline location |
+| `docs/20_MILESTONES/README.md` | Archive | Lead | As needed | 2026-07-21 | Migration pending |
+| `docs/30_TEAM/README.md` | Meta | Lead | As needed | 2026-07-21 | Team governance pointer |
+| `docs/TEAM_OPERATING_SPEC_v1.2.md` | Meta | Lead | Frozen (v1.2) | 2026-07-17 | Team norm; changes via §14 |
+| `docs/ENGINEERING_PLAYBOOK.md` | L6b | Lead | Per milestone | M8.6 | Milestone lifecycle |
+| `docs/Documentation_Standard_v1.0.md` | L6b | Lead | Rare | M4 | Doc standard |
+| `docs/M3.5-000_Schema_Freeze_Review.md` | L6a | Lead | Via Gate | M3.5 | Freeze Baseline origin (elevated to `CURRENT_ARCHITECTURE_BASELINE.md`) |
+| `docs/M3-001..M5-*` | L6a / history | Lead | Historical | various | Milestone reports (pre-migration) |
+| `scripts/freeze-check.mjs` | L6b guard | Lead | Rare | M8.6 | CI freeze guard |
+| `docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md` | L6a | Lead | Via Gate | 2026-07-21 | **Current Architecture Freeze Baseline — single entry** (broader than schema: runtime / dependency / API contract / exclusion boundaries) |
+| `docs/15_DECISIONS/README.md` | 15_DECISIONS | Lead | As needed | 2026-07-21 | Decisions layer index |
+| `docs/15_DECISIONS/ADR_TEMPLATE.md` | 15_DECISIONS | Lead | As needed | 2026-07-21 | ADR template (architecture/feature/technology decisions; required for freeze revisions) |
+| `docs/90_ARCHIVE/` | Archive | Lead | Historical | — | Superseded docs; NOT authoritative |
+| `PROJECT_CHARTER.md` | L3 support | Product Owner | Rare | (M1) | Foundational charter; referenced by Constitution §7 |
+| `docs/SUGGESTIONS.md` | Working | Lead | As needed | ongoing | Running suggestions backlog |
 
-| 文档 | 说明 |
-|------|------|
-| [PRD.md](../PRD.md) | 产品需求文档 |
-| [Product_DNA.md](../Product_DNA.md) | 产品基因（核心主张：Everything Connected / AI As Guide） |
-| [Product_Constitution.md](../Product_Constitution.md) | 产品宪章 |
-| [Product_Architecture.md](../Product_Architecture.md) | 产品结构（含阶段化文档状态） |
-| [MVP_Scope.md](../MVP_Scope.md) | MVP 范围（部分能力 defer 到后续阶段） |
-| [Information_Architecture.md](../Information_Architecture.md) | 信息架构 |
-| [Navigation_Model.md](../Navigation_Model.md) | 导航模型 |
-| [User_Journey.md](../User_Journey.md) | 用户旅程 |
-| [Discovery_Model.md](../Discovery_Model.md) | 发现模型 |
-| [Exploration_Strategy.md](../Exploration_Strategy.md) | 探索策略 |
-| [Exploration_Path.md](../Exploration_Path.md) | 探索路径 |
-| [Visualization_Principles.md](../Visualization_Principles.md) | 可视化原则（含 Avoid Overload） |
-| [Recommendation_Principles.md](../Recommendation_Principles.md) | 推荐原则 |
+## Freeze Model (important)
 
-## 3. Architecture（技术架构）
+The current architecture is **frozen as a baseline — NOT permanent**.
+- **Current Architecture Freeze Baseline** prohibits, in code: Neo4j / PostgreSQL / Elasticsearch / LLM+RAG runtime / GIS / login / permissions / new dependencies. The deterministic in-memory Knowledge Core + Exploration Engine are the agreed foundation.
+- **Freeze Revision Gate:** any change touching the freeze boundary (AI runtime, Neo4j, GIS, …) MUST pass an ADR (template: `docs/15_DECISIONS/ADR_TEMPLATE.md`) + a revision of the baseline (`docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md`, origin `docs/M3.5-000_Schema_Freeze_Review.md`), approved by Product Owner. Never bypassed silently.
+- **Code guard:** `scripts/freeze-check.mjs` runs in CI.
 
-| 文档 | 说明 |
-|------|------|
-| [Technical_Architecture.md](../Technical_Architecture.md) | 技术架构（含知识模型与数据层边界，架构已冻结） |
-| [System Design](../Technical_Architecture.md) | 系统设计内容并入 Technical_Architecture（未单列 System Design 文档） |
+## Update Cadence (anti-drift)
 
-## 4. Data（数据 / 知识模型）
+- **L4 `PROJECT_CONTEXT.md`** is updated by Lead after every release and must match git tag + CHANGELOG.
+- **L1 / L2** change only with a Product Owner vision version bump (docx re-sign + mirror re-sync).
+- **L5 / L6** change per milestone.
+- This INDEX is updated whenever a document is added, moved, or its owner/mutability changes.
 
-| 文档 | 说明 |
-|------|------|
-| 知识模型（Knowledge Model） | 定义并入 [Technical_Architecture.md](../Technical_Architecture.md)（实体泛型化 / 关系三元组 / 扁平时间线）；v2 规划见 `docs/SUGGESTIONS.md` §I |
-| 数据 Schema / 示例 | `data/examples/{topic}_example.json`（当前示例：`roman_empire_example.json`、`egypt_technology_religion_example.json`）；Schema 定义见 `data/schemas/exploration_schema.md`（已落地 v2：7 实体类型 / 结构化时间 / global_id / 关系元数据 `citation`） |
+## Authoritative Reading Order
 
-## 5. API（接口）
+Read in this order to understand the product without drift:
 
-| 文档 | 说明 |
-|------|------|
-| [exploration_api.md](api/exploration_api.md) | 接口契约（v2.1）：`GET /explore/{topic}`、`GET /search`、`GET /entity/{id}`、`GET /health` |
+1. `README.md` — GitHub entry, project status, documentation map link.
+2. `docs/INDEX.md` — this map (layers, owners, freshness, freeze model).
+3. `PRD.md` — Product Vision (mirror of the docx source of truth).
+4. `Product_DNA.md` — identity contract (what can never be violated).
+5. `Product_Constitution.md` — governance (how we decide / what we refuse).
+6. `PROJECT_CONTEXT.md` — current reality (version, freeze baseline, state).
+7. `PROJECT_ROADMAP.md` — evolution (Near-term vs Future via Gate).
+8. Architecture docs — `docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md` (freeze baseline) and milestone reports under `docs/`; decision records (ADRs) in `docs/15_DECISIONS/`.
 
-## 6. Review（评审）
+> The original vision source is `History_Explorer_PRD_完整版_v1.0.docx`; `PRD.md` is a derived mirror and the docx wins on conflict.
 
-| 文档 | 说明 |
-|------|------|
-| [M1_Final_Assessment.md](../M1_Final_Assessment.md) | M1 收口评估总报告（六轮评审汇总 + Closure 计划） |
-| [SUGGESTIONS.md](SUGGESTIONS.md) | AI 建议汇总 Backlog（持续累加，含 M1-001~M1-006 全部建议与 M-H1~M-H9 加固清单） |
-| [INTEGRATION.md](INTEGRATION.md) | 集成说明 |
+## Archive Policy
 
-## 7. Development（开发）
-
-| 文档 | 说明 |
-|------|------|
-| [DEVELOPMENT.md](../DEVELOPMENT.md) | 开发指南（启动前端 / 后端） |
-| [DEVELOPMENT_ENVIRONMENT.md](../DEVELOPMENT_ENVIRONMENT.md) | 开发环境说明 |
-| Testing（测试） | 后端 `backend/tests/`（pytest：`test_explore.py`、`test_search_entity.py`、`test_search_index.py`、`test_validation.py`，共 50 例）；前端 `frontend/src/__tests__/`（vitest：`App.smoke`、`M2_003`、`SearchEntity`、`navigation`、`searchNav`，共 38 例）；命令见 `DEVELOPMENT.md` 与各 `package.json` / `requirements-dev.txt` |
-| Release（发布就绪） | 见 [M1_Final_Assessment.md](../M1_Final_Assessment.md) §4 阻塞项与 §5 Closure 计划；部署/CI 仍为 M1 债（见 `SUGGESTIONS.md` §L4 / M-H6） |
-
----
-
-## 8. 文档分类目录说明（docs/0x_*）
-
-`docs/00_Project` … `docs/11_Release` … `docs/99_Decisions` 是**预留的分类归档目录**，
-目前多数仅含 `.gitkeep` 占位文件。
-
-- 这些目录用于**未来**按主题归档文档。
-- **当前核心文档仍位于仓库根目录与 `docs/` 根目录**（即本索引第 1–7 节所引）。
-- 请勿删除 `.gitkeep` 占位；未来归档时再按需迁入，并同步更新本索引。
+- `docs/90_ARCHIVE/` holds **historical only** documents superseded by this system.
+- It is NOT an authoritative source. Do not base engineering or product decisions on it.
+- Active documents live in the layers `00_VISION` / `10_ARCHITECTURE` / `20_MILESTONES` / `30_TEAM` + the root governance docs (`PRD.md`, `Product_DNA.md`, `Product_Constitution.md`, `PROJECT_CONTEXT.md`, `PROJECT_ROADMAP.md`).
+- Milestone reports (M3–M8.6) are not yet in `90_ARCHIVE`; they remain at `docs/` root pending a dedicated migration task (their current location is not authoritative layering).

@@ -11,7 +11,7 @@ History Explorer is a global history exploration platform.
 
 The project aims to transform history learning from passive information searching into active exploration and discovery.
 
-> **M2 note:** The M2 build is **data-driven and deterministic** — no AI runtime is active. AI is a documented future capability (the `AIGuidePanel` is a placeholder). The exploration graph (entities + id-based relationships + structured time) is the explicitly reserved input for a future AI / Knowledge-Graph layer.
+> **M2 note:** The M2 build is **data-driven and deterministic** — no AI runtime is active. AI is a documented future capability (the `InterpretationPanel` is the deterministic interpretation layer; an AI runtime is **not implemented**). The exploration graph (entities + id-based relationships + structured time) is the explicitly reserved input for a future AI / Knowledge-Graph layer.
 
 By connecting historical **events, people, civilizations, locations, and time periods** through typed relationships, History Explorer helps users understand how history is connected.
 
@@ -51,15 +51,15 @@ Discover Civilization.
 
 Current milestone:
 
-**M8 — Multi Entity Temporal Visualization: COMPLETED (released v0.9.0)**
+**M8.6 — Release & Engineering Foundation: COMPLETED (released v0.10.0)**
 
 Latest release:
 
-**v0.9.0** (2026-07-20)
+**v0.10.0** (2026-07-21)
 
 Engineering status:
 
-**Foundation cleanup in progress (M8.6)** — establishing version-source single source of truth, CI foundation, and engineering workflow automation.
+**Stable.** Deterministic exploration foundation established; CI, Engineering Playbook, version single-source, and freeze-check guard active.
 
 
 Completed (M1 Foundation Validation):
@@ -83,25 +83,40 @@ Completed (M2 Exploration MVP):
 - **Tests** — backend pytest **50 passed**, frontend vitest **38 passed**, `npm run build` **51 modules, 0 errors**.
 
 
+Completed (M3 – M8.6 — deterministic foundation):
+
+- **M3 Knowledge Core** — repository / registry / graph / search / timeline / exploration_service; composition root in `main.py`.
+- **M3.5 Schema Freeze + Global Graph + Exploration Engine + Five-Zone UI** — `core/global_graph.py`, deterministic four-dimensional weighted engine (static, explainable, no ML), cross-topic edges, real-data UI (Related / Explained / Paths / Timeline / Themes). *Established the Current Architecture Freeze Baseline.*
+- **M4 Data Scale & Quality + Architecture** — 8 topics / 69 entities / 104 relations / 31 cross-topic edges / 0 warnings.
+- **M5 AI-Readiness Gating** — concluded AI layer deferred (data / retrieval / flow / readiness not yet met).
+- **M6 Temporal Understanding Layer (v0.7.0)** — time understanding & comparison.
+- **M7 (v0.8.0)**.
+- **M8 Multi-Entity Temporal Visualization (v0.9.0)**.
+- **M8.6 Release & Engineering Foundation (v0.10.0)** — CI, `ENGINEERING_PLAYBOOK.md`, version single-source, `scripts/freeze-check.mjs` (Freeze Baseline guard).
+
+
 Deferred (explicitly NOT in M2 — recorded as debt for M3+):
 
-- CI / Docker / observability
-- API versioning (`/api/v1`) + unified error envelope
-- Knowledge Graph database (Neo4j) / GIS Map / AI Historian / Search Engine
-- `CHANGELOG.md` / `TECHNICAL_DEBT.md` (M2 status captured in `M2_Planning.md` + the M2 Final Report)
+**Completed since M2 (no longer deferred):**
+- CI — **Completed in M8.6** (`.github/workflows/ci.yml`: frontend + backend + freeze-check jobs).
+- API versioning (`/api/v1`) + unified error envelope — **Completed in M3** (`M3-002` dual-mounted `/api/v1` alongside legacy routes).
+- `CHANGELOG.md` — **Completed in M8.6** (covers v0.1.0 → v0.10.0).
+
+**Still deferred (within Current Architecture Freeze Baseline):**
+- Docker / observability
+- Knowledge Graph database (Neo4j) / GIS Map / AI Historian / Search Engine — Future capabilities gated by the Freeze Revision Gate (see `docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md`).
+- `TECHNICAL_DEBT.md` (M2 status captured in `M2_Planning.md` + the M2 Final Report)
 
 
 ## Documentation
 
+**Documentation Map (start here):** [`docs/INDEX.md`](docs/INDEX.md) — layered doc system, owners, and freshness.
+
 Important documents:
 
-- PROJECT_CONTEXT.md
-- PROJECT_CHARTER.md
-- Product DNA
-- Product Constitution
-- PRD
-- Architecture Documents
-- Team Operating Specification (v1.2 Frozen): docs/TEAM_OPERATING_SPEC_v1.2.md
+- Product Vision (mirror): `PRD.md` (source: `History_Explorer_PRD_完整版_v1.0.docx`)
+- `Product_DNA.md` · `Product_Constitution.md` · `PROJECT_CONTEXT.md` · `PROJECT_ROADMAP.md`
+- Architecture Documents · Team Operating Specification (v1.2 Frozen): docs/TEAM_OPERATING_SPEC_v1.2.md
 
 
 ## Team Operating Specification

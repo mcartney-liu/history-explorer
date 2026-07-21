@@ -1,35 +1,11 @@
-# History Explorer AI Layer
+# ai/ — Reserved Future Structure
 
-## Purpose
+> **Reserved Future Structure. Currently unused.**
 
-AI capabilities layer for historical exploration.
-
-The AI module supports future capabilities:
-
-- Historical explanation.
-- Context understanding.
-- Exploration recommendation.
-- Knowledge retrieval assistance.
-- AI guide functionality.
-
-**AI principle:** AI is a guide and interpretation layer, not the final authority.
-
-## Technology Direction
-
-- LLM integration.
-- Retrieval systems.
-- Knowledge assistance.
-- AI exploration guidance.
-
-## Directory Structure
-
-- `prompts/` — AI prompts and prompt templates.
-- `services/` — AI service implementations.
-- `config/` — AI configuration management.
-
-## Current Status
-
-Foundation only.
-
-No external AI provider integrated yet. No AI reasoning or generation logic
-implemented yet.
+- This directory is a placeholder for future AI capabilities described in the Product Vision
+  (`History_Explorer_PRD_完整版_v1.0.docx` §9–§10) and `PROJECT_ROADMAP.md` §4 (Future).
+- **No runtime dependency.** The current system uses a deterministic interpretation layer
+  (`frontend` `InterpretationPanel`) and contains **no AI / LLM runtime**.
+- **Future AI capabilities require the Freeze Revision Gate** (ADR + Architecture Review +
+  Product Owner Approval) as defined in `docs/10_ARCHITECTURE/SCHEMA_FREEZE.md`.
+- Do not add runtime AI code here without passing the Gate.
