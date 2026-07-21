@@ -4,6 +4,103 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.10.0] - 2026-07-20
+
+Engineering Foundation Cleanup milestone (**M8.6**, Phase 1 — Version Source Alignment). Establishes a single source of truth for versioning and reconciles release documentation that had drifted behind the actual Git tags.
+
+### Changed (completed in M8.6 Phase 1)
+
+- **Version Source Alignment**
+  - `frontend/package.json`: `version` aligned `0.6.0` → `0.10.0` and adopted as the single source of truth for the frontend; Git tags remain the release-event markers. No dependency, script, or formatting changes.
+  - `CHANGELOG.md`: reconciled against real Git history — added the missing `[0.7.0]`, `[0.8.0]`, and `[0.9.0]` entries (previously only `[0.6.0]` was present).
+  - `README.md`: Project Status updated from the stale "M2 — Exploration MVP" to reflect M8 completion and the in-progress foundation cleanup.
+
+### Scoped for follow-up M8.6 phases (NOT in v0.10.0)
+
+- **CI pipeline** (`.github/workflows/ci.yml`) — automated test / type-check / build / freeze-guard.
+- **Freeze-guard automation** (`scripts/freeze-check`) — enforced M3.5 freeze protection as a CI gate.
+- **Engineering Playbook** (`docs/ENGINEERING_PLAYBOOK.md`) — codified milestone lifecycle and release discipline.
+
+### Freeze Compliance
+
+- No backend / API / Knowledge Model / AI / LLM change.
+- No UI feature change; only version string and documentation updated.
+- Frontend tests: `220 passed` (29 files, unchanged from v0.9.0); `tsc --noEmit` 0 errors; `vite build` 0 errors.
+
+---
+
+## [0.9.0] - 2026-07-20
+
+Multi Entity Temporal Visualization milestone (**M8**). Adds a system-driven, multi-entity temporal view that overlays many entities on a shared year axis and surfaces deterministic overlaps — frontend-only, no backend or AI.
+
+### Added
+
+- **Multi Entity Temporal Axis (`temporalAxis.ts`)**
+  - Three pure, deterministic functions: `computeAxisBounds`, `layoutBars`, `detectOverlaps`. No `Date()`, `random()`, `async`, or I/O. Reuses `compareTemporalRanges` as the single source of truth for interval relations.
+- **Multi Entity Timeline (`MultiEntityTimeline.tsx`)**
+  - Renders N entities as CSS-positioned bands on one shared year axis with fixed time-bucket ticks; overlap facts reuse the M7 comparison-text engine. No canvas/SVG; no sorting (input order + name dedupe only).
+
+### Changed
+
+- `frontend/src/data/compareTemporal.ts`: `numericValue` exported (was private) — behavior unchanged, enables M8 reuse.
+- `App.tsx` / `App.css`: panel mounted after `TemporalComparisonPanel`; added `.multi-entity-*` styles reusing `--he-*` tokens.
+
+### Freeze Compliance
+
+- No backend / `exploration_engine.py` / `validation.py` / `navigation.ts` / Knowledge Model change.
+- No AI / LLM / ranking / similarity / confidence / era inference. Forbidden-token business-logic hits: 0.
+- Frontend tests: `220 passed` (29 files, +26 vs M7); `tsc --noEmit` 0 errors; `vite build` 0 errors (74 modules).
+
+---
+
+## [0.8.0] - 2026-07-20
+
+Temporal Comparison Layer milestone (**M7**). Lets a user compare two entities' lifespans/periods on a shared axis and read a deterministic natural-language relation — frontend-only, no backend or AI.
+
+### Added
+
+- **Temporal Comparison Engine (`compareTemporal.ts`)**
+  - Pure functions for comparing two temporal entities: `compareTemporalRanges`, `buildTemporalComparisonText`, `numericValue`. Fixed templates, no scoring/ranking/similarity.
+- **Temporal Comparison Panel (`TemporalComparisonPanel.tsx`)**
+  - Two entity selectors + A/B comparison on a shared year axis; renders the deterministic relation text. No re-sort, no recommender.
+
+### Changed
+
+- `App.tsx` / `App.css`: panel mounted; added `.temporal-comparison-*` styles reusing `--he-*` tokens.
+
+### Freeze Compliance
+
+- No backend / API / Knowledge Model change.
+- No AI / LLM / ranking / similarity. Frontend-only.
+- Regression gate green at release: frontend vitest passed; `tsc --noEmit` 0 errors; `vite build` 0 errors.
+
+---
+
+## [0.7.0] - 2026-07-20
+
+Temporal Understanding Layer milestone (**M6**). Extends the deterministic understanding layer with temporal context and a structured timeline view — frontend-only, no backend or AI.
+
+### Added
+
+- **Temporal Utilities (`temporalUtils.ts`, `timelineUtils.ts`)**
+  - Deterministic date/period formatting and timeline arithmetic helpers; pure functions, no `Date()`/`random()`/`async`.
+- **Timeline Panel enhancement (`TimelinePanel.tsx`)**
+  - Structured timeline rendering with temporal context injected from entity data.
+- **Understanding layer temporal injection (`understandingRules.ts`, `InterpretationPanel.tsx`, `EntityPage.tsx`)**
+  - Temporal context threaded into the existing deterministic "Historical Meaning" understanding flow.
+
+### Changed
+
+- `App.tsx` / `App.css`: timeline panel wired into entity views; added `.timeline-*` styles.
+
+### Freeze Compliance
+
+- No backend / API / Knowledge Model change.
+- No AI / LLM / ranking / similarity. Frontend-only.
+- Regression gate green at release: frontend vitest passed; `tsc --noEmit` 0 errors; `vite build` 0 errors.
+
+---
+
 ## [0.6.0] - 2026-07-19
 
 Historical Meaning Layer milestone (**M5-D**). Adds a deterministic, rule-based "Historical Meaning" layer that explains *why* a connection exists and *what it meant* — derived purely from existing relationship data (type + direction) via fixed templates, with no AI/LLM, no new dependencies, and no backend change. All changes are additive and freeze-safe; the frozen schema (8 entity types / 18 relationship types) and public API contract are preserved.
