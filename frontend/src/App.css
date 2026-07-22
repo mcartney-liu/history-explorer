@@ -1848,3 +1848,127 @@ body {
 .he-recommend-path-arrow {
   color: var(--he-muted);
 }
+
+/* ============================================================
+   M9-003 Exploration Journey — additive sibling of Exploration Trail.
+   Namespace-isolated (.he-journey*); reuses M2-003 design tokens only.
+   Does NOT modify .he-trail / .he-recommend or any global selector.
+   ============================================================ */
+.he-journey {
+  margin-top: var(--he-gap);
+}
+
+.he-journey h3 {
+  font-size: 1rem;
+  color: var(--he-accent-dark);
+  margin: 0 0 0.5rem;
+}
+
+.he-journey-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.he-journey-step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.he-journey-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--he-border);
+  border-radius: var(--he-radius);
+  background: var(--he-surface);
+  color: var(--he-accent-dark);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: background var(--he-transition), border-color var(--he-transition);
+}
+
+.he-journey-node:hover {
+  background: var(--he-surface-soft);
+  border-color: var(--he-accent);
+}
+
+.he-journey-node.is-current {
+  background: var(--he-surface-soft);
+  border-color: var(--he-accent);
+  font-weight: 600;
+}
+
+.he-journey-kind {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--he-muted);
+}
+
+.he-journey-label {
+  font-size: 0.95rem;
+}
+
+.he-journey-arrow {
+  color: var(--he-muted);
+  margin-left: 0.25rem;
+}
+
+.he-journey-why {
+  margin: 0 0 0.25rem 0.75rem;
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid var(--he-accent);
+  background: var(--he-surface-soft);
+  border-radius: 0 var(--he-radius) var(--he-radius) 0;
+  font-size: 0.85rem;
+  color: var(--he-muted);
+}
+
+.he-journey-why-from {
+  font-style: italic;
+  color: var(--he-accent-dark);
+}
+
+.he-journey-reasons {
+  margin: 0.25rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.he-journey-reasons li {
+  margin: 0.1rem 0;
+}
+
+.he-journey-path {
+  margin-top: 0.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.he-journey-path-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.he-journey-path-from,
+.he-journey-path-to {
+  color: var(--he-accent-dark);
+}
+
+.he-journey-path-rel {
+  font-style: italic;
+  color: var(--he-muted);
+}
+
+.he-journey-path-arrow {
+  color: var(--he-muted);
+}

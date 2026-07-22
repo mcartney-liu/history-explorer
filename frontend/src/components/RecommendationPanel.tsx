@@ -49,6 +49,19 @@ export type RecommendationItem = {
   }
 }
 
+// Context handed to the consumer (App) when a recommendation card is clicked.
+// Lets App annotate the resulting navigation edge with the "why" (so the
+// ExplorationJourney panel can show *why* this node was suggested). This is the
+// optional 2nd arg of onNodeClick — fully backward compatible with 1-arg
+// callers, which simply pass no context.
+export type RecommendationContext = {
+  source: 'recommendation'
+  reasons: string[]
+  relation_path: RelationPathStep[]
+  score: number
+  candidateSource: string
+}
+
 export type RecommendationResult = {
   current_entity: { global_id: string; name: string; type: string }
   recommendations: RecommendationItem[]
@@ -107,12 +120,26 @@ function localName(globalId: string): string {
   return globalId.split(':').slice(1).join(':') || globalId
 }
 
+// Build the click context from a recommendation item. Pure: same rec -> same
+// context, no side effects. The consumer (App) maps this into a JourneyWhyPayload
+// and attaches it to the resulting navigation edge. Exported so the
+// ExplorationJourney test can verify the producer contract without a DOM.
+export function buildRecommendationContext(rec: RecommendationItem): RecommendationContext {
+  return {
+    source: 'recommendation',
+    reasons: rec.reasons,
+    relation_path: rec.relation_path,
+    score: rec.score,
+    candidateSource: rec.metadata.candidate_source,
+  }
+}
+
 // --- Pure presentational view ---
 
 type RecommendationPanelViewProps = {
   recommendations: RecommendationItem[]
   seenGlobalIds?: Set<string>
-  onNodeClick?: (globalId: string) => void
+  onNodeClick?: (globalId: string, context?: RecommendationContext) => void
 }
 
 export function RecommendationPanelView({
@@ -135,7 +162,7 @@ export function RecommendationPanelView({
                 type="button"
                 className={seen ? 'he-recommend-node is-seen' : 'he-recommend-node'}
                 aria-label={`Explore ${name}`}
-                onClick={() => onNodeClick?.(gid)}
+                onClick={() => onNodeClick?.(gid, buildRecommendationContext(rec))}
               >
                 <span className="he-recommend-name">{name}</span>
                 {type ? <span className="he-recommend-type">{type}</span> : null}
@@ -189,7 +216,7 @@ export type RecommendationPanelProps = {
   entityId: string
   seenGlobalIds?: Set<string>
   max?: number
-  onNodeClick?: (globalId: string) => void
+  onNodeClick?: (globalId: string, context?: RecommendationContext) => void
 }
 
 function RecommendationPanel({
