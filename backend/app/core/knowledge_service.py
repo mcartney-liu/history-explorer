@@ -24,7 +24,7 @@ from .repository import TopicRepository
 from .registry import KnowledgeRegistry, EntityRef
 from .graph import KnowledgeGraph, DirectedGraph
 from .global_graph import GlobalGraph
-from .exploration_engine import ExplorationEngine
+from .exploration_engine import ExplorationEngine, RecommendationResult
 from .search import build_search_index, build_topic_index, SearchProvider
 from .timeline import TimelineIndex
 from .exploration import build_exploration_view
@@ -328,6 +328,25 @@ class KnowledgeService:
         return build_exploration_view(
             data.get("entities", []), data.get("relationships", []), main_id
         )
+
+    # --- M9-001: Deterministic Next-Node Recommendation (ADDITIVE) -------
+    # Pure delegation to the Exploration Engine's deterministic `recommend_next`.
+    # This method is ADDITIVE: it adds a new capability without changing any
+    # existing method's behavior or the frozen public API contract. Ranking is
+    # fixed-formula (no AI / ML), reusing the engine's frozen scoring primitives.
+    def recommend_next(
+        self,
+        gid: str,
+        seen_global_ids: Optional[set] = None,
+        max_results: int = 5,
+    ) -> "RecommendationResult":
+        """Deterministic, explainable next-node recommendations from `gid`.
+
+        Returns a `RecommendationResult` (M9-001 §10.1). The caller is expected
+        to call `.to_dict()` for JSON serialization. `seen_global_ids` is the set
+        of already-visited global_ids used for the diversity penalty.
+        """
+        return self._exploration_engine.recommend_next(gid, seen_global_ids, max_results)
 
     # --- Timeline (delegates to timeline index) --------------------------
     def get_timeline_index(self, topic: str) -> list[dict]:

@@ -216,6 +216,39 @@ def entity(entity_id: str):
     }
 
 
+def recommendations(entity_id: str, limit: int = 5, seen: str = ""):
+    """M9-001 (additive): deterministic, explainable next-node recommendations.
+
+    Returns a `RecommendationResult` (JSON) listing the top `limit` "next stops"
+    from the current entity, each with `reasons` + `relation_path`. `seen` is an
+    optional comma-separated list of already-visited global_ids driving the
+    diversity penalty. 404 when the entity (or its global_id) is missing.
+
+    NEW endpoint (additive) — the existing /entity/{id} response is unchanged.
+    Mounted under both /api/v1 and the legacy path so v1 == legacy holds.
+    """
+    ref = knowledge_service.resolve_entity(entity_id)
+    if ref is None:
+        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
+
+    target = knowledge_service.find_by_id(ref.topic, ref.local_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
+
+    global_id = target.get("global_id")
+    if not global_id:
+        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' has no global_id.")
+
+    seen_set: set = set()
+    if seen:
+        seen_set = {s.strip() for s in seen.split(",") if s.strip()}
+
+    result = knowledge_service.recommend_next(
+        global_id, seen_global_ids=seen_set, max_results=limit
+    )
+    return result.to_dict()
+
+
 _VALIDATION_REPORT = None
 
 
@@ -253,6 +286,12 @@ v1_router.add_api_route(
     "/entity/{entity_id}", entity, methods=["GET"], operation_id="v1_entity"
 )
 v1_router.add_api_route(
+    "/entity/{entity_id}/recommendations",
+    recommendations,
+    methods=["GET"],
+    operation_id="v1_entity_recommendations",
+)
+v1_router.add_api_route(
     "/search", search, methods=["GET"], operation_id="v1_search"
 )
 v1_router.add_api_route(
@@ -271,6 +310,12 @@ legacy_router.add_api_route(
 )
 legacy_router.add_api_route(
     "/entity/{entity_id}", entity, methods=["GET"], operation_id="entity"
+)
+legacy_router.add_api_route(
+    "/entity/{entity_id}/recommendations",
+    recommendations,
+    methods=["GET"],
+    operation_id="entity_recommendations",
 )
 legacy_router.add_api_route(
     "/search", search, methods=["GET"], operation_id="search"
