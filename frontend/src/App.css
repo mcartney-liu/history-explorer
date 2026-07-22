@@ -1741,3 +1741,110 @@ body {
   color: #1a1a1a;
   font-size: 0.92rem;
 }
+
+/* M9-002: RecommendationPanel — deterministic "next station" suggestions.
+   Mirrors the .he-continue* visual language; never re-ranks the engine order. */
+.he-recommend-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.he-recommend-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.he-recommend-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  padding: 0.45rem 0.8rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-accent);
+  border-radius: var(--he-radius);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--he-accent-dark);
+  transition: background var(--he-transition), color var(--he-transition);
+}
+
+.he-recommend-node:hover,
+.he-recommend-node:focus-visible {
+  background: var(--he-accent);
+  color: #fff;
+  outline: none;
+}
+
+.he-recommend-node.is-seen {
+  opacity: 0.6;
+  border-color: var(--he-border);
+  color: var(--he-muted);
+}
+
+.he-recommend-name {
+  font-weight: 600;
+}
+
+.he-recommend-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--he-muted);
+}
+
+.he-recommend-seen {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--he-muted);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.he-recommend-reasons {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--he-muted);
+  font-size: 0.88rem;
+}
+
+.he-recommend-reasons li {
+  margin: 0.1rem 0;
+}
+
+.he-recommend-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--he-muted);
+}
+
+.he-recommend-path-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.he-recommend-path-from,
+.he-recommend-path-to {
+  font-weight: 600;
+  color: var(--he-accent-dark);
+}
+
+.he-recommend-path-rel {
+  font-style: italic;
+}
+
+.he-recommend-path-arrow {
+  color: var(--he-muted);
+}
