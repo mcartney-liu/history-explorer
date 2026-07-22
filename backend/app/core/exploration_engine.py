@@ -185,6 +185,73 @@ class ExplorationResult:
 
 
 # ---------------------------------------------------------------------------
+# Recommendation Layer (M9-001, ADDITIVE)
+# ---------------------------------------------------------------------------
+# Deterministic, explainable next-node recommendation. Pure calculation over
+# the graph + the FROZEN scoring primitives (RELATIONSHIP_MEANING / TYPE_*
+# / temporal half-life 500). No AI / ML / random / wall-clock in ranking.
+# These weights are NEW and independently named (REC_W_*); they do NOT modify
+# the frozen exploration weights (W_RELATIONSHIP etc.) used by explore().
+
+DEFAULT_MAX_RESULTS = 5
+
+REC_W_RELATIONSHIP = 0.40
+REC_W_TIMELINE = 0.25
+REC_W_THEME = 0.20
+REC_W_DIVERSITY = 0.15
+
+ALGORITHM_VERSION = "m9-001.v1"
+
+
+@dataclass
+class RecommendationItem:
+    """One recommended next node, fully explainable (M9-001 §9)."""
+    target_entity: dict            # {global_id, name, type}
+    score: float
+    score_breakdown: dict          # 4 components, each rounded to 4 dp
+    reasons: list                  # human-readable explanation strings
+    relation_path: list            # [{from,to,relationship,direction,weight}, ...]
+    metadata: dict                 # {depth, candidate_source, entity_type}
+
+    def to_dict(self) -> dict:
+        return {
+            "target_entity": dict(self.target_entity),
+            "score": round(self.score, 4),
+            "score_breakdown": dict(self.score_breakdown),
+            "reasons": list(self.reasons),
+            "relation_path": [dict(s) for s in self.relation_path],
+            "metadata": dict(self.metadata),
+        }
+
+
+@dataclass
+class RecommendationResult:
+    """Full recommendation response for one current entity (M9-001 §10.1)."""
+    current_entity: dict
+    recommendations: list          # list[RecommendationItem]
+    algorithm_version: str = ALGORITHM_VERSION
+    parameters: dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        return {
+            "current_entity": dict(self.current_entity),
+            "recommendations": [r.to_dict() for r in self.recommendations],
+            "algorithm_version": self.algorithm_version,
+            "parameters": dict(self.parameters),
+            "metadata": dict(self.metadata),
+        }
+
+
+def _now_iso() -> str:
+    """Informational metadata timestamp only; NEVER used in ranking, so the
+    recommendation set itself stays fully deterministic (M9-001 §6/§12.1)."""
+    from datetime import datetime, timezone
+
+    return datetime.now(timezone.utc).isoformat()
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -440,6 +507,193 @@ class ExplorationEngine:
             key=lambda r: (-r.score, r.depth, "->".join(r.path))
         )
         return results[:limit]
+
+    # --- public: deterministic next-node recommendation (M9-001) ----------
+    def recommend_next(
+        self,
+        gid: str,
+        seen_global_ids: Optional[set] = None,
+        max_results: int = DEFAULT_MAX_RESULTS,
+    ) -> "RecommendationResult":
+        """Ranked, explainable 'next stop' recommendations from `gid`.
+
+        Deterministic & pure: same (gid, seen, max_results) -> identical output.
+        No random, no wall-clock in ranking (generated_at is metadata only).
+        Reuses explore() / the frozen scoring primitives; does NOT modify them.
+        """
+        seen = set(seen_global_ids) if seen_global_ids else set()
+        origin = self._gg.get_node(gid)
+        if origin is None:
+            return RecommendationResult(
+                current_entity={"global_id": gid, "name": "", "type": ""},
+                recommendations=[],
+                parameters=self._rec_parameters(max_results),
+                metadata={"generated_at": _now_iso(), "candidate_count": 0},
+            )
+
+        # 1) Candidate generation: reuse explore() (depth<=2, all reachable).
+        explored = self.explore(gid, max_depth=2, limit=10**7)
+
+        # 2) Per-candidate independent components (relationship/timeline/theme).
+        scored: list[dict] = []
+        for enode in explored:
+            node = self._gg.get_node(enode.global_id)
+            if node is None:
+                continue
+            steps = enode.steps
+            rw = steps[0].weight if steps else RELATIONSHIP_MEANING.get("related_to", 0.4)
+            tr = max(0.5, self._temporal_coherence(origin.entity, node.entity))
+            tc = self._theme_connection(origin, node)
+            base = (
+                REC_W_RELATIONSHIP * rw
+                + REC_W_TIMELINE * tr
+                + REC_W_THEME * tc
+            )
+            scored.append(
+                {
+                    "node": node,
+                    "steps": steps,
+                    "rw": rw,
+                    "tr": tr,
+                    "tc": tc,
+                    "base": base,
+                    "rel_type": steps[0].relationship if steps else None,
+                }
+            )
+
+        # 3) Deterministic greedy, diversity-aware selection.
+        #    Initial order by base score desc, then global_id asc.
+        scored.sort(key=lambda c: (-c["base"], c["node"].global_id))
+        selected: list[RecommendationItem] = []
+        type_counts: dict[str, int] = {}
+        for c in scored:
+            if len(selected) >= max_results:
+                break
+            if c["node"].global_id in seen:
+                diversity = 0.2
+            else:
+                n = type_counts.get(c["node"].type, 0)
+                diversity = 1.0 if n == 0 else (0.85 if n == 1 else 0.6)
+            final = c["base"] + REC_W_DIVERSITY * diversity
+            item = self._build_recommendation_item(c, origin, diversity, final, seen)
+            selected.append(item)
+            type_counts[c["node"].type] = type_counts.get(c["node"].type, 0) + 1
+
+        # 4) Final ranking by composite score desc, then global_id asc.
+        selected.sort(
+            key=lambda item: (-item.score, item.target_entity["global_id"])
+        )
+
+        return RecommendationResult(
+            current_entity={
+                "global_id": origin.global_id,
+                "name": origin.name,
+                "type": origin.type,
+            },
+            recommendations=selected,
+            parameters=self._rec_parameters(max_results),
+            metadata={
+                "generated_at": _now_iso(),
+                "candidate_count": len(scored),
+            },
+        )
+
+    # --- recommendation helpers (M9-001, all deterministic) ---------------
+    def _theme_connection(self, a, b) -> float:
+        """M9-001 §8.3: same topic +0.5; cross-topic +0.3; shared labels cap +0.2."""
+        s = 0.0
+        if a.topic == b.topic:
+            s += 0.5
+        else:
+            s += 0.3
+        shared = set(a.entity.get("labels", []) or []) & set(b.entity.get("labels", []) or [])
+        if shared:
+            s += 0.2 * min(len(shared), 2) / 2.0
+        return min(s, 1.0)
+
+    def _build_reasons(
+        self, rw, tr, tc, diversity, origin, node, rel_type, seen
+    ) -> list:
+        """M9-001 §9: template-based, deterministic reasons (no generation)."""
+        reasons: list[str] = []
+        if rel_type and rw >= 0.8:
+            reasons.append(f"通过强关系 '{rel_type}' 直接相连（关系含义 {rw:.2f}）")
+        elif rel_type:
+            reasons.append(f"通过关系 '{rel_type}' 相连（关系含义 {rw:.2f}）")
+        if tr >= 0.7:
+            ya, yb = _rep_year(origin.entity), _rep_year(node.entity)
+            if ya is not None and yb is not None:
+                reasons.append(
+                    f"时间相近（相差约 {abs(ya - yb)} 年，时间连贯性 {tr:.2f}）"
+                )
+            else:
+                reasons.append(f"时间相近（时间连贯性 {tr:.2f}）")
+        if tc > 0:
+            if origin.topic == node.topic:
+                reasons.append(f"同属主题 '{origin.topic}'")
+            else:
+                reasons.append(f"与主题 '{origin.topic}' 存在跨主题连接")
+        if diversity == 1.0:
+            reasons.append(f"类型 {node.type} 新颖，丰富探索多样性")
+        if node.global_id in seen:
+            reasons.append("（已访问，权重降低）")
+        if not reasons:
+            reasons.append("与当前实体在图中相连")
+        return reasons
+
+    def _build_recommendation_item(
+        self, c, origin, diversity, final, seen
+    ) -> "RecommendationItem":
+        node = c["node"]
+        steps = c["steps"]
+        rw, tr, tc = c["rw"], c["tr"], c["tc"]
+        score_breakdown = {
+            "relationship_weight": round(rw, 4),
+            "timeline_relevance": round(tr, 4),
+            "theme_connection": round(tc, 4),
+            "exploration_diversity": round(diversity, 4),
+        }
+        relation_path = [
+            {
+                "from": s.from_global_id,
+                "to": s.to_global_id,
+                "relationship": s.relationship,
+                "direction": s.direction,
+                "weight": round(s.weight, 4),
+            }
+            for s in steps
+        ]
+        depth = len(steps)
+        reasons = self._build_reasons(
+            rw, tr, tc, diversity, origin, node, c["rel_type"], seen
+        )
+        return RecommendationItem(
+            target_entity={
+                "global_id": node.global_id,
+                "name": node.name,
+                "type": node.type,
+            },
+            score=round(final, 4),
+            score_breakdown=score_breakdown,
+            reasons=reasons,
+            relation_path=relation_path,
+            metadata={
+                "depth": depth,
+                "candidate_source": "direct_relation" if depth <= 1 else "second_hop",
+                "entity_type": node.type,
+            },
+        )
+
+    def _rec_parameters(self, max_results: int) -> dict:
+        return {
+            "max_results": max_results,
+            "weights": {
+                "relationship": REC_W_RELATIONSHIP,
+                "timeline": REC_W_TIMELINE,
+                "theme": REC_W_THEME,
+                "diversity": REC_W_DIVERSITY,
+            },
+        }
 
     # --- explanation text (the future API/UI seam) ------------------------
     def _explain_path(self, steps: list[PathStep]) -> str:
