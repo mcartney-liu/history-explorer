@@ -16,6 +16,7 @@ import MultiEntityTimeline from './components/MultiEntityTimeline'
 import CrossTopicTopicList from './components/CrossTopicTopicList'
 import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
+import RecommendationPanel from './components/RecommendationPanel'
 import ExplorationTrail from './components/ExplorationTrail'
 import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
@@ -584,6 +585,14 @@ function App() {
                   openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
                 }
                 onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+              />
+              <RecommendationPanel
+                entityId={current.id}
+                seenGlobalIds={seenGlobalIds}
+                max={5}
+                onNodeClick={(gid) =>
+                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
+                }
               />
               <ContinueExploringPanel
                 connections={entityData.connections_explained}
