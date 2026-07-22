@@ -18,6 +18,8 @@ import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
 import RecommendationPanel from './components/RecommendationPanel'
 import ExplorationTrail from './components/ExplorationTrail'
+import ExplorationJourney from './components/ExplorationJourney'
+import type { JourneyWhyPayload } from './components/ExplorationJourney'
 import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
 import SearchResults, {
@@ -113,6 +115,12 @@ function App() {
   const [cursor, setCursor] = useState(-1)
   const [recent, setRecent] = useState<NavNode[]>([])
   const [errorKind, setErrorKind] = useState<ErrorKind | ''>('')
+
+  // M9-003: per-target "why this node was suggested" annotations, captured when
+  // the user follows a recommendation. This is an ANNOTATION map (gid ->
+  // JourneyWhyPayload), NOT a navigation stack — it never enters navigation.ts
+  // or pushHistory. Session-scoped: lost on refresh (see goHome reset below).
+  const [journeyReasons, setJourneyReasons] = useState<Map<string, JourneyWhyPayload>>(new Map())
 
   // Load persisted recent explorations once on mount.
   useEffect(() => {
@@ -234,6 +242,9 @@ function App() {
     setEntityData(null)
     setSearchResults(null)
     setErrorKind('')
+    // Reset journey annotations with the exploration — they are session-scoped
+    // and only meaningful within a single continuous exploration.
+    setJourneyReasons(new Map())
     setLoading(false)
   }
 
@@ -586,13 +597,38 @@ function App() {
                 }
                 onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
               />
+              <ExplorationJourney
+                history={history}
+                cursor={cursor}
+                journeyReasons={journeyReasons}
+                onStepClick={goTo}
+              />
               <RecommendationPanel
                 entityId={current.id}
                 seenGlobalIds={seenGlobalIds}
                 max={5}
-                onNodeClick={(gid) =>
+                onNodeClick={(gid, ctx) => {
+                  // Capture the "why" only when the click came from a
+                  // recommendation (ctx present). Direct navigation leaves the
+                  // annotation null. This never creates navigation state — it
+                  // only enriches the Journey view via the journeyReasons map.
+                  if (ctx) {
+                    setJourneyReasons((prev) => {
+                      const next = new Map(prev)
+                      next.set(gid, {
+                        fromGlobalId: current.id,
+                        fromName: entityData?.name ?? current.id,
+                        relationPath: ctx.relation_path,
+                        reasons: ctx.reasons,
+                        score: ctx.score,
+                        candidateSource: ctx.candidateSource,
+                        capturedAt: new Date().toISOString(),
+                      })
+                      return next
+                    })
+                  }
                   openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
-                }
+                }}
               />
               <ContinueExploringPanel
                 connections={entityData.connections_explained}
