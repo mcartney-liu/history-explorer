@@ -22,13 +22,18 @@
 | `PRD.md` | L1 (mirror) | Product Owner | Version bump only | 2026-07-21 | Derived from docx; docx wins on conflict |
 | `Product_DNA.md` | L2 | Product Owner | Rare | 2026-07-21 | Identity contract; Graph-first + infinite exploration + AI guide |
 | `Product_Constitution.md` | L3 | Product Owner | Major | 2026-07-21 | Boundaries + decision tests + AI Agent rules |
-| `PROJECT_CONTEXT.md` | L4 | Lead | Every release | 2026-07-21 | v0.10.0 / M8.6; Freeze Baseline stated |
-| `PROJECT_ROADMAP.md` | L5 | Lead + Product Owner | Per milestone | 2026-07-21 | M-system; Near-term vs Future (Gate) |
-| `README.md` | Landing/Index | Lead | Per release | 2026-07-21 | GitHub entry; points here |
+| `PROJECT_CONTEXT.md` | L4 | Lead | Every release | 2026-07-22 | v0.13.0 / M9.3; Freeze Baseline stated |
+| `PROJECT_ROADMAP.md` | L5 | Lead + Product Owner | Per milestone | 2026-07-22 | M-system incl. M9; Near-term vs Future (Gate) |
+| `README.md` | Landing/Index | Lead | Per release | 2026-07-22 | GitHub entry; v0.13.0 / M9.3 |
 | `docs/INDEX.md` | Meta | Lead | As needed | 2026-07-21 | This file |
 | `docs/00_VISION/README.md` | L1 support | Product Owner | Rare | 2026-07-21 | Source-of-truth declaration |
 | `docs/10_ARCHITECTURE/README.md` | L6a support | Lead | As needed | 2026-07-21 | Freeze Baseline location |
 | `docs/20_MILESTONES/README.md` | Archive | Lead | As needed | 2026-07-21 | Migration pending |
+| `docs/20_MILESTONES/M9-003_Exploration_Journey_Design.md` | L6a | Lead | Per milestone | 2026-07-22 | M9-003 Design (recovered from v0.13.0) |
+| `docs/20_MILESTONES/M9-003.1_Implementation_Planning.md` | L6a | Lead | Per milestone | 2026-07-22 | M9-003.1 Planning (recovered) |
+| `docs/20_MILESTONES/M9-003.2_Implementation_Report.md` | L6a | Lead | Per milestone | 2026-07-22 | M9-003.2 Report (RELEASED v0.13.0) |
+| `docs/20_MILESTONES/M9-003_Final_Audit_Report.md` | L6a | Lead | Per milestone | 2026-07-22 | M9-003 Final Audit (recovered) |
+| `docs/20_MILESTONES/M6_M7_M8_Historical_Gap_Note.md` | Gap | Lead | As needed | 2026-07-22 | Honest gap declaration (no fabrication) |
 | `docs/30_TEAM/README.md` | Meta | Lead | As needed | 2026-07-21 | Team governance pointer |
 | `docs/TEAM_OPERATING_SPEC_v1.2.md` | Meta | Lead | Frozen (v1.2) | 2026-07-17 | Team norm; changes via §14 |
 | `docs/ENGINEERING_PLAYBOOK.md` | L6b | Lead | Per milestone | M8.6 | Milestone lifecycle |

@@ -49,9 +49,9 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (v0.10.0 / M8.6)
+# 5. Current State (v0.13.0 / M9.3)
 
-Released: **v0.10.0** (M8.6, 2026-07-21).
+Released: **v0.13.0** (M9-003, 2026-07-22).
 
 Implemented (deterministic, no AI runtime):
 
@@ -62,10 +62,11 @@ Implemented (deterministic, no AI runtime):
 - Five-Zone UI (Related / Explained / Paths / Timeline / Themes) rendering real data.
 - Basic search (`/search`); deterministic rule-based explanation (`connections_explained`).
 - Engineering foundation (M8.6): CI, Engineering Playbook, version-source single truth, freeze-check guard.
+- Exploration Flow Enhancement (M9-001 / M9-002 / M9-003, v0.11.0–v0.13.0): deterministic Next-Node Recommendation Engine (backend, `GET /entity/{id}/recommendations`, explainable four-dimensional scoring) + `RecommendationPanel` (frontend, surfaces the recommendation with reasons) + `ExplorationJourney` (frontend, annotates each exploration stop with *why it was reached*). All three milestones are **frontend/backend additive, zero-freeze-touch, no AI runtime** — the frozen deterministic engine is reused, not replaced.
 
 Deferred / Not yet built (per Freeze Baseline):
 
-- AI guidance layer (History Guide / Next Node / Graph Builder).
+- AI guidance layer (History Guide / AI Next Node / Graph Builder) — the *deterministic* Next-Node recommendation (M9-001) is delivered, but the AI/LLM-powered variant remains deferred per Freeze Baseline.
 - GIS Map / spatial visualization.
 - Neo4j-level knowledge model; PostgreSQL; Elasticsearch.
 - User persistence / accounts.

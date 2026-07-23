@@ -29,6 +29,7 @@ Development philosophy:
 - **M7** (v0.8.0).
 - **M8** Multi-Entity Temporal Visualization (v0.9.0).
 - **M8.6** Release & Engineering Foundation - CI, Playbook, version single-source, freeze-check (v0.10.0).
+- **M9** Exploration Flow Enhancement (deterministic, zero-freeze-touch) - M9-001 Next-Node Recommendation Engine (v0.11.0) · M9-002 RecommendationPanel (v0.12.0) · M9-003 Exploration Journey Panel (v0.13.0).
 
 
 # 3. Near-Term (within Current Architecture Freeze Baseline)

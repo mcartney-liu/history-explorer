@@ -51,11 +51,11 @@ Discover Civilization.
 
 Current milestone:
 
-**M8.6 — Release & Engineering Foundation: COMPLETED (released v0.10.0)**
+**M9.3 — Exploration Flow Enhancement: COMPLETED (released v0.13.0)**
 
 Latest release:
 
-**v0.10.0** (2026-07-21)
+**v0.13.0** (2026-07-22)
 
 Engineering status:
 
@@ -94,13 +94,18 @@ Completed (M3 – M8.6 — deterministic foundation):
 - **M8 Multi-Entity Temporal Visualization (v0.9.0)**.
 - **M8.6 Release & Engineering Foundation (v0.10.0)** — CI, `ENGINEERING_PLAYBOOK.md`, version single-source, `scripts/freeze-check.mjs` (Freeze Baseline guard).
 
+- **M9 Exploration Flow Enhancement (v0.11.0 – v0.13.0)** — deterministic, explainable exploration-flow upgrades; all three milestones are **frontend/backend additive, zero-freeze-touch, no AI runtime** (the frozen deterministic engine is reused):
+  - **M9-001 Deterministic Next-Node Recommendation Engine (v0.11.0)** — backend `GET /entity/{id}/recommendations` reusing the frozen four-dimensional scoring; explainable, no AI runtime.
+  - **M9-002 RecommendationPanel (v0.12.0)** — frontend panel surfacing the recommendation with its `reasons` (why) and `relation_path`.
+  - **M9-003 Exploration Journey Panel (v0.13.0)** — frontend panel annotating each exploration stop with *why it was reached* (captured when following a recommendation); pure consumer of App navigation history, owns no navigation state.
+
 
 Deferred (explicitly NOT in M2 — recorded as debt for M3+):
 
 **Completed since M2 (no longer deferred):**
 - CI — **Completed in M8.6** (`.github/workflows/ci.yml`: frontend + backend + freeze-check jobs).
 - API versioning (`/api/v1`) + unified error envelope — **Completed in M3** (`M3-002` dual-mounted `/api/v1` alongside legacy routes).
-- `CHANGELOG.md` — **Completed in M8.6** (covers v0.1.0 → v0.10.0).
+- `CHANGELOG.md` — **Completed in M8.6** (covers v0.1.0 → v0.13.0).
 
 **Still deferred (within Current Architecture Freeze Baseline):**
 - Docker / observability

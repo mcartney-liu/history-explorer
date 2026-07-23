@@ -4,6 +4,65 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.13.0] - 2026-07-22
+
+Exploration Journey Panel milestone (**M9-003**). Adds an explainable, retractable exploration journey that annotates each stop with *why it was reached* — frontend-only, no backend or AI.
+
+### Added
+
+- **Exploration Journey Panel (M9-003)**
+  - `frontend/src/components/ExplorationJourney.tsx` (new): pure-consumer Journey panel — `buildJourney` (pure fn) / `ExplorationJourneyView` (presentational) / `ExplorationJourney` (container). Renders App navigation history with per-stop "why" annotations; **owns no navigation state**.
+  - `frontend/src/App.tsx` (additive): session-scoped `journeyReasons` annotation map + `goHome` reset + `<ExplorationJourney>` sibling mount (Trail → Journey → RecPanel); `onNodeClick` 2-arg capture of recommendation context.
+  - `frontend/src/components/RecommendationPanel.tsx` (additive): `RecommendationContext` type + `buildRecommendationContext` pure fn + backward-compatible `onNodeClick(gid, ctx?)`.
+  - `frontend/src/App.css` (additive): `.he-journey*` styles (reuse `--he-*` tokens).
+  - `frontend/src/components/__tests__/ExplorationJourney.test.tsx` (new): 13 tests.
+
+### Freeze Compliance
+
+- No backend / `navigation.ts` / schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. `journeyReasons` is an annotation map, never enters `navigation.ts`.
+- No AI / LLM / Provider / Recommendation-as-ML introduced — deterministic graph sort surfaced read-only.
+- No new dependency. Frontend vitest **242 passed** (229 + 13); `tsc --noEmit` 0 errors; `vite build` 0 errors; freeze-check (`FROZEN_SCOPE=frontend`) PASSED.
+
+---
+
+## [0.12.0] - 2026-07-22
+
+RecommendationPanel milestone (**M9-002**). Surfaces the M9-001 recommendation API in the frontend — frontend-only, no backend or AI.
+
+### Added
+
+- **RecommendationPanel (M9-002)**
+  - `frontend/src/components/RecommendationPanel.tsx` (new): self-fetching panel consuming `GET /entity/{id}/recommendations`; 3-layer (fetch helper + view + container); `he-recommend` namespace; empty → null; loading → skeleton; error → retry.
+  - `frontend/src/App.tsx` (additive): mount `RecommendationPanel` as entity-branch sibling (EntityPage → RecommendationPanel → ContinueExploringPanel), wired with `entityId` / `seenGlobalIds` / `max` / `onNodeClick`.
+  - `frontend/src/App.css` (additive): `.he-recommend*` styles.
+  - `frontend/src/components/__tests__/RecommendationPanel.test.tsx` (new): 9 tests.
+
+### Freeze Compliance
+
+- No backend / schema / enum change. No AI / LLM. No new dependency. Frontend vitest **229 passed** (220 + 9); `tsc --noEmit` 0 errors; `vite build` 0 errors; freeze-check (`FROZEN_SCOPE=frontend`) PASSED.
+
+---
+
+## [0.11.0] - 2026-07-22
+
+Deterministic Next-Node Recommendation Engine milestone (**M9-001.2**). Adds a backend, explainable "next node" recommendation API reusing the frozen four-dimensional scoring — no AI/LLM, no schema change, no new dependency. All changes additive and freeze-safe.
+
+### Added
+
+- **Next-Node Recommendation Engine (M9-001)**
+  - `core/exploration_engine.py`: `recommend_next()` — deterministic composite recommendation score reusing the frozen scoring primitives (relationship meaning / temporal coherence / entity importance / path simplicity); returns ranked candidates with `reasons`, `relation_path`, `score_breakdown`.
+  - `core/knowledge_service.py`: `recommend_next()` facade over the engine.
+  - `main.py`: `GET /entity/{entity_id}/recommendations` (dual-mounted `/api/v1` + legacy) returning `RecommendationResult` (`RecommendationItem[]` + `algorithm_version` + `parameters` + `metadata`). New types `RecommendationItem` / `RecommendationResult` / `REC_W_*`.
+  - `tests/test_recommend.py`: 15 new backend tests.
+
+### Freeze Compliance
+
+- No frontend / schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change.
+- No AI / LLM / Provider / Recommendation-as-ML introduced — this is a deterministic graph sort, PO-authorized (M9-000 / M9-001 Planning Baseline).
+- No new dependency. Backend pytest **130 passed** (incl. 15 new); frontend vitest **220 passed** (unchanged); freeze-check (`FROZEN_SCOPE=backend`) PASSED (D=0).
+
+---
+
 ## [0.10.0] - 2026-07-20
 
 Engineering Foundation Cleanup milestone (**M8.6**, Phase 1 — Version Source Alignment). Establishes a single source of truth for versioning and reconciles release documentation that had drifted behind the actual Git tags.
