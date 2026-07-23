@@ -49,16 +49,16 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (v0.13.0 / M9.3)
+# 5. Current State (Runtime v0.13.0 / Project Release vM9-004.2 / M9-004)
 
-Released: **v0.13.0** (M9-003, 2026-07-22).
+Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM9-004.2** (M9-004, 2026-07-22) — historical knowledge graph data expansion (non-runtime release).
 
 Implemented (deterministic, no AI runtime):
 
 - Knowledge Core (in-memory): entities + typed relationships + structured time.
 - Global Graph (cross-topic edges) and Deterministic Exploration Engine (four-dimensional weighted scoring; static, explainable, no ML).
 - Multi-entity temporal visualization (M6 / M7 / M8): time understanding, comparison, multi-axis.
-- Cross-topic connections (M4); data scale & quality (8 topics / 69 entities / 104 relations / 31 cross-topic edges / 0 warnings).
+- Cross-topic connections (M4); data scale & quality (8 topics / 99 entities / 154 relations / 45 cross-topic edges / 15 timelines / 0 warnings) — expanded in project release vM9-004.2.
 - Five-Zone UI (Related / Explained / Paths / Timeline / Themes) rendering real data.
 - Basic search (`/search`); deterministic rule-based explanation (`connections_explained`).
 - Engineering foundation (M8.6): CI, Engineering Playbook, version-source single truth, freeze-check guard.
