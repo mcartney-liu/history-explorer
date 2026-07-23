@@ -33,3 +33,8 @@ __pycache__/
 
 # Vite temporary config files
 vite.config.ts.timestamp-*.mjs
+
+# === M9-007: AI-generated / design mockup artifacts (one-off exploration, not product assets) ===
+Product_homepage_hero_mockup_*.png
+*_mockup_*.png
+*.tmp
