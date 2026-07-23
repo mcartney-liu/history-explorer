@@ -273,6 +273,39 @@
         "lng": 23.7324
       },
       "region": "Athens"
+    },
+    {
+      "id": "person-archimedes",
+      "type": "Person",
+      "name": "Archimedes",
+      "description": "Syracusan mathematician, physicist, and engineer of the Hellenistic age.",
+      "global_id": "greek_philosophy:person-archimedes",
+      "aliases": [],
+      "labels": {
+        "en": "Archimedes"
+      }
+    },
+    {
+      "id": "tech-archimedes-screw",
+      "type": "Technology",
+      "name": "Archimedes' Screw",
+      "description": "A helical device for raising water, attributed to Archimedes.",
+      "global_id": "greek_philosophy:tech-archimedes-screw",
+      "aliases": [],
+      "labels": {
+        "en": "Archimedes' Screw"
+      }
+    },
+    {
+      "id": "idea-atomism",
+      "type": "Idea",
+      "name": "Atomism",
+      "description": "The doctrine that matter is composed of indivisible atoms, advanced by Leucippus and Democritus.",
+      "global_id": "greek_philosophy:idea-atomism",
+      "aliases": [],
+      "labels": {
+        "en": "Atomism"
+      }
     }
   ],
   "relationships": [
@@ -420,6 +453,56 @@
       "source": "idea-logic",
       "target": "roman_empire:civ-roman",
       "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-archimedes",
+      "target": "tech-archimedes-screw",
+      "type": "discovered",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-archimedes",
+      "target": "early_christianity:idea-koine-greek",
+      "type": "spoke",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "idea-atomism",
+      "target": "idea-theory-forms",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-pythagoras",
+      "target": "idea-theory-forms",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-aristotle",
+      "target": "idea-logic",
+      "type": "influenced",
       "confidence": null,
       "citation": "",
       "evidence": [],

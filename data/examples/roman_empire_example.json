@@ -176,10 +176,25 @@
       "name": "Roman Egypt (Aegyptus)",
       "description": "The Roman province established in 30 BC after the fall of Cleopatra, linking the Nile valley to the Mediterranean empire.",
       "global_id": "roman_empire:roman_egypt",
-      "aliases": ["Aegyptus", "Roman Province of Egypt"],
-      "labels": {"en": "Roman Egypt (Aegyptus)"},
-      "start_date": {"value": -30, "precision": "year", "certainty": "exact", "label": "30 BC"},
-      "end_date": {"value": 641, "precision": "year", "certainty": "approximate", "label": "641 CE"},
+      "aliases": [
+        "Aegyptus",
+        "Roman Province of Egypt"
+      ],
+      "labels": {
+        "en": "Roman Egypt (Aegyptus)"
+      },
+      "start_date": {
+        "value": -30,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "30 BC"
+      },
+      "end_date": {
+        "value": 641,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "641 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
@@ -193,10 +208,26 @@
       "name": "Byzantine Empire",
       "description": "The Eastern Roman continuation that inherited Roman law, administration, and Greek learning after the fall of the western empire.",
       "global_id": "roman_empire:civ-byzantine",
-      "aliases": ["Eastern Roman Empire", "Byzantium"],
-      "labels": {"en": "Byzantine Empire", "el": "Vasileia Rhomaion"},
-      "start_date": {"value": 330, "precision": "year", "certainty": "approximate", "label": "330 CE"},
-      "end_date": {"value": 1453, "precision": "year", "certainty": "exact", "label": "1453 CE"},
+      "aliases": [
+        "Eastern Roman Empire",
+        "Byzantium"
+      ],
+      "labels": {
+        "en": "Byzantine Empire",
+        "el": "Vasileia Rhomaion"
+      },
+      "start_date": {
+        "value": 330,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "330 CE"
+      },
+      "end_date": {
+        "value": 1453,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1453 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
@@ -210,16 +241,86 @@
       "name": "Christianity",
       "description": "A monotheistic faith that spread through the Roman Empire and was adopted as its state religion, carrying forward the monotheistic idea across civilizations.",
       "global_id": "roman_empire:religion-christianity",
-      "aliases": ["Christian faith"],
-      "labels": {"en": "Christianity"},
-      "start_date": {"value": 30, "precision": "year", "certainty": "approximate", "label": "c. 30 CE"},
+      "aliases": [
+        "Christian faith"
+      ],
+      "labels": {
+        "en": "Christianity"
+      },
+      "start_date": {
+        "value": 30,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 30 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "practiced_by": "civ-roman",
       "practiced_in": "loc-rome",
-      "texts": ["Bible"]
+      "texts": [
+        "Bible"
+      ]
+    },
+    {
+      "id": "tp-republic",
+      "type": "Time Period",
+      "name": "Roman Republic",
+      "description": "The Roman state (509-27 BC) before the imperial monarchy.",
+      "global_id": "roman_empire:tp-republic",
+      "aliases": [
+        "Res Publica"
+      ],
+      "labels": {
+        "en": "Roman Republic"
+      }
+    },
+    {
+      "id": "person-constantine",
+      "type": "Person",
+      "name": "Constantine the Great",
+      "description": "Roman emperor (306-337 AD) who legalized Christianity via the Edict of Milan.",
+      "global_id": "roman_empire:person-constantine",
+      "aliases": [],
+      "labels": {
+        "en": "Constantine the Great"
+      }
+    },
+    {
+      "id": "person-julius-caesar",
+      "type": "Person",
+      "name": "Julius Caesar",
+      "description": "Roman general and dictator whose crossing of the Rubicon ended the Republic.",
+      "global_id": "roman_empire:person-julius-caesar",
+      "aliases": [],
+      "labels": {
+        "en": "Julius Caesar"
+      }
+    },
+    {
+      "id": "loc-constantinople",
+      "type": "Location",
+      "name": "Constantinople",
+      "description": "City on the Bosporus founded by Constantine as the new imperial capital.",
+      "global_id": "roman_empire:loc-constantinople",
+      "aliases": [
+        "Istanbul"
+      ],
+      "labels": {
+        "en": "Constantinople"
+      }
+    },
+    {
+      "id": "event-edict-milan",
+      "type": "Event",
+      "name": "Edict of Milan",
+      "description": "313 AD proclamation granting Christians legal toleration in the Roman Empire.",
+      "global_id": "roman_empire:event-edict-milan",
+      "aliases": [],
+      "labels": {
+        "en": "Edict of Milan"
+      }
     }
   ],
   "relationships": [
@@ -327,6 +428,96 @@
       "source": "religion-christianity",
       "target": "egypt_technology_religion:idea-monotheism",
       "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-republic",
+      "target": "tp-27bc",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-byzantine",
+      "target": "civ-roman",
+      "type": "after",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-byzantine",
+      "target": "civ-roman",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-constantine",
+      "target": "loc-constantinople",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-constantine",
+      "target": "event-edict-milan",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-edict-milan",
+      "target": "religion-christianity",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-christianity",
+      "target": "early_christianity:religion-early-church",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-julius-caesar",
+      "target": "event-roman-empire-established",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-augustus",
+      "target": "loc-rome",
+      "type": "ruled",
       "confidence": null,
       "citation": "",
       "evidence": [],
