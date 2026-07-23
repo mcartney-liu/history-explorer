@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM9-004.2** (2026-07-22) — historical knowledge graph data expansion (non-runtime release)
+- **Project Release: vM9-006** (2026-07-23) — release governance & consistency checker (non-runtime release)
 
 Engineering status:
 
