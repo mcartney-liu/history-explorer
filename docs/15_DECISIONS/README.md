@@ -9,9 +9,10 @@ from `20_MILESTONES` (release history).
 ## Contents
 
 - `ADR_TEMPLATE.md` — copy this to `ADR-XXXX_<topic>.md` for each new decision.
-- `ADR-*.md` — individual accepted / proposed decisions. None exist yet: the repository
-  has *required* ADRs via the Freeze Revision Gate, but held no instance before this
-  layer was established (M8.8-D.1).
+- `ADR-0001_agent_governance_framework.md` — **Accepted** (2026-07-23, M9-010). Process
+  Governance Decision establishing the Agent Governance Foundation. Freeze Revision Gate: No.
+- `ADR-*.md` — individual accepted / proposed decisions. The first instance (`ADR-0001`)
+  was created in M9-010; subsequent decisions follow the same template and pattern.
 
 ## Relationship to the Freeze Baseline
 
