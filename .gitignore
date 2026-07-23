@@ -1,35 +1,9 @@
-# WorkBuddy internal memory / runtime — not part of the project
-.workbuddy/
+# === M9-007 Repository Hygiene: ignore one-off AI / design / temp artifacts ===
+# AI-generated product hero & design mockups are exploration outputs, not version-controlled product assets
+Product_homepage_hero_mockup_*.png
+*_mockup_*.png
 
-# Generated task report artifacts
-REPOSITORY_INIT_REPORT.html
-
-# Environment files
-.env
-.env.*
-
-# Node dependencies
-node_modules/
-
-# Build outputs
-dist/
-build/
-
-# Logs
+# Temporary & scratch files
+*.tmp
 *.log
-
-# IDE files
-.vscode/
-.idea/
-
-# Operating system files
 .DS_Store
-Thumbs.db
-
-# Python cache
-__pycache__/
-*.pyc
-.pytest_cache/
-
-# Vite temporary config files
-vite.config.ts.timestamp-*.mjs
