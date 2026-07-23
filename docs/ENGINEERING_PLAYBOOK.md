@@ -82,12 +82,12 @@ Run before any release commit is staged (after implementation + tests pass).
   every entry:
   - `M` (modified) entries **must** fall within the approved scope. Anything
     outside scope → **STOP**.
-  - `??` (untracked) entries **must** be classified:
-    - *Release Artifact* → add to version control explicitly.
-    - *Temporary File* → delete.
-    - *Design / Mockup Asset* → append an ignore rule to `.gitignore` (if a
-      matching rule already exists, append only — never overwrite).
-    - *Unknown* → **STOP**, await Product Owner decision.
+  - `??` (untracked) entries **must** be classified into one of three buckets:
+    - **Tracked Changes** — a legitimate release artifact; add it to version
+      control explicitly.
+    - **Temporary Files** — delete, or ignore through `.gitignore` (append
+      only, never overwrite existing rules).
+    - **Unknown Files** — **STOP**, await Product Owner decision.
 - **H2 — Gitignore Integrity.** Confirm `.gitignore`:
   - exists;
   - retains **all** previously-existing ignore rules;
@@ -116,17 +116,25 @@ annotated tag.
 
 Run after the annotated tag is created, before `push`.
 
+- **Push Gate (Release Workflow rule).** `push` is forbidden until **both**
+  pass:
+  - **Freeze Check PASS** — `node scripts/freeze-check.mjs`; and
+  - **Release Consistency Check R1–R7 PASS** — `node scripts/release-consistency-check.mjs`.
+  If either fails → **STOP**, do not push; await remediation. This gate only
+  *adds* a workflow requirement; it does not modify the checkers or the Version
+  Policy.
 - **H3 (Post-Tag phase) — Metadata Synchronization.** Re-run
-  `scripts/release-consistency-check.mjs`. Requirement: **R1–R7 all PASS**.
-  If any check fails → **STOP**, do not push.
+  `scripts/release-consistency-check.mjs`. Requirement: **R1–R7 all PASS**
+  (this is the consistency half of the Push Gate above). If it fails →
+  **STOP**, do not push.
 - **H4 — Tag Verification.** Never infer tag existence from a command's exit
   status alone — exit-code behavior varies across shells (Git Bash, PowerShell,
   Linux). Always verify by:
   - inspecting the returned tag list (e.g. `git tag --list "vM*"`), **or**
   - explicit object verification (e.g. `git rev-parse -q --verify <tag>` /
     `git cat-file -t <tag>`).
-  - Proceed to push only when the tag is positively confirmed present and points
-    at the intended commit.
+  - Proceed to push only when the tag is positively confirmed present, the Push
+    Gate above is satisfied, and the tag points at the intended commit.
 
 ### 6.4 Hardening Boundaries
 
