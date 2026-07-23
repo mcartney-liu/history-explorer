@@ -175,13 +175,92 @@
       "name": "Monotheism",
       "description": "The idea of a single god, first expressed in Egyptian pharaoh Akhenaten's worship of Aten, which traveled and shaped later monotheistic faiths.",
       "global_id": "egypt_technology_religion:idea-monotheism",
-      "aliases": ["Belief in one god"],
-      "labels": {"en": "Monotheism"},
-      "start_date": {"value": -1350, "precision": "year", "certainty": "approximate", "label": "c. 1350 BC (Aten cult)"},
+      "aliases": [
+        "Belief in one god"
+      ],
+      "labels": {
+        "en": "Monotheism"
+      },
+      "start_date": {
+        "value": -1350,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1350 BC (Aten cult)"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": ""
+    },
+    {
+      "id": "tp-old-kingdom",
+      "type": "Time Period",
+      "name": "Egyptian Old Kingdom",
+      "description": "The pyramid-building age of Egypt (c. 2686-2181 BC), centered on Memphis.",
+      "global_id": "egypt_technology_religion:tp-old-kingdom",
+      "aliases": [],
+      "labels": {
+        "en": "Egyptian Old Kingdom"
+      }
+    },
+    {
+      "id": "tp-new-kingdom",
+      "type": "Time Period",
+      "name": "Egyptian New Kingdom",
+      "description": "The empire phase of Egypt (c. 1550-1070 BC) under Thutmosid and Ramessid rulers.",
+      "global_id": "egypt_technology_religion:tp-new-kingdom",
+      "aliases": [],
+      "labels": {
+        "en": "Egyptian New Kingdom"
+      }
+    },
+    {
+      "id": "religion-osiris",
+      "type": "Religion",
+      "name": "Osiris Cult",
+      "description": "The Egyptian mystery cult of the dying-and-rising god Osiris, promise of afterlife.",
+      "global_id": "egypt_technology_religion:religion-osiris",
+      "aliases": [
+        "Cult of Osiris"
+      ],
+      "labels": {
+        "en": "Osiris Cult"
+      }
+    },
+    {
+      "id": "tech-hieroglyph",
+      "type": "Technology",
+      "name": "Hieroglyphic Writing",
+      "description": "The Egyptian logographic script used for monumental and sacred inscriptions.",
+      "global_id": "egypt_technology_religion:tech-hieroglyph",
+      "aliases": [
+        "Hieroglyphs"
+      ],
+      "labels": {
+        "en": "Hieroglyphic Writing"
+      }
+    },
+    {
+      "id": "tech-mummification",
+      "type": "Technology",
+      "name": "Mummification",
+      "description": "The Egyptian preservation technique for the dead, tied to belief in the afterlife.",
+      "global_id": "egypt_technology_religion:tech-mummification",
+      "aliases": [],
+      "labels": {
+        "en": "Mummification"
+      }
+    },
+    {
+      "id": "person-imhotep",
+      "type": "Person",
+      "name": "Imhotep",
+      "description": "Third-Dynasty architect, physician, and sage credited with the Step Pyramid of Djoser.",
+      "global_id": "egypt_technology_religion:person-imhotep",
+      "aliases": [],
+      "labels": {
+        "en": "Imhotep"
+      }
     }
   ],
   "relationships": [
@@ -269,6 +348,96 @@
       "source": "idea-monotheism",
       "target": "hellenistic_world:civ-ptolemaic-egypt",
       "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-egypt",
+      "target": "tech-hieroglyph",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-egypt",
+      "target": "tech-mummification",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-imhotep",
+      "target": "event-great-pyramid-built",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-osiris",
+      "target": "religion-ancient-egyptian",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-old-kingdom",
+      "target": "tp-new-kingdom",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-old-kingdom",
+      "target": "persian_empire:tp-achaemenid",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-old-kingdom",
+      "target": "roman_empire:event-roman-empire-established",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-ancient-egyptian",
+      "target": "idea-monotheism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-great-pyramid-built",
+      "target": "loc-ancient-egypt",
+      "type": "located_at",
       "confidence": null,
       "citation": "",
       "evidence": [],

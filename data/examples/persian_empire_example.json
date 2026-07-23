@@ -315,6 +315,32 @@
       "source": "",
       "evidence": [],
       "reliability": ""
+    },
+    {
+      "id": "loc-susa",
+      "type": "Location",
+      "name": "Susa",
+      "description": "Ancient capital of Elam and a seasonal residence of the Achaemenid kings.",
+      "global_id": "persian_empire:loc-susa",
+      "aliases": [
+        "Shushan"
+      ],
+      "labels": {
+        "en": "Susa"
+      }
+    },
+    {
+      "id": "religion-mithra",
+      "type": "Religion",
+      "name": "Mithraism",
+      "description": "The Roman mystery cult of the god Mithra, with Persian-rooted imagery.",
+      "global_id": "persian_empire:religion-mithra",
+      "aliases": [
+        "Cult of Mithras"
+      ],
+      "labels": {
+        "en": "Mithraism"
+      }
     }
   ],
   "relationships": [
@@ -472,6 +498,36 @@
       "source": "religion-zoroastrianism",
       "target": "egypt_technology_religion:idea-monotheism",
       "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "loc-susa",
+      "target": "civ-persian",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-mithra",
+      "target": "civ-persian",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-royal-road",
+      "target": "silk_road:silk_road",
+      "type": "traded_with",
       "confidence": null,
       "citation": "",
       "evidence": [],

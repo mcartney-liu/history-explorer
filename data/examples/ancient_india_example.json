@@ -297,6 +297,54 @@
       "source": "",
       "evidence": [],
       "reliability": ""
+    },
+    {
+      "id": "tp-guupta",
+      "type": "Time Period",
+      "name": "Gupta Period",
+      "description": "The classical age of India (c. 320-550 AD) under the Gupta dynasty.",
+      "global_id": "ancient_india:tp-guupta",
+      "aliases": [
+        "Gupta Empire"
+      ],
+      "labels": {
+        "en": "Gupta Period"
+      }
+    },
+    {
+      "id": "person-kalidasa",
+      "type": "Person",
+      "name": "Kalidasa",
+      "description": "Classical Sanskrit poet and playwright of the Gupta court.",
+      "global_id": "ancient_india:person-kalidasa",
+      "aliases": [],
+      "labels": {
+        "en": "Kalidasa"
+      }
+    },
+    {
+      "id": "tech-zero",
+      "type": "Technology",
+      "name": "Zero and Decimal System",
+      "description": "The place-value numeral system with zero, formalized in Gupta-era India.",
+      "global_id": "ancient_india:tech-zero",
+      "aliases": [
+        "Shunya"
+      ],
+      "labels": {
+        "en": "Zero and Decimal System"
+      }
+    },
+    {
+      "id": "person-aryabhata",
+      "type": "Person",
+      "name": "Aryabhata",
+      "description": "Gupta-era mathematician-astronomer who authored the Aryabhatiya.",
+      "global_id": "ancient_india:person-aryabhata",
+      "aliases": [],
+      "labels": {
+        "en": "Aryabhata"
+      }
     }
   ],
   "relationships": [
@@ -444,6 +492,56 @@
       "source": "civ-maurya",
       "target": "persian_empire:civ-persian",
       "type": "contemporary_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-maurya",
+      "target": "tp-guupta",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-zero",
+      "target": "person-aryabhata",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-buddhism",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "idea-dharma",
+      "target": "religion-buddhism",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-kalidasa",
+      "target": "person-aryabhata",
+      "type": "related_to",
       "confidence": null,
       "citation": "",
       "evidence": [],

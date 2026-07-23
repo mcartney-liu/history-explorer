@@ -222,6 +222,43 @@
         "lng": 36.1585
       },
       "region": "Syria"
+    },
+    {
+      "id": "person-peter",
+      "type": "Person",
+      "name": "Saint Peter",
+      "description": "Leading apostle regarded as the first bishop of Rome.",
+      "global_id": "early_christianity:person-peter",
+      "aliases": [
+        "Simon Peter"
+      ],
+      "labels": {
+        "en": "Saint Peter"
+      }
+    },
+    {
+      "id": "idea-koine-greek",
+      "type": "Idea",
+      "name": "Koine Greek (Lingua Franca)",
+      "description": "The common Hellenistic Greek spoken across the eastern Mediterranean and used in the New Testament.",
+      "global_id": "early_christianity:idea-koine-greek",
+      "aliases": [
+        "Common Greek"
+      ],
+      "labels": {
+        "en": "Koine Greek"
+      }
+    },
+    {
+      "id": "event-pentecost",
+      "type": "Event",
+      "name": "Pentecost",
+      "description": "The descent of the Holy Spirit on the apostles, birth of the public church.",
+      "global_id": "early_christianity:event-pentecost",
+      "aliases": [],
+      "labels": {
+        "en": "Pentecost"
+      }
     }
   ],
   "relationships": [
@@ -349,6 +386,56 @@
       "source": "idea-resurrection",
       "target": "egypt_technology_religion:idea-monotheism",
       "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-peter",
+      "target": "event-crucifixion",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "religion-early-church",
+      "target": "roman_empire:religion-christianity",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-paul",
+      "target": "idea-koine-greek",
+      "type": "spoke",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-peter",
+      "target": "roman_empire:loc-rome",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-pentecost",
+      "target": "religion-early-church",
+      "type": "caused",
       "confidence": null,
       "citation": "",
       "evidence": [],

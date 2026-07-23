@@ -8,16 +8,36 @@
       "name": "Silk Road",
       "description": "The network of Central Asian trade routes carrying silk, paper, and ideas between the Roman Mediterranean and Han China.",
       "global_id": "silk_road:silk_road",
-      "aliases": ["Silk Route", "Seidenstraße"],
-      "labels": {"en": "Silk Road"},
-      "start_date": {"value": -130, "precision": "year", "certainty": "approximate", "label": "c. 130 BC"},
-      "end_date": {"value": 1453, "precision": "year", "certainty": "approximate", "label": "1453 CE"},
+      "aliases": [
+        "Silk Route",
+        "Seidenstraße"
+      ],
+      "labels": {
+        "en": "Silk Road"
+      },
+      "start_date": {
+        "value": -130,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 130 BC"
+      },
+      "end_date": {
+        "value": 1453,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "1453 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "coordinates": {"lat": 40.0, "lng": 90.0},
+      "coordinates": {
+        "lat": 40.0,
+        "lng": 90.0
+      },
       "region": "Central Asia",
-      "related_events": ["event-silk-road-opened"]
+      "related_events": [
+        "event-silk-road-opened"
+      ]
     },
     {
       "id": "han_dynasty",
@@ -25,10 +45,27 @@
       "name": "Han Dynasty",
       "description": "The Chinese imperial dynasty (206 BC–220 CE) that expanded westward and produced the silk and paper traded along the routes.",
       "global_id": "silk_road:han_dynasty",
-      "aliases": ["Han China", "Western Han", "Eastern Han"],
-      "labels": {"en": "Han Dynasty", "zh": "汉朝"},
-      "start_date": {"value": -206, "precision": "year", "certainty": "exact", "label": "206 BC"},
-      "end_date": {"value": 220, "precision": "year", "certainty": "exact", "label": "220 CE"},
+      "aliases": [
+        "Han China",
+        "Western Han",
+        "Eastern Han"
+      ],
+      "labels": {
+        "en": "Han Dynasty",
+        "zh": "汉朝"
+      },
+      "start_date": {
+        "value": -206,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "206 BC"
+      },
+      "end_date": {
+        "value": 220,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "220 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
@@ -43,16 +80,43 @@
       "description": "Han envoy whose westward missions (138–126 BC) opened diplomatic and trade contact between China and the Hellenistic west.",
       "global_id": "silk_road:person-zhang-qian",
       "aliases": [],
-      "labels": {"en": "Zhang Qian", "zh": "张骞"},
-      "start_date": {"value": -164, "precision": "year", "certainty": "approximate", "label": "164 BC"},
-      "end_date": {"value": -114, "precision": "year", "certainty": "approximate", "label": "114 BC"},
+      "labels": {
+        "en": "Zhang Qian",
+        "zh": "张骞"
+      },
+      "start_date": {
+        "value": -164,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "164 BC"
+      },
+      "end_date": {
+        "value": -114,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "114 BC"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": {"value": -164, "precision": "year", "certainty": "approximate", "label": "164 BC"},
-      "death": {"value": -114, "precision": "year", "certainty": "approximate", "label": "114 BC"},
-      "roles": ["Han imperial envoy"],
-      "related_events": ["event-silk-road-opened"]
+      "birth": {
+        "value": -164,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "164 BC"
+      },
+      "death": {
+        "value": -114,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "114 BC"
+      },
+      "roles": [
+        "Han imperial envoy"
+      ],
+      "related_events": [
+        "event-silk-road-opened"
+      ]
     },
     {
       "id": "loc-chang-an",
@@ -60,16 +124,31 @@
       "name": "Chang'an",
       "description": "The Han capital at the eastern end of the Silk Road, terminus of the overland routes into China.",
       "global_id": "silk_road:loc-chang-an",
-      "aliases": ["Xi'an"],
-      "labels": {"en": "Chang'an", "zh": "长安"},
-      "start_date": {"value": -202, "precision": "year", "certainty": "approximate", "label": "202 BC"},
+      "aliases": [
+        "Xi'an"
+      ],
+      "labels": {
+        "en": "Chang'an",
+        "zh": "长安"
+      },
+      "start_date": {
+        "value": -202,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "202 BC"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
-      "coordinates": {"lat": 34.3416, "lng": 108.9398},
+      "coordinates": {
+        "lat": 34.3416,
+        "lng": 108.9398
+      },
       "region": "Guanzhong Basin",
-      "related_events": ["event-silk-road-opened"]
+      "related_events": [
+        "event-silk-road-opened"
+      ]
     },
     {
       "id": "tech-paper",
@@ -77,15 +156,30 @@
       "name": "Papermaking",
       "description": "The Han-era technique for making paper from mulberry bark and rags, which spread west along the Silk Road.",
       "global_id": "silk_road:tech-paper",
-      "aliases": ["Paper"],
-      "labels": {"en": "Papermaking", "zh": "造纸术"},
-      "start_date": {"value": -105, "precision": "year", "certainty": "approximate", "label": "c. 105 BC"},
+      "aliases": [
+        "Paper"
+      ],
+      "labels": {
+        "en": "Papermaking",
+        "zh": "造纸术"
+      },
+      "start_date": {
+        "value": -105,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 105 BC"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "invented_by": "han_dynasty",
-      "invented_in": {"value": -105, "precision": "year", "certainty": "approximate", "label": "c. 105 BC"},
+      "invented_in": {
+        "value": -105,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 105 BC"
+      },
       "category": "writing-materials"
     },
     {
@@ -95,14 +189,23 @@
       "description": "Zhang Qian's return in c. 126 BC established the first documented overland link between Han China and the Hellenistic west.",
       "global_id": "silk_road:event-silk-road-opened",
       "aliases": [],
-      "labels": {"en": "Silk Road Opened"},
-      "start_date": {"value": -130, "precision": "year", "certainty": "approximate", "label": "c. 130 BC"},
+      "labels": {
+        "en": "Silk Road Opened"
+      },
+      "start_date": {
+        "value": -130,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 130 BC"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "location": "loc-chang-an",
-      "participants": ["person-zhang-qian"],
+      "participants": [
+        "person-zhang-qian"
+      ],
       "causes": [],
       "consequences": []
     },
@@ -112,32 +215,300 @@
       "name": "Silk Production",
       "description": "The Han Chinese technique of rearing silkworms and weaving silk, a luxury that spread west along the Silk Road to Rome.",
       "global_id": "silk_road:tech-silk",
-      "aliases": ["Sericulture"],
-      "labels": {"en": "Silk Production", "zh": "丝织"},
-      "start_date": {"value": -2700, "precision": "year", "certainty": "approximate", "label": "ancient (legendary)"},
+      "aliases": [
+        "Sericulture"
+      ],
+      "labels": {
+        "en": "Silk Production",
+        "zh": "丝织"
+      },
+      "start_date": {
+        "value": -2700,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "ancient (legendary)"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "invented_by": "han_dynasty",
-      "invented_in": {"value": -2700, "precision": "year", "certainty": "approximate", "label": "ancient China"},
+      "invented_in": {
+        "value": -2700,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "ancient China"
+      },
       "category": "textile"
+    },
+    {
+      "id": "loc-samarkand",
+      "type": "Location",
+      "name": "Samarkand",
+      "description": "Oasis city in Transoxiana, a major Silk Road caravan hub.",
+      "global_id": "silk_road:loc-samarkand",
+      "aliases": [],
+      "labels": {
+        "en": "Samarkand"
+      }
+    },
+    {
+      "id": "loc-kashgar",
+      "type": "Location",
+      "name": "Kashgar",
+      "description": "Oasis town at the foot of the Pamirs where northern and southern Silk Roads met.",
+      "global_id": "silk_road:loc-kashgar",
+      "aliases": [],
+      "labels": {
+        "en": "Kashgar"
+      }
+    },
+    {
+      "id": "person-ban-chao",
+      "type": "Person",
+      "name": "Ban Chao",
+      "description": "Han general who re-opened and secured the Western Regions for the Silk Road.",
+      "global_id": "silk_road:person-ban-chao",
+      "aliases": [],
+      "labels": {
+        "en": "Ban Chao"
+      }
+    },
+    {
+      "id": "tech-glass",
+      "type": "Technology",
+      "name": "Glassmaking",
+      "description": "Glass production traded west-to-east along the Silk Road routes.",
+      "global_id": "silk_road:tech-glass",
+      "aliases": [],
+      "labels": {
+        "en": "Glassmaking"
+      }
+    },
+    {
+      "id": "idea-chinese-language",
+      "type": "Idea",
+      "name": "Chinese Language (Hanyu)",
+      "description": "The Sinitic language family spoken across Han China, linking travelers and texts.",
+      "global_id": "silk_road:idea-chinese-language",
+      "aliases": [
+        "Hanyu"
+      ],
+      "labels": {
+        "en": "Chinese Language"
+      }
     }
   ],
   "relationships": [
-    {"source": "han_dynasty", "target": "tech-paper", "type": "invented", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "person-zhang-qian", "target": "event-silk-road-opened", "type": "participated_in", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "event-silk-road-opened", "target": "loc-chang-an", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "silk_road", "target": "han_dynasty", "type": "traded_with", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "person-zhang-qian", "target": "silk_road", "type": "related_to", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-
-    {"source": "silk_road:silk_road", "target": "roman_empire:civ-roman", "type": "traded_with", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "han_dynasty", "target": "tech-silk", "type": "invented", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "tech-silk", "target": "roman_empire:civ-roman", "type": "spread", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null},
-    {"source": "tech-paper", "target": "roman_empire:civ-roman", "type": "spread", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null}
+    {
+      "source": "han_dynasty",
+      "target": "tech-paper",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zhang-qian",
+      "target": "event-silk-road-opened",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-silk-road-opened",
+      "target": "loc-chang-an",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "silk_road",
+      "target": "han_dynasty",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zhang-qian",
+      "target": "silk_road",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "silk_road:silk_road",
+      "target": "roman_empire:civ-roman",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "han_dynasty",
+      "target": "tech-silk",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-silk",
+      "target": "roman_empire:civ-roman",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-paper",
+      "target": "roman_empire:civ-roman",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "silk_road",
+      "target": "roman_empire:civ-roman",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "silk_road",
+      "target": "persian_empire:civ-persian",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-silk",
+      "target": "roman_empire:civ-roman",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "loc-samarkand",
+      "target": "silk_road",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "loc-kashgar",
+      "target": "silk_road",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-ban-chao",
+      "target": "event-silk-road-opened",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zhang-qian",
+      "target": "event-silk-road-opened",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "ancient_india:religion-buddhism",
+      "target": "silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zhang-qian",
+      "target": "idea-chinese-language",
+      "type": "spoke",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-glass",
+      "target": "silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null
+    }
   ],
   "timeline": [
-    {"period": {"value": -130, "precision": "year", "certainty": "approximate", "label": "c. 130 BC"}, "event": "Zhang Qian opens the Silk Road link to the west"},
-    {"period": {"value": -105, "precision": "year", "certainty": "approximate", "label": "c. 105 BC"}, "event": "Han papermaking invented, later spread west"}
+    {
+      "period": {
+        "value": -130,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 130 BC"
+      },
+      "event": "Zhang Qian opens the Silk Road link to the west"
+    },
+    {
+      "period": {
+        "value": -105,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 105 BC"
+      },
+      "event": "Han papermaking invented, later spread west"
+    }
   ]
 }
