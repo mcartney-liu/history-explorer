@@ -51,11 +51,12 @@ Discover Civilization.
 
 Current milestone:
 
-**M9.3 — Exploration Flow Enhancement: COMPLETED (released v0.13.0)**
+**M9.3 — Exploration Flow Enhancement: COMPLETED**
 
-Latest release:
+Latest releases (dual-track versioning):
 
-**v0.13.0** (2026-07-22)
+- **Runtime Version: v0.13.0** (2026-07-22)
+- **Project Release: vM9-004.2** (2026-07-22) — historical knowledge graph data expansion (non-runtime release)
 
 Engineering status:
 

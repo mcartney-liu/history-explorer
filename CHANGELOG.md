@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM9-006] - 2026-07-23 (Project Release — M9-006)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; no code changed. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Release Governance & Documentation Hygiene (M9-006). Establishes the dual-track release-version policy and its automated consistency guard, closing the version-drift that existed before M9-006.
+
+### Added
+
+- **Release Version Policy** (`docs/RELEASE_VERSION_POLICY.md`, new): dual-track versioning model; seven release-version artifacts each with a single responsibility; formal "do not mix" rules; Release authority retained by Product Owner (D8).
+- **Release Consistency Checker** (`scripts/release-consistency-check.mjs`, new): CI guard enforcing the policy via R1–R7 (package.json / runtime tag / project tag / README / PROJECT_CONTEXT §5 / CHANGELOG / self-integrity). stdlib-only, strictly read-only.
+
+### Freeze Compliance
+
+- No backend / frontend / schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+- `frontend/package.json` held at `0.13.0`; README / PROJECT_CONTEXT / CHANGELOG synced to reflect the dual-track reality.
+
+---
+
+## [vM9-004.2] - 2026-07-22 (Project Release — M9-004)
+
+> **Non-runtime release.** This is a Project Release (data milestone), not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; no code changed. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Historical Knowledge Graph Data Expansion (**M9-004.2**). Expands the example dataset coverage across all 8 topics.
+
+### Data (from `validation.py` / `GET /health`)
+
+- **8 topics / 99 entities / 154 relations / 45 cross-topic edges / 15 timelines / 0 warnings** (previously 8 / 69 / 104 / 31 / 15 / 0).
+
+### Freeze Compliance
+
+- No backend / frontend / schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. Pure data expansion.
+- No AI / LLM introduced. No new dependency.
+- Validation report: **0 warnings / 0 errors**.
+
+---
+
 ## [0.13.0] - 2026-07-22
 
 Exploration Journey Panel milestone (**M9-003**). Adds an explainable, retractable exploration journey that annotates each stop with *why it was reached* — frontend-only, no backend or AI.
