@@ -1,3 +1,8 @@
+// @deprecated M10-2: superseded by ExplorationPathTree for the shared
+// full-journey view. This file and its tests are intentionally RETAINED (not
+// deleted) per the M10-2 trail-convergence decision — App no longer renders it
+// by default, but the component stays importable/testable and can be restored.
+//
 // M5-B-2: "Exploration Trail" — a footprint log of the user's WHOLE journey.
 //
 // Unlike Breadcrumb (which shows only Home -> current cursor, a hierarchical

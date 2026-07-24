@@ -19,9 +19,22 @@ type TimelinePanelProps = {
   // static, so only "associated" time points are interactive.
   nameToId?: Record<string, string>
   onEventClick?: (entityId: string) => void
+  // M10-2 (cross-panel focus, CONSUMER only): a local->global id map plus the
+  // focused entity's global_id. When an event resolves (name -> local id ->
+  // global id) to the focused entity, it is marked is-focused so the linkage
+  // set in RelationshipView is mirrored here. This is the forward direction
+  // (Relationship -> Focus -> Timeline); Timeline never PRODUCES focus.
+  globalIdById?: Record<string, string>
+  focusedId?: string
 }
 
-function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps) {
+function TimelinePanel({
+  timeline,
+  nameToId,
+  onEventClick,
+  globalIdById,
+  focusedId,
+}: TimelinePanelProps) {
   const clickable = typeof onEventClick === 'function' && !!nameToId
 
   // M6-P4: deterministic ordering + fixed time-bucket grouping.
@@ -47,6 +60,14 @@ function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps)
           {flatItems.map((item, idx) => {
             const entityId = clickable ? nameToId![item.event] : undefined
             const interactive = clickable && !!entityId
+            // M10-2: resolve the event's global_id (name -> local -> global) and
+            // mark it focused when it matches the App-owned focus. Pure lookup;
+            // no navigation, no state.
+            const localId = nameToId?.[item.event]
+            const eventGlobalId = localId ? globalIdById?.[localId] : undefined
+            const isFocused =
+              typeof focusedId === 'string' && !!eventGlobalId && eventGlobalId === focusedId
+            const focusCls = isFocused ? ' is-focused' : ''
             const node = (
               <div className="timeline-node" key={`node-${idx}`}>
                 <div className="timeline-period">{item.period}</div>
@@ -56,14 +77,14 @@ function TimelinePanel({ timeline, nameToId, onEventClick }: TimelinePanelProps)
                 {interactive ? (
                   <button
                     type="button"
-                    className="timeline-event is-clickable"
+                    className={`timeline-event is-clickable${focusCls}`}
                     aria-label={`Open ${item.event}`}
                     onClick={() => onEventClick!(entityId!)}
                   >
                     {item.event}
                   </button>
                 ) : (
-                  <div className="timeline-event">{item.event}</div>
+                  <div className={`timeline-event${focusCls}`}>{item.event}</div>
                 )}
               </div>
             )
