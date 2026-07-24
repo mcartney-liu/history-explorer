@@ -11,6 +11,9 @@ from `20_MILESTONES` (release history).
 - `ADR_TEMPLATE.md` — copy this to `ADR-XXXX_<topic>.md` for each new decision.
 - `ADR-0001_agent_governance_framework.md` — **Accepted** (2026-07-23, M9-010). Process
   Governance Decision establishing the Agent Governance Foundation. Freeze Revision Gate: No.
+- `ADR-0002_agent_workflow_contract_framework.md` — **Accepted** (2026-07-24, M9-011-001). Process
+  Governance Decision establishing the Agent Workflow & Contract Framework (contract layer pinning
+  the §11 five-node flow). Freeze Revision Gate: No.
 - `ADR-*.md` — individual accepted / proposed decisions. The first instance (`ADR-0001`)
   was created in M9-010; subsequent decisions follow the same template and pattern.
 
