@@ -49,9 +49,9 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (Runtime v0.13.0 / Project Release vM9-006 / M9-006)
+# 5. Current State (Runtime v0.13.0 / Project Release vM10-2 / M10-2)
 
-Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM9-006** (M9-006, 2026-07-23) — release governance & consistency checker (non-runtime release).
+Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM10-2** (M10-2, 2026-07-24) — exploration narrative focus linkage.
 
 Implemented (deterministic, no AI runtime):
 

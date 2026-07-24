@@ -1,51 +1,57 @@
 #!/usr/bin/env node
-// History Explorer — M3.5 Freeze Guard
+// History Explorer — M3.5 Freeze Guard (+ M11 ADR-0003 controlled AI allowance)
 //
 // Automated protection for the M3.5-000 Schema Freeze + Team Operating Spec
 // v1.2 invariant: no AI / LLM / graph-DB / Redis / new dependency / backend
-// schema changes enter through the frontend-only milestones.
+// schema changes enter through the frontend-only milestones — EXCEPT the
+// approved M11 AI Gateway, which passed the Freeze Revision Gate (ADR-0003).
 //
 // Design (from M8.6-003 Design Freeze):
 //   - Token scan first strips ALL comments (//, #, /* */, """ docstrings),
 //     string/template literals, then scans only real code logic. This keeps
 //     the documented "AI is a future capability" notes (which are LEGAL)
 //     from false-FAILing. Only genuine code-logic hits are D-class.
-//   - Token list is intentionally narrow: gpt | openai | rag | neo4j |
-//     graphql | redis. These are strong signals of an AI/LLM/graph/Redis
-//     RUNTIME being introduced. The bare words `ai`/`llm` are deliberately
-//     EXCLUDED: they are product-concept words that legally appear in docs,
-//     UI copy, and tests (e.g. "AI is a future capability"). Runtime
-//     introduction is caught via dependency + path-scope checks instead.
-//     (recommend/ranking/similarity/confidence/importance/influence) are
-//     LEGAL (TimeValue fields, the `influenced` relationship type, search
-//     ordering) and are guarded indirectly via the dependency + path-scope
-//     checks instead of text bans, to avoid false-FAILs.
-//   - Forbidden dependencies are scanned in package.json + requirements*.txt.
-//   - Path scope (FROZEN_SCOPE=frontend) blocks backend/app changes.
-//   - Enum guard re-asserts ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18.
+//   - The bare words `ai`/`llm` are deliberately EXCLUDED: they are product-concept
+//     words that legally appear in docs, UI copy, and tests. Runtime introduction
+//     is caught via dependency + path-scope checks instead.
+//
+// M11 (ADR-0003) evolution:
+//   - AI runtime is permitted ONLY inside `backend/app/ai_gateway/` (the approved
+//     module), behind an approved provider abstraction, with grounding required.
+//   - A single approved LLM provider SDK is whitelisted (currently `openai`).
+//     Any OTHER AI/LLM/vector SDK is still forbidden (unknown AI dependency FAILs).
+//   - Outside the approved module, the absolute AI prohibition is unchanged.
+//   - Vector DB / RAG / Neo4j / Redis / GIS remain forbidden everywhere.
 //
 // Severity model (M8.6 Playbook): only D-class (business-logic) hits FAIL.
 
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
 const ROOT = process.cwd();
 const FROZEN_SCOPE = process.env.FROZEN_SCOPE || "frontend";
 
-// ---- Configuration (adjust per milestone; keep in sync with M3.5-000) ----
-// Narrow, high-signal token set (see header note for why business words are
-// intentionally excluded).
-const FORBIDDEN_TOKENS =
-  /\b(gpt|openai|rag|neo4j|graphql|redis)\b/i;
-const FORBIDDEN_DEPS =
-  /(openai|langchain|anthropic|cohere|neo4j|redis|tensorflow|torch|pytorch|huggingface|spacy|nltk|scikit-learn|sklearn)/i;
+// ---- M11 (ADR-0003) approved AI allowance --------------------------------
+// AI runtime is permitted ONLY inside this module, additive and grounded.
+const APPROVED_AI_MODULE = "backend/app/ai_gateway/";
+// Single approved LLM provider SDK (whitelisted). Change ONLY via a new ADR + Gate.
+const APPROVED_AI_DEPS = new Set(["openai"]);
+
+// Tokens forbidden everywhere EXCEPT inside the approved AI module.
+const FORBIDDEN_TOKENS = /\b(gpt|openai|rag|neo4j|graphql|redis|vectordb)\b/i;
+// Inside the approved AI module the provider SDK is allowed, but these stay forbidden.
+const APPROVED_MODULE_TOKENS = /\b(rag|neo4j|graphql|redis|vectordb)\b/i;
+
+// Known AI/LLM/vector SDKs. Any that match but are NOT in APPROVED_AI_DEPS FAIL.
+const AI_SDK_PATTERN = /(openai|anthropic|cohere|langchain|huggingface|gemini|claude|llamaindex|ollama|mistral|bedrock|azure-ai|semantic-kernel|chromadb|pinecone|weaviate|qdrant|faiss|milvus)/i;
+// Always-forbidden infrastructure (never allowed, even outside the AI module).
+const FORBIDDEN_INFRA = /(neo4j|redis|graphql|tensorflow|torch|pytorch|spacy|nltk|scikit-learn|sklearn)/i;
+
 const EXPECTED_ENTITY_TYPES = 8;
 const EXPECTED_RELATIONSHIP_TYPES = 18;
 const SCAN_DIRS = ["frontend/src", "backend/app"];
-
-// D-class violations -> zero tolerance -> process.exit(1)
-const D = [];
 
 function log(msg) {
   process.stderr.write(msg + "\n");
@@ -80,16 +86,17 @@ function getChangedFiles() {
 }
 
 // ---- 1. scope check ----
-function checkScope(changed) {
-  if (FROZEN_SCOPE !== "frontend") return;
+export function checkScope(violations, changed, scope = FROZEN_SCOPE) {
+  if (scope !== "frontend") return;
   for (const f of changed) {
     if (
       f.startsWith("backend/") &&
       !f.startsWith("backend/tests/") &&
-      !f.startsWith("backend/requirements")
+      !f.startsWith("backend/requirements") &&
+      !f.startsWith(APPROVED_AI_MODULE)
     ) {
-      D.push(
-        `SCOPE: backend change outside tests/deps not allowed under FROZEN_SCOPE=frontend -> ${f}`
+      violations.push(
+        `SCOPE: backend change outside tests/deps/ai_gateway not allowed under FROZEN_SCOPE=frontend -> ${f}`
       );
     }
   }
@@ -103,14 +110,17 @@ function walk(dir, cb) {
     else cb(p);
   }
 }
-function checkTokens() {
+
+export function checkTokens(violations, root = ROOT) {
   const exts = new Set([".ts", ".tsx", ".py"]);
   for (const dir of SCAN_DIRS) {
-    const full = path.join(ROOT, dir);
+    const full = path.join(root, dir);
     if (!fs.existsSync(full)) continue;
     walk(full, (file) => {
       if (!exts.has(path.extname(file))) return;
-      const rel = path.relative(ROOT, file);
+      const rel = path.relative(root, file).split(path.sep).join("/");
+      const inApprovedAi = rel.startsWith(APPROVED_AI_MODULE);
+      const tokenRe = inApprovedAi ? APPROVED_MODULE_TOKENS : FORBIDDEN_TOKENS;
       let src = fs.readFileSync(file, "utf8");
       // Remove cross-line block constructs FIRST (replace content with spaces
       // but KEEP newlines so line numbers stay accurate).
@@ -125,9 +135,13 @@ function checkTokens() {
           .replace(/"[^"]*"/g, "")
           .replace(/'[^']*'/g, "")
           .replace(/`[^`]*`/g, "");
-        const m = code.match(FORBIDDEN_TOKENS);
+        const m = code.match(tokenRe);
         if (m) {
-          D.push(`TOKEN: ${rel}:${i + 1} forbidden token "${m[0]}"`);
+          violations.push(
+            `TOKEN: ${rel}:${i + 1} forbidden token "${m[0]}"${
+              inApprovedAi ? " (inside approved AI module)" : ""
+            }`
+          );
         }
       });
     });
@@ -135,34 +149,45 @@ function checkTokens() {
 }
 
 // ---- 3. dependency check ----
-function checkDeps() {
-  const pkgPath = path.join(ROOT, "frontend/package.json");
+export function checkDeps(violations, root = ROOT) {
+  const pkgPath = path.join(root, "frontend/package.json");
   if (fs.existsSync(pkgPath)) {
     const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
     const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
     for (const d of Object.keys(deps)) {
-      if (FORBIDDEN_DEPS.test(d)) {
-        D.push(`DEP: frontend/package.json contains forbidden dep "${d}"`);
+      if (AI_SDK_PATTERN.test(d) && !APPROVED_AI_DEPS.has(d.toLowerCase())) {
+        violations.push(
+          `DEP: frontend/package.json contains non-approved AI SDK "${d}" (approved: ${[
+            ...APPROVED_AI_DEPS,
+          ]})`
+        );
+      }
+      if (FORBIDDEN_INFRA.test(d)) {
+        violations.push(`DEP: frontend/package.json contains forbidden dependency "${d}"`);
       }
     }
   }
   for (const rf of ["backend/requirements.txt", "backend/requirements-dev.txt"]) {
-    const p = path.join(ROOT, rf);
+    const p = path.join(root, rf);
     if (!fs.existsSync(p)) continue;
     fs.readFileSync(p, "utf8")
       .split("\n")
       .forEach((l) => {
         const name = l.split(/[=<>~ ]/)[0].trim();
-        if (name && FORBIDDEN_DEPS.test(name)) {
-          D.push(`DEP: ${rf} contains forbidden dep "${name}"`);
+        if (!name) return;
+        if (AI_SDK_PATTERN.test(name) && !APPROVED_AI_DEPS.has(name.toLowerCase())) {
+          violations.push(`DEP: ${rf} contains non-approved AI SDK "${name}"`);
+        }
+        if (FORBIDDEN_INFRA.test(name)) {
+          violations.push(`DEP: ${rf} contains forbidden dependency "${name}"`);
         }
       });
   }
 }
 
 // ---- 4. enum guard ----
-function checkEnums() {
-  const vp = path.join(ROOT, "backend/app/validation.py");
+export function checkEnums(violations, root = ROOT) {
+  const vp = path.join(root, "backend/app/validation.py");
   if (!fs.existsSync(vp)) return;
   const c = fs.readFileSync(vp, "utf8");
   const eB = c.match(
@@ -176,25 +201,37 @@ function checkEnums() {
   const eC = count(eB);
   const rC = count(rB);
   if (eC !== EXPECTED_ENTITY_TYPES)
-    D.push(`ENUM: ENTITY_TYPES count=${eC} expected=${EXPECTED_ENTITY_TYPES}`);
+    violations.push(`ENUM: ENTITY_TYPES count=${eC} expected=${EXPECTED_ENTITY_TYPES}`);
   if (rC !== EXPECTED_RELATIONSHIP_TYPES)
-    D.push(
+    violations.push(
       `ENUM: RELATIONSHIP_TYPES count=${rC} expected=${EXPECTED_RELATIONSHIP_TYPES}`
     );
 }
 
-// ---- run ----
-const changed = getChangedFiles();
-checkScope(changed);
-checkTokens();
-checkDeps();
-checkEnums();
-
-if (D.length) {
-  log(`\n[M3.5 Freeze Guard] FAILED — ${D.length} D-class violation(s):`);
-  for (const v of D) log("  - " + v);
-  log("\nFix the violation or escalate to Product Owner before merge.");
-  process.exit(1);
+// ---- orchestration (pure, testable) ----
+export function runChecks(opts = {}) {
+  const root = opts.root ?? ROOT;
+  const scope = opts.scope ?? FROZEN_SCOPE;
+  const files = opts.files ?? getChangedFiles();
+  const violations = [];
+  checkScope(violations, files, scope);
+  checkTokens(violations, root);
+  checkDeps(violations, root);
+  checkEnums(violations, root);
+  return violations;
 }
-log("[M3.5 Freeze Guard] PASSED — no D-class violations.");
-process.exit(0);
+
+// ---- CLI entry ----
+const __filename = fileURLToPath(import.meta.url);
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+if (isMain) {
+  const violations = runChecks();
+  if (violations.length) {
+    log(`\n[M3.5 Freeze Guard] FAILED — ${violations.length} D-class violation(s):`);
+    for (const v of violations) log("  - " + v);
+    log("\nFix the violation or escalate to Product Owner before merge.");
+    process.exit(1);
+  }
+  log("[M3.5 Freeze Guard] PASSED — no D-class violations.");
+  process.exit(0);
+}
