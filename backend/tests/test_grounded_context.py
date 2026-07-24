@@ -342,3 +342,150 @@ def test_provider_timeout_graceful(client, stub_ks, monkeypatch):
     data = resp.json()
     assert data["engine"] == "deterministic"
     assert data["grounded"] is False
+
+
+# ===========================================================================
+# M11-3 Test Hardening (Governance Hardening milestone)
+#   MUST  -> guard ADR-0003 correctness
+#   SHOULD -> raise quality / lock boundary invariants
+# ===========================================================================
+
+# --- MUST 1. Malformed / unparseable JSON -> explicit unverified ----------
+def test_malformed_json_returns_ai_unverified(client, stub_ks, monkeypatch):
+    # Provider emits prose with no parseable JSON object. The answer cannot be
+    # citation-verified, so the contract is: flag it ungrounded and never
+    # masquerade it as a verified ("ai") grounded answer.
+    monkeypatch.setattr(
+        answer_service, "get_provider",
+        lambda: _FakeProvider("I'm not certain, but maybe X did something notable."),
+    )
+    resp = client.post(
+        f"{V1}/ai/explain",
+        json={"question": "X?", "context_global_ids": [PERSON]},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    # Explicit uncertainty signals.
+    assert data["engine"] == "ai_unverified"
+    assert data["grounded"] is False
+    assert data["engine"] != "ai"          # must not claim verified
+    assert data["citations"] == []          # nothing verifiable survived
+
+
+# --- MUST 2. Validator is in the pipeline; illegal citation cannot bypass --
+def test_validator_runs_on_every_citation_cannot_bypass(client, stub_ks, monkeypatch):
+    # A valid entity citation mixed with a fabricated relationship edge that is
+    # NOT a real neighbor of the context entity. If the validator were bypassed
+    # the fabricated edge would survive into valid_citations.
+    payload = json.dumps({
+        "answer": "X relates to Y and to ghost.",
+        "citations": [
+            {"global_id": PERSON, "kind": "entity", "label": "X"},
+            {"global_id": "topic-a:event-z", "kind": "relationship", "label": "fabricated_edge"},
+        ],
+    })
+    monkeypatch.setattr(answer_service, "get_provider", lambda: _FakeProvider(payload))
+    resp = client.post(
+        f"{V1}/ai/explain",
+        json={"question": "X?", "context_global_ids": [PERSON]},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    valid_ids = {c["global_id"] for c in data["citations"]}
+    # The real entity survives; the fabricated edge is dropped by the validator.
+    assert PERSON in valid_ids
+    assert "topic-a:event-z" not in valid_ids
+    assert "topic-a:event-z" in {c["global_id"] for c in data["rejected_citations"]}
+
+
+# --- MUST 3. Correct global_id but WRONG kind must be rejected ------------
+def test_wrong_citation_kind_rejected(client, stub_ks, monkeypatch):
+    # PERSON is a real entity node, but labeled with kind="timeline". The
+    # timeline check fails (PERSON is not a synthetic timeline id) -> rejected.
+    payload = json.dumps({
+        "answer": "X happened in a period.",
+        "citations": [
+            {"global_id": PERSON, "kind": "timeline", "label": "wrong kind"},
+        ],
+    })
+    monkeypatch.setattr(answer_service, "get_provider", lambda: _FakeProvider(payload))
+    resp = client.post(
+        f"{V1}/ai/explain",
+        json={"question": "X?", "context_global_ids": [PERSON]},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    ids = {c["global_id"] for c in data["citations"]}
+    assert PERSON not in ids
+    assert PERSON in {c["global_id"] for c in data["rejected_citations"]}
+    assert data["grounded"] is False
+
+
+# --- SHOULD 4. Fake timeline citation rejected (negative) -----------------
+def test_fake_timeline_citation_rejected(client, stub_ks, monkeypatch):
+    # A timeline citation with a non-existent synthetic id must be rejected.
+    payload = json.dumps({
+        "answer": "It happened in a fake period.",
+        "citations": [
+            {"global_id": "topic-a:timeline:fake_period", "kind": "timeline", "label": "fake"},
+        ],
+    })
+    monkeypatch.setattr(answer_service, "get_provider", lambda: _FakeProvider(payload))
+    resp = client.post(
+        f"{V1}/ai/explain",
+        json={"question": "When?", "context_global_ids": [PERSON]},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "topic-a:timeline:fake_period" not in {c["global_id"] for c in data["citations"]}
+    assert "topic-a:timeline:fake_period" in {c["global_id"] for c in data["rejected_citations"]}
+    assert data["grounded"] is False
+
+
+# --- SHOULD 5. /ai/chat is strictly stateless across calls ----------------
+def test_chat_endpoint_stateless_across_calls(client, stub_ks, monkeypatch):
+    # Two consecutive /ai/chat calls with identical input must yield identical
+    # output — the handler holds no conversation / session / user-memory state.
+    monkeypatch.setattr(answer_service, "get_provider", lambda: _FakeProvider(VALID_JSON))
+    body = {"question": "What about X?", "context_global_ids": [PERSON]}
+    r1 = client.post(f"{V1}/ai/chat", json=body)
+    r2 = client.post(f"{V1}/ai/chat", json=body)
+    assert r1.status_code == 200 and r2.status_code == 200
+    d1, d2 = r1.json(), r2.json()
+    assert d1["answer"] == d2["answer"]
+    assert d1["grounded"] == d2["grounded"]
+    # No session / cursor / state token may leak from the stateless endpoint.
+    for key in ("session", "cursor", "state", "conversation_id", "chat_id"):
+        assert key not in d1
+
+
+# --- SHOULD 6. main.py AI handler is a thin delegate (no logic leak) -------
+def test_main_py_ai_handler_is_thin_delegate(client):
+    import inspect
+
+    for handler in (main_mod.ai_explain, main_mod.ai_chat):
+        src = inspect.getsource(handler)
+        # The handler MUST delegate to grounded_answer and must not itself run
+        # AI orchestration or touch graph state.
+        assert "grounded_answer(" in src
+        assert "knowledge_service." not in src          # no graph access in handler
+        assert "get_provider" not in src                 # no provider wiring in handler
+        assert "PromptService" not in src
+        assert "ResponseValidator" not in src
+        assert "_CITATION_INSTRUCTION" not in src
+
+    # Whole-file guardrails (mirror freeze boundary §5): AI logic + graph
+    # mutation must live only in ai_gateway, never in main.py.
+    main_py = BACKEND_DIR / "app" / "main.py"
+    text = main_py.read_text(encoding="utf-8")
+    ai_logic = re.compile(
+        r"\b(provider\.(complete|chat)|PromptService|_CITATION_INSTRUCTION|"
+        r"ResponseValidator|get_provider)\b"
+    )
+    assert ai_logic.search(text) is None, "AI orchestration leaked into main.py"
+    graph_write = re.compile(
+        r"\b(add_node|add_edge|global_subgraph|build_graph|mutate_graph|"
+        r"set_node|save_graph|write_graph)\b"
+    )
+    assert graph_write.search(text) is None, "graph mutation detected in main.py"
+
