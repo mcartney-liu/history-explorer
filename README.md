@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM11-3** (2026-07-25) — Governance Hardening (M11-3): orchestrator boundary documented + ADR-0003 compliance tests (non-runtime release)
+- **Project Release: vM12-1** (2026-07-25) — Grounded AI Exploration Experience Foundation (M12-1): frontend integration of Grounded AI endpoints (non-runtime release)
 
 Engineering status:
 

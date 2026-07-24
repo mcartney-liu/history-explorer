@@ -49,9 +49,9 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (Runtime v0.13.0 / Project Release vM11-3 / M11-3)
+# 5. Current State (Runtime v0.13.0 / Project Release vM12-1 / M12-1)
 
-Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM11-3** (M11-3, 2026-07-25) — Governance Hardening: orchestrator boundary documented + ADR-0003 compliance tests.
+Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM12-1** (M12-1, 2026-07-25) — Grounded AI Exploration Experience Foundation: frontend integration of the existing Grounded AI endpoints (ADR-0003).
 
 Governance Hardening (M11-3, project release vM11-3): orchestrator (`answer_service`) boundary documented in M11-2 Planning §2 + Architecture Baseline §3; added ADR-0003 grounding validation tests (malformed-JSON / validator-bypass / wrong-kind / timeline / stateless / thin-handler); tracked M11-2 governance debt cleared. Runtime stays `0.13.0`.
 

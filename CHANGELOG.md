@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM12-1] - 2026-07-25 (Project Release — M12-1)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Grounded AI Exploration Experience Foundation (M12-1). Surfaces the existing back-end Grounded AI endpoints (ADR-0003) in the Explorer UI:
+
+- Frontend-only integration (`Backend NO CHANGE`, `Runtime 0.13.0` unchanged): `aiClient` (thin fetch wrapper for `POST /api/v1/ai/explain` + `/ai/chat`, `AbortController` race protection), `GroundedAnswer` (honest engine/grounded rendering — never fakes a reliable fact), `CitationList` (verified citations clickable; rejected citations shown, never hidden, never clickable), `AIExplanationPanel` (container + testable view; idle/loading/success/error states).
+- `App.tsx` mounts `AIExplanationPanel`; grounding context is taken ONLY from the existing exploration graph (`main_entity.global_id` + related entities resolved via `exploreEntityGlobalById`); citation clicks reuse `openEntity` — no new ids, no new business logic.
+- 14 new frontend tests (291 total); `npm run build` clean; freeze-check EXIT 0.
+
 ## [vM11-3] - 2026-07-25 (Project Release — M11-3)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only documentation + tests were changed (additive). See `docs/RELEASE_VERSION_POLICY.md`.
