@@ -20,6 +20,8 @@ import RecommendationPanel from './components/RecommendationPanel'
 import ExplorationTrail from './components/ExplorationTrail'
 import ExplorationJourney from './components/ExplorationJourney'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
+import ExplorationPathTree from './components/ExplorationPathTree'
+import { loadPath, savePath, loadReasons, saveReasons } from './utils/explorationPersistence'
 import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
 import SearchResults, {
@@ -127,6 +129,23 @@ function App() {
     setRecent(loadRecent())
   }, [])
 
+  // M10-1: restore the persisted exploration trail (history + cursor +
+  // journeyReasons) once on mount so a refresh resumes the user's path.
+  // Single navigation truth stays in App (history/cursor/journeyReasons);
+  // the persistence adapter only reads storage — no second state source.
+  useEffect(() => {
+    const p = loadPath()
+    if (p && p.history.length > 0) {
+      setHistory(p.history)
+      setCursor(p.cursor)
+      fetchNode(p.history[p.cursor], p.cursor)
+    }
+    const r = loadReasons()
+    if (r) setJourneyReasons(r)
+    // fetchNode is intentionally excluded: mount-only restore, not a reactive dep.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // M5-A-2: load the topic catalog from GET /topics to power the curated
   // landing page. Pure I/O; all loading / error state stays in App so the
   // LandingPage component stays presentational (and reusable / testable).
@@ -213,6 +232,7 @@ function App() {
     const { history: h, cursor: c } = pushHistory(history, cursor, node)
     setHistory(h)
     setCursor(c)
+    savePath(h, c)
     fetchNode(node, c)
   }
 
@@ -224,6 +244,7 @@ function App() {
   function goTo(newCursor: number) {
     if (newCursor < 0 || newCursor >= history.length) return
     setCursor(newCursor)
+    savePath(history, newCursor)
     fetchNode(history[newCursor], newCursor)
   }
 
@@ -245,6 +266,8 @@ function App() {
     // Reset journey annotations with the exploration — they are session-scoped
     // and only meaningful within a single continuous exploration.
     setJourneyReasons(new Map())
+    savePath([], -1)
+    saveReasons(new Map())
     setLoading(false)
   }
 
@@ -478,6 +501,12 @@ function App() {
                 onForward={goForward}
               />
               <ExplorationTrail history={history} cursor={cursor} onStepClick={goTo} />
+              <ExplorationPathTree
+                history={history}
+                cursor={cursor}
+                journeyReasons={journeyReasons}
+                onStepClick={goTo}
+              />
             </>
           )}
 
@@ -624,6 +653,9 @@ function App() {
                         candidateSource: ctx.candidateSource,
                         capturedAt: new Date().toISOString(),
                       })
+                      // Persist the annotation so the arrival reason survives a
+                      // refresh. Idempotent write (adapter swallows quota errors).
+                      saveReasons(next)
                       return next
                     })
                   }
