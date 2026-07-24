@@ -44,6 +44,7 @@
 | `docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md` | L6a | Lead | Via Gate | 2026-07-21 | **Current Architecture Freeze Baseline — single entry** (broader than schema: runtime / dependency / API contract / exclusion boundaries) |
 | `docs/15_DECISIONS/README.md` | 15_DECISIONS | Lead | As needed | 2026-07-21 | Decisions layer index |
 | `docs/15_DECISIONS/ADR_TEMPLATE.md` | 15_DECISIONS | Lead | As needed | 2026-07-21 | ADR template (architecture/feature/technology decisions; required for freeze revisions) |
+| `docs/AGENT_WORKFLOW_PROTOCOL.md` | Meta | Lead | As needed | 2026-07-24 | Agent Workflow & Contract Framework — Entry/Transition/Output contracts pinning TEAM_SPEC §11; Reference-not-Copy; Gate = No (ADR-0002) |
 | `docs/90_ARCHIVE/` | Archive | Lead | Historical | — | Superseded docs; NOT authoritative |
 | `PROJECT_CHARTER.md` | L3 support | Product Owner | Rare | (M1) | Foundational charter; referenced by Constitution §7 |
 | `docs/SUGGESTIONS.md` | Working | Lead | As needed | ongoing | Running suggestions backlog |

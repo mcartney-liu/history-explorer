@@ -13,6 +13,8 @@ repository (Agent Levels L0–L3, Universal Rules, STOP conditions). Do not
 proceed without reading it. Rule text is intentionally **not** duplicated here
 to prevent drift — this file only points to the protocol.
 
+> Workflow governance reference: `docs/AGENT_WORKFLOW_PROTOCOL.md`
+
 ## Unknown = STOP
 
 If you encounter any of the following, **STOP immediately** and wait for the

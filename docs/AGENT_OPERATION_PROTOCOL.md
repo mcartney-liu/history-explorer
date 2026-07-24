@@ -76,10 +76,17 @@ report may inform but is **never** the sole basis for a conclusion.
 ## 4. Mode Prompts
 
 Use the matching template from `prompts/` for each engagement:
-- `prompts/readonly-audit-mode.md` → L0
+- `prompts/readonly-audit-mode.md` → L0 (audit; **reused** for code-review and closure verification — no separate prompt is added)
+- `prompts/task-planning-mode.md` → Planner / Lead (checkpoint planning before Implementation)
+- `prompts/security-audit-mode.md` → L0 (governance-consistency / freeze-compliance / reference-integrity / dependency-drift audit)
 - `prompts/implementation-mode.md` → L1
 - `prompts/release-mode.md` → L2
 - `prompts/emergency-fix-mode.md` → L3
+
+> Code-review and closure do **not** get a dedicated prompt — they reuse
+> `prompts/readonly-audit-mode.md` (L0). This keeps the `prompts/` surface at six
+> files and avoids duplicating the audit contract. See
+> `docs/AGENT_WORKFLOW_PROTOCOL.md` §7 for the binding matrix.
 
 ## 5. Iron Laws
 
@@ -100,3 +107,5 @@ Use the matching template from `prompts/` for each engagement:
 - Architecture Baseline: `docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md`
 - Team Operating Spec: `docs/TEAM_OPERATING_SPEC_v1.2.md`
 - Release Version Policy: `docs/RELEASE_VERSION_POLICY.md`
+- Agent Workflow Contract Framework: `docs/AGENT_WORKFLOW_PROTOCOL.md` (Process Governance; Freeze Revision Gate = No; see ADR-0002)
+- ADR-0002 (Agent Workflow & Contract Framework): `docs/15_DECISIONS/ADR-0002_agent_workflow_contract_framework.md`
