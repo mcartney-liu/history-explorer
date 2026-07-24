@@ -1,2 +1,4 @@
 fastapi
 uvicorn
+# M11 (ADR-0003) — single approved LLM provider SDK. Change ONLY via new ADR + Gate.
+openai
