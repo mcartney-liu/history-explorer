@@ -17,6 +17,13 @@ from .validation import (
     format_developer_report,
 )
 
+# M11-2 (ADR-0003): grounded AI interpretation endpoints. All AI orchestration
+# lives inside the approved ai_gateway module; this file only mounts the routes
+# (no AI logic / graph mutation / business logic — freeze boundary §5).
+from pydantic import BaseModel
+
+from .ai_gateway import grounded_answer
+
 # --- Configuration (env-driven, M3-002) -----------------------------------
 settings = get_settings()
 logger = configure_logging(settings.log_level)
@@ -277,6 +284,41 @@ def healthz():
     }
 
 
+# --- M11-2 (ADR-0003): Grounded AI interpretation endpoints ---------------
+# Both endpoints are STRICTLY STATELESS (Acceptance Review Required Change #2):
+# every request carries its own context via `context_global_ids`; the server
+# holds no conversation / session / user-memory state. The handler is a thin
+# delegate to `grounded_answer` in ai_gateway — all AI logic stays there.
+class AIRequest(BaseModel):
+    question: str
+    context_global_ids: list[str] = []
+
+
+def ai_explain(body: AIRequest):
+    """Single-shot, grounded explanation of the current exploration context.
+
+    The answer is built strictly from the deterministic knowledge graph
+    (ADR-0003). Returns the deterministic fallback when AI is disabled or the
+    provided context is empty. HTTP 200 in every case (M0-M10 unaffected).
+    """
+    return grounded_answer(
+        knowledge_service, body.question, body.context_global_ids, mode="explain"
+    )
+
+
+def ai_chat(body: AIRequest):
+    """Stateless conversational question over the current exploration context.
+
+    Identical engine to /ai/explain; the distinguishing contract is that this
+    endpoint stores NO conversation state between requests — context is released
+    when the handler returns. It is a pure function of (question,
+    context_global_ids), never of past requests.
+    """
+    return grounded_answer(
+        knowledge_service, body.question, body.context_global_ids, mode="chat"
+    )
+
+
 # --- Router wiring: canonical /api/v1 + frozen legacy compat -------------
 v1_router = APIRouter()
 v1_router.add_api_route(
@@ -303,6 +345,12 @@ v1_router.add_api_route(
 v1_router.add_api_route(
     "/healthz", healthz, methods=["GET"], operation_id="v1_healthz"
 )
+v1_router.add_api_route(
+    "/ai/explain", ai_explain, methods=["POST"], operation_id="v1_ai_explain"
+)
+v1_router.add_api_route(
+    "/ai/chat", ai_chat, methods=["POST"], operation_id="v1_ai_chat"
+)
 
 legacy_router = APIRouter()
 legacy_router.add_api_route(
@@ -328,6 +376,12 @@ legacy_router.add_api_route(
 )
 legacy_router.add_api_route(
     "/healthz", healthz, methods=["GET"], operation_id="healthz"
+)
+legacy_router.add_api_route(
+    "/ai/explain", ai_explain, methods=["POST"], operation_id="ai_explain"
+)
+legacy_router.add_api_route(
+    "/ai/chat", ai_chat, methods=["POST"], operation_id="ai_chat"
 )
 
 app.include_router(v1_router, prefix=settings.api_v1_prefix)
