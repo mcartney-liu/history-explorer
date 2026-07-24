@@ -38,6 +38,13 @@ const FROZEN_SCOPE = process.env.FROZEN_SCOPE || "frontend";
 const APPROVED_AI_MODULE = "backend/app/ai_gateway/";
 // Single approved LLM provider SDK (whitelisted). Change ONLY via a new ADR + Gate.
 const APPROVED_AI_DEPS = new Set(["openai"]);
+// M11-2 (ADR-0003): the FastAPI composition root `backend/app/main.py` must mount
+// the AI Gateway routers (/ai/explain, /ai/chat). This is the ONLY backend/app file
+// (besides ai_gateway/) permitted under FROZEN_SCOPE=frontend. Allowed content is
+// STRICTLY route mounting — no AI logic, no graph mutation, no business logic. Any
+// other change to main.py requires a new Freeze Revision Gate. Reviewed under ADR-0003
+// + the M11-2 Architecture Acceptance Review (verdict: CONDITIONAL PASS).
+const APPROVED_AI_MAIN = "backend/app/main.py";
 
 // Tokens forbidden everywhere EXCEPT inside the approved AI module.
 const FORBIDDEN_TOKENS = /\b(gpt|openai|rag|neo4j|graphql|redis|vectordb)\b/i;
@@ -93,10 +100,11 @@ export function checkScope(violations, changed, scope = FROZEN_SCOPE) {
       f.startsWith("backend/") &&
       !f.startsWith("backend/tests/") &&
       !f.startsWith("backend/requirements") &&
-      !f.startsWith(APPROVED_AI_MODULE)
+      !f.startsWith(APPROVED_AI_MODULE) &&
+      f !== APPROVED_AI_MAIN
     ) {
       violations.push(
-        `SCOPE: backend change outside tests/deps/ai_gateway not allowed under FROZEN_SCOPE=frontend -> ${f}`
+        `SCOPE: backend change outside tests/deps/ai_gateway/main.py not allowed under FROZEN_SCOPE=frontend -> ${f}`
       );
     }
   }
