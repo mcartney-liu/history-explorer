@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM11-2] - 2026-07-24 (Project Release — M11-2)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only backend `ai_gateway/` code + tests were added (additive). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Grounded AI Interpretation Layer (**M11-1 / M11-2**). Introduces an *additive* AI explanation layer over the deterministic knowledge graph, governed by **ADR-0003** — the deterministic graph stays the single source of truth and AI only consumes read-only grounding.
+
+### Added
+
+- **AI Gateway foundation (M11-1)** — `backend/app/ai_gateway/`: `provider` (transport adapter, no business logic), `prompt_service`, `fallback_handler`, `config`. The provider returns `None` when disabled / missing credentials, never raises.
+- **Grounded Context Engine (M11-2)** — `backend/app/ai_gateway/`: `citation_model` (pure `Citation`), `grounding_builder` (read-only KnowledgeService adapter → `GroundingResult`), `context_serializer` (`GroundingResult` → `[ALLOWED FACTS]`), `response_validator` (validates every AI citation against real graph facts — `global_id` / `kind` / relationship / timeline; illegal citations rejected; all-illegal → `grounded=false`), `answer_service` (orchestration: builder → serialize → provider → validate, with deterministic fallback on provider failure / timeout).
+- **AI endpoints** — `POST /ai/explain` + `POST /ai/chat`, dual-mounted (`/api/v1` + legacy). `/ai/chat` is **strictly stateless**: context is self-carried via `context_global_ids[]`; no conversation / history / session / memory / DB / Redis.
+
+### Freeze Compliance
+
+- Runtime held at `0.13.0`; no frontend / schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change.
+- AI is **additive** and grounded per ADR-0003; the deterministic graph is never mutated. New dependency scope (`openai` SDK) is confined to `ai_gateway/`; `main.py` is route-mount only (no forbidden bare tokens).
+- `scripts/freeze-check.mjs` **EXIT 0**; backend **156 passed** (incl. 12 new in `test_grounded_context.py`); M0–M10 zero regression.
+
+---
+
+## [vM10-2] - 2026-07-24 (Project Release — M10-2)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`. See `docs/RELEASE_VERSION_POLICY.md`. (Backfilled for changelog completeness — the `vM10-2` tag was created without a matching CHANGELOG entry.)
+
+Exploration Narrative Integration (**M10-1 / M10-2**), the M10 project-release series.
+
+### Added
+
+- **Exploration state persistence & trail visualization (M10-1)** — exploration state persistence plus an enriched exploration trail visualization.
+- **Exploration narrative focus linkage (M10-2)** — links the exploration narrative to the focused entity/topic so trail and narrative stay in sync.
+
+### Freeze Compliance
+
+- No schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency. Runtime held at `0.13.0`.
+
+---
+
 ## [vM9-006] - 2026-07-23 (Project Release — M9-006)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; no code changed. See `docs/RELEASE_VERSION_POLICY.md`.

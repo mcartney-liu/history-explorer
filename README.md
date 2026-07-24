@@ -51,12 +51,12 @@ Discover Civilization.
 
 Current milestone:
 
-**M9.3 — Exploration Flow Enhancement: COMPLETED**
+**M11-2 — Grounded AI Interpretation Layer: COMPLETED**
 
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM9-006** (2026-07-23) — release governance & consistency checker (non-runtime release)
+- **Project Release: vM11-2** (2026-07-24) — Grounded AI Interpretation Layer / Grounded Context Engine (non-runtime release)
 
 Engineering status:
 

@@ -49,9 +49,9 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (Runtime v0.13.0 / Project Release vM10-2 / M10-2)
+# 5. Current State (Runtime v0.13.0 / Project Release vM11-2 / M11-2)
 
-Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM10-2** (M10-2, 2026-07-24) — exploration narrative focus linkage.
+Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM11-2** (M11-2, 2026-07-24) — Grounded AI Interpretation Layer (Grounded Context Engine).
 
 Implemented (deterministic, no AI runtime):
 
@@ -63,10 +63,11 @@ Implemented (deterministic, no AI runtime):
 - Basic search (`/search`); deterministic rule-based explanation (`connections_explained`).
 - Engineering foundation (M8.6): CI, Engineering Playbook, version-source single truth, freeze-check guard.
 - Exploration Flow Enhancement (M9-001 / M9-002 / M9-003, v0.11.0–v0.13.0): deterministic Next-Node Recommendation Engine (backend, `GET /entity/{id}/recommendations`, explainable four-dimensional scoring) + `RecommendationPanel` (frontend, surfaces the recommendation with reasons) + `ExplorationJourney` (frontend, annotates each exploration stop with *why it was reached*). All three milestones are **frontend/backend additive, zero-freeze-touch, no AI runtime** — the frozen deterministic engine is reused, not replaced.
+- Grounded AI Interpretation Layer (M11-1 / M11-2, project release vM11-2): an **additive** AI explanation layer governed by **ADR-0003**. `backend/app/ai_gateway/` holds the AI Gateway foundation (provider / prompt / fallback / config, M11-1) and the Grounded Context Engine (citation model / grounding builder / context serializer / response validator / answer orchestration, M11-2), exposed via `POST /ai/explain` + `POST /ai/chat` (dual-mounted `/api/v1` + legacy; `/ai/chat` is strictly stateless). The **deterministic graph remains the single source of truth** — AI consumes read-only grounding, every citation is validated against real graph facts, and nothing mutates the graph. Runtime stays `0.13.0`.
 
 Deferred / Not yet built (per Freeze Baseline):
 
-- AI guidance layer (History Guide / AI Next Node / Graph Builder) — the *deterministic* Next-Node recommendation (M9-001) is delivered, but the AI/LLM-powered variant remains deferred per Freeze Baseline.
+- Full LLM-powered generative guidance (History Guide / AI Next Node / Graph Builder) — a **grounded** AI interpretation layer is now delivered (M11-1 / M11-2, under the ADR-0003 Freeze Revision Gate) alongside the deterministic Next-Node recommendation (M9-001); the broader LLM-powered generative variants remain gated behind the Freeze Revision Gate.
 - GIS Map / spatial visualization.
 - Neo4j-level knowledge model; PostgreSQL; Elasticsearch.
 - User persistence / accounts.
