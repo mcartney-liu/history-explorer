@@ -207,6 +207,44 @@ body {
   border-color: #d8cfbe;
 }
 
+/* M10-2 cross-panel focus highlight (additive). A focused entity set from the
+   Relationship panel is mirrored here (Timeline), on cross-topic chips, and on
+   the originating relationship branch, so the linkage reads at a glance. */
+.timeline-event.is-focused {
+  background: #f3e6c6;
+  border-color: #8a6d3b;
+  box-shadow: 0 0 0 2px rgba(138, 109, 59, 0.35);
+}
+
+.related-list li.is-focused,
+.rel-branch.is-focused {
+  background: #f3e6c6;
+  border-radius: 8px;
+  box-shadow: inset 3px 0 0 #8a6d3b;
+}
+
+/* Secondary, non-navigating "Focus" action inside a relationship branch. */
+.rel-focus-btn {
+  font: inherit;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a6d3b;
+  background: transparent;
+  border: 1px solid #d8cfbe;
+  border-radius: 4px;
+  padding: 0.05rem 0.45rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.rel-focus-btn:hover,
+.rel-focus-btn:focus-visible {
+  background: #f3e6c6;
+  border-color: #8a6d3b;
+  outline: none;
+}
+
 /* Interpretation placeholder: future AI integration seam, no AI logic */
 .interpretation-panel {
   border: 1px dashed #d8cfbe;

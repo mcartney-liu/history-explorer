@@ -13,11 +13,9 @@ import ThemesPanel from './components/ThemesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import MultiEntityTimeline from './components/MultiEntityTimeline'
-import CrossTopicTopicList from './components/CrossTopicTopicList'
-import CrossTopicConnectionsPanel from './components/CrossTopicConnectionsPanel'
+import CrossTopicBridge from './components/CrossTopicBridge'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
 import RecommendationPanel from './components/RecommendationPanel'
-import ExplorationTrail from './components/ExplorationTrail'
 import ExplorationJourney from './components/ExplorationJourney'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
 import ExplorationPathTree from './components/ExplorationPathTree'
@@ -124,6 +122,14 @@ function App() {
   // or pushHistory. Session-scoped: lost on refresh (see goHome reset below).
   const [journeyReasons, setJourneyReasons] = useState<Map<string, JourneyWhyPayload>>(new Map())
 
+  // M10-2: cross-panel FOCUS — a lightweight, session-scoped highlight that
+  // links the Relationship / Timeline / Cross-Topic panels around one entity.
+  // Deliberately VIEW STATE only: it lives in this useState alone, is a
+  // global_id ("topic:localid"), and NEVER enters navigation.ts, history,
+  // journeyReasons, or explorationPersistence/localStorage. It is cleared on
+  // every navigation (fetchNode) and on goHome, so it never leaks across pages.
+  const [focusedEntityId, setFocusedEntityId] = useState<string | null>(null)
+
   // Load persisted recent explorations once on mount.
   useEffect(() => {
     setRecent(loadRecent())
@@ -193,6 +199,9 @@ function App() {
     setLoading(true)
     setErrorKind('')
     setSearchResults(null)
+    // M10-2: focus refers to entities on the page being left, so reset it on
+    // every navigation. Keeps focus a per-page VIEW STATE that never leaks.
+    setFocusedEntityId(null)
     try {
       let data: unknown
       if (node.type === 'topic') {
@@ -266,6 +275,8 @@ function App() {
     // Reset journey annotations with the exploration — they are session-scoped
     // and only meaningful within a single continuous exploration.
     setJourneyReasons(new Map())
+    // M10-2: clear the cross-panel focus when leaving the exploration entirely.
+    setFocusedEntityId(null)
     savePath([], -1)
     saveReasons(new Map())
     setLoading(false)
@@ -500,7 +511,10 @@ function App() {
                 onBack={goBack}
                 onForward={goForward}
               />
-              <ExplorationTrail history={history} cursor={cursor} onStepClick={goTo} />
+              {/* M10-2 trail convergence: ExplorationPathTree is the single
+                  full-journey view here (it supersedes the earlier
+                  ExplorationTrail, which is retained but no longer rendered by
+                  default). ExplorationJourney still renders on the entity page. */}
               <ExplorationPathTree
                 history={history}
                 cursor={cursor}
@@ -538,13 +552,15 @@ function App() {
                 relatedEntities={result.exploration.related_entities}
                 nameById={exploreNameById}
                 onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
+                globalIdById={exploreEntityGlobalById}
+                focusedId={focusedEntityId ?? undefined}
+                onEntityFocus={(gid) => setFocusedEntityId(gid)}
               />
-              <CrossTopicConnectionsPanel
+              <CrossTopicBridge
                 connections={result.exploration.cross_topic_related}
-                onEntityClick={(gid) => openEntity(gid)}
-              />
-              <CrossTopicTopicList
                 relatedTopics={result.related_topics}
+                focusedId={focusedEntityId ?? undefined}
+                onEntityClick={(gid) => openEntity(gid)}
                 onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
               />
               <RelatedEntityList
@@ -557,6 +573,8 @@ function App() {
                 timeline={result.timeline}
                 nameToId={exploreNameToId}
                 onEventClick={(id) => openEntity(id, exploreNameById[id])}
+                globalIdById={exploreEntityGlobalById}
+                focusedId={focusedEntityId ?? undefined}
               />
               <TemporalComparisonPanel entities={result.entities} />
               <MultiEntityTimeline entities={result.entities} />

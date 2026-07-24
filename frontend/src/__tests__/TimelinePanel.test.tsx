@@ -70,3 +70,56 @@ describe('M6-P4 TimelinePanel — sorting & time buckets', () => {
     expect(html).toContain('No timeline data.')
   })
 })
+
+// M10-2 (cross-panel focus, CONSUMER only): when an event resolves
+// name -> local id -> global id and that global id equals the App-owned focus,
+// the event is marked is-focused so the linkage set in RelationshipView is
+// mirrored here. Timeline never PRODUCES focus.
+describe('M10-2 TimelinePanel — cross-panel focus CONSUMER', () => {
+  const timeline = [
+    {
+      period: '27 BC',
+      event: 'Roman Empire Established',
+      date: { value: -27, label: '27 BC' },
+    },
+  ]
+  const nameToId = { 'Roman Empire Established': 'event-roman-empire-established' }
+  const globalIdById = {
+    'event-roman-empire-established': 'roman_empire:roman-empire-established',
+  }
+
+  it('marks a timeline event is-focused when it resolves to the focused global_id', () => {
+    const html = renderToStaticMarkup(
+      <TimelinePanel
+        timeline={timeline}
+        nameToId={nameToId}
+        globalIdById={globalIdById}
+        focusedId="roman_empire:roman-empire-established"
+      />,
+    )
+    expect(html).toContain('timeline-event is-focused')
+  })
+
+  it('does NOT mark a timeline event focused when focusedId does not match', () => {
+    const html = renderToStaticMarkup(
+      <TimelinePanel
+        timeline={timeline}
+        nameToId={nameToId}
+        globalIdById={globalIdById}
+        focusedId="some_other:entity"
+      />,
+    )
+    expect(html).not.toContain('is-focused')
+  })
+
+  it('does NOT mark a timeline event focused when no globalIdById map is supplied', () => {
+    const html = renderToStaticMarkup(
+      <TimelinePanel
+        timeline={timeline}
+        nameToId={nameToId}
+        focusedId="roman_empire:roman-empire-established"
+      />,
+    )
+    expect(html).not.toContain('is-focused')
+  })
+})

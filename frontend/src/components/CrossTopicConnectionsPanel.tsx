@@ -12,6 +12,10 @@ type CrossTopicConnectionsPanelProps = {
   // Reuse the existing navigation handler with the fully-qualified global_id
   // the backend already supplied — never re-prefix here.
   onEntityClick: (globalId: string) => void
+  // M10-2: the currently focused entity (global_id). When a cross-topic
+  // neighbor's global_id matches, its chip is marked is-focused so the linkage
+  // set by RelationshipView is visible here too. Undefined = nothing focused.
+  focusedId?: string
 }
 
 // M4-003 (additive): renders each cross-topic neighbor of the centered entity
@@ -21,6 +25,7 @@ type CrossTopicConnectionsPanelProps = {
 function CrossTopicConnectionsPanel({
   connections,
   onEntityClick,
+  focusedId,
 }: CrossTopicConnectionsPanelProps) {
   if (!connections || connections.length === 0) {
     return null
@@ -37,7 +42,7 @@ function CrossTopicConnectionsPanel({
           .map((item) => (
             <li
               key={item.global_id}
-              className="is-clickable"
+              className={`is-clickable${item.global_id === focusedId ? ' is-focused' : ''}`}
               role="button"
               tabIndex={0}
               aria-label={`Open ${item.name ?? item.global_id}`}
