@@ -6,9 +6,12 @@ type GroundedAnswerProps = {
 
 // Each engine state gets a distinct, honest label. None of these claim the
 // answer is a reliable, self-evident fact — that is the ADR-0003 boundary.
+// Engine labels describe PROVENANCE only — they never assert verification.
+// The verification verdict lives in the grounded badge, kept strictly separate
+// so an `ai` answer that failed validation is never relabeled as "verified".
 const ENGINE_LABEL: Record<AIEngine, string> = {
-  ai: 'AI 解读（已通过事实溯源验证）',
-  ai_unverified: 'AI 解读（未通过事实溯源验证）',
+  ai: 'AI 解读',
+  ai_unverified: 'AI 解读（引用未通过验证）',
   deterministic: '确定性回退（AI 不可用）',
 }
 
