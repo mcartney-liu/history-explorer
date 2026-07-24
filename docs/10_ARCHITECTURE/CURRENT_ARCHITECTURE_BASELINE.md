@@ -49,6 +49,18 @@ not weaken the deterministic core; the in-memory graph remains the single source
   dependencies remain forbidden.
 - **Remain forbidden** under this exception: vector database, RAG infrastructure,
   Neo4j, Redis, GIS, login / auth, and autonomous agents.
+- **Orchestration layer** (`ai_gateway/answer_service.py`): the single integration point
+  that composes `grounding_builder` → `context_serializer` → `provider` → `response_validator`
+  → `fallback_handler` into `grounded_answer(knowledge_service, question, context_global_ids)`.
+  The `knowledge_service` is injected via parameter (no global coupling); the orchestrator
+  holds no graph state and never mutates the graph.
+- **main.py thin-handler invariant**: `main.py` only **route-mounts** `/ai/*` endpoints and
+  **delegates** to `ai_gateway` (specifically `grounded_answer`). It MUST NOT:
+  (a) import or instantiate `KnowledgeService` / graph state,
+  (b) perform any graph mutation / navigation / exploration,
+  (c) contain AI business logic, prompt construction, or provider calls.
+  This invariant is CI-guarded by `scripts/freeze-check.mjs` (`APPROVED_AI_MAIN` allowlists
+  `main.py` for route-mounting tokens only; forbidden AI/graph tokens still fail).
 - The AI module lives **inside** `backend/app/` (within `freeze-check` scan scope). The
   reserved root `ai/` placeholder is **outside** scan scope and MUST NOT host runtime AI code.
 

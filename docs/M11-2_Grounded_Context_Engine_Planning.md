@@ -33,9 +33,12 @@ are reused unchanged.
 | `ai_gateway/grounding_builder.py` | new | Read-only from KnowledgeService → assemble facts + citations. No LLM call, no graph mutation, no state storage. |
 | `ai_gateway/context_serializer.py` | new | facts → `[ALLOWED FACTS]` prompt text segment. |
 | `ai_gateway/response_validator.py` | new | Verify every AI citation maps to a real `global_id` in GlobalGraph (existence + kind match). Drop unresolvable; never invent/fix content. |
+| `ai_gateway/answer_service.py` | new | **Orchestrator** for grounded answers. Composes `grounding_builder` → `context_serializer` → `provider` → `response_validator` → `fallback_handler` into a single `grounded_answer(knowledge_service, question, context_global_ids)` pipeline. `main.py` calls only this function; no AI logic / graph mutation / business logic lives in `main.py`. `knowledge_service` is injected via parameter (no global coupling). |
 | `ai_gateway/__init__.py` | modify | Export new symbols. |
 | `backend/app/main.py` | modify | Mount `/ai/explain` + `/ai/chat` under **both** `v1_router` and `legacy_router`. Route-mounting ONLY (see §3). |
 | `backend/tests/test_grounded_context.py` | new | See §4. |
+
+**Orchestration pipeline (added post-implementation, governance alignment)**: `answer_service.grounded_answer` is the single integration point that wires the modules above in order — (1) `grounding_builder` reads facts + citations from the injected `knowledge_service`; (2) `context_serializer` renders the `[ALLOWED FACTS]` prompt segment; (3) `provider` calls the LLM; (4) `response_validator` verifies every citation against the real graph and drops unresolvable ones; (5) `fallback_handler` engages when provider fails or no facts exist. `main.py` only route-mounts and delegates to `grounded_answer` — no orchestration, AI logic, or graph mutation belongs there.
 
 **Forbidden to change**: `frontend/**` · `frontend/package.json` (Runtime 0.13.0) ·
 `core/*` (read-only consume) · `data/**` · `docs/**` ·
