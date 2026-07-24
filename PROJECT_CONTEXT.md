@@ -49,9 +49,11 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (Runtime v0.13.0 / Project Release vM11-2 / M11-2)
+# 5. Current State (Runtime v0.13.0 / Project Release vM11-3 / M11-3)
 
-Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM11-2** (M11-2, 2026-07-24) — Grounded AI Interpretation Layer (Grounded Context Engine).
+Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM11-3** (M11-3, 2026-07-25) — Governance Hardening: orchestrator boundary documented + ADR-0003 compliance tests.
+
+Governance Hardening (M11-3, project release vM11-3): orchestrator (`answer_service`) boundary documented in M11-2 Planning §2 + Architecture Baseline §3; added ADR-0003 grounding validation tests (malformed-JSON / validator-bypass / wrong-kind / timeline / stateless / thin-handler); tracked M11-2 governance debt cleared. Runtime stays `0.13.0`.
 
 Implemented (deterministic, no AI runtime):
 

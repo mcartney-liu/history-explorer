@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM11-3] - 2026-07-25 (Project Release — M11-3)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only documentation + tests were changed (additive). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Governance Hardening (M11-3). Clears the tracked governance debt from M11-2:
+
+- Documented `answer_service` orchestration layer (builder → serializer → provider → validator → fallback) in M11-2 Planning §2 and Architecture Baseline §3; added `main.py` thin-handler invariant (route mounting / delegation only — no `KnowledgeService`, no graph mutation, no AI business logic).
+- Added ADR-0003 grounding validation tests: malformed-JSON → `ai_unverified` fallback, validator-bypass prevention, wrong-citation-kind rejection, fake-timeline rejection, `/ai/chat` stateless contract, `main.py` thin-handler regression.
+- Strengthened AI boundary regression coverage; governance debt cleared.
+
 ## [vM11-2] - 2026-07-24 (Project Release — M11-2)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only backend `ai_gateway/` code + tests were added (additive). See `docs/RELEASE_VERSION_POLICY.md`.

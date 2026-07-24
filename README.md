@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM11-2** (2026-07-24) — Grounded AI Interpretation Layer / Grounded Context Engine (non-runtime release)
+- **Project Release: vM11-3** (2026-07-25) — Governance Hardening (M11-3): orchestrator boundary documented + ADR-0003 compliance tests (non-runtime release)
 
 Engineering status:
 
