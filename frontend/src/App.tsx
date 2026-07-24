@@ -16,6 +16,7 @@ import MultiEntityTimeline from './components/MultiEntityTimeline'
 import CrossTopicBridge from './components/CrossTopicBridge'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
 import RecommendationPanel from './components/RecommendationPanel'
+import AIExplanationPanel from './components/AIExplanationPanel'
 import ExplorationJourney from './components/ExplorationJourney'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
 import ExplorationPathTree from './components/ExplorationPathTree'
@@ -454,6 +455,17 @@ function App() {
     ? buildEntityTimeMap(result.entities)
     : {}
 
+  // M12-1: grounded AI exploration context — built strictly from the existing
+  // exploration graph (main entity + related entities' resolved global ids),
+  // reusing the same exploreEntityGlobalById map as the rest of the topic view.
+  // No new ids are invented; no business logic is added (Freeze Pack).
+  const aiContextIds: string[] = result
+    ? [
+        result.exploration.main_entity.global_id,
+        ...result.exploration.related_entities.map((re) => exploreEntityGlobalById[re.id]),
+      ].filter((gid): gid is string => Boolean(gid))
+    : []
+
   const crumbs = buildBreadcrumb(history, cursor)
 
   // M5-B-1: global ids the user has already visited, derived from the recent
@@ -626,6 +638,11 @@ function App() {
                   openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
                 }
                 onTopicClick={(t) => navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })}
+              />
+
+              <AIExplanationPanel
+                contextGlobalIds={aiContextIds}
+                onCitationClick={(gid) => openEntity(gid)}
               />
             </div>
           )}
