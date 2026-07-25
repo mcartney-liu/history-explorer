@@ -18,6 +18,8 @@ import ContinueExploringPanel from './components/ContinueExploringPanel'
 import RecommendationPanel from './components/RecommendationPanel'
 import AIExplanationPanel from './components/AIExplanationPanel'
 import MultiEntityContextPanel from './components/MultiEntityContextPanel'
+import EntityPickerPanel from './components/EntityPickerPanel'
+import type { Candidate } from './data/candidateUtils'
 import ExplorationJourney from './components/ExplorationJourney'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
 import ExplorationPathTree from './components/ExplorationPathTree'
@@ -106,6 +108,11 @@ function App() {
   const [searchLoading, setSearchLoading] = useState(false)
   const [searchError, setSearchError] = useState('')
   const [searchSelected, setSearchSelected] = useState(-1)
+
+  // M14: candidates hand-picked in the cross-topic EntityPickerPanel. This is a
+  // plain selection list (name/type/topic + gid), NOT AI state — the grounded
+  // reasoning selection still lives locally inside MultiEntityContextPanel.
+  const [pickedCandidates, setPickedCandidates] = useState<Candidate[]>([])
 
   // M2-002: entity detail page (GET /entity/{id}).
   const [entityData, setEntityData] = useState<EntityDetail | null>(null)
@@ -645,7 +652,9 @@ function App() {
                 contextGlobalIds={aiContextIds}
                 onCitationClick={(gid) => openEntity(gid)}
               />
+              <EntityPickerPanel onCandidatesChange={setPickedCandidates} />
               <MultiEntityContextPanel
+                candidates={pickedCandidates}
                 candidateGids={Object.values(exploreEntityGlobalById)}
                 onCitationClick={(gid) => openEntity(gid)}
               />

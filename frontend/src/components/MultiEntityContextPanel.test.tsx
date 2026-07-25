@@ -1,17 +1,23 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { Candidate } from '../data/candidateUtils'
 import MultiEntityContextPanel, {
   MultiEntityContextView,
   applyToggleSelection,
+  resolveCandidates,
 } from './MultiEntityContextPanel'
 
-const CANDIDATES = ['egypt:person:1', 'egypt:place:2', 'egypt:event:3']
+const GIDS = ['egypt:person:1', 'egypt:place:2', 'egypt:event:3']
+const CANDIDATES: Candidate[] = [
+  { gid: 'qin_dynasty:person-qsh', name: '秦始皇', type: 'Person', topic: 'qin_dynasty' },
+  { gid: 'ancient_greece:person-alex', name: '亚历山大', type: 'Person', topic: 'ancient_greece' },
+]
 
-describe('MultiEntityContextView (M13)', () => {
-  it('renders the heading and every candidate as an unchecked box', () => {
+describe('MultiEntityContextView (M13/M14)', () => {
+  it('renders the heading and every candidate as an unchecked box (friendly name/type)', () => {
     const html = renderToStaticMarkup(
       <MultiEntityContextView
-        candidateGids={CANDIDATES}
+        candidates={CANDIDATES}
         selectedGids={[]}
         maxSelectable={8}
         onToggle={() => {}}
@@ -19,16 +25,16 @@ describe('MultiEntityContextView (M13)', () => {
     )
     expect(html).toContain('AI 多实体联合解读')
     expect(html).toContain('已选 0/8')
-    for (const gid of CANDIDATES) {
-      expect(html).toContain(gid)
-    }
+    expect(html).toContain('秦始皇')
+    expect(html).toContain('亚历山大')
+    expect(html).toContain('Person')
   })
 
   it('marks selected candidates as checked and shows the count', () => {
     const html = renderToStaticMarkup(
       <MultiEntityContextView
-        candidateGids={CANDIDATES}
-        selectedGids={['egypt:person:1', 'egypt:event:3']}
+        candidates={CANDIDATES}
+        selectedGids={['qin_dynasty:person-qsh', 'ancient_greece:person-alex']}
         maxSelectable={8}
         onToggle={() => {}}
       />,
@@ -41,13 +47,13 @@ describe('MultiEntityContextView (M13)', () => {
   it('disables unchecked boxes once the selection cap is reached (MAX_N is UI-only)', () => {
     const html = renderToStaticMarkup(
       <MultiEntityContextView
-        candidateGids={CANDIDATES}
-        selectedGids={['egypt:person:1', 'egypt:place:2']}
-        maxSelectable={2}
+        candidates={CANDIDATES}
+        selectedGids={['qin_dynasty:person-qsh']}
+        maxSelectable={1}
         onToggle={() => {}}
       />,
     )
-    // The unselected candidate (egypt:event:3) must be disabled at the cap.
+    // The unselected candidate must be disabled at the cap.
     expect(html).toContain('disabled')
   })
 })
@@ -64,14 +70,57 @@ describe('applyToggleSelection (M13 selection cap)', () => {
   })
 })
 
-describe('MultiEntityContextPanel container (M13)', () => {
-  it('renders the initial idle state with no selection and a real candidate pool', () => {
+describe('resolveCandidates (M14 compatibility-first resolution)', () => {
+  it('uses candidates as the primary source when non-empty', () => {
+    expect(resolveCandidates(CANDIDATES, GIDS)).toEqual(CANDIDATES)
+  })
+  it('falls back to candidateGids when candidates is empty/undefined', () => {
+    expect(resolveCandidates(undefined, GIDS)).toEqual(
+      GIDS.map((gid) => ({ gid, name: gid })),
+    )
+    expect(resolveCandidates([], GIDS)).toEqual(GIDS.map((gid) => ({ gid, name: gid })))
+  })
+  it('returns [] when neither source has entries', () => {
+    expect(resolveCandidates(undefined, undefined)).toEqual([])
+    expect(resolveCandidates([], [])).toEqual([])
+  })
+  it('de-duplicates by gid, preserving first-occurrence order', () => {
+    const dup: Candidate[] = [
+      { gid: 't:a', name: 'A' },
+      { gid: 't:a', name: 'A dup' },
+      { gid: 't:b', name: 'B' },
+    ]
+    expect(resolveCandidates(dup).map((c) => c.gid)).toEqual(['t:a', 't:b'])
+  })
+})
+
+describe('MultiEntityContextPanel container (M13/M14)', () => {
+  it('backward-compatible: renders from bare candidateGids (name === gid)', () => {
     const html = renderToStaticMarkup(
-      <MultiEntityContextPanel candidateGids={CANDIDATES} onCitationClick={() => {}} />,
+      <MultiEntityContextPanel candidateGids={GIDS} onCitationClick={() => {}} />,
     )
     expect(html).toContain('AI 多实体联合解读')
     expect(html).toContain('已选 0/8')
-    // Local selection state — no global store, no context provider.
     expect(html).toContain('egypt:person:1')
+  })
+
+  it('M14: renders friendly candidates when the candidates prop is supplied', () => {
+    const html = renderToStaticMarkup(
+      <MultiEntityContextPanel candidates={CANDIDATES} onCitationClick={() => {}} />,
+    )
+    expect(html).toContain('秦始皇')
+    expect(html).toContain('亚历山大')
+  })
+
+  it('M14: candidates wins over candidateGids when both are supplied', () => {
+    const html = renderToStaticMarkup(
+      <MultiEntityContextPanel
+        candidates={CANDIDATES}
+        candidateGids={GIDS}
+        onCitationClick={() => {}}
+      />,
+    )
+    expect(html).toContain('秦始皇')
+    expect(html).not.toContain('egypt:person:1')
   })
 })

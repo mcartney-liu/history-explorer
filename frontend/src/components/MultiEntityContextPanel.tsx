@@ -1,16 +1,24 @@
 import { useState } from 'react'
 import AIExplanationPanel from './AIExplanationPanel'
 import { multiEntityContext } from '../data/aiContext'
+import type { Candidate } from '../data/candidateUtils'
 
 // M13 (Multi Entity Reasoning Foundation): the user explicitly picks N real
-// entity global_ids from the current exploration graph and asks ONE grounded
-// question across all of them, reusing the M12-1 single `/api/v1/ai/explain`
-// primitive. Zero backend changes.
+// entity global_ids and asks ONE grounded question across all of them, reusing
+// the M12-1 single `/api/v1/ai/explain` primitive. Zero backend changes.
 //
-// Freeze constraints (M13 Correction #1 / #2):
-//   - selectedGids is COMPONENT-LOCAL state. It is NOT lifted into App.tsx,
-//     not stored in any global store / context provider, and never persisted.
-//     App.tsx only supplies candidateGids + onCitationClick (navigation).
+// M14 (Cross Topic Selection + Candidate UX): the candidate pool may now be
+// supplied as friendly `candidates` (name/type/topic) coming from the
+// EntityPickerPanel, in addition to the original bare `candidateGids`. This is
+// a COMPATIBILITY-FIRST extension:
+//   - candidateGids?: string[]  (retained for existing callers)
+//   - candidates?: Candidate[]  (new; primary source when non-empty)
+//   Resolution rule (resolveCandidates): candidates wins when non-empty;
+//   otherwise fall back to candidateGids. No breaking API change.
+//
+// Freeze constraints (M13 Correction #1 / #2, unchanged):
+//   - selectedGids is COMPONENT-LOCAL state. Not lifted into App, no global
+//     store / context provider, never persisted.
 //   - MAX_N (the selection cap) is a UI-layer concern defined here, NOT in the
 //     context builder. multiEntityContext() stays a generic N-id builder.
 const MAX_SELECTABLE = 8
@@ -28,10 +36,39 @@ export function applyToggleSelection(prev: string[], gid: string, max: number): 
   return [...prev, gid]
 }
 
+/**
+ * Resolve the effective candidate pool from the two compatible inputs.
+ * `candidates` (friendly) wins when non-empty; otherwise bare `candidateGids`
+ * are mapped to minimal candidates (name === gid) so existing callers keep
+ * working unchanged. De-duplicates by gid, preserving first-occurrence order.
+ * Pure — unit-testable without a DOM.
+ */
+export function resolveCandidates(
+  candidates?: Candidate[],
+  candidateGids?: string[],
+): Candidate[] {
+  const source: Candidate[] =
+    candidates && candidates.length > 0
+      ? candidates
+      : (candidateGids ?? []).map((gid) => ({ gid, name: gid }))
+
+  const seen = new Set<string>()
+  const out: Candidate[] = []
+  for (const c of source) {
+    if (c && c.gid && !seen.has(c.gid)) {
+      seen.add(c.gid)
+      out.push(c)
+    }
+  }
+  return out
+}
+
 export type MultiEntityContextPanelProps = {
-  // Real graph global_ids the user may choose from (supplied by the host from
-  // the existing exploreEntityGlobalById map). Always real, resolvable ids.
-  candidateGids: string[]
+  // Real graph global_ids the user may choose from (existing callers). Kept for
+  // backward compatibility; now optional.
+  candidateGids?: string[]
+  // M14: friendly candidates (name/type/topic). Primary source when non-empty.
+  candidates?: Candidate[]
   onCitationClick?: (global_id: string) => void
 }
 
@@ -39,9 +76,11 @@ export type MultiEntityContextPanelProps = {
 // All rendering is delegated to MultiEntityContextView.
 export default function MultiEntityContextPanel({
   candidateGids,
+  candidates,
   onCitationClick,
 }: MultiEntityContextPanelProps) {
   const [selectedGids, setSelectedGids] = useState<string[]>([])
+  const pool = resolveCandidates(candidates, candidateGids)
 
   function toggle(gid: string) {
     setSelectedGids((prev) => applyToggleSelection(prev, gid, MAX_SELECTABLE))
@@ -49,7 +88,7 @@ export default function MultiEntityContextPanel({
 
   return (
     <MultiEntityContextView
-      candidateGids={candidateGids}
+      candidates={pool}
       selectedGids={selectedGids}
       maxSelectable={MAX_SELECTABLE}
       onToggle={toggle}
@@ -59,7 +98,7 @@ export default function MultiEntityContextPanel({
 }
 
 export type MultiEntityContextViewProps = {
-  candidateGids: string[]
+  candidates: Candidate[]
   selectedGids: string[]
   maxSelectable: number
   onToggle: (gid: string) => void
@@ -69,7 +108,7 @@ export type MultiEntityContextViewProps = {
 // Presentational view — every visual state (checked / disabled / count) is
 // derived purely from props, so tests can render any state without a click.
 export function MultiEntityContextView({
-  candidateGids,
+  candidates,
   selectedGids,
   maxSelectable,
   onToggle,
@@ -84,19 +123,21 @@ export function MultiEntityContextView({
         勾选多个实体，向 AI 提出一个跨实体的事实溯源问题（已选 {selectedGids.length}/{maxSelectable}）。
       </p>
       <ul className="mec-candidates">
-        {candidateGids.map((gid) => {
-          const checked = selectedGids.includes(gid)
+        {candidates.map((c) => {
+          const checked = selectedGids.includes(c.gid)
           const disabled = !checked && selectedGids.length >= maxSelectable
           return (
-            <li key={gid}>
+            <li key={c.gid}>
               <label>
                 <input
                   type="checkbox"
                   checked={checked}
                   disabled={disabled}
-                  onChange={() => onToggle(gid)}
+                  onChange={() => onToggle(c.gid)}
                 />
-                <span className="mec-gid">{gid}</span>
+                <span className="mec-name">{c.name}</span>
+                {c.type && <span className="mec-type">{c.type}</span>}
+                {c.topic && <span className="mec-topic">{c.topic}</span>}
               </label>
             </li>
           )
