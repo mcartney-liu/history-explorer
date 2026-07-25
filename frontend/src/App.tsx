@@ -17,6 +17,7 @@ import CrossTopicBridge from './components/CrossTopicBridge'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
 import RecommendationPanel from './components/RecommendationPanel'
 import AIExplanationPanel from './components/AIExplanationPanel'
+import MultiEntityContextPanel from './components/MultiEntityContextPanel'
 import ExplorationJourney from './components/ExplorationJourney'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
 import ExplorationPathTree from './components/ExplorationPathTree'
@@ -642,6 +643,10 @@ function App() {
 
               <AIExplanationPanel
                 contextGlobalIds={aiContextIds}
+                onCitationClick={(gid) => openEntity(gid)}
+              />
+              <MultiEntityContextPanel
+                candidateGids={Object.values(exploreEntityGlobalById)}
                 onCitationClick={(gid) => openEntity(gid)}
               />
             </div>
