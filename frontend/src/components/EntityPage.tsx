@@ -15,6 +15,8 @@ import EntityExplorationGuide from './EntityExplorationGuide'
 import type { NavNode } from './navigation'
 import type { StarterItem } from '../data/explorationStarters'
 import { RelatedTopic } from './crossTopic'
+import AIExplanationPanel from './AIExplanationPanel'
+import { entityContext } from '../data/aiContext'
 
 export type EntityRelationship = {
   type: string
@@ -94,6 +96,8 @@ function EntityPage({
   // by the API). So we build a single-entry time map keyed by the centered
   // entity's name; the relationships builder resolves it via the actor-name
   // fallback. Target-side dates remain a documented Future Scope item.
+  const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
+
   const centerTimeMap: Record<string, string> = buildEntityTimeMap([
     {
       name: entity.name,
@@ -164,6 +168,13 @@ function EntityPage({
       />
 
       <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
+
+      {entityGlobalId ? (
+        <AIExplanationPanel
+          contextGlobalIds={entityContext(entityGlobalId)}
+          onCitationClick={onNodeClick}
+        />
+      ) : null}
     </div>
   )
 }
