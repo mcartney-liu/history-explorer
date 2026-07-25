@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM12-2] - 2026-07-25 (Project Release — M12-2)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+AI Contextual Exploration (M12-2). Brings the M12-1 Grounded AI capability into real exploration flows through a frontend Context Assembly Layer — no new AI, backend unchanged:
+
+- `frontend/src/data/aiContext.ts` (new, pure & stateless): turns an exploration selection into the `context_global_ids` array consumed by `AIExplanationPanel` / `aiClient`. Rejects empty ids and synthetic `topic:timeline:<label>` ids; `timelineContext` only accepts a real entity global_id — the frontend never invents timeline citation ids.
+- `EntityPage` integrates `AIExplanationPanel` (context = `[entity.global_id]`); `RelationshipView` integrates it for the focused pair (`relationshipContext`, explicitly non-causal — no 导致/引起/因果 wording); `TimelinePanel` integrates it scoped to the entity (`entityContext` only). `EntityPage` forwards `onNodeClick` to both sub-panels; citation clicks reuse `openEntity`.
+- `CitationList` made kind-aware: entity / relationship citations stay clickable (M12-1), timeline citations render as plain references (their synthetic global_id is unresolvable → prevents dead-link navigation).
+- 15 new frontend tests (306 total: `aiContext` validation + CitationList anti-deadlink); `npm run build` clean; freeze-check EXIT 0.
+- Deferred (per Scope Freeze): Multi-Entity Context UI, Journey Summary, Causal Reasoning, AI Memory.
+
 ## [vM12-1] - 2026-07-25 (Project Release — M12-1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.

@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM12-1** (2026-07-25) — Grounded AI Exploration Experience Foundation (M12-1): frontend integration of Grounded AI endpoints (non-runtime release)
+- **Project Release: vM12-2** (2026-07-25) — AI Contextual Exploration (M12-2): frontend Context Assembly Layer + 3 AI explain integrations (entity/relationship/timeline) on the existing Grounded AI panel; no new AI, no backend change (non-runtime release)
 
 Engineering status:
 
