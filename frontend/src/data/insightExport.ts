@@ -11,7 +11,7 @@
 // The browser-side glue (Blob download / print window) lives in the panel's
 // event handlers, keeping everything here purely testable.
 
-import type { RelationshipMatrixRow, TimelineBandEntry } from './relationshipUtils'
+import type { RelationshipMatrixRow, TimelineBandEntry, RelationshipPath } from './relationshipUtils'
 
 export const INSIGHT_REPORT_SCHEMA = 'history-explorer/insight-report@1'
 
@@ -35,6 +35,23 @@ function sortCounts(counts: Record<string, number>): Record<string, number> {
   const out: Record<string, number> = {}
   for (const key of Object.keys(counts ?? {}).sort()) out[key] = counts[key]
   return out
+}
+
+/** Markdown escaping for table cells: escape pipe + collapse newlines. */
+function mdCell(value: unknown): string {
+  return String(value ?? '')
+    .replace(/\|/g, '\\|')
+    .replace(/\r?\n/g, ' ')
+}
+
+/** Markdown escaping for prose (titles / list items): escape leading
+ *  markdown-significant characters and pipes. */
+function mdText(value: unknown): string {
+  let s = String(value ?? '')
+    .replace(/\|/g, '\\|')
+    .replace(/\r?\n/g, ' ')
+  if (s.length > 0 && /^[#>*\-]/.test(s)) s = '\\' + s
+  return s
 }
 
 /**
@@ -71,6 +88,87 @@ export function serializeInsightReport(input: InsightReportInput): string {
     })),
   }
   return JSON.stringify(report, null, 2)
+}
+
+/**
+ * Serialize the SAME insight view (already rendered by RelationshipInsightPanel)
+ * to a DETERMINISTIC Markdown string. Pure string-out, mirroring
+ * serializeInsightReport: no network, no persistence, no timestamp/randomness,
+ * so the same input always yields byte-identical output.
+ *
+ * Ordering rules for stable serialization:
+ *   - entities: input order
+ *   - type counts: alphabetical (via sortCounts)
+ *   - matrix rows / timeline band: input order
+ */
+export function serializeInsightReportAsMarkdown(input: InsightReportInput): string {
+  const title = input.mainEntityName
+    ? `关系洞察报告 — ${input.mainEntityName}`
+    : '关系洞察报告'
+
+  const entityLines =
+    (input.entities ?? []).length === 0
+      ? '- 无实体'
+      : (input.entities ?? [])
+          .map((e) => `- ${mdText(e.name)}${e.gid ? ` (\`${mdText(e.gid)}\`)` : ''}`)
+          .join('\n')
+
+  const counts = sortCounts(input.relationshipTypeCounts)
+  const countRows =
+    Object.keys(counts).length === 0
+      ? '| — | 0 |'
+      : Object.entries(counts)
+          .map(([type, count]) => `| ${mdCell(type)} | ${count} |`)
+          .join('\n')
+
+  const matrixRows =
+    (input.matrixRows ?? []).length === 0
+      ? '| 无既有关系元数据 | | |'
+      : (input.matrixRows ?? [])
+          .map(
+            (r) =>
+              `| ${mdCell(r.source)} | ${mdCell(r.relationType)} | ${mdCell(r.target)} |`,
+          )
+          .join('\n')
+
+  const bandRows =
+    (input.timelineBand ?? []).length === 0
+      ? '| — | 无时间线数据 | — |'
+      : (input.timelineBand ?? [])
+          .map(
+            (b) =>
+              `| ${mdCell(b.name)} | ${mdCell(fmtRange(b.start, b.end))} | ${mdCell(b.overlaps.join('、'))} |`,
+          )
+          .join('\n')
+
+  return [
+    `# ${mdText(title)}`,
+    '',
+    '> 本报告仅汇总客户端已有的关系元数据与时间边界，不包含任何历史解释或自动结论。',
+    '',
+    '## 实体清单',
+    '',
+    entityLines,
+    '',
+    '## 关系类型汇总',
+    '',
+    '| 关系类型 | 数量 |',
+    '| --- | --- |',
+    countRows,
+    '',
+    '## 关系类型矩阵',
+    '',
+    '| 源实体 | 关系类型 | 目标实体 |',
+    '| --- | --- | --- |',
+    matrixRows,
+    '',
+    '## 多实体时间线带',
+    '',
+    '| 实体 | 时间范围 | 时间重叠 |',
+    '| --- | --- | --- |',
+    bandRows,
+    '',
+  ].join('\n')
 }
 
 /** Minimal HTML escaping for text nodes/attributes in the printable view. */
@@ -171,4 +269,33 @@ export function buildPrintableInsight(input: InsightReportInput): string {
     '</body>',
     '</html>',
   ].join('\n')
+}
+
+/**
+ * Serialize already-computed relationship paths (EXISTING edges only, from the
+ * M20 findRelationshipPaths helper) to a plain-text chain representation.
+ * Deterministic, no network, no inference. Each path renders as:
+ *   A — rel → B — rel → C
+ * Multiple paths are joined by newlines. Shared nodes are re-drawn per path
+ * (mirrors the SVG view), so this is a pure projection of RelationshipPath[] —
+ * it never invents, infers, or implies a relationship and never fabricates an
+ * edge. This is the deterministic source for the "Copy Relationship Path Text"
+ * button; it performs no path recomputation.
+ */
+export function serializeRelationshipPathsAsText(
+  paths: RelationshipPath[],
+  nameByGlobalId: Record<string, string>,
+): string {
+  const labelOf = (gid: string): string => (nameByGlobalId?.[gid] ?? gid)
+  return (paths ?? [])
+    .map((p) =>
+      (p.nodes ?? [])
+        .map((n, j) =>
+          j < (p.edges ?? []).length
+            ? `${labelOf(n)} — ${p.edges[j]} →`
+            : labelOf(n),
+        )
+        .join(' '),
+    )
+    .join('\n')
 }

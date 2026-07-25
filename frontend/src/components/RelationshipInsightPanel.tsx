@@ -42,6 +42,8 @@ import {
 import {
   serializeInsightReport,
   buildPrintableInsight,
+  serializeInsightReportAsMarkdown,
+  serializeRelationshipPathsAsText,
   type InsightReportInput,
 } from '../data/insightExport'
 import RelationshipPathGraph from './RelationshipPathGraph'
@@ -263,6 +265,47 @@ export default function RelationshipInsightPanel({
     w.print()
   }
 
+  // M22-A3 — local-only clipboard copy. Uses navigator.clipboard when available
+  // with a document.execCommand('copy') fallback; never uploads, never calls a
+  // third-party clipboard service, never touches the network or an account.
+  // copyMsg is VIEW-ONLY status text (success / failure), not persisted.
+  const [copyMsg, setCopyMsg] = useState<'' | 'ok' | 'error'>('')
+
+  const handleCopy = async (text: string) => {
+    if (!text) {
+      setCopyMsg('error')
+      if (typeof window !== 'undefined') window.setTimeout(() => setCopyMsg(''), 2500)
+      return
+    }
+    let ok = false
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text)
+        ok = true
+      }
+    } catch {
+      ok = false
+    }
+    if (!ok) {
+      try {
+        const ta = document.createElement('textarea')
+        ta.value = text
+        ta.style.position = 'fixed'
+        ta.style.top = '-10000px'
+        ta.style.opacity = '0'
+        document.body.appendChild(ta)
+        ta.focus()
+        ta.select()
+        ok = document.execCommand('copy')
+        document.body.removeChild(ta)
+      } catch {
+        ok = false
+      }
+    }
+    setCopyMsg(ok ? 'ok' : 'error')
+    if (typeof window !== 'undefined') window.setTimeout(() => setCopyMsg(''), 2500)
+  }
+
   return (
     <div className="relationship-insight-panel" data-testid="relationship-insight-panel">
       <h4 className="rip-title">关系洞察（可视化既有元数据）</h4>
@@ -275,7 +318,20 @@ export default function RelationshipInsightPanel({
         <button type="button" className="rip-export-btn" onClick={handlePrintView}>
           打印视图
         </button>
+        <button
+          type="button"
+          className="rip-export-btn"
+          onClick={() => handleCopy(serializeInsightReportAsMarkdown(exportInput))}
+        >
+          复制 Markdown 报告
+        </button>
         <span className="rip-export-note">仅本地生成，不上传。</span>
+        {copyMsg === 'ok' && (
+          <span className="rip-copy-status rip-copy-ok">已复制到剪贴板</span>
+        )}
+        {copyMsg === 'error' && (
+          <span className="rip-copy-status rip-copy-error">复制失败，请手动选择文本复制</span>
+        )}
       </div>
 
       {/* M17 — Relationship Type Summary (count only, no causal explanation). */}
@@ -540,6 +596,15 @@ export default function RelationshipInsightPanel({
                     </li>
                   ))}
                 </ul>
+                <button
+                  type="button"
+                  className="rip-export-btn rip-path-copy"
+                  onClick={() =>
+                    handleCopy(serializeRelationshipPathsAsText(connectivityPaths, nameByGlobalId))
+                  }
+                >
+                  复制关系路径文本
+                </button>
               </>
             )}
           </>
