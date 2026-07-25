@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM17] - 2026-07-25 (Project Release — M17)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Relationship Insight Enhancement (M17, Theme A + Theme B). Extends the M16 Relationship Insight Layer with aggregated analytics over EXISTING relationship metadata — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. The new views VISUALIZE only; they perform no fetch, invent no edges, and draw no causal inference:
+
+- `frontend/src/data/relationshipUtils.ts` (extended): added pure, state-free, AI-free helpers — `aggregateRelationshipTypes` (counts relationships by `type`; validates against a frozen frontend mirror of the backend 18-type `RELATIONSHIP_TYPES` vocabulary, bucketing any out-of-vocabulary type as `unknown`), `buildRelationshipTypeMatrix` (one `source → relation_type → target` row per existing edge, never inferred), `buildMultiEntityTimelineBand` (per-entity parsed time bounds + overlap-only comparison via `max(start) <= min(end)`, no historical/causal narrative). No React state; `global_id` stays authoritative.
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended): adds three native `<details>` sections — Relationship Type Summary (counts only, no explanation), Relationship Type Matrix (source → type → target table), and Multi Entity Timeline Band (time ranges + overlap labels). The panel never fetches and never modifies `grounded_answer` / `/api/v1/ai/explain` / `multiEntityContext()`.
+- `frontend/src/App.css` (extended): styling for the three new analytics blocks.
+- `frontend/src/App.tsx` (additive): passes `mainEntityName` to `RelationshipInsightPanel` for accurate matrix source labels.
+
+Tests: +16 (12 in `relationshipUtils.test.ts`, 4 in `RelationshipInsightPanel.test.tsx`). Frontend 413 passed / backend 162 passed; build 89 modules; freeze-check PASSED. Runtime held at `0.13.0`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM16] - 2026-07-25 (Project Release — M16)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.

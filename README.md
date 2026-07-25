@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM16** (2026-07-25) — Relationship Insight Visualization Layer (M16, Theme B): a pure-frontend visualization of EXISTING relationship metadata across the user's picked candidates — `relationshipUtils` (`pairEntities`/`findExistingRelationships`/`timelineOverlap`/`geoComparison`, all pure, no fetch, no AI) plus `RelationshipInsightPanel` (relationship cards / timeline overlap / geographic comparison / collapsible `<details>`); wired into the topic result block from `pickedCandidates` + `exploreThemesRelationships` + `exploreEntityTimeByName`. It VISUALIZES only — no causal inference, no inferred edges, no new KG semantics; `grounded_answer`/`/api/v1/ai/explain`/`multiEntityContext()` untouched (non-runtime release)
+- **Project Release: vM17** (2026-07-25) — Relationship Insight Enhancement (M17, Theme A + Theme B): extends the M16 Relationship Insight Layer with aggregated, pure-frontend analytics over EXISTING relationship metadata — `relationshipUtils` now also exposes `aggregateRelationshipTypes` (frozen 18-type vocabulary; unknowns bucketed as `unknown`), `buildRelationshipTypeMatrix` (source → relation_type → target rows), and `buildMultiEntityTimelineBand` (per-entity time bounds + overlap-only comparison, no causal narrative). The panel adds three native `<details>` sections: Relationship Type Summary (counts only), Relationship Type Matrix, and Multi Entity Timeline Band. It VISUALIZES only — no causal inference, no inferred edges, no new KG semantics, no AI; backend unchanged, runtime stays `0.13.0` (non-runtime release)
 
 Engineering status:
 
