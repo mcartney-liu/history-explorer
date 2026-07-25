@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM13** (2026-07-25) — Multi Entity Reasoning Foundation (M13): frontend `MultiEntityContextPanel` (component-local selection) + `multiEntityContext` N-id builder reuse the M12-1 Grounded AI `/explain` primitive for user-selected N entities; resolves M12-2 scope drift; no new AI, no backend change (non-runtime release)
+- **Project Release: vM14** (2026-07-25) — Cross Topic Selection Picker + Candidate UX (M14): new `EntityPickerPanel` searches any topic and hand-picks N real entities across different topics; `MultiEntityContextPanel` gains a compatibility-first `candidates` prop (retains `candidateGids`) and renders friendly name/type instead of bare global_ids, feeding the existing M13 multi-entity grounded pipeline; no new AI, no backend change (non-runtime release)
 
 Engineering status:
 

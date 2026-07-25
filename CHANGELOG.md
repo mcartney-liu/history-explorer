@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM14] - 2026-07-25 (Project Release — M14)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Cross Topic Selection Picker + Candidate UX Enhancement (M14). Lets the user search ANY topic, hand-pick N real entities across different topics (acceptance: 秦始皇 + 亚历山大 + 罗马帝国 selectable across topics into ONE grounded question), see friendly candidate info, and feed their global_ids into the existing M13 multi-entity grounded pipeline. No backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change:
+
+- `frontend/src/components/SearchResults.tsx`: `SearchResultItem` gains an optional additive `global_id?: string` (the `/search` API still omits it, so it stays optional).
+- `frontend/src/data/candidateUtils.ts` (new): pure `Candidate` normalization — `deriveGlobalId` (canonical `${topic}:${id}`, prefers explicit `global_id`) + `toCandidate` (only real Entity rows with a resolvable global_id). No AI logic; deliberately kept out of the `aiContext` Grounded-AI layer.
+- `frontend/src/components/EntityPickerPanel.tsx` (new): searches ANY topic by reusing `GET /search`, shows friendly name/type/topic, and adds/removes candidates. Selection is COMPONENT-LOCAL state (no App global AI state); notifies the host via `onCandidatesChange`. Pure helpers (`resultsToCandidates` map+dedup, `addCandidate`, `removeCandidate`) extracted & tested.
+- `frontend/src/components/MultiEntityContextPanel.tsx`: compatibility-first extension — retains `candidateGids?: string[]` (now optional) and adds `candidates?: Candidate[]`. `resolveCandidates()` rule: `candidates` wins when non-empty, else falls back to `candidateGids` (existing callers unchanged); dedupe by gid, preserve order. The view renders friendly name/type instead of bare global_ids; `MAX_N = 8` stays UI-layer only and `multiEntityContext()` is unchanged.
+- `App.tsx`: mounts `EntityPickerPanel` and holds the picked candidates in a plain selection list (`pickedCandidates`, NOT AI state), feeding `MultiEntityContextPanel` `candidates` while keeping `candidateGids` as fallback.
+- New/updated frontend tests (full suite 347 passed): `candidateUtils.test.ts`, `EntityPickerPanel.test.tsx`, and extended `MultiEntityContextPanel.test.tsx` (backward-compat + candidates-primary + `resolveCandidates`). `npm run build` clean; freeze-check EXIT 0; backend diff = 0.
+- Deferred (per Scope Freeze): causal reasoning, AI memory / session persistence, proactive AI recommendation, backend changes, runtime bump.
+
 ## [vM13] - 2026-07-25 (Project Release — M13)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.

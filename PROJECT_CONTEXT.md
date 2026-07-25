@@ -49,9 +49,11 @@ The product helps users understand:
 - **AI As Interpretation & Guidance Layer** - does not replace sources or verification.
 - **Long-term Scalability** - architecture and docs support continuous growth.
 
-# 5. Current State (Runtime v0.13.0 / Project Release vM13 / M13)
+# 5. Current State (Runtime v0.13.0 / Project Release vM14 / M14)
 
-Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM13** (M13, 2026-07-25) — Multi Entity Reasoning Foundation: the user explicitly selects N real entity global_ids from the exploration graph and asks ONE grounded question across them via the M12-1 Grounded AI `/explain` primitive. Delivered `MultiEntityContextPanel` (component-local `selectedGids`, UI-only `MAX_N` cap) + `multiEntityContext` N-id builder; resolves the M12-2 Multi-Entity scope drift; no new AI, backend unchanged.
+Released (runtime): **v0.13.0** (M9-003, 2026-07-22). Latest project release: **vM14** (M14, 2026-07-25) — Cross Topic Selection Picker + Candidate UX Enhancement: the user can now search ANY topic, hand-pick N real entities across different topics (e.g. 秦始皇 + 亚历山大 + 罗马帝国), see friendly candidate info, and send their global_ids into the existing M13 multi-entity grounded pipeline. Delivered `frontend/src/data/candidateUtils.ts` (pure `toCandidate` / `deriveGlobalId`, no AI logic), `EntityPickerPanel` (reuses `GET /search`, component-local selection), and a compatibility-first `MultiEntityContextPanel` (`candidates` prop wins when non-empty, `candidateGids` retained as fallback; friendly name/type render). Backend unchanged, runtime stays `0.13.0`, no new dependency, no AI memory / session / proactive / causal drift.
+
+Prior project release vM13 (M13, 2026-07-25) — Multi Entity Reasoning Foundation: the user explicitly selects N real entity global_ids and asks ONE grounded question across them via the M12-1 Grounded AI `/explain` primitive. Delivered `MultiEntityContextPanel` (component-local `selectedGids`, UI-only `MAX_N` cap) + `multiEntityContext` N-id builder; resolved the M12-2 Multi-Entity scope drift; no new AI, backend unchanged.
 
 Governance Hardening (M11-3, project release vM11-3): orchestrator (`answer_service`) boundary documented in M11-2 Planning §2 + Architecture Baseline §3; added ADR-0003 grounding validation tests (malformed-JSON / validator-bypass / wrong-kind / timeline / stateless / thin-handler); tracked M11-2 governance debt cleared. Runtime stays `0.13.0`.
 
