@@ -31,26 +31,34 @@ export default function CitationList({
         <div className="cl-group">
           <h4 className="cl-heading">事实引用（{valid.length}）</h4>
           <ul className="cl-items">
-            {valid.map((c, i) => (
+            {valid.map((c, i) => {
+              // M12-2: entity / relationship citations are navigable facts and
+              // stay clickable (consistent with M12-1). Timeline citations use a
+              // SYNTHETIC global_id that GlobalGraph cannot resolve, so clicking
+              // them would dead-link — they render as plain (non-clickable)
+              // references. This is the only kind-aware guard added in M12-2.
+              const clickable = c.kind === 'entity' || c.kind === 'relationship'
+              return (
               <li
                 key={`${c.global_id}-${i}`}
-                className="cl-item is-clickable"
-                role="button"
-                tabIndex={0}
-                aria-label={`查看引用来源 ${c.label || c.global_id}`}
-                onClick={() => onCitationClick?.(c.global_id)}
-                onKeyDown={(e) => {
+                className={`cl-item${clickable ? ' is-clickable' : ''}`}
+                role={clickable ? 'button' : undefined}
+                tabIndex={clickable ? 0 : undefined}
+                aria-label={`${clickable ? '查看引用来源 ' : '引用来源 '}${c.label || c.global_id}`}
+                onClick={clickable ? () => onCitationClick?.(c.global_id) : undefined}
+                onKeyDown={clickable ? (e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()
                     onCitationClick?.(c.global_id)
                   }
-                }}
+                } : undefined}
               >
                 <span className="cl-kind">{KIND_LABEL[c.kind] ?? c.kind}</span>
                 <span className="cl-label">{c.label || c.global_id}</span>
                 <span className="cl-id">{c.global_id}</span>
               </li>
-            ))}
+              )
+            })}
           </ul>
         </div>
       )}

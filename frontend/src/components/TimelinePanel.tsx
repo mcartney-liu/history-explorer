@@ -2,6 +2,8 @@ import { Fragment } from 'react'
 import EmptyState from './EmptyState'
 import { sortTimeline, groupTimeline } from '../data/timelineUtils'
 import type { TimeValue } from '../data/temporalUtils'
+import AIExplanationPanel from './AIExplanationPanel'
+import { entityContext } from '../data/aiContext'
 
 export type TimelineItem = {
   period: string
@@ -26,6 +28,12 @@ type TimelinePanelProps = {
   // (Relationship -> Focus -> Timeline); Timeline never PRODUCES focus.
   globalIdById?: Record<string, string>
   focusedId?: string
+  // M12-2: the centered entity's global_id, used as the timeline AI explain
+  // context (timeline citation ids are backend-synthesized and NOT resolvable,
+  // so the frontend never invents them).
+  entityGlobalId?: string
+  // M12-2: optional gid -> openEntity handler for citation navigation.
+  onNodeClick?: (globalId: string) => void
 }
 
 function TimelinePanel({
@@ -34,6 +42,8 @@ function TimelinePanel({
   onEventClick,
   globalIdById,
   focusedId,
+  entityGlobalId,
+  onNodeClick,
 }: TimelinePanelProps) {
   const clickable = typeof onEventClick === 'function' && !!nameToId
 
@@ -115,6 +125,13 @@ function TimelinePanel({
       ) : (
         <EmptyState message="No timeline data." />
       )}
+
+      {entityGlobalId ? (
+        <AIExplanationPanel
+          contextGlobalIds={entityContext(entityGlobalId)}
+          onCitationClick={onNodeClick}
+        />
+      ) : null}
     </div>
   )
 }

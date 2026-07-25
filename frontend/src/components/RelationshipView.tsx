@@ -1,6 +1,8 @@
 import { MainEntity } from './MainEntityCard'
 import { RelatedEntity } from './RelatedEntityList'
 import EmptyState from './EmptyState'
+import AIExplanationPanel from './AIExplanationPanel'
+import { relationshipContext } from '../data/aiContext'
 
 type RelationshipViewProps = {
   mainEntity: MainEntity
@@ -22,6 +24,9 @@ type RelationshipViewProps = {
   // Emits a related entity's global_id to focus it (App stores it as VIEW
   // STATE). Distinct from onEntityClick (navigation) — focusing does NOT move.
   onEntityFocus?: (globalId: string) => void
+  // M12-2: optional gid -> openEntity handler so the relationship explanation
+  // panel's citations can navigate (reuses App's onNodeClick).
+  onNodeClick?: (globalId: string) => void
 }
 
 // Lightweight relationship visualization prototype (S5-003).
@@ -40,6 +45,7 @@ function RelationshipView({
   globalIdById,
   focusedId,
   onEntityFocus,
+  onNodeClick,
 }: RelationshipViewProps) {
   if (!mainEntity?.id) {
     return null
@@ -115,6 +121,13 @@ function RelationshipView({
           <EmptyState message="No connected entities." />
         )}
       </div>
+
+      {mainEntity.global_id && focusedId ? (
+        <AIExplanationPanel
+          contextGlobalIds={relationshipContext(mainEntity.global_id, focusedId)}
+          onCitationClick={onNodeClick}
+        />
+      ) : null}
     </div>
   )
 }

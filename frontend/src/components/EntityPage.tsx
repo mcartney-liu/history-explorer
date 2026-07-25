@@ -131,6 +131,7 @@ function EntityPage({
         relatedEntities={entity.exploration.related_entities}
         nameById={nameById}
         onEntityClick={onEntityClick}
+        onNodeClick={onNodeClick}
       />
 
       {onTopicClick && (
@@ -165,6 +166,8 @@ function EntityPage({
         timeline={entity.timeline}
         nameToId={nameToId}
         onEventClick={onEntityClick}
+        entityGlobalId={entityGlobalId}
+        onNodeClick={onNodeClick}
       />
 
       <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
