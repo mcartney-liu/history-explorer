@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM14** (2026-07-25) — Cross Topic Selection Picker + Candidate UX (M14): new `EntityPickerPanel` searches any topic and hand-picks N real entities across different topics; `MultiEntityContextPanel` gains a compatibility-first `candidates` prop (retains `candidateGids`) and renders friendly name/type instead of bare global_ids, feeding the existing M13 multi-entity grounded pipeline; no new AI, no backend change (non-runtime release)
+- **Project Release: vM15** (2026-07-25) — Multi Entity Reasoning Enhancement (M15): pure-frontend UX thickening of the M14 picker via new `pickerUtils` helpers (`filterByTopic`/`sortCandidates`/`reorderCandidates`/`clearCandidates`); `EntityPickerPanel` gains topic-filter chips, a sort control, selected reordering, clear-all, and results overflow handling; `MultiEntityContextPanel` shows the resolved-context count and a collapsible preview of the exact `global_id`s sent to the AI; `global_id` stays authoritative, no new AI, no backend change (non-runtime release)
 
 Engineering status:
 

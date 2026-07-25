@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM15] - 2026-07-25 (Project Release — M15)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Multi Entity Reasoning Enhancement (M15, Theme A). A pure-frontend UX thickening of the M14 Cross Topic Picker — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. `global_id` stays the authoritative identity throughout:
+
+- `frontend/src/data/pickerUtils.ts` (new): pure, state-free, AI-free helpers — `filterByTopic` (exact-topic filter, blank == all, fresh copy), `distinctTopics` (first-seen distinct topics for filter chips), `sortCandidates` (non-mutating locale-aware sort over name/type/topic/gid; blanks sink last; deterministic gid tie-break), `reorderCandidates` (bounds-checked move for the selected list), `clearCandidates` (fresh empty array). No React state; ids are never synthesized, only rearranged.
+- `frontend/src/components/EntityPickerPanel.tsx`: container adds LOCAL-only `sortKey`/`activeTopic` state and derives the visible list via `sortCandidates(filterByTopic(results, activeTopic))`. View gains OPTIONAL, backward-compatible props — topic-filter chips (全部 + `distinctTopics`, `aria-pressed`), a sort control (名称/类型/主题/标识), selected reorder arrows (↑/↓, boundary-disabled), a clear-all button, and a results overflow notice capped at `MAX_VISIBLE_RESULTS` (UI-only). All new View props default to no-op so M14 callers/tests are unchanged.
+- `frontend/src/components/MultiEntityContextPanel.tsx`: the view now mirrors `multiEntityContext(selectedGids)` read-only — a resolved-context count (`已解析上下文 N 个 global_id`) plus a native collapsible `<details>` previewing the exact `global_id` list sent to `/ai/explain` (ADR-0003 honesty). No new React state, `selectedGids` stays local, `MAX_SELECTABLE` stays UI-only, `multiEntityContext()` unchanged.
+- New/updated frontend tests (full suite 375 passed): `pickerUtils.test.ts` (19), extended `EntityPickerPanel.test.tsx` (9→16), extended `MultiEntityContextPanel.test.tsx` (13→15). `npm run build` clean; freeze-check EXIT 0; backend diff = 0.
+- Deferred (per Scope Freeze): Theme B relationship-aware explanation (→ M16), causal reasoning, AI memory / session persistence, proactive AI recommendation, backend changes, runtime bump.
+
 ## [vM14] - 2026-07-25 (Project Release — M14)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
