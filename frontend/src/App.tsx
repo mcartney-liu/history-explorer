@@ -664,6 +664,7 @@ function App() {
                 relationships={exploreThemesRelationships}
                 timeMap={exploreEntityTimeByName}
                 mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]}
+                mainEntityName={result.exploration.main_entity.name}
               />
             </div>
           )}
