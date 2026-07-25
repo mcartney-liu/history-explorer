@@ -88,3 +88,36 @@ export function relationshipContext(entityAGid: string, entityBGid: string): str
 export function timelineContext(entityGid: string): string[] {
   return [assertValid(entityGid, 'timeline entityGid')]
 }
+
+/**
+ * Context for a MULTI-ENTITY question (M13 Multi Entity Reasoning
+ * Foundation): the user explicitly selects N real entity global_ids and asks
+ * ONE grounded question across all of them, reusing the M12-1 single
+ * `/api/v1/ai/explain` primitive.
+ *
+ * This builder ONLY performs: validation / normalization / deduplication /
+ * preserving first-occurrence order. It does NOT impose any selection cap —
+ * MAX_N (the maximum number of selectable entities) is a UI-layer concern
+ * owned by the host panel (MultiEntityContextPanel). The backend
+ * grounded_answer already accepts `Sequence[str]`, so this stays a generic
+ * N-id builder (M13 Correction #2).
+ *
+ * Throws if `ids` is not an array, or if any entry is empty / a synthetic
+ * timeline id — keeping the invariant that the context layer never emits
+ * obviously invalid context.
+ */
+export function multiEntityContext(ids: unknown): string[] {
+  if (!Array.isArray(ids)) {
+    throw new Error('aiContext: multiEntityContext expects an array of global_ids')
+  }
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const id of ids) {
+    const trimmed = assertValid(id, 'multi-entity global_id')
+    if (!seen.has(trimmed)) {
+      seen.add(trimmed)
+      out.push(trimmed)
+    }
+  }
+  return out
+}
