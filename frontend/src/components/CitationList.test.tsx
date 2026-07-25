@@ -40,4 +40,21 @@ describe('CitationList', () => {
     expect(html).not.toContain('is-clickable')
     expect(html).not.toContain('role="button"')
   })
+
+  // M12-2 anti-deadlink guard: a timeline citation carries a SYNTHETIC
+  // global_id (`topic:timeline:<label>`) that GlobalGraph cannot resolve, so
+  // even when a host handler is supplied it MUST NOT be presented as clickable.
+  it('renders timeline citations WITHOUT a clickable affordance (M12-2)', () => {
+    const timelineCitations: AICitation[] = [
+      { global_id: 'topic:timeline:foo', kind: 'timeline', label: 'Foo' },
+    ]
+    const html = renderToStaticMarkup(
+      <CitationList citations={timelineCitations} onCitationClick={() => {}} />,
+    )
+    expect(html).not.toContain('is-clickable')
+    expect(html).not.toContain('role="button"')
+    // still rendered as a visible reference
+    expect(html).toContain('topic:timeline:foo')
+    expect(html).toContain('时间线')
+  })
 })
