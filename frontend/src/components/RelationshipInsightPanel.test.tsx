@@ -281,3 +281,69 @@ describe('RelationshipInsightPanel (M18 export)', () => {
     expect(html).not.toContain('href="http')
   })
 })
+
+// ---------------------------------------------------------------------------
+// M19 (Relationship Centrality / Pair Explorer) — presentation tests.
+// The panel is a PURE VIEW; it must never fetch and must only surface
+// EXISTING metadata. No causal/inferred language is allowed in the output.
+// ---------------------------------------------------------------------------
+
+describe('M19 — Relationship Centrality & Pair Explorer', () => {
+  it('renders the centrality block with degree counts over existing edges', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('关系中心性')
+    expect(html).toContain('关系计数')
+    expect(html).toContain('rome:empire')
+    expect(html).toContain('greece:alex')
+  })
+
+  it('pair explorer shows the existing edge between the selected two entities', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('成对关系探查')
+    expect(html).toContain('contemporary_of')
+    // No causal/inferred language anywhere in the rendered output.
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+  })
+
+  it('pair explorer reports no edge for a pair with no existing relationship', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[qin, alex]}
+        relationships={relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('无已存在的关系边')
+  })
+
+  it('honours an injected nameByGlobalId map to label target entities outside the candidate set', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome]}
+        relationships={relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+        nameByGlobalId={{ 'rome:empire': '罗马帝国', 'greece:alex': '希腊的亚历山大' }}
+      />,
+    )
+    // '希腊的亚历山大' can ONLY come from the injected map: the candidate set
+    // has no greece:alex, and the relationship's other.name is just '亚历山大'.
+    expect(html).toContain('希腊的亚历山大')
+  })
+})

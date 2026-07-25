@@ -32,6 +32,8 @@ import {
   sortRelationshipMatrixByCount,
   sortTimelineBands,
   normalizeTimelineRange,
+  calculateRelationshipCentrality,
+  filterEdgesBetweenPair,
   RELATIONSHIP_FILTER_ALL,
   type TimelineOverlapStatus,
 } from '../data/relationshipUtils'
@@ -50,6 +52,12 @@ export type RelationshipInsightPanelProps = {
   mainGlobalId?: string
   /** Friendly display name of the main entity; used only to label matrix source rows. */
   mainEntityName?: string
+  /**
+   * Optional explicit global_id -> display name map (e.g. supplied by the host
+   * via App.tsx). Overrides the candidate-derived map so target entities that
+   * are NOT in the candidate set can still be labelled. Never fabricated.
+   */
+  nameByGlobalId?: Record<string, string>
 }
 
 const STATUS_LABEL: Record<TimelineOverlapStatus, string> = {
@@ -132,13 +140,21 @@ export default function RelationshipInsightPanel({
   geoMap,
   mainGlobalId,
   mainEntityName,
+  nameByGlobalId: injectedNameByGlobalId,
 }: RelationshipInsightPanelProps) {
   const pairs = pairEntities(candidates)
 
   // M17 analytics: pure summaries of EXISTING metadata only (no inference).
-  const nameByGlobalId: Record<string, string> = {}
+  const baseNameByGid: Record<string, string> = {}
   for (const c of candidates ?? []) {
-    if (c?.gid) nameByGlobalId[c.gid] = c.name
+    if (c?.gid) baseNameByGid[c.gid] = c.name
+  }
+  // M19: prefer an explicitly injected global_id -> name map (e.g. from
+  // App.tsx) over the candidate-derived one, so target entities that are NOT
+  // in the candidate set can still be labelled. Values are never fabricated.
+  const nameByGlobalId: Record<string, string> = {
+    ...baseNameByGid,
+    ...(injectedNameByGlobalId ?? {}),
   }
   const typeCounts = aggregateRelationshipTypes(relationships)
   const matrixRows = buildRelationshipTypeMatrix(relationships, {
@@ -154,6 +170,16 @@ export default function RelationshipInsightPanel({
   const [bandSortBy, setBandSortBy] = useState<'start' | 'name'>('start')
   const [bandSortDir, setBandSortDir] = useState<'asc' | 'desc'>('asc')
 
+  // M19 — Pair Relationship Explorer: view-only selection of two entities to
+  // inspect. This state describes WHICH existing edges to display, never WHAT
+  // data exists; it is not persisted. Distinct candidate global_ids drive the
+  // dropdowns; defaults pick the first two when at least two are available.
+  const distinctGids = Array.from(
+    new Set((candidates ?? []).filter((c) => c?.gid).map((c) => c.gid as string)),
+  )
+  const [exploreA, setExploreA] = useState<string>(() => distinctGids[0] ?? '')
+  const [exploreB, setExploreB] = useState<string>(() => distinctGids[1] ?? distinctGids[0] ?? '')
+
   const filteredRows = filterRelationshipMatrixByType(matrixRows, matrixFilter)
   const visibleRows =
     matrixSort === 'none'
@@ -162,6 +188,19 @@ export default function RelationshipInsightPanel({
   const visibleBand = sortTimelineBands(timelineBand, { by: bandSortBy, dir: bandSortDir })
   // Filter options = the type buckets actually present (canonical, incl. unknown).
   const filterOptions = Object.keys(typeCounts)
+
+  // M19 — Relationship Centrality: undirected degree count per global_id over
+  // the EXISTING matrix (no inference). Sorted by count desc, then gid asc for
+  // deterministic display order.
+  const centralityEntries = Object.entries(calculateRelationshipCentrality(matrixRows)).sort(
+    (a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0),
+  )
+  // M19 — Pair Relationship Explorer: only the EXISTING edges whose endpoints
+  // are exactly the two selected entities. Empty when not both selected.
+  const pairEdges =
+    exploreA && exploreB && exploreA !== exploreB
+      ? filterEdgesBetweenPair(exploreA, exploreB, matrixRows)
+      : []
 
   // M18 — client-side export of the CURRENT view. Pure serialization comes
   // from insightExport.ts; this glue only creates a local Blob download or a
@@ -290,6 +329,100 @@ export default function RelationshipInsightPanel({
                   ))}
                 </tbody>
               </table>
+            )}
+          </>
+        )}
+      </details>
+
+      {/* M19 — Relationship Centrality (degree over EXISTING matrix only). */}
+      <details className="rip-block">
+        <summary className="rip-block-summary">关系中心性（基于既有元数据）</summary>
+        {matrixRows.length === 0 ? (
+          <p className="rip-muted">无既有关系元数据。</p>
+        ) : (
+          <>
+            <p className="rip-note">基于已存在的关系边计数，仅供参考。</p>
+            <table className="rip-matrix">
+              <thead>
+                <tr>
+                  <th>实体</th>
+                  <th>global_id</th>
+                  <th>关系计数</th>
+                </tr>
+              </thead>
+              <tbody>
+                {centralityEntries.map(([gid, count]) => (
+                  <tr key={gid}>
+                    <td>{nameByGlobalId[gid] ?? gid}</td>
+                    <td className="rip-type">{gid}</td>
+                    <td>{count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+      </details>
+
+      {/* M19 — Pair Relationship Explorer (existing edges only, no causal words). */}
+      <details className="rip-block">
+        <summary className="rip-block-summary">成对关系探查（仅既有边）</summary>
+        {distinctGids.length < 2 ? (
+          <p className="rip-muted">请选择至少两个实体以使用成对关系探查。</p>
+        ) : (
+          <>
+            <div className="rip-controls" aria-label="pair-explorer-controls">
+              <label className="rip-control">
+                实体 A
+                <select
+                  className="rip-control-select"
+                  value={exploreA}
+                  onChange={(e) => setExploreA(e.target.value)}
+                >
+                  {distinctGids.map((g) => (
+                    <option key={g} value={g}>
+                      {nameByGlobalId[g] ?? g}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="rip-control">
+                实体 B
+                <select
+                  className="rip-control-select"
+                  value={exploreB}
+                  onChange={(e) => setExploreB(e.target.value)}
+                >
+                  {distinctGids.map((g) => (
+                    <option key={g} value={g}>
+                      {nameByGlobalId[g] ?? g}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {exploreA && exploreB && exploreA !== exploreB ? (
+              pairEdges.length === 0 ? (
+                <p className="rip-muted">所选两实体间无已存在的关系边。</p>
+              ) : (
+                <ul className="rip-rel-list">
+                  {pairEdges.map((row, idx) => (
+                    <li
+                      className="rip-rel-card"
+                      key={`${row.sourceGlobalId}-${row.targetGlobalId}-${row.relationType}-${idx}`}
+                    >
+                      <span className="rip-rel-type">{row.relationType}</span>
+                      <span className="rip-rel-label">
+                        {(nameByGlobalId[row.sourceGlobalId ?? ''] ?? row.source)} →{' '}
+                        {row.relationType} →{' '}
+                        {(nameByGlobalId[row.targetGlobalId ?? ''] ?? row.target)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )
+            ) : (
+              <p className="rip-muted">请选择两个不同的实体以查看它们之间的已存在关系边。</p>
             )}
           </>
         )}
