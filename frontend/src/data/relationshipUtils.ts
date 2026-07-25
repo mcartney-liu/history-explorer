@@ -287,3 +287,169 @@ export function geoComparison(
     note: `Great-circle distance ≈ ${Math.round(distanceKm)} km.`,
   }
 }
+
+// ---------------------------------------------------------------------------
+// M17 (Relationship Insight Enhancement): aggregated type analytics.
+// ---------------------------------------------------------------------------
+//
+// SCOPE (frozen): still a PURE data-inspection layer. Everything below
+// operates on data already present in the client, introduces NO new KG
+// semantics, performs NO causal inference, invents NO edges, and touches NO
+// network/AI. Relationship metadata is summarized and tabulated only.
+
+/**
+ * Frozen frontend mirror of the backend enum `RELATIONSHIP_TYPES`
+ * (backend/app/validation.py, Schema Freeze M3.5-000, 18 types). This is a
+ * DISPLAY-ONLY constant: it does not change the backend enum, the schema, or
+ * any relationship semantics. It exists so that relationship types emitted by
+ * the API can be validated against the known vocabulary and any value outside
+ * the frozen set is bucketed as `unknown` (honest, not silently accepted).
+ */
+export const RELATIONSHIP_TYPES: ReadonlySet<string> = new Set<string>([
+  'caused',
+  'influenced',
+  'participated_in',
+  'located_at',
+  'related_to',
+  'before',
+  'after',
+  'contemporary_with',
+  'part_of',
+  'ruled',
+  'traded_with',
+  'invented',
+  'discovered',
+  'practiced',
+  'spoke',
+  'inherited',
+  'conquered',
+  'spread',
+])
+
+/**
+ * Count relationships by their `type`. Returns `{ [relationshipType]: count }`.
+ * Types that are NOT part of the frozen 18-type vocabulary are aggregated under
+ * the key `unknown` (so data-quality drift is visible, never hidden). The input
+ * array and its members are never mutated.
+ *
+ * This is a pure tally — it attaches no meaning, cause, or narrative to any
+ * relationship type.
+ */
+export function aggregateRelationshipTypes(
+  relationships: EntityRelationship[],
+): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const rel of relationships ?? []) {
+    if (!rel || typeof rel.type !== 'string') continue
+    const key = RELATIONSHIP_TYPES.has(rel.type) ? rel.type : 'unknown'
+    counts[key] = (counts[key] ?? 0) + 1
+  }
+  return counts
+}
+
+export type RelationshipMatrixRow = {
+  /** Source entity display name (the exploration's main entity). */
+  source: string
+  sourceGlobalId?: string
+  /** The relationship type exactly as emitted by the API. */
+  relationType: string
+  /** Target entity display name (`rel.other.name`). */
+  target: string
+  targetGlobalId?: string
+}
+
+/**
+ * Tabulate the existing relationship edges as a flat matrix of
+ * `source —(relationType)—> target` rows, one per relationship. This is a
+ * tabular VIEW of metadata that already exists; it never infers edges, never
+ * invents a target, and never attaches causal meaning. The `source` is resolved
+ * from `opts.sourceName` / `opts.nameByGlobalId[mainGlobalId]` and falls back to
+ * the raw id when no friendly name is available (no fabrication).
+ */
+export function buildRelationshipTypeMatrix(
+  relationships: EntityRelationship[],
+  opts?: {
+    mainGlobalId?: string
+    sourceName?: string
+    nameByGlobalId?: Record<string, string>
+  },
+): RelationshipMatrixRow[] {
+  const nameByGid = opts?.nameByGlobalId ?? {}
+  const mainGid = opts?.mainGlobalId
+  const rows: RelationshipMatrixRow[] = []
+  for (const rel of relationships ?? []) {
+    if (!rel || !rel.other) continue
+    const relationType = typeof rel.type === 'string' ? rel.type : ''
+    const targetGid = rel.other.global_id
+    const target = rel.other.name || targetGid || rel.target || ''
+    const sourceGid =
+      mainGid ?? (typeof rel.source === 'string' ? rel.source : undefined)
+    const source =
+      opts?.sourceName ||
+      (sourceGid && nameByGid[sourceGid]) ||
+      sourceGid ||
+      rel.source ||
+      ''
+    rows.push({
+      source,
+      sourceGlobalId: sourceGid,
+      relationType,
+      target,
+      targetGlobalId: targetGid,
+    })
+  }
+  return rows
+}
+
+export type TimelineBandEntry = {
+  name: string
+  gid?: string
+  /** negative = BCE, positive = CE, null = unknown bound. */
+  start: number | null
+  end: number | null
+  /** Names of OTHER entities whose time bounds overlap this one. */
+  overlaps: string[]
+}
+
+/**
+ * Build a multi-entity timeline band from candidates and a name -> time-range
+ * map. Each entry carries `{ name, start, end, overlaps }`. Overlap detection is
+ * a PURE bounds comparison (max(start) <= min(end)) between two entities' time
+ * ranges — it carries NO historical/causal interpretation and emits NO
+ * narrative. Entities without parseable time data appear with null bounds and
+ * an empty `overlaps` list (honest "no data"), never fabricated dates.
+ */
+export function buildMultiEntityTimelineBand(
+  candidates: Candidate[],
+  timeMap: Record<string, string>,
+): TimelineBandEntry[] {
+  const entries: TimelineBandEntry[] = []
+  for (const c of candidates ?? []) {
+    if (!c || !c.name) continue
+    const range = parseTimeRange(timeMap?.[c.name])
+    entries.push({
+      name: c.name,
+      gid: c.gid,
+      start: range?.start ?? null,
+      end: range?.end ?? null,
+      overlaps: [],
+    })
+  }
+  for (let i = 0; i < entries.length; i++) {
+    const a = entries[i]
+    if (a.start == null || a.end == null) continue
+    for (let j = 0; j < entries.length; j++) {
+      if (i === j) continue
+      const b = entries[j]
+      if (b.start == null || b.end == null) continue
+      const aStart = a.start ?? -Infinity
+      const aEnd = a.end ?? Infinity
+      const bStart = b.start ?? -Infinity
+      const bEnd = b.end ?? Infinity
+      const ovStart = Math.max(aStart, bStart)
+      const ovEnd = Math.min(aEnd, bEnd)
+      if (ovStart <= ovEnd) a.overlaps.push(b.name)
+    }
+  }
+  return entries
+}

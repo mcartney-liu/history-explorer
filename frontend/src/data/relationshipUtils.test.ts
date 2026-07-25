@@ -9,6 +9,12 @@ import {
   findExistingRelationships,
   timelineOverlap,
   geoComparison,
+  aggregateRelationshipTypes,
+  buildRelationshipTypeMatrix,
+  buildMultiEntityTimelineBand,
+  RELATIONSHIP_TYPES,
+  type RelationshipMatrixRow,
+  type TimelineBandEntry,
 } from './relationshipUtils'
 
 const qin: Candidate = { gid: 'china:qin', name: '秦始皇', type: 'Person', topic: 'china' }
@@ -179,5 +185,150 @@ describe('geoComparison', () => {
     }
     const r = geoComparison(pairs[0], geoMap)
     expect(r.available).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M17 (Relationship Insight Enhancement) — aggregated type analytics.
+// ---------------------------------------------------------------------------
+
+const zhou: Candidate = { gid: 'china:zhou', name: '周朝', type: 'Time Period', topic: 'china' }
+
+function rel(
+  type: string,
+  other: { id: string; name: string; global_id: string; topic?: string },
+): EntityRelationship {
+  return {
+    type,
+    source: 'empire',
+    target: other.id,
+    direction: 'outgoing',
+    other: { id: other.id, name: other.name, type: 'Person', global_id: other.global_id, topic: other.topic ?? 'rome' },
+  }
+}
+
+describe('aggregateRelationshipTypes', () => {
+  it('counts multiple relationship types and returns a tally', () => {
+    const relationships: EntityRelationship[] = [
+      rel('conquered', { id: 'alex', name: '亚历山大', global_id: 'greece:alex' }),
+      rel('inherited', { id: 'augustus', name: '奥古斯都', global_id: 'rome:augustus' }),
+      rel('part_of', { id: 'rome', name: '罗马帝国', global_id: 'rome:empire' }),
+      rel('conquered', { id: 'persia', name: '波斯', global_id: 'persia:empire' }),
+    ]
+    const counts = aggregateRelationshipTypes(relationships)
+    expect(counts).toEqual({ conquered: 2, inherited: 1, part_of: 1 })
+  })
+
+  it('buckets types outside the frozen 18-type vocabulary as "unknown"', () => {
+    const relationships: EntityRelationship[] = [
+      rel('conquered_by', { id: 'alex', name: '亚历山大', global_id: 'greece:alex' }),
+      rel('conquered', { id: 'persia', name: '波斯', global_id: 'persia:empire' }),
+    ]
+    const counts = aggregateRelationshipTypes(relationships)
+    expect(counts).toEqual({ conquered: 1, unknown: 1 })
+  })
+
+  it('returns {} for empty input', () => {
+    expect(aggregateRelationshipTypes([])).toEqual({})
+    expect(aggregateRelationshipTypes(undefined as unknown as EntityRelationship[])).toEqual({})
+  })
+
+  it('does not mutate the input array', () => {
+    const relationships: EntityRelationship[] = [rel('ruled', { id: 'aug', name: '奥', global_id: 'rome:aug' })]
+    const snapshot = JSON.parse(JSON.stringify(relationships))
+    aggregateRelationshipTypes(relationships)
+    expect(relationships).toEqual(snapshot)
+  })
+
+  it('mirrors the backend 18-type vocabulary', () => {
+    expect(RELATIONSHIP_TYPES.size).toBe(18)
+    expect(RELATIONSHIP_TYPES.has('contemporary_with')).toBe(true)
+    expect(RELATIONSHIP_TYPES.has('conquered')).toBe(true)
+  })
+})
+
+describe('buildRelationshipTypeMatrix', () => {
+  const relationships: EntityRelationship[] = [
+    rel('conquered', { id: 'alex', name: '亚历山大', global_id: 'greece:alex', topic: 'greece' }),
+    rel('inherited', { id: 'augustus', name: '奥古斯都', global_id: 'rome:augustus' }),
+  ]
+
+  it('produces one source→type→target row per relationship', () => {
+    const rows: RelationshipMatrixRow[] = buildRelationshipTypeMatrix(relationships, {
+      mainGlobalId: 'rome:empire',
+      sourceName: '罗马帝国',
+    })
+    expect(rows).toHaveLength(2)
+    expect(rows[0]).toMatchObject({
+      source: '罗马帝国',
+      relationType: 'conquered',
+      target: '亚历山大',
+    })
+    expect(rows[1]).toMatchObject({
+      source: '罗马帝国',
+      relationType: 'inherited',
+      target: '奥古斯都',
+    })
+  })
+
+  it('falls back to the global id as source name when no friendly name is provided', () => {
+    const rows = buildRelationshipTypeMatrix(relationships, { mainGlobalId: 'rome:empire' })
+    expect(rows[0].source).toBe('rome:empire')
+  })
+
+  it('never invents a target — only uses existing metadata', () => {
+    const rows = buildRelationshipTypeMatrix(relationships, { mainGlobalId: 'rome:empire', sourceName: '罗马帝国' })
+    for (const r of rows) {
+      expect(r.target).toBeTruthy()
+      expect(r.targetGlobalId).toBeTruthy()
+    }
+  })
+})
+
+describe('buildMultiEntityTimelineBand', () => {
+  const timeMap: Record<string, string> = {
+    秦始皇: '259 BC - 210 BC',
+    亚历山大: '356 BC - 323 BC',
+    罗马帝国: '27 BC - 476 CE',
+    周朝: '1046 BC - 256 BC',
+  }
+
+  it('reports an overlap between two BCE entities whose ranges intersect', () => {
+    const band: TimelineBandEntry[] = buildMultiEntityTimelineBand([qin, zhou], timeMap)
+    expect(band).toHaveLength(2)
+    const qinEntry = band.find((e) => e.name === '秦始皇')!
+    const zhouEntry = band.find((e) => e.name === '周朝')!
+    expect(qinEntry.overlaps).toContain('周朝')
+    expect(zhouEntry.overlaps).toContain('秦始皇')
+  })
+
+  it('builds a band of three entities with correct bounds and no false overlaps', () => {
+    const band = buildMultiEntityTimelineBand([qin, alex, rome], timeMap)
+    expect(band).toHaveLength(3)
+    const qinEntry = band.find((e) => e.name === '秦始皇')!
+    expect(qinEntry.start).toBe(-259)
+    expect(qinEntry.end).toBe(-210)
+    const romeEntry = band.find((e) => e.name === '罗马帝国')!
+    expect(romeEntry.start).toBe(-27)
+    expect(romeEntry.end).toBe(476)
+    // All three are mutually non-overlapping in this dataset.
+    for (const e of band) expect(e.overlaps).toEqual([])
+  })
+
+  it('parses the BC→CE boundary correctly (no year zero leakage)', () => {
+    const band = buildMultiEntityTimelineBand(
+      [{ gid: 'x:p', name: '跨年' } as Candidate],
+      { 跨年: '1 BC - 1 CE' },
+    )
+    expect(band[0].start).toBe(-1)
+    expect(band[0].end).toBe(1)
+  })
+
+  it('keeps entities without time data with null bounds and empty overlaps (no fabrication)', () => {
+    const band = buildMultiEntityTimelineBand([qin, { gid: 'x:u', name: '未知' } as Candidate], timeMap)
+    const unknown = band.find((e) => e.name === '未知')!
+    expect(unknown.start).toBeNull()
+    expect(unknown.end).toBeNull()
+    expect(unknown.overlaps).toEqual([])
   })
 })
