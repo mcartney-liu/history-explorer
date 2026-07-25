@@ -90,3 +90,85 @@ describe('RelationshipInsightPanel', () => {
     expect(html).toContain('<details')
   })
 })
+
+// ---------------------------------------------------------------------------
+// M17 (Relationship Insight Enhancement) — aggregated analytics sections.
+// ---------------------------------------------------------------------------
+
+describe('RelationshipInsightPanel (M17 analytics)', () => {
+  const zhou: Candidate = { gid: 'china:zhou', name: '周朝', type: 'Time Period', topic: 'china' }
+
+  const m17Relationships: EntityRelationship[] = [
+    {
+      type: 'conquered',
+      source: 'empire',
+      target: 'alex',
+      direction: 'outgoing',
+      other: { id: 'alex', name: '亚历山大', type: 'Person', global_id: 'greece:alex', topic: 'greece' },
+    },
+    {
+      type: 'inherited',
+      source: 'empire',
+      target: 'augustus',
+      direction: 'outgoing',
+      other: { id: 'augustus', name: '奥古斯都', type: 'Person', global_id: 'rome:augustus', topic: 'rome' },
+    },
+  ]
+
+  it('renders the relationship type summary with counts (no causal text)', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={m17Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('关系类型汇总')
+    expect(html).toContain('conquered')
+    expect(html).toContain('inherited')
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+  })
+
+  it('renders the relationship type matrix as source → type → target rows', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={m17Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('关系类型矩阵')
+    expect(html).toContain('罗马帝国') // resolved source name
+    expect(html).toContain('亚历山大') // target
+    expect(html).toContain('奥古斯都')
+  })
+
+  it('renders the multi-entity timeline band with overlap labels', () => {
+    const bandTimeMap: Record<string, string> = {
+      ...timeMap,
+      周朝: '1046 BC - 256 BC',
+    }
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, zhou]} relationships={[]} timeMap={bandTimeMap} />,
+    )
+    expect(html).toContain('多实体时间线带')
+    expect(html).toContain('时间重叠')
+    expect(html).toContain('周朝')
+  })
+
+  it('does not emit inferred/discovered edge language in any analytics section', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex, qin]}
+        relationships={m17Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).not.toContain('影响')
+    expect(html).not.toContain('导致')
+  })
+})
