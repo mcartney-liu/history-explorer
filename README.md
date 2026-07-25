@@ -51,12 +51,12 @@ Discover Civilization.
 
 Current milestone:
 
-**M11-2 — Grounded AI Interpretation Layer: COMPLETED**
+**M13 — Multi Entity Reasoning Foundation: COMPLETED**
 
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM12-2** (2026-07-25) — AI Contextual Exploration (M12-2): frontend Context Assembly Layer + 3 AI explain integrations (entity/relationship/timeline) on the existing Grounded AI panel; no new AI, no backend change (non-runtime release)
+- **Project Release: vM13** (2026-07-25) — Multi Entity Reasoning Foundation (M13): frontend `MultiEntityContextPanel` (component-local selection) + `multiEntityContext` N-id builder reuse the M12-1 Grounded AI `/explain` primitive for user-selected N entities; resolves M12-2 scope drift; no new AI, no backend change (non-runtime release)
 
 Engineering status:
 

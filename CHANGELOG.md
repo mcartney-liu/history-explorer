@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM13] - 2026-07-25 (Project Release — M13)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Multi Entity Reasoning Foundation (M13). Lets the user explicitly pick N real entity global_ids from the current exploration graph and ask ONE grounded question across them — reusing the existing M12-1 Grounded AI `/api/v1/ai/explain` primitive. No backend, runtime, schema, causal, AI-memory, or proactive-AI change:
+
+- `frontend/src/data/aiContext.ts`: new `multiEntityContext(ids)` — a pure, stateless N-id builder that validates / normalizes / deduplicates / preserves first-occurrence order. It imposes NO selection cap (MAX_N is a UI-layer concern per M13 Correction #2); the backend `grounded_answer(context_global_ids: Sequence[str])` already accepts N context ids.
+- `frontend/src/components/MultiEntityContextPanel.tsx` (new): owns `selectedGids` as COMPONENT-LOCAL `useState` — NOT lifted into `App.tsx`, no global store / context provider, never persisted (M13 Correction #1). `MAX_N = 8` enforced only at the UI layer; renders `AIExplanationPanel` with `multiEntityContext(selectedGids)`. This delivers the panel M12-2 promised but never shipped (resolves M12-2 scope drift).
+- `App.tsx`: mounts `MultiEntityContextPanel` on the Explore page, passing `candidateGids={Object.values(exploreEntityGlobalById)}` and `onCitationClick=openEntity`. App holds NO AI selection state — additivity preserved (the legacy auto-context `AIExplanationPanel` is kept unchanged).
+- 16 new frontend tests (322 total: `aiContext.multiEntityContext` + `MultiEntityContextPanel` view + `applyToggleSelection` cap logic); `npm run build` clean; freeze-check EXIT 0.
+- Deferred (per Scope Freeze): causal reasoning, AI memory / session persistence, proactive AI recommendation, backend changes, runtime bump, cross-topic selection picker (current candidate pool = current Explore page entities).
+
 ## [vM12-2] - 2026-07-25 (Project Release — M12-2)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
