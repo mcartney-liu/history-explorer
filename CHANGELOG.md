@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM19] - 2026-07-25 (Project Release — M19)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Relationship Centrality & Pair Explorer (M19). A pure-frontend additive visualization over the M17/M18 insight views — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. Both new capabilities surface EXISTING relationship metadata only; nothing is fetched, inferred, or uploaded:
+
+- `frontend/src/data/relationshipUtils.ts` (extended): two pure, state-free, AI-free helpers — `calculateRelationshipCentrality` (undirected degree count per global_id over the EXISTING relationship matrix; never invents edges) and `filterEdgesBetweenPair` (returns only existing edges whose endpoints are exactly A and B, either direction; never infers a relationship).
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended): two new `<details>` blocks — Relationship Centrality (entity name / global_id / relationship count, labelled via an optional injected `nameByGlobalId`) and Pair Relationship Explorer (two view-only `<select>` controls showing only existing edges between the selected pair, no causal words). The panel still never fetches and never modifies `grounded_answer` / `/api/v1/ai/explain` / `multiEntityContext()`.
+- `frontend/src/App.tsx` (extended): derives `exploreNameByGlobalId` from already-fetched exploration metadata (`exploreEntityGlobalById` + `exploreNameById`) and passes it to the panel so target entities outside the candidate set are labelled; additive only — no change to MultiEntityContext / AIExplanationPanel / aiContext / API contract.
+- `frontend/src/data/relationshipUtils.test.ts` / `RelationshipInsightPanel.test.tsx` (extended): unit + presentation tests for the new pure functions and blocks; existing "no fetch / no inference" assertions unchanged.
+
+Tests: +12 (relationshipUtils centrality/pair-edge, panel centrality/pair-explorer). Frontend 459 passed / backend 162 passed; build clean; freeze-check EXIT 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM18] - 2026-07-25 (Project Release — M18)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
