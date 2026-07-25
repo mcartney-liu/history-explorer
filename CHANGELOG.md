@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM20] - 2026-07-25 (Project Release — M20)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Relationship Connectivity Explorer (M20). A pure-frontend additive path-exploration over the M17–M19 insight views — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. It surfaces EXISTING relationship edges only; nothing is fetched, inferred, or uploaded:
+
+- `frontend/src/data/relationshipUtils.ts` (extended): one pure, state-free, AI-free helper — `findRelationshipPaths(rows, gidA, gidB, maxHops=3)` (bounded DFS over EXISTING edges only; returns `[{ nodes: string[], edges: string[] }]` where `nodes.length === edges.length + 1`; never invents, infers, or implies a relationship; never mutates its input; input type/empty guards return `[]`).
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended): one new `<details>` block — Relationship Connectivity Explorer (two view-only `<select>` source/target entity controls + a max-hops control; renders `node —relation→ node` chains over existing edges only; shows a clear notice when no path exists among the loaded edges; disclaimer states it only visualises edges already present, no causal words). The panel still never fetches and never modifies `grounded_answer` / `/api/v1/ai/explain` / `multiEntityContext()`.
+- `frontend/src/App.tsx` (unchanged): `exploreNameByGlobalId` (M19) is already passed to the panel, so M20 needs no App wiring change; AI pipeline diff = 0.
+- `frontend/src/data/relationshipUtils.test.ts` / `RelationshipInsightPanel.test.tsx` (extended): unit + presentation tests for `findRelationshipPaths` (direct edge / two-hop / no path / cyclic A→B→A / maxHops bound / non-mutating input / directed semantics) and the new block (renders controls + disclaimer, renders a path chain over existing edges, reports no path, and never emits 推断 / 发现 / 因果). Existing "no fetch / no inference" assertions unchanged.
+
+Tests: +11 (relationshipUtils findRelationshipPaths ×7, panel connectivity-explorer ×4). Frontend 470 passed / backend 162 passed; build clean; freeze-check EXIT 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM19] - 2026-07-25 (Project Release — M19)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
