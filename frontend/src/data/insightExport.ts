@@ -272,6 +272,50 @@ export function buildPrintableInsight(input: InsightReportInput): string {
 }
 
 /**
+ * Escape a single CSV cell per RFC 4180: wrap in quotes when it contains a
+ * comma, double-quote, CR, or LF; double internal quotes. Deterministic.
+ */
+function csvCell(value: unknown): string {
+  const s = String(value ?? '')
+  if (/[",\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`
+  return s
+}
+
+/** Join CSV cells with commas (RFC 4180 row). */
+function csvRow(cells: string[]): string {
+  return cells.map(csvCell).join(',')
+}
+
+/**
+ * Serialize the SAME insight view to a DETERMINISTIC CSV string. A single flat
+ * table with a `section` column keeps spreadsheet import simple while
+ * preserving every part of the report (entities / type_count / relationship /
+ * timeline). Pure string-out: no network, no persistence, no timestamp or
+ * randomness, so the same input always yields byte-identical output. Ordering
+ * mirrors the other serializers: entities in input order, type counts
+ * alphabetical (via sortCounts), matrix rows and timeline band in input order.
+ */
+export function serializeInsightReportAsCsv(input: InsightReportInput): string {
+  const rows: string[] = [csvRow(['section', 'col1', 'col2', 'col3', 'col4'])]
+  for (const e of input.entities ?? []) {
+    rows.push(csvRow(['entities', e.name ?? '', e.gid ?? '', '', '']))
+  }
+  const counts = sortCounts(input.relationshipTypeCounts)
+  for (const [type, count] of Object.entries(counts)) {
+    rows.push(csvRow(['type_count', type, String(count), '', '']))
+  }
+  for (const r of input.matrixRows ?? []) {
+    rows.push(csvRow(['relationship', r.source, r.relationType, r.target, '']))
+  }
+  for (const b of input.timelineBand ?? []) {
+    rows.push(
+      csvRow(['timeline', b.name, b.gid ?? '', fmtRange(b.start, b.end), b.overlaps.join('、')]),
+    )
+  }
+  return rows.join('\n')
+}
+
+/**
  * Serialize already-computed relationship paths (EXISTING edges only, from the
  * M20 findRelationshipPaths helper) to a plain-text chain representation.
  * Deterministic, no network, no inference. Each path renders as:

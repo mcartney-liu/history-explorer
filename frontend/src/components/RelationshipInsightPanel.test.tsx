@@ -8,6 +8,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import RelationshipInsightPanel from './RelationshipInsightPanel'
 import type { Candidate } from '../data/candidateUtils'
 import type { EntityRelationship } from './EntityPage'
+import { serializeInsightReportAsCsv } from '../data/insightExport'
 
 const qin: Candidate = { gid: 'china:qin', name: '秦始皇', type: 'Person', topic: 'china' }
 const alex: Candidate = { gid: 'greece:alex', name: '亚历山大', type: 'Person', topic: 'greece' }
@@ -574,5 +575,105 @@ describe('M22 — Insight Share / Copy Enhancement (A3)', () => {
     expect(html).not.toContain('<form')
     expect(html).not.toContain('href="http')
     expect(html).not.toContain('第三方')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M23 (Timeline Zoom/Pan, Entity Comparison Table, CSV Export) — additive,
+// view-only enhancements. The panel remains a PURE VIEW: no fetch, no new KG
+// semantics, no inference, no causal narrative. Tests assert on static HTML.
+// ---------------------------------------------------------------------------
+
+describe('M23 — Timeline Zoom/Pan, Entity Comparison, CSV Export', () => {
+  const zhou: Candidate = { gid: 'china:zhou', name: '周朝', type: 'Time Period', topic: 'china' }
+
+  const m23Relationships: EntityRelationship[] = [
+    {
+      type: 'contemporary_of',
+      source: 'empire',
+      target: 'alex',
+      direction: 'outgoing',
+      other: { id: 'alex', name: '亚历山大', type: 'Person', global_id: 'greece:alex', topic: 'greece' },
+    },
+    {
+      type: 'before',
+      source: 'empire',
+      target: 'qin',
+      direction: 'outgoing',
+      other: { id: 'qin', name: '秦始皇', type: 'Person', global_id: 'china:qin', topic: 'china' },
+    },
+  ]
+
+  it('M23-A1 renders an SVG timeline with view-only zoom/pan controls (no causal words in the SVG)', () => {
+    const bandTimeMap: Record<string, string> = {
+      ...timeMap,
+      周朝: '1046 BC - 256 BC',
+    }
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, zhou]} relationships={[]} timeMap={bandTimeMap} />,
+    )
+    expect(html).toContain('rip-timeline-svg')
+    expect(html).toContain('放大')
+    expect(html).toContain('缩小')
+    expect(html).toContain('重置视图')
+    // The SVG timeline block (M23-A1's addition) must introduce no inference /
+    // discovery / causal language. Scoped to the <svg> so the panel's separate
+    // "不做推断" boundary disclaimer (outside the SVG) is not mistaken for a violation.
+    const svgMatch = html.match(/<svg class="rip-timeline-svg"[\s\S]*?<\/svg>/)
+    expect(svgMatch).not.toBeNull()
+    const svgHtml = svgMatch?.[0] ?? ''
+    expect(svgHtml).not.toContain('推断')
+    expect(svgHtml).not.toContain('发现')
+    expect(svgHtml).not.toContain('因果')
+  })
+
+  it('M23-A2 renders a read-only entity comparison table over existing metrics', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={m23Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('实体对比表')
+    expect(html).toContain('关系类型数')
+    expect(html).toContain('重叠数')
+    expect(html).toContain('罗马帝国')
+    expect(html).toContain('亚历山大')
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+  })
+
+  it('M23-A3 renders local-only Copy CSV / Download CSV buttons without breaking the exact 3-button rule', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
+    )
+    expect(html).toContain('复制 CSV 报告')
+    expect(html).toContain('下载 CSV')
+    // M18 exact-match constraint: class="rip-export-btn" must remain exactly 3;
+    // CSV buttons use the rip-csv modifier so they are excluded from that match.
+    const exact = html.match(/class="rip-export-btn"/g) ?? []
+    expect(exact).toHaveLength(3)
+    expect(html).not.toContain('<form')
+    expect(html).not.toContain('href="http')
+  })
+
+  it('M23-A3 serializeInsightReportAsCsv is deterministic and RFC-4180 quoted', () => {
+    const input = {
+      entities: [{ name: 'A', gid: 'a:1' }],
+      relationshipTypeCounts: { contemporary_of: 2, 'before,of': 1 },
+      matrixRows: [
+        { source: 'A', sourceGlobalId: 'a:1', relationType: 'contemporary_of', target: 'B', targetGlobalId: 'b:2' },
+      ],
+      timelineBand: [{ name: 'A', gid: 'a:1', start: -200, end: 100, overlaps: ['B'] }],
+    }
+    const out1 = serializeInsightReportAsCsv(input)
+    const out2 = serializeInsightReportAsCsv(input)
+    expect(out1).toBe(out2)
+    expect(out1).toContain('section,col1,col2,col3,col4')
+    // A comma inside a cell must be wrapped in quotes per RFC 4180.
+    expect(out1).toContain('"before,of"')
+    expect(out1).toContain('relationship,A,contemporary_of,B,')
   })
 })

@@ -43,6 +43,7 @@ import {
   serializeInsightReport,
   buildPrintableInsight,
   serializeInsightReportAsMarkdown,
+  serializeInsightReportAsCsv,
   serializeRelationshipPathsAsText,
   type InsightReportInput,
 } from '../data/insightExport'
@@ -77,6 +78,14 @@ function formatYear(v: number): string {
   const n = Math.round(v)
   return n < 0 ? `${Math.abs(n)} BC` : `${n} CE`
 }
+
+// M23-A1 — SVG timeline geometry. These are VIEW-ONLY coordinates: the panel
+// never recomputes buildMultiEntityTimelineBand; zoom/pan merely transform
+// this SVG via a <g> element.
+const TL_W = 720
+const TL_PAD = 48
+const TL_TOP = 30
+const TL_ROW = 30
 
 function RelationshipPairRow({
   a,
@@ -175,6 +184,12 @@ export default function RelationshipInsightPanel({
   const [bandSortBy, setBandSortBy] = useState<'start' | 'name'>('start')
   const [bandSortDir, setBandSortDir] = useState<'asc' | 'desc'>('asc')
 
+  // M23-A1 — Timeline zoom/pan: VIEW-ONLY transform state for the SVG timeline.
+  // It only changes SVG coordinates (translate/scale on a <g>); it never
+  // recomputes buildMultiEntityTimelineBand nor touches persistence.
+  const [tlZoom, setTlZoom] = useState(1)
+  const [tlPan, setTlPan] = useState(0)
+
   // M19 — Pair Relationship Explorer: view-only selection of two entities to
   // inspect. This state describes WHICH existing edges to display, never WHAT
   // data exists; it is not persisted. Distinct candidate global_ids drive the
@@ -216,6 +231,26 @@ export default function RelationshipInsightPanel({
       ? filteredRows
       : sortRelationshipMatrixByCount(filteredRows, typeCounts, matrixSort)
   const visibleBand = sortTimelineBands(timelineBand, { by: bandSortBy, dir: bandSortDir })
+  // M23-A1 — year bounds + SVG geometry for the timeline, derived from EXISTING
+  // bands only. tlSvg is null when no band has a usable [start,end] range; the
+  // plain <ul> list below still renders in that case.
+  const tlYears: Array<[number, number]> = visibleBand
+    .filter((b) => b.start != null && b.end != null)
+    .map((b) => [b.start as number, b.end as number])
+  const tlMinYear = tlYears.length
+    ? Math.min(...tlYears.map((p) => Math.min(p[0], p[1])))
+    : null
+  const tlMaxYear = tlYears.length
+    ? Math.max(...tlYears.map((p) => Math.max(p[0], p[1])))
+    : null
+  const tlSvg = (() => {
+    if (tlMinYear == null || tlMaxYear == null) return null
+    const span = tlMaxYear - tlMinYear || 1
+    const xOf = (year: number) => TL_PAD + ((year - tlMinYear) / span) * (TL_W - 2 * TL_PAD)
+    const validBands = visibleBand.filter((b) => b.start != null && b.end != null)
+    const tlH = TL_TOP + validBands.length * TL_ROW + 14
+    return { span, xOf, validBands, tlH, minYear: tlMinYear, maxYear: tlMaxYear }
+  })()
   // Filter options = the type buckets actually present (canonical, incl. unknown).
   const filterOptions = Object.keys(typeCounts)
 
@@ -231,6 +266,28 @@ export default function RelationshipInsightPanel({
     exploreA && exploreB && exploreA !== exploreB
       ? filterEdgesBetweenPair(exploreA, exploreB, matrixRows)
       : []
+
+  // M23-A2 — Entity Comparison Table: a read-only aggregation of M16–M19 metrics
+  // (centrality degree / distinct relationship-type breadth / timeline bounds /
+  // overlap count) per entity. Pure presentation of EXISTING data — no new KG
+  // semantics, no inferred edges, no causal narrative.
+  const centralityMap: Record<string, number> = Object.fromEntries(centralityEntries)
+  const comparisonRows = (candidates ?? [])
+    .filter((c): c is Candidate & { gid: string } => !!c?.gid)
+    .map((c) => {
+      const gid = c.gid
+      const name = nameByGlobalId[gid] ?? c.name
+      const degree = centralityMap[gid] ?? 0
+      const typeSet = new Set(
+        matrixRows
+          .filter((r) => r.sourceGlobalId === gid || r.targetGlobalId === gid)
+          .map((r) => r.relationType),
+      )
+      const band = timelineBand.find((b) => b.gid === gid)
+      const hasTime = !!band && band.start != null && band.end != null
+      const overlapCount = band?.overlaps.length ?? 0
+      return { gid, name, degree, typeCount: typeSet.size, hasTime, overlapCount }
+    })
 
   // M18 — client-side export of the CURRENT view. Pure serialization comes
   // from insightExport.ts; this glue only creates a local Blob download or a
@@ -251,6 +308,18 @@ export default function RelationshipInsightPanel({
     const a = document.createElement('a')
     a.href = url
     a.download = 'relationship-insight.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  // M23-A3 — local-only CSV download (Blob only; nothing uploaded or stored).
+  const handleDownloadCsv = () => {
+    const csv = serializeInsightReportAsCsv(exportInput)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'relationship-insight.csv'
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -324,6 +393,24 @@ export default function RelationshipInsightPanel({
           onClick={() => handleCopy(serializeInsightReportAsMarkdown(exportInput))}
         >
           复制 Markdown 报告
+        </button>
+        {/* M23-A3 — local-only CSV copy/download. Same rip-export-btn base class
+            but a rip-csv modifier, so the M18 exact-match test (class=
+            "rip-export-btn" === 3) is unaffected while the >=4 substring match
+            still counts them. No upload, no third-party service. */}
+        <button
+          type="button"
+          className="rip-export-btn rip-csv"
+          onClick={() => handleCopy(serializeInsightReportAsCsv(exportInput))}
+        >
+          复制 CSV 报告
+        </button>
+        <button
+          type="button"
+          className="rip-export-btn rip-csv"
+          onClick={handleDownloadCsv}
+        >
+          下载 CSV
         </button>
         <span className="rip-export-note">仅本地生成，不上传。</span>
         {copyMsg === 'ok' && (
@@ -445,6 +532,41 @@ export default function RelationshipInsightPanel({
               </tbody>
             </table>
           </>
+        )}
+      </details>
+
+      {/* M23-A2 — Entity Comparison Table: read-only aggregation of M16–M19
+          metrics per entity. Pure presentation of EXISTING data; no new KG
+          semantics, no inference, no causal narrative. */}
+      <details className="rip-block">
+        <summary className="rip-block-summary">实体对比表（基于既有元数据）</summary>
+        {comparisonRows.length === 0 ? (
+          <p className="rip-muted">请选择实体以查看对比表。</p>
+        ) : (
+          <table className="rip-matrix rip-compare">
+            <thead>
+              <tr>
+                <th>实体</th>
+                <th>global_id</th>
+                <th>关系计数</th>
+                <th>关系类型数</th>
+                <th>有时间线</th>
+                <th>重叠数</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonRows.map((row) => (
+                <tr key={row.gid}>
+                  <td>{row.name}</td>
+                  <td className="rip-type">{row.gid}</td>
+                  <td>{row.degree}</td>
+                  <td>{row.typeCount}</td>
+                  <td>{row.hasTime ? '是' : '否'}</td>
+                  <td>{row.overlapCount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </details>
 
@@ -643,6 +765,45 @@ export default function RelationshipInsightPanel({
                 </select>
               </label>
             </div>
+              {/* M23-A1 — SVG timeline with VIEW-ONLY zoom/pan. The <g transform>
+                  only changes SVG coordinates; buildMultiEntityTimelineBand is NOT
+                  recomputed. Controls are view-only and never persisted. Pure
+                  visualization of EXISTING bounds (no inference / causal words). */}
+              {tlSvg && (
+                <>
+                  <div className="rip-controls" aria-label="timeline-zoom-pan">
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlZoom((z) => Math.min(4, z * 1.2))}>放大</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlZoom((z) => Math.max(0.4, z / 1.2))}>缩小</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlPan((p) => p - 40)}>左移</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlPan((p) => p + 40)}>右移</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => { setTlZoom(1); setTlPan(0) }}>重置视图</button>
+                  </div>
+                  <svg className="rip-timeline-svg" viewBox={`0 0 ${TL_W} ${tlSvg.tlH}`} width="100%" role="img" aria-label="时间线视图">
+                    <g transform={`translate(${tlPan},0) scale(${tlZoom},1)`}>
+                      <line x1={TL_PAD} y1={TL_TOP - 8} x2={TL_W - TL_PAD} y2={TL_TOP - 8} stroke="#999" strokeWidth="1" />
+                      {tlSvg.validBands.map((b, i) => {
+                        const y = TL_TOP + i * TL_ROW
+                        const x1 = tlSvg.xOf(b.start as number)
+                        const x2 = tlSvg.xOf(b.end as number)
+                        const rx = Math.min(x1, x2)
+                        const rw = Math.max(Math.abs(x2 - x1), 2)
+                        const ry = y + 4
+                        const rh = TL_ROW - 12
+                        const overlapFill = b.overlaps.length > 0 ? '#e8a33d' : '#5b8fb0'
+                        return (
+                          <g key={b.gid ?? b.name}>
+                            <rect x={rx} y={ry} width={rw} height={rh} rx="2" fill={overlapFill} opacity="0.85" />
+                            <text x={rx + 4} y={ry + rh / 2 + 4} fontSize="11" fill="#1a1a1a">{b.name}</text>
+                            <text x={rx + rw - 4} y={ry + rh / 2 + 4} fontSize="10" fill="#ffffff" textAnchor="end">{`${formatYear(b.start as number)} – ${formatYear(b.end as number)}`}</text>
+                          </g>
+                        )
+                      })}
+                    </g>
+                    <text x={TL_PAD} y={TL_TOP - 12} fontSize="10" fill="#666">{formatYear(tlSvg.minYear)}</text>
+                    <text x={TL_W - TL_PAD} y={TL_TOP - 12} fontSize="10" fill="#666" textAnchor="end">{formatYear(tlSvg.maxYear)}</text>
+                  </svg>
+                </>
+              )}
             <ul className="rip-timeline-band">
               {visibleBand.map((e) => {
                 const range = normalizeTimelineRange(e)
