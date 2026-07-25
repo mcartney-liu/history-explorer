@@ -2243,3 +2243,40 @@ body {
   padding: 0.1rem 0.5rem;
   font-size: 0.82rem;
 }
+
+/* M18 — view-only filter/sort controls (RelationshipInsightPanel). */
+.rip-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.55rem;
+  background: var(--he-surface);
+  border: 1px solid var(--he-border);
+  border-radius: 6px;
+}
+
+.rip-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--he-muted);
+  font-weight: 600;
+}
+
+.rip-control-select {
+  font: inherit;
+  font-weight: 500;
+  color: var(--he-accent-dark);
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  cursor: pointer;
+}
+
+.rip-control-select:focus-visible {
+  outline: 2px solid var(--he-accent);
+  outline-offset: 1px;
+}

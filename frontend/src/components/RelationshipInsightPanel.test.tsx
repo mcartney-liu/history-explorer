@@ -172,3 +172,86 @@ describe('RelationshipInsightPanel (M17 analytics)', () => {
     expect(html).not.toContain('导致')
   })
 })
+
+// ---------------------------------------------------------------------------
+// M18 (Interactive Controls) — view-only filter/sort controls.
+// ---------------------------------------------------------------------------
+
+describe('RelationshipInsightPanel (M18 controls)', () => {
+  const m18Relationships: EntityRelationship[] = [
+    {
+      type: 'conquered',
+      source: 'empire',
+      target: 'alex',
+      direction: 'outgoing',
+      other: { id: 'alex', name: '亚历山大', type: 'Person', global_id: 'greece:alex', topic: 'greece' },
+    },
+    {
+      type: 'inherited',
+      source: 'empire',
+      target: 'augustus',
+      direction: 'outgoing',
+      other: { id: 'augustus', name: '奥古斯都', type: 'Person', global_id: 'rome:augustus', topic: 'rome' },
+    },
+  ]
+
+  it('renders matrix filter and sort controls with all/original defaults', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={m18Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('rip-controls')
+    expect(html).toContain('筛选类型')
+    expect(html).toContain('全部类型')
+    expect(html).toContain('按数量排序')
+    expect(html).toContain('原始顺序')
+    // Filter options mirror the type buckets actually present.
+    expect(html).toContain('<option value="conquered">')
+    expect(html).toContain('<option value="inherited">')
+  })
+
+  it('renders timeline band sort controls (start/name, asc/desc)', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
+    )
+    expect(html).toContain('排序依据')
+    expect(html).toContain('起始时间')
+    expect(html).toContain('名称')
+    expect(html).toContain('升序')
+  })
+
+  it('default view still shows every matrix row (controls are additive, not destructive)', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={m18Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).toContain('亚历山大')
+    expect(html).toContain('奥古斯都')
+    expect(html).toContain('conquered')
+    expect(html).toContain('inherited')
+  })
+
+  it('controls introduce no persistence or inference language', () => {
+    // Pair rome+alex has an existing edge, so the M16 "不做推断" disclaimer for
+    // empty pairs is absent — any 推断/发现/保存 here would come from M18 controls.
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[rome, alex]}
+        relationships={m18Relationships}
+        timeMap={timeMap}
+        mainGlobalId="rome:empire"
+      />,
+    )
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+    expect(html).not.toContain('保存')
+  })
+})
