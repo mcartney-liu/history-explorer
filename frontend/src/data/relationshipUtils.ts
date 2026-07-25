@@ -453,3 +453,139 @@ export function buildMultiEntityTimelineBand(
   }
   return entries
 }
+
+// ---------------------------------------------------------------------------
+// M18 (Relationship Insight: Interactive Controls & Export): pure view helpers.
+// ---------------------------------------------------------------------------
+//
+// SCOPE (frozen): still a PURE data-inspection layer. The helpers below only
+// FILTER, SORT, and NORMALIZE rows/bands that were already built by the M17
+// functions above. They introduce NO new KG semantics, NO inferred edges, NO
+// causal reasoning, NO persistence, and NO network/AI access. Deterministic:
+// same input -> same output, inputs are never mutated.
+
+/**
+ * Sentinel filter value meaning "no filtering, show every row".
+ * Kept as an exported constant so the panel and the helpers agree on it.
+ */
+export const RELATIONSHIP_FILTER_ALL = 'all'
+
+/**
+ * Normalize a raw relationship-type filter string coming from a UI control.
+ * - empty / null / undefined / 'all' (any casing, padded) -> RELATIONSHIP_FILTER_ALL
+ * - a value inside the frozen 18-type vocabulary -> that canonical value
+ * - anything else (including 'unknown' itself) -> 'unknown' bucket, consistent
+ *   with how aggregateRelationshipTypes() buckets out-of-vocabulary types.
+ * Pure string normalization; no new semantics are introduced.
+ */
+export function normalizeRelationshipFilter(
+  input?: string | null,
+): string {
+  if (typeof input !== 'string') return RELATIONSHIP_FILTER_ALL
+  const v = input.trim().toLowerCase()
+  if (v === '' || v === RELATIONSHIP_FILTER_ALL) return RELATIONSHIP_FILTER_ALL
+  if (RELATIONSHIP_TYPES.has(v)) return v
+  return 'unknown'
+}
+
+/**
+ * Return the subset of matrix rows whose relationType matches the (normalized)
+ * filter. `'all'` returns a shallow copy of every row; `'unknown'` matches rows
+ * whose type falls outside the frozen 18-type vocabulary. Rows are never
+ * mutated and row order is preserved (this is a view filter, not a ranking).
+ */
+export function filterRelationshipMatrixByType(
+  rows: RelationshipMatrixRow[],
+  filter?: string | null,
+): RelationshipMatrixRow[] {
+  const f = normalizeRelationshipFilter(filter)
+  const all = rows ?? []
+  if (f === RELATIONSHIP_FILTER_ALL) return all.slice()
+  if (f === 'unknown') {
+    return all.filter((r) => !RELATIONSHIP_TYPES.has(r.relationType))
+  }
+  return all.filter((r) => r.relationType === f)
+}
+
+/**
+ * Sort matrix rows by how frequent each row's relationship-type bucket is,
+ * using the counts produced by aggregateRelationshipTypes(). Out-of-vocabulary
+ * types read the `unknown` bucket, mirroring the aggregation. The sort is
+ * STABLE: rows with equal counts keep their original relative order. Returns a
+ * new array; the input array and its rows are never mutated.
+ */
+export function sortRelationshipMatrixByCount(
+  rows: RelationshipMatrixRow[],
+  counts: Record<string, number>,
+  dir: 'asc' | 'desc' = 'desc',
+): RelationshipMatrixRow[] {
+  const all = rows ?? []
+  const countOf = (r: RelationshipMatrixRow): number => {
+    const key = RELATIONSHIP_TYPES.has(r.relationType) ? r.relationType : 'unknown'
+    return counts?.[key] ?? 0
+  }
+  const sign = dir === 'asc' ? 1 : -1
+  return all
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => {
+      const d = countOf(a.row) - countOf(b.row)
+      if (d !== 0) return d * sign
+      return a.index - b.index // stable tie-break: original order
+    })
+    .map((e) => e.row)
+}
+
+/**
+ * Sort timeline band entries for display. `by: 'start'` (default) orders by
+ * the numeric start bound; `by: 'name'` orders by code-point comparison of the
+ * entity name (locale-independent, deterministic). Entries with a null sort
+ * key are always placed LAST regardless of direction (honest "no data" stays
+ * out of the way, never fabricated into a position). Stable; returns a new
+ * array without mutating the input.
+ */
+export function sortTimelineBands(
+  bands: TimelineBandEntry[],
+  opts?: { by?: 'start' | 'name'; dir?: 'asc' | 'desc' },
+): TimelineBandEntry[] {
+  const by = opts?.by ?? 'start'
+  const dir = opts?.dir ?? 'asc'
+  const sign = dir === 'asc' ? 1 : -1
+  const all = bands ?? []
+  return all
+    .map((band, index) => ({ band, index }))
+    .sort((a, b) => {
+      if (by === 'name') {
+        const an = a.band.name ?? ''
+        const bn = b.band.name ?? ''
+        if (an < bn) return -1 * sign
+        if (an > bn) return 1 * sign
+        return a.index - b.index
+      }
+      const as = a.band.start
+      const bs = b.band.start
+      if (as == null && bs == null) return a.index - b.index
+      if (as == null) return 1 // null bounds always last
+      if (bs == null) return -1
+      if (as !== bs) return (as - bs) * sign
+      return a.index - b.index
+    })
+    .map((e) => e.band)
+}
+
+/**
+ * Normalize a band's `{ start, end }` bounds for display: if BOTH bounds are
+ * present and reversed (start > end), they are swapped; otherwise the bounds
+ * are passed through unchanged. A missing bound stays null — this helper never
+ * invents a date, never widens a range, and attaches no interpretation.
+ * Returns a fresh object; the input band is not mutated.
+ */
+export function normalizeTimelineRange(
+  band: TimelineBandEntry,
+): { start: number | null; end: number | null } {
+  const start = band?.start ?? null
+  const end = band?.end ?? null
+  if (start != null && end != null && start > end) {
+    return { start: end, end: start }
+  }
+  return { start, end }
+}

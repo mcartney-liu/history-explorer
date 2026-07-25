@@ -13,6 +13,12 @@ import {
   buildRelationshipTypeMatrix,
   buildMultiEntityTimelineBand,
   RELATIONSHIP_TYPES,
+  RELATIONSHIP_FILTER_ALL,
+  normalizeRelationshipFilter,
+  filterRelationshipMatrixByType,
+  sortRelationshipMatrixByCount,
+  sortTimelineBands,
+  normalizeTimelineRange,
   type RelationshipMatrixRow,
   type TimelineBandEntry,
 } from './relationshipUtils'
@@ -330,5 +336,155 @@ describe('buildMultiEntityTimelineBand', () => {
     expect(unknown.start).toBeNull()
     expect(unknown.end).toBeNull()
     expect(unknown.overlaps).toEqual([])
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M18 — interactive control helpers (pure filter / sort / normalize).
+// ---------------------------------------------------------------------------
+
+const mkRow = (relationType: string, target: string): RelationshipMatrixRow => ({
+  source: '罗马帝国',
+  sourceGlobalId: 'rome:empire',
+  relationType,
+  target,
+  targetGlobalId: `x:${target}`,
+})
+
+describe('normalizeRelationshipFilter', () => {
+  it('maps empty / null / undefined / "all" (any casing) to the ALL sentinel', () => {
+    expect(normalizeRelationshipFilter()).toBe(RELATIONSHIP_FILTER_ALL)
+    expect(normalizeRelationshipFilter(null)).toBe(RELATIONSHIP_FILTER_ALL)
+    expect(normalizeRelationshipFilter('')).toBe(RELATIONSHIP_FILTER_ALL)
+    expect(normalizeRelationshipFilter('  ALL ')).toBe(RELATIONSHIP_FILTER_ALL)
+  })
+
+  it('passes through canonical vocabulary values (trimmed, lowercased)', () => {
+    expect(normalizeRelationshipFilter('conquered')).toBe('conquered')
+    expect(normalizeRelationshipFilter('  Influenced ')).toBe('influenced')
+    for (const t of RELATIONSHIP_TYPES) {
+      expect(normalizeRelationshipFilter(t)).toBe(t)
+    }
+  })
+
+  it('buckets out-of-vocabulary values as unknown (consistent with aggregation)', () => {
+    expect(normalizeRelationshipFilter('conquered_by')).toBe('unknown')
+    expect(normalizeRelationshipFilter('unknown')).toBe('unknown')
+    expect(normalizeRelationshipFilter('nonsense')).toBe('unknown')
+  })
+})
+
+describe('filterRelationshipMatrixByType', () => {
+  const rows: RelationshipMatrixRow[] = [
+    mkRow('conquered', '高卢'),
+    mkRow('ruled', '奥古斯都'),
+    mkRow('conquered_by', '西哥特'),
+    mkRow('conquered', '埃及'),
+  ]
+
+  it('"all" returns a shallow copy of every row in original order', () => {
+    const out = filterRelationshipMatrixByType(rows, RELATIONSHIP_FILTER_ALL)
+    expect(out).toEqual(rows)
+    expect(out).not.toBe(rows) // copy, not the same array
+  })
+
+  it('filters by a canonical type', () => {
+    const out = filterRelationshipMatrixByType(rows, 'conquered')
+    expect(out.map((r) => r.target)).toEqual(['高卢', '埃及'])
+  })
+
+  it('"unknown" matches only out-of-vocabulary rows', () => {
+    const out = filterRelationshipMatrixByType(rows, 'unknown')
+    expect(out.map((r) => r.relationType)).toEqual(['conquered_by'])
+  })
+
+  it('does not mutate the input array', () => {
+    const before = rows.map((r) => ({ ...r }))
+    filterRelationshipMatrixByType(rows, 'conquered')
+    expect(rows).toEqual(before)
+  })
+})
+
+describe('sortRelationshipMatrixByCount', () => {
+  const rows: RelationshipMatrixRow[] = [
+    mkRow('ruled', '奥古斯都'),
+    mkRow('conquered', '高卢'),
+    mkRow('conquered_by', '西哥特'),
+    mkRow('conquered', '埃及'),
+  ]
+  const counts = { conquered: 2, ruled: 1, unknown: 1 }
+
+  it('sorts descending by bucket count by default (stable within ties)', () => {
+    const out = sortRelationshipMatrixByCount(rows, counts)
+    expect(out.map((r) => r.target)).toEqual(['高卢', '埃及', '奥古斯都', '西哥特'])
+  })
+
+  it('sorts ascending when requested, keeping original order within ties', () => {
+    const out = sortRelationshipMatrixByCount(rows, counts, 'asc')
+    // ruled(1) and conquered_by->unknown(1) tie: original order 奥古斯都 then 西哥特.
+    expect(out.map((r) => r.target)).toEqual(['奥古斯都', '西哥特', '高卢', '埃及'])
+  })
+
+  it('reads the unknown bucket for out-of-vocabulary types and treats missing counts as 0', () => {
+    const out = sortRelationshipMatrixByCount(rows, { conquered: 2 }, 'desc')
+    expect(out[0].relationType).toBe('conquered')
+    // rows with no count data (0) keep original relative order at the end.
+    expect(out.slice(2).map((r) => r.target)).toEqual(['奥古斯都', '西哥特'])
+  })
+
+  it('does not mutate the input', () => {
+    const before = rows.map((r) => ({ ...r }))
+    sortRelationshipMatrixByCount(rows, counts, 'asc')
+    expect(rows).toEqual(before)
+  })
+})
+
+describe('sortTimelineBands', () => {
+  const bands: TimelineBandEntry[] = [
+    { name: '罗马帝国', gid: 'rome:empire', start: -27, end: 476, overlaps: [] },
+    { name: '秦始皇', gid: 'china:qin', start: -259, end: -210, overlaps: [] },
+    { name: '未知', gid: 'x:u', start: null, end: null, overlaps: [] },
+    { name: '亚历山大', gid: 'greece:alex', start: -356, end: -323, overlaps: [] },
+  ]
+
+  it('sorts by start ascending by default, null bounds always last', () => {
+    const out = sortTimelineBands(bands)
+    expect(out.map((b) => b.name)).toEqual(['亚历山大', '秦始皇', '罗马帝国', '未知'])
+  })
+
+  it('sorts by start descending, null bounds still last', () => {
+    const out = sortTimelineBands(bands, { by: 'start', dir: 'desc' })
+    expect(out.map((b) => b.name)).toEqual(['罗马帝国', '秦始皇', '亚历山大', '未知'])
+  })
+
+  it('sorts by name using deterministic code-point comparison', () => {
+    const out = sortTimelineBands(bands, { by: 'name', dir: 'asc' })
+    const expected = [...bands.map((b) => b.name)].sort()
+    expect(out.map((b) => b.name)).toEqual(expected)
+  })
+
+  it('does not mutate the input array', () => {
+    const namesBefore = bands.map((b) => b.name)
+    sortTimelineBands(bands, { by: 'start', dir: 'desc' })
+    expect(bands.map((b) => b.name)).toEqual(namesBefore)
+  })
+})
+
+describe('normalizeTimelineRange', () => {
+  it('passes well-formed bounds through unchanged', () => {
+    const band: TimelineBandEntry = { name: 'a', start: -259, end: -210, overlaps: [] }
+    expect(normalizeTimelineRange(band)).toEqual({ start: -259, end: -210 })
+  })
+
+  it('swaps reversed bounds without widening the range', () => {
+    const band: TimelineBandEntry = { name: 'b', start: 476, end: -27, overlaps: [] }
+    expect(normalizeTimelineRange(band)).toEqual({ start: -27, end: 476 })
+  })
+
+  it('keeps null bounds null (no fabrication) and never mutates the band', () => {
+    const band: TimelineBandEntry = { name: 'c', start: null, end: 100, overlaps: [] }
+    expect(normalizeTimelineRange(band)).toEqual({ start: null, end: 100 })
+    expect(band.start).toBeNull()
+    expect(band.end).toBe(100)
   })
 })
