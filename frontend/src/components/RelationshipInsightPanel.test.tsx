@@ -347,3 +347,130 @@ describe('M19 — Relationship Centrality & Pair Explorer', () => {
     expect(html).toContain('希腊的亚历山大')
   })
 })
+
+// ---------------------------------------------------------------------------
+// M20 (Relationship Connectivity / Path Explorer) — presentation tests.
+// The panel is a PURE VIEW; it must never fetch and must only surface EXISTING
+// metadata. No causal/inferred/discovery language is allowed in the output.
+// ---------------------------------------------------------------------------
+
+describe('M20 — Relationship Connectivity Explorer', () => {
+  // The connectivity explorer reads ONLY the EXISTING relationship matrix
+  // (RelationshipMatrixRow[]), independent of the candidate set. These tests
+  // therefore pass candidates={[]} so the per-pair section (which may surface
+  // the pre-existing "不做推断" muted note) is suppressed, and supply an
+  // explicit nameByGlobalId map so path endpoints are labelled.
+
+  // rome -> alex -> cyrus: a 2-hop chain built from EXISTING edges only. Each
+  // rel.source carries the real GLOBAL id of the edge's start (no mainGlobalId
+  // override) so the matrix keeps the correct source global ids for traversal.
+  const m20Relationships: EntityRelationship[] = [
+    {
+      type: 'conquered',
+      source: 'rome:empire',
+      target: 'alex',
+      direction: 'outgoing',
+      other: { id: 'alex', name: '亚历山大', type: 'Person', global_id: 'greece:alex', topic: 'greece' },
+    },
+    {
+      type: 'traded_with',
+      source: 'greece:alex',
+      target: 'cyrus',
+      direction: 'outgoing',
+      other: { id: 'cyrus', name: '居鲁士', type: 'Person', global_id: 'persia:cyrus', topic: 'persia' },
+    },
+  ]
+
+  const m20NameByGlobalId: Record<string, string> = {
+    'rome:empire': '罗马帝国',
+    'greece:alex': '亚历山大',
+    'persia:cyrus': '居鲁士',
+  }
+
+  it('renders the connectivity explorer block with source/target/hops controls and a boundary disclaimer', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={m20Relationships}
+        timeMap={timeMap}
+        nameByGlobalId={m20NameByGlobalId}
+      />,
+    )
+    expect(html).toContain('关系连通性探查')
+    expect(html).toContain('源实体')
+    expect(html).toContain('目标实体')
+    expect(html).toContain('最大跳数')
+    expect(html).toContain('3 跳')
+    // The disclaimer must state the panel only visualises EXISTING edges and
+    // adds no connections / explanations — WITHOUT using the banned words
+    // 推断 / 发现 / 因果 (per the frozen Relationship Layer boundary).
+    expect(html).toContain('本模块仅以图形方式呈现已存在的关系边所形成的路径')
+  })
+
+  it('never emits 推断 / 发现 / 因果 anywhere in the rendered output', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={m20Relationships}
+        timeMap={timeMap}
+        nameByGlobalId={m20NameByGlobalId}
+      />,
+    )
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+    expect(html).not.toContain('因果')
+  })
+
+  it('renders a path chain over existing edges (node —relation→ node) when endpoints are connected', () => {
+    // gids are named so the SORTED default selection (smallest = source) has an
+    // outgoing edge to the next gid: 'a:start' -> 'z:end'. Deterministic.
+    const rels: EntityRelationship[] = [
+      {
+        type: 'related_to',
+        source: 'a:start',
+        target: 'end',
+        direction: 'outgoing',
+        other: { id: 'end', name: '终点', type: 'X', global_id: 'z:end', topic: 't' },
+      },
+    ]
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={rels}
+        timeMap={timeMap}
+        nameByGlobalId={{ 'a:start': '起点', 'z:end': '终点' }}
+      />,
+    )
+    expect(html).toContain('rip-path')
+    expect(html).toContain('起点')
+    expect(html).toContain('终点')
+    expect(html).toContain('related_to')
+    // No invented connection language.
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+    expect(html).not.toContain('因果')
+  })
+
+  it('reports no existing-edge path within the hop bound when endpoints are unconnected', () => {
+    // Smallest gid 'a:first' is a SINK (the only edge points INTO it), so the
+    // sorted default source has no outgoing edge -> no path to 'z:second'.
+    const rels: EntityRelationship[] = [
+      {
+        type: 'before',
+        source: 'z:second',
+        target: 'first',
+        direction: 'outgoing',
+        other: { id: 'first', name: '甲', type: 'X', global_id: 'a:first', topic: 't' },
+      },
+    ]
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={rels}
+        timeMap={timeMap}
+        nameByGlobalId={{ 'a:first': '甲', 'z:second': '乙' }}
+      />,
+    )
+    expect(html).toContain('没有已存在的边所能组成的路径')
+  })
+})

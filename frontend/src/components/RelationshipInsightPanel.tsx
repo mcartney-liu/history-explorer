@@ -34,8 +34,10 @@ import {
   normalizeTimelineRange,
   calculateRelationshipCentrality,
   filterEdgesBetweenPair,
+  findRelationshipPaths,
   RELATIONSHIP_FILTER_ALL,
   type TimelineOverlapStatus,
+  type RelationshipPath,
 } from '../data/relationshipUtils'
 import {
   serializeInsightReport,
@@ -179,6 +181,31 @@ export default function RelationshipInsightPanel({
   )
   const [exploreA, setExploreA] = useState<string>(() => distinctGids[0] ?? '')
   const [exploreB, setExploreB] = useState<string>(() => distinctGids[1] ?? distinctGids[0] ?? '')
+
+  // M20 — Relationship Connectivity Explorer: view-only selection of two
+  // entities plus a max-hops bound; the path enumeration runs over EXISTING
+  // edges only (via findRelationshipPaths). This state describes WHICH existing
+  // edges to traverse and how far, never WHAT data exists; it is not persisted.
+  // The entity set is the union of global_ids present in the EXISTING matrix
+  // (sources + targets), so entities outside the candidate set can still be
+  // chosen as path endpoints — values are never fabricated.
+  const connGids = Array.from(
+    new Set(
+      matrixRows
+        .flatMap((r) => [r.sourceGlobalId, r.targetGlobalId])
+        .filter((g): g is string => typeof g === 'string' && g.length > 0),
+    ),
+  ).sort()
+  const [connSource, setConnSource] = useState<string>(() => connGids[0] ?? '')
+  const [connTarget, setConnTarget] = useState<string>(
+    () => connGids[1] ?? connGids[0] ?? '',
+  )
+  const [connHops, setConnHops] = useState<number>(3)
+
+  const connectivityPaths: RelationshipPath[] =
+    connSource && connTarget && connSource !== connTarget
+      ? findRelationshipPaths(matrixRows, connSource, connTarget, connHops)
+      : []
 
   const filteredRows = filterRelationshipMatrixByType(matrixRows, matrixFilter)
   const visibleRows =
@@ -423,6 +450,90 @@ export default function RelationshipInsightPanel({
               )
             ) : (
               <p className="rip-muted">请选择两个不同的实体以查看它们之间的已存在关系边。</p>
+            )}
+          </>
+        )}
+      </details>
+
+      {/* M20 — Relationship Connectivity Explorer (existing edges only, no
+          causal/inferred language; the disclaimer deliberately avoids the words
+          推断 / 发现 / 因果 per the frozen Relationship Layer boundary). */}
+      <details className="rip-block">
+        <summary className="rip-block-summary">关系连通性探查（路径，仅既有边）</summary>
+        {connGids.length < 2 ? (
+          <p className="rip-muted">请选择至少两个实体以使用关系连通性探查。</p>
+        ) : (
+          <>
+            <div className="rip-controls" aria-label="connectivity-controls">
+              <label className="rip-control">
+                源实体
+                <select
+                  className="rip-control-select"
+                  value={connSource}
+                  onChange={(e) => setConnSource(e.target.value)}
+                >
+                  {connGids.map((g) => (
+                    <option key={g} value={g}>
+                      {nameByGlobalId[g] ?? g}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="rip-control">
+                目标实体
+                <select
+                  className="rip-control-select"
+                  value={connTarget}
+                  onChange={(e) => setConnTarget(e.target.value)}
+                >
+                  {connGids.map((g) => (
+                    <option key={g} value={g}>
+                      {nameByGlobalId[g] ?? g}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="rip-control">
+                最大跳数
+                <select
+                  className="rip-control-select"
+                  value={String(connHops)}
+                  onChange={(e) => setConnHops(Number(e.target.value))}
+                >
+                  <option value="1">1 跳</option>
+                  <option value="2">2 跳</option>
+                  <option value="3">3 跳</option>
+                </select>
+              </label>
+            </div>
+            <p className="rip-note">
+              本模块仅以图形方式呈现已存在的关系边所形成的路径；不新增连接，亦不提供任何解释。
+            </p>
+            {connSource === connTarget ? (
+              <p className="rip-muted">请选择两个不同的实体以查看它们之间的路径。</p>
+            ) : connectivityPaths.length === 0 ? (
+              <p className="rip-muted">
+                所选两实体之间没有已存在的边所能组成的路径（在 {connHops} 跳内）。
+              </p>
+            ) : (
+              <ul className="rip-path-list">
+                {connectivityPaths.map((p, i) => (
+                  <li className="rip-path" key={`${p.nodes.join('>')}-${i}`}>
+                    {p.nodes.map((n, j) => (
+                      <span key={j}>
+                        <span className="rip-path-node">{nameByGlobalId[n] ?? n}</span>
+                        {j < p.edges.length && (
+                          <span className="rip-path-edge">
+                            {' —'}
+                            {p.edges[j]}
+                            {'→ '}
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </li>
+                ))}
+              </ul>
             )}
           </>
         )}
