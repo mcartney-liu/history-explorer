@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM22] - 2026-07-26 (Project Release — M22)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Insight Share / Copy Enhancement + RelationshipPathGraph Layout Toggle (M22). A pure-frontend additive release over the M21 graph and the M18 export layer — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. Everything surfaces EXISTING relationship metadata only; nothing is fetched, inferred, or uploaded:
+
+- `frontend/src/data/insightExport.ts` (extended): two new pure, deterministic serializers — `serializeInsightReportAsMarkdown` (Markdown of the SAME insight view already rendered by the panel; alphabetical type-count ordering, same input → same bytes, no timestamp/randomness/privacy/network) and `serializeRelationshipPathsAsText` (plain-text `A — rel → B` chain over EXISTING M20 path edges only; multiple paths joined by newlines, never invents/infers a relationship). Both are export-only helpers with no AI, no network, no persistence.
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended, A3): local-only "复制 Markdown 报告" and "复制关系路径文本" buttons using `navigator.clipboard` (with a `document.execCommand` fallback and a clear success/failure status); no upload, no account binding, no third-party clipboard service. Centrality / Pair Explorer / Timeline / Connectivity / Graph blocks are unchanged.
+- `frontend/src/components/RelationshipPathGraph.tsx` (extended, A4): a layout toggle (Horizontal Chain / Compact Grid) that ONLY changes SVG coordinates — the `RelationshipPath[]` data, `findRelationshipPaths()`, and every existing edge are untouched; no graph algorithm, no edge creation, no inferred connection. Hover-to-highlight and empty state preserved.
+- `frontend/src/data/insightExport.test.ts` / `RelationshipPathGraph.test.tsx` / `RelationshipInsightPanel.test.tsx` (extended): unit + presentation tests for the Markdown/path-text serializers (Markdown output, multi-entity report, path text, empty data, deterministic, no 推断 / 发现 / 因果 / 导致) and the layout toggle (default horizontal, grid layout, toggle reflects state, data consistency, hover structure preserved, no banned words). Existing "no fetch / no inference" assertions unchanged.
+
+Tests: +19 (insightExport ×10, RelationshipPathGraph ×6, panel A3 ×3). Frontend 496 passed / backend 162 passed; build clean; freeze-check EXIT 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM21] - 2026-07-25 (Project Release — M21)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.

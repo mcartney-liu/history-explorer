@@ -276,7 +276,8 @@ describe('RelationshipInsightPanel (M18 export)', () => {
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     const buttons = html.match(/class="rip-export-btn"/g) ?? []
-    expect(buttons).toHaveLength(2)
+    expect(buttons).toHaveLength(3)
+    expect(html).toContain('复制 Markdown 报告')
     expect(html).not.toContain('<form')
     expect(html).not.toContain('href="http')
   })
@@ -503,5 +504,75 @@ describe('M20 — Relationship Connectivity Explorer', () => {
     expect(html).not.toContain('推断')
     expect(html).not.toContain('发现')
     expect(html).not.toContain('因果')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M22 (Insight Share / Copy Enhancement — A3) — local-only clipboard copy.
+// ---------------------------------------------------------------------------
+
+describe('M22 — Insight Share / Copy Enhancement (A3)', () => {
+  const m22Relationships: EntityRelationship[] = [
+    {
+      type: 'conquered',
+      source: 'rome:empire',
+      target: 'alex',
+      direction: 'outgoing',
+      other: { id: 'alex', name: '亚历山大', type: 'Person', global_id: 'greece:alex', topic: 'greece' },
+    },
+    {
+      type: 'traded_with',
+      source: 'greece:alex',
+      target: 'cyrus',
+      direction: 'outgoing',
+      other: { id: 'cyrus', name: '居鲁士', type: 'Person', global_id: 'persia:cyrus', topic: 'persia' },
+    },
+  ]
+  const m22NameByGlobalId: Record<string, string> = {
+    'rome:empire': '罗马帝国',
+    'greece:alex': '亚历山大',
+    'persia:cyrus': '居鲁士',
+  }
+
+  it('renders a local-only Copy Markdown Report button (no upload / no links out)', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
+    )
+    expect(html).toContain('rip-export')
+    expect(html).toContain('复制 Markdown 报告')
+    expect(html).toContain('class="rip-export-btn"')
+    expect(html).not.toContain('<form')
+    expect(html).not.toContain('href="http')
+  })
+
+  it('renders a Copy Relationship Path Text button when connectivity paths exist', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={m22Relationships}
+        timeMap={timeMap}
+        nameByGlobalId={m22NameByGlobalId}
+      />,
+    )
+    expect(html).toContain('复制关系路径文本')
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+    expect(html).not.toContain('因果')
+  })
+
+  it('copy buttons are plain <button type="button"> (no form submit, no links out, no third-party service)', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={m22Relationships}
+        timeMap={timeMap}
+        nameByGlobalId={m22NameByGlobalId}
+      />,
+    )
+    const buttons = html.match(/rip-export-btn/g) ?? []
+    expect(buttons.length).toBeGreaterThanOrEqual(4)
+    expect(html).not.toContain('<form')
+    expect(html).not.toContain('href="http')
+    expect(html).not.toContain('第三方')
   })
 })
