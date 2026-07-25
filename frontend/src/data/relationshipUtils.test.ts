@@ -19,6 +19,8 @@ import {
   sortRelationshipMatrixByCount,
   sortTimelineBands,
   normalizeTimelineRange,
+  calculateRelationshipCentrality,
+  filterEdgesBetweenPair,
   type RelationshipMatrixRow,
   type TimelineBandEntry,
 } from './relationshipUtils'
@@ -486,5 +488,135 @@ describe('normalizeTimelineRange', () => {
     expect(normalizeTimelineRange(band)).toEqual({ start: null, end: 100 })
     expect(band.start).toBeNull()
     expect(band.end).toBe(100)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M19 (Relationship Centrality / Pair Explorer) — pure function tests.
+// Deterministic, no React, no fetch. These helpers only read an existing
+// RelationshipMatrixRow[]; they never invent edges or attach meaning.
+// ---------------------------------------------------------------------------
+
+const m19Rows: RelationshipMatrixRow[] = [
+  {
+    source: '罗马帝国',
+    sourceGlobalId: 'rome:empire',
+    relationType: 'contemporary_of',
+    target: '亚历山大',
+    targetGlobalId: 'greece:alex',
+  },
+  {
+    source: '罗马帝国',
+    sourceGlobalId: 'rome:empire',
+    relationType: 'conquered_by',
+    target: '奥古斯都',
+    targetGlobalId: 'rome:augustus',
+  },
+  {
+    source: '罗马帝国',
+    sourceGlobalId: 'rome:empire',
+    relationType: 'related_to',
+    target: '秦始皇',
+    targetGlobalId: 'china:qin',
+  },
+]
+
+describe('calculateRelationshipCentrality (M19)', () => {
+  it('counts each endpoint as one incident edge (undirected degree)', () => {
+    const c = calculateRelationshipCentrality(m19Rows)
+    expect(c['rome:empire']).toBe(3)
+    expect(c['greece:alex']).toBe(1)
+    expect(c['rome:augustus']).toBe(1)
+    expect(c['china:qin']).toBe(1)
+  })
+
+  it('skips a row endpoint with a missing global_id (never fabricated)', () => {
+    const partial: RelationshipMatrixRow[] = [
+      {
+        source: '罗马帝国',
+        sourceGlobalId: 'rome:empire',
+        relationType: 'related_to',
+        target: '秦始皇',
+        targetGlobalId: 'china:qin',
+      },
+      {
+        source: '罗马帝国',
+        sourceGlobalId: undefined,
+        relationType: 'related_to',
+        target: '亚历山大',
+        targetGlobalId: 'greece:alex',
+      },
+      {
+        source: '罗马帝国',
+        sourceGlobalId: 'rome:empire',
+        relationType: 'related_to',
+        target: '秦始皇',
+        targetGlobalId: '',
+      },
+    ]
+    const c = calculateRelationshipCentrality(partial)
+    // Present endpoints still count (rome:empire appears in 2 rows, china:qin
+    // and greece:alex in 1 each).
+    expect(c['rome:empire']).toBe(2)
+    expect(c['china:qin']).toBe(1)
+    expect(c['greece:alex']).toBe(1)
+    // A missing endpoint is never turned into a bogus '' key.
+    expect(c['']).toBeUndefined()
+  })
+
+  it('returns {} for empty or undefined input', () => {
+    expect(calculateRelationshipCentrality([])).toEqual({})
+    expect(calculateRelationshipCentrality(undefined as unknown as RelationshipMatrixRow[])).toEqual({})
+  })
+
+  it('does not mutate the input array', () => {
+    const snapshot = JSON.stringify(m19Rows)
+    calculateRelationshipCentrality(m19Rows)
+    expect(JSON.stringify(m19Rows)).toBe(snapshot)
+  })
+})
+
+describe('filterEdgesBetweenPair (M19)', () => {
+  const rows: RelationshipMatrixRow[] = [
+    {
+      source: '罗马帝国',
+      sourceGlobalId: 'rome:empire',
+      relationType: 'contemporary_of',
+      target: '亚历山大',
+      targetGlobalId: 'greece:alex',
+    },
+    {
+      source: '罗马帝国',
+      sourceGlobalId: 'rome:empire',
+      relationType: 'contemporary_of',
+      target: '奥古斯都',
+      targetGlobalId: 'rome:augustus',
+    },
+  ]
+
+  it('returns only the rows whose two endpoints are exactly A and B (either direction)', () => {
+    const fwd = filterEdgesBetweenPair('rome:empire', 'greece:alex', rows)
+    expect(fwd).toHaveLength(1)
+    expect(fwd[0].targetGlobalId).toBe('greece:alex')
+    const rev = filterEdgesBetweenPair('greece:alex', 'rome:empire', rows)
+    expect(rev).toHaveLength(1)
+    expect(rev[0].targetGlobalId).toBe('greece:alex')
+  })
+
+  it('returns [] when no edge connects the pair', () => {
+    expect(filterEdgesBetweenPair('rome:augustus', 'greece:alex', rows)).toHaveLength(0)
+  })
+
+  it('returns [] for empty, equal, or missing gids', () => {
+    expect(filterEdgesBetweenPair('rome:empire', 'rome:empire', rows)).toHaveLength(0)
+    expect(filterEdgesBetweenPair('', 'greece:alex', rows)).toHaveLength(0)
+    expect(filterEdgesBetweenPair('rome:empire', '', rows)).toHaveLength(0)
+  })
+
+  it('returns [] for empty or undefined rows and never invents edges', () => {
+    expect(filterEdgesBetweenPair('rome:empire', 'greece:alex', [])).toHaveLength(0)
+    expect(
+      filterEdgesBetweenPair('rome:empire', 'greece:alex', undefined as unknown as RelationshipMatrixRow[]),
+    ).toHaveLength(0)
   })
 })

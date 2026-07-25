@@ -589,3 +589,68 @@ export function normalizeTimelineRange(
   }
   return { start, end }
 }
+
+// ---------------------------------------------------------------------------
+// M19 (Relationship Centrality / Pair Explorer): pure inspectors (additive).
+// ---------------------------------------------------------------------------
+//
+// SCOPE (frozen): still a PURE data-inspection layer. The two helpers below
+// operate ONLY on RelationshipMatrixRow[] that were already built by
+// buildRelationshipTypeMatrix(). They introduce NO new KG semantics, NO
+// invented edges, NO causal reasoning, NO network/AI. Deterministic: same
+// input -> same output, inputs are never mutated, no Date/Math.random.
+
+export type RelationshipCentrality = Record<string, number>
+
+/**
+ * Degree centrality over an EXISTING relationship matrix. For every row, each
+ * endpoint global_id (`sourceGlobalId`, `targetGlobalId`) that is present gets
+ * +1. This is an undirected incident-edge count over the metadata already on
+ * the client — it attaches no meaning, cause, or narrative to any edge. Rows
+ * with a missing endpoint global_id are skipped for that endpoint only (the
+ * value is never fabricated). Returns a fresh object; the input array and its
+ * rows are never mutated.
+ */
+export function calculateRelationshipCentrality(
+  rows: RelationshipMatrixRow[],
+): RelationshipCentrality {
+  const counts: RelationshipCentrality = {}
+  for (const row of rows ?? []) {
+    if (!row) continue
+    const endpoints = [row.sourceGlobalId, row.targetGlobalId]
+    for (const gid of endpoints) {
+      if (typeof gid === 'string' && gid.length > 0) {
+        counts[gid] = (counts[gid] ?? 0) + 1
+      }
+    }
+  }
+  return counts
+}
+
+/**
+ * Return ONLY the matrix rows whose two endpoints are exactly `gidA` and
+ * `gidB` (unordered: either direction matches). This is a LOOKUP over EXISTING
+ * edges — it never invents an edge, never implies a relationship, and never
+ * changes relationship semantics. When either gid is empty/missing, or the two
+ * gids are equal, returns [] (a node never forms an edge with itself here).
+ * Preserves the original row order; returns a new array (no mutation).
+ */
+export function filterEdgesBetweenPair(
+  gidA: string,
+  gidB: string,
+  rows: RelationshipMatrixRow[],
+): RelationshipMatrixRow[] {
+  if (typeof gidA !== 'string' || typeof gidB !== 'string') return []
+  if (gidA.length === 0 || gidB.length === 0) return []
+  if (gidA === gidB) return []
+  const out: RelationshipMatrixRow[] = []
+  for (const row of rows ?? []) {
+    if (!row) continue
+    const s = row.sourceGlobalId
+    const t = row.targetGlobalId
+    if ((s === gidA && t === gidB) || (s === gidB && t === gidA)) {
+      out.push(row)
+    }
+  }
+  return out
+}
