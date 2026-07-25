@@ -56,7 +56,7 @@ Current milestone:
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
-- **Project Release: vM15** (2026-07-25) — Multi Entity Reasoning Enhancement (M15): pure-frontend UX thickening of the M14 picker via new `pickerUtils` helpers (`filterByTopic`/`sortCandidates`/`reorderCandidates`/`clearCandidates`); `EntityPickerPanel` gains topic-filter chips, a sort control, selected reordering, clear-all, and results overflow handling; `MultiEntityContextPanel` shows the resolved-context count and a collapsible preview of the exact `global_id`s sent to the AI; `global_id` stays authoritative, no new AI, no backend change (non-runtime release)
+- **Project Release: vM16** (2026-07-25) — Relationship Insight Visualization Layer (M16, Theme B): a pure-frontend visualization of EXISTING relationship metadata across the user's picked candidates — `relationshipUtils` (`pairEntities`/`findExistingRelationships`/`timelineOverlap`/`geoComparison`, all pure, no fetch, no AI) plus `RelationshipInsightPanel` (relationship cards / timeline overlap / geographic comparison / collapsible `<details>`); wired into the topic result block from `pickedCandidates` + `exploreThemesRelationships` + `exploreEntityTimeByName`. It VISUALIZES only — no causal inference, no inferred edges, no new KG semantics; `grounded_answer`/`/api/v1/ai/explain`/`multiEntityContext()` untouched (non-runtime release)
 
 Engineering status:
 

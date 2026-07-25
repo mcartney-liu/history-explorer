@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM16] - 2026-07-25 (Project Release — M16)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Relationship Insight Visualization Layer (M16, Theme B). A pure-frontend visualization of EXISTING relationship metadata across the user's picked candidates — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. The panel VISUALIZES only; it performs no fetch (never loads `/entity/{id}`), invents no edges, and draws no causal inference:
+
+- `frontend/src/data/relationshipUtils.ts` (new): pure, state-free, AI-free inspectors — `pairEntities` (unique unordered candidate pairs, gid-deduped, deterministic order), `findExistingRelationships` (looks up existing edges from `exploreThemesRelationships` matching the pair's global_ids; never inferred), `timelineOverlap` (self-contained BCE/CE parser over `buildEntityTimeMap` output; reports overlap / gap / partial / unknown, no inference), `geoComparison` (great-circle distance when coordinates exist; backend exposes none today, so it reports "no geographic data" honestly). No React state; `global_id` stays authoritative.
+- `frontend/src/components/RelationshipInsightPanel.tsx` (new): a PURE VIEW over existing client data. Per pair it renders relationship cards (existing `rel.type` only), a timeline-overlap view, a geographic-comparison view, and a native collapsible `<details>` (browser-managed fold, no React state). It never fetches and never modifies `grounded_answer` / `/api/v1/ai/explain` / `multiEntityContext()`.
+- `frontend/src/App.tsx`: mounts `RelationshipInsightPanel` in the topic result block, fed `pickedCandidates` + `exploreThemesRelationships` + `exploreEntityTimeByName` + `mainGlobalId`. Additive only — no existing pipeline is modified.
+- `frontend/src/App.css`: additive `.relationship-insight-panel` / `.rip-*` styles reusing the parchment/bronze `--he-*` tokens.
+- New/updated frontend tests (full suite 397 passed): `relationshipUtils.test.ts` (17), `RelationshipInsightPanel.test.tsx` (5). `npm run build` clean; freeze-check EXIT 0; backend diff = 0.
+- Deferred (per Scope Freeze / M16 corrections): causal reasoning, relationship discovery, inferred edges, new KG semantics, AI memory / session persistence, proactive AI recommendation, backend changes, runtime bump.
+
 ## [vM15] - 2026-07-25 (Project Release — M15)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
