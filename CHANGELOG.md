@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM21] - 2026-07-25 (Project Release — M21)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Relationship Path Graph Visualization (M21). A pure-frontend additive SVG visualization over the M20 Connectivity Explorer — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. It surfaces EXISTING relationship edges only; nothing is fetched, inferred, or uploaded:
+
+- `frontend/src/components/RelationshipPathGraph.tsx` (new): a PURE VIEW component that receives the already-computed `RelationshipPath[]` (M20 `findRelationshipPaths`) and renders node + edge SVG chains over EXISTING edges only. Includes hover-to-highlight a single path, multi-path layout, and an empty state ("No relationship path available"). It performs no path recomputation, no data query, no API call, no edge creation, no inference, no causal reasoning — Relationship Layer position remains Visualization Only.
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended): embeds `<RelationshipPathGraph />` inside the existing M20 Relationship Connectivity Explorer block (additive; the text `node —relation→ node` chain is kept). Centrality / Pair Explorer / Timeline / Export blocks are unchanged.
+- `frontend/src/components/RelationshipPathGraph.test.tsx` / `RelationshipInsightPanel.test.tsx` (extended): unit + presentation tests for the graph (node-name render, relation-type render, multi-hop chain, multi-path render, empty state, no 推断 / 发现 / 因果) and its panel integration (SVG present for connected endpoints, no causal words). Existing "no fetch / no inference" assertions unchanged.
+
+Tests: +7 (RelationshipPathGraph ×6, panel graph integration ×1). Frontend 477 passed / backend 162 passed; build clean; freeze-check EXIT 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM20] - 2026-07-25 (Project Release — M20)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
