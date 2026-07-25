@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM23] - 2026-07-25 (Project Release — M23)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Timeline Zoom/Pan + Entity Comparison Table + Insight CSV Export (M23). A pure-frontend additive release over the M17–M22 insight views — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. Everything surfaces EXISTING relationship metadata only; nothing is fetched, inferred, or uploaded:
+
+- `frontend/src/data/insightExport.ts` (extended, A3): a new pure, deterministic serializer — `serializeInsightReportAsCsv` (RFC-4180 CSV of the SAME insight view already rendered by the panel: entities / type counts / relationship matrix / timeline band; alphabetical type-count ordering, same input → same bytes, no timestamp/randomness/privacy/network). Export-only helper with no AI, no network, no persistence.
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended): (A1) an SVG multi-entity timeline with VIEW-ONLY zoom/pan controls (放大 / 缩小 / 左移 / 右移 / 重置视图) that only transform SVG coordinates via a `<g>` element — `buildMultiEntityTimelineBand` is never recomputed, no data mutation; (A2) a read-only entity comparison table aggregating M16–M19 metrics per entity (centrality degree / distinct relationship-type count / timeline bounds / overlap count) — pure presentation of EXISTING data, no new KG semantics, no inferred edges, no causal narrative; (A3) local-only "复制 CSV 报告" and "下载 CSV" buttons using `navigator.clipboard` (with a `document.execCommand` fallback and a clear success/failure status) and a Blob download — no upload, no account binding, no third-party service. Centrality / Pair Explorer / Timeline list / Connectivity / Graph blocks are unchanged (the timeline `<ul>` list is kept; the SVG is additive).
+- `frontend/src/components/RelationshipInsightPanel.test.tsx` (extended): presentation tests for A1 (SVG timeline + view-only zoom/pan controls present, no 推断 / 发现 / 因果 inside the SVG), A2 (read-only comparison table over existing metrics, no causal words), and A3 (local-only Copy CSV / Download CSV buttons; the exact `class="rip-export-btn" === 3` rule is preserved because CSV buttons use a `rip-csv` modifier; the `>= 4` substring rule still holds). `frontend/src/data/insightExport.test.ts` (extended): unit test for `serializeInsightReportAsCsv` (deterministic, RFC-4180 quoting of commas). Existing "no fetch / no inference" assertions unchanged.
+
+Tests: +4 (panel A1/A2/A3 ×3, insightExport CSV ×1). Frontend 500 passed / backend 162 passed; build clean; freeze-check EXIT 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM22] - 2026-07-26 (Project Release — M22)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
