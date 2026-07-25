@@ -35,6 +35,11 @@ import {
   RELATIONSHIP_FILTER_ALL,
   type TimelineOverlapStatus,
 } from '../data/relationshipUtils'
+import {
+  serializeInsightReport,
+  buildPrintableInsight,
+  type InsightReportInput,
+} from '../data/insightExport'
 
 export type RelationshipInsightPanelProps = {
   candidates: Candidate[]
@@ -158,9 +163,53 @@ export default function RelationshipInsightPanel({
   // Filter options = the type buckets actually present (canonical, incl. unknown).
   const filterOptions = Object.keys(typeCounts)
 
+  // M18 — client-side export of the CURRENT view. Pure serialization comes
+  // from insightExport.ts; this glue only creates a local Blob download or a
+  // print window. Nothing is uploaded, stored, or bound to any account.
+  const exportInput: InsightReportInput = {
+    mainEntityName,
+    mainGlobalId,
+    entities: (candidates ?? []).map((c) => ({ name: c.name, gid: c.gid })),
+    relationshipTypeCounts: typeCounts,
+    matrixRows,
+    timelineBand,
+  }
+
+  const handleDownloadJson = () => {
+    const json = serializeInsightReport(exportInput)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'relationship-insight.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handlePrintView = () => {
+    const html = buildPrintableInsight(exportInput)
+    const w = window.open('', '_blank', 'noopener,noreferrer')
+    if (!w) return
+    w.document.write(html)
+    w.document.close()
+    w.focus()
+    w.print()
+  }
+
   return (
     <div className="relationship-insight-panel" data-testid="relationship-insight-panel">
       <h4 className="rip-title">关系洞察（可视化既有元数据）</h4>
+
+      {/* M18 — local-only export controls (Blob download / print view). */}
+      <div className="rip-controls rip-export" aria-label="insight-export">
+        <button type="button" className="rip-export-btn" onClick={handleDownloadJson}>
+          下载 JSON 报告
+        </button>
+        <button type="button" className="rip-export-btn" onClick={handlePrintView}>
+          打印视图
+        </button>
+        <span className="rip-export-note">仅本地生成，不上传。</span>
+      </div>
 
       {/* M17 — Relationship Type Summary (count only, no causal explanation). */}
       <details className="rip-block" open>

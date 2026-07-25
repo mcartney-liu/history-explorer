@@ -255,3 +255,29 @@ describe('RelationshipInsightPanel (M18 controls)', () => {
     expect(html).not.toContain('保存')
   })
 })
+
+// ---------------------------------------------------------------------------
+// M18 (Insight Export) — local-only export buttons.
+// ---------------------------------------------------------------------------
+
+describe('RelationshipInsightPanel (M18 export)', () => {
+  it('renders JSON download and print buttons with the local-only note', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
+    )
+    expect(html).toContain('rip-export')
+    expect(html).toContain('下载 JSON 报告')
+    expect(html).toContain('打印视图')
+    expect(html).toContain('仅本地生成，不上传。')
+  })
+
+  it('export buttons are plain <button type="button"> elements (no form submit, no links out)', () => {
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
+    )
+    const buttons = html.match(/class="rip-export-btn"/g) ?? []
+    expect(buttons).toHaveLength(2)
+    expect(html).not.toContain('<form')
+    expect(html).not.toContain('href="http')
+  })
+})

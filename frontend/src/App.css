@@ -2280,3 +2280,34 @@ body {
   outline: 2px solid var(--he-accent);
   outline-offset: 1px;
 }
+
+/* M18 — local-only export controls (RelationshipInsightPanel). */
+.rip-export {
+  align-items: center;
+}
+
+.rip-export-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--he-accent-dark);
+  background: var(--he-surface-soft);
+  border: 1px solid var(--he-border);
+  border-radius: 4px;
+  padding: 0.25rem 0.7rem;
+  cursor: pointer;
+}
+
+.rip-export-btn:hover {
+  background: #efe7d6;
+}
+
+.rip-export-btn:focus-visible {
+  outline: 2px solid var(--he-accent);
+  outline-offset: 1px;
+}
+
+.rip-export-note {
+  color: var(--he-muted);
+  font-size: 0.8rem;
+}
