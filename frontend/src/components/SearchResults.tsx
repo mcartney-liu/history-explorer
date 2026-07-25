@@ -8,6 +8,12 @@ export type SearchResultItem = {
   name: string
   type?: string
   topic?: string
+  // M14 (additive): a real graph global_id, when the payload carries one.
+  // The current /search API omits it (it strips global_id in _entity_result),
+  // so this stays OPTIONAL — candidateUtils derives `${topic}:${id}` as the
+  // canonical fallback. Adding the field keeps the type honest and lets a
+  // future backend surface global_id directly without another type change.
+  global_id?: string
   description?: string | null
   match?: string
   // Additive display enrichment (M2-002.5). All optional and may be null —
