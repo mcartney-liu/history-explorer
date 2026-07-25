@@ -438,6 +438,19 @@ function App() {
         result.entities.map((e) => [e.id, e.global_id ?? `${exploreTopic}:${e.id}`]),
       )
     : {}
+
+  // M19: derive a global_id -> display name map so the RelationshipInsightPanel
+  // can label target entities that are NOT in the candidate set (e.g. edges
+  // pointing at entities outside the current selection). Pure frontend; built
+  // only from already-fetched exploration metadata. No new API field.
+  const exploreNameByGlobalId: Record<string, string> = result
+    ? Object.fromEntries(
+        Object.entries(exploreEntityGlobalById)
+          .filter(([, gid]) => Boolean(gid))
+          .map(([localId, gid]) => [gid, exploreNameById[localId] ?? gid]),
+      )
+    : {}
+
   const exploreThemesRelationships: EntityRelationship[] = result
     ? result.exploration.related_entities.map((re) => ({
         type: re.relationship,
@@ -665,6 +678,7 @@ function App() {
                 timeMap={exploreEntityTimeByName}
                 mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]}
                 mainEntityName={result.exploration.main_entity.name}
+                nameByGlobalId={exploreNameByGlobalId}
               />
             </div>
           )}
