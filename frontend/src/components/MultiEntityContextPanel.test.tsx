@@ -58,6 +58,37 @@ describe('MultiEntityContextView (M13/M14)', () => {
   })
 })
 
+describe('MultiEntityContextView — M15 resolved-context transparency', () => {
+  it('shows a resolved-context count of 0 with no preview when nothing is selected', () => {
+    const html = renderToStaticMarkup(
+      <MultiEntityContextView
+        candidates={CANDIDATES}
+        selectedGids={[]}
+        maxSelectable={8}
+        onToggle={() => {}}
+      />,
+    )
+    expect(html).toContain('已解析上下文 0 个 global_id')
+    expect(html).not.toContain('预览将发送的 global_id')
+  })
+
+  it('mirrors multiEntityContext: count + collapsible list of the exact ids sent', () => {
+    const html = renderToStaticMarkup(
+      <MultiEntityContextView
+        candidates={CANDIDATES}
+        selectedGids={['qin_dynasty:person-qsh', 'ancient_greece:person-alex']}
+        maxSelectable={8}
+        onToggle={() => {}}
+      />,
+    )
+    expect(html).toContain('已解析上下文 2 个 global_id')
+    expect(html).toContain('预览将发送的 global_id')
+    // exact global_ids that will be sent to /ai/explain are previewable
+    expect(html).toContain('qin_dynasty:person-qsh')
+    expect(html).toContain('ancient_greece:person-alex')
+  })
+})
+
 describe('applyToggleSelection (M13 selection cap)', () => {
   it('adds a new gid when below the cap', () => {
     expect(applyToggleSelection(['a:1'], 'b:2', 8)).toEqual(['a:1', 'b:2'])

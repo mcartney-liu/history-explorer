@@ -143,6 +143,27 @@ export function MultiEntityContextView({
           )
         })}
       </ul>
+
+      {/*
+        M15: honest transparency — show exactly how many global_ids resolved into
+        the AI context and let the user expand the precise list that will be
+        sent. This is a read-only mirror of multiEntityContext(selectedGids); it
+        adds NO new state and does not change the context builder.
+      */}
+      <div className="mec-resolved" aria-label="已解析上下文">
+        <span className="mec-resolved-count">已解析上下文 {contextIds.length} 个 global_id</span>
+        {contextIds.length > 0 && (
+          <details className="mec-context-preview">
+            <summary>预览将发送的 global_id</summary>
+            <ul className="mec-context-ids">
+              {contextIds.map((id) => (
+                <li key={id} className="mec-context-id">{id}</li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
+
       <AIExplanationPanel contextGlobalIds={contextIds} onCitationClick={onCitationClick} />
     </section>
   )
