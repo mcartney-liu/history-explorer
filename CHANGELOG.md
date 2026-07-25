@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM18] - 2026-07-25 (Project Release — M18)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Relationship Insight Controls & Local Export (M18). A pure-frontend deterministic interaction + export layer over the M17 insight views — no backend, runtime, schema, causal, AI-memory, session-persistence, or proactive-AI change. Controls reorder/filter EXISTING rows only; export serializes EXISTING metadata locally — nothing is fetched, inferred, or uploaded:
+
+- `frontend/src/data/relationshipUtils.ts` (extended): five pure, state-free, AI-free helpers — `normalizeRelationshipFilter` (validates against the frozen 18-type `RELATIONSHIP_TYPES` mirror; blank/`all` → `RELATIONSHIP_FILTER_ALL` sentinel, out-of-vocabulary → `unknown`), `filterRelationshipMatrixByType` (non-mutating matrix row filter incl. `unknown` bucket), `sortRelationshipMatrixByCount` (count-based asc/desc sort with stable original-order tie-break), `sortTimelineBands` (by `start` or `name`; null time bounds always sort last, never fabricated), `normalizeTimelineRange` (swaps inverted bounds only, invents no dates).
+- `frontend/src/data/insightExport.ts` (new): pure serialization layer — `serializeInsightReport` (deterministic JSON, schema `history-explorer/insight-report@1`, alphabetical count keys, same input → same bytes) and `buildPrintableInsight` (self-contained escaped HTML, no `<script>` / external links, explicit metadata-only disclaimer). No network, no persistence, no timestamps, no randomness.
+- `frontend/src/components/RelationshipInsightPanel.tsx` (extended): matrix filter/sort `<select>` controls and timeline-band sort controls (component-local `useState` view state only), plus a download-JSON button (client-side Blob + object URL) and a print-view button (`window.open` + `print`), labeled 「仅本地生成，不上传。」. The panel still never fetches and never modifies `grounded_answer` / `/api/v1/ai/explain` / `multiEntityContext()`.
+- `frontend/src/App.css` (extended): `.rip-controls` / `.rip-control-select` / `.rip-export*` styles reusing the parchment/bronze `--he-*` tokens.
+
+Tests: +34 (relationshipUtils controls, panel controls/export, insightExport determinism/escaping). Frontend 447 passed / backend 162 passed; build clean; freeze-check EXIT 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM17] - 2026-07-25 (Project Release — M17)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `0.13.0`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
