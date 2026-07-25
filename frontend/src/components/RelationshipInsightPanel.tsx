@@ -44,6 +44,7 @@ import {
   buildPrintableInsight,
   type InsightReportInput,
 } from '../data/insightExport'
+import RelationshipPathGraph from './RelationshipPathGraph'
 
 export type RelationshipInsightPanelProps = {
   candidates: Candidate[]
@@ -516,24 +517,30 @@ export default function RelationshipInsightPanel({
                 所选两实体之间没有已存在的边所能组成的路径（在 {connHops} 跳内）。
               </p>
             ) : (
-              <ul className="rip-path-list">
-                {connectivityPaths.map((p, i) => (
-                  <li className="rip-path" key={`${p.nodes.join('>')}-${i}`}>
-                    {p.nodes.map((n, j) => (
-                      <span key={j}>
-                        <span className="rip-path-node">{nameByGlobalId[n] ?? n}</span>
-                        {j < p.edges.length && (
-                          <span className="rip-path-edge">
-                            {' —'}
-                            {p.edges[j]}
-                            {'→ '}
-                          </span>
-                        )}
-                      </span>
-                    ))}
-                  </li>
-                ))}
-              </ul>
+              <>
+                {/* M21-A1 — Relationship Path Graph Visualization: a PURE SVG view
+                    over the SAME already-computed connectivityPaths (existing
+                    edges only). Additive: the text chain below is kept. */}
+                <RelationshipPathGraph paths={connectivityPaths} nameByGlobalId={nameByGlobalId} />
+                <ul className="rip-path-list">
+                  {connectivityPaths.map((p, i) => (
+                    <li className="rip-path" key={`${p.nodes.join('>')}-${i}`}>
+                      {p.nodes.map((n, j) => (
+                        <span key={j}>
+                          <span className="rip-path-node">{nameByGlobalId[n] ?? n}</span>
+                          {j < p.edges.length && (
+                            <span className="rip-path-edge">
+                              {' —'}
+                              {p.edges[j]}
+                              {'→ '}
+                            </span>
+                          )}
+                        </span>
+                      ))}
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
           </>
         )}

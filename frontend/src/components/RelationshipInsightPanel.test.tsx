@@ -473,4 +473,35 @@ describe('M20 — Relationship Connectivity Explorer', () => {
     )
     expect(html).toContain('没有已存在的边所能组成的路径')
   })
+
+  it('renders an SVG path graph (M21-A1) for connected endpoints, without causal words', () => {
+    // SORTED default selection: 'a:start' (source) -> 'z:end' (target), one hop.
+    const rels: EntityRelationship[] = [
+      {
+        type: 'related_to',
+        source: 'a:start',
+        target: 'end',
+        direction: 'outgoing',
+        other: { id: 'end', name: '终点', type: 'X', global_id: 'z:end', topic: 't' },
+      },
+    ]
+    const html = renderToStaticMarkup(
+      <RelationshipInsightPanel
+        candidates={[]}
+        relationships={rels}
+        timeMap={timeMap}
+        nameByGlobalId={{ 'a:start': '起点', 'z:end': '终点' }}
+      />,
+    )
+    // SVG graph present and carrying the resolved node labels from the path.
+    expect(html).toContain('rpg-svg')
+    expect(html).toContain('rpg-path')
+    expect(html).toContain('起点')
+    expect(html).toContain('终点')
+    expect(html).toContain('related_to')
+    // No causal/inferred/discovery language introduced by M21-A1.
+    expect(html).not.toContain('推断')
+    expect(html).not.toContain('发现')
+    expect(html).not.toContain('因果')
+  })
 })
