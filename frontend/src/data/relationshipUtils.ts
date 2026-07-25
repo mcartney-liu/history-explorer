@@ -654,3 +654,106 @@ export function filterEdgesBetweenPair(
   }
   return out
 }
+
+// ---------------------------------------------------------------------------
+// M20 (Relationship Connectivity / Path Explorer): pure path finder (additive).
+// ---------------------------------------------------------------------------
+//
+// SCOPE (frozen): still a PURE data-inspection layer. findRelationshipPaths()
+// runs a BOUNDED traversal over the EXISTING RelationshipMatrixRow[] edges that
+// were already built by buildRelationshipTypeMatrix(). It introduces NO new KG
+// semantics, NO invented edges, NO guessed connections, NO causal reasoning,
+// NO network/AI. Deterministic: same input -> same output, inputs are never
+// mutated, no Date/Math.random. Edges are followed in their literal stored
+// direction (sourceGlobalId -> targetGlobalId); the function never reverses or
+// fabricates an edge to "complete" a path.
+
+export type RelationshipPath = {
+  /** Ordered global_id sequence: nodes.length === edges.length + 1. */
+  nodes: string[]
+  /** Ordered relationship_type sequence, one per traversed edge. */
+  edges: string[]
+}
+
+/**
+ * Enumerate every SIMPLE path (no repeated node) composed solely of EXISTING
+ * relationship edges from `gidA` to `gidB`, bounded by `maxHops` (max edges).
+ *
+ * - Directed traversal: each row contributes one edge sourceGlobalId ->
+ *   targetGlobalId with its literal `relationType`. No edge is reversed or
+ *   invented; a connection is never guessed when no edge exists.
+ * - Bounded: `maxHops` (default 3) caps path length to prevent graph explosion;
+ *   a non-positive / non-integer `maxHops` is clamped to 1.
+ * - Returns [] when either gid is empty / missing / non-string, or no
+ *   existing-edge path within `maxHops` reaches `gidB`. When `gidA === gidB`,
+ *   only non-trivial cycle paths (length >= 1) are returned — e.g. a cycle
+ *   A→B→A yields the path [A, B, A].
+ * - Pure: builds a fresh adjacency map; the input array and its rows are never
+ *   mutated; every returned array is a new object.
+ */
+export function findRelationshipPaths(
+  rows: RelationshipMatrixRow[],
+  gidA: string,
+  gidB: string,
+  maxHops: number = 3,
+): RelationshipPath[] {
+  if (typeof gidA !== 'string' || typeof gidB !== 'string') return []
+  if (gidA.length === 0 || gidB.length === 0) return []
+
+  let hops = maxHops
+  if (!Number.isInteger(hops) || hops < 1) hops = 1
+
+  // Build directed adjacency from EXISTING edges only.
+  const adj = new Map<string, Array<{ to: string; relationType: string }>>()
+  for (const row of rows ?? []) {
+    if (!row) continue
+    const from = row.sourceGlobalId
+    const to = row.targetGlobalId
+    const rel = row.relationType
+    if (typeof from !== 'string' || from.length === 0) continue
+    if (typeof to !== 'string' || to.length === 0) continue
+    if (typeof rel !== 'string' || rel.length === 0) continue
+    let list = adj.get(from)
+    if (!list) {
+      list = []
+      adj.set(from, list)
+    }
+    list.push({ to, relationType: rel })
+  }
+
+  const results: RelationshipPath[] = []
+  const seen = new Set<string>()
+
+  const dfs = (current: string, pathNodes: string[], pathEdges: string[]): void => {
+    const edgeCount = pathNodes.length - 1
+    if (edgeCount > hops) return
+    if (current === gidB && edgeCount >= 1) {
+      const sig = pathNodes.join('\u0000') + '\u0000' + pathEdges.join('\u0000')
+      if (!seen.has(sig)) {
+        seen.add(sig)
+        results.push({ nodes: [...pathNodes], edges: [...pathEdges] })
+      }
+      // A simple path cannot revisit gidB, so no extension from here can end at
+      // gidB again; stop descending to keep the traversal bounded and cheap.
+      return
+    }
+    if (edgeCount >= hops) return
+    const neighbors = adj.get(current)
+    if (!neighbors) return
+    for (const { to, relationType } of neighbors) {
+      // Simple path: no repeated INTERMEDIATE node. The target gidB is allowed
+      // to reappear only as the terminal node — this is exactly what a cycle
+      // back to the start (gidA === gidB, e.g. A→B→A) is, and reaching gidB
+      // always terminates the branch, so it can never become an intermediate.
+      if (pathNodes.includes(to) && to !== gidB) continue
+      pathNodes.push(to)
+      pathEdges.push(relationType)
+      dfs(to, pathNodes, pathEdges)
+      pathNodes.pop()
+      pathEdges.pop()
+    }
+  }
+
+  dfs(gidA, [gidA], [])
+  return results
+}

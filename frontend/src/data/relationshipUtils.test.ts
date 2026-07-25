@@ -21,7 +21,9 @@ import {
   normalizeTimelineRange,
   calculateRelationshipCentrality,
   filterEdgesBetweenPair,
+  findRelationshipPaths,
   type RelationshipMatrixRow,
+  type RelationshipPath,
   type TimelineBandEntry,
 } from './relationshipUtils'
 
@@ -618,5 +620,157 @@ describe('filterEdgesBetweenPair (M19)', () => {
     expect(
       filterEdgesBetweenPair('rome:empire', 'greece:alex', undefined as unknown as RelationshipMatrixRow[]),
     ).toHaveLength(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// M20 (Relationship Connectivity / Path Explorer) — pure function tests.
+// Deterministic, no React, no fetch. findRelationshipPaths() only traverses
+// EXISTING edges; it never invents, reverses, or guesses a connection.
+// ---------------------------------------------------------------------------
+
+describe('findRelationshipPaths (M20)', () => {
+  it('returns the single direct edge A→B', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAB',
+        target: 'B',
+        targetGlobalId: 'B',
+      },
+    ]
+    const paths = findRelationshipPaths(rows, 'A', 'B')
+    expect(paths).toHaveLength(1)
+    expect(paths[0].nodes).toEqual(['A', 'B'])
+    expect(paths[0].edges).toEqual(['rAB'])
+    // structure invariant: nodes.length === edges.length + 1
+    expect(paths[0].nodes.length).toBe(paths[0].edges.length + 1)
+  })
+
+  it('returns the two-hop path A→C→B', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAC',
+        target: 'C',
+        targetGlobalId: 'C',
+      },
+      {
+        source: 'C',
+        sourceGlobalId: 'C',
+        relationType: 'rCB',
+        target: 'B',
+        targetGlobalId: 'B',
+      },
+    ]
+    const paths = findRelationshipPaths(rows, 'A', 'B')
+    expect(paths).toHaveLength(1)
+    expect(paths[0].nodes).toEqual(['A', 'C', 'B'])
+    expect(paths[0].edges).toEqual(['rAC', 'rCB'])
+    expect(paths[0].nodes.length).toBe(paths[0].edges.length + 1)
+  })
+
+  it('returns [] when no existing-edge path connects A and B', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAC',
+        target: 'C',
+        targetGlobalId: 'C',
+      },
+    ]
+    expect(findRelationshipPaths(rows, 'A', 'B')).toHaveLength(0)
+  })
+
+  it('returns the cycle path A→B→A when gidA === gidB', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAB',
+        target: 'B',
+        targetGlobalId: 'B',
+      },
+      {
+        source: 'B',
+        sourceGlobalId: 'B',
+        relationType: 'rBA',
+        target: 'A',
+        targetGlobalId: 'A',
+      },
+    ]
+    const paths = findRelationshipPaths(rows, 'A', 'A')
+    expect(paths).toHaveLength(1)
+    expect(paths[0].nodes).toEqual(['A', 'B', 'A'])
+    expect(paths[0].edges).toEqual(['rAB', 'rBA'])
+    expect(paths[0].nodes.length).toBe(paths[0].edges.length + 1)
+  })
+
+  it('respects the maxHops limit (longer paths are excluded)', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAC',
+        target: 'C',
+        targetGlobalId: 'C',
+      },
+      {
+        source: 'C',
+        sourceGlobalId: 'C',
+        relationType: 'rCD',
+        target: 'D',
+        targetGlobalId: 'D',
+      },
+      {
+        source: 'D',
+        sourceGlobalId: 'D',
+        relationType: 'rDB',
+        target: 'B',
+        targetGlobalId: 'B',
+      },
+    ]
+    // 3-hop path A→C→D→B must be excluded when maxHops = 2.
+    expect(findRelationshipPaths(rows, 'A', 'B', 2)).toHaveLength(0)
+    // maxHops = 3 (default) includes it.
+    const within = findRelationshipPaths(rows, 'A', 'B', 3)
+    expect(within).toHaveLength(1)
+    expect(within[0].nodes).toEqual(['A', 'C', 'D', 'B'])
+    expect(within[0].edges).toEqual(['rAC', 'rCD', 'rDB'])
+    // default argument also works (no explicit maxHops).
+    expect(findRelationshipPaths(rows, 'A', 'B')).toHaveLength(1)
+  })
+
+  it('does not mutate the input array or its rows', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAB',
+        target: 'B',
+        targetGlobalId: 'B',
+      },
+    ]
+    const snapshot = JSON.stringify(rows)
+    findRelationshipPaths(rows, 'A', 'B')
+    expect(JSON.stringify(rows)).toBe(snapshot)
+  })
+
+  it('never invents a reverse edge: B→A is not found when only A→B exists', () => {
+    const rows: RelationshipMatrixRow[] = [
+      {
+        source: 'A',
+        sourceGlobalId: 'A',
+        relationType: 'rAB',
+        target: 'B',
+        targetGlobalId: 'B',
+      },
+    ]
+    // Directed traversal: the stored edge is A→B; no reverse is fabricated.
+    expect(findRelationshipPaths(rows, 'B', 'A')).toHaveLength(0)
+    expect(findRelationshipPaths(rows, 'A', 'B')).toHaveLength(1)
   })
 })
