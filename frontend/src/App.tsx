@@ -32,6 +32,7 @@ import SearchResults, {
   resolveSearchResultTarget,
 } from './components/SearchResults'
 import EntityPage, { EntityDetail, EntityRelationship } from './components/EntityPage'
+import RelationshipInsightPanel from './components/RelationshipInsightPanel'
 import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
 import { nextSelectionIndex } from './components/searchNav'
 import {
@@ -657,6 +658,12 @@ function App() {
                 candidates={pickedCandidates}
                 candidateGids={Object.values(exploreEntityGlobalById)}
                 onCitationClick={(gid) => openEntity(gid)}
+              />
+              <RelationshipInsightPanel
+                candidates={pickedCandidates}
+                relationships={exploreThemesRelationships}
+                timeMap={exploreEntityTimeByName}
+                mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]}
               />
             </div>
           )}
