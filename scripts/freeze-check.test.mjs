@@ -14,7 +14,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { runChecks } from "./freeze-check.mjs";
+import { runChecks, SCOPE_ALLOWLIST } from "./freeze-check.mjs";
 
 function makeProject(files) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "he-freeze-"));
@@ -141,5 +141,39 @@ test("7. M24 allowlist: dataset.py + dataset test PASS, other backend files bloc
   assert.ok(
     blocked.some((x) => x.startsWith("SCOPE")),
     "non-allowlisted backend file must raise SCOPE violation, got: " + JSON.stringify(blocked)
+  );
+});
+
+test("8. M25.1 allowlist: 4 new dataset-provider/validator files exist in allowlist and PASS scope", () => {
+  const M25_1_ALLOWED = [
+    "backend/app/core/dataset_provider.py",
+    "backend/app/core/dataset_validator.py",
+    "backend/tests/test_dataset_provider.py",
+    "backend/tests/test_dataset_validator.py",
+  ];
+  // (a) direct membership — these files MUST be present in the PO-approved allowlist.
+  for (const f of M25_1_ALLOWED) {
+    assert.ok(
+      SCOPE_ALLOWLIST.includes(f),
+      `expected ${f} to be in SCOPE_ALLOWLIST (M25.1 Freeze Revision Gate), got: ` +
+        JSON.stringify(SCOPE_ALLOWLIST)
+    );
+  }
+  // (b) behavioral — a change to only these files must NOT raise a SCOPE violation.
+  const root = makeProject(VALID);
+  const v = runChecks({ root, files: M25_1_ALLOWED });
+  assert.ok(
+    !v.some((x) => x.startsWith("SCOPE")),
+    "M25.1-approved dataset-provider/validator files must NOT raise SCOPE violation, got: " +
+      JSON.stringify(v)
+  );
+  // (c) regression guard — M24 entries still present.
+  assert.ok(
+    SCOPE_ALLOWLIST.includes("backend/app/core/dataset.py"),
+    "M24 entry dataset.py must remain in SCOPE_ALLOWLIST"
+  );
+  assert.ok(
+    SCOPE_ALLOWLIST.includes("backend/tests/test_dataset_metadata.py"),
+    "M24 entry test_dataset_metadata.py must remain in SCOPE_ALLOWLIST"
   );
 });

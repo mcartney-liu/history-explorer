@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM25.1] - 2026-07-26 (Project Release — M25.1)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive Dataset Provider Layer code + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Dataset Provider Layer (M25.1). A backend additive layer over the M24 Dataset identity foundation — approved via the Architecture Freeze Gate — that groups read-only dataset access behind a single facade and adds dataset-level validation orchestration. No schema / API / runtime / AI / frontend change:
+
+- `backend/app/core/dataset_provider.py` (new): a lightweight, composition-based `DatasetProvider` that holds a `TopicRepository` (R1 — it does NOT inherit from `TopicRepository` and does NOT become a `DatasetRepository`; no `save_dataset()` / `publish_dataset()` / `switch_dataset()`). It delegates `list_topics` / `load_topic` / `load_all` transparently and derives a `DatasetManifest` (frozen 9-field identity descriptor: `dataset_id` / `version` / `manifest_schema_version` / `dataset_schema_version` / `name` / `creator` / `license` / `content_hash` / `provenance_policy`, with `provenance_policy="human-curated"`; R3 — NO lifecycle fields `status` / `published_at` / `approval`). `content_hash` reuses the canonical deterministic M24 hash. `SourceLoader` / `EmptySourceLoader.load()` returns `[]` (R4 — no `sources.json`, no AI-generated sources; the real `SourceRegistry` is deferred to M26). `build_dataset_provider` factory mirrors `JsonTopicRepository(data_dir)`.
+- `backend/app/core/dataset_validator.py` (new): `DatasetValidator` (R2 — orchestration only). It reuses the single frozen schema engine `app.validation.build_validation_report`; it does NOT define `validate_entity()` / `validate_relationship()` / `validate_timeline()` / `DatasetSchemaValidator`, and `validation.py` is unchanged. `DatasetValidationReport` (frozen) summarises manifest validity, schema-version validity, entity / relationship / timeline counts, and error issues.
+- `backend/tests/test_dataset_provider.py` (new, 10 tests): composition-not-inheritance, delegated reads match the repository, manifest has exactly 9 fields with no lifecycle, `content_hash` equals the M24 canonical hash, no lifecycle methods, `load_sources()` returns `[]`, zero `TopicRepository` side effects, factory usable.
+- `backend/tests/test_dataset_validator.py` (new, 3 tests): orchestration reuses the frozen engine (counts + error issues match `build_validation_report`), unknown schema version FAILS, no Evidence Claim methods / fields (R5 — `provenance_policy` is `human-curated`; AI does not generate provenance or assign confidence).
+- `scripts/freeze-check.mjs` (changed): `SCOPE_ALLOWLIST` extended from 2 → 6 entries. M25.1 adds exactly four files (`backend/app/core/dataset_provider.py`, `backend/app/core/dataset_validator.py`, `backend/tests/test_dataset_provider.py`, `backend/tests/test_dataset_validator.py`); M24's two entries are retained. All other backend/frontend paths stay frozen.
+- `scripts/freeze-check.test.mjs` (changed): governance test 8 added (asserts the four M25.1 files are in the allowlist and PASS scope, and that M24 entries remain) — 8/8.
+
+Tests: backend **181 passed** (+13 Dataset Provider/Validator tests); frontend **500 passed** (unchanged). `freeze-check` EXIT 0; governance tests **8/8**; backend diff (vs vM24) limited to `dataset_provider.py` + `dataset_validator.py` + their tests; `main.py` unchanged — the provider is NOT wired into any runtime path (E1 deferred to M26); AI pipeline diff = 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM24] - 2026-07-26 (Project Release — M24)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive foundation code + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.

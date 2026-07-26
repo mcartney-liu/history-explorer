@@ -112,13 +112,25 @@ function getChangedFiles() {
 //   - backend/app/core/dataset.py              (new Dataset identity layer)
 //   - backend/tests/test_dataset_metadata.py   (its unit tests)
 //
+// M25.1 (Dataset Provider Layer) was approved via a subsequent Freeze Revision
+// Gate and ADDS four more files to the allowlist (additive, no change to M24
+// entries; all other guards/DEP/TOKEN/ENUM unchanged):
+//   - backend/app/core/dataset_provider.py     (DatasetProvider composition layer)
+//   - backend/app/core/dataset_validator.py     (Dataset-level validation orchestration)
+//   - backend/tests/test_dataset_provider.py   (its unit tests)
+//   - backend/tests/test_dataset_validator.py   (its unit tests)
+//
 // Explicitly FORBIDDEN from the allowlist (require a new Freeze Revision Gate):
 //   backend/app/main.py, backend/app/api/*, backend/app/ai_gateway/*,
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
 //   data/examples/*, frontend/*.
-const SCOPE_ALLOWLIST = [
+export const SCOPE_ALLOWLIST = [
   "backend/app/core/dataset.py",
   "backend/tests/test_dataset_metadata.py",
+  "backend/app/core/dataset_provider.py",
+  "backend/app/core/dataset_validator.py",
+  "backend/tests/test_dataset_provider.py",
+  "backend/tests/test_dataset_validator.py",
 ];
 
 function _scopeAllowed(file) {
