@@ -29,6 +29,22 @@ Freeze Compliance:
 - DatasetProvider Runtime Activation (E2) remains deferred.
 - Backend **205 passed** (unchanged) / frontend **500 passed** (unchanged); `freeze-check` EXIT 0; governance tests **9/9**. No AI / LLM introduced. No new dependency.
 
+## [vM29.1] - 2026-07-26 (Project Release — M29.1)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive provenance-projection code + freeze-guard script + tests were added, and the runtime provenance projection was activated. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Runtime Provenance Projection Activation (M29.1). A backend additive activation of the provenance projection over the M27.1 provenance layer — approved via the Architecture Freeze Gate (ADR-005 for `main.py`, ADR-006 for the projection read model) — that builds a runtime `ProvenanceIndex` read model from the DatasetProvider and exposes it through a new read-only endpoint. No schema / API-contract break / frontend / data change:
+
+- `backend/app/core/provenance_index.py` (new): `ProvenanceIndex` (frozen `ProvenanceRecord` dataclass: `subject_id` / `source_id` / `claim_id` / `reference`; no confidence / score). `ProvenanceIndex.build(provider)` reads `provider.load_evidence_claims()` + `provider.load_sources()` and indexes `subject_id → List[ProvenanceRecord]` via the `SourceRegistry` O(1) `reference` resolution; `resolve(subject_id)` returns `[]` when absent; `to_json()` is deterministic (sorted keys, no time / random / network). Derived read model only — it does NOT become a Source of Truth.
+- `backend/app/main.py` (changed, via ADR-005 Freeze Gate): composition root now wires a module-level `provenance_index` behind the `PROVENANCE_PROJECTION` env flag (default `true`; `"false"` → no projection, `GET /provenance` returns 404, runtime falls back to the vM27.1 behaviour). No lifespan / no new dependency.
+- `backend/app/main.py` (changed): added `GET /provenance/{entity_id}` (dual-mounted `/api/v1` + legacy) returning `{"entity_id": ..., "provenance": [...]}`; 200 with the records (empty array when none), 404 when the flag is off; KnowledgeService untouched. The provenance is NOT merged into the `/entity` response (Option B).
+- `backend/tests/test_provenance_index.py` (new, 9 tests): source resolve, claim resolve, unknown subject → `[]`, deterministic build ×2 `to_json`, examples-immutable hash.
+- `backend/tests/test_provenance_api.py` (new, 5 tests): flag on v1 / legacy 200 + records, missing → `[]`, flag off 404 + KnowledgeService alive.
+- `scripts/freeze-check.mjs` (changed): `SCOPE_ALLOWLIST` extended from 12 → 16 entries. M29.1 adds exactly four files (`backend/app/core/provenance_index.py`, `backend/app/main.py`, `backend/tests/test_provenance_index.py`, `backend/tests/test_provenance_api.py`); M24 / M25.1 / M26.1 entries retained.
+- `scripts/freeze-check.test.mjs` (changed): governance test 10 added (asserts the four M29.1 files are in the allowlist and PASS scope, and that M24 / M25.1 / M26.1 entries remain) — 10 / 10.
+
+Tests: backend **219 passed** (+14 Provenance Index / API tests); frontend **500 passed** (unchanged). `freeze-check` EXIT 0; governance tests **10 / 10**; backend diff (vs vM27.1) limited to `provenance_index.py` + `main.py` + their tests; `data/examples` diff = 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM26.1] - 2026-07-26 (Project Release — M26.1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive Source Registry + Evidence Claim code + curated data + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.
