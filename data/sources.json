@@ -78,5 +78,45 @@
     "reference": "UNESCO. The Silk Roads: Routes of Dialogue. World Heritage Centre.",
     "license": "Other",
     "publisher_or_archive": "UNESCO World Heritage Centre"
+  },
+  {
+    "id": "src-arthashastra",
+    "type": "literature",
+    "title": "Arthashastra",
+    "creator": "Chanakya (Kautilya), trad.",
+    "year": -300,
+    "reference": "Kautilya. Arthashastra. ed. R. P. Kangle. Motilal Banarsidass.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Motilal Banarsidass"
+  },
+  {
+    "id": "src-tipitaka",
+    "type": "literature",
+    "title": "Tipitaka (Pali Canon)",
+    "creator": "Buddhist Sangha (compiled)",
+    "year": -100,
+    "reference": "The Pali Tipitaka. Pali Text Society.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Pali Text Society"
+  },
+  {
+    "id": "src-aryabhatiya",
+    "type": "literature",
+    "title": "Aryabhatiya",
+    "creator": "Aryabhata",
+    "year": 499,
+    "reference": "Aryabhata. Aryabhatiya. trans. K. S. Shukla. Indian National Science Academy.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Indian National Science Academy"
+  },
+  {
+    "id": "src-thapar-early-india",
+    "type": "secondary",
+    "title": "The Penguin History of Early India: From the Origins to AD 1300",
+    "creator": "Romila Thapar",
+    "year": 2002,
+    "reference": "Thapar, R. (2002). The Penguin History of Early India. Penguin Books.",
+    "license": "Proprietary",
+    "publisher_or_archive": "Penguin Books"
   }
 ]

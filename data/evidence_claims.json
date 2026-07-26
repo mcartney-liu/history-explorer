@@ -21,14 +21,29 @@
     "subject_id": "person-ashoka",
     "source_id": "src-ashoka-edicts",
     "claim": "The Edicts of Ashoka record the emperor's conversion to Buddhism and his dhamma policy after the Kalinga war.",
-    "notes": "Primary inscriptional source; corroborates person-ashoka->event-kalinga-war."
+    "notes": "Primary inscriptional source; corroborates person-ashoka->event-kalinga-war.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-ashoka-edicts"
+    ],
+    "interpretation_note": "Ashoka's own inscriptions are near-contemporary and among the most reliable sources for ancient India."
   },
   {
     "id": "ec-004",
     "subject_type": "entity",
     "subject_id": "civ-maurya",
     "source_id": "src-ashoka-edicts",
-    "claim": "The Maurya polity under Ashoka is documented in the major rock edicts as a centrally administered dhamma-ruled state."
+    "claim": "The Maurya polity under Ashoka is documented in the major rock edicts as a centrally administered dhamma-ruled state.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-ashoka-edicts",
+      "src-strabo-geography"
+    ],
+    "interpretation_note": "Edicts provide internal administration detail; Greek accounts (Strabo/Megasthenes) corroborate scale."
   },
   {
     "id": "ec-005",
@@ -36,7 +51,14 @@
     "subject_id": "person-ashoka->event-kalinga-war",
     "source_id": "src-ashoka-edicts",
     "claim": "Ashoka's own edicts (Rock Edict XIII) reference the conquest of Kalinga and its remorse-driven reform.",
-    "notes": "Real relationship pair verified in ancient_india_example.json."
+    "notes": "Real relationship pair verified in ancient_india_example.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-ashoka-edicts"
+    ],
+    "interpretation_note": "First-person royal source; the causal link to dhamma policy is widely accepted."
   },
   {
     "id": "ec-006",
@@ -73,5 +95,206 @@
     "subject_id": "person-socrates",
     "source_id": "src-strabo-geography",
     "claim": "Strabo records Socrates' habitual dialogue in the Athenian agora."
+  },
+  {
+    "id": "ec-011",
+    "subject_type": "entity",
+    "subject_id": "person-chandragupta",
+    "source_id": "src-arthashastra",
+    "claim": "Chandragupta Maurya founded the Maurya dynasty c. 322 BCE with the counsel of Chanakya, per the Arthashastra tradition and later Greek accounts (Megasthenes/Strabo).",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-arthashastra",
+      "src-strabo-geography"
+    ],
+    "interpretation_note": "Founding date debated (c. 322 vs 320 BCE); lineage transmitted by later Sanskrit tradition."
+  },
+  {
+    "id": "ec-012",
+    "subject_type": "entity",
+    "subject_id": "loc-pataliputra",
+    "source_id": "src-strabo-geography",
+    "claim": "Pataliputra (modern Patna) was the Mauryan capital at the Ganges-Son confluence, attested by Megasthenes' Indica (via Strabo) and the Ashokan edicts.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-strabo-geography",
+      "src-ashoka-edicts"
+    ],
+    "interpretation_note": "Site identification with Patna is secure from both literary and epigraphic evidence."
+  },
+  {
+    "id": "ec-013",
+    "subject_type": "entity",
+    "subject_id": "religion-buddhism",
+    "source_id": "src-tipitaka",
+    "claim": "Buddhism arose from the teachings of Siddhartha Gautama (5th-4th c. BCE); the Tipitaka preserves the earliest doctrinal corpus.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-tipitaka"
+    ],
+    "interpretation_note": "Core historicity of the Buddha widely accepted; specific biographical details vary by tradition."
+  },
+  {
+    "id": "ec-014",
+    "subject_type": "entity",
+    "subject_id": "person-siddhartha",
+    "source_id": "src-tipitaka",
+    "claim": "Siddhartha Gautama, the historical Buddha, lived c. 563-483 BCE (traditional); the earliest biographical material is in the Pali Canon.",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "medium",
+    "source_ids": [
+      "src-tipitaka"
+    ],
+    "interpretation_note": "Chronology varies across Buddhist traditions; c. 5th-4th c. BCE is the mainstream scholarly range."
+  },
+  {
+    "id": "ec-015",
+    "subject_type": "entity",
+    "subject_id": "loc-indus-valley",
+    "source_id": "src-thapar-early-india",
+    "claim": "The Indus Valley was the heartland of the early Indus (Harappan) Civilization (c. 2600-1900 BCE) in modern Pakistan, later integrated into the wider Indic cultural sphere.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-thapar-early-india"
+    ],
+    "interpretation_note": "Harappan script remains undeciphered; language attribution unknown."
+  },
+  {
+    "id": "ec-016",
+    "subject_type": "entity",
+    "subject_id": "event-kalinga-war",
+    "source_id": "src-ashoka-edicts",
+    "claim": "The Kalinga War (c. 261 BCE) was a pivotal conquest by Ashoka, after which he adopted dhamma; attested by Ashokan Major Rock Edict XIII.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-ashoka-edicts"
+    ],
+    "interpretation_note": "Ashoka's own edict is the primary, near-contemporary source."
+  },
+  {
+    "id": "ec-017",
+    "subject_type": "entity",
+    "subject_id": "idea-dharma",
+    "source_id": "src-ashoka-edicts",
+    "claim": "Dharma is the central ethical/cosmic concept in Indian thought, promulgated by Ashoka as 'dhamma' in his edicts.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-ashoka-edicts"
+    ],
+    "interpretation_note": "Ashoka's dhamma was a pragmatic, non-sectarian ethical policy rather than a single doctrinal system."
+  },
+  {
+    "id": "ec-018",
+    "subject_type": "entity",
+    "subject_id": "tp-maurya",
+    "source_id": "src-ashoka-edicts",
+    "claim": "The Maurya Era (c. 322-185 BCE) was the age of the first Indian empire and its Buddhist flowering, documented by the Ashokan edicts.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-ashoka-edicts",
+      "src-strabo-geography"
+    ],
+    "interpretation_note": "End date (c. 185 BCE, Pushyamitra Shunga) is standard periodization."
+  },
+  {
+    "id": "ec-019",
+    "subject_type": "entity",
+    "subject_id": "tp-guupta",
+    "source_id": "src-thapar-early-india",
+    "claim": "The Gupta Period (c. 320-550 CE) was a classical age of India under the Gupta dynasty, famed for Sanskrit literature (Kalidasa) and mathematics (Aryabhata).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-thapar-early-india"
+    ],
+    "interpretation_note": "Often termed a 'classical age'; dates approximate."
+  },
+  {
+    "id": "ec-020",
+    "subject_type": "entity",
+    "subject_id": "person-kalidasa",
+    "source_id": "src-thapar-early-india",
+    "claim": "Kalidasa was a classical Sanskrit poet and playwright of the Gupta court (c. 4th-5th c. CE), author of Abhijnanashakuntalam.",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-thapar-early-india"
+    ],
+    "interpretation_note": "Exact dates and even historicity debates exist; standard attribution to the Gupta court."
+  },
+  {
+    "id": "ec-021",
+    "subject_type": "entity",
+    "subject_id": "tech-zero",
+    "source_id": "src-aryabhatiya",
+    "claim": "The place-value numeral system with zero was formalized in Gupta-era India; attested by Aryabhata's notation and later inscriptions (e.g., Gwalior).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-aryabhatiya"
+    ],
+    "interpretation_note": "Concept of zero as a numeral (shunya) is distinctly Indian; earlier Mesopotamian/Egyptian null-markers differ."
+  },
+  {
+    "id": "ec-022",
+    "subject_type": "entity",
+    "subject_id": "person-aryabhata",
+    "source_id": "src-aryabhatiya",
+    "claim": "Aryabhata (b. 476 CE) authored the Aryabhatiya, introducing place-value notation, trigonometric functions, and a heliocentric-leaning model.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-aryabhatiya"
+    ],
+    "interpretation_note": "Aryabhata's birthplace is traditionally given as Kusumapura (near Pataliputra)."
+  },
+  {
+    "id": "ec-023",
+    "subject_type": "relationship",
+    "subject_id": "religion-buddhism->silk_road:silk_road",
+    "source_id": "src-silk-road-archives",
+    "claim": "Buddhism spread from India to Central Asia and Han China along the Silk Road from the 2nd c. BCE, carried by monks and merchants.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-silk-road-archives",
+      "src-thapar-early-india"
+    ],
+    "interpretation_note": "Archaeological (e.g., Bamiyan, Dunhuang) and textual evidence corroborate the transmission."
+  },
+  {
+    "id": "ec-024",
+    "subject_type": "relationship",
+    "subject_id": "civ-maurya->persian_empire:civ-persian",
+    "source_id": "src-strabo-geography",
+    "claim": "The Maurya polity had indirect awareness of Persian (Achaemenid) administration via the Arthashastra's references; direct contemporaneity was limited (Achaemenid fell 330 BCE).",
+    "confidence": "low",
+    "scholar_consensus": "weak",
+    "controversy_level": "medium",
+    "source_ids": [
+      "src-strabo-geography",
+      "src-arthashastra"
+    ],
+    "interpretation_note": "Relationship is loose/indirect; included to mark cross-topic awareness, not a strong historical linkage."
   }
 ]

@@ -203,6 +203,15 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/RelationshipEvidence.test.tsx",
   "frontend/src/components/ExplorationFlowGuide.tsx",
   "frontend/src/components/ExplorationFlowGuide.test.tsx",
+  // M31 Pilot (Knowledge Model Expansion) — DATA-LEVEL Freeze Gate (M31-G0).
+  // Pilot validates the Knowledge Model Expansion on a single high-density
+  // dataset (ancient_india) WITHOUT touching schema/runtime/enum/API. This is
+  // a curated-data change only; it must NOT introduce new entity/relationship
+  // TYPES, new dependencies, or any AI/LLM/DB/neo4j/ES/vector component.
+  // NOTE: `checkScope` skips `data/` files, so this entry is a no-op for the
+  // checker but documents the PO-approved Pilot gate explicitly (audit trail,
+  // consistent with how M26.1 listed data/sources.json + data/evidence_claims.json).
+  "data/examples/ancient_india_example.json",
 ];
 
 function _scopeAllowed(file) {

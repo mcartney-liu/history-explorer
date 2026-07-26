@@ -26,14 +26,35 @@
         "certainty": "approximate",
         "label": "185 BC"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-ashoka-edicts",
+      "evidence": [
+        "ec-004"
+      ],
+      "reliability": "high",
       "period": "tp-maurya",
       "region": "loc-pataliputra",
       "related_events": [
         "event-kalinga-war"
-      ]
+      ],
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Pataliputra (capital region), Magadha"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Sanskrit",
+        "Pali",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Maurya Empire",
+          "url": "https://en.wikipedia.org/wiki/Maurya_Empire"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "person-chandragupta",
@@ -57,9 +78,11 @@
         "certainty": "approximate",
         "label": "297 BC"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-arthashastra",
+      "evidence": [
+        "ec-011"
+      ],
+      "reliability": "high",
       "birth": {
         "value": -340,
         "precision": "year",
@@ -74,7 +97,25 @@
       },
       "roles": [
         "Mauryan emperor"
-      ]
+      ],
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Magadha (Maurya heartland)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Sanskrit",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Chandragupta Maurya",
+          "url": "https://en.wikipedia.org/wiki/Chandragupta_Maurya"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "person-ashoka",
@@ -100,9 +141,11 @@
         "certainty": "approximate",
         "label": "232 BC"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-ashoka-edicts",
+      "evidence": [
+        "ec-003"
+      ],
+      "reliability": "high",
       "birth": {
         "value": -304,
         "precision": "year",
@@ -117,7 +160,25 @@
       },
       "roles": [
         "Mauryan emperor"
-      ]
+      ],
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Pataliputra (capital)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Prakrit",
+        "Sanskrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Ashoka",
+          "url": "https://en.wikipedia.org/wiki/Ashoka"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "loc-pataliputra",
@@ -133,14 +194,35 @@
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-strabo-geography",
+      "evidence": [
+        "ec-012"
+      ],
+      "reliability": "medium",
       "coordinates": {
         "lat": 25.6114,
         "lng": 85.1384
       },
-      "region": "Magadha"
+      "region": "Magadha",
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Pataliputra, Magadha (Ganges–Son confluence)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Sanskrit",
+        "Pali",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Pataliputra",
+          "url": "https://en.wikipedia.org/wiki/Pataliputra"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "religion-buddhism",
@@ -156,14 +238,35 @@
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-tipitaka",
+      "evidence": [
+        "ec-013"
+      ],
+      "reliability": "high",
       "practiced_by": "person-siddhartha",
       "practiced_in": "loc-pataliputra",
       "texts": [
         "Tipitaka"
-      ]
+      ],
+      "geo": {
+        "lat": 24.695,
+        "lng": 84.985,
+        "label": "Bodh Gaya / Magadha (place of enlightenment)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization), originated in Magadha",
+      "language": [
+        "Pali",
+        "Sanskrit",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Buddhism",
+          "url": "https://en.wikipedia.org/wiki/Buddhism"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "person-siddhartha",
@@ -190,9 +293,11 @@
         "certainty": "approximate",
         "label": "c. 483 BC"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-tipitaka",
+      "evidence": [
+        "ec-014"
+      ],
+      "reliability": "high",
       "birth": {
         "value": -563,
         "precision": "year",
@@ -207,7 +312,25 @@
       },
       "roles": [
         "Teacher"
-      ]
+      ],
+      "geo": {
+        "lat": 27.4833,
+        "lng": 83.2733,
+        "label": "Lumbini (birthplace)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Pali",
+        "Sanskrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Gautama Buddha",
+          "url": "https://en.wikipedia.org/wiki/Gautama_Buddha"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "loc-indus-valley",
@@ -223,14 +346,31 @@
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-thapar-early-india",
+      "evidence": [
+        "ec-015"
+      ],
+      "reliability": "medium",
       "coordinates": {
         "lat": 27.0,
         "lng": 70.0
       },
-      "region": "South Asia"
+      "region": "South Asia",
+      "geo": {
+        "lat": 27.0,
+        "lng": 70.0,
+        "label": "Indus River basin, modern Pakistan"
+      },
+      "cultural_affiliation": "Indus (Harappan) civilization; later integrated into the Indic cultural sphere",
+      "language": [],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Indus Valley",
+          "url": "https://en.wikipedia.org/wiki/Indus_Valley"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "event-kalinga-war",
@@ -244,15 +384,35 @@
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-ashoka-edicts",
+      "evidence": [
+        "ec-016"
+      ],
+      "reliability": "high",
       "location": "loc-pataliputra",
       "participants": [
         "person-ashoka"
       ],
       "causes": [],
-      "consequences": []
+      "consequences": [],
+      "geo": {
+        "lat": 20.47,
+        "lng": 85.83,
+        "label": "Kalinga (coastal Odisha)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Prakrit",
+        "Sanskrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Kalinga War",
+          "url": "https://en.wikipedia.org/wiki/Kalinga_War"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "idea-dharma",
@@ -268,9 +428,30 @@
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": ""
+      "source": "src-ashoka-edicts",
+      "evidence": [
+        "ec-017"
+      ],
+      "reliability": "high",
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Ancient India (Indic cultural sphere)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Sanskrit",
+        "Pali",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Dharma",
+          "url": "https://en.wikipedia.org/wiki/Dharma"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "tp-maurya",
@@ -294,9 +475,30 @@
         "certainty": "approximate",
         "label": "185 BC"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": ""
+      "source": "src-ashoka-edicts",
+      "evidence": [
+        "ec-018"
+      ],
+      "reliability": "high",
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Indian subcontinent"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Sanskrit",
+        "Pali",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Mauryan Empire",
+          "url": "https://en.wikipedia.org/wiki/Mauryan_Empire"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "tp-guupta",
@@ -309,7 +511,41 @@
       ],
       "labels": {
         "en": "Gupta Period"
-      }
+      },
+      "start_date": {
+        "value": 320,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "320 CE"
+      },
+      "end_date": {
+        "value": 550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "550 CE"
+      },
+      "source": "src-thapar-early-india",
+      "evidence": [
+        "ec-019"
+      ],
+      "reliability": "medium",
+      "geo": {
+        "lat": 25.6114,
+        "lng": 82.0,
+        "label": "Indian subcontinent (classical age)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization), classical Sanskrit culture",
+      "language": [
+        "Sanskrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Gupta Empire",
+          "url": "https://en.wikipedia.org/wiki/Gupta_Empire"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "person-kalidasa",
@@ -320,7 +556,41 @@
       "aliases": [],
       "labels": {
         "en": "Kalidasa"
-      }
+      },
+      "start_date": {
+        "value": 400,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 4th–5th c. CE (Gupta court)"
+      },
+      "end_date": {
+        "value": 450,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. mid-5th c. CE"
+      },
+      "source": "src-thapar-early-india",
+      "evidence": [
+        "ec-020"
+      ],
+      "reliability": "medium",
+      "geo": {
+        "lat": 23.1765,
+        "lng": 75.7885,
+        "label": "Ujjain (Gupta court)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization), classical Sanskrit culture",
+      "language": [
+        "Sanskrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Kalidasa",
+          "url": "https://en.wikipedia.org/wiki/Kalidasa"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "tech-zero",
@@ -333,7 +603,32 @@
       ],
       "labels": {
         "en": "Zero and Decimal System"
-      }
+      },
+      "start_date": null,
+      "end_date": null,
+      "source": "src-aryabhatiya",
+      "evidence": [
+        "ec-021"
+      ],
+      "reliability": "high",
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Indian subcontinent"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization)",
+      "language": [
+        "Sanskrit",
+        "Prakrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "0 (number)",
+          "url": "https://en.wikipedia.org/wiki/0_(number)"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "person-aryabhata",
@@ -344,7 +639,41 @@
       "aliases": [],
       "labels": {
         "en": "Aryabhata"
-      }
+      },
+      "start_date": {
+        "value": 476,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "476 CE"
+      },
+      "end_date": {
+        "value": 550,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "550 CE"
+      },
+      "source": "src-aryabhatiya",
+      "evidence": [
+        "ec-022"
+      ],
+      "reliability": "high",
+      "geo": {
+        "lat": 25.6114,
+        "lng": 85.1384,
+        "label": "Kusumapura (near Pataliputra)"
+      },
+      "cultural_affiliation": "Ancient Indian (Indic civilization), classical Sanskrit science",
+      "language": [
+        "Sanskrit"
+      ],
+      "external_refs": [
+        {
+          "source": "Wikipedia",
+          "title": "Aryabhata",
+          "url": "https://en.wikipedia.org/wiki/Aryabhata"
+        }
+      ],
+      "importance": "high"
     }
   ],
   "relationships": [
@@ -352,201 +681,360 @@
       "source": "person-chandragupta",
       "target": "civ-maurya",
       "type": "ruled",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Chanakya, Arthashastra; Strabo, Geographica (on Megasthenes' Indica).",
+      "evidence": [
+        "ec-011"
+      ],
+      "valid_time": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 322–297 BCE"
+      },
+      "weight": 0.9,
+      "mechanism": "political",
+      "geographic_scope": "Magadha / Indian subcontinent"
     },
     {
       "source": "person-ashoka",
       "target": "civ-maurya",
       "type": "ruled",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Edicts of Ashoka (Rock and Pillar Edicts).",
+      "evidence": [
+        "ec-003"
+      ],
+      "valid_time": {
+        "value": -268,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 268–232 BCE"
+      },
+      "weight": 0.9,
+      "mechanism": "political",
+      "geographic_scope": "Magadha / Indian subcontinent"
     },
     {
       "source": "civ-maurya",
       "target": "loc-pataliputra",
       "type": "located_at",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Megasthenes (Indica, via Strabo); Ashokan edicts.",
+      "evidence": [
+        "ec-004"
+      ],
+      "valid_time": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322–185 BCE"
+      },
+      "weight": 0.8,
+      "mechanism": "political",
+      "geographic_scope": "Magadha (capital)"
     },
     {
       "source": "civ-maurya",
       "target": "religion-buddhism",
       "type": "practiced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Edicts of Ashoka (esp. Rock Edicts II, VIII, XII).",
+      "evidence": [
+        "ec-013",
+        "ec-003"
+      ],
+      "valid_time": {
+        "value": -268,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "from c. 268 BCE (Ashoka's reign)"
+      },
+      "weight": 0.8,
+      "mechanism": "religious",
+      "geographic_scope": "Indian subcontinent"
     },
     {
       "source": "person-siddhartha",
       "target": "religion-buddhism",
       "type": "influenced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Pali Canon (Tipitaka); Buddhist chronicles.",
+      "evidence": [
+        "ec-014"
+      ],
+      "valid_time": {
+        "value": -500,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 5th–4th c. BCE"
+      },
+      "weight": 0.95,
+      "mechanism": "religious",
+      "geographic_scope": "Magadha (origin)"
     },
     {
       "source": "person-ashoka",
       "target": "event-kalinga-war",
       "type": "participated_in",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Ashoka, Rock Edict XIII.",
+      "evidence": [
+        "ec-005",
+        "ec-016"
+      ],
+      "valid_time": {
+        "value": -261,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 261 BCE"
+      },
+      "weight": 0.85,
+      "mechanism": "political",
+      "geographic_scope": "Kalinga (coastal Odisha)"
     },
     {
       "source": "event-kalinga-war",
       "target": "loc-pataliputra",
       "type": "located_at",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "medium",
+      "citation": "Ashoka, Rock Edict XIII (war prosecuted from the capital).",
+      "evidence": [
+        "ec-016"
+      ],
+      "valid_time": {
+        "value": -261,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 261 BCE"
+      },
+      "weight": 0.5,
+      "mechanism": "political",
+      "geographic_scope": "Odisha → Magadha"
     },
     {
       "source": "person-siddhartha",
       "target": "idea-dharma",
       "type": "influenced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Pali Canon (Dhamma teachings); Ashokan dhamma edicts.",
+      "evidence": [
+        "ec-014",
+        "ec-017"
+      ],
+      "valid_time": {
+        "value": -500,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 5th c. BCE"
+      },
+      "weight": 0.8,
+      "mechanism": "religious",
+      "geographic_scope": "Magadha"
     },
     {
       "source": "person-ashoka",
       "target": "idea-dharma",
       "type": "influenced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Ashoka, Rock and Pillar Edicts (dhamma policy).",
+      "evidence": [
+        "ec-003",
+        "ec-017"
+      ],
+      "valid_time": {
+        "value": -268,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "from c. 268 BCE"
+      },
+      "weight": 0.85,
+      "mechanism": "religious",
+      "geographic_scope": "Indian subcontinent"
     },
     {
       "source": "civ-maurya",
       "target": "tp-maurya",
       "type": "related_to",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Standard periodization; Ashokan edicts as Maurya-source.",
+      "evidence": [
+        "ec-004"
+      ],
+      "valid_time": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322–185 BCE"
+      },
+      "weight": 0.7,
+      "mechanism": "political",
+      "geographic_scope": "Indian subcontinent"
     },
     {
       "source": "religion-buddhism",
       "target": "loc-pataliputra",
       "type": "located_at",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "confidence": "medium",
+      "citation": "Early Buddhist sangha centered in Magadha (Pataliputra, Rajagaha).",
+      "evidence": [
+        "ec-013"
+      ],
       "valid_time": null,
-      "weight": null
+      "weight": 0.5,
+      "mechanism": "religious",
+      "geographic_scope": "Magadha (early sangha)"
     },
     {
       "source": "person-siddhartha",
       "target": "loc-indus-valley",
       "type": "located_at",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "confidence": "low",
+      "citation": "Loose cultural/geographic association with the broader North Indian plains; the Buddha's ministry was in the Gangetic plain, not the Indus basin.",
+      "evidence": [
+        "ec-014"
+      ],
       "valid_time": null,
-      "weight": null
+      "weight": 0.3,
+      "mechanism": "cultural",
+      "geographic_scope": "Gangetic plain (loose link to broader North India)"
     },
     {
       "source": "religion-buddhism",
       "target": "silk_road:han_dynasty",
       "type": "spread",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "UNESCO, The Silk Roads: Routes of Dialogue; Buddhist transmission to Han China (2nd c. BCE onward).",
+      "evidence": [
+        "ec-023"
+      ],
+      "valid_time": {
+        "value": -200,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "from c. 2nd c. BCE"
+      },
+      "weight": 0.8,
+      "mechanism": "cultural",
+      "geographic_scope": "India → Central Asia → Han China"
     },
     {
       "source": "religion-buddhism",
       "target": "silk_road:silk_road",
       "type": "spread",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "UNESCO, The Silk Roads: Routes of Dialogue; Buddhist transmission along the Silk Road.",
+      "evidence": [
+        "ec-023"
+      ],
+      "valid_time": {
+        "value": -200,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "from c. 2nd c. BCE"
+      },
+      "weight": 0.8,
+      "mechanism": "cultural",
+      "geographic_scope": "India → Central Asia → East Asia"
     },
     {
       "source": "civ-maurya",
       "target": "persian_empire:civ-persian",
       "type": "contemporary_with",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "low",
+      "citation": "Chanakya's Arthashastra references Persian (Achaemenid) administrative models; overlap limited (Achaemenid fell 330 BCE, Maurya rose 322 BCE).",
+      "evidence": [
+        "ec-024"
+      ],
+      "valid_time": {
+        "value": -500,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "6th–4th c. BCE (limited overlap)"
+      },
+      "weight": 0.4,
+      "mechanism": "political",
+      "geographic_scope": "West Asia ↔ South Asia"
     },
     {
       "source": "tp-maurya",
       "target": "tp-guupta",
       "type": "before",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Standard Indian periodization: Maurya (322–185 BCE) precedes Gupta (c. 320–550 CE).",
+      "evidence": [
+        "ec-018",
+        "ec-019"
+      ],
+      "valid_time": {
+        "value": -185,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "Maurya ends 185 BCE; Gupta begins c. 320 CE"
+      },
+      "weight": 0.7,
+      "mechanism": "chronological",
+      "geographic_scope": "Indian subcontinent"
     },
     {
       "source": "tech-zero",
       "target": "person-aryabhata",
       "type": "invented",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
-    },
-    {
-      "source": "religion-buddhism",
-      "target": "silk_road:silk_road",
-      "type": "spread",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Aryabhata, Aryabhatiya (place-value notation, zero as a numeral).",
+      "evidence": [
+        "ec-021",
+        "ec-022"
+      ],
+      "valid_time": {
+        "value": 476,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 5th c. CE (formalized)"
+      },
+      "weight": 0.75,
+      "mechanism": "technological",
+      "geographic_scope": "Indian subcontinent"
     },
     {
       "source": "idea-dharma",
       "target": "religion-buddhism",
       "type": "influenced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Pali Canon; Ashokan dhamma edicts framing Buddhist teaching within dharma.",
+      "evidence": [
+        "ec-017",
+        "ec-013"
+      ],
+      "valid_time": {
+        "value": -500,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 5th c. BCE"
+      },
+      "weight": 0.7,
+      "mechanism": "religious",
+      "geographic_scope": "Indian subcontinent"
     },
     {
       "source": "person-kalidasa",
       "target": "person-aryabhata",
       "type": "related_to",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "medium",
+      "citation": "Both flourished at the Gupta court (classical Sanskrit culture); exact personal contact unattested.",
+      "evidence": [
+        "ec-020",
+        "ec-022"
+      ],
+      "valid_time": {
+        "value": 400,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 4th–5th c. CE"
+      },
+      "weight": 0.5,
+      "mechanism": "cultural",
+      "geographic_scope": "Gupta court"
     }
   ],
   "timeline": [
@@ -557,7 +1045,13 @@
         "certainty": "approximate",
         "label": "322 BC"
       },
-      "event": "Chandragupta founds the Maurya Empire"
+      "event": "Chandragupta founds the Maurya Empire",
+      "phase": "Empire Formation",
+      "parallel_with": [
+        "greek_philosophy",
+        "hellenistic_world"
+      ],
+      "depends_on": []
     },
     {
       "period": {
@@ -566,7 +1060,48 @@
         "certainty": "approximate",
         "label": "261 BC"
       },
-      "event": "Ashoka's Kalinga War; turn to Buddhism"
+      "event": "Ashoka's Kalinga War; turn to Buddhism",
+      "phase": "Imperial Consolidation & Dhamma",
+      "parallel_with": [
+        "silk_road",
+        "hellenistic_world"
+      ],
+      "depends_on": [
+        "person-chandragupta->civ-maurya"
+      ]
+    },
+    {
+      "period": {
+        "value": 320,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "320 CE"
+      },
+      "event": "Gupta dynasty rises; classical age begins",
+      "phase": "Classical Age",
+      "parallel_with": [
+        "roman_empire",
+        "silk_road"
+      ],
+      "depends_on": [
+        "tp-maurya"
+      ]
+    },
+    {
+      "period": {
+        "value": 499,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "499 CE"
+      },
+      "event": "Aryabhata composes the Aryabhatiya; zero formalized",
+      "phase": "Mathematical Synthesis",
+      "parallel_with": [
+        "hellenistic_world"
+      ],
+      "depends_on": [
+        "tp-guupta"
+      ]
     }
   ]
 }
