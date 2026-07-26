@@ -65,13 +65,16 @@ test("1. AI code OUTSIDE approved path FAILS (token + scope)", () => {
   );
 });
 
-test("2. backend/app/ai_gateway/ is ALLOWED", () => {
+test("2. ai_gateway change is SCOPE-blocked under M24 allowlist, but openai token still allowed inside it", () => {
   const root = makeProject(VALID);
   const v = runChecks({ root, files: VALID.map((f) => f.rel) });
-  assert.equal(
-    v.length,
-    0,
-    "expected no violations for approved M11 scenario, got: " + JSON.stringify(v)
+  assert.ok(
+    v.some((x) => x.startsWith("SCOPE")),
+    "expected SCOPE violation for ai_gateway change under M24 allowlist mode, got: " + JSON.stringify(v)
+  );
+  assert.ok(
+    !v.some((x) => x.startsWith("TOKEN")),
+    "openai inside ai_gateway must NOT raise a TOKEN violation, got: " + JSON.stringify(v)
   );
 });
 
@@ -99,13 +102,16 @@ test("4. vector database dependency FAILS", () => {
   );
 });
 
-test("5. approved provider (openai) PASSES", () => {
+test("5. approved provider (openai) passes TOKEN/DEP checks", () => {
   const root = makeProject(VALID);
   const v = runChecks({ root, files: VALID.map((f) => f.rel) });
-  assert.equal(
-    v.length,
-    0,
-    "approved provider must pass, got: " + JSON.stringify(v)
+  assert.ok(
+    !v.some((x) => x.startsWith("TOKEN")),
+    "approved provider openai must not raise TOKEN violation, got: " + JSON.stringify(v)
+  );
+  assert.ok(
+    !v.some((x) => x.startsWith("DEP")),
+    "approved provider openai must not raise DEP violation, got: " + JSON.stringify(v)
   );
 });
 
@@ -118,5 +124,22 @@ test("6. non-approved AI SDK (langchain) FAILS", () => {
   assert.ok(
     v.some((x) => x.startsWith("DEP") && /non-approved AI SDK/i.test(x)),
     "expected non-approved AI SDK DEP violation, got: " + JSON.stringify(v)
+  );
+});
+
+test("7. M24 allowlist: dataset.py + dataset test PASS, other backend files blocked", () => {
+  const root = makeProject(VALID);
+  const allowed = runChecks({
+    root,
+    files: ["backend/app/core/dataset.py", "backend/tests/test_dataset_metadata.py"],
+  });
+  assert.ok(
+    !allowed.some((x) => x.startsWith("SCOPE")),
+    "M24-approved dataset files must NOT raise SCOPE violation, got: " + JSON.stringify(allowed)
+  );
+  const blocked = runChecks({ root, files: ["backend/app/core/global_graph.py"] });
+  assert.ok(
+    blocked.some((x) => x.startsWith("SCOPE")),
+    "non-allowlisted backend file must raise SCOPE violation, got: " + JSON.stringify(blocked)
   );
 });

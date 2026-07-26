@@ -23,6 +23,16 @@
 //   - Outside the approved module, the absolute AI prohibition is unchanged.
 //   - Vector DB / RAG / Neo4j / Redis / GIS remain forbidden everywhere.
 //
+// M24 (Freeze Gate Revision) evolution — scope guard upgraded to allowlist mode:
+//   - The old "frontend-only" scope model (default allow backend except tests/
+//     deps/ai_gateway/main.py) is replaced by an explicit SCOPE_ALLOWLIST.
+//   - DEFAULT: every backend/ and frontend/ change is FROZEN. A change passes
+//     ONLY when it matches SCOPE_ALLOWLIST (exact file or directory prefix).
+//   - M24 adds exactly two entries: backend/app/core/dataset.py and
+//     backend/tests/test_dataset_metadata.py (approved backend additive
+//     foundation change). All other backend/frontend paths stay frozen and
+//     require a new Freeze Revision Gate to be allowlisted.
+//
 // Severity model (M8.6 Playbook): only D-class (business-logic) hits FAIL.
 
 import fs from "node:fs";
@@ -92,19 +102,40 @@ function getChangedFiles() {
   return files;
 }
 
-// ---- 1. scope check ----
-export function checkScope(violations, changed, scope = FROZEN_SCOPE) {
-  if (scope !== "frontend") return;
+// ---- 1. scope check (M24 Freeze Gate Revision: allowlist mode) ----
+// Upgraded from the old "frontend-only" mode. Now the DEFAULT is: every change
+// under `backend/` or `frontend/` is FROZEN. A change is permitted ONLY when it
+// matches an entry in SCOPE_ALLOWLIST — the explicit, PO-approved allowlist.
+//
+// M24 (Data Foundation) was approved via the Freeze Revision Gate and adds
+// exactly two files to the allowlist:
+//   - backend/app/core/dataset.py              (new Dataset identity layer)
+//   - backend/tests/test_dataset_metadata.py   (its unit tests)
+//
+// Explicitly FORBIDDEN from the allowlist (require a new Freeze Revision Gate):
+//   backend/app/main.py, backend/app/api/*, backend/app/ai_gateway/*,
+//   backend/app/core/global_graph.py, backend/app/core/registry.py,
+//   data/examples/*, frontend/*.
+const SCOPE_ALLOWLIST = [
+  "backend/app/core/dataset.py",
+  "backend/tests/test_dataset_metadata.py",
+];
+
+function _scopeAllowed(file) {
+  return SCOPE_ALLOWLIST.some((p) => {
+    if (file === p) return true;
+    // directory-style entry (trailing "/") permits nested files
+    if (p.endsWith("/") && file.startsWith(p)) return true;
+    return false;
+  });
+}
+
+export function checkScope(violations, changed) {
   for (const f of changed) {
-    if (
-      f.startsWith("backend/") &&
-      !f.startsWith("backend/tests/") &&
-      !f.startsWith("backend/requirements") &&
-      !f.startsWith(APPROVED_AI_MODULE) &&
-      f !== APPROVED_AI_MAIN
-    ) {
+    if (!f.startsWith("backend/") && !f.startsWith("frontend/")) continue;
+    if (!_scopeAllowed(f)) {
       violations.push(
-        `SCOPE: backend change outside tests/deps/ai_gateway/main.py not allowed under FROZEN_SCOPE=frontend -> ${f}`
+        `SCOPE: backend/frontend change outside approved allowlist not allowed -> ${f}`
       );
     }
   }
@@ -219,10 +250,9 @@ export function checkEnums(violations, root = ROOT) {
 // ---- orchestration (pure, testable) ----
 export function runChecks(opts = {}) {
   const root = opts.root ?? ROOT;
-  const scope = opts.scope ?? FROZEN_SCOPE;
   const files = opts.files ?? getChangedFiles();
   const violations = [];
-  checkScope(violations, files, scope);
+  checkScope(violations, files); // allowlist mode: default frozen, only SCOPE_ALLOWLIST passes
   checkTokens(violations, root);
   checkDeps(violations, root);
   checkEnums(violations, root);
