@@ -28,5 +28,55 @@
     "reference": "Rosenberg, J. (1999). A History of the Roman Empire. Academic Press.",
     "license": "Proprietary",
     "publisher_or_archive": "Academic Press"
+  },
+  {
+    "id": "src-ashoka-edicts",
+    "type": "inscription",
+    "title": "Edicts of Ashoka (Rock and Pillar Edicts)",
+    "creator": "Ashoka Maurya",
+    "year": -250,
+    "reference": "Thapar, R. (ed.). Asokan Inscriptions. Indian Epigraphical Series.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Indian Epigraphical Series"
+  },
+  {
+    "id": "src-strabo-geography",
+    "type": "literature",
+    "title": "Geographica",
+    "creator": "Strabo",
+    "year": -20,
+    "reference": "Strabo. Geographica. ed. A. Meineke. Teubner.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Teubner"
+  },
+  {
+    "id": "src-pliny-nh",
+    "type": "literature",
+    "title": "Naturalis Historia",
+    "creator": "Pliny the Elder",
+    "year": 77,
+    "reference": "Pliny the Elder. Natural History. trans. H. Rackham. Loeb Classical Library.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Loeb Classical Library"
+  },
+  {
+    "id": "src-nt-greek",
+    "type": "literature",
+    "title": "Novum Testamentum Graece",
+    "creator": "Various (canonical authors)",
+    "year": 100,
+    "reference": "Nestle-Aland. Novum Testamentum Graece. Deutsche Bibelgesellschaft.",
+    "license": "Proprietary",
+    "publisher_or_archive": "Deutsche Bibelgesellschaft"
+  },
+  {
+    "id": "src-silk-road-archives",
+    "type": "archival",
+    "title": "The Silk Roads: Routes of Dialogue",
+    "creator": "UNESCO World Heritage Centre",
+    "year": 2014,
+    "reference": "UNESCO. The Silk Roads: Routes of Dialogue. World Heritage Centre.",
+    "license": "Other",
+    "publisher_or_archive": "UNESCO World Heritage Centre"
   }
 ]

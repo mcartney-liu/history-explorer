@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM27.1] - 2026-07-26 (Project Release — M27.1)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only curated provenance data + documentation were changed. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Project Release — M27.1 Provenance Coverage Expansion
+
+Changes:
+
+- Expanded curated source registry (Source Registry curated sources **3 → 8**).
+- Expanded evidence claim dataset (Evidence Claims **2 → 10**).
+- Added provenance coverage for additional historical entities and relationships (human-curated records outside `data/examples`; no AI-generated sources, no `confidence` field).
+
+Architecture:
+
+- No runtime change (held at `0.13.0`).
+- No API change.
+- No frontend change.
+
+Freeze Compliance:
+
+- `main.py` / `api/*` / `validation.py` / frontend untouched; `data/examples` diff = 0.
+- No schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No backend code changed.
+- DatasetProvider Runtime Activation (E2) remains deferred.
+- Backend **205 passed** (unchanged) / frontend **500 passed** (unchanged); `freeze-check` EXIT 0; governance tests **9/9**. No AI / LLM introduced. No new dependency.
+
 ## [vM26.1] - 2026-07-26 (Project Release — M26.1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive Source Registry + Evidence Claim code + curated data + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.

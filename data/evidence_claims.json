@@ -14,5 +14,64 @@
     "source_id": "src-herodotus-histories",
     "claim": "Court chronicle links Chandragupta Maurya to the founding of the Maurya dynasty.",
     "notes": "Illustrative curated link; not an auto-generated inference."
+  },
+  {
+    "id": "ec-003",
+    "subject_type": "entity",
+    "subject_id": "person-ashoka",
+    "source_id": "src-ashoka-edicts",
+    "claim": "The Edicts of Ashoka record the emperor's conversion to Buddhism and his dhamma policy after the Kalinga war.",
+    "notes": "Primary inscriptional source; corroborates person-ashoka->event-kalinga-war."
+  },
+  {
+    "id": "ec-004",
+    "subject_type": "entity",
+    "subject_id": "civ-maurya",
+    "source_id": "src-ashoka-edicts",
+    "claim": "The Maurya polity under Ashoka is documented in the major rock edicts as a centrally administered dhamma-ruled state."
+  },
+  {
+    "id": "ec-005",
+    "subject_type": "relationship",
+    "subject_id": "person-ashoka->event-kalinga-war",
+    "source_id": "src-ashoka-edicts",
+    "claim": "Ashoka's own edicts (Rock Edict XIII) reference the conquest of Kalinga and its remorse-driven reform.",
+    "notes": "Real relationship pair verified in ancient_india_example.json."
+  },
+  {
+    "id": "ec-006",
+    "subject_type": "entity",
+    "subject_id": "person-jesus",
+    "source_id": "src-nt-greek",
+    "claim": "The Pauline epistles attest to the early Jesus movement and its spread to Antioch."
+  },
+  {
+    "id": "ec-007",
+    "subject_type": "relationship",
+    "subject_id": "person-paul->religion-early-church",
+    "source_id": "src-nt-greek",
+    "claim": "Paul's letters describe his role in founding early churches across the eastern Mediterranean.",
+    "notes": "Real relationship pair verified in early_christianity_example.json."
+  },
+  {
+    "id": "ec-008",
+    "subject_type": "entity",
+    "subject_id": "civ-egypt",
+    "source_id": "src-pliny-nh",
+    "claim": "Pliny's Natural History catalogues Egyptian antiquities and mummification practices known to the Roman world."
+  },
+  {
+    "id": "ec-009",
+    "subject_type": "entity",
+    "subject_id": "person-plato",
+    "source_id": "src-strabo-geography",
+    "claim": "Strabo's Geographica places Plato's Academy within the suburban deme of Kolonos, near Athens."
+  },
+  {
+    "id": "ec-010",
+    "subject_type": "entity",
+    "subject_id": "person-socrates",
+    "source_id": "src-strabo-geography",
+    "claim": "Strabo records Socrates' habitual dialogue in the Athenian agora."
   }
 ]
