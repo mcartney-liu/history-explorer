@@ -29,6 +29,21 @@ Freeze Compliance:
 - DatasetProvider Runtime Activation (E2) remains deferred.
 - Backend **205 passed** (unchanged) / frontend **500 passed** (unchanged); `freeze-check` EXIT 0; governance tests **9/9**. No AI / LLM introduced. No new dependency.
 
+## [vM30.1] - 2026-07-26 (Project Release — M30-A)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive provenance-UI code + freeze-guard script + tests were added, surfacing the existing M29.1 provenance projection. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Frontend Provenance Exploration Panel (M30-A). A pure-frontend additive layer over the M29.1 runtime provenance projection — approved via the Frontend Freeze Revision Gate (lightweight ADR) — that surfaces the existing `GET /provenance/{entity_id}` read model inside the Entity Page. No backend / data / schema / validation / registry / runtime change:
+
+- `frontend/src/data/provenanceApi.ts` (new): HTTP-only client for `GET /provenance/{entity_id}` (`API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'`); `getProvenance(entityId)` returns the `provenance` array (empty array when none); a 404 raises `ProvenanceDisabledError` (the panel then shows a friendly disabled state rather than a hard error). No AI, no new dependency.
+- `frontend/src/components/ProvenancePanel.tsx` (new): a 5-state container (`ProvenancePanel`) + view (`ProvenancePanelView`) — loading / success / empty / disabled / error. The success view shows Source / Claim / Reference only (never `subject_id`); `AbortController` aborts the in-flight fetch on unmount; retry re-keys the request. Reuses the existing `EmptyState` / `ErrorCard` / `LoadingSkeleton` UX atoms. No edge creation / inference / causal reasoning.
+- `frontend/src/components/EntityPage.tsx` (changed): mounts `<ProvenancePanel entityId={entity.id} />` right after the relationship cluster (RelatedEntityList), before the AI panel. It passes `entity.id` — the **local id** — because the backend indexes provenance by local id per ADR-006 (NOT the `global_id`); this contract fix is the key correctness change vs the earlier global_id assumption.
+- `frontend/src/data/provenanceApi.test.ts` (new, 5 tests): 200 + records, 200 + empty, 404 → `ProvenanceDisabledError`, 500 → Error, malformed JSON.
+- `frontend/src/components/ProvenancePanel.test.tsx` (new, 5 tests): renders `ProvenancePanelView` with forced status (loading / empty / disabled / error / success).
+- `scripts/freeze-check.mjs` (changed): `SCOPE_ALLOWLIST` extended from 16 → 21 entries. M30-A adds exactly five files (`frontend/src/data/provenanceApi.ts`, `frontend/src/data/provenanceApi.test.ts`, `frontend/src/components/ProvenancePanel.tsx`, `frontend/src/components/ProvenancePanel.test.tsx`, `frontend/src/components/EntityPage.tsx`); M24 / M25.1 / M26.1 / M29.1 entries retained.
+
+Tests: frontend **510 passed** (+10 provenance UI tests); backend **219 passed** (unchanged). `freeze-check` EXIT 0; governance tests **9/9**; backend diff = 0; `data/examples` diff = 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM29.1] - 2026-07-26 (Project Release — M29.1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive provenance-projection code + freeze-guard script + tests were added, and the runtime provenance projection was activated. See `docs/RELEASE_VERSION_POLICY.md`.
