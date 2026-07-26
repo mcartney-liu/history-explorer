@@ -296,5 +296,602 @@
       "src-arthashastra"
     ],
     "interpretation_note": "Relationship is loose/indirect; included to mark cross-topic awareness, not a strong historical linkage."
+  },
+  {
+    "id": "ec-rom-001",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-cah",
+    "claim": "The Roman Empire (principate) is conventionally dated from 27 BCE under Augustus and lasted in the West until 476 CE.",
+    "notes": "Standard periodization.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-rosenberg-1999"
+    ],
+    "interpretation_note": "Western fall 476 CE is conventional; Eastern continuation persisted to 1453 CE."
+  },
+  {
+    "id": "ec-rom-002",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-cah",
+    "claim": "At its height Rome controlled the Mediterranean basin and large parts of Europe, North Africa, and the Near East.",
+    "notes": "Territorial extent.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-oxford-roman"
+    ]
+  },
+  {
+    "id": "ec-rom-003",
+    "subject_type": "entity",
+    "subject_id": "person-augustus",
+    "source_id": "src-tacitus-ann",
+    "claim": "Augustus (born Gaius Octavius, 63 BCE) became the first Roman emperor in 27 BCE after the civil wars.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-tacitus-ann",
+      "src-suetonius"
+    ],
+    "interpretation_note": "Octavian's exact birth name and the nature of the principate are well documented by Tacitus and Suetonius."
+  },
+  {
+    "id": "ec-rom-004",
+    "subject_type": "entity",
+    "subject_id": "person-augustus",
+    "source_id": "src-res-gestae",
+    "claim": "Augustus reformed provincial administration and the military, founding the principate system.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-res-gestae",
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-005",
+    "subject_type": "entity",
+    "subject_id": "event-roman-empire-established",
+    "source_id": "src-tacitus-ann",
+    "claim": "The Roman Empire was formally established in 27 BCE when the Senate granted Octavian the title Augustus.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-tacitus-ann",
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-006",
+    "subject_type": "entity",
+    "subject_id": "loc-rome",
+    "source_id": "src-livy",
+    "claim": "Rome is traditionally dated to a founding in 753 BCE, though archaeological evidence places early Rome in the 8th-7th c. BCE.",
+    "notes": "Founding tradition.",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "medium",
+    "source_ids": [
+      "src-livy",
+      "src-wiki-rome"
+    ],
+    "interpretation_note": "The 753 BCE (Ab urbe condita) date is a later antiquarian tradition (Varro); material culture suggests a gradually growing Latin settlement, not a single founding event."
+  },
+  {
+    "id": "ec-rom-007",
+    "subject_type": "entity",
+    "subject_id": "tp-27bc",
+    "source_id": "src-cah",
+    "claim": "The year 27 BCE marks the traditional beginning of the Roman Empire (principate).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-008",
+    "subject_type": "entity",
+    "subject_id": "roman_egypt",
+    "source_id": "src-cah",
+    "claim": "Roman Egypt (Aegyptus) was established as a province in 30 BCE after Octavian's defeat of Cleopatra VII.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-cil"
+    ]
+  },
+  {
+    "id": "ec-rom-009",
+    "subject_type": "entity",
+    "subject_id": "roman_egypt",
+    "source_id": "src-cah",
+    "claim": "Egypt under Rome supplied grain to the capital and was a personal domain of the emperor.",
+    "notes": "",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-oxford-roman"
+    ]
+  },
+  {
+    "id": "ec-rom-010",
+    "subject_type": "entity",
+    "subject_id": "civ-byzantine",
+    "source_id": "src-oxford-byzantium",
+    "claim": "The Byzantine Empire, the eastern continuation of Rome, is conventionally dated from 330 CE (Constantinople's dedication) or 395 CE (formal dominion split).",
+    "notes": "",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-oxford-byzantium",
+      "src-cambridge-byzantine"
+    ],
+    "interpretation_note": "Scholars differ on the start date; 330 CE (New Rome) and 395 CE (division) are both used."
+  },
+  {
+    "id": "ec-rom-011",
+    "subject_type": "entity",
+    "subject_id": "civ-byzantine",
+    "source_id": "src-cambridge-byzantine",
+    "claim": "Byzantium preserved Roman law (Corpus Juris Civilis) and Greek learning after the West fell in 476 CE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cambridge-byzantine",
+      "src-oxford-byzantium"
+    ]
+  },
+  {
+    "id": "ec-rom-012",
+    "subject_type": "entity",
+    "subject_id": "religion-christianity",
+    "source_id": "src-oxford-christianity",
+    "claim": "Christianity emerged in the 1st c. CE within the Roman Judean province and spread across the empire.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-oxford-christianity",
+      "src-eusebius-eccl"
+    ]
+  },
+  {
+    "id": "ec-rom-013",
+    "subject_type": "entity",
+    "subject_id": "religion-christianity",
+    "source_id": "src-theodosian-code",
+    "claim": "Christianity became the state religion of the Roman Empire under Theodosius I (Edict of Thessalonica, 380 CE).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-theodosian-code",
+      "src-oxford-christianity"
+    ]
+  },
+  {
+    "id": "ec-rom-014",
+    "subject_type": "entity",
+    "subject_id": "tp-republic",
+    "source_id": "src-livy",
+    "claim": "The Roman Republic (509-27 BCE) preceded the empire; its fall followed the civil wars of the 1st c. BCE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-livy",
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-015",
+    "subject_type": "entity",
+    "subject_id": "person-constantine",
+    "source_id": "src-edict-milan",
+    "claim": "Constantine the Great (r. 306-337 CE) legalized Christianity via the Edict of Milan (313 CE).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-edict-milan",
+      "src-eusebius-eccl"
+    ]
+  },
+  {
+    "id": "ec-rom-016",
+    "subject_type": "entity",
+    "subject_id": "person-constantine",
+    "source_id": "src-oxford-byzantium",
+    "claim": "Constantine founded Constantinople as the new imperial capital, dedicated in 330 CE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-oxford-byzantium",
+      "src-cambridge-byzantine"
+    ]
+  },
+  {
+    "id": "ec-rom-017",
+    "subject_type": "entity",
+    "subject_id": "person-julius-caesar",
+    "source_id": "src-caesar-commentarii",
+    "claim": "Julius Caesar (100-44 BCE) crossed the Rubicon in 49 BCE, precipitating the civil war that ended the Republic.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-caesar-commentarii",
+      "src-suetonius"
+    ]
+  },
+  {
+    "id": "ec-rom-018",
+    "subject_type": "entity",
+    "subject_id": "person-julius-caesar",
+    "source_id": "src-suetonius",
+    "claim": "Caesar was appointed dictator perpetuo in 44 BCE and was assassinated that year.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-suetonius",
+      "src-caesar-commentarii"
+    ]
+  },
+  {
+    "id": "ec-rom-019",
+    "subject_type": "entity",
+    "subject_id": "loc-constantinople",
+    "source_id": "src-oxford-byzantium",
+    "claim": "Constantinople, founded on the site of Byzantium, became the capital of the Eastern Roman (Byzantine) Empire.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-oxford-byzantium",
+      "src-wiki-const"
+    ]
+  },
+  {
+    "id": "ec-rom-020",
+    "subject_type": "entity",
+    "subject_id": "event-edict-milan",
+    "source_id": "src-edict-milan",
+    "claim": "The Edict of Milan (313 CE) granted Christians legal toleration throughout the Roman Empire.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-edict-milan",
+      "src-eusebius-eccl"
+    ]
+  },
+  {
+    "id": "ec-rom-021",
+    "subject_type": "relationship",
+    "subject_id": "person-augustus->event-roman-empire-established",
+    "source_id": "src-tacitus-ann",
+    "claim": "Augustus (Octavian) was the central actor in the establishment of the Roman Empire in 27 BCE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-tacitus-ann",
+      "src-suetonius"
+    ]
+  },
+  {
+    "id": "ec-rom-022",
+    "subject_type": "relationship",
+    "subject_id": "event-roman-empire-established->civ-roman",
+    "source_id": "src-cah",
+    "claim": "The founding event of 27 BCE marks the beginning of the Roman civ-empire entity.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-023",
+    "subject_type": "relationship",
+    "subject_id": "event-roman-empire-established->loc-rome",
+    "source_id": "src-cah",
+    "claim": "The Roman Empire was established and centered at Rome.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-britannica-rome"
+    ]
+  },
+  {
+    "id": "ec-rom-024",
+    "subject_type": "relationship",
+    "subject_id": "event-roman-empire-established->tp-27bc",
+    "source_id": "src-cah",
+    "claim": "The empire's establishment is dated to 27 BCE (tp-27bc).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-025",
+    "subject_type": "relationship",
+    "subject_id": "civ-roman->roman_egypt",
+    "source_id": "src-cah",
+    "claim": "Roman Egypt (Aegyptus) was an imperial province administered from Rome.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-cil"
+    ]
+  },
+  {
+    "id": "ec-rom-026",
+    "subject_type": "relationship",
+    "subject_id": "civ-roman->hellenistic_world:civ-greek",
+    "source_id": "src-cah",
+    "claim": "Roman culture was deeply influenced by Hellenistic Greek art, literature, and philosophy.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah",
+      "src-oxford-roman"
+    ]
+  },
+  {
+    "id": "ec-rom-027",
+    "subject_type": "relationship",
+    "subject_id": "civ-roman->silk_road:silk_road",
+    "source_id": "src-silk-road-archives",
+    "claim": "The Roman Empire traded indirectly with the eastern Silk Road networks, importing silk and spices via Parthian and later Sassanian intermediaries.",
+    "notes": "",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "medium",
+    "source_ids": [
+      "src-silk-road-archives",
+      "src-iranica-rome"
+    ],
+    "interpretation_note": "Direct Rome-Silk Road trade was limited; most exchange was mediated by Parthia/Persia. Roman silk imports are well attested archaeologically."
+  },
+  {
+    "id": "ec-rom-028",
+    "subject_type": "relationship",
+    "subject_id": "civ-roman->hellenistic_world:civ-greek",
+    "source_id": "src-cah",
+    "claim": "Rome conquered the Hellenistic Greek world in the Macedonian Wars (ending 146 BCE).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cah"
+    ]
+  },
+  {
+    "id": "ec-rom-029",
+    "subject_type": "relationship",
+    "subject_id": "civ-byzantine->civ-roman",
+    "source_id": "src-cambridge-byzantine",
+    "claim": "The Byzantine Empire inherited Roman law, administration, and imperial ideology.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cambridge-byzantine",
+      "src-oxford-byzantium"
+    ]
+  },
+  {
+    "id": "ec-rom-030",
+    "subject_type": "relationship",
+    "subject_id": "civ-roman->religion-christianity",
+    "source_id": "src-theodosian-code",
+    "claim": "Christianity became the predominant religion practiced within the Roman Empire from the 4th c. CE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-theodosian-code",
+      "src-oxford-christianity"
+    ]
+  },
+  {
+    "id": "ec-rom-031",
+    "subject_type": "relationship",
+    "subject_id": "religion-christianity->egypt_technology_religion:idea-monotheism",
+    "source_id": "src-oxford-christianity",
+    "claim": "Roman/early Christianity carried forward monotheistic tradition rooted in Jewish and Egyptian monotheistic ideas.",
+    "notes": "",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-oxford-christianity",
+      "src-wiki-rome"
+    ]
+  },
+  {
+    "id": "ec-rom-032",
+    "subject_type": "relationship",
+    "subject_id": "tp-republic->tp-27bc",
+    "source_id": "src-livy",
+    "claim": "The Roman Republic (509-27 BCE) preceded the imperial era beginning in 27 BCE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-livy"
+    ]
+  },
+  {
+    "id": "ec-rom-033",
+    "subject_type": "relationship",
+    "subject_id": "civ-byzantine->civ-roman",
+    "source_id": "src-cambridge-byzantine",
+    "claim": "The Byzantine Empire succeeded the Western Roman Empire in time (after 476 CE in the West).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cambridge-byzantine"
+    ]
+  },
+  {
+    "id": "ec-rom-034",
+    "subject_type": "relationship",
+    "subject_id": "civ-byzantine->civ-roman",
+    "source_id": "src-oxford-byzantium",
+    "claim": "Byzantium explicitly styled itself as the continuation of the Roman Empire (translatio imperii).",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-oxford-byzantium"
+    ]
+  },
+  {
+    "id": "ec-rom-035",
+    "subject_type": "relationship",
+    "subject_id": "person-constantine->loc-constantinople",
+    "source_id": "src-oxford-byzantium",
+    "claim": "Constantine ruled from and founded Constantinople as his capital.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-oxford-byzantium",
+      "src-wiki-const"
+    ]
+  },
+  {
+    "id": "ec-rom-036",
+    "subject_type": "relationship",
+    "subject_id": "person-constantine->event-edict-milan",
+    "source_id": "src-edict-milan",
+    "claim": "Constantine issued (with Licinius) the Edict of Milan in 313 CE.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-edict-milan",
+      "src-eusebius-eccl"
+    ]
+  },
+  {
+    "id": "ec-rom-037",
+    "subject_type": "relationship",
+    "subject_id": "event-edict-milan->religion-christianity",
+    "source_id": "src-edict-milan",
+    "claim": "The Edict of Milan granted Christians toleration, advancing Christianity's status in the empire.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-edict-milan"
+    ]
+  },
+  {
+    "id": "ec-rom-038",
+    "subject_type": "relationship",
+    "subject_id": "religion-christianity->early_christianity:religion-early-church",
+    "source_id": "src-oxford-christianity",
+    "claim": "Christianity spread from its Judean origins into a broader early church across the Roman world.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-oxford-christianity",
+      "src-early-church"
+    ]
+  },
+  {
+    "id": "ec-rom-039",
+    "subject_type": "relationship",
+    "subject_id": "person-julius-caesar->event-roman-empire-established",
+    "source_id": "src-caesar-commentarii",
+    "claim": "Julius Caesar's actions (dictatorship, 49-44 BCE) precipitated the fall of the Republic that led to the Empire's establishment under Augustus; Caesar himself did not found the Empire.",
+    "notes": "",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "medium",
+    "source_ids": [
+      "src-caesar-commentarii",
+      "src-suetonius"
+    ],
+    "interpretation_note": "Caesar died in 44 BCE, 17 years before the 27 BCE settlement. The relationship is causal/indirect: his assassination triggered the final civil war won by Octavian. Treating Caesar as a direct founder of the Empire is a common simplification."
+  },
+  {
+    "id": "ec-rom-040",
+    "subject_type": "relationship",
+    "subject_id": "person-augustus->loc-rome",
+    "source_id": "src-tacitus-ann",
+    "claim": "Augustus ruled the Roman Empire from Rome as its first emperor.",
+    "notes": "",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-tacitus-ann"
+    ]
   }
 ]

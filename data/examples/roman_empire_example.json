@@ -8,7 +8,10 @@
       "name": "Roman Empire Established",
       "description": "The Roman Empire was founded in 27 BC under Augustus.",
       "global_id": "roman_empire:event-roman-empire-established",
-      "aliases": [],
+      "aliases": [
+        "Principate",
+        "Founding of the Roman Empire"
+      ],
       "labels": {
         "en": "Roman Empire Established",
         "la": "Imperium Romanum Conditum"
@@ -20,15 +23,41 @@
         "label": "27 BC"
       },
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-005"
+      ],
+      "reliability": "high",
       "location": "loc-rome",
       "participants": [
         "person-augustus"
       ],
       "causes": [],
-      "consequences": []
+      "consequences": [],
+      "period": "tp-27bc",
+      "region": "Roman Italy",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Roman Empire",
+          "url": "https://www.britannica.com/topic/Roman-Empire"
+        },
+        {
+          "source": "World History Encyclopedia",
+          "title": "Roman Empire",
+          "url": "https://www.worldhistory.org/Roman_Empire/"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "person-augustus",
@@ -38,7 +67,8 @@
       "global_id": "roman_empire:person-augustus",
       "aliases": [
         "Octavian",
-        "Imperator Caesar Divi Filius"
+        "Imperator Caesar Divi Filius",
+        "Gaius Octavius Thurinus"
       ],
       "labels": {
         "en": "Augustus",
@@ -57,9 +87,12 @@
         "certainty": "exact",
         "label": "14 CE"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-tacitus-ann",
+      "evidence": [
+        "ec-rom-003",
+        "ec-rom-004"
+      ],
+      "reliability": "high",
       "birth": {
         "value": -63,
         "precision": "year",
@@ -78,7 +111,31 @@
       ],
       "related_events": [
         "event-roman-empire-established"
-      ]
+      ],
+      "period": "tp-27bc",
+      "region": "Roman Italy",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Augustus",
+          "url": "https://www.britannica.com/biography/Augustus"
+        },
+        {
+          "source": "Livius",
+          "title": "Augustus",
+          "url": "https://www.livius.org/articles/people/augustus/"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "civ-roman",
@@ -88,7 +145,8 @@
       "global_id": "roman_empire:civ-roman",
       "aliases": [
         "Rome",
-        "Romanitas"
+        "Romanitas",
+        "Imperium Romanum"
       ],
       "labels": {
         "en": "Roman Civilization",
@@ -106,14 +164,40 @@
         "certainty": "exact",
         "label": "476 CE"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-001",
+        "ec-rom-002"
+      ],
+      "reliability": "high",
       "period": "tp-27bc",
-      "region": "loc-rome",
+      "region": "Mediterranean",
       "related_events": [
         "event-roman-empire-established"
-      ]
+      ],
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin",
+        "Greek"
+      ],
+      "external_refs": [
+        {
+          "source": "Cambridge Ancient History",
+          "title": "The Augustan Empire",
+          "url": "https://www.cambridge.org/"
+        },
+        {
+          "source": "Oxford Handbook of Roman Studies",
+          "title": "Roman Studies",
+          "url": "https://www.oxfordhandbooks.com/"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "loc-rome",
@@ -130,9 +214,11 @@
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-livy",
+      "evidence": [
+        "ec-rom-006"
+      ],
+      "reliability": "medium",
       "coordinates": {
         "lat": 41.9028,
         "lng": 12.4964
@@ -140,7 +226,30 @@
       "region": "Italian Peninsula",
       "related_events": [
         "event-roman-empire-established"
-      ]
+      ],
+      "period": null,
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Rome",
+          "url": "https://www.britannica.com/place/Rome"
+        },
+        {
+          "source": "Livius",
+          "title": "Rome",
+          "url": "https://www.livius.org/articles/place/rome/"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "tp-27bc",
@@ -148,15 +257,20 @@
       "name": "27 BC",
       "description": "Year the Roman Empire was founded.",
       "global_id": "roman_empire:tp-27bc",
-      "aliases": [],
+      "aliases": [
+        "27 BCE",
+        "Year of the Principate"
+      ],
       "labels": {
         "en": "27 BC"
       },
       "start_date": null,
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-007"
+      ],
+      "reliability": "high",
       "start": {
         "value": -27,
         "precision": "year",
@@ -168,7 +282,26 @@
         "precision": "year",
         "certainty": "exact",
         "label": "27 BC"
-      }
+      },
+      "period": "tp-27bc",
+      "region": "Roman Italy",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Cambridge Ancient History",
+          "title": "The Augustan Settlement",
+          "url": "https://www.cambridge.org/"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "roman_egypt",
@@ -195,12 +328,39 @@
         "certainty": "approximate",
         "label": "641 CE"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
-      "period": null,
-      "region": "loc-rome",
-      "related_events": []
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-008",
+        "ec-rom-009"
+      ],
+      "reliability": "high",
+      "period": "tp-27bc",
+      "region": "Egypt",
+      "related_events": [],
+      "geo": {
+        "lat": 31.2001,
+        "lng": 29.9187,
+        "label": "Alexandria (Roman Egypt)"
+      },
+      "cultural_affiliation": "Roman; Hellenistic-Egyptian",
+      "language": [
+        "Latin",
+        "Greek",
+        "Egyptian"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Egypt - Roman period",
+          "url": "https://www.britannica.com/place/Egypt"
+        },
+        {
+          "source": "Oxford Handbook of Roman Studies",
+          "title": "Roman Egypt",
+          "url": "https://www.oxfordhandbooks.com/"
+        }
+      ],
+      "importance": "medium"
     },
     {
       "id": "civ-byzantine",
@@ -210,7 +370,8 @@
       "global_id": "roman_empire:civ-byzantine",
       "aliases": [
         "Eastern Roman Empire",
-        "Byzantium"
+        "Byzantium",
+        "Romaion"
       ],
       "labels": {
         "en": "Byzantine Empire",
@@ -228,12 +389,38 @@
         "certainty": "exact",
         "label": "1453 CE"
       },
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-oxford-byzantium",
+      "evidence": [
+        "ec-rom-010",
+        "ec-rom-011"
+      ],
+      "reliability": "high",
       "period": null,
-      "region": "loc-rome",
-      "related_events": []
+      "region": "Constantinople",
+      "related_events": [],
+      "geo": {
+        "lat": 41.0082,
+        "lng": 28.9784,
+        "label": "Constantinople"
+      },
+      "cultural_affiliation": "Roman-Greek",
+      "language": [
+        "Greek",
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Oxford Handbook of Byzantine Studies",
+          "title": "Byzantine Studies",
+          "url": "https://www.oxfordhandbooks.com/"
+        },
+        {
+          "source": "Cambridge History of the Byzantine Empire",
+          "title": "Byzantine Empire",
+          "url": "https://www.cambridge.org/"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "religion-christianity",
@@ -242,7 +429,8 @@
       "description": "A monotheistic faith that spread through the Roman Empire and was adopted as its state religion, carrying forward the monotheistic idea across civilizations.",
       "global_id": "roman_empire:religion-christianity",
       "aliases": [
-        "Christian faith"
+        "Christian faith",
+        "Christendom"
       ],
       "labels": {
         "en": "Christianity"
@@ -254,14 +442,43 @@
         "label": "c. 30 CE"
       },
       "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
+      "source": "src-theodosian-code",
+      "evidence": [
+        "ec-rom-012",
+        "ec-rom-013"
+      ],
+      "reliability": "high",
       "practiced_by": "civ-roman",
       "practiced_in": "loc-rome",
       "texts": [
         "Bible"
-      ]
+      ],
+      "period": null,
+      "region": "Roman Empire",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome (origin of imperial church)"
+      },
+      "cultural_affiliation": "Judeo-Christian",
+      "language": [
+        "Greek",
+        "Latin",
+        "Aramaic"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Christianity",
+          "url": "https://www.britannica.com/topic/Christianity"
+        },
+        {
+          "source": "Oxford History of Christianity",
+          "title": "Christianity",
+          "url": "https://www.oxfordhistory.com/"
+        }
+      ],
+      "importance": "high"
     },
     {
       "id": "tp-republic",
@@ -270,11 +487,41 @@
       "description": "The Roman state (509-27 BC) before the imperial monarchy.",
       "global_id": "roman_empire:tp-republic",
       "aliases": [
-        "Res Publica"
+        "Res Publica",
+        "Roman Republic"
       ],
       "labels": {
         "en": "Roman Republic"
-      }
+      },
+      "period": null,
+      "region": "Roman Italy",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Livius",
+          "title": "Roman Republic",
+          "url": "https://www.livius.org/articles/state/roman-republic/"
+        },
+        {
+          "source": "Cambridge Ancient History",
+          "title": "The Roman Republic",
+          "url": "https://www.cambridge.org/"
+        }
+      ],
+      "importance": "medium",
+      "source": "src-livy",
+      "evidence": [
+        "ec-rom-014"
+      ],
+      "reliability": "high"
     },
     {
       "id": "person-constantine",
@@ -282,10 +529,57 @@
       "name": "Constantine the Great",
       "description": "Roman emperor (306-337 AD) who legalized Christianity via the Edict of Milan.",
       "global_id": "roman_empire:person-constantine",
-      "aliases": [],
+      "aliases": [
+        "Constantine I",
+        "Flavius Constantinus",
+        "Saint Constantine"
+      ],
       "labels": {
         "en": "Constantine the Great"
-      }
+      },
+      "birth": {
+        "value": 272,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "272 CE"
+      },
+      "death": {
+        "value": 337,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "337 CE"
+      },
+      "period": null,
+      "region": "Constantinople",
+      "geo": {
+        "lat": 41.0082,
+        "lng": 28.9784,
+        "label": "Constantinople"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin",
+        "Greek"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Constantine the Great",
+          "url": "https://www.britannica.com/biography/Constantine-I"
+        },
+        {
+          "source": "Oxford Handbook of Byzantine Studies",
+          "title": "Constantine",
+          "url": "https://www.oxfordhandbooks.com/"
+        }
+      ],
+      "importance": "high",
+      "source": "src-edict-milan",
+      "evidence": [
+        "ec-rom-015",
+        "ec-rom-016"
+      ],
+      "reliability": "high"
     },
     {
       "id": "person-julius-caesar",
@@ -293,10 +587,55 @@
       "name": "Julius Caesar",
       "description": "Roman general and dictator whose crossing of the Rubicon ended the Republic.",
       "global_id": "roman_empire:person-julius-caesar",
-      "aliases": [],
+      "aliases": [
+        "Gaius Julius Caesar",
+        "Dictator"
+      ],
       "labels": {
         "en": "Julius Caesar"
-      }
+      },
+      "birth": {
+        "value": -100,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "100 BCE"
+      },
+      "death": {
+        "value": -44,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "44 BCE"
+      },
+      "period": null,
+      "region": "Roman Italy",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Julius Caesar",
+          "url": "https://www.britannica.com/biography/Julius-Caesar"
+        },
+        {
+          "source": "Livius",
+          "title": "Caesar",
+          "url": "https://www.livius.org/articles/people/julius-caesar/"
+        }
+      ],
+      "importance": "high",
+      "source": "src-caesar-commentarii",
+      "evidence": [
+        "ec-rom-017",
+        "ec-rom-018"
+      ],
+      "reliability": "high"
     },
     {
       "id": "loc-constantinople",
@@ -305,11 +644,41 @@
       "description": "City on the Bosporus founded by Constantine as the new imperial capital.",
       "global_id": "roman_empire:loc-constantinople",
       "aliases": [
-        "Istanbul"
+        "Byzantium",
+        "Istanbul",
+        "Constantinople (modern Istanbul)"
       ],
       "labels": {
         "en": "Constantinople"
-      }
+      },
+      "geo": {
+        "lat": 41.0082,
+        "lng": 28.9784,
+        "label": "Constantinople"
+      },
+      "cultural_affiliation": "Roman-Greek",
+      "language": [
+        "Greek",
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Constantinople",
+          "url": "https://www.britannica.com/place/Constantinople"
+        },
+        {
+          "source": "Oxford Handbook of Byzantine Studies",
+          "title": "Constantinople",
+          "url": "https://www.oxfordhandbooks.com/"
+        }
+      ],
+      "importance": "medium",
+      "source": "src-oxford-byzantium",
+      "evidence": [
+        "ec-rom-019"
+      ],
+      "reliability": "high"
     },
     {
       "id": "event-edict-milan",
@@ -317,10 +686,42 @@
       "name": "Edict of Milan",
       "description": "313 AD proclamation granting Christians legal toleration in the Roman Empire.",
       "global_id": "roman_empire:event-edict-milan",
-      "aliases": [],
+      "aliases": [
+        "Edict of Toleration",
+        "Milan Proclamation"
+      ],
       "labels": {
         "en": "Edict of Milan"
-      }
+      },
+      "period": null,
+      "region": "Roman Empire",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Milan/Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Edict of Milan",
+          "url": "https://www.britannica.com/topic/Edict-of-Milan"
+        },
+        {
+          "source": "Lactantius, De Mortibus Persecutorum",
+          "title": "Edict text",
+          "url": "https://www.earlychurch.org/"
+        }
+      ],
+      "importance": "medium",
+      "source": "src-edict-milan",
+      "evidence": [
+        "ec-rom-020"
+      ],
+      "reliability": "high"
     }
   ],
   "relationships": [
@@ -328,201 +729,301 @@
       "source": "person-augustus",
       "target": "event-roman-empire-established",
       "type": "participated_in",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Tacitus, Annales 1.1-9",
+      "evidence": [
+        "ec-rom-021"
+      ],
+      "valid_time": "27 BCE",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Roman Italy",
+      "temporal_relation": null
     },
     {
       "source": "event-roman-empire-established",
       "target": "civ-roman",
       "type": "related_to",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "CAH X",
+      "evidence": [
+        "ec-rom-022"
+      ],
+      "valid_time": "27 BCE",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Roman Italy",
+      "temporal_relation": null
     },
     {
       "source": "event-roman-empire-established",
       "target": "loc-rome",
       "type": "located_at",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Britannica: Rome",
+      "evidence": [
+        "ec-rom-023"
+      ],
+      "valid_time": "27 BCE",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": "Roman Italy",
+      "temporal_relation": null
     },
     {
       "source": "event-roman-empire-established",
       "target": "tp-27bc",
       "type": "related_to",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "CAH X",
+      "evidence": [
+        "ec-rom-024"
+      ],
+      "valid_time": "27 BCE",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "contemporary_with"
     },
     {
       "source": "civ-roman",
       "target": "roman_egypt",
       "type": "part_of",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "CAH XI",
+      "evidence": [
+        "ec-rom-025"
+      ],
+      "valid_time": "30 BCE - 641 CE",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Egypt / Mediterranean",
+      "temporal_relation": null
     },
     {
       "source": "civ-roman",
       "target": "hellenistic_world:civ-greek",
       "type": "influenced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "CAH X",
+      "evidence": [
+        "ec-rom-026"
+      ],
+      "valid_time": "2nd c. BCE onward",
+      "weight": 0.9,
+      "mechanism": "cultural",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
     },
     {
       "source": "civ-roman",
       "target": "silk_road:silk_road",
       "type": "traded_with",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "medium",
+      "citation": "UNESCO Silk Roads",
+      "evidence": [
+        "ec-rom-027"
+      ],
+      "valid_time": "1st c. BCE - 3rd c. CE",
+      "weight": 0.7,
+      "mechanism": "economic",
+      "geographic_scope": "Eurasia / Silk Road",
+      "temporal_relation": null
     },
     {
       "source": "civ-roman",
       "target": "hellenistic_world:civ-greek",
       "type": "conquered",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "CAH VIII",
+      "evidence": [
+        "ec-rom-028"
+      ],
+      "valid_time": "146 BCE",
+      "weight": 0.9,
+      "mechanism": "political",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
     },
     {
       "source": "civ-byzantine",
       "target": "civ-roman",
       "type": "inherited",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Oxford Byzantine Studies",
+      "evidence": [
+        "ec-rom-029"
+      ],
+      "valid_time": "330 CE onward",
+      "weight": 1,
+      "mechanism": "cultural",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
     },
     {
       "source": "civ-roman",
       "target": "religion-christianity",
       "type": "practiced",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Theodosian Code",
+      "evidence": [
+        "ec-rom-030"
+      ],
+      "valid_time": "4th c. CE onward",
+      "weight": 0.9,
+      "mechanism": "religious",
+      "geographic_scope": "Roman Empire",
+      "temporal_relation": null
     },
     {
       "source": "religion-christianity",
       "target": "egypt_technology_religion:idea-monotheism",
       "type": "inherited",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "medium",
+      "citation": "Oxford History of Christianity",
+      "evidence": [
+        "ec-rom-031"
+      ],
+      "valid_time": "1st c. CE",
+      "weight": 0.6,
+      "mechanism": "religious",
+      "geographic_scope": null,
+      "temporal_relation": null
     },
     {
       "source": "tp-republic",
       "target": "tp-27bc",
       "type": "before",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Livy",
+      "evidence": [
+        "ec-rom-032"
+      ],
+      "valid_time": "509-27 BCE",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "before"
     },
     {
       "source": "civ-byzantine",
       "target": "civ-roman",
       "type": "after",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Cambridge Byzantine",
+      "evidence": [
+        "ec-rom-033"
+      ],
+      "valid_time": "476 CE onward",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "after"
     },
     {
       "source": "civ-byzantine",
       "target": "civ-roman",
       "type": "inherited",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Oxford Byzantine Studies",
+      "evidence": [
+        "ec-rom-034"
+      ],
+      "valid_time": "330 CE onward",
+      "weight": 1,
+      "mechanism": "cultural",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
     },
     {
       "source": "person-constantine",
       "target": "loc-constantinople",
       "type": "ruled",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Oxford Byzantine Studies",
+      "evidence": [
+        "ec-rom-035"
+      ],
+      "valid_time": "306-337 CE",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Constantinople / Eastern Med",
+      "temporal_relation": null
     },
     {
       "source": "person-constantine",
       "target": "event-edict-milan",
       "type": "participated_in",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Edict of Milan (Lactantius)",
+      "evidence": [
+        "ec-rom-036"
+      ],
+      "valid_time": "313 CE",
+      "weight": 1,
+      "mechanism": "religious",
+      "geographic_scope": "Roman Empire",
+      "temporal_relation": null
     },
     {
       "source": "event-edict-milan",
       "target": "religion-christianity",
       "type": "related_to",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Edict of Milan",
+      "evidence": [
+        "ec-rom-037"
+      ],
+      "valid_time": "313 CE",
+      "weight": 0.9,
+      "mechanism": "religious",
+      "geographic_scope": "Roman Empire",
+      "temporal_relation": null
     },
     {
       "source": "religion-christianity",
       "target": "early_christianity:religion-early-church",
       "type": "spread",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Oxford History of Christianity",
+      "evidence": [
+        "ec-rom-038"
+      ],
+      "valid_time": "1st-4th c. CE",
+      "weight": 0.9,
+      "mechanism": "religious",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
     },
     {
       "source": "person-julius-caesar",
       "target": "event-roman-empire-established",
       "type": "participated_in",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "medium",
+      "citation": "Caesar, Commentarii; Suetonius",
+      "evidence": [
+        "ec-rom-039"
+      ],
+      "valid_time": "49-27 BCE",
+      "weight": 0.8,
+      "mechanism": "political",
+      "geographic_scope": "Roman Italy",
+      "temporal_relation": null
     },
     {
       "source": "person-augustus",
       "target": "loc-rome",
       "type": "ruled",
-      "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
-      "weight": null
+      "confidence": "high",
+      "citation": "Tacitus, Annales",
+      "evidence": [
+        "ec-rom-040"
+      ],
+      "valid_time": "27 BCE - 14 CE",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Roman Italy",
+      "temporal_relation": null
     }
   ],
   "timeline": [
@@ -533,7 +1034,15 @@
         "certainty": "exact",
         "label": "27 BC"
       },
-      "event": "Roman Empire Established"
+      "event": "Roman Empire Established",
+      "phase": "Empire Formation",
+      "parallel_with": [
+        "roman_empire:roman_egypt",
+        "roman_empire:civ-byzantine"
+      ],
+      "depends_on": [
+        "roman_empire:tp-republic"
+      ]
     }
   ]
 }
