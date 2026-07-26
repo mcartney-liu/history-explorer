@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM33.1] - 2026-07-27 (Project Release — M31 + M33)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only curated dataset files were changed (no backend / frontend / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Data checkpoints — two milestones released as independent commits/tags on one feature branch:
+
+- **M31 Knowledge Model Expansion (vM31.1)**: `data/examples/ancient_india_example.json` enriched with geo / language / external_refs; `data/sources.json` adds 4 India curated sources (`src-arthashastra`, `src-tipitaka`, `src-thapar-early-india`, `src-aryabhatiya`); `data/evidence_claims.json` adds 14 legacy claims (`ec-011`–`ec-024`); `scripts/freeze-check.mjs` allowlist extended (M31 Pilot annotation). No API / runtime change; no AI / LLM; no new dependency.
+- **M33 A-1 Roman Gold Dataset (vM33.1)**: `data/examples/roman_empire_example.json` added; `data/evidence_claims.json` adds 40 Roman claims (`ec-rom-001`–`ec-rom-040`); `data/sources.json` adds 27 Roman curated sources. Upgrades the Knowledge Production Pipeline from "structural Gold" (ancient_india + Roman) toward "Governance Complete Gold". No backend / frontend / schema / validation change; runtime stays `[0.13.0]`; no AI / LLM / new dependency.
+
 ## [vM30.2] - 2026-07-26 (Project Release — M30-B)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive exploration-flow code + freeze-guard script + tests were added, closing the Entity → Relationship → Evidence → Source → Historical Context loop over the existing M30-A provenance panel and M29.1 provenance projection. See `docs/RELEASE_VERSION_POLICY.md`.
