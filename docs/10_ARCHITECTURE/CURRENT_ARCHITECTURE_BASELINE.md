@@ -86,3 +86,27 @@ new dependency, …) MUST pass:
   `PROJECT_ROADMAP.md` §4 (Future) and require the Gate above.
 - **AI interpretation runtime** has passed the Gate via **ADR-0003** (M11 Grounded AI
   Interpretation Layer) and is now an approved exception — see §3.
+- **M24 (2026-07-26)** added a backend additive Dataset identity layer (`backend/app/core/dataset.py`) and upgraded the freeze-guard scope to allowlist mode. The frozen schema (ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18), the in-memory storage model, the API contract, and all §1–§3 boundaries are **UNCHANGED**. See §7 for the derived Provenance Contract.
+
+## 7. Provenance Contract (M24)
+
+M24 introduces a **derived Dataset identity** for the curated graph. This is provenance
+metadata, **not** a schema change — it does not alter the frozen enumerations (§1), the
+in-memory storage model, the API contract, or any freeze boundary (§3).
+
+- **Identity** (`backend/app/core/dataset.py`, dataclass `DatasetMetadata`): `dataset_id`
+  (`curated-history-graph`, a fixed constant), `name`, `description`, `topics[]`, and
+  `content_hash`.
+- **Canonical deterministic hash** (`compute_content_hash`): for each topic (sorted
+  ascending), the `entities` / `relationships` / `timeline` arrays are each serialized with
+  `json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)`, then the
+  resulting per-array string lists are **sorted** before assembly. The per-topic blobs are
+  joined by `\n` and hashed with `sha256`; the result is prefixed `sha256:`.
+- **Stability guarantees**: (a) independent of JSON key order and array element order;
+  (b) identical content → identical hash across runs and machines; (c) any content change
+  (entity / relationship / timeline edit, or topic add / remove / rename) changes the hash.
+- **Purpose**: a reproducible fingerprint of the curated dataset, enabling change detection,
+  cache-busting, and audit without storing a snapshot. Computed on read from the existing
+  `TopicRepository` — no new persistence, no mutation.
+- **Freeze-safe**: additive only; lives under the M24 allowlist (`backend/app/core/dataset.py`);
+  no further Freeze Revision Gate required beyond the one already granted for M24.

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM24] - 2026-07-26 (Project Release — M24)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive foundation code + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Data Foundation (Minimal Dataset Layer) + Freeze Guard allowlist mode (M24). A backend additive foundation release, approved via the Architecture Freeze Gate, that gives the curated multi-topic graph a stable, reproducible Dataset identity — and hardens the freeze guard. No schema / API / runtime / AI / frontend change:
+
+- `backend/app/core/dataset.py` (new): a lightweight, composition-based `DatasetMetadataProvider` that derives a stable curated-dataset identity (`dataset_id = curated-history-graph` + canonical deterministic `content_hash` sha256) from EXISTING topic content via `TopicRepository`. The hash sorts topic / entity / relationship / timeline before hashing, so it is independent of JSON key/array order; same content → same bytes. No new storage, no `repository.py` / API / runtime change.
+- `backend/tests/test_dataset_metadata.py` (new, 6 tests): hash stability across calls, JSON key/array order independence, content-change sensitivity, provider topics match repository, determinism, and zero `TopicRepository` side effects.
+- `scripts/freeze-check.mjs` (changed): scope guard upgraded from `frontend-only` mode to an explicit **allowlist** mode. DEFAULT — every `backend/` and `frontend/` change is FROZEN; a change passes ONLY when it matches `SCOPE_ALLOWLIST`. M24 adds exactly two entries (`backend/app/core/dataset.py`, `backend/tests/test_dataset_metadata.py`). All other backend/frontend paths — incl. `main.py`, `api/*`, `ai_gateway/*`, `global_graph.py`, `registry.py`, `data/examples/*`, `frontend/*` — stay frozen and require a new Freeze Revision Gate. This revokes the M11 ADR-0003 scope-level exception for `ai_gateway/` and `main.py`; TOKEN/DEP governance for the AI module is retained.
+- `scripts/freeze-check.test.mjs` (changed): governance tests revised (tests 2/5 reflect the new scope policy; new test 7 asserts the M24 allowlist) — 7/7.
+
+Tests: backend **168 passed** (+6 dataset tests); frontend **500 passed** (unchanged). `tsc -b` / `vite build` clean; `freeze-check` EXIT 0; backend diff (vs vM23) limited to `dataset.py` + its test; AI pipeline diff = 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM23] - 2026-07-25 (Project Release — M23)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend code + tests were added (additive, backend unchanged). See `docs/RELEASE_VERSION_POLICY.md`.
