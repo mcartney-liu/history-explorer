@@ -30,7 +30,9 @@ from app.core.dataset_provider import (
     PROVENANCE_POLICY,
     DatasetManifest,
     DatasetProvider,
+    SourceRecord,
 )
+from app.core.evidence_claim import EvidenceClaim, SUBJECT_TYPES
 from app.validation import build_validation_report
 
 # Schema versions accepted by M25.1. Versions that carry lifecycle / evidence
@@ -149,4 +151,71 @@ class DatasetValidator:
                 f"SCHEMA: dataset_schema_version '{manifest.dataset_schema_version}' "
                 f"not accepted (expected '{self._accepted_dataset_schema}')"
             )
+        return (len(errors) == 0, errors)
+
+    # ---- M26.1 provenance orchestration (still orchestration only) ----
+
+    def validate_source_registry(
+        self, sources: List[SourceRecord]
+    ) -> tuple[bool, List[str]]:
+        """Orchestration-only check of the curated source registry (M26.1).
+
+        Asserts: every source has a unique `id`; every source carries the
+        required human-curated fields. Does NOT re-implement entity/
+        relationship rules — those live only in `validation.py`. Subtypes of
+        `SourceRecord` (e.g. `SourceRecordV1`) are accepted under LSP.
+        """
+        errors: List[str] = []
+        seen_ids = set()
+        for s in sources:
+            sid = getattr(s, "id", None)
+            if not sid:
+                errors.append("SOURCE: source record missing 'id'")
+                continue
+            if sid in seen_ids:
+                errors.append(f"SOURCE: duplicate source id '{sid}'")
+            seen_ids.add(sid)
+            for field in ("type", "title", "creator", "reference", "license"):
+                if not getattr(s, field, None):
+                    errors.append(
+                        f"SOURCE: source '{sid}' missing required field '{field}'"
+                    )
+        return (len(errors) == 0, errors)
+
+    def validate_evidence_claims(
+        self,
+        claims: List[EvidenceClaim],
+        sources: List[SourceRecord],
+    ) -> tuple[bool, List[str]]:
+        """Orchestration-only check of Evidence Claims (M26.1).
+
+        Asserts: every claim has a valid `subject_type` (entity/relationship),
+        the referenced `source_id` exists in the provided source registry, and
+        required fields are present. No AI; no confidence computation. Entity/
+        relationship content rules are NOT re-checked here — they remain the
+        sole responsibility of `validation.build_validation_report`.
+        """
+        errors: List[str] = []
+        source_ids = {getattr(s, "id", None) for s in sources}
+        for c in claims:
+            cid = getattr(c, "id", None)
+            if not cid:
+                errors.append("EVIDENCE: claim missing 'id'")
+                continue
+            if getattr(c, "subject_type", None) not in SUBJECT_TYPES:
+                errors.append(
+                    f"EVIDENCE: claim '{cid}' has invalid subject_type "
+                    f"'{getattr(c, 'subject_type', None)}'"
+                )
+            if not getattr(c, "subject_id", None):
+                errors.append(f"EVIDENCE: claim '{cid}' missing 'subject_id'")
+            sid = getattr(c, "source_id", None)
+            if not sid:
+                errors.append(f"EVIDENCE: claim '{cid}' missing 'source_id'")
+            elif sid not in source_ids:
+                errors.append(
+                    f"EVIDENCE: claim '{cid}' references unknown source '{sid}'"
+                )
+            if not getattr(c, "claim", None):
+                errors.append(f"EVIDENCE: claim '{cid}' missing 'claim' text")
         return (len(errors) == 0, errors)

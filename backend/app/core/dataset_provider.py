@@ -39,6 +39,7 @@ from app.core.dataset import (
     DatasetMetadataProvider,
     compute_content_hash,
 )
+from app.core.evidence_claim import EvidenceClaim, FileEvidenceClaimLoader
 from app.core.repository import JsonTopicRepository, TopicRepository
 
 # Default provenance + attribution metadata for the curated dataset.
@@ -132,12 +133,14 @@ class DatasetProvider:
         creator: str = DEFAULT_CREATOR,
         license: str = DEFAULT_LICENSE,
         source_loader: Optional[SourceLoader] = None,
+        evidence_path: Optional[Path] = None,
     ) -> None:
         self._repo = repo
         self._meta = DatasetMetadataProvider(repo)
         self._creator = creator
         self._license = license
         self._source_loader: SourceLoader = source_loader or EmptySourceLoader()
+        self._evidence_path: Optional[Path] = Path(evidence_path) if evidence_path else None
 
     # ---- delegated reads (transparent pass-through to the repository) ----
     def list_topics(self) -> list[str]:
@@ -175,19 +178,60 @@ class DatasetProvider:
         return self._meta.metadata()
 
     def load_sources(self) -> List[SourceRecord]:
-        """Return provenance sources. M25.1 returns `[]` (R4)."""
+        """Return provenance sources.
+
+        M25.1 returned `[]` (R4, no source registry). M26.1 returns the curated
+        sources when a `SourceLoader` is configured (e.g. `FileSourceLoader`
+        reading `data/sources.json`); defaults to `[]` when none is set or the
+        file is absent.
+        """
         return self._source_loader.load()
+
+    def load_evidence_claims(self) -> List[EvidenceClaim]:
+        """Return human-curated Evidence Claims (M26.1).
+
+        Loads from an independent curated file (`data/evidence_claims.json`,
+        set via `evidence_path`). Returns `[]` when no file is configured or
+        present. Does NOT modify `data/examples/*`; the claims are a separate
+        curated layer resolved by `source_id`.
+        """
+        if self._evidence_path is None or not self._evidence_path.exists():
+            return []
+        return FileEvidenceClaimLoader(self._evidence_path).load()
 
 
 def build_dataset_provider(
     data_dir: Path,
     creator: str = DEFAULT_CREATOR,
     license: str = DEFAULT_LICENSE,
+    sources_path: Optional[Path] = None,
+    evidence_path: Optional[Path] = None,
 ) -> DatasetProvider:
     """Factory: wrap a JSON topic repository in a `DatasetProvider`.
 
     Mirrors the `JsonTopicRepository(data_dir)` construction used by `main.py`,
     keeping the composition root consistent. Does NOT modify `main.py`.
+
+    M26.1: defaults the curated `sources.json` / `evidence_claims.json` paths to
+    the sibling of `data/examples/` (i.e. `data/`). When those files are absent,
+    the loaders gracefully return `[]` — preserving M25.1 behavior until sources
+    and claims are curated.
     """
     repo = JsonTopicRepository(data_dir)
-    return DatasetProvider(repo, creator=creator, license=license)
+    if sources_path is None:
+        sources_path = Path(data_dir).parent / "sources.json"
+    if evidence_path is None:
+        evidence_path = Path(data_dir).parent / "evidence_claims.json"
+    source_loader = None
+    if Path(sources_path).exists():
+        # Lazy import to avoid a circular import with `source_registry.py`.
+        from app.core.source_registry import FileSourceLoader
+
+        source_loader = FileSourceLoader(Path(sources_path))
+    return DatasetProvider(
+        repo,
+        creator=creator,
+        license=license,
+        source_loader=source_loader,
+        evidence_path=Path(evidence_path),
+    )

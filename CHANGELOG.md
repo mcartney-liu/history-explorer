@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM26.1] - 2026-07-26 (Project Release — M26.1)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive Source Registry + Evidence Claim code + curated data + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Dataset Source Registry + Evidence Claim Boundary (M26.1). A backend additive provenance layer over the M25.1 Dataset Provider Layer — approved via the Architecture Freeze Gate — that adds a human-curated Source Registry and a typed Evidence Claim boundary, keeping provenance metadata in an independent curated layer outside `data/examples`. No schema / API / runtime / AI / frontend change:
+
+- `backend/app/core/source_registry.py` (new): a human-curated `SourceRegistry` indexed by `source_id`. `SourceRecordV1` extends the M25.1 `SourceRecord` with `publisher_or_archive`. `FileSourceLoader` reads `data/sources.json` (returns `[]` when absent); sources are an independent curated layer and NEVER enter the knowledge graph (no CITED_FROM relation; `RELATIONSHIP_TYPES=18` unchanged), and AI-generated sources / citations / confidence are forbidden.
+- `backend/app/core/evidence_claim.py` (new): a typed `EvidenceClaim` record linking a subject (entity or relationship) to a curated source via `source_id`, plus `FileEvidenceClaimLoader` reading `data/evidence_claims.json`. Evidence Claims are a separate curated layer and do NOT modify `data/examples/*`; validation is orchestration-only (see `dataset_validator.validate_evidence_claims`).
+- `backend/app/core/dataset_provider.py` (changed): `__init__` gains an `evidence_path` argument; `build_dataset_provider` now defaults to wiring `FileSourceLoader` (graceful `[]` when `data/sources.json` is absent) and adds `load_evidence_claims()`; composition over `TopicRepository` unchanged, no lifecycle methods.
+- `backend/app/core/dataset_validator.py` (changed): adds `validate_source_registry()` (id uniqueness + required human-curated fields) and `validate_evidence_claims()` (valid `subject_type`, resolvable `source_id`, required fields). Both are orchestration-only and reuse the single frozen `app.validation.build_validation_report`; `validation.py` unchanged.
+- `backend/tests/test_source_registry.py` (new, 12 tests): loader returns `[]` when file absent, `SourceRecordV1` carries `publisher_or_archive`, registry id-index lookup, duplicate-id detection, curated-field validation, no graph mutation.
+- `backend/tests/test_evidence_claim.py` (new, 12 tests): loader returns `[]` when file absent, typed claim construction, `subject_type` validation, `source_id` resolution, required-field checks, no `data/examples` access.
+- `data/sources.json` (new, curated) + `data/evidence_claims.json` (new, curated): independent provenance metadata layer outside `data/examples`; human-curated, no AI.
+- `scripts/freeze-check.mjs` (changed): `SCOPE_ALLOWLIST` extended from 6 → 12 entries. M26.1 adds exactly six files (`backend/app/core/source_registry.py`, `backend/app/core/evidence_claim.py`, `backend/tests/test_source_registry.py`, `backend/tests/test_evidence_claim.py`, `data/sources.json`, `data/evidence_claims.json`); M24's two and M25.1's four entries are retained. `data/examples/*` stays frozen.
+- `scripts/freeze-check.test.mjs` (changed): governance test 9 added (asserts the six M26.1 files are in the allowlist and PASS scope, and that M24/M25.1 entries remain) — 9/9.
+
+Tests: backend **205 passed** (+24 Source Registry/Evidence Claim tests); frontend **500 passed** (unchanged). `freeze-check` EXIT 0; governance tests **9/9**; backend diff (vs vM25.1) limited to `source_registry.py` + `evidence_claim.py` + `dataset_provider.py` + `dataset_validator.py` + their tests; `main.py` unchanged — the provider is NOT wired into any runtime path (E1/E2 deferred); AI pipeline diff = 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No AI / LLM introduced. No new dependency.
+
 ## [vM25.1] - 2026-07-26 (Project Release — M25.1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only backend additive Dataset Provider Layer code + freeze-guard script + tests were added. See `docs/RELEASE_VERSION_POLICY.md`.

@@ -177,3 +177,44 @@ test("8. M25.1 allowlist: 4 new dataset-provider/validator files exist in allowl
     "M24 entry test_dataset_metadata.py must remain in SCOPE_ALLOWLIST"
   );
 });
+
+test("9. M26.1 allowlist: 6 new source-registry/evidence-claim files present; M24+M25.1 retained", () => {
+  const M26_1_ALLOWED = [
+    "backend/app/core/source_registry.py",
+    "backend/app/core/evidence_claim.py",
+    "backend/tests/test_source_registry.py",
+    "backend/tests/test_evidence_claim.py",
+    "data/sources.json",
+    "data/evidence_claims.json",
+  ];
+  // (a) direct membership — these files MUST be present in the PO-approved allowlist.
+  for (const f of M26_1_ALLOWED) {
+    assert.ok(
+      SCOPE_ALLOWLIST.includes(f),
+      `expected ${f} to be in SCOPE_ALLOWLIST (M26.1 Freeze Revision Gate), got: ` +
+        JSON.stringify(SCOPE_ALLOWLIST)
+    );
+  }
+  // (b) behavioral — a change to only these files must NOT raise a SCOPE violation.
+  const root = makeProject(VALID);
+  const v = runChecks({ root, files: M26_1_ALLOWED });
+  assert.ok(
+    !v.some((x) => x.startsWith("SCOPE")),
+    "M26.1-approved files must NOT raise SCOPE violation, got: " + JSON.stringify(v)
+  );
+  // (c) regression guard — M24 + M25.1 entries still present.
+  const RETAINED = [
+    "backend/app/core/dataset.py",
+    "backend/tests/test_dataset_metadata.py",
+    "backend/app/core/dataset_provider.py",
+    "backend/app/core/dataset_validator.py",
+    "backend/tests/test_dataset_provider.py",
+    "backend/tests/test_dataset_validator.py",
+  ];
+  for (const f of RETAINED) {
+    assert.ok(
+      SCOPE_ALLOWLIST.includes(f),
+      `expected ${f} retained in SCOPE_ALLOWLIST, got: ` + JSON.stringify(SCOPE_ALLOWLIST)
+    );
+  }
+});

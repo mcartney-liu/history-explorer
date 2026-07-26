@@ -1,0 +1,32 @@
+[
+  {
+    "id": "src-herodotus-histories",
+    "type": "literature",
+    "title": "The Histories",
+    "creator": "Herodotus",
+    "year": -440,
+    "reference": "Herodotus. The Histories. trans. A. D. Godley. Loeb Classical Library.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Loeb Classical Library"
+  },
+  {
+    "id": "src-thucydides-peloponnesian",
+    "type": "literature",
+    "title": "History of the Peloponnesian War",
+    "creator": "Thucydides",
+    "year": -411,
+    "reference": "Thucydides. History of the Peloponnesian War. trans. Rex Warner. Penguin Classics.",
+    "license": "Public Domain",
+    "publisher_or_archive": "Penguin Classics"
+  },
+  {
+    "id": "src-rosenberg-1999",
+    "type": "secondary",
+    "title": "A History of the Roman Empire",
+    "creator": "John Rosenberg",
+    "year": 1999,
+    "reference": "Rosenberg, J. (1999). A History of the Roman Empire. Academic Press.",
+    "license": "Proprietary",
+    "publisher_or_archive": "Academic Press"
+  }
+]

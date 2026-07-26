@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ec-001",
+    "subject_type": "entity",
+    "subject_id": "empire-roman",
+    "source_id": "src-rosenberg-1999",
+    "claim": "The Roman Empire is conventionally dated from 27 BCE (principate of Augustus).",
+    "notes": "Standard periodization; see Rosenberg ch. 2."
+  },
+  {
+    "id": "ec-002",
+    "subject_type": "relationship",
+    "subject_id": "person-chandragupta-maurya->person-chandragupta",
+    "source_id": "src-herodotus-histories",
+    "claim": "Court chronicle links Chandragupta Maurya to the founding of the Maurya dynasty.",
+    "notes": "Illustrative curated link; not an auto-generated inference."
+  }
+]

@@ -120,17 +120,36 @@ function getChangedFiles() {
 //   - backend/tests/test_dataset_provider.py   (its unit tests)
 //   - backend/tests/test_dataset_validator.py   (its unit tests)
 //
+// M26.1 (Source Registry + Evidence Claim) was approved via a subsequent Freeze
+// Revision Gate and ADDS six more files to the allowlist (additive, no change
+// to M24/M25.1 entries; all other guards/DEP/TOKEN/ENUM unchanged):
+//   - backend/app/core/source_registry.py      (human-curated Source Registry)
+//   - backend/app/core/evidence_claim.py       (typed Evidence Claim + link model)
+//   - backend/tests/test_source_registry.py    (its unit tests)
+//   - backend/tests/test_evidence_claim.py     (its unit tests)
+//   - data/sources.json                        (curated sources, OUTSIDE data/examples)
+//   - data/evidence_claims.json                (curated evidence, OUTSIDE data/examples)
+//
 // Explicitly FORBIDDEN from the allowlist (require a new Freeze Revision Gate):
 //   backend/app/main.py, backend/app/api/*, backend/app/ai_gateway/*,
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
 //   data/examples/*, frontend/*.
 export const SCOPE_ALLOWLIST = [
+  // M24 (Data Foundation) — Freeze Revision Gate
   "backend/app/core/dataset.py",
   "backend/tests/test_dataset_metadata.py",
+  // M25.1 (Dataset Provider Layer) — Freeze Revision Gate
   "backend/app/core/dataset_provider.py",
   "backend/app/core/dataset_validator.py",
   "backend/tests/test_dataset_provider.py",
   "backend/tests/test_dataset_validator.py",
+  // M26.1 (Source Registry + Evidence Claim) — Freeze Revision Gate
+  "backend/app/core/source_registry.py",
+  "backend/app/core/evidence_claim.py",
+  "backend/tests/test_source_registry.py",
+  "backend/tests/test_evidence_claim.py",
+  "data/sources.json",
+  "data/evidence_claims.json",
 ];
 
 function _scopeAllowed(file) {
