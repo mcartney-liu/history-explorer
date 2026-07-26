@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM30.2] - 2026-07-26 (Project Release — M30-B)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive exploration-flow code + freeze-guard script + tests were added, closing the Entity → Relationship → Evidence → Source → Historical Context loop over the existing M30-A provenance panel and M29.1 provenance projection. See `docs/RELEASE_VERSION_POLICY.md`.
+
+Frontend Exploration Flow Closure (M30-B). A pure-frontend additive closure of the entity-exploration loop over the M30-A provenance panel — approved via the Frontend Freeze Revision Gate (lightweight ADR) — that surfaces provenance evidence for a relationship and groups it by source inside the Entity Page. No backend / data / schema / validation / registry / runtime change:
+
+- `frontend/src/components/RelationshipEvidence.tsx` (new): a 5-state container (`RelationshipEvidence`) + view (`RelationshipEvidenceView`) — loading / success / empty / disabled / error. The success view reuses `ProvenancePanelView` to render `GET /provenance/{entity_id}` records for the relationship's **local id** (the same ADR-006 contract as M30-A; no new API). `AbortController` aborts the in-flight fetch on unmount; retry re-keys the request. It mounts only when the user clicks "查看依据" — never auto-fetches for every relationship.
+- `frontend/src/components/RelationshipEvidence.test.tsx` (new, 5 + 1 tests): 5-state render + a local-id contract test asserting the fetch URL uses the LOCAL id (`person-ashoka`, no `:`). No Playwright / Jest / RTL; `renderToStaticMarkup` + vitest node env.
+- `frontend/src/components/ExplorationFlowGuide.tsx` (new): a static, state-free 4-step guide (Relationship → Evidence → Source → Historical Context) rendered as an `<ol>`; no buttons, no inputs, no state. Additive on `EntityPage`.
+- `frontend/src/components/ExplorationFlowGuide.test.tsx` (new): asserts the 4 steps render and the HTML contains no `<button` / `<input`.
+- `frontend/src/components/RelationshipView.tsx` (changed): adds a lazy "查看依据" button (class `rel-evidence-btn`, kept distinct from the focus button class to avoid breaking existing focus tests) that mounts `<RelationshipEvidence entityId={item.id} entityName={displayName} />` only on click. Default: no evidence fetch for any relationship.
+- `frontend/src/components/EntityPage.tsx` (changed): mounts `<ExplorationFlowGuide />` after the AI panel and before the cross-topic list (additive; the existing `EntityExplorationGuide` is untouched). `ProvenancePanel entityId={entity.id}` (local id) is retained.
+- `frontend/src/components/ProvenancePanel.tsx` (changed): records are now grouped by `source_id` on the frontend via a pure `groupBySource` function. No new field; no `claim_text` / `confidence`; `subject_id` still hidden.
+- `frontend/src/components/ProvenancePanel.test.tsx` (changed): adds a grouping case (3 records / 2 sources → exactly 2 `provenance-group-head`, contains `claim-1` / `claim-3`, never `person-ashoka`).
+- `scripts/freeze-check.mjs` (changed): `SCOPE_ALLOWLIST` extended from 21 → 26 entries. M30-B adds exactly five files (`frontend/src/components/RelationshipEvidence.tsx`, `frontend/src/components/RelationshipEvidence.test.tsx`, `frontend/src/components/ExplorationFlowGuide.tsx`, `frontend/src/components/ExplorationFlowGuide.test.tsx`, `frontend/src/components/RelationshipView.tsx`); M24 / M25.1 / M26.1 / M29.1 / M30-A entries retained.
+
+Tests: frontend **518 passed** (+8 exploration-flow tests); backend **219 passed** (unchanged). `freeze-check` EXIT 0; governance tests **9/9**; backend diff = 0; `data/examples` diff = 0. Runtime held at `[0.13.0]`; no schema / enum (`ENTITY_TYPES=8`, `RELATIONSHIP_TYPES=18`) change. No new API / no new fact / no AI / LLM introduced. No new dependency.
+
 ## [vM27.1] - 2026-07-26 (Project Release — M27.1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only curated provenance data + documentation were changed. See `docs/RELEASE_VERSION_POLICY.md`.
