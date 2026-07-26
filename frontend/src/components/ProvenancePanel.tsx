@@ -1,0 +1,108 @@
+import { useEffect, useRef, useState } from 'react'
+import {
+  getProvenance,
+  ProvenanceDisabledError,
+  type ProvenanceRecord,
+} from '../data/provenanceApi'
+import EmptyState from './EmptyState'
+import ErrorCard, { type ErrorKind } from './ErrorCard'
+import LoadingSkeleton from './LoadingSkeleton'
+
+export type ProvenanceStatus = 'loading' | 'success' | 'empty' | 'error' | 'disabled'
+
+// 注意：entityId 必须是 LOCAL id（entity.id），不是 global_id。
+export type ProvenancePanelProps = {
+  entityId: string
+}
+
+// Container: owns the request lifecycle only (status + abort + retry). All
+// rendering is delegated to the presentational ProvenancePanelView so it can
+// be tested without a DOM. No global state — the status lives in this instance.
+export default function ProvenancePanel({ entityId }: ProvenancePanelProps) {
+  const [status, setStatus] = useState<ProvenanceStatus>('loading')
+  const [records, setRecords] = useState<ProvenanceRecord[]>([])
+  const [errorKind, setErrorKind] = useState<ErrorKind | undefined>(undefined)
+  // Bump to force a refetch (used by the retry button).
+  const [reloadKey, setReloadKey] = useState(0)
+  const controllerRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+    controllerRef.current = controller
+    setStatus('loading')
+    setErrorKind(undefined)
+    getProvenance(entityId, controller.signal)
+      .then((rows) => {
+        setRecords(rows)
+        setStatus(rows.length > 0 ? 'success' : 'empty')
+      })
+      .catch((e) => {
+        if (controller.signal.aborted) return
+        if (e instanceof ProvenanceDisabledError) {
+          setStatus('disabled')
+          return
+        }
+        setErrorKind('network')
+        setStatus('error')
+      })
+    return () => controller.abort()
+  }, [entityId, reloadKey])
+
+  return (
+    <ProvenancePanelView
+      status={status}
+      records={records}
+      errorKind={errorKind}
+      onRetry={() => setReloadKey((k) => k + 1)}
+    />
+  )
+}
+
+export type ProvenancePanelViewProps = {
+  status: ProvenanceStatus
+  records: ProvenanceRecord[]
+  errorKind?: ErrorKind
+  onRetry?: () => void
+}
+
+// Presentational view — drives every visual state purely from props, so tests
+// can render any state without running an effect.
+export function ProvenancePanelView({
+  status,
+  records,
+  errorKind,
+  onRetry,
+}: ProvenancePanelViewProps) {
+  return (
+    <section className="provenance-panel" aria-label="Entity Evidence / Provenance">
+      <h3>Evidence / Provenance</h3>
+      {status === 'loading' && <LoadingSkeleton label="读取事实溯源…" />}
+      {status === 'disabled' && (
+        <EmptyState message="事实溯源投影未启用（PROVENANCE_PROJECTION=false）。" />
+      )}
+      {status === 'empty' && (
+        <EmptyState message="该实体暂无策展的事实溯源记录。" />
+      )}
+      {status === 'error' && (
+        <ErrorCard kind={errorKind ?? 'network'} onRetry={onRetry} />
+      )}
+      {status === 'success' && (
+        <ul className="provenance-list">
+          {records.map((r) => (
+            <li className="provenance-item" key={r.claim_id}>
+              <div>
+                <strong>Source:</strong> {r.source_id}
+              </div>
+              <div>
+                <strong>Claim:</strong> {r.claim_id}
+              </div>
+              <div>
+                <strong>Reference:</strong> {r.reference}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}

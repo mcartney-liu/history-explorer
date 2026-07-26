@@ -16,6 +16,7 @@ import type { NavNode } from './navigation'
 import type { StarterItem } from '../data/explorationStarters'
 import { RelatedTopic } from './crossTopic'
 import AIExplanationPanel from './AIExplanationPanel'
+import ProvenancePanel from './ProvenancePanel'
 import { entityContext } from '../data/aiContext'
 
 export type EntityRelationship = {
@@ -144,6 +145,10 @@ function EntityPage({
         mainEntityName={entity.name}
         onEntityClick={onEntityClick}
       />
+
+      {/* M30-A: provenance projection UI. Pass the LOCAL id (entity.id), not the
+          global_id prop, so backend resolve() matches claim.subject_id verbatim. */}
+      <ProvenancePanel entityId={entity.id} />
 
       <ConnectionsExplainedPanel connections={entity.connections_explained} />
 

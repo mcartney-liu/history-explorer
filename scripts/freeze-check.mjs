@@ -141,6 +141,16 @@ function getChangedFiles() {
 // / schema change):
 //   - backend/app/main.py
 //
+// M30-A (Frontend Provenance UI) was approved via the Frontend Freeze Revision
+// Gate (lightweight ADR) and ADDS five frontend files to the allowlist (additive;
+// consumes the existing M29.1 provenance projection endpoint; no backend / schema
+// / enum change; runtime version stays 0.13.0):
+//   - frontend/src/data/provenanceApi.ts           (provenance API client)
+//   - frontend/src/data/provenanceApi.test.ts      (its unit tests)
+//   - frontend/src/components/ProvenancePanel.tsx  (provenance UI panel)
+//   - frontend/src/components/ProvenancePanel.test.tsx (its unit tests)
+//   - frontend/src/components/EntityPage.tsx       (mounts ProvenancePanel)
+//
 // Explicitly FORBIDDEN from the allowlist (require a new Freeze Revision Gate):
 //   backend/app/api/*, backend/app/ai_gateway/*,
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
@@ -171,6 +181,14 @@ export const SCOPE_ALLOWLIST = [
   // change beyond what the gate already approved for M29.1-A/B.
   "backend/tests/test_provenance_index.py",
   "backend/tests/test_provenance_api.py",
+  // M30-A (Frontend Provenance UI) — Frontend Freeze Revision Gate (lightweight
+  // ADR). Consumes the existing M29.1 provenance projection endpoint; purely
+  // additive frontend change — no backend / schema / enum change; runtime stays 0.13.0.
+  "frontend/src/data/provenanceApi.ts",
+  "frontend/src/data/provenanceApi.test.ts",
+  "frontend/src/components/ProvenancePanel.tsx",
+  "frontend/src/components/ProvenancePanel.test.tsx",
+  "frontend/src/components/EntityPage.tsx",
 ];
 
 function _scopeAllowed(file) {
