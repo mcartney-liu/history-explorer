@@ -7,7 +7,8 @@
     "year": -440,
     "reference": "Herodotus. The Histories. trans. A. D. Godley. Loeb Classical Library.",
     "license": "Public Domain",
-    "publisher_or_archive": "Loeb Classical Library"
+    "publisher_or_archive": "Loeb Classical Library",
+    "tier": "primary"
   },
   {
     "id": "src-thucydides-peloponnesian",
@@ -17,7 +18,8 @@
     "year": -411,
     "reference": "Thucydides. History of the Peloponnesian War. trans. Rex Warner. Penguin Classics.",
     "license": "Public Domain",
-    "publisher_or_archive": "Penguin Classics"
+    "publisher_or_archive": "Penguin Classics",
+    "tier": "primary"
   },
   {
     "id": "src-rosenberg-1999",
@@ -27,7 +29,9 @@
     "year": 1999,
     "reference": "Rosenberg, J. (1999). A History of the Roman Empire. Academic Press.",
     "license": "Proprietary",
-    "publisher_or_archive": "Academic Press"
+    "publisher_or_archive": "Academic Press",
+    "tier": "academic",
+    "verification_status": "pending"
   },
   {
     "id": "src-ashoka-edicts",
@@ -37,7 +41,8 @@
     "year": -250,
     "reference": "Thapar, R. (ed.). Asokan Inscriptions. Indian Epigraphical Series.",
     "license": "Public Domain",
-    "publisher_or_archive": "Indian Epigraphical Series"
+    "publisher_or_archive": "Indian Epigraphical Series",
+    "tier": "primary"
   },
   {
     "id": "src-strabo-geography",
@@ -47,7 +52,8 @@
     "year": -20,
     "reference": "Strabo. Geographica. ed. A. Meineke. Teubner.",
     "license": "Public Domain",
-    "publisher_or_archive": "Teubner"
+    "publisher_or_archive": "Teubner",
+    "tier": "primary"
   },
   {
     "id": "src-pliny-nh",
@@ -57,7 +63,8 @@
     "year": 77,
     "reference": "Pliny the Elder. Natural History. trans. H. Rackham. Loeb Classical Library.",
     "license": "Public Domain",
-    "publisher_or_archive": "Loeb Classical Library"
+    "publisher_or_archive": "Loeb Classical Library",
+    "tier": "primary"
   },
   {
     "id": "src-nt-greek",
@@ -67,7 +74,8 @@
     "year": 100,
     "reference": "Nestle-Aland. Novum Testamentum Graece. Deutsche Bibelgesellschaft.",
     "license": "Proprietary",
-    "publisher_or_archive": "Deutsche Bibelgesellschaft"
+    "publisher_or_archive": "Deutsche Bibelgesellschaft",
+    "tier": "primary"
   },
   {
     "id": "src-silk-road-archives",
@@ -77,7 +85,8 @@
     "year": 2014,
     "reference": "UNESCO. The Silk Roads: Routes of Dialogue. World Heritage Centre.",
     "license": "Other",
-    "publisher_or_archive": "UNESCO World Heritage Centre"
+    "publisher_or_archive": "UNESCO World Heritage Centre",
+    "tier": "reference"
   },
   {
     "id": "src-arthashastra",
@@ -87,7 +96,8 @@
     "year": -300,
     "reference": "Kautilya. Arthashastra. ed. R. P. Kangle. Motilal Banarsidass.",
     "license": "Public Domain",
-    "publisher_or_archive": "Motilal Banarsidass"
+    "publisher_or_archive": "Motilal Banarsidass",
+    "tier": "primary"
   },
   {
     "id": "src-tipitaka",
@@ -97,7 +107,8 @@
     "year": -100,
     "reference": "The Pali Tipitaka. Pali Text Society.",
     "license": "Public Domain",
-    "publisher_or_archive": "Pali Text Society"
+    "publisher_or_archive": "Pali Text Society",
+    "tier": "primary"
   },
   {
     "id": "src-aryabhatiya",
@@ -107,7 +118,8 @@
     "year": 499,
     "reference": "Aryabhata. Aryabhatiya. trans. K. S. Shukla. Indian National Science Academy.",
     "license": "Public Domain",
-    "publisher_or_archive": "Indian National Science Academy"
+    "publisher_or_archive": "Indian National Science Academy",
+    "tier": "primary"
   },
   {
     "id": "src-thapar-early-india",
@@ -117,7 +129,8 @@
     "year": 2002,
     "reference": "Thapar, R. (2002). The Penguin History of Early India. Penguin Books.",
     "license": "Proprietary",
-    "publisher_or_archive": "Penguin Books"
+    "publisher_or_archive": "Penguin Books",
+    "tier": "academic"
   },
   {
     "id": "src-res-gestae",
