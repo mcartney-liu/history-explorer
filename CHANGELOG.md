@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM33.1.1] - 2026-07-26 (Project Release — M33 A-1.5)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only curated dataset files were changed (no backend / frontend / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Source Governance Stabilization Migration (M33 A-1.5) — a data-only governance fix over vM33.1 that brings the Knowledge Production Pipeline to "Governance Complete Gold":
+
+- **Source Tier backfill**: `data/sources.json` — 12 sources missing a frozen `tier` field (`src-herodotus-histories`, `src-thucydides-peloponnesian`, `src-rosenberg-1999`, `src-ashoka-edicts`, `src-strabo-geography`, `src-pliny-nh`, `src-nt-greek`, `src-silk-road-archives`, `src-arthashastra`, `src-tipitaka`, `src-aryabhatiya`, `src-thapar-early-india`) now carry `tier ∈ {primary, academic, reference}`; distribution primary 18 / academic 13 / reference 8 / missing 0. `src-rosenberg-1999` also adds a non-vocabulary `verification_status: pending` field.
+- **Evidence Claim source corrections**: `data/evidence_claims.json` — `ec-002` source corrected from `herodotus` to `arthashastra` (injects `source_ids: [arthashastra, strabo]`); `ec-023` re-pointed to `thapar-early-india`; `ec-rom-027` re-pointed to `iranica-rome` (the latter two retain `silk-road` inside `source_ids[]`).
+- **Validation**: Gold Gate (G1 Source / G2 Wikipedia / G3 Registry / G4 Vocabulary) + Greek Checklist (C1–C5) all pass; 39 sources, 64 claims, missing-tier count 0. No backend / frontend / schema / validation / registry / runtime change; runtime stays `[0.13.0]`; no AI / LLM / new dependency. Release commit: `f58d57f`; tag `vM33.1.1`.
+
 ## [vM33.1] - 2026-07-27 (Project Release — M31 + M33)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only curated dataset files were changed (no backend / frontend / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
