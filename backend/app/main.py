@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import LOGGER_NAME, configure_logging, get_settings
 from .core.repository import TOPIC_PATTERN, JsonTopicRepository
 from .core.knowledge_service import KnowledgeService
+# M29.1-A/B: provenance runtime projection (read model, ADR-006). Wired into the
+# composition root in M29.1-B under the approved Freeze Revision Gate (ADR-005).
+from .core.dataset_provider import build_dataset_provider
+from .core.provenance_index import ProvenanceIndex
 from .core.exploration import build_exploration_response as _exploration_from_data, build_generic_exploration
 
 # M2-005: data-quality validation is a pure library kept separate from the
@@ -79,6 +84,22 @@ EXPLORATION_DATA_DIR = Path(settings.data_dir)
 
 _repository = JsonTopicRepository(EXPLORATION_DATA_DIR)
 knowledge_service = KnowledgeService(_repository)
+
+# --- M29.1-B: Provenance Runtime Projection (composition root) ------------
+# ADR-005 Freeze Revision Gate approved. Pure additive wiring: a module-level
+# singleton `provenance_index` derived from the curated DatasetProvider. No
+# lifespan / startup hook added; KnowledgeService / repository / schema untouched.
+# `ProvenanceIndex` is a read model (ADR-006) — it never mutates examples, the
+# graph, or any data file. Gated by PROVENANCE_PROJECTION (default on); when
+# disabled the runtime falls back to vM27.1 behavior with no projection built.
+PROVENANCE_PROJECTION = (
+    os.environ.get("PROVENANCE_PROJECTION", "true").strip().lower() != "false"
+)
+
+provenance_index: "ProvenanceIndex | None" = None
+if PROVENANCE_PROJECTION:
+    _provenance_provider = build_dataset_provider(EXPLORATION_DATA_DIR)
+    provenance_index = ProvenanceIndex().build(_provenance_provider)
 
 
 # M4-005: legacy compatibility shims removed; all topic/entity lookups now
@@ -256,6 +277,37 @@ def recommendations(entity_id: str, limit: int = 5, seen: str = ""):
     return result.to_dict()
 
 
+# --- M29.1-C: Runtime Provenance Projection exposure (ADR-006 read model) --
+# New OPTIONAL endpoint gated by PROVENANCE_PROJECTION (default on). It exposes
+# the subject_id -> ProvenanceRecord projection that M29.1-A/‑B wired into the
+# composition root. It does NOT mutate examples, the graph, or any schema, and
+# it never merges into the /entity response (M29.0 Option B: dedicated endpoint).
+# When the projection is disabled the endpoint returns 404 — preserving the
+# vM27.1 contract where this endpoint does not exist — so /entity, /search and
+# /explore behavior is fully unchanged. add_api_route on both v1_router and
+# legacy_router keeps the v1 == legacy invariant without a new router file.
+def provenance(entity_id: str):
+    """Return the provenance records (source references) for a historical entity.
+
+    `entity_id` mirrors the identifier accepted by /entity/{entity_id} (local or
+    global id) and is used verbatim as the provenance subject_id key. Provenance
+    is a derived read model: 200 with an (possibly empty) `provenance` list in
+    every case — absence of records is a valid, empty answer, never a 404. The
+    endpoint returns 404 ONLY when PROVENANCE_PROJECTION is disabled, preserving
+    the vM27.1 fallback where this capability does not exist.
+    """
+    if not PROVENANCE_PROJECTION or provenance_index is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Provenance projection is disabled (PROVENANCE_PROJECTION=false).",
+        )
+    records = provenance_index.resolve(entity_id)
+    return {
+        "entity_id": entity_id,
+        "provenance": [r.to_dict() for r in records],
+    }
+
+
 _VALIDATION_REPORT = None
 
 
@@ -351,6 +403,12 @@ v1_router.add_api_route(
 v1_router.add_api_route(
     "/ai/chat", ai_chat, methods=["POST"], operation_id="v1_ai_chat"
 )
+v1_router.add_api_route(
+    "/provenance/{entity_id}",
+    provenance,
+    methods=["GET"],
+    operation_id="v1_provenance",
+)
 
 legacy_router = APIRouter()
 legacy_router.add_api_route(
@@ -382,6 +440,12 @@ legacy_router.add_api_route(
 )
 legacy_router.add_api_route(
     "/ai/chat", ai_chat, methods=["POST"], operation_id="ai_chat"
+)
+legacy_router.add_api_route(
+    "/provenance/{entity_id}",
+    provenance,
+    methods=["GET"],
+    operation_id="provenance",
 )
 
 app.include_router(v1_router, prefix=settings.api_v1_prefix)

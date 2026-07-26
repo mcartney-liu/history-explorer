@@ -130,8 +130,19 @@ function getChangedFiles() {
 //   - data/sources.json                        (curated sources, OUTSIDE data/examples)
 //   - data/evidence_claims.json                (curated evidence, OUTSIDE data/examples)
 //
+// M29.1-A (ProvenanceIndex module) was approved via the Freeze Revision Gate and
+// ADDS one file to the allowlist (the dormant read-model module created in M29.1-A;
+// no runtime wiring, no schema change):
+//   - backend/app/core/provenance_index.py    (ProvenanceIndex read model)
+//
+// M29.1-B (Runtime Projection Activation) was approved via the Freeze Revision Gate
+// (ADR-005) and ADDS main.py to the allowlist (provenance read-model wiring only —
+// additive composition-root singleton; no AI logic / graph mutation / business logic
+// / schema change):
+//   - backend/app/main.py
+//
 // Explicitly FORBIDDEN from the allowlist (require a new Freeze Revision Gate):
-//   backend/app/main.py, backend/app/api/*, backend/app/ai_gateway/*,
+//   backend/app/api/*, backend/app/ai_gateway/*,
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
 //   data/examples/*, frontend/*.
 export const SCOPE_ALLOWLIST = [
@@ -150,6 +161,16 @@ export const SCOPE_ALLOWLIST = [
   "backend/tests/test_evidence_claim.py",
   "data/sources.json",
   "data/evidence_claims.json",
+  // M29.1-A (ProvenanceIndex module) — Freeze Revision Gate
+  "backend/app/core/provenance_index.py",
+  // M29.1-B (Runtime Projection Activation) — Freeze Revision Gate (ADR-005)
+  "backend/app/main.py",
+  // M29.1-C / M29.2 (Provenance API + tests) — Freeze Revision Gate (ADR-005)
+  // Endpoint is additive (no new router file, mounts on v1 + legacy). These two
+  // test files exercise the read model + the HTTP endpoint; no feature-scope
+  // change beyond what the gate already approved for M29.1-A/B.
+  "backend/tests/test_provenance_index.py",
+  "backend/tests/test_provenance_api.py",
 ];
 
 function _scopeAllowed(file) {
