@@ -17,6 +17,7 @@ import type { StarterItem } from '../data/explorationStarters'
 import { RelatedTopic } from './crossTopic'
 import AIExplanationPanel from './AIExplanationPanel'
 import ProvenancePanel from './ProvenancePanel'
+import ExplorationFlowGuide from './ExplorationFlowGuide'
 import { entityContext } from '../data/aiContext'
 
 export type EntityRelationship = {
@@ -134,6 +135,8 @@ function EntityPage({
         onEntityClick={onEntityClick}
         onNodeClick={onNodeClick}
       />
+
+      <ExplorationFlowGuide />
 
       {onTopicClick && (
         <CrossTopicTopicList relatedTopics={entity.related_topics} onTopicClick={onTopicClick} />

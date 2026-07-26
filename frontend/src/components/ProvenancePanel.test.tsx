@@ -62,4 +62,23 @@ describe('ProvenancePanelView', () => {
     // Per design, subject_id is an internal index key and must NOT be shown.
     expect(html).not.toContain('person-ashoka')
   })
+
+  it('groups records by source_id on success (S4)', () => {
+    const grouped: ProvenanceRecord[] = [
+      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-1', reference: 'ref-1' },
+      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-2', reference: 'ref-2' },
+      { subject_id: 'person-ashoka', source_id: 'src-2', claim_id: 'claim-3', reference: 'ref-3' },
+    ]
+    const html = renderToStaticMarkup(
+      <ProvenancePanelView status="success" records={grouped} />,
+    )
+    expect(html).toContain('provenance-group')
+    // Two distinct sources => exactly two group headers.
+    const heads = html.match(/provenance-group-head/g) || []
+    expect(heads.length).toBe(2)
+    expect(html).toContain('claim-1')
+    expect(html).toContain('claim-3')
+    // subject_id still hidden after grouping.
+    expect(html).not.toContain('person-ashoka')
+  })
 })

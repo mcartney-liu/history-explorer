@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { MainEntity } from './MainEntityCard'
 import { RelatedEntity } from './RelatedEntityList'
 import EmptyState from './EmptyState'
 import AIExplanationPanel from './AIExplanationPanel'
+import RelationshipEvidence from './RelationshipEvidence'
 import { relationshipContext } from '../data/aiContext'
 
 type RelationshipViewProps = {
@@ -47,6 +49,8 @@ function RelationshipView({
   onEntityFocus,
   onNodeClick,
 }: RelationshipViewProps) {
+  const [evidenceFor, setEvidenceFor] = useState<string | null>(null)
+
   if (!mainEntity?.id) {
     return null
   }
@@ -91,6 +95,17 @@ function RelationshipView({
                       Focus
                     </button>
                   )}
+                  <button
+                    type="button"
+                    className="explore-button rel-evidence-btn"
+                    aria-label={`查看 ${displayName} 的依据`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setEvidenceFor((prev) => (prev === item.id ? null : item.id))
+                    }}
+                  >
+                    查看依据
+                  </button>
                 </>
               )
               return clickable ? (
@@ -109,10 +124,16 @@ function RelationshipView({
                   }}
                 >
                   {content}
+                  {evidenceFor === item.id && (
+                    <RelationshipEvidence entityId={item.id} entityName={displayName} />
+                  )}
                 </li>
               ) : (
                 <li key={item.id} className={className}>
                   {content}
+                  {evidenceFor === item.id && (
+                    <RelationshipEvidence entityId={item.id} entityName={displayName} />
+                  )}
                 </li>
               )
             })}

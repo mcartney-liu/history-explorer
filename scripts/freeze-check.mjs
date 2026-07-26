@@ -189,6 +189,20 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/ProvenancePanel.tsx",
   "frontend/src/components/ProvenancePanel.test.tsx",
   "frontend/src/components/EntityPage.tsx",
+  // M30-B (Exploration UX Upgrade) — Frontend Freeze Revision Gate (lightweight
+  // ADR). Pure additive frontend UX closure; consumes the existing M29.1
+  // provenance projection + M30-A UI. No backend / schema / enum / runtime
+  // change; runtime stays 0.13.0.
+  //   - RelationshipView.tsx           (S2: lazy "查看依据" entry per branch)
+  //   - RelationshipEvidence.tsx        (S1: lazy per-relationship evidence container+view)
+  //   - RelationshipEvidence.test.tsx   (its unit tests)
+  //   - ExplorationFlowGuide.tsx        (S3: stateless exploration-flow closure guide)
+  //   - ExplorationFlowGuide.test.tsx    (its unit tests)
+  "frontend/src/components/RelationshipView.tsx",
+  "frontend/src/components/RelationshipEvidence.tsx",
+  "frontend/src/components/RelationshipEvidence.test.tsx",
+  "frontend/src/components/ExplorationFlowGuide.tsx",
+  "frontend/src/components/ExplorationFlowGuide.test.tsx",
 ];
 
 function _scopeAllowed(file) {

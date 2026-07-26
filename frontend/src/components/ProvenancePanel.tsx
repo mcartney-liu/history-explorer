@@ -65,6 +65,19 @@ export type ProvenancePanelViewProps = {
   onRetry?: () => void
 }
 
+// Frontend-only grouping of provenance records by their source_id (read model).
+// No new fields are introduced — source_id is already returned by the backend;
+// we only reorganize the existing records for readability. subject_id stays hidden.
+function groupBySource(records: ProvenanceRecord[]): Array<[string, ProvenanceRecord[]]> {
+  const map = new Map<string, ProvenanceRecord[]>()
+  for (const r of records) {
+    const bucket = map.get(r.source_id)
+    if (bucket) bucket.push(r)
+    else map.set(r.source_id, [r])
+  }
+  return [...map.entries()]
+}
+
 // Presentational view — drives every visual state purely from props, so tests
 // can render any state without running an effect.
 export function ProvenancePanelView({
@@ -87,21 +100,25 @@ export function ProvenancePanelView({
         <ErrorCard kind={errorKind ?? 'network'} onRetry={onRetry} />
       )}
       {status === 'success' && (
-        <ul className="provenance-list">
-          {records.map((r) => (
-            <li className="provenance-item" key={r.claim_id}>
-              <div>
-                <strong>Source:</strong> {r.source_id}
-              </div>
-              <div>
-                <strong>Claim:</strong> {r.claim_id}
-              </div>
-              <div>
-                <strong>Reference:</strong> {r.reference}
-              </div>
-            </li>
+        <div className="provenance-groups">
+          {groupBySource(records).map(([sourceId, recs]) => (
+            <section className="provenance-group" key={sourceId}>
+              <h4 className="provenance-group-head">Source: {sourceId}</h4>
+              <ul className="provenance-list">
+                {recs.map((r) => (
+                  <li className="provenance-item" key={r.claim_id}>
+                    <div>
+                      <strong>Claim:</strong> {r.claim_id}
+                    </div>
+                    <div>
+                      <strong>Reference:</strong> {r.reference}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ))}
-        </ul>
+        </div>
       )}
     </section>
   )
