@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM35.1] - 2026-07-27 (Project Release — M35)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive exploration-experience code + release-quality fixes (CI workflow, one dataset alias, one backend test assertion) + freeze-guard script + release-metadata docs were changed (no `backend/app` / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
+
+User Exploration Experience MVP (M35) — a pure-frontend additive release over vM34.1, admitted via the Frontend Freeze Revision Gate (same mechanism as M30-A/M30-B/M34):
+
+- **Discover landing**: `frontend/src/pages/DiscoverPage.tsx` — static discover page with curated topic entries; no new API, no backend call beyond the existing endpoints.
+- **Narrative layer (static)**: `frontend/src/components/exploration/StorySection.tsx` + `WhyImportantPanel.tsx`, sourced exclusively from hand-curated `frontend/src/data/narrative.ts` — **NO AI generation**, no LLM, no external fetch.
+- **Journey trace (local-only)**: `frontend/src/components/journey/JourneyPanel.tsx` + `frontend/src/lib/journey.ts` — localStorage-only exploration trace; nothing uploaded, no account binding.
+- **Feedback capture (no-op/local)**: `frontend/src/components/FeedbackWidget.tsx` — localStorage only, no network.
+- **Mount points**: `App.tsx` / `EntityPage.tsx` — additive mounts only; existing views untouched.
+- **M35 Release Quality Corrections** (release-quality fixes, NOT feature scope): `.github/workflows/ci.yml` frontend job `npm ci` → `npm install` with corrected `cache-dependency-path` (lockfile is gitignored, `npm ci` cannot run); `data/examples/roman_empire_example.json` — duplicated `Byzantium` alias removed from `civ-byzantine` (kept on `loc-constantinople`), eliminating the `DUPLICATE_ALIAS` validation warning; `backend/tests/test_search_index.py` — assertion synced to the legitimately-enriched `person-augustus.location == "Roman Italy"` (test/data drift; PO-approved single-file Freeze Revision Gate, registered in `scripts/freeze-check.mjs` SCOPE_ALLOWLIST).
+- **Governance / invariants**: no new feature beyond M35 scope; no `backend/app` change; no schema change; ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; zero new dependency; no AI / LLM; runtime stays `[0.13.0]`. Backend **219 passed**; frontend **569 passed** (+29); freeze-check EXIT 0; governance tests **9/9**. Release tag: `vM35.1`.
+
 ## [vM34.1] - 2026-07-27 (Project Release — M34)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive exploration-UX + graph-viz code + freeze-guard script + a strategy doc + release-metadata docs were changed (no backend / data / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
