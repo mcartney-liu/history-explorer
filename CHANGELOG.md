@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM36.2] - 2026-07-27 (Project Release — M36.2)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Historical Narrative Layer is additive — no backend core / schema / AI Gateway / enum / dependency change.
+
+### Historical Narrative Layer (M36.2)
+
+**Frontend Components**
+- `EventNarrativeCard.tsx`: AI-powered historical narrative entry — 3 pre-set narrative modes (historical_impact, why_happened, multi_civilization_view) with causal/impact badge counts. Reuses M36.0 explainAI + GroundedAnswer + CitationList.
+- `EventNarrativeJourney.tsx`: event exploration path visualization — Event→Event chain with priority sorting (caused > before/after > influenced), cross-topic topic badges, and global_id routing. `currentTopic` prop safe (optional, backward-compatible).
+- `EntityPage.tsx`: mounts both behind `entity.type === 'Event'` guard — zero impact on non-Event types.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+4 M36.2 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0 vs vM36.1). Frontend 66 files, 617 passed (+18).
+
 ## [vM36.1] - 2026-07-27 (Project Release — M36.1)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Event Intelligence Layer is additive — no backend core / schema / AI Gateway / enum / dependency change.
