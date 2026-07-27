@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM39] - 2026-07-27 (Project Release — M39)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Research Intelligence is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First: zero conversation memory, zero AI planner.
+
+### Research Intelligence (M39)
+
+**ResearchSummary**: explainAI-powered cross-dimensional research synthesis with comparative header (single: "研究综述", multi: "比较研究综述"), adaptive header via `comparedNames`, unique citation aggregation, grounded badge.
+
+**MultiEntitySelector**: add/remove comparison entities from relationships, max 3 entities, auto-generates `context_global_ids[]`, duplicate prevention via filtering.
+
+**Multi-Entity Research**: `ResearchPanel` orchestrates single/multi-entity research via `context_global_ids[]` + comparison-prefixed dimension questions (e.g. "比较 Roman Empire 与 Han Dynasty: 政治制度...").
+
+**Comparative UX**: `ResearchReport` and `ResearchSummary` adapt titles and headers based on `comparedNames` — zero AI impact, pure UI adaptation.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+4 M39 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 73 files, 672 passed (+14 vs vM38).
+
 ## [vM38] - 2026-07-27 (Project Release — M38)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. AI Research Mode is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First: zero conversation memory, zero AI planner.
