@@ -137,3 +137,95 @@ describe('DiscoverPage (M42 Activation)', () => {
     expect(html).toContain('古代文明')
   })
 })
+
+// ============================================================
+// M44 Phase 1 — Product Introduction tests
+// ============================================================
+
+describe('DiscoverPage (M44 Guidance)', () => {
+  it('renders product introduction section', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('History Explorer 能做什么')
+  })
+
+  it('showcases all four capabilities', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('历史叙事')
+    expect(html).toContain('关系探索')
+    expect(html).toContain('深度研究')
+    expect(html).toContain('AI 历史对话')
+  })
+
+  it('existing M35 featured section still renders', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('data-topic="silk_road"')
+  })
+})
+
+// ============================================================
+// M44 Phase 4 — Empty State Optimization tests
+// ============================================================
+
+describe('DiscoverPage (M44 Empty States)', () => {
+  it('shows empty guidance for RecentResearches when no history', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('你还没有开始探索')
+    expect(html).toContain('搜索一个历史主题')
+  })
+
+  it('shows InterestProfile onboarding when no history', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('历史兴趣画像')
+  })
+
+  it('shows recent data when ResearchHistory has content', () => {
+    localStorage.setItem(getStorageKey(), JSON.stringify([{
+      id: 'r1', version: 1, createdAt: '2026-07-28T00:00:00Z', updatedAt: '',
+      entityName: 'Roman Empire', entityType: 'Civilization',
+      entityGlobalId: 't:civ-roman', comparedNames: [], dimensions: [],
+      summaryCitations: [], bookmarked: false, labels: [],
+    }]))
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('Roman Empire')
+    expect(html).not.toContain('你还没有开始探索')
+  })
+})
+
+// ============================================================
+// M44 Phase 6 — ResearchLibrary entry test
+// ============================================================
+
+describe('DiscoverPage (M44 ResearchLibrary)', () => {
+  it('shows research library entry when bookmarked exists', () => {
+    localStorage.setItem(getStorageKey(), JSON.stringify([{
+      id: 'r1', version: 1, createdAt: '2026-07-28T00:00:00Z', updatedAt: '',
+      entityName: 'Roman Empire', entityType: 'Civilization',
+      entityGlobalId: 't:civ-roman', comparedNames: [], dimensions: [],
+      summaryCitations: [], bookmarked: true, labels: [],
+    }]))
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('我的研究收藏')
+    expect(html).toContain('Roman Empire')
+  })
+
+  it('hides library entry when no bookmarks', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).not.toContain('我的研究收藏')
+  })
+})

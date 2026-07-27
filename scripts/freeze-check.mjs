@@ -371,6 +371,9 @@ export const SCOPE_ALLOWLIST = [
   // M43 Phase 4 — ExplorationFunnelAnalysis (funnel metrics from events)
   "frontend/src/data/ExplorationFunnelAnalysis.ts",
   "frontend/src/data/ExplorationFunnelAnalysis.test.ts",
+  // M44 Phase 2 — EntityTabGuidance (tab description model)
+  "frontend/src/data/EntityTabGuidance.ts",
+  "frontend/src/data/EntityTabGuidance.test.ts",
 ];
 
 function _scopeAllowed(file) {

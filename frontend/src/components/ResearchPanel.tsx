@@ -175,6 +175,12 @@ export function ResearchPanelView({
                 dimensions={dimensions}
                 comparedNames={selectedEntities.map((e) => e.name)}
               />
+
+              {/* M44: Research completion guidance */}
+              <div className="rp-completion-guidance" role="status">
+                <p>研究完成。你可以保存这份研究结果到「研究收藏库」中，之后随时恢复查看或与其他实体进行对比。</p>
+              </div>
+
               <button type="button" className="rp-reset-btn" onClick={onReset}>
                 重新研究
               </button>

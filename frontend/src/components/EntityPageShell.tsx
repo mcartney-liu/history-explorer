@@ -1,4 +1,5 @@
 import { useState, useCallback, type ReactNode } from 'react'
+import { guidanceFor } from '../data/EntityTabGuidance'
 
 // ============================================================
 // Types
@@ -77,6 +78,24 @@ export function EntityPageShellView({
           </button>
         ))}
       </nav>
+
+      {/* Tab guidance (M44) */}
+      {(() => {
+        const g = guidanceFor(activeTab)
+        return (
+          <div className="eps-guidance" role="complementary" aria-label={`${g.title} 说明`}>
+            <p className="eps-guidance-title">{g.title}</p>
+            <p className="eps-guidance-desc">{g.description}</p>
+            {g.recommendedActions.length > 0 && (
+              <ul className="eps-guidance-actions">
+                {g.recommendedActions.map((a, i) => (
+                  <li key={i}>{a}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )
+      })()}
 
       {/* Tab content */}
       <div className="eps-content" role="tabpanel">

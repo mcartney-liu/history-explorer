@@ -71,4 +71,21 @@ describe('EntityPageShellView', () => {
     expect(html).toContain('分析')
     expect(html).toContain('扩展')
   })
+
+  // M44 Tab Guidance
+  it('renders guidance for active tab', () => {
+    const html = renderToStaticMarkup(
+      <EntityPageShellView activeTab="explore" tabs={TEST_TABS} />,
+    )
+    expect(html).toContain('探索历史关系')
+    expect(html).toContain('AI 历史学家')
+  })
+
+  it('renders guidance for research tab', () => {
+    const html = renderToStaticMarkup(
+      <EntityPageShellView activeTab="research" tabs={TEST_TABS} />,
+    )
+    expect(html).toContain('深入研究')
+    expect(html).toContain('启动 4 维度分析')
+  })
 })

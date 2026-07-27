@@ -213,4 +213,31 @@ describe('ResearchPanelView', () => {
     expect(dimensions[1].status).toBe('error')
     // explainAI is NOT called — only data conversion
   })
+
+  // --- M44 Phase 3: Completion Guidance ---
+
+  it('renders completion guidance when research is done', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'Answer', grounded: true, citations: [], rejected_citations: [] },
+        ]}
+      />,
+    )
+    expect(html).toContain('研究收藏库')
+    expect(html).toContain('保存这份研究结果')
+  })
+
+  it('does not render guidance when research is idle', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="idle"
+        dimensions={[]}
+      />,
+    )
+    expect(html).not.toContain('保存这份研究结果')
+  })
 })

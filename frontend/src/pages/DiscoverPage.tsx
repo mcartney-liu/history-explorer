@@ -3,6 +3,7 @@
 // M35: presentational entry page with hero + featured + popular
 // M42: personalized discovery using ResearchHistory, UserInterestProfile,
 //      and entity-type exploration entry points.
+// M44: added ProductIntro section — static capability showcase for new visitors.
 
 import { useMemo } from 'react'
 import type { NavNode } from '../components/navigation'
@@ -30,8 +31,68 @@ const ENTITY_TYPE_CARDS = [
   { type: 'Location', label: '地理探索', slug: 'locations', desc: '丝绸之路、地中海、恒河流域' },
 ]
 
+// M44 Product Introduction — static capability showcase
+const PRODUCT_CAPABILITIES = [
+  {
+    id: 'story',
+    icon: '📖',
+    title: '历史叙事',
+    desc: '从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。',
+  },
+  {
+    id: 'explore',
+    icon: '🔗',
+    title: '关系探索',
+    desc: '穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。',
+  },
+  {
+    id: 'research',
+    icon: '🔬',
+    title: '深度研究',
+    desc: '4 维度 AI 分析：政治、军事、经济、文化。支持多实体对比研究，结果可保存回顾。',
+  },
+  {
+    id: 'chat',
+    icon: '💬',
+    title: 'AI 历史对话',
+    desc: '向 AI 历史学家提问。每个回答都有事实溯源，没有经过验证的内容不会呈现。',
+  },
+]
+
+function ProductIntro() {
+  return (
+    <div className="discover-intro">
+      <h3 className="discover-section-heading">History Explorer 能做什么</h3>
+      <div className="discover-intro-grid">
+        {PRODUCT_CAPABILITIES.map((cap) => (
+          <div key={cap.id} className="discover-intro-card">
+            <span className="discover-intro-icon">{cap.icon}</span>
+            <h4 className="discover-intro-title">{cap.title}</h4>
+            <p className="discover-intro-desc">{cap.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function RecentResearches({ researches }: { researches: SavedResearch[] }) {
-  if (researches.length === 0) return null
+  if (researches.length === 0) {
+    return (
+      <div className="discover-recent discover-recent--empty">
+        <h3 className="discover-section-heading">最近研究</h3>
+        <p className="discover-empty-text">你还没有开始探索。</p>
+        <div className="discover-empty-actions">
+          <p>试试：</p>
+          <ul>
+            <li>搜索一个历史主题（如"罗马""丝绸之路"）</li>
+            <li>点击下方精选探索开始</li>
+            <li>从文明、事件、人物分类进入</li>
+          </ul>
+        </div>
+      </div>
+    )
+  }
   const recent = [...researches]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
@@ -52,9 +113,45 @@ function RecentResearches({ researches }: { researches: SavedResearch[] }) {
   )
 }
 
+// M44 Phase 6 — ResearchLibrary entry on DiscoverPage
+function ResearchLibraryEntry() {
+  const researches = useMemo(() => listResearch().filter((r) => r.bookmarked), [])
+  if (researches.length === 0) return null
+  return (
+    <div className="discover-library">
+      <h3 className="discover-section-heading">我的研究收藏</h3>
+      <p className="discover-section-sub">
+        已保存 {researches.length} 项研究结果。点击可跳转到对应实体继续查看。
+      </p>
+      <ul className="discover-library-list">
+        {researches.slice(0, 5).map((r) => (
+          <li key={r.id}>
+            <a href={`#/entity/${encodeURIComponent(r.entityGlobalId)}`} className="discover-library-link">
+              <span className="discover-library-type">{r.entityType}</span>
+              {r.entityName}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 function InterestProfile() {
   const researches = useMemo(() => listResearch(), [])
-  if (researches.length < 2) return null
+  if (researches.length < 2) {
+    return (
+      <div className="discover-interest discover-interest--empty">
+        <h3 className="discover-section-heading">我的探索兴趣</h3>
+        <p className="discover-empty-text">
+          完成几次探索后，这里会生成你的历史兴趣画像。
+        </p>
+        <p className="discover-empty-sub">
+          你探索得越多，推荐会越贴近你的兴趣方向。
+        </p>
+      </div>
+    )
+  }
   const profile = useMemo(() => generateUserInterestProfile(researches), [researches])
   const summary = useMemo(() => insightSummary({ researchCount: profile.activeExplorationDays + 1, favoriteEntityTypes: profile.topEntityTypes.map((t) => t.type), favoriteDimensions: profile.topDimensions.map((d) => d.dimension), exploredRelationships: [], frequentThemes: profile.topThemes } as any), [profile])
 
@@ -129,8 +226,14 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
         <p className="discover-hero-sub">{DISCOVER_HERO_SUB}</p>
       </div>
 
+      {/* M44: Product introduction for new visitors */}
+      <ProductIntro />
+
       {/* M42: Recent researches */}
       <RecentResearches researches={researches} />
+
+      {/* M44: ResearchLibrary entry point */}
+      <ResearchLibraryEntry />
 
       {/* M42: Interest profile */}
       <InterestProfile />

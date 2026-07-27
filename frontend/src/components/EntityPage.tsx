@@ -182,6 +182,10 @@ function EntityPage({
             case 'explore':
               return (
                 <>
+                  {/* M44: HistorianChat visibility hint */}
+                  <p className="explore-hint">
+                    不知道从哪里开始？可以试试下方的推荐探索，或向下滚动与 AI 历史学家对话。
+                  </p>
                   {entityGlobalId ? (
                     <ResearchDiscoveryPanel
                       currentEntity={{
