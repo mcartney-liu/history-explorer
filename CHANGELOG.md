@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM37] - 2026-07-27 (Project Release — M37)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. AI Historian Interaction Layer is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First architecture: zero conversation memory.
+
+### AI Historian Interaction Layer (M37)
+
+**HistorianChat**: Grounding First conversational AI — context badge (entityType + entityName), 8 entity-type-specific suggested question templates, follow-up input, clear chat, chat message history (frontend-only state). explainAI receives only question + entityGlobalId — no conversation_id, session_id, or memory injected.
+
+**JourneyCard**: relationship-driven exploration recommendations — pure frontend data from entity.relationships, priority-sorted (caused > before > after > influenced > participated_in), capped at 6 cards, global_id routing with local id fallback. Zero AI calls, zero API modifications.
+
+**EntityPage**: mounts both components for all entity types. `scripts/freeze-check.mjs` SCOPE_ALLOWLIST extended (+4 M37 entries). EntITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 68 files, 635 passed (+18 vs vM36.2).
+
 ## [vM36.2] - 2026-07-27 (Project Release — M36.2)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Historical Narrative Layer is additive — no backend core / schema / AI Gateway / enum / dependency change.
