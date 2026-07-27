@@ -22,6 +22,8 @@ import EntityHeader from './EntityHeader'
 import GraphViewPanel from './GraphViewPanel'
 import EventCausalChain from './EventCausalChain'
 import EventImpactPanel from './EventImpactPanel'
+import EventNarrativeCard from './EventNarrativeCard'
+import EventNarrativeJourney from './EventNarrativeJourney'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
@@ -161,6 +163,19 @@ function EntityPage({
             centerEntityName={entity.name}
             nameById={nameById}
             onEntityClick={onEntityClick}
+          />
+          <EventNarrativeCard
+            entityGlobalId={entityGlobalId}
+            entityName={entity.name}
+            relationships={entity.relationships}
+            onEntityClick={onEntityClick}
+          />
+          <EventNarrativeJourney
+            relationships={entity.relationships}
+            centerEntityName={entity.name}
+            nameById={nameById}
+            onEntityClick={onEntityClick}
+            currentTopic={entityGlobalId?.split(':')[0]}
           />
         </>
       )}

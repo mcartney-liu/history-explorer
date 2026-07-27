@@ -295,6 +295,15 @@ export const SCOPE_ALLOWLIST = [
   // M36.1 Step 1 test-only fix: adjust explore_from limit to account for
   // enriched dataset density. No production-logic change.
   "backend/tests/test_exploration_engine.py",
+  // M36.2 (Event Narrative Intelligence) — Frontend Freeze Revision Gate
+  // EventNarrativeCard: AI-powered historical narrative entry point for Event
+  // pages. Reuses existing AIExplanationPanel + M36.0 AI modes; no new API /
+  // backend / schema / enum / dependency.
+  "frontend/src/components/EventNarrativeCard.tsx",
+  "frontend/src/components/EventNarrativeCard.test.tsx",
+  // M36.2 Step 2 — EventNarrativeJourney (event exploration path visualization)
+  "frontend/src/components/EventNarrativeJourney.tsx",
+  "frontend/src/components/EventNarrativeJourney.test.tsx",
 ];
 
 function _scopeAllowed(file) {
