@@ -359,6 +359,18 @@ export const SCOPE_ALLOWLIST = [
   // M42 Phase 3 — KnowledgeCoverage (data quality analysis utility)
   "frontend/src/data/KnowledgeCoverage.ts",
   "frontend/src/data/KnowledgeCoverage.test.ts",
+  // M43 Phase 1 — UIAudit (page section audit model)
+  "frontend/src/data/UIAudit.ts",
+  "frontend/src/data/UIAudit.test.ts",
+  // M43 Phase 2 — UserJourney (funnel path mapping)
+  "frontend/src/data/UserJourney.ts",
+  "frontend/src/data/UserJourney.test.ts",
+  // M43 Phase 3 — UserBehaviorEvent (local behavior telemetry)
+  "frontend/src/data/UserBehaviorEvent.ts",
+  "frontend/src/data/UserBehaviorEvent.test.ts",
+  // M43 Phase 4 — ExplorationFunnelAnalysis (funnel metrics from events)
+  "frontend/src/data/ExplorationFunnelAnalysis.ts",
+  "frontend/src/data/ExplorationFunnelAnalysis.test.ts",
 ];
 
 function _scopeAllowed(file) {
