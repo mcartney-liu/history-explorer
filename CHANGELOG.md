@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM44] - 2026-07-28 (Project Release — M44)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. User Experience Improvement — zero backend / schema / AI Gateway / dependency change. "Fix what we measured."
+
+### User Experience Improvement (M44)
+
+**DiscoverPage**: Product Intro (4 capability cards: 历史叙事/关系探索/深度研究/AI历史对话), empty state optimization (RecentResearches onboarding + InterestProfile explanation for new users), ResearchLibrary entry (saved bookmark links with count).
+
+**EntityTabGuidance**: Per-tab guidance data for all 5 tabs — title/description/recommendedActions. EntityPageShell renders inline guidance panel between tab navigation and content.
+
+**ResearchPanel**: Completion guidance — when research finishes, displays save-prompt pointing to ResearchLibrary. Idle mode unaffected.
+
+**HistorianChat Visibility**: Enhanced explore tab guidance text ("你也可以向 AI 历史学家提问") plus inline hint in Explore tab panel area.
+
+**All M43-identified UX blockers resolved**: 6/6 problems addressed through guidance text and conditional rendering — zero business logic changes.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M44 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 87 files, 810 passed (+17 vs vM43).
+
 ## [vM43] - 2026-07-28 (Project Release — M43)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Validation Layer — zero backend / schema / AI Gateway / dependency change. "Measure before you build more."
