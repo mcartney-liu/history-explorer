@@ -85,7 +85,7 @@ def test_search_response_carries_enrichment_fields():
     augustus = next(r for r in res.json()["results"] if r["id"] == "person-augustus")
     assert augustus["start"] == "63 BC"
     assert augustus["end"] == "14 CE"
-    assert augustus["location"] is None  # Person has no region
+    assert augustus["location"] == "Roman Italy"  # Person enrichment: region propagates to location
 
     rome = client.get("/search?q=rome").json()["results"][0]
     assert rome["id"] == "loc-rome"

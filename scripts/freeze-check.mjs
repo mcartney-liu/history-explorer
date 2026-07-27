@@ -229,6 +229,37 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/lib/graphLayout.test.ts",
   "frontend/src/App.tsx",
   "frontend/src/App.css",
+  // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
+  // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
+  // frontend change: Discover landing page, static narrative layer
+  // (StorySection / WhyImportantPanel sourced from hand-curated narrative.ts,
+  // NO AI generation), localStorage-only Journey trace, and a no-op/localStorage
+  // FeedbackWidget. ZERO new dependency; no backend / schema / data JSON /
+  // enum / API change; runtime stays 0.13.0.
+  // NOTE: `git status --porcelain` reports untracked dirs with a trailing "/",
+  // so directory-style prefixes (not just exact file entries) are required to
+  // match the `frontend/src/pages/` path the checker actually enumerates.
+  "frontend/src/pages/",
+  "frontend/src/components/discover/",
+  "frontend/src/components/exploration/",
+  "frontend/src/components/journey/",
+  "frontend/src/components/FeedbackWidget.tsx",
+  "frontend/src/lib/journey.ts",
+  "frontend/src/data/narrative.ts",
+  // M35 co-located unit tests (same convention as M30-A/M34: every gated
+  // source file ships with its test file registered explicitly; the three
+  // directory-style entries above already cover their nested tests).
+  "frontend/src/components/FeedbackWidget.test.tsx",
+  "frontend/src/lib/journey.test.ts",
+  "frontend/src/data/narrative.test.ts",
+  // M35 (Roman Italy test/data drift fix) — Backend Test Freeze Revision Gate
+  // (PO-approved, 2026-07-27). The single backend test file
+  // `backend/tests/test_search_index.py` is updated to assert the
+  // legitimately-enriched `person-augustus.location == "Roman Italy"` (the
+  // example data carries `region: "Roman Italy"`, propagated by
+  // `backend/app/core/search.py`). No backend/app business logic, schema,
+  // enum, or dependency change — purely a stale assertion aligned to data.
+  "backend/tests/test_search_index.py",
 ];
 
 function _scopeAllowed(file) {
