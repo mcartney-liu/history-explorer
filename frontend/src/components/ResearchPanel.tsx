@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { explainAI } from '../data/aiClient'
 import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } from './ResearchDimensionCard'
 import ResearchReport from './ResearchReport'
+import ResearchSummary from './ResearchSummary'
+import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
 import type { EntityRelationship } from './EntityPage'
 
 export type ResearchPanelProps = {
@@ -73,11 +75,17 @@ export function ResearchPanelView({
   dimensions = [] as ResearchDimension[],
   onStart = (_q: string) => {},
   onReset = () => {},
+  selectedEntities = [] as SelectableEntity[],
+  availableEntities = [] as SelectableEntity[],
+  onSelectEntities = (_entities: SelectableEntity[]) => {},
 }: ResearchPanelProps & {
   mode?: ResearchMode
   dimensions?: ResearchDimension[]
   onStart?: (question: string) => void
   onReset?: () => void
+  selectedEntities?: SelectableEntity[]
+  availableEntities?: SelectableEntity[]
+  onSelectEntities?: (entities: SelectableEntity[]) => void
 }) {
   const template = templateFor(entityType)
 
@@ -116,6 +124,14 @@ export function ResearchPanelView({
           >
             开始研究
           </button>
+
+          {availableEntities.length > 0 && (
+            <MultiEntitySelector
+              selected={selectedEntities}
+              available={availableEntities}
+              onChange={onSelectEntities}
+            />
+          )}
         </div>
       )}
 
@@ -145,10 +161,18 @@ export function ResearchPanelView({
 
           {mode === 'done' && (
             <>
+              <ResearchSummary
+                entityName={entityName}
+                entityType={entityType}
+                entityGlobalId={entityGlobalId}
+                dimensions={dimensions}
+                comparedNames={selectedEntities.map((e) => e.name)}
+              />
               <ResearchReport
                 entityName={entityName}
                 entityType={entityType}
                 dimensions={dimensions}
+                comparedNames={selectedEntities.map((e) => e.name)}
               />
               <button type="button" className="rp-reset-btn" onClick={onReset}>
                 重新研究
@@ -170,13 +194,31 @@ export function ResearchPanelView({
 export default function ResearchPanel(props: ResearchPanelProps) {
   const [mode, setMode] = useState<ResearchMode>('idle')
   const [dimensions, setDimensions] = useState<ResearchDimension[]>([])
+  const [selectedEntities, setSelectedEntities] = useState<SelectableEntity[]>([])
+
+  // Build available entities from relationships
+  const availableEntities: SelectableEntity[] = (props.relationships ?? [])
+    .filter((r) => r.other.global_id && r.other.name)
+    .map((r) => ({ id: r.other.id, globalId: r.other.global_id, name: r.other.name, type: r.other.type }))
+
+  // Compute context_global_ids: primary entity + selected comparison entities
+  const contextGlobalIds: string[] = [
+    props.entityGlobalId,
+    ...selectedEntities.map((e) => e.globalId!).filter(Boolean),
+  ]
 
   async function onStart(_q: string) {
     const template = templateFor(props.entityType)
+    const comparisonPrefix = selectedEntities.length > 0
+      ? `比较 ${props.entityName} 与 ${selectedEntities.map((e) => e.name).join('、')}»`
+      : ''
+
     const initial: ResearchDimension[] = template.map((t, i) => ({
       id: `dim-${i}`,
       title: t.title,
-      question: t.question.replace('这个', props.entityName).replace('他/她', props.entityName),
+      question: comparisonPrefix
+        ? `${comparisonPrefix}${t.question.replace('这个', '')}`
+        : t.question.replace('这个', props.entityName).replace('他/她', props.entityName),
       status: 'loading' as DimensionStatus,
     }))
     setDimensions(initial)
@@ -186,7 +228,7 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       const results = await Promise.all(
         initial.map(async (dim) => {
           try {
-            const res = await explainAI(dim.question, [props.entityGlobalId])
+            const res = await explainAI(dim.question, contextGlobalIds)
             return { ...dim, ...res, status: 'success' as DimensionStatus }
           } catch {
             return { ...dim, status: 'error' as DimensionStatus, error: '请求失败' }
@@ -200,5 +242,16 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     }
   }
 
-  return <ResearchPanelView {...props} mode={mode} dimensions={dimensions} onStart={onStart} onReset={() => { setMode('idle'); setDimensions([]) }} />
+  return (
+    <ResearchPanelView
+      {...props}
+      mode={mode}
+      dimensions={dimensions}
+      onStart={onStart}
+      onReset={() => { setMode('idle'); setDimensions([]); setSelectedEntities([]) }}
+      selectedEntities={selectedEntities}
+      availableEntities={availableEntities}
+      onSelectEntities={setSelectedEntities}
+    />
+  )
 }

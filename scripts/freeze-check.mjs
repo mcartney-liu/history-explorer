@@ -325,6 +325,13 @@ export const SCOPE_ALLOWLIST = [
   // M38 Phase 3 — ResearchReport (structured historical research report view)
   "frontend/src/components/ResearchReport.tsx",
   "frontend/src/components/ResearchReport.test.tsx",
+  // M39 Phase 1 — ResearchSummary (cross-dimensional research synthesis)
+  // explainAI-powered summary from completed dimension results. Zero backend.
+  "frontend/src/components/ResearchSummary.tsx",
+  "frontend/src/components/ResearchSummary.test.tsx",
+  // M39 Phase 2 — MultiEntitySelector (multi-entity comparison research)
+  "frontend/src/components/MultiEntitySelector.tsx",
+  "frontend/src/components/MultiEntitySelector.test.tsx",
 ];
 
 function _scopeAllowed(file) {

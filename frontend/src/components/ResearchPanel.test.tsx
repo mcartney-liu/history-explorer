@@ -155,4 +155,22 @@ describe('ResearchPanelView', () => {
     expect(html).toContain('历史研究报告')
     expect(html).toContain('关键发现')
   })
+
+  // --- M39 Phase 2: MultiEntity ---
+
+  it('renders MultiEntitySelector when relationships available', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="idle"
+        dimensions={[]}
+        availableEntities={[
+          { id: 'civ-han', globalId: 't2:civ-han', name: 'Han Dynasty', type: 'Civilization' },
+        ]}
+        selectedEntities={[]}
+      />,
+    )
+    expect(html).toContain('比较对象')
+    expect(html).toContain('添加比较对象')
+  })
 })

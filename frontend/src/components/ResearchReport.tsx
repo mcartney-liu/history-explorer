@@ -8,6 +8,8 @@ export type ResearchReportProps = {
   entityType: string
   /** Completed research dimensions. */
   dimensions: ResearchDimension[]
+  /** Names of comparison entities (multi-entity research). */
+  comparedNames?: string[]
 }
 
 function uniqueCitations(dims: ResearchDimension[]): AICitation[] {
@@ -24,20 +26,25 @@ function uniqueCitations(dims: ResearchDimension[]): AICitation[] {
   return result
 }
 
-export function ResearchReportView({ entityName, entityType, dimensions }: ResearchReportProps) {
+export function ResearchReportView({ entityName, entityType, dimensions, comparedNames }: ResearchReportProps) {
   const completed = dimensions.filter((d) => d.status === 'success')
   const failed = dimensions.filter((d) => d.status === 'error')
   const allCitations = uniqueCitations(completed)
   const totalCitations = completed.reduce((sum, d) => sum + (d.citations?.length ?? 0), 0)
+  const isComparative = !!(comparedNames && comparedNames.length > 0)
 
   return (
     <div className="rreport">
-      <h3 className="rreport-title">历史研究报告</h3>
+      <h3 className="rreport-title">
+        {isComparative ? '比较研究报告' : '历史研究报告'}
+      </h3>
 
       {/* Topic header */}
-      <div className="rreport-topic">
+      <div className={`rreport-topic${isComparative ? ' rreport-topic--compare' : ''}`}>
         <span className="rreport-topic-type">{entityType}</span>
-        <span className="rreport-topic-name">{entityName}</span>
+        <span className="rreport-topic-name">
+          {isComparative ? `${entityName} × ${comparedNames!.join(' × ')}` : entityName}
+        </span>
       </div>
 
       {/* Executive Summary */}

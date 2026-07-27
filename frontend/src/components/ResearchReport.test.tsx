@@ -92,4 +92,19 @@ describe('ResearchReportView', () => {
     expect(html).toContain('维度覆盖')
     expect(html).toContain('✓ A')
   })
+
+  // --- M39 Phase 3: Comparative ---
+
+  it('renders comparison title with comparedNames', () => {
+    const html = renderToStaticMarkup(
+      <ResearchReportView
+        entityName="Roman Empire"
+        entityType="Civilization"
+        dimensions={dims([{ title: 'A', status: 'success', answer: 'Ok', citations: [] }])}
+        comparedNames={['Han Dynasty']}
+      />,
+    )
+    expect(html).toContain('比较研究报告')
+    expect(html).toContain('Roman Empire × Han Dynasty')
+  })
 })
