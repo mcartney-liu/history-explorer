@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM38] - 2026-07-27 (Project Release — M38)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. AI Research Mode is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First: zero conversation memory, zero AI planner.
+
+### AI Research Mode (M38)
+
+**ResearchPanel**: frontend research orchestrator — 7 entity-type research templates (Civilization, Event, Person, Religion, Technology, Location, Idea) with 4 dimensions each. `Promise.all(explainAI(...))` parallel execution, progress bar, context badge, and reset action. Zero backend changes.
+
+**ResearchDimensionCard**: per-dimension display with grounded badge (✓已验证 / ⚠部分验证), citation count, and GroundedAnswer rendering. States: idle → loading → success → error.
+
+**ResearchReport**: structured historical report aggregating all dimension results — topic header, executive summary with completion stats, key findings per dimension, unique citation de-duplication, and dimension coverage matrix. Pure frontend aggregation, zero AI calls.
+
+**EntityPage**: mounts ResearchPanel for all entity types. `scripts/freeze-check.mjs` SCOPE_ALLOWLIST extended (+6 M38 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 71 files, 658 passed (+23 vs vM37).
+
 ## [vM37] - 2026-07-27 (Project Release — M37)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. AI Historian Interaction Layer is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First architecture: zero conversation memory.
