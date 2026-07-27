@@ -4,6 +4,7 @@ import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } f
 import ResearchReport from './ResearchReport'
 import ResearchSummary from './ResearchSummary'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
+import { loadResearch, type SavedResearch } from '../data/ResearchHistory'
 import type { EntityRelationship } from './EntityPage'
 
 export type ResearchPanelProps = {
@@ -13,7 +14,7 @@ export type ResearchPanelProps = {
   relationships: EntityRelationship[]
 }
 
-type ResearchMode = 'idle' | 'planning' | 'running' | 'done' | 'error'
+type ResearchMode = 'idle' | 'planning' | 'running' | 'done' | 'error' | 'restored'
 
 /** Entity-type-specific research dimension templates. */
 const RESEARCH_TEMPLATES: Record<string, { title: string; question: string }[]> = {
@@ -187,6 +188,19 @@ export function ResearchPanelView({
           研究执行失败。请稍后重试或使用解释模式获取单维度分析。
         </p>
       )}
+
+      {mode === 'restored' && (
+        <div className="rp-restored">
+          <span className="rp-restored-badge">已恢复历史研究</span>
+          {dimensions.length > 0 && (
+            <div className="rp-results">
+              {dimensions.map((dim) => (
+                <ResearchDimensionCard key={dim.id} dimension={dim} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   )
 }
@@ -254,4 +268,18 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       onSelectEntities={setSelectedEntities}
     />
   )
+}
+
+/** Restore a saved research — does NOT re-call explainAI. */
+export function restoreResearch(research: SavedResearch): ResearchDimension[] {
+  return research.dimensions.map((d) => ({
+    id: d.id,
+    title: d.title,
+    question: d.question,
+    status: d.status as DimensionStatus,
+    answer: d.answer,
+    grounded: d.grounded,
+    citations: [],
+    rejected_citations: [],
+  }))
 }

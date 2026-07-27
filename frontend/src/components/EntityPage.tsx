@@ -27,6 +27,7 @@ import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
 import JourneyCard from './JourneyCard'
 import ResearchPanel from './ResearchPanel'
+import ResearchLibrary from './ResearchLibrary'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
@@ -260,6 +261,8 @@ function EntityPage({
           relationships={entity.relationships}
         />
       ) : null}
+
+      <ResearchLibrary />
 
       {entityGlobalId ? (
         <AIExplanationPanel

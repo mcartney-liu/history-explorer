@@ -332,6 +332,15 @@ export const SCOPE_ALLOWLIST = [
   // M39 Phase 2 — MultiEntitySelector (multi-entity comparison research)
   "frontend/src/components/MultiEntitySelector.tsx",
   "frontend/src/components/MultiEntitySelector.test.tsx",
+  // M40 Phase 1 — ResearchHistory (localStorage research persistence)
+  "frontend/src/data/ResearchHistory.ts",
+  "frontend/src/data/ResearchHistory.test.ts",
+  // M40 Phase 2 — ResearchBookmarkButton (bookmark toggle UI)
+  "frontend/src/components/ResearchBookmarkButton.tsx",
+  "frontend/src/components/ResearchBookmarkButton.test.tsx",
+  // M40 Phase 3 — ResearchLibrary (saved research list view)
+  "frontend/src/components/ResearchLibrary.tsx",
+  "frontend/src/components/ResearchLibrary.test.tsx",
 ];
 
 function _scopeAllowed(file) {

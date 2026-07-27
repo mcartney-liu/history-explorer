@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { ResearchPanelView } from './ResearchPanel'
+import { ResearchPanelView, restoreResearch } from './ResearchPanel'
 import type { EntityRelationship } from './EntityPage'
 
 const baseProps = {
@@ -172,5 +172,45 @@ describe('ResearchPanelView', () => {
     )
     expect(html).toContain('比较对象')
     expect(html).toContain('添加比较对象')
+  })
+
+  // --- M40 Phase 4: Restore ---
+
+  it('renders restored state with badge', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="restored"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'Answer', grounded: true, citations: [], rejected_citations: [] },
+        ]}
+      />,
+    )
+    expect(html).toContain('已恢复历史研究')
+    expect(html).toContain('Answer')
+  })
+
+  it('restoreResearch converts SavedResearch to ResearchDimension[]', () => {
+    const dimensions = restoreResearch({
+      id: 'r_1',
+      version: 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      entityName: 'Test',
+      entityType: 'Event',
+      entityGlobalId: 't:ev',
+      comparedNames: [],
+      dimensions: [
+        { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'Answer', grounded: true, citationCount: 2 },
+        { id: '1', title: 'B', question: 'Q', status: 'error', citationCount: 0 },
+      ],
+      summaryCitations: [],
+      bookmarked: false,
+      labels: [],
+    })
+    expect(dimensions).toHaveLength(2)
+    expect(dimensions[0].status).toBe('success')
+    expect(dimensions[1].status).toBe('error')
+    // explainAI is NOT called — only data conversion
   })
 })
