@@ -56,6 +56,8 @@ import { resolveStarters, resolveEntityStarters } from './data/explorationStarte
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
+import AppShell from './components/AppShell'
+import GraphViewPanel from './components/GraphViewPanel'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -488,6 +490,19 @@ function App() {
       ].filter((gid): gid is string => Boolean(gid))
     : []
 
+  // M34-A1: single source of truth for the navigation-following callbacks that
+  // were previously duplicated inline across the topic and entity views (TD-1).
+  //   openNode      — cross-topic / entity-view nodes whose display name is
+  //                   derived from the global id itself.
+  //   openNodeNamed — topic-view panels that resolve a display name from the
+  //                   current topic's entity map (exploreNameById).
+  // Bodies are byte-for-byte identical to the inline arrows they replace, so
+  // navigation behavior is unchanged.
+  const openNode = (gid: string) =>
+    openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
+  const openNodeNamed = (gid: string) =>
+    openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
+
   const crumbs = buildBreadcrumb(history, cursor)
 
   // M5-B-1: global ids the user has already visited, derived from the recent
@@ -498,66 +513,66 @@ function App() {
     recent.filter((n) => n.type === 'entity').map((n) => (n as { id: string }).id),
   )
 
+  // M34-A1: the search cluster and the navigation cluster are hoisted into
+  // AppShell slots. AppShell wraps the nav cluster in a semantic <nav
+  // class="nav-shell"> (fixes TD-nav) and renders the same hero + .explorer
+  // chrome the monolith rendered, so the smoke tests stay green.
+  const searchSlot = (
+    <>
+      <SearchBox
+        topic={topic}
+        loading={loading}
+        error={error}
+        onTopicChange={setTopic}
+        onExplore={handleExplore}
+      />
+
+      <EntitySearchBox
+        onSearch={handleSearch}
+        loading={searchLoading}
+        error={searchError}
+        resultsActive={!!searchResults && searchResults.length > 0}
+        onArrow={handleSearchNav}
+        onEnterSelect={handleSearchEnterSelect}
+        onEscape={handleSearchEscape}
+      />
+
+      {searchResults && (
+        <SearchResults
+          query={searchQuery}
+          results={orderedSearchResults}
+          onSelectItem={handleResultSelect}
+          onClear={clearSearch}
+          selectedIndex={searchSelected}
+        />
+      )}
+    </>
+  )
+
+  const navSlot = current ? (
+    <>
+      <Breadcrumb crumbs={crumbs} onCrumbClick={onCrumbClick} />
+      <HistoryBar
+        canBack={canBack(cursor)}
+        canForward={canForward(cursor, history.length)}
+        onBack={goBack}
+        onForward={goForward}
+      />
+      {/* M10-2 trail convergence: ExplorationPathTree is the single
+          full-journey view here (it supersedes the earlier
+          ExplorationTrail, which is retained but no longer rendered by
+          default). ExplorationJourney still renders on the entity page. */}
+      <ExplorationPathTree
+        history={history}
+        cursor={cursor}
+        journeyReasons={journeyReasons}
+        onStepClick={goTo}
+      />
+    </>
+  ) : undefined
+
   return (
-    <main className="app">
-      <section className="hero">
-        <h1 className="title">History Explorer</h1>
-        <p className="tagline">Explore History. Discover Civilization.</p>
-        <p className="description">
-          A data-driven global history exploration platform.
-        </p>
-
-        <div className="explorer">
-          <SearchBox
-            topic={topic}
-            loading={loading}
-            error={error}
-            onTopicChange={setTopic}
-            onExplore={handleExplore}
-          />
-
-          <EntitySearchBox
-            onSearch={handleSearch}
-            loading={searchLoading}
-            error={searchError}
-            resultsActive={!!searchResults && searchResults.length > 0}
-            onArrow={handleSearchNav}
-            onEnterSelect={handleSearchEnterSelect}
-            onEscape={handleSearchEscape}
-          />
-
-          {searchResults && (
-            <SearchResults
-              query={searchQuery}
-              results={orderedSearchResults}
-              onSelectItem={handleResultSelect}
-              onClear={clearSearch}
-              selectedIndex={searchSelected}
-            />
-          )}
-
-          {current && (
-            <>
-              <Breadcrumb crumbs={crumbs} onCrumbClick={onCrumbClick} />
-              <HistoryBar
-                canBack={canBack(cursor)}
-                canForward={canForward(cursor, history.length)}
-                onBack={goBack}
-                onForward={goForward}
-              />
-              {/* M10-2 trail convergence: ExplorationPathTree is the single
-                  full-journey view here (it supersedes the earlier
-                  ExplorationTrail, which is retained but no longer rendered by
-                  default). ExplorationJourney still renders on the entity page. */}
-              <ExplorationPathTree
-                history={history}
-                cursor={cursor}
-                journeyReasons={journeyReasons}
-                onStepClick={goTo}
-              />
-            </>
-          )}
-
+    <AppShell search={searchSlot} nav={navSlot}>
           {loading && (
             <LoadingSkeleton
               label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'}
@@ -590,12 +605,20 @@ function App() {
                 focusedId={focusedEntityId ?? undefined}
                 onEntityFocus={(gid) => setFocusedEntityId(gid)}
               />
+              {/* M34-A2: spatial view of the SAME main-entity + direct-neighbour
+                  data the RelationshipView lists. Self-drawn SVG, no new deps. */}
+              <GraphViewPanel
+                mainEntity={result.exploration.main_entity}
+                relatedEntities={result.exploration.related_entities}
+                nameById={exploreNameById}
+                onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
+              />
               <CrossTopicBridge
                 connections={result.exploration.cross_topic_related}
                 relatedTopics={result.related_topics}
                 focusedId={focusedEntityId ?? undefined}
                 onEntityClick={(gid) => openEntity(gid)}
-                onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+                onTopicClick={handleTopicClick}
               />
               <RelatedEntityList
                 relatedEntities={result.exploration.related_entities}
@@ -627,39 +650,29 @@ function App() {
                   ),
                   exploreEntityTimeByName,
                 )}
-                onNodeClick={(gid) =>
-                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
-                }
+                onNodeClick={openNodeNamed}
               />
               <ExplorationPathsPanel
                 connections={result.connections_explained}
-                onNodeClick={(gid) =>
-                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
-                }
+                onNodeClick={openNodeNamed}
               />
               <ThemesPanel
                 relationships={exploreThemesRelationships}
-                onNodeClick={(gid) =>
-                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
-                }
+                onNodeClick={openNodeNamed}
               />
               <ContinueExploringPanel
                 connections={result.connections_explained}
                 crossTopicRelated={result.exploration.cross_topic_related}
                 relatedTopics={result.related_topics}
                 seenGlobalIds={seenGlobalIds}
-                onNodeClick={(gid) =>
-                  openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
-                }
-                onTopicClick={(t) => navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })}
+                onNodeClick={openNodeNamed}
+                onTopicClick={handleTopicClick}
               />
               <TopicComparisonPanel
                 key={result?.topic ?? current.topic}
                 crossTopicRelated={result.exploration.cross_topic_related}
-                onNodeClick={(gid) =>
-                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
-                }
-                onTopicClick={(t) => navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })}
+                onNodeClick={openNode}
+                onTopicClick={handleTopicClick}
               />
 
               <AIExplanationPanel
@@ -692,10 +705,8 @@ function App() {
                 entityStarters={resolveEntityStarters(current.id)}
                 onStarterClick={(t) => navigateTo(t)}
                 onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
-                onNodeClick={(gid) =>
-                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
-                }
-                onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+                onNodeClick={openNode}
+                onTopicClick={handleTopicClick}
               />
               <ExplorationJourney
                 history={history}
@@ -730,17 +741,15 @@ function App() {
                       return next
                     })
                   }
-                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
+                  openNode(gid)
                 }}
               />
               <ContinueExploringPanel
                 connections={entityData.connections_explained}
                 relatedTopics={entityData.related_topics}
                 seenGlobalIds={seenGlobalIds}
-                onNodeClick={(gid) =>
-                  openEntity(gid, gid.includes(':') ? gid.split(':').slice(1).join(':') : gid)
-                }
-                onTopicClick={(topic) => navigateTo({ type: 'topic', topic, title: prettifyTopic(topic) })}
+                onNodeClick={openNode}
+                onTopicClick={handleTopicClick}
               />
             </>
           )}
@@ -757,9 +766,7 @@ function App() {
               onRecentClear={clearRecent}
             />
           )}
-        </div>
-      </section>
-    </main>
+    </AppShell>
   )
 }
 

@@ -18,6 +18,8 @@ import { RelatedTopic } from './crossTopic'
 import AIExplanationPanel from './AIExplanationPanel'
 import ProvenancePanel from './ProvenancePanel'
 import ExplorationFlowGuide from './ExplorationFlowGuide'
+import EntityHeader from './EntityHeader'
+import GraphViewPanel from './GraphViewPanel'
 import { entityContext } from '../data/aiContext'
 
 export type EntityRelationship = {
@@ -110,10 +112,7 @@ function EntityPage({
 
   return (
     <div className="result">
-      <div className="result-section entity-page-head">
-        <h3>Entity</h3>
-        <span className="re-type">{entity.type}</span>
-      </div>
+      <EntityHeader type={entity.type} />
 
       <SummaryPanel title={entity.name} summary={description} />
 
@@ -134,6 +133,15 @@ function EntityPage({
         nameById={nameById}
         onEntityClick={onEntityClick}
         onNodeClick={onNodeClick}
+      />
+
+      {/* M34-A2: spatial view of the centred entity + its direct neighbours,
+          reusing the same relationship data (no new API / dependency). */}
+      <GraphViewPanel
+        mainEntity={entity.exploration.main_entity}
+        relatedEntities={entity.exploration.related_entities}
+        nameById={nameById}
+        onEntityClick={onEntityClick}
       />
 
       <ExplorationFlowGuide />
