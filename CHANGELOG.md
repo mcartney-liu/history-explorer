@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM34.1] - 2026-07-27 (Project Release — M34)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive exploration-UX + graph-viz code + freeze-guard script + a strategy doc + release-metadata docs were changed (no backend / data / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Exploration UX Hardening + Knowledge Graph Visualization MVP (M34) — a pure-frontend additive release over M33 A-1.5, admitted via the Frontend Freeze Revision Gate (M34-ADR-001):
+
+- **A1 - Exploration UX Hardening**: extracts `AppShell` (hero + semantic `<nav class="nav-shell">`) and `EntityHeader` out of the `App.tsx` / `EntityPage.tsx` monolith; hoists the duplicated navigation callbacks into single named handlers (`openNode` / `openNodeNamed`) reused by both views - fixes TD-1 (duplicated rendering) and TD-nav (no navigation shell). DOM and navigation behavior preserved verbatim.
+- **A2 - Knowledge Graph Visualization MVP**: adds `lib/graphLayout.ts` (pure, deterministic radial layout; hard MVP caps nodes <=30 / edges <=60, scope = main entity + direct neighbours) and `components/GraphViewPanel.tsx` (self-drawn SVG, zero new dependency, node colors from the 8 frozen entity types, edge labels from the 18 frozen relationship types). Reuses the already-fetched `/explore` + `/entity` relationship data - no new API, no backend change. Mounted in both topic view (`App.tsx`) and entity view (`EntityPage.tsx`).
+- **A3 - Civilization Expansion Strategy** (docs only): `docs/product/M34-A3_Civilization_Expansion_Strategy.md` - a strategy-only document proposing a repeatable, freeze-safe civilization/topic expansion pipeline.
+- **Governance**: `docs/15_DECISIONS/M34-ADR-001_Exploration_UX_and_Graph_MVP.md` (ADR); `scripts/freeze-check.mjs` SCOPE_ALLOWLIST extended with the ten M34-A1/A2 frontend paths (`EntityPage.tsx` already allowlisted). No backend / data / schema / validation / registry / runtime change; runtime stays `[0.13.0]`; no AI / LLM / new dependency. Frontend **540 passed** (+22); freeze-check EXIT 0; governance tests **9/9**. Release tag: `vM34.1`.
+
 ## [vM33.1.1] - 2026-07-26 (Project Release — M33 A-1.5)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only curated dataset files were changed (no backend / frontend / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
