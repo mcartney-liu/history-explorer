@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM36.1] - 2026-07-27 (Project Release — M36.1)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Event Intelligence Layer is additive — no backend core / schema / AI Gateway / enum / dependency change.
+
+### Event Intelligence Layer (M36.1)
+
+**Event Data Enrichment**
+- `roman_empire_example.json`: +3 Events (Republic End, Pax Romana, Empire Fall) + 7 Event→Event causal relationships (caused, before, influenced).
+- `hellenistic_world_example.json`: +2 Events (Alexander's Conquest, Diadochi Wars) + 6 Event→Event causal relationships.
+
+**Frontend Components**
+- `EventCausalChain.tsx`: directed causal chain view — incoming causes → center event → outgoing effects, with temporal before/after labels.
+- `EventImpactPanel.tsx`: long-term impact grouped by entity type (Civilization, Religion, etc.).
+- `EntityPage.tsx`: mounts both behind `entity.type === 'Event'` guard — zero impact on non-Event types.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+7 M36.1 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+15 vs vM36.0). Frontend 64 files, 599 passed (+15).
+
 ## [vM36.0] - 2026-07-27 (Project Release — M36.0)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; the AI Interpretation Layer is additive — no backend core / schema / data / validation / registry / deterministic engine change. See `docs/RELEASE_VERSION_POLICY.md`.
