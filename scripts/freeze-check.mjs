@@ -353,6 +353,12 @@ export const SCOPE_ALLOWLIST = [
   // M41 Phase 4 — ResearchInsights (deterministic research analytics)
   "frontend/src/data/ResearchInsights.ts",
   "frontend/src/data/ResearchInsights.test.ts",
+  // M42 Phase 1 — EntityPageShell (platform tab navigation)
+  "frontend/src/components/EntityPageShell.tsx",
+  "frontend/src/components/EntityPageShell.test.tsx",
+  // M42 Phase 3 — KnowledgeCoverage (data quality analysis utility)
+  "frontend/src/data/KnowledgeCoverage.ts",
+  "frontend/src/data/KnowledgeCoverage.test.ts",
 ];
 
 function _scopeAllowed(file) {

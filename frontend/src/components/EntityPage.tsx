@@ -32,6 +32,8 @@ import ResearchLibrary from './ResearchLibrary'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
+import EntityPageShell from './EntityPageShell'
+import type { EntityTab } from './EntityPageShell'
 
 export type EntityRelationship = {
   type: string
@@ -143,149 +145,169 @@ function EntityPage({
       <StorySection narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
       <WhyImportantPanel narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
 
-      <MainEntityCard mainEntity={entity.exploration.main_entity} />
+      <EntityPageShell
+        renderTab={(activeTab: EntityTab) => {
+          switch (activeTab) {
+            // ---- INFO TAB ----
+            case 'info':
+              return (
+                <>
+                  <MainEntityCard mainEntity={entity.exploration.main_entity} />
+                  <RelationshipView
+                    mainEntity={entity.exploration.main_entity}
+                    relatedEntities={entity.exploration.related_entities}
+                    nameById={nameById}
+                    onEntityClick={onEntityClick}
+                    onNodeClick={onNodeClick}
+                  />
+                  <ProvenancePanel entityId={entity.id} />
+                  <ConnectionsExplainedPanel connections={entity.connections_explained} />
+                  <TimelinePanel
+                    timeline={entity.timeline}
+                    nameToId={nameToId}
+                    onEventClick={onEntityClick}
+                    entityGlobalId={entityGlobalId}
+                    onNodeClick={onNodeClick}
+                  />
+                  <GraphViewPanel
+                    mainEntity={entity.exploration.main_entity}
+                    relatedEntities={entity.exploration.related_entities}
+                    nameById={nameById}
+                    onEntityClick={onEntityClick}
+                  />
+                </>
+              )
 
-      <RelationshipView
-        mainEntity={entity.exploration.main_entity}
-        relatedEntities={entity.exploration.related_entities}
-        nameById={nameById}
-        onEntityClick={onEntityClick}
-        onNodeClick={onNodeClick}
+            // ---- EXPLORE TAB ----
+            case 'explore':
+              return (
+                <>
+                  {entityGlobalId ? (
+                    <ResearchDiscoveryPanel
+                      currentEntity={{
+                        globalId: entityGlobalId,
+                        name: entity.name,
+                        type: entity.type,
+                      }}
+                      relationships={(entity.relationships ?? []).map((r) => ({
+                        type: r.type,
+                        other: { globalId: r.other.global_id ?? '', name: r.other.name ?? '', type: r.other.type ?? '' },
+                      }))}
+                      onExplore={(gid) => window.location.hash = `#/entity/${encodeURIComponent(gid)}`}
+                    />
+                  ) : null}
+                  <JourneyCard
+                    relationships={entity.relationships}
+                    centerEntityName={entity.name}
+                    nameById={nameById}
+                    onEntityClick={onEntityClick}
+                  />
+                  {entityGlobalId ? (
+                    <HistorianChat
+                      entityGlobalId={entityGlobalId}
+                      entityName={entity.name}
+                      entityType={entity.type}
+                      relationships={entity.relationships}
+                    />
+                  ) : null}
+                  <RelatedEntityList
+                    relatedEntities={entity.exploration.related_entities}
+                    nameById={nameById}
+                    mainEntityName={entity.name}
+                    onEntityClick={onEntityClick}
+                  />
+                  <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
+                  <ExplorationFlowGuide />
+                  {onTopicClick && (
+                    <CrossTopicTopicList relatedTopics={entity.related_topics} onTopicClick={onTopicClick} />
+                  )}
+                </>
+              )
+
+            // ---- RESEARCH TAB ----
+            case 'research':
+              return (
+                <>
+                  {entityGlobalId ? (
+                    <ResearchPanel
+                      entityGlobalId={entityGlobalId}
+                      entityName={entity.name}
+                      entityType={entity.type}
+                      relationships={entity.relationships}
+                    />
+                  ) : null}
+                  <ResearchLibrary />
+                </>
+              )
+
+            // ---- ANALYZE TAB ----
+            case 'analyze':
+              return (
+                <>
+                  {entity.type === 'Event' && (
+                    <>
+                      <EventCausalChain
+                        relationships={entity.relationships}
+                        centerEntityName={entity.name}
+                        nameById={nameById}
+                        onEntityClick={onEntityClick}
+                      />
+                      <EventImpactPanel
+                        relationships={entity.relationships}
+                        centerEntityName={entity.name}
+                        nameById={nameById}
+                        onEntityClick={onEntityClick}
+                      />
+                      <EventNarrativeCard
+                        entityGlobalId={entityGlobalId}
+                        entityName={entity.name}
+                        relationships={entity.relationships}
+                        onEntityClick={onEntityClick}
+                      />
+                      <EventNarrativeJourney
+                        relationships={entity.relationships}
+                        centerEntityName={entity.name}
+                        nameById={nameById}
+                        onEntityClick={onEntityClick}
+                        currentTopic={entityGlobalId?.split(':')[0]}
+                      />
+                    </>
+                  )}
+                  <InterpretationPanel
+                    interpretations={toInterpretationViewModels(entity.connections_explained)}
+                    understandings={buildUnderstandingsFromRelationships(
+                      entity.relationships,
+                      entity.name,
+                      centerTimeMap,
+                    )}
+                    onNodeClick={onNodeClick}
+                  />
+                  <ExplorationPathsPanel
+                    connections={entity.connections_explained}
+                    onNodeClick={onNodeClick}
+                  />
+                  {entityGlobalId ? (
+                    <AIExplanationPanel
+                      contextGlobalIds={entityContext(entityGlobalId)}
+                      onCitationClick={onNodeClick}
+                    />
+                  ) : null}
+                </>
+              )
+
+            // ---- EXTENSIONS TAB ----
+            case 'extensions':
+              return (
+                <div className="result">
+                  <p>更多功能即将推出。包括：AI 内容创作、教育模块、社交探索。</p>
+                </div>
+              )
+
+            default:
+              return null
+          }
+        }}
       />
-
-      {/* M36.1: Event intelligence views — additive Event-only panels between
-          RelationshipView and GraphViewPanel. Zero impact on non-Event types. */}
-      {entity.type === 'Event' && (
-        <>
-          <EventCausalChain
-            relationships={entity.relationships}
-            centerEntityName={entity.name}
-            nameById={nameById}
-            onEntityClick={onEntityClick}
-          />
-          <EventImpactPanel
-            relationships={entity.relationships}
-            centerEntityName={entity.name}
-            nameById={nameById}
-            onEntityClick={onEntityClick}
-          />
-          <EventNarrativeCard
-            entityGlobalId={entityGlobalId}
-            entityName={entity.name}
-            relationships={entity.relationships}
-            onEntityClick={onEntityClick}
-          />
-          <EventNarrativeJourney
-            relationships={entity.relationships}
-            centerEntityName={entity.name}
-            nameById={nameById}
-            onEntityClick={onEntityClick}
-            currentTopic={entityGlobalId?.split(':')[0]}
-          />
-        </>
-      )}
-
-      {/* M34-A2: spatial view of the centred entity + its direct neighbours,
-          reusing the same relationship data (no new API / dependency). */}
-      <GraphViewPanel
-        mainEntity={entity.exploration.main_entity}
-        relatedEntities={entity.exploration.related_entities}
-        nameById={nameById}
-        onEntityClick={onEntityClick}
-      />
-
-      <ExplorationFlowGuide />
-
-      {onTopicClick && (
-        <CrossTopicTopicList relatedTopics={entity.related_topics} onTopicClick={onTopicClick} />
-      )}
-
-      <RelatedEntityList
-        relatedEntities={entity.exploration.related_entities}
-        nameById={nameById}
-        mainEntityName={entity.name}
-        onEntityClick={onEntityClick}
-      />
-
-      {/* M30-A: provenance projection UI. Pass the LOCAL id (entity.id), not the
-          global_id prop, so backend resolve() matches claim.subject_id verbatim. */}
-      <ProvenancePanel entityId={entity.id} />
-
-      <ConnectionsExplainedPanel connections={entity.connections_explained} />
-
-      <InterpretationPanel
-        interpretations={toInterpretationViewModels(entity.connections_explained)}
-        understandings={buildUnderstandingsFromRelationships(
-          entity.relationships,
-          entity.name,
-          centerTimeMap,
-        )}
-        onNodeClick={onNodeClick}
-      />
-
-      <ExplorationPathsPanel
-        connections={entity.connections_explained}
-        onNodeClick={onNodeClick}
-      />
-
-      <TimelinePanel
-        timeline={entity.timeline}
-        nameToId={nameToId}
-        onEventClick={onEntityClick}
-        entityGlobalId={entityGlobalId}
-        onNodeClick={onNodeClick}
-      />
-
-      <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
-
-      <JourneyCard
-        relationships={entity.relationships}
-        centerEntityName={entity.name}
-        nameById={nameById}
-        onEntityClick={onEntityClick}
-      />
-
-      {entityGlobalId ? (
-        <HistorianChat
-          entityGlobalId={entityGlobalId}
-          entityName={entity.name}
-          entityType={entity.type}
-          relationships={entity.relationships}
-        />
-      ) : null}
-
-      {entityGlobalId ? (
-        <ResearchDiscoveryPanel
-          currentEntity={{
-            globalId: entityGlobalId,
-            name: entity.name,
-            type: entity.type,
-          }}
-          relationships={(entity.relationships ?? []).map((r) => ({
-            type: r.type,
-            other: { globalId: r.other.global_id ?? '', name: r.other.name ?? '', type: r.other.type ?? '' },
-          }))}
-          onExplore={(gid) => window.location.hash = `#/entity/${encodeURIComponent(gid)}`}
-        />
-      ) : null}
-
-      {entityGlobalId ? (
-        <ResearchPanel
-          entityGlobalId={entityGlobalId}
-          entityName={entity.name}
-          entityType={entity.type}
-          relationships={entity.relationships}
-        />
-      ) : null}
-
-      <ResearchLibrary />
-
-      {entityGlobalId ? (
-        <AIExplanationPanel
-          contextGlobalIds={entityContext(entityGlobalId)}
-          onCitationClick={onNodeClick}
-        />
-      ) : null}
     </div>
   )
 }

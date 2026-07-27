@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import DiscoverPage, {
   DISCOVER_HERO,
@@ -6,6 +6,25 @@ import DiscoverPage, {
   prettifySlug,
 } from './DiscoverPage'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
+import { getStorageKey } from '../data/ResearchHistory'
+
+// localStorage polyfill for Node environment
+const store = new Map<string, string>()
+beforeAll(() => {
+  const mock: Storage = {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => { store.set(key, value) },
+    removeItem: (key: string) => { store.delete(key) },
+    clear: () => { store.clear() },
+    get length() { return store.size },
+    key: (index: number) => Array.from(store.keys())[index] ?? null,
+  }
+  Object.defineProperty(globalThis, 'localStorage', { value: mock, writable: true })
+})
+
+beforeEach(() => {
+  localStorage.clear()
+})
 
 // M35 Phase 2: DiscoverPage is purely presentational; rendered with
 // renderToStaticMarkup (environment:'node', no DOM) matching the repo style.
@@ -42,18 +61,79 @@ describe('DiscoverPage (M35)', () => {
     }
   })
 
-  it('renders only known topic slugs (grounded in the curated starter map)', () => {
+  it('renders only known topic slugs (M35 TOPIC_STARTERS + M42 entity types)', () => {
     const html = renderToStaticMarkup(
       <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
     )
+    const m42Slugs = ['ancient_civilizations', 'historical_events', 'historical_figures', 'religion', 'technology', 'locations']
+    const knownSlugs = new Set([...Object.keys(TOPIC_STARTERS), ...m42Slugs])
     const rendered = [...html.matchAll(/data-topic="([^"]+)"/g)].map((m) => m[1])
     for (const slug of rendered) {
-      expect(Object.keys(TOPIC_STARTERS)).toContain(slug)
+      expect(knownSlugs).toContain(slug)
     }
   })
 
   it('prettifySlug mirrors the App display rule', () => {
     expect(prettifySlug('silk_road')).toBe('Silk Road')
     expect(prettifySlug('greek_philosophy')).toBe('Greek Philosophy')
+  })
+})
+
+// ============================================================
+// M42 Phase 4 — DiscoverPage Activation tests
+// ============================================================
+
+describe('DiscoverPage (M42 Activation)', () => {
+  it('renders without crash when no research history', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('原来历史还能这样探索。')
+  })
+
+  it('renders entity type exploration cards', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('探索主题')
+    expect(html).toContain('古代文明')
+    expect(html).toContain('历史事件')
+    expect(html).toContain('历史人物')
+  })
+
+  it('shows recent researches when history exists', () => {
+    const research = {
+      id: 'r_1', version: 1, createdAt: '2026-07-28T00:00:00Z', updatedAt: '',
+      entityName: 'Roman Empire', entityType: 'Civilization',
+      entityGlobalId: 't:civ-roman', comparedNames: [], dimensions: [],
+      summaryCitations: [], bookmarked: true, labels: [],
+    }
+    localStorage.setItem(getStorageKey(), JSON.stringify([research]))
+
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('最近研究')
+    expect(html).toContain('Roman Empire')
+    expect(html).toContain('★')
+  })
+
+  it('renders interest profile when multiple researches', () => {
+    const researches = [
+      { id: 'r1', version: 1, createdAt: '2026-07-01T00:00:00Z', updatedAt: '',
+        entityName: 'Rome', entityType: 'Civilization', entityGlobalId: 't:rome',
+        comparedNames: [], dimensions: [{ id: '0', title: 'Politics', question: 'Q', status: 'success', citationCount: 1 }],
+        summaryCitations: [], bookmarked: false, labels: [] },
+      { id: 'r2', version: 1, createdAt: '2026-07-15T00:00:00Z', updatedAt: '',
+        entityName: 'Event X', entityType: 'Event', entityGlobalId: 't:event',
+        comparedNames: [], dimensions: [], summaryCitations: [], bookmarked: false, labels: [] },
+    ]
+    localStorage.setItem(getStorageKey(), JSON.stringify(researches))
+
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).toContain('我的探索兴趣')
+    expect(html).toContain('古代文明')
   })
 })

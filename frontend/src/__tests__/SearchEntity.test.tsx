@@ -103,9 +103,10 @@ describe('M2-002 search & entity UI', () => {
     // Relationship / related entity clickable surface
     expect(html).toContain('role="button"')
     expect(html).toContain('Explore Roman Empire Established')
-    // Section headings
+    // Section headings (info tab — default view)
     expect(html).toContain('Relationship Network')
-    expect(html).toContain('Related Exploration')
+    // Tab navigation should be present
+    expect(html).toContain('了解')
   })
 
   it('SearchResults shows type, time period, location and description', () => {

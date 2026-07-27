@@ -1,24 +1,16 @@
-// Discover landing experience (M35 Phase 2).
+// Discover landing experience (M35 Phase 2 / M42 Phase 4).
 //
-// A purely presentational entry page that answers "why would I explore
-// history here?" before the visitor picks a topic. It renders:
-//   - Hero: the FIXED copy 「原来历史还能这样探索。」 (Design Freeze §2 — verbatim,
-//     never generated).
-//   - Featured exploration: the Silk Road topic (FEATURED_TOPIC), with its
-//     curated starters from the EXISTING data/explorationStarters.ts mapping.
-//   - Popular explorations: one card per TOPIC_STARTERS key. No new topic
-//     data is created here — every slug/label/target is read verbatim from
-//     the existing curated starter map.
-//
-// Deliberately presentational and dependency-free (mirrors FirstExplorationGuide):
-//   - No fetch, no localStorage, no AI/LLM, no navigation logic of its own.
-//   - Clicking a topic calls onTopicClick(slug); clicking a starter calls
-//     onStarterClick(item.target). App wires BOTH to the same navigateTo the
-//     rest of the app uses — one navigation path, no second mechanism.
+// M35: presentational entry page with hero + featured + popular
+// M42: personalized discovery using ResearchHistory, UserInterestProfile,
+//      and entity-type exploration entry points.
 
+import { useMemo } from 'react'
 import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
+import { listResearch } from '../data/ResearchHistory'
+import { generateUserInterestProfile, insightSummary } from '../data/ResearchInsights'
+import type { SavedResearch } from '../data/ResearchHistory'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = '原来历史还能这样探索。'
@@ -27,6 +19,63 @@ export const DISCOVER_HERO_SUB =
 
 // Featured exploration — Design Freeze §2 default.
 export const FEATURED_TOPIC = 'silk_road'
+
+// Entity type exploration entry points (M42)
+const ENTITY_TYPE_CARDS = [
+  { type: 'Civilization', label: '古代文明', slug: 'ancient_civilizations', desc: '罗马、汉朝、波斯…帝国兴衰的背后' },
+  { type: 'Event', label: '历史事件', slug: 'historical_events', desc: '关键转折点：战争、革命、变革' },
+  { type: 'Person', label: '历史人物', slug: 'historical_figures', desc: '恺撒、亚里士多德、释迦牟尼' },
+  { type: 'Religion', label: '宗教发展', slug: 'religion', desc: '佛教、基督教、伊斯兰教的传播' },
+  { type: 'Technology', label: '技术演进', slug: 'technology', desc: '冶铁、造纸、航海技术' },
+  { type: 'Location', label: '地理探索', slug: 'locations', desc: '丝绸之路、地中海、恒河流域' },
+]
+
+function RecentResearches({ researches }: { researches: SavedResearch[] }) {
+  if (researches.length === 0) return null
+  const recent = [...researches]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 3)
+  return (
+    <div className="discover-recent">
+      <h3 className="discover-section-heading">最近研究</h3>
+      <p className="discover-section-sub">继续未完成的探索，或从收藏中快速进入。</p>
+      <div className="discover-recent-list">
+        {recent.map((r) => (
+          <a key={r.id} href={`#/entity/${encodeURIComponent(r.entityGlobalId)}`} className="discover-recent-card">
+            <span className="discover-recent-type">{r.entityType}</span>
+            <span className="discover-recent-name">{r.entityName}</span>
+            {r.bookmarked && <span className="discover-recent-star">★</span>}
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function InterestProfile() {
+  const researches = useMemo(() => listResearch(), [])
+  if (researches.length < 2) return null
+  const profile = useMemo(() => generateUserInterestProfile(researches), [researches])
+  const summary = useMemo(() => insightSummary({ researchCount: profile.activeExplorationDays + 1, favoriteEntityTypes: profile.topEntityTypes.map((t) => t.type), favoriteDimensions: profile.topDimensions.map((d) => d.dimension), exploredRelationships: [], frequentThemes: profile.topThemes } as any), [profile])
+
+  return (
+    <div className="discover-interest">
+      <h3 className="discover-section-heading">我的探索兴趣</h3>
+      {profile.topThemes.length > 0 && (
+        <div className="discover-interest-themes">
+          {profile.topThemes.slice(0, 4).map((theme) => (
+            <span key={theme} className="discover-interest-tag">{theme}</span>
+          ))}
+        </div>
+      )}
+      {profile.topDimensions.length > 0 && (
+        <p className="discover-interest-dims">
+          常研究维度：{profile.topDimensions.slice(0, 4).map((d) => d.dimension).join('、')}
+        </p>
+      )}
+    </div>
+  )
+}
 
 // Same display rule App.prettifyTopic uses (pure, tiny; duplicated on purpose
 // so this page stays import-light and App's helper stays private).
@@ -68,16 +117,43 @@ function StarterChips({
 
 function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
   const featuredStarters = TOPIC_STARTERS[FEATURED_TOPIC] ?? []
-  // Popular = every curated topic in the EXISTING starter map, featured first.
   const popularSlugs = Object.keys(TOPIC_STARTERS).filter(
     (slug) => slug !== FEATURED_TOPIC,
   )
+  const researches = useMemo(() => listResearch(), [])
 
   return (
     <section className="discover-page" aria-label="Discover history explorations">
       <div className="discover-hero">
         <h2 className="discover-hero-title">{DISCOVER_HERO}</h2>
         <p className="discover-hero-sub">{DISCOVER_HERO_SUB}</p>
+      </div>
+
+      {/* M42: Recent researches */}
+      <RecentResearches researches={researches} />
+
+      {/* M42: Interest profile */}
+      <InterestProfile />
+
+      {/* M42: Entity type exploration */}
+      <div className="discover-themes">
+        <h3 className="discover-section-heading">探索主题</h3>
+        <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
+        <div className="discover-theme-grid">
+          {ENTITY_TYPE_CARDS.map((card) => (
+            <button
+              key={card.slug}
+              type="button"
+              className="discover-theme-card"
+              data-topic={card.slug}
+              aria-label={`探索 ${card.label}`}
+              onClick={() => onTopicClick(card.slug)}
+            >
+              <span className="discover-theme-label">{card.label}</span>
+              <span className="discover-theme-desc">{card.desc}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="discover-featured" data-topic={FEATURED_TOPIC}>

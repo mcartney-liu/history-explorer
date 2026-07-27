@@ -132,3 +132,147 @@ export function insightSummary(insight: ResearchInsight): string | null {
     insight.frequentThemes.length > 0 ? `（${insight.frequentThemes.slice(0, 2).join('、')}）` : ''
   } 主题`
 }
+
+// ============================================================
+// M42 Phase 2 — UserInterestProfile
+// Structured user exploration behavior signals.
+// Zero AI. Zero backend. Deterministic from ResearchHistory.
+// ============================================================
+
+export interface UserInterestProfile {
+  topEntityTypes: { type: string; count: number }[]
+  topDimensions: { dimension: string; count: number }[]
+  topThemes: string[]
+  recentlyExplored: string[]
+  comparisonPairs: { entities: string[] }[]
+  activeExplorationDays: number
+  bookmarkCategories: string[]
+}
+
+const TYPE_TO_THEME: Record<string, string> = {
+  Civilization: '古代文明',
+  Event: '历史事件',
+  Person: '历史人物',
+  Religion: '宗教发展',
+  Technology: '技术演进',
+  Location: '地理探索',
+  Idea: '思想传播',
+}
+
+function safeResearches(researches: SavedResearch[]): SavedResearch[] {
+  return researches.filter(
+    (r) =>
+      r &&
+      typeof r.entityType === 'string' &&
+      Array.isArray(r.dimensions) &&
+      typeof r.createdAt === 'string',
+  )
+}
+
+function topEntityTypes(researches: SavedResearch[]): { type: string; count: number }[] {
+  const map = new Map<string, number>()
+  for (const r of researches) {
+    map.set(r.entityType, (map.get(r.entityType) ?? 0) + 1)
+  }
+  return [...map.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([type, count]) => ({ type, count }))
+}
+
+function topDimensions(researches: SavedResearch[]): { dimension: string; count: number }[] {
+  const map = new Map<string, number>()
+  for (const r of researches) {
+    for (const d of r.dimensions) {
+      if (d.title) map.set(d.title, (map.get(d.title) ?? 0) + 1)
+    }
+  }
+  return [...map.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([dimension, count]) => ({ dimension, count }))
+}
+
+function topThemes(researches: SavedResearch[]): string[] {
+  const set = new Set<string>()
+  for (const r of researches) {
+    const theme = TYPE_TO_THEME[r.entityType]
+    if (theme) set.add(theme)
+  }
+  return [...set]
+}
+
+function recentlyExplored(
+  researches: SavedResearch[],
+  limit = 10,
+): string[] {
+  return [...researches]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, limit)
+    .map((r) => r.entityGlobalId ?? r.id)
+}
+
+function comparisonPairs(researches: SavedResearch[]): { entities: string[] }[] {
+  const pairs = researches
+    .filter((r) => r.comparedNames && r.comparedNames.length > 0)
+    .map((r) => ({
+      entities: [r.entityName, ...(r.comparedNames ?? [])],
+    }))
+  // Deduplicate by sorted join
+  const seen = new Set<string>()
+  return pairs.filter((p) => {
+    const key = [...p.entities].sort().join('|')
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+function activeDays(researches: SavedResearch[]): number {
+  if (researches.length < 2) return 0
+  const times = researches.map((r) => new Date(r.createdAt).getTime())
+  const min = Math.min(...times)
+  const max = Math.max(...times)
+  return Math.max(1, Math.ceil((max - min) / (1000 * 60 * 60 * 24)))
+}
+
+function bookmarkCategories(researches: SavedResearch[]): string[] {
+  const set = new Set<string>()
+  for (const r of researches) {
+    for (const label of r.labels ?? []) {
+      if (label) set.add(label)
+    }
+  }
+  return [...set]
+}
+
+// -----------------------------------------------------------
+// Public
+// -----------------------------------------------------------
+
+export function generateUserInterestProfile(
+  researches: SavedResearch[],
+): UserInterestProfile {
+  const safe = safeResearches(researches)
+  if (safe.length === 0) {
+    return {
+      topEntityTypes: [],
+      topDimensions: [],
+      topThemes: [],
+      recentlyExplored: [],
+      comparisonPairs: [],
+      activeExplorationDays: 0,
+      bookmarkCategories: [],
+    }
+  }
+
+  return {
+    topEntityTypes: topEntityTypes(safe),
+    topDimensions: topDimensions(safe),
+    topThemes: topThemes(safe),
+    recentlyExplored: recentlyExplored(safe),
+    comparisonPairs: comparisonPairs(safe),
+    activeExplorationDays: activeDays(safe),
+    bookmarkCategories: bookmarkCategories(safe),
+  }
+}
