@@ -53,11 +53,14 @@ import ErrorCard, { ErrorKind } from './components/ErrorCard'
 import LandingPage, { TopicSummary } from './components/LandingPage'
 import FirstExplorationGuide from './components/FirstExplorationGuide'
 import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
+import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
 import AppShell from './components/AppShell'
 import GraphViewPanel from './components/GraphViewPanel'
+import StorySection from './components/exploration/StorySection'
+import WhyImportantPanel from './components/exploration/WhyImportantPanel'
 import DiscoverPage from './pages/DiscoverPage'
 import JourneyPanel from './components/journey/JourneyPanel'
 import { addJourneyEntry, entryFromNode, type JourneyEntry } from './lib/journey'
@@ -376,7 +379,10 @@ function App() {
         title: item.name || prettifyTopic(target.topic),
       })
     } else {
-      openEntity(target.id, item.name)
+      // M35.1: reconstruct the entity global_id (the /search response strips
+      // global_id, leaving only topic + id) so StorySection / WhyImportantPanel
+      // inside EntityPage can match the curated narrative.
+      openEntity(resolveNarrativeKey(item), item.name)
     }
   }
 
@@ -611,6 +617,11 @@ function App() {
                 starters={resolveStarters(current.topic)}
                 onStarterClick={(t) => navigateTo(t)}
               />
+              {/* M35.1: restore the curated narrative for the active topic.
+                  StorySection / WhyImportantPanel render null when no copy
+                  exists, so topics without curated narrative are unaffected. */}
+              <StorySection narrativeKey={current.topic} />
+              <WhyImportantPanel narrativeKey={current.topic} />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
               <RelationshipView
                 mainEntity={result.exploration.main_entity}

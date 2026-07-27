@@ -51,3 +51,22 @@ export function getNarrative(key: string): NarrativeBlock | undefined {
 export function hasNarrative(key: string): boolean {
   return Object.prototype.hasOwnProperty.call(NARRATIVE, key)
 }
+
+// M35.1 — normalize a possibly-partial navigation target into the canonical
+// narrative key consumed by NARRATIVE / StorySection / WhyImportantPanel.
+//   - global_id present  -> use it verbatim (entity key)
+//   - topic + id present  -> `${topic}:${id}` (reconstruct entity global_id)
+//   - topic only          -> the topic slug (topic key)
+//   - otherwise           -> '' (safe fallback; panels render null)
+// This lets the Search entry recover the entity global_id that the backend's
+// /search response strips, so the narrative panels can match the node.
+export function resolveNarrativeKey(input: {
+  global_id?: string
+  topic?: string
+  id?: string
+}): string {
+  if (input.global_id) return input.global_id
+  if (input.topic && input.id) return `${input.topic}:${input.id}`
+  if (input.topic) return input.topic
+  return ''
+}

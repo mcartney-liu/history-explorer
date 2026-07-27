@@ -10,7 +10,7 @@ import { describe, it, expect } from 'vitest'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import fs from 'node:fs'
-import { NARRATIVE, getNarrative, hasNarrative } from './narrative'
+import { NARRATIVE, getNarrative, hasNarrative, resolveNarrativeKey } from './narrative'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // frontend/src/data -> repo root/data/examples
@@ -80,5 +80,51 @@ describe('narrative accessors', () => {
         `empty block for ${key}`,
       ).toBe(true)
     }
+  })
+})
+
+// M35.1 — resolveNarrativeKey normalization (U2 fix + Search entry support).
+describe('resolveNarrativeKey', () => {
+  // Case 1: topic + id -> `${topic}:${id}` (canonical entity key).
+  it('Case1: builds `${topic}:${id}` from topic + id', () => {
+    expect(resolveNarrativeKey({ topic: 'ancient_india', id: 'religion-buddhism' })).toBe(
+      'ancient_india:religion-buddhism',
+    )
+  })
+
+  // Case 2: global_id takes priority over topic + id when both are present.
+  it('Case2: global_id wins over topic + id', () => {
+    expect(
+      resolveNarrativeKey({
+        global_id: 'roman_empire:civ-roman',
+        topic: 'ancient_india',
+        id: 'religion-buddhism',
+      }),
+    ).toBe('roman_empire:civ-roman')
+  })
+
+  // Case 3: topic-only -> the topic slug (topic key).
+  it('Case3: topic-only returns the topic slug', () => {
+    expect(resolveNarrativeKey({ topic: 'silk_road' })).toBe('silk_road')
+  })
+
+  // Case 4: Search Buddhism entry produces the entity global_id the
+  // narrative panels expect (mirrors the App.tsx Search result item shape).
+  it('Case4: Search Buddhism result resolves to ancient_india:religion-buddhism', () => {
+    const searchItem = {
+      result_type: 'Entity' as const,
+      id: 'religion-buddhism',
+      name: 'Buddhism',
+      type: 'religion',
+      topic: 'ancient_india',
+    }
+    expect(resolveNarrativeKey(searchItem)).toBe('ancient_india:religion-buddhism')
+  })
+
+  // Case 5: unknown / incomplete input is a safe empty fallback so
+  // StorySection / WhyImportantPanel render null (no crash, no lookup miss).
+  it('Case5: empty input and id-only input fall back to empty string', () => {
+    expect(resolveNarrativeKey({})).toBe('')
+    expect(resolveNarrativeKey({ id: 'orphan-local-id' })).toBe('')
   })
 })

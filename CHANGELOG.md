@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM35.1.1] - 2026-07-27 (Project Release — M35.1)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive narrative-consistency code + tests were changed (no `backend/app` / data / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
+
+Narrative Consistency Patch (M35.1) — a pure-frontend additive fix over vM35.1:
+
+- **U1 (Topic narrative mount)**: `App.tsx` Topic view now mounts `<StorySection narrativeKey={current.topic} />` + `<WhyImportantPanel narrativeKey={current.topic} />` after `FirstExplorationGuide`, surfacing the already-curated `data/narrative.ts` (e.g. `silk_road`) on topic pages — previously only reachable from the Discover page.
+- **U2 (Search global_id normalization)**: `App.tsx` search landing now reconstructs the entity `global_id` via `resolveNarrativeKey()` (in `data/narrative.ts`) before `openEntity()`, so `EntityPage` can match the curated narrative for searched entities (e.g. Search "Buddhism" → `ancient_india:religion-buddhism`).
+- New pure helper `resolveNarrativeKey({ global_id?, topic?, id? })` in `data/narrative.ts` (NARRATIVE data unchanged); 5 new unit tests in `data/narrative.test.ts` (topic+id / global_id priority / topic-only / Search Buddhism key / empty+id-only safe fallback).
+- **Governance / invariants**: no new feature; no `backend/app` change; no schema change; ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; zero new dependency; no AI / LLM; runtime stays `[0.13.0]`. Backend **219 passed** (unchanged); frontend **574 passed** (+5); freeze-check EXIT 0; governance tests **9/9**. Release tag: `vM35.1.1`.
+
 ## [vM35.1] - 2026-07-27 (Project Release — M35)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive exploration-experience code + release-quality fixes (CI workflow, one dataset alias, one backend test assertion) + freeze-guard script + release-metadata docs were changed (no `backend/app` / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
