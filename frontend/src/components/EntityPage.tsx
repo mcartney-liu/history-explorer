@@ -24,6 +24,8 @@ import EventCausalChain from './EventCausalChain'
 import EventImpactPanel from './EventImpactPanel'
 import EventNarrativeCard from './EventNarrativeCard'
 import EventNarrativeJourney from './EventNarrativeJourney'
+import HistorianChat from './HistorianChat'
+import JourneyCard from './JourneyCard'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
@@ -232,6 +234,22 @@ function EntityPage({
       />
 
       <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
+
+      <JourneyCard
+        relationships={entity.relationships}
+        centerEntityName={entity.name}
+        nameById={nameById}
+        onEntityClick={onEntityClick}
+      />
+
+      {entityGlobalId ? (
+        <HistorianChat
+          entityGlobalId={entityGlobalId}
+          entityName={entity.name}
+          entityType={entity.type}
+          relationships={entity.relationships}
+        />
+      ) : null}
 
       {entityGlobalId ? (
         <AIExplanationPanel

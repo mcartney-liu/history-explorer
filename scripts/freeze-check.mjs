@@ -304,6 +304,16 @@ export const SCOPE_ALLOWLIST = [
   // M36.2 Step 2 — EventNarrativeJourney (event exploration path visualization)
   "frontend/src/components/EventNarrativeJourney.tsx",
   "frontend/src/components/EventNarrativeJourney.test.tsx",
+  // M37 Phase 1 (AI Historian Chat) — Frontend Freeze Revision Gate
+  // HistorianChat: conversational AI historian with multi-turn chat state,
+  // suggested questions, and follow-up. Reuses M36.0 explainAI + GroundedAnswer.
+  "frontend/src/components/HistorianChat.tsx",
+  "frontend/src/components/HistorianChat.test.tsx",
+  // M37 Phase 2 (Journey Intelligence) — Frontend Freeze Revision Gate
+  // JourneyCard: relationship-driven exploration recommendations. Pure
+  // frontend — uses existing entity.relationships data; no new API/AI Gateway.
+  "frontend/src/components/JourneyCard.tsx",
+  "frontend/src/components/JourneyCard.test.tsx",
 ];
 
 function _scopeAllowed(file) {
