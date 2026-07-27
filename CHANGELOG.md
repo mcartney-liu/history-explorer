@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM43] - 2026-07-28 (Project Release — M43)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Validation Layer — zero backend / schema / AI Gateway / dependency change. "Measure before you build more."
+
+### Product Validation Layer (M43)
+
+**UIAudit**: structured page audit for DiscoverPage (6 sections) and EntityPage (6 sections). Each section carries `userGoal` ("为什么存在？") and `successMetric` ("怎样算成功？"), identifies missing guidance and empty states.
+
+**UserJourney**: 3 funnel path maps (Discovery: 3 nodes, Exploration: 5 nodes, Research: 5 nodes). Each node identifies entry points, blockers, missing guidance, and next-step visibility. Total: 13 nodes, 7 blockers, 7 missing guidance items.
+
+**UserBehaviorEvent**: localStorage behavior telemetry with 13 domain-neutral action types across Discovery/Exploration/Research/Persistence funnels. Analysis helpers: action frequencies, unique entity count, session duration detection, tab usage stats. Max 1000 events, auto-capped.
+
+**ExplorationFunnelAnalysis**: 3 funnel metrics with conversion rates and bottleneck detection. Each funnel computes per-step entered/completed counts, overall conversion rate, and identifies bottleneck steps where drop-off occurs.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+6 M43 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. All modules are data-only (tree-shaken from production).
+
+**Tests**: Backend 247 (+0). Frontend 86 files, 793 passed (+36 vs vM42).
+
 ## [vM42] - 2026-07-28 (Project Release — M42)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Foundation Upgrade — zero backend / schema / AI Gateway / dependency change.
