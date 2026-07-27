@@ -314,6 +314,17 @@ export const SCOPE_ALLOWLIST = [
   // frontend — uses existing entity.relationships data; no new API/AI Gateway.
   "frontend/src/components/JourneyCard.tsx",
   "frontend/src/components/JourneyCard.test.tsx",
+  // M38 Phase 1 (AI Research Mode) — Frontend Freeze Revision Gate
+  // ResearchPanel + ResearchDimensionCard: multi-dimensional AI research
+  // with parallel explainAI() calls. Pure frontend orchestrator; zero
+  // backend / AI Gateway / schema changes. Grounding First per dimension.
+  "frontend/src/components/ResearchPanel.tsx",
+  "frontend/src/components/ResearchPanel.test.tsx",
+  "frontend/src/components/ResearchDimensionCard.tsx",
+  "frontend/src/components/ResearchDimensionCard.test.tsx",
+  // M38 Phase 3 — ResearchReport (structured historical research report view)
+  "frontend/src/components/ResearchReport.tsx",
+  "frontend/src/components/ResearchReport.test.tsx",
 ];
 
 function _scopeAllowed(file) {

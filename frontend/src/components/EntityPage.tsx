@@ -26,6 +26,7 @@ import EventNarrativeCard from './EventNarrativeCard'
 import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
 import JourneyCard from './JourneyCard'
+import ResearchPanel from './ResearchPanel'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
@@ -244,6 +245,15 @@ function EntityPage({
 
       {entityGlobalId ? (
         <HistorianChat
+          entityGlobalId={entityGlobalId}
+          entityName={entity.name}
+          entityType={entity.type}
+          relationships={entity.relationships}
+        />
+      ) : null}
+
+      {entityGlobalId ? (
+        <ResearchPanel
           entityGlobalId={entityGlobalId}
           entityName={entity.name}
           entityType={entity.type}
