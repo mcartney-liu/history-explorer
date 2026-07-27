@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM42] - 2026-07-28 (Project Release — M42)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Foundation Upgrade — zero backend / schema / AI Gateway / dependency change.
+
+### Product Foundation Upgrade (M42)
+
+**EntityPageShell**: 5-tab navigation (了解/探索/研究/分析/扩展) with localStorage tab persistence. EntityPage refactored from 13-panel flat scroll into layered shell — all M36-M41 panels preserved across tabs, zero loss.
+
+**DiscoverPage Activation**: Recent researches from ResearchHistory (top 3 by date), interest profile from UserInterestProfile (themes + dimensions), 6 entity-type exploration cards (Civilization/Event/Person/Religion/Technology/Location). No AI feed, no infinite scroll, no social features.
+
+**UserInterestProfile** (ResearchInsights extension): 7-field profile — topEntityTypes, topDimensions, topThemes, recentlyExplored, comparisonPairs, activeExplorationDays, bookmarkCategories. Deterministic from ResearchHistory, no AI memory.
+
+**KnowledgeCoverage**: Internal data quality utility — per-type coverage metrics (entity/source/claim/relationship counts + avg dimensions), warning system, coverage summary. Tree-shaken from production bundle.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+6 M42 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 82 files, 757 passed (+31 vs vM41).
+
 ## [vM41] - 2026-07-28 (Project Release — M41)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Research Intelligence is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First: zero AI planner, zero memory, zero agent.
