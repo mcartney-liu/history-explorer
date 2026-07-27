@@ -58,6 +58,10 @@ import { buildUnderstandingsFromConnectionsExplained } from './data/understandin
 import { buildEntityTimeMap } from './data/temporalUtils'
 import AppShell from './components/AppShell'
 import GraphViewPanel from './components/GraphViewPanel'
+import DiscoverPage from './pages/DiscoverPage'
+import JourneyPanel from './components/journey/JourneyPanel'
+import { addJourneyEntry, entryFromNode, type JourneyEntry } from './lib/journey'
+import FeedbackWidget from './components/FeedbackWidget'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -254,7 +258,19 @@ function App() {
     setHistory(h)
     setCursor(c)
     savePath(h, c)
+    // M35 Feature D: record every navigation in the journey trace (localStorage).
+    // Single unified entry point => complete path coverage with no second mechanism.
+    addJourneyEntry(entryFromNode(node))
     fetchNode(node, c)
+  }
+
+  // M35 Feature D: re-open a journey entry from the JourneyPanel.
+  function handleJourneyClick(entry: JourneyEntry) {
+    if (entry.kind === 'topic') {
+      navigateTo({ type: 'topic', topic: entry.globalId, title: entry.label })
+    } else {
+      navigateTo({ type: 'entity', id: entry.globalId, name: entry.label })
+    }
   }
 
   // Open an entity by id (with a display name for the breadcrumb).
@@ -755,6 +771,13 @@ function App() {
           )}
 
           {!current && (
+            <>
+            {/* M35: Discover experience — presentational; both callbacks reuse
+                the single navigation truth (navigateTo via handleTopicClick). */}
+            <DiscoverPage
+              onTopicClick={handleTopicClick}
+              onStarterClick={(t) => navigateTo(t)}
+            />
             <LandingPage
               topics={topics}
               loading={topicsLoading}
@@ -765,6 +788,12 @@ function App() {
               onRecentSelect={navigateTo}
               onRecentClear={clearRecent}
             />
+            {/* M35 Feature D: exploration journey trace — localStorage only,
+                reuses the single navigateTo entry via handleJourneyClick. */}
+            <JourneyPanel onNavigate={handleJourneyClick} />
+            {/* M35 Feature E: lightweight feedback — localStorage only, no API. */}
+            <FeedbackWidget page="discover" />
+            </>
           )}
     </AppShell>
   )

@@ -20,6 +20,8 @@ import ProvenancePanel from './ProvenancePanel'
 import ExplorationFlowGuide from './ExplorationFlowGuide'
 import EntityHeader from './EntityHeader'
 import GraphViewPanel from './GraphViewPanel'
+import StorySection from './exploration/StorySection'
+import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
 
 export type EntityRelationship = {
@@ -124,6 +126,13 @@ function EntityPage({
           onStarterClick={onStarterClick}
         />
       ) : null}
+
+      {/* M35 Feature C: curated narrative (StorySection / WhyImportantPanel).
+          narrativeKey carries the GLOBAL id so narrative.ts lookup matches
+          its global_id keys (OI-1 fix: Design Freeze used entity.id local id,
+          but narrative keys are global_ids). No AI — copy is hand-authored. */}
+      <StorySection narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
+      <WhyImportantPanel narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
 
       <MainEntityCard mainEntity={entity.exploration.main_entity} />
 
