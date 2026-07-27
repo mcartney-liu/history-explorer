@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM40] - 2026-07-27 (Project Release — M40)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Research Persistence is additive — no backend core / schema / AI Gateway / enum / dependency change.
+
+### Research Persistence (M40)
+
+**ResearchHistory**: localStorage CRUD module with versioned schema (`history-explorer.research.v1`, CURRENT_VERSION=1) — save/load/list/delete/update. SavedResearch includes serialized dimensions, citations, comparedNames, bookmarks, labels.
+
+**ResearchBookmarkButton**: toggle bookmark with star UI (☆/★) + label tags display. Calls updateResearch() for persistence.
+
+**ResearchLibrary**: list view of saved researches — entity type badge, name, comparedNames, dimension completion ratio, citation count, relative timestamps. Open (onSelect) and delete actions.
+
+**Restore Workflow**: ResearchPanel `restored` mode — displays saved dimensions without re-calling explainAI. restoreResearch is a pure data mapper with zero AI overhead.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+6 M40 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 76 files, 695 passed (+23 vs vM39).
+
 ## [vM39] - 2026-07-27 (Project Release — M39)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Research Intelligence is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First: zero conversation memory, zero AI planner.
