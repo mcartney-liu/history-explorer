@@ -212,6 +212,23 @@ export const SCOPE_ALLOWLIST = [
   // checker but documents the PO-approved Pilot gate explicitly (audit trail,
   // consistent with how M26.1 listed data/sources.json + data/evidence_claims.json).
   "data/examples/ancient_india_example.json",
+  // M34-A1/A2 (Exploration UX Hardening + Knowledge Graph Visualization MVP) —
+  // Frontend Freeze Revision Gate (M34-ADR-001, lightweight ADR; same mechanism
+  // as M30-A/M30-B). Purely additive frontend change; self-drawn SVG graph with
+  // ZERO new dependency; reuses the existing /explore + /entity relationship
+  // data (no new endpoint / backend / schema / enum change; runtime stays 0.13.0).
+  //   A1: AppShell (nav shell) + EntityHeader extraction; App.tsx/App.css adopt them.
+  //   A2: GraphViewPanel (SVG renderer) + graphLayout (pure, capped ≤30 nodes/≤60 edges).
+  "frontend/src/components/AppShell.tsx",
+  "frontend/src/components/AppShell.test.tsx",
+  "frontend/src/components/EntityHeader.tsx",
+  "frontend/src/components/EntityHeader.test.tsx",
+  "frontend/src/components/GraphViewPanel.tsx",
+  "frontend/src/components/GraphViewPanel.test.tsx",
+  "frontend/src/lib/graphLayout.ts",
+  "frontend/src/lib/graphLayout.test.ts",
+  "frontend/src/App.tsx",
+  "frontend/src/App.css",
 ];
 
 function _scopeAllowed(file) {
