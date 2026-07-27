@@ -85,4 +85,75 @@ describe('GroundedAnswer', () => {
     expect(html).toContain('事实引用 1 条')
     expect(html).toContain('未通过验证 1 条')
   })
+
+  // --- M36.0 Confidence badge ---
+  it('renders confidence badge when confidence is present', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer
+        response={makeResponse({ confidence: 'high' })}
+      />,
+    )
+    expect(html).toContain('置信度：高')
+  })
+
+  it('does not render confidence badge when absent (backward compat)', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse()} />,
+    )
+    expect(html).not.toContain('置信度')
+  })
+
+  it('renders confidence medium badge', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer
+        response={makeResponse({ grounded: false, confidence: 'medium' })}
+      />,
+    )
+    expect(html).toContain('置信度：中')
+  })
+
+  // --- M36.0 Perspectives ---
+  it('renders perspectives when non-empty', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer
+        response={makeResponse({
+          perspectives: ['Alt view 1', 'Alt view 2'],
+        })}
+      />,
+    )
+    expect(html).toContain('多角度解读')
+    expect(html).toContain('Alt view 1')
+    expect(html).toContain('Alt view 2')
+  })
+
+  it('does not render perspectives when empty', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer
+        response={makeResponse({ perspectives: [] })}
+      />,
+    )
+    expect(html).not.toContain('多角度解读')
+  })
+
+  // --- M36.0 Evidence ---
+  it('renders evidence block when present', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer
+        response={makeResponse({
+          evidence: [
+            { global_id: 'a:b', kind: 'entity', label: 'B', status: 'verified' },
+          ],
+        })}
+      />,
+    )
+    expect(html).toContain('已验证的事实证据')
+    expect(html).toContain('B')
+  })
+
+  it('does not render evidence when absent (backward compat)', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse()} />,
+    )
+    expect(html).not.toContain('已验证的事实证据')
+  })
 })

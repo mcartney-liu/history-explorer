@@ -29,14 +29,71 @@ from .response_validator import ResponseValidator
 
 # Instruct the AI to reply with verifiable JSON. Kept here (AI logic in the
 # approved module) so M11-1's prompt_service stays unchanged per the plan.
+# M36.0 adds an OPTIONAL `perspectives` array (alternative interpretations /
+# caveats) — purely additive; the grounding contract from ADR-0003 is unchanged.
 _CITATION_INSTRUCTION = (
     "\n\nReply ONLY with a JSON object of the form:\n"
-    '{"answer": "<your grounded answer>", "citations": ['
+    '{"answer": "<your grounded answer>", '
+    '"perspectives": ["<optional alternative interpretation or caveat>", "..."], '
+    '"citations": ['
     '{"global_id": "<id>", "kind": "entity|relationship|timeline", '
     '"label": "<short source label>"}]}\n'
     "Every citation.global_id MUST be an entity/relationship/timeline id that "
-    "appears in [ALLOWED FACTS]. Do not cite anything absent from the facts."
+    "appears in [ALLOWED FACTS]. Do not cite anything absent from the facts. "
+    "Keep `perspectives` short (1-3 items) and only when genuinely useful; "
+    "otherwise return an empty list."
 )
+
+# M36.0 AI Response Contract: server-computed confidence. Never trust the LLM
+# to self-rate; derive it from the deterministic validation result so the
+# number is reproducible and freeze-safe.
+def _compute_confidence(grounded: bool, valid: int, total: int) -> str:
+    """Map validation outcome to high/medium/low.
+
+    Fully-grounded (all cited ids resolved) → high (ratio ≈ 1.0).
+    Partial grounding with ≥50% valid → medium. Otherwise → low.
+    Zero citations or zero valid → low to avoid false confidence.
+    """
+    if total <= 0 or valid <= 0:
+        return "low"
+    if grounded:
+        return "high"
+    ratio = valid / total
+    if ratio >= 0.5:
+        return "medium"
+    return "low"
+
+
+def _extract_perspectives(parsed: dict) -> List[str]:
+    """Pull the LLM-supplied perspectives list, coercing to clean strings."""
+    raw = parsed.get("perspectives") or []
+    if not isinstance(raw, list):
+        return []
+    out: List[str] = []
+    for item in raw:
+        if isinstance(item, str) and item.strip():
+            out.append(item.strip())
+        elif isinstance(item, (int, float)):
+            out.append(str(item))
+    return out
+
+
+def _build_evidence(valid_citations: Sequence[Citation]) -> List[dict]:
+    """Re-map verified citations into an `evidence` contract view.
+
+    Semantically: the verified facts that back the answer. Additive alongside
+    `citations` (raw list); `status: verified` signals graph-confirmation to
+    the frontend without altering the frozen citation model.
+    """
+    return [
+        {
+            "global_id": c.global_id,
+            "kind": c.kind,
+            "label": c.label,
+            "status": "verified",
+        }
+        for c in valid_citations
+    ]
 
 
 def _parse_ai_json(raw: str) -> Optional[Dict[str, Any]]:
@@ -104,6 +161,9 @@ def grounded_answer(
         # Could not verify citations -> return the raw answer but flag ungrounded.
         return {
             "answer": raw,
+            "perspectives": [],
+            "evidence": [],
+            "confidence": "low",
             "citations": [],
             "rejected_citations": [],
             "grounded": False,
@@ -128,8 +188,13 @@ def grounded_answer(
     validator = ResponseValidator(knowledge_service)
     result = validator.validate(ai_citations, context)
 
+    valid = len(result.valid_citations)
+    total = len(ai_citations)
     return {
         "answer": answer,
+        "perspectives": _extract_perspectives(parsed),
+        "evidence": _build_evidence(result.valid_citations),
+        "confidence": _compute_confidence(result.grounded, valid, total),
         "citations": [c.to_dict() for c in result.valid_citations],
         "rejected_citations": [c.to_dict() for c in result.rejected_citations],
         "grounded": result.grounded,
@@ -144,6 +209,11 @@ def _with_echo(
     payload: Dict[str, Any], question: str, context: List[str], mode: str
 ) -> Dict[str, Any]:
     out = dict(payload)
+    # M36.0 contract: deterministic path has no AI-verified evidence, so the
+    # additive fields default to empty/low to keep the frontend contract whole.
+    out.setdefault("perspectives", [])
+    out.setdefault("evidence", [])
+    out.setdefault("confidence", "low")
     out["question"] = question
     out["context_global_ids"] = context
     out["mode"] = mode

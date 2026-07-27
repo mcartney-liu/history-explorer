@@ -152,9 +152,12 @@ function getChangedFiles() {
 //   - frontend/src/components/EntityPage.tsx       (mounts ProvenancePanel)
 //
 // Explicitly FORBIDDEN from the allowlist (require a new Freeze Revision Gate):
-//   backend/app/api/*, backend/app/ai_gateway/*,
+//   backend/app/api/*,
+//   backend/app/ai_gateway/* EXCEPT the four M36.0-gated files listed below
+//   (provider.py / response_validator.py / fallback_handler.py /
+//   citation_model.py / context_serializer.py remain frozen),
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
-//   data/examples/*, frontend/*.
+//   data/examples/*, frontend/* (except entries listed below).
 export const SCOPE_ALLOWLIST = [
   // M24 (Data Foundation) — Freeze Revision Gate
   "backend/app/core/dataset.py",
@@ -260,6 +263,26 @@ export const SCOPE_ALLOWLIST = [
   // `backend/app/core/search.py`). No backend/app business logic, schema,
   // enum, or dependency change — purely a stale assertion aligned to data.
   "backend/tests/test_search_index.py",
+  // M36.0 (AI Interpretation Layer Activation) — Freeze Revision Gate
+  // (PO-approved, 2026-07-27; ADR-0003 grounded-AI exception evolution).
+  // Activates & enhances the EXISTING ai_gateway (grounding 2-hop expansion,
+  // prompt mode system, additive response contract) plus the frontend AI UX.
+  // EXACT-FILE entries only (deliberately NOT a directory prefix): provider.py,
+  // response_validator.py, fallback_handler.py, citation_model.py and
+  // context_serializer.py stay frozen. No new dependency / schema / enum /
+  // DB / RAG / vector change; OpenAI remains the only whitelisted provider.
+  "backend/app/ai_gateway/grounding_builder.py",
+  "backend/app/ai_gateway/prompt_service.py",
+  "backend/app/ai_gateway/answer_service.py",
+  "backend/app/ai_gateway/config.py",
+  "frontend/src/data/aiClient.ts",
+  "frontend/src/components/AIExplanationPanel.tsx",
+  "frontend/src/components/GroundedAnswer.tsx",
+  "frontend/src/components/CitationList.tsx",
+  "backend/tests/test_ai_gateway.py",
+  "frontend/src/components/AIExplanationPanel.test.tsx",
+  "frontend/src/components/GroundedAnswer.test.tsx",
+  "frontend/src/components/CitationList.test.tsx",
 ];
 
 function _scopeAllowed(file) {

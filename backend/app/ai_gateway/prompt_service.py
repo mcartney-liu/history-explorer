@@ -22,6 +22,51 @@ Rules you MUST follow:
 """
 
 
+# --- M36.0 Prompt Mode System -----------------------------------------------
+# Five scenario templates. Each APPENDS a focus directive to the base
+# SYSTEM_PROMPT — the ADR-0003 grounding contract above is shared verbatim by
+# every mode and is never weakened or rewritten per-mode.
+_MODE_DIRECTIVES = {
+    "explain": (
+        "Focus: give a clear, balanced explanation of the subject using only "
+        "the allowed facts."
+    ),
+    "why_important": (
+        "Focus: explain WHY the subject matters historically — its "
+        "significance and legacy — using only the allowed facts."
+    ),
+    "why_happened": (
+        "Focus: explain WHY the subject happened — causes, preconditions and "
+        "driving forces — using only relationships present in the allowed "
+        "facts. Never assert a cause that is not backed by an allowed fact."
+    ),
+    "historical_impact": (
+        "Focus: explain the IMPACT and consequences of the subject — what "
+        "changed afterwards — using only the allowed facts."
+    ),
+    "multi_civilization_view": (
+        "Focus: compare how the subject connects ACROSS civilizations and "
+        "regions, using cross-topic relationships (including 2-hop chains) "
+        "present in the allowed facts."
+    ),
+    "timeline_explanation": (
+        "Focus: explain the subject as a chronological sequence, ordering "
+        "only the timeline facts provided. Never invent dates or periods."
+    ),
+}
+
+
+def template_for(mode: str) -> str:
+    """Return the full system prompt for a scenario mode.
+
+    Unknown/empty modes fall back to the default 'explain' template. The
+    grounding contract (SYSTEM_PROMPT) is always included unchanged.
+    """
+    key = (mode or "").strip().lower()
+    directive = _MODE_DIRECTIVES.get(key, _MODE_DIRECTIVES["explain"])
+    return "%s\n%s\n" % (SYSTEM_PROMPT, directive)
+
+
 def build_grounding_section(facts: List[str]) -> str:
     if not facts:
         return "[ALLOWED FACTS]\n(none provided)\n"
@@ -37,8 +82,11 @@ def build_user_prompt(question: str, facts: List[str]) -> str:
 class PromptService:
     """Builds system and user prompts for grounded answering."""
 
-    def system_prompt(self) -> str:
-        return SYSTEM_PROMPT
+    def system_prompt(self, mode: str = "explain") -> str:
+        """Mode-aware system prompt (M36.0). Default keeps prior behaviour
+        semantics: the grounding contract always leads; unknown modes fall
+        back to 'explain'."""
+        return template_for(mode)
 
     def user_prompt(self, question: str, facts: List[str]) -> str:
         return build_user_prompt(question, facts)

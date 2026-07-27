@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { explainAI, chatAI, type AIResponse } from '../data/aiClient'
+import {
+  explainAI,
+  PROMPT_MODES,
+  type AIResponse,
+} from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
 
@@ -9,13 +13,15 @@ export type AIExplanationPanelProps = {
   // The grounding context: global ids the backend will verify citations
   // against. Supplied by the host (App) from the existing exploration graph.
   contextGlobalIds: string[]
-  mode?: 'explain' | 'chat'
+  /** M36.0: prompt mode (pass-through to backend PromptService). */
+  mode?: string
   onCitationClick?: (global_id: string) => void
 }
 
-// Container: owns the request lifecycle only (status + abort). All rendering is
-// delegated to the presentational AIExplanationView so it can be tested without
-// a DOM. No global state — the status lives in this component instance alone.
+// Container: owns the request lifecycle (status + abort + mode). All rendering
+// is delegated to the presentational AIExplanationView so it can be tested
+// without a DOM. No global state — the status lives in this component instance
+// alone.
 export default function AIExplanationPanel({
   contextGlobalIds,
   mode = 'explain',
@@ -25,6 +31,8 @@ export default function AIExplanationPanel({
   const [status, setStatus] = useState<AIExplanationStatus>('idle')
   const [response, setResponse] = useState<AIResponse | null>(null)
   const [error, setError] = useState('')
+  // M36.0: active prompt mode chip (explain is the implicit default).
+  const [promptMode, setPromptMode] = useState(mode)
   const controllerRef = useRef<AbortController | null>(null)
 
   // Abort any in-flight request when the panel unmounts.
@@ -43,8 +51,12 @@ export default function AIExplanationPanel({
     setError('')
     setResponse(null)
     try {
-      const call = mode === 'chat' ? chatAI : explainAI
-      const res = await call(trimmed, contextGlobalIds, controller.signal)
+      const res = await explainAI(
+        trimmed,
+        contextGlobalIds,
+        controller.signal,
+        promptMode,
+      )
       setResponse(res)
       setStatus('success')
     } catch (e) {
@@ -61,8 +73,10 @@ export default function AIExplanationPanel({
       response={response}
       error={error}
       contextCount={contextGlobalIds.length}
+      promptMode={promptMode}
       onQuestionChange={setQuestion}
       onAsk={ask}
+      onModeChange={setPromptMode}
       onCitationClick={onCitationClick}
     />
   )
@@ -74,8 +88,11 @@ export type AIExplanationViewProps = {
   response: AIResponse | null
   error: string
   contextCount: number
+  /** M36.0: active prompt mode key. */
+  promptMode: string
   onQuestionChange: (value: string) => void
   onAsk: (question: string) => void
+  onModeChange: (mode: string) => void
   onCitationClick?: (global_id: string) => void
 }
 
@@ -87,8 +104,10 @@ export function AIExplanationView({
   response,
   error,
   contextCount,
+  promptMode,
   onQuestionChange,
   onAsk,
+  onModeChange,
   onCitationClick,
 }: AIExplanationViewProps) {
   return (
@@ -97,6 +116,23 @@ export function AIExplanationView({
       <p className="ae-context-note">
         基于当前探索上下文（{contextCount} 个实体）提供可被知识图谱验证的解读。
       </p>
+
+      {/* M36.0 Mode Chips — choose a prompt mode before asking */}
+      <div className="ae-mode-chips" role="group" aria-label="解读模式">
+        {PROMPT_MODES.map((m) => (
+          <button
+            key={m.key}
+            type="button"
+            className={`ae-mode-chip${promptMode === m.key ? ' ae-mode-chip--active' : ''}`}
+            disabled={status === 'loading'}
+            aria-pressed={promptMode === m.key}
+            onClick={() => onModeChange(m.key)}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+
       <div className="ae-input-row">
         <input
           className="ae-input"
@@ -120,8 +156,15 @@ export function AIExplanationView({
         </button>
       </div>
 
+      {/* M36.0 Permanent disclaimer — always visible */}
+      <p className="ae-disclaimer">
+        AI 解读由知识图谱中的事实事实驱动，可溯源验证。答案可能有限或存在偏差，建议结合历史资料交叉参考。
+      </p>
+
       {status === 'idle' && (
-        <p className="ae-hint">输入问题后点击「问 AI」，获取带事实引用与溯源验证的解读。</p>
+        <p className="ae-hint">
+          输入问题后点击「问 AI」，获取带事实引用与溯源验证的解读。
+        </p>
       )}
 
       {status === 'loading' && (
@@ -136,7 +179,21 @@ export function AIExplanationView({
         </p>
       )}
 
-      {status === 'success' && response && (
+      {/* M36.0 Deterministic fallback — explicit UI for engine "deterministic" */}
+      {status === 'success' && response && response.engine === 'deterministic' && (
+        <div className="ae-result ae-result--fallback">
+          <div className="ae-fallback">
+            <p className="ae-fallback-text">
+              {response.answer}
+            </p>
+            {response.reason && (
+              <span className="ae-fallback-reason">原因：{response.reason}</span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {status === 'success' && response && response.engine !== 'deterministic' && (
         <div className="ae-result">
           <GroundedAnswer response={response} />
           <CitationList

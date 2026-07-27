@@ -99,3 +99,79 @@ def test_no_forbidden_infra_tokens_in_source():
         lowcode = code.lower()
         for b in banned:
             assert b not in lowcode, "%s contains forbidden token '%s'" % (f.name, b)
+
+
+# ---------------------------------------------------------------------------
+# M36.0 AI Response Contract — unit tests for confidence / evidence helpers
+# ---------------------------------------------------------------------------
+
+from app.ai_gateway.answer_service import (  # noqa: E402
+    _build_evidence,
+    _compute_confidence,
+    _extract_perspectives,
+)
+from app.ai_gateway.citation_model import Citation  # noqa: E402
+
+
+class TestComputeConfidence:
+    def test_all_grounded_high(self):
+        assert _compute_confidence(True, 5, 5) == "high"
+
+    def test_partial_grounded_medium(self):
+        assert _compute_confidence(False, 3, 5) == "medium"
+
+    def test_few_valid_low(self):
+        assert _compute_confidence(False, 1, 5) == "low"
+
+    def test_ungrounded_few_valid_low(self):
+        # grounded=False but very few valid citations → low
+        assert _compute_confidence(False, 2, 5) == "low"
+
+    def test_zero_citations_low(self):
+        assert _compute_confidence(True, 0, 0) == "low"
+
+    def test_single_citation_grounded_high(self):
+        # grounded=True means all checked-out, single citation => ratio=1.0
+        assert _compute_confidence(True, 1, 1) == "high"
+
+
+class TestExtractPerspectives:
+    def test_empty_list(self):
+        assert _extract_perspectives({"perspectives": []}) == []
+
+    def test_missing_key(self):
+        assert _extract_perspectives({}) == []
+
+    def test_string_items(self):
+        parsed = {"perspectives": ["view A", "view B"]}
+        assert _extract_perspectives(parsed) == ["view A", "view B"]
+
+    def test_filters_non_strings(self):
+        parsed = {"perspectives": ["ok", None, 42, "  fine  ", []]}
+        assert _extract_perspectives(parsed) == ["ok", "42", "fine"]
+
+    def test_not_a_list(self):
+        assert _extract_perspectives({"perspectives": "not-a-list"}) == []
+
+
+class TestBuildEvidence:
+    def test_empty_citations(self):
+        assert _build_evidence([]) == []
+
+    def test_maps_citations_to_evidence(self):
+        c1 = Citation("ancient_india:person-ashoka", "entity", "Ashoka")
+        c2 = Citation("timeline::ashoka::0", "timeline", "Ashoka Reign")
+        evidence = _build_evidence([c1, c2])
+        assert len(evidence) == 2
+        assert evidence[0] == {
+            "global_id": "ancient_india:person-ashoka",
+            "kind": "entity",
+            "label": "Ashoka",
+            "status": "verified",
+        }
+        assert evidence[1] == {
+            "global_id": "timeline::ashoka::0",
+            "kind": "timeline",
+            "label": "Ashoka Reign",
+            "status": "verified",
+        }

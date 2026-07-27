@@ -17,10 +17,9 @@ function makeResponse(overrides: Partial<AIResponse> = {}): AIResponse {
   }
 }
 
-// The presentational view exposes every status as props, so each state can be
-// rendered without a DOM click (the container owns the request lifecycle).
+// All existing test renders need promptMode + onModeChange (M36.0 additive).
 describe('AIExplanationView', () => {
-  it('renders the idle hint', () => {
+  it('renders the idle hint and disclaimer', () => {
     const html = renderToStaticMarkup(
       <AIExplanationView
         status="idle"
@@ -28,12 +27,16 @@ describe('AIExplanationView', () => {
         response={null}
         error=""
         contextCount={3}
+        promptMode="explain"
         onQuestionChange={() => {}}
         onAsk={() => {}}
+        onModeChange={() => {}}
       />,
     )
     expect(html).toContain('AI 事实溯源解读')
     expect(html).toContain('输入问题后点击')
+    // M36.0: permanent disclaimer always rendered
+    expect(html).toContain('可溯源验证')
   })
 
   it('renders the loading state', () => {
@@ -44,8 +47,10 @@ describe('AIExplanationView', () => {
         response={null}
         error=""
         contextCount={3}
+        promptMode="explain"
         onQuestionChange={() => {}}
         onAsk={() => {}}
+        onModeChange={() => {}}
       />,
     )
     expect(html).toContain('正在生成带事实溯源的解读')
@@ -59,8 +64,10 @@ describe('AIExplanationView', () => {
         response={null}
         error="AI request failed (500)"
         contextCount={3}
+        promptMode="explain"
         onQuestionChange={() => {}}
         onAsk={() => {}}
+        onModeChange={() => {}}
       />,
     )
     expect(html).toContain('无法获取 AI 解读')
@@ -75,8 +82,10 @@ describe('AIExplanationView', () => {
         response={makeResponse({ grounded: true, engine: 'ai' })}
         error=""
         contextCount={3}
+        promptMode="explain"
         onQuestionChange={() => {}}
         onAsk={() => {}}
+        onModeChange={() => {}}
         onCitationClick={() => {}}
       />,
     )
@@ -97,11 +106,78 @@ describe('AIExplanationView', () => {
         })}
         error=""
         contextCount={3}
+        promptMode="explain"
         onQuestionChange={() => {}}
         onAsk={() => {}}
+        onModeChange={() => {}}
       />,
     )
-    expect(html).toContain('确定性回退（AI 不可用）')
-    expect(html).toContain('并非 AI 生成的解读')
+    // M36.0: deterministic fallback renders in its own block, not via GroundedAnswer
+    expect(html).toContain('ae-result--fallback')
+    expect(html).toContain('AI 解读层当前不可用。')
+    expect(html).not.toContain('ga-engine-badge')
+  })
+
+  // --- M36.0 Mode Chips ---
+  it('renders all five mode chips', () => {
+    const html = renderToStaticMarkup(
+      <AIExplanationView
+        status="idle"
+        question=""
+        response={null}
+        error=""
+        contextCount={3}
+        promptMode="explain"
+        onQuestionChange={() => {}}
+        onAsk={() => {}}
+        onModeChange={() => {}}
+      />,
+    )
+    expect(html).toContain('为何重要')
+    expect(html).toContain('为何发生')
+    expect(html).toContain('历史影响')
+    expect(html).toContain('多文明视角')
+    expect(html).toContain('时间线解读')
+  })
+
+  it('highlights the active mode chip', () => {
+    const html = renderToStaticMarkup(
+      <AIExplanationView
+        status="idle"
+        question=""
+        response={null}
+        error=""
+        contextCount={3}
+        promptMode="why_important"
+        onQuestionChange={() => {}}
+        onAsk={() => {}}
+        onModeChange={() => {}}
+      />,
+    )
+    expect(html).toContain('ae-mode-chip--active')
+  })
+
+  // --- M36.0 Deterministic fallback UI ---
+  it('shows fallback block for engine=deterministic with reason', () => {
+    const html = renderToStaticMarkup(
+      <AIExplanationView
+        status="success"
+        question="q"
+        response={makeResponse({
+          grounded: false,
+          engine: 'deterministic',
+          answer: 'AI 不可用',
+          reason: 'provider_error',
+        })}
+        error=""
+        contextCount={3}
+        promptMode="explain"
+        onQuestionChange={() => {}}
+        onAsk={() => {}}
+        onModeChange={() => {}}
+      />,
+    )
+    expect(html).toContain('ae-result--fallback')
+    expect(html).toContain('provider_error')
   })
 })

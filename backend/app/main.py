@@ -344,6 +344,10 @@ def healthz():
 class AIRequest(BaseModel):
     question: str
     context_global_ids: list[str] = []
+    # M36.0 (additive): scenario mode. Pure pass-through to ai_gateway — no
+    # prompt text or AI logic lives in main.py (freeze boundary §5). Unknown
+    # modes fall back to 'explain' inside prompt_service.
+    mode: str = "explain"
 
 
 def ai_explain(body: AIRequest):
@@ -354,7 +358,10 @@ def ai_explain(body: AIRequest):
     provided context is empty. HTTP 200 in every case (M0-M10 unaffected).
     """
     return grounded_answer(
-        knowledge_service, body.question, body.context_global_ids, mode="explain"
+        knowledge_service,
+        body.question,
+        body.context_global_ids,
+        mode=body.mode or "explain",
     )
 
 
@@ -367,7 +374,10 @@ def ai_chat(body: AIRequest):
     context_global_ids), never of past requests.
     """
     return grounded_answer(
-        knowledge_service, body.question, body.context_global_ids, mode="chat"
+        knowledge_service,
+        body.question,
+        body.context_global_ids,
+        mode=body.mode or "explain",
     )
 
 

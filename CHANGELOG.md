@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM36.0] - 2026-07-27 (Project Release — M36.0)
+
+> **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; the AI Interpretation Layer is additive — no backend core / schema / data / validation / registry / deterministic engine change. See `docs/RELEASE_VERSION_POLICY.md`.
+
+### AI Interpretation Layer Activation (M36.0)
+
+**Backend — AI Gateway (`backend/app/ai_gateway/`)**
+- **2-hop grounding context**: `GroundingBuilder.expand_context()` performs BFS from root global_ids, capped at `MAX_EXPANDED_ENTITIES=25`. Bridge entities pushed into `GroundingResult.expanded_global_ids` so the frozen `ResponseValidator` can resolve 2-hop entity references without modification.
+- **Prompt mode system**: `PromptService.template_for(mode)` appends a mode-specific directive to `SYSTEM_PROMPT`. Six modes: `explain`, `why_important`, `why_happened`, `historical_impact`, `multi_civilization_view`, `timeline_explanation`. ADR-0003 grounding contract never weakened.
+- **Response contract upgrade**: Additive fields `perspectives` (LLM-supplied), `evidence` (server-verified citations as `{global_id, kind, label, status:"verified"}`), `confidence` (server-computed `high|medium|low` from validation result). Old fields retained. `_CITATION_INSTRUCTION` updated.
+- **main.py**: `AIRequest.mode: str = "explain"` — pure pass-through, no AI logic in main.py.
+
+**Frontend — AI UX (`frontend/src/`)**
+- `aiClient.ts`: `AIEvidence` / `AIConfidence` types, `PROMPT_MODES` export, `mode` pass-through in request body.
+- `AIExplanationPanel.tsx`: 5 mode chips (为何重要 / 为何发生 / 历史影响 / 多文明视角 / 时间线解读), permanent disclaimer, deterministic fallback UI block.
+- `GroundedAnswer.tsx`: renders `perspectives` block, `evidence` block, `confidence` badge — all guarded for backward compatibility.
+
+**Freeze Gate**
+- `scripts/freeze-check.mjs` SCOPE_ALLOWLIST extended (12 precise file entries).
+- Freeze invariants: ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**
+- Backend: `test_ai_gateway.py` +13 (confidence 6, perspectives 5, evidence 2) → 232 passed.
+- Frontend: +10 tests across 3 `.test.tsx` files → 584 passed.
+
 ## [vM35.1.1] - 2026-07-27 (Project Release — M35.1)
 
 > **Non-runtime release.** This is a Project Release, not a Runtime Version bump. `frontend/package.json` remains `[0.13.0]`; only frontend additive narrative-consistency code + tests were changed (no `backend/app` / data / schema / validation / registry / runtime change). See `docs/RELEASE_VERSION_POLICY.md`.
