@@ -175,3 +175,146 @@ class TestBuildEvidence:
             "label": "Ashoka Reign",
             "status": "verified",
         }
+
+
+# ---------------------------------------------------------------------------
+# M36.1 Event Intelligence Layer — data integrity tests
+# ---------------------------------------------------------------------------
+
+import json  # noqa: E402
+
+
+def _load_event_data(dataset):
+    path = BACKEND_DIR.parent / "data" / "examples" / f"{dataset}_example.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+class TestM361RomanEventIntegrity:
+    """Verify that M36.1 event causal-chain data is loadable and self-consistent."""
+
+    def test_all_events_load(self):
+        d = _load_event_data("roman_empire")
+        events = [e for e in d["entities"] if e["type"] == "Event"]
+        assert len(events) == 5, f"Expected 5 Events, got {len(events)}"
+
+    def test_event_ids_present(self):
+        d = _load_event_data("roman_empire")
+        eids = {e["id"] for e in d["entities"] if e["type"] == "Event"}
+        assert "event-republic-end" in eids
+        assert "event-roman-empire-established" in eids
+        assert "event-pax-romana" in eids
+        assert "event-empire-fall" in eids
+        assert "event-edict-milan" in eids
+
+    def test_causal_chain_exists(self):
+        d = _load_event_data("roman_empire")
+        rels = d["relationships"]
+        causal = [
+            r for r in rels
+            if r["type"] in ("caused", "influenced", "before", "after")
+            and any(e["id"] == r["source"] for e in d["entities"] if e["type"] == "Event")
+            and any(e["id"] == r["target"] for e in d["entities"] if e["type"] == "Event")
+        ]
+        assert len(causal) >= 4, f"Expected ≥4 Event->Event causal edges, got {len(causal)}"
+
+    def test_republic_end_caused_empire(self):
+        d = _load_event_data("roman_empire")
+        assert any(
+            r["source"] == "event-republic-end"
+            and r["target"] == "event-roman-empire-established"
+            and r["type"] == "caused"
+            for r in d["relationships"]
+        ), "Missing: event-republic-end →[caused]→ event-roman-empire-established"
+
+    def test_empire_caused_pax_romana(self):
+        d = _load_event_data("roman_empire")
+        assert any(
+            r["source"] == "event-roman-empire-established"
+            and r["target"] == "event-pax-romana"
+            and r["type"] == "caused"
+            for r in d["relationships"]
+        ), "Missing: event-roman-empire-established →[caused]→ event-pax-romana"
+
+    def test_event_targets_exist_as_entities(self):
+        d = _load_event_data("roman_empire")
+        eids = {e["id"] for e in d["entities"]}
+        # Cross-topic targets (e.g. "hellenistic_world:civ-greek") are valid
+        # global_id references to other datasets, not local ids.
+        for r in d["relationships"]:
+            tgt = r["target"]
+            if ":" in tgt and not any(e["id"] == tgt for e in d["entities"]):
+                # cross-topic global_id — skip local-id check
+                continue
+            assert tgt in eids, f"Relationship target '{tgt}' not in entities"
+            assert r["source"] in eids, \
+                f"Relationship source '{r['source']}' not in entities"
+
+    def test_relationship_types_are_allowed(self):
+        from app.validation import RELATIONSHIP_TYPES
+        d = _load_event_data("roman_empire")
+        for r in d["relationships"]:
+            assert r["type"] in RELATIONSHIP_TYPES, \
+                f"Relationship type '{r['type']}' not in RELATIONSHIP_TYPES"
+
+
+class TestM361HellenisticEventIntegrity:
+    def test_all_events_load(self):
+        d = _load_event_data("hellenistic_world")
+        events = [e for e in d["entities"] if e["type"] == "Event"]
+        assert len(events) == 4, f"Expected 4 Events, got {len(events)}"
+
+    def test_alexander_conquest_causes_gaugamela(self):
+        d = _load_event_data("hellenistic_world")
+        assert any(
+            r["source"] == "event-alexander-conquest"
+            and r["target"] == "event-gaugamela"
+            and r["type"] == "caused"
+            for r in d["relationships"]
+        ), "Missing: event-alexander-conquest →[caused]→ event-gaugamela"
+
+    def test_conquest_causes_diadochi(self):
+        d = _load_event_data("hellenistic_world")
+        assert any(
+            r["source"] == "event-alexander-conquest"
+            and r["target"] == "event-diadochi-wars"
+            and r["type"] == "caused"
+            for r in d["relationships"]
+        ), "Missing: event-alexander-conquest →[caused]→ event-diadochi-wars"
+
+    def test_gaugamela_before_alexandria(self):
+        d = _load_event_data("hellenistic_world")
+        assert any(
+            r["source"] == "event-gaugamela"
+            and r["target"] == "event-alexandria-founded"
+            and r["type"] == "before"
+            for r in d["relationships"]
+        ), "Missing: event-gaugamela →[before]→ event-alexandria-founded"
+
+
+class TestM361FreezeInvariants:
+    """Verify schema/enum boundaries are NOT breached by M36.1 data changes."""
+
+    def test_entity_types_unchanged(self):
+        from app.validation import ENTITY_TYPES
+        assert len(ENTITY_TYPES) == 8, f"ENTITY_TYPES count changed: {len(ENTITY_TYPES)}"
+
+    def test_relationship_types_unchanged(self):
+        from app.validation import RELATIONSHIP_TYPES
+        assert len(RELATIONSHIP_TYPES) == 18, \
+            f"RELATIONSHIP_TYPES count changed: {len(RELATIONSHIP_TYPES)}"
+
+    def test_all_event_types_valid(self):
+        from app.validation import ENTITY_TYPES
+        for ds in ("roman_empire", "hellenistic_world"):
+            d = _load_event_data(ds)
+            for e in d["entities"]:
+                assert e["type"] in ENTITY_TYPES, \
+                    f"Entity '{e['id']}' type '{e['type']}' not in ENTITY_TYPES"
+
+    def test_all_rel_types_valid(self):
+        from app.validation import RELATIONSHIP_TYPES
+        for ds in ("roman_empire", "hellenistic_world"):
+            d = _load_event_data(ds)
+            for r in d["relationships"]:
+                assert r["type"] in RELATIONSHIP_TYPES, \
+                    f"Rel type '{r['type']}' not in RELATIONSHIP_TYPES"

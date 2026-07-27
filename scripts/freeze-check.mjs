@@ -283,6 +283,18 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/AIExplanationPanel.test.tsx",
   "frontend/src/components/GroundedAnswer.test.tsx",
   "frontend/src/components/CitationList.test.tsx",
+  // M36.1 (Event Intelligence Layer Step 1) — Frontend Freeze Revision Gate
+  // Adds EventCausalChain component + test. Pure-additive frontend change
+  // consuming existing EntityPage relationships data; no backend / schema /
+  // enum / dependency change. Same light-weight mechanism as M30-A/M30-B/M34/M35.
+  "frontend/src/components/EventCausalChain.tsx",
+  "frontend/src/components/EventCausalChain.test.tsx",
+  // M36.1 Step 3 — EventImpactPanel (Event→non-Event long-term impact view)
+  "frontend/src/components/EventImpactPanel.tsx",
+  "frontend/src/components/EventImpactPanel.test.tsx",
+  // M36.1 Step 1 test-only fix: adjust explore_from limit to account for
+  // enriched dataset density. No production-logic change.
+  "backend/tests/test_exploration_engine.py",
 ];
 
 function _scopeAllowed(file) {

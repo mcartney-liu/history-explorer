@@ -52,7 +52,11 @@ def test_explore_from_single_hop_keeps_relationship():
 # ---------------------------------------------------------------------------
 def test_explore_from_multi_hop_reaches_han():
     ks = _ks()
-    result = ks.explore_from(ROME, max_depth=2)
+    # Explicit limit avoids sensitivity to dataset density changes (e.g. M36.1
+    # Event enrichment adds more depth-1 neighbors that push Silk Road entities
+    # past the default limit=20). The graph path itself is intact — this is
+    # verified independently by test_find_connections_rome_to_han.
+    result = ks.explore_from(ROME, max_depth=2, limit=50)
     han = [n for n in result if n["global_id"] == HAN]
     assert han, "Han China must be reachable from Rome within 2 hops"
     assert han[0]["depth"] == 2

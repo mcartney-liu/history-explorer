@@ -721,6 +721,195 @@
         "ec-rom-020"
       ],
       "reliability": "high"
+    },
+    {
+      "id": "event-republic-end",
+      "type": "Event",
+      "name": "End of the Roman Republic",
+      "description": "The collapse of the Roman Republic through civil wars (49-27 BC), culminating in Octavian's victory at Actium and the establishment of the Principate.",
+      "global_id": "roman_empire:event-republic-end",
+      "aliases": [
+        "Fall of the Republic",
+        "Roman Civil Wars"
+      ],
+      "labels": {
+        "en": "End of the Roman Republic"
+      },
+      "start_date": {
+        "value": -49,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "49 BC"
+      },
+      "end_date": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      },
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-017"
+      ],
+      "reliability": "high",
+      "location": "loc-rome",
+      "participants": [
+        "person-julius-caesar"
+      ],
+      "causes": [
+        "Concentration of military power in individual generals",
+        "Breakdown of Republican constitutional norms"
+      ],
+      "consequences": [
+        "Establishment of the Roman Empire under Augustus"
+      ],
+      "period": "tp-republic",
+      "region": "Roman Italy",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Cambridge Ancient History",
+          "title": "The Last Age of the Roman Republic",
+          "url": "https://www.cambridge.org/"
+        }
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "event-pax-romana",
+      "type": "Event",
+      "name": "Pax Romana",
+      "description": "A period of relative peace and stability across the Roman Empire lasting approximately 200 years (27 BC – 180 AD), enabling economic prosperity, cultural flourishing, and infrastructural development.",
+      "global_id": "roman_empire:event-pax-romana",
+      "aliases": [
+        "Roman Peace",
+        "Augustan Peace"
+      ],
+      "labels": {
+        "en": "Pax Romana"
+      },
+      "start_date": {
+        "value": -27,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "27 BC"
+      },
+      "end_date": {
+        "value": 180,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "180 AD"
+      },
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-005"
+      ],
+      "reliability": "high",
+      "location": "loc-rome",
+      "participants": [
+        "person-augustus"
+      ],
+      "causes": [
+        "Establishment of the Roman Empire",
+        "Augustus's administrative reforms"
+      ],
+      "consequences": [
+        "Spread of Roman law and Latin language",
+        "Expansion of trade networks across the Mediterranean",
+        "Cultural flourishing (literature, architecture, engineering)"
+      ],
+      "period": "tp-27bc",
+      "region": "Mediterranean",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin",
+        "Greek"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Pax Romana",
+          "url": "https://www.britannica.com/event/Pax-Romana"
+        }
+      ],
+      "importance": "high"
+    },
+    {
+      "id": "event-empire-fall",
+      "type": "Event",
+      "name": "Fall of the Western Roman Empire",
+      "description": "The gradual decline and eventual collapse of the Western Roman Empire in 476 AD, marking the conventional end of antiquity and the beginning of the Middle Ages in Western Europe.",
+      "global_id": "roman_empire:event-empire-fall",
+      "aliases": [
+        "Fall of Rome",
+        "Collapse of the Western Empire"
+      ],
+      "labels": {
+        "en": "Fall of the Western Roman Empire"
+      },
+      "start_date": {
+        "value": 376,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "376 AD"
+      },
+      "end_date": {
+        "value": 476,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "476 AD"
+      },
+      "source": "src-cah",
+      "evidence": [
+        "ec-rom-001"
+      ],
+      "reliability": "high",
+      "location": "loc-rome",
+      "participants": [
+        "person-constantine"
+      ],
+      "causes": [
+        "Economic decline and inflation",
+        "Barbarian migrations and invasions",
+        "Political instability and civil wars"
+      ],
+      "consequences": [
+        "Rise of the Byzantine Empire as the Roman successor",
+        "Fragmentation of Western Europe into Germanic kingdoms",
+        "Preservation of Roman law and culture through the Church"
+      ],
+      "period": null,
+      "region": "Western Europe",
+      "geo": {
+        "lat": 41.9028,
+        "lng": 12.4964,
+        "label": "Rome"
+      },
+      "cultural_affiliation": "Roman",
+      "language": [
+        "Latin"
+      ],
+      "external_refs": [
+        {
+          "source": "Encyclopaedia Britannica",
+          "title": "Decline and Fall of the Roman Empire",
+          "url": "https://www.britannica.com/event/Decline-and-fall-of-the-Roman-Empire"
+        }
+      ],
+      "importance": "high"
     }
   ],
   "relationships": [
@@ -1008,6 +1197,111 @@
       "mechanism": "political",
       "geographic_scope": "Roman Italy",
       "temporal_relation": null
+    },
+    {
+      "source": "event-republic-end",
+      "target": "event-roman-empire-established",
+      "type": "caused",
+      "confidence": "high",
+      "citation": "CAH IX; Suetonius, Divus Augustus",
+      "evidence": [
+        "ec-rom-017"
+      ],
+      "valid_time": "49-27 BCE",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Roman Italy",
+      "temporal_relation": "before"
+    },
+    {
+      "source": "event-roman-empire-established",
+      "target": "event-pax-romana",
+      "type": "caused",
+      "confidence": "high",
+      "citation": "CAH X; Tacitus, Annales",
+      "evidence": [
+        "ec-rom-005"
+      ],
+      "valid_time": "27 BCE onward",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": "after"
+    },
+    {
+      "source": "event-pax-romana",
+      "target": "civ-roman",
+      "type": "influenced",
+      "confidence": "high",
+      "citation": "CAH X-XI",
+      "evidence": [
+        "ec-rom-022"
+      ],
+      "valid_time": "27 BCE - 180 CE",
+      "weight": 0.9,
+      "mechanism": "cultural",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
+    },
+    {
+      "source": "event-pax-romana",
+      "target": "event-empire-fall",
+      "type": "before",
+      "confidence": "high",
+      "citation": "Gibbon; CAH XII",
+      "evidence": [
+        "ec-rom-001"
+      ],
+      "valid_time": "180 CE - 476 CE",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "before"
+    },
+    {
+      "source": "event-empire-fall",
+      "target": "civ-byzantine",
+      "type": "influenced",
+      "confidence": "high",
+      "citation": "Oxford Byzantine Studies",
+      "evidence": [
+        "ec-rom-029"
+      ],
+      "valid_time": "476 CE onward",
+      "weight": 0.8,
+      "mechanism": "political",
+      "geographic_scope": "Mediterranean",
+      "temporal_relation": null
+    },
+    {
+      "source": "event-roman-empire-established",
+      "target": "event-empire-fall",
+      "type": "before",
+      "confidence": "high",
+      "citation": "CAH X-XII",
+      "evidence": [
+        "ec-rom-001"
+      ],
+      "valid_time": "27 BCE - 476 CE",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "before"
+    },
+    {
+      "source": "event-empire-fall",
+      "target": "civ-roman",
+      "type": "after",
+      "confidence": "high",
+      "citation": "Gibbon; CAH XII",
+      "evidence": [
+        "ec-rom-001"
+      ],
+      "valid_time": "476 CE",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "after"
     },
     {
       "source": "person-augustus",

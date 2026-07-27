@@ -20,6 +20,8 @@ import ProvenancePanel from './ProvenancePanel'
 import ExplorationFlowGuide from './ExplorationFlowGuide'
 import EntityHeader from './EntityHeader'
 import GraphViewPanel from './GraphViewPanel'
+import EventCausalChain from './EventCausalChain'
+import EventImpactPanel from './EventImpactPanel'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
@@ -143,6 +145,25 @@ function EntityPage({
         onEntityClick={onEntityClick}
         onNodeClick={onNodeClick}
       />
+
+      {/* M36.1: Event intelligence views — additive Event-only panels between
+          RelationshipView and GraphViewPanel. Zero impact on non-Event types. */}
+      {entity.type === 'Event' && (
+        <>
+          <EventCausalChain
+            relationships={entity.relationships}
+            centerEntityName={entity.name}
+            nameById={nameById}
+            onEntityClick={onEntityClick}
+          />
+          <EventImpactPanel
+            relationships={entity.relationships}
+            centerEntityName={entity.name}
+            nameById={nameById}
+            onEntityClick={onEntityClick}
+          />
+        </>
+      )}
 
       {/* M34-A2: spatial view of the centred entity + its direct neighbours,
           reusing the same relationship data (no new API / dependency). */}

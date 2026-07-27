@@ -352,9 +352,169 @@
       "labels": {
         "en": "Parchment"
       }
+    },
+    {
+      "id": "event-alexander-conquest",
+      "type": "Event",
+      "name": "Alexander's Conquest of Persia",
+      "description": "Alexander the Great's campaign (334-323 BC) that toppled the Achaemenid Persian Empire and created the largest empire the world had yet seen, stretching from Greece to India.",
+      "global_id": "hellenistic_world:event-alexander-conquest",
+      "aliases": [
+        "Alexander's Campaign",
+        "Macedonian Conquest"
+      ],
+      "labels": {
+        "en": "Alexander's Conquest of Persia"
+      },
+      "start_date": {
+        "value": -334,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "334 BC"
+      },
+      "end_date": {
+        "value": -323,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "323 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "high",
+      "location": "loc-alexandria",
+      "participants": [
+        "person-alexander"
+      ],
+      "causes": [
+        "Philip II's unification of Greece under Macedonian hegemony",
+        "Persian weakness after the reign of Artaxerxes III"
+      ],
+      "consequences": [
+        "Destruction of the Achaemenid Empire",
+        "Spread of Greek culture across the Near East",
+        "Foundation of the Hellenistic period"
+      ]
+    },
+    {
+      "id": "event-diadochi-wars",
+      "type": "Event",
+      "name": "Wars of the Diadochi",
+      "description": "A series of conflicts (322-275 BC) among Alexander's generals (the Diadochi) over the division of his empire, resulting in the formation of the major Hellenistic kingdoms: Ptolemaic Egypt, Seleucid Empire, and Antigonid Macedon.",
+      "global_id": "hellenistic_world:event-diadochi-wars",
+      "aliases": [
+        "Successor Wars",
+        "Wars of Alexander's Successors"
+      ],
+      "labels": {
+        "en": "Wars of the Diadochi"
+      },
+      "start_date": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BC"
+      },
+      "end_date": {
+        "value": -275,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "275 BC"
+      },
+      "source": "",
+      "evidence": [],
+      "reliability": "high",
+      "location": "loc-alexandria",
+      "participants": [],
+      "causes": [
+        "Death of Alexander the Great without a clear successor",
+        "Competition among Alexander's generals for territory"
+      ],
+      "consequences": [
+        "Division of Alexander's empire into Hellenistic kingdoms",
+        "Rise of Ptolemaic Egypt and the Seleucid Empire",
+        "End of Macedonian unified rule"
+      ]
     }
   ],
   "relationships": [
+    {
+      "source": "event-alexander-conquest",
+      "target": "event-gaugamela",
+      "type": "caused",
+      "confidence": "high",
+      "citation": "Arrian, Anabasis",
+      "evidence": [],
+      "valid_time": "331 BC",
+      "weight": 1,
+      "mechanism": "military",
+      "geographic_scope": "Mesopotamia",
+      "temporal_relation": "before"
+    },
+    {
+      "source": "event-alexander-conquest",
+      "target": "event-alexandria-founded",
+      "type": "caused",
+      "confidence": "high",
+      "citation": "Arrian, Anabasis",
+      "evidence": [],
+      "valid_time": "331 BC",
+      "weight": 1,
+      "mechanism": "cultural",
+      "geographic_scope": "Egypt",
+      "temporal_relation": "after"
+    },
+    {
+      "source": "event-gaugamela",
+      "target": "event-alexandria-founded",
+      "type": "before",
+      "confidence": "high",
+      "citation": "Arrian, Anabasis; Diodorus",
+      "evidence": [],
+      "valid_time": "331 BC",
+      "weight": 1,
+      "mechanism": null,
+      "geographic_scope": null,
+      "temporal_relation": "before"
+    },
+    {
+      "source": "event-alexander-conquest",
+      "target": "emp-hellenistic",
+      "type": "caused",
+      "confidence": "high",
+      "citation": "CAH VI; Peter Green, Alexander to Actium",
+      "evidence": [],
+      "valid_time": "334-323 BC",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Eastern Mediterranean / Near East",
+      "temporal_relation": null
+    },
+    {
+      "source": "event-alexander-conquest",
+      "target": "event-diadochi-wars",
+      "type": "caused",
+      "confidence": "high",
+      "citation": "Diodorus Siculus; Plutarch",
+      "evidence": [],
+      "valid_time": "323 BC",
+      "weight": 1,
+      "mechanism": "political",
+      "geographic_scope": "Eastern Mediterranean",
+      "temporal_relation": "after"
+    },
+    {
+      "source": "event-diadochi-wars",
+      "target": "civ-ptolemaic-egypt",
+      "type": "influenced",
+      "confidence": "high",
+      "citation": "CAH VII.1",
+      "evidence": [],
+      "valid_time": "305 BC",
+      "weight": 0.9,
+      "mechanism": "political",
+      "geographic_scope": "Egypt",
+      "temporal_relation": null
+    },
     {
       "source": "person-alexander",
       "target": "event-gaugamela",
