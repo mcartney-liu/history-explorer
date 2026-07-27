@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM41] - 2026-07-28 (Project Release — M41)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Research Intelligence is additive — no backend core / schema / AI Gateway / enum / dependency change. Grounding First: zero AI planner, zero memory, zero agent.
+
+### Research Intelligence (M41)
+
+**ResearchPlanner**: deterministic recommendation engine (zero AI calls). 5 priority rules: causal chain → history → comparison → generic related → similar type. Deduplication by entityGlobalId. Input: EntityInfo + RelationshipInfo[] + ResearchHistory.
+
+**ResearchRecommendationCard**: explainable suggestion card. 5 reason types mapped to human-readable Chinese labels + explanation text. Shows suggested dimensions. Explore button with aria label.
+
+**ResearchDiscoveryPanel**: entity-driven discovery. Calls ResearchPlanner with current entity + relationships + history. Renders recommendation cards. Shows history insight ("您经常探索 Civilization 与 Military 主题"). Mounted before ResearchPanel on EntityPage.
+
+**ResearchInsights**: deterministic analytics from ResearchHistory. 5 rules: research count, entity type frequency ranking, dimension frequency ranking, relationship interest inference, theme mapping (7 entity→theme pairs). `insightSummary()` generates human-readable text.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+6 M41 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 80 files, 726 passed (+31 vs vM40).
+
 ## [vM40] - 2026-07-27 (Project Release — M40)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Research Persistence is additive — no backend core / schema / AI Gateway / enum / dependency change.
