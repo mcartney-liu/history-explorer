@@ -26,6 +26,7 @@ import EventNarrativeCard from './EventNarrativeCard'
 import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
 import JourneyCard from './JourneyCard'
+import ResearchDiscoveryPanel from './ResearchDiscoveryPanel'
 import ResearchPanel from './ResearchPanel'
 import ResearchLibrary from './ResearchLibrary'
 import StorySection from './exploration/StorySection'
@@ -250,6 +251,21 @@ function EntityPage({
           entityName={entity.name}
           entityType={entity.type}
           relationships={entity.relationships}
+        />
+      ) : null}
+
+      {entityGlobalId ? (
+        <ResearchDiscoveryPanel
+          currentEntity={{
+            globalId: entityGlobalId,
+            name: entity.name,
+            type: entity.type,
+          }}
+          relationships={(entity.relationships ?? []).map((r) => ({
+            type: r.type,
+            other: { globalId: r.other.global_id ?? '', name: r.other.name ?? '', type: r.other.type ?? '' },
+          }))}
+          onExplore={(gid) => window.location.hash = `#/entity/${encodeURIComponent(gid)}`}
         />
       ) : null}
 

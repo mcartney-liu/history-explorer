@@ -341,6 +341,18 @@ export const SCOPE_ALLOWLIST = [
   // M40 Phase 3 — ResearchLibrary (saved research list view)
   "frontend/src/components/ResearchLibrary.tsx",
   "frontend/src/components/ResearchLibrary.test.tsx",
+  // M41 Phase 1 — ResearchPlanner (deterministic recommendation engine)
+  "frontend/src/data/ResearchPlanner.ts",
+  "frontend/src/data/ResearchPlanner.test.ts",
+  // M41 Phase 2 — ResearchRecommendationCard (exploration suggestion UI)
+  "frontend/src/components/ResearchRecommendationCard.tsx",
+  "frontend/src/components/ResearchRecommendationCard.test.tsx",
+  // M41 Phase 3 — ResearchDiscoveryPanel (recommendation container UI)
+  "frontend/src/components/ResearchDiscoveryPanel.tsx",
+  "frontend/src/components/ResearchDiscoveryPanel.test.tsx",
+  // M41 Phase 4 — ResearchInsights (deterministic research analytics)
+  "frontend/src/data/ResearchInsights.ts",
+  "frontend/src/data/ResearchInsights.test.ts",
 ];
 
 function _scopeAllowed(file) {
