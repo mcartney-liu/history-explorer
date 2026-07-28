@@ -383,6 +383,9 @@ export const SCOPE_ALLOWLIST = [
   // M47 — OptimizationPriority + CapabilityHealth (decision intelligence)
   "frontend/src/data/OptimizationPriority.ts",
   "frontend/src/data/OptimizationPriority.test.ts",
+  // M48 — ExplorationBehaviors (behavioral pattern detection)
+  "frontend/src/data/ExplorationBehaviors.ts",
+  "frontend/src/data/ExplorationBehaviors.test.ts",
 ];
 
 function _scopeAllowed(file) {

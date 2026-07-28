@@ -13,6 +13,8 @@ import { generateProductIntelligence, intelligenceSummary } from './ProductIntel
 import type { ProductIntelligence } from './ProductIntelligence'
 import { generateDecisionIntelligence } from './OptimizationPriority'
 import type { OptimizationPriority, CapabilityHealth } from './OptimizationPriority'
+import { analyzeExplorationBehaviors } from './ExplorationBehaviors'
+import type { ExplorationBehaviors } from './ExplorationBehaviors'
 
 // -----------------------------------------------------------
 // Types
@@ -23,6 +25,7 @@ export interface ProductUsageAnalysis {
   intelligence: ProductIntelligence
   priority: OptimizationPriority
   capabilityHealth: CapabilityHealth[]
+  explorationBehaviors: ExplorationBehaviors
   summary: string
 }
 
@@ -36,13 +39,15 @@ export function analyzeProductUsage(
   const funnelMetrics = allFunnelMetrics()
   const intelligence = generateProductIntelligence(events)
   const decision = generateDecisionIntelligence(intelligence, funnelMetrics)
-  const summary = buildSummary(funnelMetrics, intelligence, decision)
+  const explorationBehaviors = analyzeExplorationBehaviors(events)
+  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors)
 
   return {
     funnelMetrics,
     intelligence,
     priority: decision.priority,
     capabilityHealth: decision.capabilityHealth,
+    explorationBehaviors,
     summary,
   }
 }
@@ -55,6 +60,7 @@ function buildSummary(
   funnels: FunnelMetric[],
   pi: ProductIntelligence,
   decision: { priority: OptimizationPriority; capabilityHealth: CapabilityHealth[] },
+  eb: ExplorationBehaviors,
 ): string {
   const lines: string[] = []
 
@@ -84,6 +90,9 @@ function buildSummary(
   if (criticals.length > 0) {
     lines.push(`[风险] ${criticals.length}项能力处于critical: ${criticals.map((c) => c.capability).join(', ')}`)
   }
+
+  // M48: Exploration behaviors
+  lines.push(`[行为模式] 主要模式: ${eb.dominantPattern}  置信度: ${Math.round(eb.confidence * 100)}%${eb.insights.length > 0 ? `  洞察: ${eb.insights[0]}` : ''}`)
 
   return lines.join('\n')
 }
