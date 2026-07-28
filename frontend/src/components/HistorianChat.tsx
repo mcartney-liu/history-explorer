@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { explainAI, type AIResponse } from '../data/aiClient'
+import { recordEvent } from '../data/UserBehaviorEvent'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
 import type { EntityRelationship } from './EntityPage'
@@ -215,8 +216,15 @@ export default function HistorianChat(props: HistorianChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [status, setStatus] = useState<ChatStatus>('idle')
   const [error, setError] = useState('')
+  const hasRecordedChatStart = useRef(false)
 
   async function onAsk(question: string) {
+    // M46: record first chat interaction
+    if (!hasRecordedChatStart.current) {
+      hasRecordedChatStart.current = true
+      recordEvent({ action: 'start_chat', entityGlobalId: props.entityGlobalId })
+    }
+
     const userMsg: ChatMessage = { role: 'user', content: question }
     setMessages((prev) => [...prev, userMsg])
     setStatus('loading')

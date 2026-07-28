@@ -108,3 +108,73 @@ describe('ProductIntelligence', () => {
     expect(summary).toContain('Discovery')
   })
 })
+
+// ============================================================
+// M46 Phase 2 — Extended intelligence fields
+// ============================================================
+
+describe('ProductIntelligence (M46 Phase 2)', () => {
+  it('detects drop-off when user opens discover but never clicks entity', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_discover', timestamp: '2026-01-01T00:00:00Z' },
+    ]
+    const pi = generateProductIntelligence(events)
+    expect(pi.dropOffPoints.length).toBeGreaterThan(0)
+    expect(pi.dropOffPoints[0].funnel).toBe('Discovery')
+    expect(pi.dropOffPoints[0].nextStep).toBe('click_entity')
+  })
+
+  it('no drop-off when funnel is complete', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_discover', timestamp: '2026-01-01T00:00:00Z' },
+      { action: 'click_entity', timestamp: '2026-01-01T00:01:00Z' },
+      { action: 'open_entity', timestamp: '2026-01-01T00:02:00Z' },
+    ]
+    const pi = generateProductIntelligence(events)
+    expect(pi.dropOffPoints).toHaveLength(0)
+  })
+
+  it('calculates chat adoption rate', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_entity', timestamp: '2026-01-01T00:00:00Z' },
+      { action: 'open_entity', timestamp: '2026-01-01T00:01:00Z' },
+      { action: 'start_chat', timestamp: '2026-01-01T00:02:00Z' },
+    ]
+    const pi = generateProductIntelligence(events)
+    expect(pi.chatAdoptionRate).toBe(0.5) // 1 chat / 2 opens
+  })
+
+  it('chat adoption rate is 0 when no events', () => {
+    const pi = generateProductIntelligence([])
+    expect(pi.chatAdoptionRate).toBe(0)
+  })
+
+  it('detects unused capabilities', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_discover', timestamp: '2026-01-01T00:00:00Z' },
+    ]
+    const pi = generateProductIntelligence(events)
+    expect(pi.unusedCapabilities.length).toBeGreaterThan(0)
+    expect(pi.unusedCapabilities).toContain('AI 历史学家对话')
+    expect(pi.unusedCapabilities).toContain('多实体对比研究')
+  })
+
+  it('no unused capabilities when all used', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_discover', timestamp: '2026-01-01T00:00:00Z' },
+      { action: 'click_entity', timestamp: '2026-01-01T00:01:00Z' },
+      { action: 'open_entity', timestamp: '2026-01-01T00:02:00Z' },
+      { action: 'switch_tab', timestamp: '2026-01-01T00:03:00Z' },
+      { action: 'click_journey', timestamp: '2026-01-01T00:04:00Z' },
+      { action: 'start_chat', timestamp: '2026-01-01T00:05:00Z' },
+      { action: 'start_research', timestamp: '2026-01-01T00:06:00Z' },
+      { action: 'save_research', timestamp: '2026-01-01T00:07:00Z' },
+      { action: 'restore_research', timestamp: '2026-01-01T00:08:00Z' },
+      { action: 'start_comparison', timestamp: '2026-01-01T00:09:00Z' },
+    ]
+    const pi = generateProductIntelligence(events)
+    expect(pi.unusedCapabilities).toHaveLength(0)
+    expect(pi.dropOffPoints).toHaveLength(0)
+    expect(pi.chatAdoptionRate).toBeGreaterThan(0)
+  })
+})

@@ -377,6 +377,9 @@ export const SCOPE_ALLOWLIST = [
   // M45 Phase 4 — ProductIntelligence (product insights from events)
   "frontend/src/data/ProductIntelligence.ts",
   "frontend/src/data/ProductIntelligence.test.ts",
+  // M46 Phase 3 — ProductUsageAnalysis (unified analysis entry point)
+  "frontend/src/data/ProductUsageAnalysis.ts",
+  "frontend/src/data/ProductUsageAnalysis.test.ts",
 ];
 
 function _scopeAllowed(file) {

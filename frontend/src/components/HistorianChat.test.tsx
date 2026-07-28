@@ -1,6 +1,24 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { HistorianChatView, type ChatMessage } from './HistorianChat'
+
+// localStorage polyfill for event storage
+const store = new Map<string, string>()
+beforeAll(() => {
+  const mock: Storage = {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => { store.set(key, value) },
+    removeItem: (key: string) => { store.delete(key) },
+    clear: () => { store.clear() },
+    get length() { return store.size },
+    key: (index: number) => Array.from(store.keys())[index] ?? null,
+  }
+  Object.defineProperty(globalThis, 'localStorage', { value: mock, writable: true })
+})
+
+beforeEach(() => {
+  localStorage.clear()
+})
 
 describe('HistorianChatView', () => {
   it('renders idle state with suggested questions for Event', () => {
@@ -188,5 +206,30 @@ describe('HistorianChatView', () => {
       />,
     )
     expect(html).not.toContain('继续追问')
+  })
+})
+
+// ============================================================
+// M46 Phase 1 — start_chat event wiring test
+// ============================================================
+
+import { getEventCount, clearEvents } from '../data/UserBehaviorEvent'
+
+describe('HistorianChat (M46 start_chat)', () => {
+  it('does not produce start_chat on render alone', () => {
+    clearEvents()
+    const html = renderToStaticMarkup(
+      <HistorianChatView
+        entityName="Rome"
+        entityType="Civilization"
+        messages={[]}
+        status="idle"
+        suggestedQuestions={[]}
+        onAsk={() => {}}
+        onClear={() => {}}
+      />,
+    )
+    expect(html).toContain('AI 历史学家')
+    expect(getEventCount()).toBe(0)
   })
 })

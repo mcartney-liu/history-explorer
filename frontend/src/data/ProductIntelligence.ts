@@ -1,10 +1,5 @@
-// ============================================================
-// M45 Phase 4 — ProductIntelligence
-// Reads UserBehaviorEvent data to produce structured product
-// insights. Pure functions. Zero AI. Zero UI. Zero backend.
-//
-// Domain Boundary: Platform Capability. Works on event
-// sequences, not history-specific content.
+// M46 Phase 2 — ProductIntelligence extended
+// Added: dropOffPoints, chatAdoptionRate, unusedCapabilities.
 // ============================================================
 
 import type { UserBehaviorEvent, BehaviorAction } from './UserBehaviorEvent'
@@ -13,14 +8,24 @@ import type { UserBehaviorEvent, BehaviorAction } from './UserBehaviorEvent'
 // Types
 // -----------------------------------------------------------
 
+export interface DropOffPoint {
+  funnel: string
+  step: string
+  reached: number
+  nextStep: string
+}
+
 export interface ProductIntelligence {
   totalEvents: number
   sessions: number
   discoveryToEntityRate: number
   exploreEngagementRate: number
   researchSaveRate: number
+  chatAdoptionRate: number
   mostUsedTab: string | null
   mostExploredTypes: string[]
+  dropOffPoints: DropOffPoint[]
+  unusedCapabilities: string[]
   recommendations: string[]
 }
 
@@ -102,6 +107,80 @@ function generateRecommendations(
 }
 
 // -----------------------------------------------------------
+// M46 Phase 2 — New analysis functions
+// -----------------------------------------------------------
+
+/** Find steps where user stopped in each funnel. */
+function findDropOffPoints(events: UserBehaviorEvent[]): DropOffPoint[] {
+  const results: DropOffPoint[] = []
+
+  // Discovery: open_discover → click_entity → open_entity
+  if (events.some((e) => e.action === 'open_discover')) {
+    if (!events.some((e) => e.action === 'click_entity')) {
+      results.push({
+        funnel: 'Discovery', step: 'open_discover', reached: 1, nextStep: 'click_entity',
+      })
+    } else if (!events.some((e) => e.action === 'open_entity')) {
+      results.push({
+        funnel: 'Discovery', step: 'click_entity', reached: 1, nextStep: 'open_entity',
+      })
+    }
+  }
+
+  // Exploration: only flag if user actively explored (switch_tab) but didn't complete
+  if (events.some((e) => e.action === 'switch_tab')) {
+    if (!events.some((e) => e.action === 'click_journey')) {
+      results.push({
+        funnel: 'Exploration', step: 'switch_tab', reached: 1, nextStep: 'click_journey',
+      })
+    }
+  }
+
+  // Research: start → save → restore → compare
+  if (events.some((e) => e.action === 'start_research')) {
+    if (!events.some((e) => e.action === 'save_research')) {
+      results.push({
+        funnel: 'Research', step: 'start_research', reached: 1, nextStep: 'save_research',
+      })
+    } else if (!events.some((e) => e.action === 'restore_research')) {
+      results.push({
+        funnel: 'Research', step: 'save_research', reached: 1, nextStep: 'restore_research',
+      })
+    } else if (!events.some((e) => e.action === 'start_comparison')) {
+      results.push({
+        funnel: 'Research', step: 'restore_research', reached: 1, nextStep: 'start_comparison',
+      })
+    }
+  }
+
+  return results
+}
+
+/** Chat adoption: start_chat / open_entity. */
+function chatAdoptionRate(events: UserBehaviorEvent[]): number {
+  return rate(
+    countAction(events, 'start_chat' as BehaviorAction),
+    countAction(events, 'open_entity' as BehaviorAction),
+  )
+}
+
+/** Detect capabilities that exist in the event type system but were never used. */
+function unusedCapabilities(events: UserBehaviorEvent[]): string[] {
+  const actions = new Set(events.map((e) => e.action))
+  const unused: string[] = []
+
+  if (!actions.has('start_chat')) unused.push('AI 历史学家对话')
+  if (!actions.has('save_research')) unused.push('研究结果保存')
+  if (!actions.has('restore_research')) unused.push('研究恢复回顾')
+  if (!actions.has('start_comparison')) unused.push('多实体对比研究')
+  if (!actions.has('click_journey')) unused.push('历史旅程探索')
+  if (!actions.has('switch_tab')) unused.push('Tab 页面切换')
+  if (!actions.has('click_entity')) unused.push('从首页进入实体')
+
+  return unused
+}
+
+// -----------------------------------------------------------
 // Public API
 // -----------------------------------------------------------
 
@@ -129,6 +208,9 @@ export function generateProductIntelligence(
   const recommendations = generateRecommendations(
     events, discoveryToEntityRate, exploreEngagementRate, researchSaveRate,
   )
+  const dropOffPoints = findDropOffPoints(events)
+  const chatAdoption = chatAdoptionRate(events)
+  const unused = unusedCapabilities(events)
 
   return {
     totalEvents,
@@ -136,8 +218,11 @@ export function generateProductIntelligence(
     discoveryToEntityRate,
     exploreEngagementRate,
     researchSaveRate,
+    chatAdoptionRate: chatAdoption,
     mostUsedTab: tab,
     mostExploredTypes: types,
+    dropOffPoints,
+    unusedCapabilities: unused,
     recommendations,
   }
 }
