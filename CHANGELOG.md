@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM45] - 2026-07-28 (Project Release — M45)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Intelligence Layer — zero backend / schema / AI Gateway / dependency change. "Verify what we fixed."
+
+### Product Intelligence Layer (M45)
+
+**Event Wiring**: 9 UserBehaviorEvents wired to production code across 4 components — DiscoverPage (open_discover, click_entity), EntityPageShell (open_entity, switch_tab), ResearchPanel (start_research, save_research, restore_research, start_comparison), JourneyCard (click_journey). Events auto-recorded via useEffect and callback wrappers.
+
+**Funnel Runtime Validation**: 3 simulation scenarios — Discovery (open→click→entity, 100%), Exploration (open→tab→journey, all steps), Research (start→save→restore→compare, full loop). Validates M43 funnel analysis pipeline works end-to-end.
+
+**ProductIntelligence**: 8-field product insight from event data — totalEvents, sessions (30min gap detection), discoveryToEntityRate, exploreEngagementRate, researchSaveRate, mostUsedTab, mostExploredTypes, recommendations (5 bottleneck rules). Pure data module, no UI dependency.
+
+**M43→M44→M45 Arc**: Measure → Fix → Verify. The product can now answer "are users using what we built?" with real behavior data.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M45 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched.
+
+**Tests**: Backend 247 (+0). Frontend 88 files, 824 passed (+14 vs vM44).
+
 ## [vM44] - 2026-07-28 (Project Release — M44)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. User Experience Improvement — zero backend / schema / AI Gateway / dependency change. "Fix what we measured."
