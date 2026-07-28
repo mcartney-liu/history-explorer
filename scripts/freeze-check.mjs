@@ -399,6 +399,9 @@ export const SCOPE_ALLOWLIST = [
   // M52 — ProductDecisionInsight (decision fusion layer)
   "frontend/src/data/ProductDecisionInsight.ts",
   "frontend/src/data/ProductDecisionInsight.test.ts",
+  // M53 — Pipeline Auto-Activation (intelligence activation gate)
+  "frontend/src/data/ProductIntelligenceActivation.ts",
+  "frontend/src/data/ProductIntelligenceActivation.test.ts",
 ];
 
 function _scopeAllowed(file) {

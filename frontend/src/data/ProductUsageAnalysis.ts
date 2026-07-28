@@ -166,4 +166,37 @@ if (typeof window !== 'undefined') {
     }
   }
   console.log('[pa] DevTools ready. Type __pa() in console to analyze product usage.')
+
+  // M53: Auto-activation — watches for events and triggers pipeline
+  import('./ProductIntelligenceActivation').then(({ shouldActivatePipeline }) => {
+    let _autoInterval: ReturnType<typeof setInterval> | null = null
+    function tryActivate() {
+      const raw = localStorage.getItem('history-explorer.events.v1')
+      if (!raw) return
+      try {
+        const events = JSON.parse(raw)
+        const decision = shouldActivatePipeline(events)
+        if (decision.shouldActivate) {
+          const result = analyzeProductUsage(events)
+          const di = result.decisionInsight
+          console.log(`[Product Intelligence] (reason: ${decision.reason}) status: ${di.overallStatus}`)
+          if (di.primaryIssue) {
+            console.log(`[Product Intelligence] issue: ${di.primaryIssue.problem}`)
+            console.log(`[Product Intelligence] action: ${di.recommendedAction.action}`)
+            console.log(`[Product Intelligence] confidence: ${Math.round(di.confidence * 100)}%`)
+          }
+        }
+      } catch (_) { /* silent */ }
+    }
+    ;(window as any).__pa_start = () => {
+      if (_autoInterval) return
+      _autoInterval = setInterval(tryActivate, 15_000)
+      console.log('[pa] Auto-activation started. Pipeline runs on save_research or 5+ events.')
+    }
+    ;(window as any).__pa_stop = () => {
+      if (_autoInterval) { clearInterval(_autoInterval); _autoInterval = null }
+    }
+    // Auto-start on load
+    tryActivate()
+  })
 }
