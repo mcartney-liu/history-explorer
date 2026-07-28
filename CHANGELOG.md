@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM53] - 2026-07-28 (Project Release — M53)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Pipeline Auto-Activation — zero backend / schema / AI Gateway / dependency change. 17 consecutive milestones without backend changes.
+
+### Pipeline Auto-Activation (M53)
+
+**ProductIntelligenceActivation**: Activation gate — determines when the M45-M52 intelligence pipeline should auto-run. Rules: milestone events (save_research, start_comparison, research_loop) → immediate activation; event threshold (≥5) → activation; throttle (60s) → prevent spam; zero events → skip. Deterministic, no mutation of input events.
+
+**Auto-Trigger Integration**: ProductUsageAnalysis devtools block extended with `setInterval` checker (15s) that reads localStorage, runs activation gate, and invokes full pipeline. Console output with ProductDecisionInsight summary. Manual control via `__pa_start()` / `__pa_stop()`.
+
+**Semantics Hardening (Phase 2)**: Verified auto-trigger output equals manual `analyzeProductUsage()` output. Activation gate does not mutate events. Throttle stability confirmed. Pipeline semantics unchanged — all M45-M52 analysis outputs identical.
+
+**M43-M53 Arc Complete**: Measure → Fix → Verify → Optimize → Decide → Behavior → Depth → Knowledge → Activation → Fusion → Auto-Trigger.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M53 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 17 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 96 files, 908 passed (+9 vs vM52).
+
 ## [vM52] - 2026-07-28 (Project Release — M52)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Decision Insight Fusion Layer — zero backend / schema / AI Gateway / dependency change. 16 consecutive milestones without backend changes. **Convergence milestone** — closes the M43-M50 intelligence build cycle.
