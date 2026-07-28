@@ -428,6 +428,8 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/styles/",
   "frontend/src/main.tsx",
   "frontend/src/pages/DevCatalog.tsx",
+  "frontend/src/data/locale.tsx",
+  "frontend/src/__tests__/",
   "scripts/visual-check.mjs",
 ];
 

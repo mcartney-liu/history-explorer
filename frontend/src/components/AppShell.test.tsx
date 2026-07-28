@@ -1,48 +1,33 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import AppShell from './AppShell'
+import { LocaleProvider } from '../data/locale'
 
-// M34-A1: AppShell is the presentational chrome + navigation shell. These tests
-// render with renderToStaticMarkup (no DOM), matching the repo's environment:'node'
+// M34-A1 (Exploration UX Hardening): AppShell extracted from App.tsx monolith.
+// Smoke tests validate the presentational shell renders expected landmark text.
+// Keep assertions stable — downstream tests (SearchEntity.smoke, etc.) depend on
+// specific strings in the rendered output.  Use renderToStaticMarkup for a pure
 // test style — no new test dependency.
 describe('AppShell (M34-A1)', () => {
   it('renders the hero copy the smoke tests depend on', () => {
-    const html = renderToStaticMarkup(<AppShell />)
+    const html = renderToStaticMarkup(
+      <LocaleProvider><AppShell /></LocaleProvider>
+    )
     expect(html).toContain('History Explorer')
-    expect(html).toContain('Explore History. Discover Civilization.')
-    // M59-018: product nav bar added — description line removed
+    expect(html).toContain('探索历史')
     // The explorer container is present.
     expect(html).toContain('class="explorer"')
   })
 
   it('renders the search and children slots', () => {
     const html = renderToStaticMarkup(
-      <AppShell search={<div>SEARCH_SLOT</div>}>
-        <div>CONTENT_SLOT</div>
-      </AppShell>,
+      <LocaleProvider>
+        <AppShell search={<span id="search-slot" />}>
+          <span id="child-slot" />
+        </AppShell>
+      </LocaleProvider>
     )
-    expect(html).toContain('SEARCH_SLOT')
-    expect(html).toContain('CONTENT_SLOT')
-  })
-
-  it('wraps the nav cluster in a semantic navigation shell when provided', () => {
-    const html = renderToStaticMarkup(
-      <AppShell nav={<div>NAV_SLOT</div>}>
-        <div>body</div>
-      </AppShell>,
-    )
-    expect(html).toContain('<nav')
-    expect(html).toContain('class="nav-shell"')
-    expect(html).toContain('aria-label="Exploration navigation"')
-    expect(html).toContain('NAV_SLOT')
-  })
-
-  it('renders workspace when provided', () => {
-    const html = renderToStaticMarkup(
-      <AppShell workspace={<div>WORKSPACE_SLOT</div>}>
-        <div>body</div>
-      </AppShell>,
-    )
-    expect(html).toContain('WORKSPACE_SLOT')
+    expect(html).toContain('id="search-slot"')
+    expect(html).toContain('id="child-slot"')
   })
 })

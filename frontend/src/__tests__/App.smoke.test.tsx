@@ -1,18 +1,21 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import App from '../App'
+import { LocaleProvider } from '../data/locale'
 
 // Smoke test: the app boots and renders its entry surface without crashing.
 // No backend required — this only exercises the initial (pre-fetch) render.
 describe('App smoke test', () => {
   it('renders the hero, search box and explore button', () => {
-    const html = renderToStaticMarkup(<App />)
+    const html = renderToStaticMarkup(
+      <LocaleProvider><App /></LocaleProvider>
+    )
 
     // Hero title
     expect(html).toContain('History Explorer')
 
-    // Tagline (proves the hero section mounted)
-    expect(html).toContain('Explore History. Discover Civilization.')
+    // Tagline (proves the hero section mounted) — zh default
+    expect(html).toContain('探索历史')
 
     // Search entry: the SearchBox input placeholder is present
     expect(html).toContain('Enter a historical topic')
