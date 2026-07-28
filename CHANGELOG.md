@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM46] - 2026-07-28 (Project Release — M46)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Optimization Loop — zero backend / schema / AI Gateway / dependency change. 11 consecutive milestones without backend changes.
+
+### Product Optimization Loop (M46)
+
+**start_chat Event Wiring**: HistorianChat first message capture via useRef guard — fires once per session. Closes the Exploration funnel gap: open_entity → switch_tab → click_journey → start_chat now has complete event chain.
+
+**ProductIntelligence Extended**: 3 new fields — `dropOffPoints` (per-funnel user stop detection: Discovery/Exploration/Research), `chatAdoptionRate` (start_chat/open_entity), `unusedCapabilities` (7 capability checks: AI对话/保存/恢复/对比/旅程/Tab切换/首页进入).
+
+**ProductUsageAnalysis**: Unified analysis entry — delegates to ExplorationFunnelAnalysis + ProductIntelligence, produces structured summary with sections: [基础] event volume, [Discovery/Exploration/Research] funnel health, [互动] engagement, [流失] drop-off points, [未用] unused capabilities.
+
+**10/10 events wired**: open_discover / click_entity / open_entity / switch_tab / click_journey / start_chat / start_research / save_research / restore_research / start_comparison — complete coverage across all funnel steps.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M46 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 11 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 89 files, 836 passed (+12 vs vM45).
+
 ## [vM45] - 2026-07-28 (Project Release — M45)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Intelligence Layer — zero backend / schema / AI Gateway / dependency change. "Verify what we fixed."
