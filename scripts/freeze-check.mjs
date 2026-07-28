@@ -380,6 +380,9 @@ export const SCOPE_ALLOWLIST = [
   // M46 Phase 3 — ProductUsageAnalysis (unified analysis entry point)
   "frontend/src/data/ProductUsageAnalysis.ts",
   "frontend/src/data/ProductUsageAnalysis.test.ts",
+  // M47 — OptimizationPriority + CapabilityHealth (decision intelligence)
+  "frontend/src/data/OptimizationPriority.ts",
+  "frontend/src/data/OptimizationPriority.test.ts",
 ];
 
 function _scopeAllowed(file) {
