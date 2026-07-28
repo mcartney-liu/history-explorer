@@ -1,0 +1,40 @@
+/* ============================================================
+   M59-021 — Layout Grid System
+   Unified page layout for History Explorer.
+   No CSS framework. Just constraints that all pages obey.
+   ============================================================ */
+
+/* ---- Page Container ---- */
+.page-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* ---- 12-col Grid ---- */
+.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-4);
+}
+
+/* Main content — 9 columns */
+.main-column {
+  grid-column: 1 / 10;
+  min-width: 0;
+}
+
+/* Workspace sidebar — 3 columns */
+.workspace-column {
+  grid-column: 10 / 13;
+  min-width: 0;
+}
+
+/* ---- Section spacing tokens ---- */
+.layout-section {
+  margin-bottom: var(--space-6);
+}
+
+.layout-section:last-child {
+  margin-bottom: 0;
+}

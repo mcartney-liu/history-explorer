@@ -19,26 +19,46 @@ type AppShellProps = {
 }
 
 function AppShell({ search, nav, workspace, children }: AppShellProps) {
+  // M59-018: product navigation — no new pages, just anchors to existing sections
+  const navItems = [
+    { id: 'discover', label: '发现' },
+    { id: 'explore', label: '探索' },
+    { id: 'research', label: '研究' },
+    { id: 'workspace', label: '工作台' },
+  ]
+
   return (
     <main className="app">
+      <header className="app-nav">
+        <span className="app-nav-brand">History Explorer</span>
+        <nav className="app-nav-links" aria-label="产品导航">
+          {navItems.map(({ id, label }) => (
+            <span key={id} className="app-nav-link" data-nav={id}>
+              {label}
+            </span>
+          ))}
+        </nav>
+      </header>
       <section className="hero">
-        <h1 className="title">History Explorer</h1>
         <p className="tagline">Explore History. Discover Civilization.</p>
-        <p className="description">
-          A data-driven global history exploration platform.
-        </p>
 
-        <div className="explorer">
-          {search}
-          {nav ? (
-            <nav className="nav-shell" aria-label="Exploration navigation">
-              {nav}
-            </nav>
-          ) : null}
-          {children}
+        <div className="page-container layout-grid">
+          <div className="main-column">
+            <div className="explorer">
+              {search}
+              {nav ? (
+                <nav className="nav-shell" aria-label="Exploration navigation">
+                  {nav}
+                </nav>
+              ) : null}
+              {children}
+            </div>
+          </div>
+          <div className="workspace-column">
+            {workspace}
+          </div>
         </div>
       </section>
-      {workspace}
     </main>
   )
 }

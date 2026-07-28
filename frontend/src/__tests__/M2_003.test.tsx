@@ -145,7 +145,8 @@ describe('M2-003 Timeline navigation', () => {
     const html = renderToStaticMarkup(
       <EntityPage entity={entity} onEntityClick={() => {}} />,
     )
-    expect(html).toContain('Open Roman Empire Established')
+    // M59-016: timeline data now rendered via ConnectionExplorer.Timeline view
+    expect(html).toContain('Roman Empire Established')
   })
 })
 

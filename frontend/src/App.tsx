@@ -59,6 +59,7 @@ import { buildUnderstandingsFromConnectionsExplained } from './data/understandin
 import { buildEntityTimeMap } from './data/temporalUtils'
 import AppShell from './components/AppShell'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
+import DevCatalog from './pages/DevCatalog'
 import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
@@ -594,7 +595,7 @@ function App() {
     </>
   ) : undefined
 
-  // M59-009: Workspace — build from navigation history
+  // M59-020: Workspace — build current + history from navigation stack
   const workspaceItems: WorkspaceItem[] = useMemo(() => {
     const items: WorkspaceItem[] = []
     if (current && result) {
@@ -608,10 +609,32 @@ function App() {
     return items
   }, [current, result, entityData])
 
+  // M59-020: Workspace history — from navigation stack
+  const workspaceHistory: WorkspaceItem[] = useMemo(() => {
+    return history
+      .filter((n) => n.type === 'entity')
+      .map((n) => ({
+        id: n.id,
+        title: n.name || n.id,
+        subtitle: n.type,
+        icon: '\u{1F4D6}',
+        timestamp: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+      }))
+      .reverse()
+      .slice(0, 8)
+  }, [history])
+
+  // M59-021: Dev catalog route — hash-based, dev only
+  if (typeof window !== 'undefined' && window.location.hash === '#/dev/catalog') {
+    return <DevCatalog />
+  }
+
   return (
     <AppShell search={searchSlot} nav={navSlot} workspace={
       <WorkspacePanel
         current={workspaceItems[0] ?? null}
+        history={workspaceHistory}
+        onEntityClick={(id) => navigateToEntity(id)}
         onEntityClick={(id) => navigateToEntity(id)}
       />
     }>

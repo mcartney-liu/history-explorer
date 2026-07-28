@@ -491,3 +491,118 @@ hr{border:none;border-top:1px solid var(--line);margin:16px 0}
 .ais-input{padding:var(--space-3) var(--space-4) var(--space-4);border-top:1px solid var(--line)}
 .ais-input-field{width:100%;padding:var(--space-2) var(--space-3);background:var(--navy-surface);border:1px solid var(--line);border-radius:8px;font-size:13px;color:var(--mid)}
 .ais-input-hint{font-size:10px;color:var(--low);display:block;text-align:center;margin-top:4px}
+
+
+/* ========== AI INTERACTION VIEWS (M59-014) ========== */
+.ais-actions-list{display:flex;flex-direction:column;gap:4px;padding:var(--space-3) var(--space-4)}
+.ais-action-btn{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);
+  border-radius:10px;cursor:pointer;transition:var(--animation-fast);font-size:14px;color:var(--mid)}
+.ais-action-btn:hover{background:var(--gold-glow);color:var(--hi)}
+.ais-action-icon{font-size:18px;width:24px;text-align:center}
+.ais-thinking{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-5) var(--space-4);color:var(--mid)}
+.ais-thinking-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:dotPulse 1s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:0.3}50%{opacity:1}}
+.ais-response{padding:var(--space-4)}
+.ais-response-text{font-size:14px;color:var(--hi);line-height:1.8}
+.ais-next-actions{display:flex;gap:8px;margin-top:var(--space-3)}
+.ais-next-tag{font-size:12px;color:var(--gold);border:1px solid var(--gold-line);border-radius:6px;padding:4px 10px;cursor:pointer;transition:var(--animation-fast)}
+.ais-next-tag:hover{background:var(--gold-glow)}
+.ais-retry-btn{font-size:12px;color:var(--low);background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;margin-top:var(--space-3);transition:var(--animation-fast)}
+.ais-retry-btn:hover{color:var(--hi);border-color:var(--gold-line)}
+.ais-error{padding:var(--space-4)}
+
+
+/* ========== ENTITY HERO AI ENTRY (M59-016) ========== */
+.eh-ai-btn{display:inline-flex;align-items:center;gap:var(--space-2);margin-top:var(--space-3);
+  padding:var(--space-2) var(--space-4);background:var(--navy-card);border:1px solid var(--gold-line);
+  border-radius:10px;color:var(--gold-hi);font-size:13px;cursor:pointer;transition:var(--animation-fast)}
+.eh-ai-btn:hover{background:var(--gold-glow);border-color:var(--gold-hi);box-shadow:0 0 16px var(--gold-glow)}
+.eh-ai-btn-icon{font-size:15px}
+
+/* ========== ENTITY HERO ACTIONS (M59-016) ========== */
+.eh-actions{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)}
+.eh-action{display:inline-flex;align-items:center;gap:6px;padding:var(--space-2) var(--space-4);
+  border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:var(--animation-fast);
+  background:var(--navy-card);border:1px solid var(--line);color:var(--mid);font-family:var(--sans)}
+.eh-action:hover{color:var(--hi);border-color:var(--gold-line)}
+.eh-action-ai{border-color:var(--gold-line);color:var(--gold-hi);background:var(--gold-glow)}
+.eh-action-ai:hover{box-shadow:0 0 12px var(--gold-glow)}
+.eh-action-research:hover{border-color:var(--gold-line)}
+.eh-action-compare:hover{border-color:var(--gold-line)}
+
+
+/* ========== EXPLORATION GUIDE (M59-017) ========== */
+.eg{padding:var(--space-5) 0}
+.eg-progress{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:var(--space-4)}
+.eg-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-hi));border-radius:3px;transition:width .6s ease}
+.eg-body{display:flex;flex-direction:column;gap:var(--space-4)}
+.eg-stats{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.eg-stat{font-size:12px;color:var(--low);background:var(--navy-card);border:1px solid var(--line);border-radius:8px;padding:4px 12px}
+.eg-next{display:flex;flex-direction:column;gap:var(--space-2)}
+.eg-next-label{font-size:11px;color:var(--low);letter-spacing:1px;text-transform:uppercase}
+.eg-next-card{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);
+  background:linear-gradient(158deg,rgba(17,25,48,0.9),rgba(9,14,28,0.95));
+  border:1px solid var(--gold-line);border-radius:12px;cursor:pointer;transition:var(--animation-fast)}
+.eg-next-card:hover{box-shadow:0 0 20px var(--gold-glow);transform:translateY(-1px)}
+.eg-next-icon{font-size:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--navy-surface);border-radius:10px}
+.eg-next-name{display:block;font-family:var(--serif);font-size:15px;font-weight:700;color:var(--hi)}
+.eg-next-type{display:block;font-size:11px;color:var(--low);margin-top:1px}
+.eg-next-arrow{font-size:18px;color:var(--gold);margin-left:auto;transition:transform var(--animation-fast)}
+.eg-next-card:hover .eg-next-arrow{transform:translateX(3px)}
+.eg-path{display:flex;flex-direction:column;gap:var(--space-2)}
+.eg-path-label{font-size:11px;color:var(--low);letter-spacing:1px}
+.eg-path-items{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:12px;color:var(--mid)}
+.eg-path-arr{color:var(--low);margin:0 2px}
+.eg-path-name{color:var(--gold);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+
+/* ========== ENTITY EXPERIENCE HEADER (M59-018) ========== */
+.eex{padding:var(--space-8) 0 var(--space-2)}
+.eex-guide{margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--line-soft)}
+
+
+/* ========== APP NAVIGATION (M59-018) ========== */
+.app-nav{display:flex;align-items:center;justify-content:space-between;
+  padding:var(--space-3) var(--space-12);position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(180deg,rgba(9,14,28,0.97),rgba(9,14,28,0.85));
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.app-nav-brand{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--hi);letter-spacing:1px}
+.app-nav-links{display:flex;gap:var(--space-1)}
+.app-nav-link{font-family:var(--sans);font-size:14px;color:var(--low);padding:6px 16px;
+  border-radius:6px;cursor:pointer;transition:var(--animation-fast)}
+.app-nav-link:hover{color:var(--hi);background:var(--navy-card)}
+
+.ais-subtitle{display:block;font-size:11px;color:var(--low);font-style:italic;margin-top:2px}
+
+
+/* ========== ENTITY INSIGHT CARD (M59-019) ========== */
+.eic{padding:var(--space-4);background:linear-gradient(158deg,rgba(17,25,48,0.7),rgba(9,14,28,0.8));
+  border:1px solid var(--line);border-radius:12px;margin:var(--space-3) 0}
+.eic-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2)}
+.eic-label{font-size:11px;color:var(--mid);letter-spacing:1px}
+.eic-text{font-size:14px;color:var(--hi);line-height:1.8}
+.eic-ask{margin-top:var(--space-3);font-size:12px;color:var(--gold);background:transparent;
+  border:1px solid var(--gold-line);border-radius:6px;padding:4px 12px;cursor:pointer;transition:var(--animation-fast)}
+.eic-ask:hover{background:var(--gold-glow)}
+
+
+/* ========== EXPLORATION HISTORY LIST (M59-020) ========== */
+.ehl{display:flex;flex-direction:column;gap:2px}
+.ehl-empty{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);
+  border-radius:10px;border:1px dashed var(--line);font-size:12px;color:var(--low)}
+.ehl-empty-icon{font-size:14px}
+.ehl-item{display:flex;align-items:center;justify-content:space-between;padding:var(--space-2) var(--space-3);
+  border-radius:8px;cursor:pointer;transition:var(--animation-fast)}
+.ehl-item:hover{background:var(--gold-glow)}
+.ehl-item-left{display:flex;align-items:center;gap:var(--space-2);min-width:0}
+.ehl-item-icon{font-size:14px;flex-shrink:0}
+.ehl-item-name{font-size:13px;font-weight:500;color:var(--hi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+.ehl-item-current{font-size:10px;color:var(--gold);margin-left:4px}
+.ehl-item-time{font-size:10px;color:var(--low);flex-shrink:0}
+/* ========== EXPLORATION PATH CARD (M59-020) ========== */
+.epc{padding:var(--space-3);background:var(--navy-card);border:1px solid var(--line);border-radius:10px}
+.epc-label{font-size:10px;color:var(--mid);letter-spacing:1px;display:block;margin-bottom:var(--space-2)}
+.epc-steps{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.epc-step{font-size:13px;color:var(--hi);display:flex;align-items:center;gap:var(--space-2)}
+.epc-arrow{color:var(--gold);font-size:14px}
+.epc-name{font-family:var(--serif)}

@@ -102,9 +102,9 @@ describe('M2-002 search & entity UI', () => {
     expect(html).toContain('Roman Empire Established')
     // Relationship / related entity clickable surface
     expect(html).toContain('role="button"')
-    expect(html).toContain('Explore Roman Empire Established')
-    // Section headings (info tab — default view)
-    expect(html).toContain('Relationship Network')
+    // M59-016: RelatedEntityList replaced by ExplorationCard — checks entity is rendered
+    expect(html).toContain('Roman Empire Established')
+    // M59-016: RelationshipView removed from info tab (covered by ConnectionExplorer)
     // Tab navigation should be present
     expect(html).toContain('了解')
   })

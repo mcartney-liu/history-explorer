@@ -90,7 +90,11 @@ import { EntityHero } from './entity/EntityHero'
 import { ExplorationCard } from './entity/ExplorationCard'
 import { buildCardsFromViewModel } from '../data/entity/ExplorationCardModel'
 import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { buildInsight } from '../data/entity/EntityInsightModel'
+import { EntityInsightCard } from './entity/EntityInsightCard'
 import { ConnectionExplorer } from './entity/ConnectionExplorer'
+import { ExplorationGuide } from './entity/ExplorationGuide'
+import { EntityExperienceHeader } from './entity/EntityExperienceHeader'
 
 function EntityPage({
   entity,
@@ -177,11 +181,41 @@ function EntityPage({
             case 'info':
               return (
                 <>
-                  {/* Layer 1: Identity */}
-                  <EntityHero identity={viewModel.identity} />
-
-                  {/* Layer 2: Understand */}
-                  <ConnectionsExplainedPanel connections={entity.connections_explained} />
+                  {/* M59-018: EntityExperienceHeader — unified identity + insight + guidance */}
+                  {/* M59-019: EntityInsightCard — historical insight summary */}
+                  <EntityExperienceHeader
+                    hero={
+                      <EntityHero
+                        identity={viewModel.identity}
+                        onAskAI={() => {
+                          console.log('[AI Companion] Ask about:', viewModel.identity.name)
+                        }}
+                        onResearch={() => {
+                          console.log('[Research] Start research:', viewModel.identity.name)
+                        }}
+                        onCompare={() => {
+                          console.log('[Compare] Add to compare:', viewModel.identity.name)
+                        }}
+                      />
+                    }
+                    guide={
+                      <>
+                        <EntityInsightCard
+                          insight={buildInsight(entity).text}
+                          onAskMore={() => {
+                            console.log('[AI] Ask more about:', viewModel.identity.name)
+                          }}
+                        />
+                        <ExplorationGuide
+                          entityName={viewModel.identity.name}
+                          nodes={viewModel.connections.graphNodes}
+                          edges={viewModel.connections.graphEdges}
+                          timelineCount={viewModel.connections.timeline.length}
+                          onExploreNode={(id) => onEntityClick(id)}
+                        />
+                      </>
+                    }
+                  />
 
                   {/* Layer 3: Connect — three exploration views */}
                   <ConnectionExplorer
@@ -207,27 +241,11 @@ function EntityPage({
                     </div>
                   )}
 
-                  {/* Layer 4: Data tools (power users) */}
-                  <RelationshipView
-                    mainEntity={entity.exploration.main_entity}
-                    relatedEntities={entity.exploration.related_entities}
-                    nameById={nameById}
-                    onEntityClick={onEntityClick}
-                    onNodeClick={onNodeClick}
-                  />
-                  <TimelinePanel
-                    timeline={entity.timeline}
-                    nameToId={nameToId}
-                    onEventClick={onEntityClick}
-                    entityGlobalId={entityGlobalId}
-                    onNodeClick={onNodeClick}
-                  />
-                  <GraphViewPanel
-                    mainEntity={entity.exploration.main_entity}
-                    relatedEntities={entity.exploration.related_entities}
-                    nameById={nameById}
-                    onEntityClick={onEntityClick}
-                  />
+                  {/* M59-016: RelationshipView/TimelinePanel/GraphViewPanel removed from info tab.
+                      Covered by ConnectionExplorer (Graph | Timeline | Map views).
+                      Files preserved for rollback and other tabs. */}
+
+                  {/* Layer 4: Data provenance */}
                   <ProvenancePanel entityId={entity.id} />
                 </>
               )

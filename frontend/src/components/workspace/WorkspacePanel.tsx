@@ -5,7 +5,10 @@
 // Pure presentational. Mock state. Future backend wire point.
 // ============================================================
 
+// M59-020: now uses real navigation history data.
 import type { ReactNode } from 'react'
+import { ExplorationPathCard } from './ExplorationPathCard'
+import { ExplorationHistoryList } from './ExplorationHistoryList'
 
 // ---- Data types ----
 export interface WorkspaceItem {
@@ -92,16 +95,25 @@ export function WorkspacePanel({
         )}
       </WorkspaceSection>
 
-      {/* History */}
+      {/* History — real data from navigation stack */}
       <WorkspaceSection title="探索足迹" badge={history.length > 0 ? String(history.length) : undefined}>
         {history.length > 0 ? (
-          history.slice(0, 8).map((item) => (
-            <WorkspaceItem
-              key={item.id}
-              item={item}
-              onClick={() => onEntityClick?.(item.id)}
+          <>
+            <ExplorationPathCard path={history.map((h) => h.title)} />
+            <div style={{ height: 'var(--space-2)' }} />
+            <ExplorationHistoryList
+              items={history.map((h, i) => ({
+                id: h.id,
+                entityId: h.id,
+                name: h.title,
+                type: h.subtitle,
+                visitedAt: Date.now() - (history.length - i) * 60000,
+                source: 'related' as const,
+                depth: i,
+              }))}
+              onItemClick={(id) => onEntityClick?.(id)}
             />
-          ))
+          </>
         ) : (
           <WorkspacePlaceholder label="你探索过的实体会出现在这里" />
         )}

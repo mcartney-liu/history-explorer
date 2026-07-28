@@ -10,7 +10,7 @@ describe('AppShell (M34-A1)', () => {
     const html = renderToStaticMarkup(<AppShell />)
     expect(html).toContain('History Explorer')
     expect(html).toContain('Explore History. Discover Civilization.')
-    expect(html).toContain('A data-driven global history exploration platform.')
+    // M59-018: product nav bar added — description line removed
     // The explorer container is present.
     expect(html).toContain('class="explorer"')
   })

@@ -417,6 +417,18 @@ export const SCOPE_ALLOWLIST = [
   // M59-011 — AI Companion Architecture
   "frontend/src/data/ai/",
   "frontend/src/components/ai/",
+  // M59 — index.html (Earth background + Google Fonts)
+  "frontend/index.html",
+  // M59-016 — entity flow consolidation (test updates)
+  "frontend/src/__tests__/M2_003.test.tsx",
+  "frontend/src/__tests__/SearchEntity.test.tsx",
+  // M59-020 — Exploration Memory & Workspace
+  "frontend/src/data/workspace/",
+  // M59-021 — Layout Grid + Dev Catalog + Visual QA
+  "frontend/src/styles/",
+  "frontend/src/main.tsx",
+  "frontend/src/pages/DevCatalog.tsx",
+  "scripts/visual-check.mjs",
 ];
 
 function _scopeAllowed(file) {
