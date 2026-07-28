@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM50] - 2026-07-28 (Project Release — M50)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Usage-Informed Knowledge Intelligence — zero backend / schema / AI Gateway / dependency change. 15 consecutive milestones without backend changes.
+
+### Usage-Informed Knowledge Intelligence (M50)
+
+**KnowledgeUsageCoverage**: Entity type coverage from UserBehaviorEvent data — `exploredEntityTypes/unexploredEntityTypes` from event `entityType` field, `topEntryEntities` from click/open/research frequency, `entityCoverage` ratio (0-1). Relationship coverage marked as `null` + `relationshipDataAvailable=false` because events lack `relationshipType` — unknown is not zero. This is a deliberate data boundary decision: the module does NOT falsely claim "0 relationships explored" when no data source exists.
+
+**Semantic Amendment (Phase 2)**: `exploredRelationshipTypes=[]`, `unexploredRelationshipTypes=[]`, `relationshipCoverage=null` — empty arrays and null values protect against misleading "0/18 explored" claims.
+
+**ProductUsageAnalysis integration**: `knowledgeUsageCoverage` field added. Summary shows conditional output: "关系使用数据不可用" when relationship data unavailable; entity counts when available.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M50 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 15 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 93 files, 883 passed (+10 vs vM49).
+
 ## [vM49] - 2026-07-28 (Project Release — M49)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Exploration Depth Layer — zero backend / schema / AI Gateway / dependency change. 14 consecutive milestones without backend changes.
