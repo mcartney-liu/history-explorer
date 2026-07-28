@@ -374,6 +374,9 @@ export const SCOPE_ALLOWLIST = [
   // M44 Phase 2 — EntityTabGuidance (tab description model)
   "frontend/src/data/EntityTabGuidance.ts",
   "frontend/src/data/EntityTabGuidance.test.ts",
+  // M45 Phase 4 — ProductIntelligence (product insights from events)
+  "frontend/src/data/ProductIntelligence.ts",
+  "frontend/src/data/ProductIntelligence.test.ts",
 ];
 
 function _scopeAllowed(file) {

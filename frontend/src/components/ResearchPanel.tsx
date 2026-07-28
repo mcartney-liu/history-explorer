@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { explainAI } from '../data/aiClient'
+import { recordEvent } from '../data/UserBehaviorEvent'
 import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } from './ResearchDimensionCard'
 import ResearchReport from './ResearchReport'
 import ResearchSummary from './ResearchSummary'
@@ -227,7 +228,27 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     ...selectedEntities.map((e) => e.globalId!).filter(Boolean),
   ]
 
+  // M45 Phase 3: record save event when research completes
+  useEffect(() => {
+    if (mode === 'done') {
+      recordEvent({ action: 'save_research', entityGlobalId: props.entityGlobalId })
+    }
+  }, [mode, props.entityGlobalId])
+
+  // M45 Phase 3: record restore event
+  useEffect(() => {
+    if (mode === 'restored') {
+      recordEvent({ action: 'restore_research', entityGlobalId: props.entityGlobalId })
+    }
+  }, [mode, props.entityGlobalId])
+
   async function onStart(_q: string) {
+    // M45: record research start
+    recordEvent({ action: 'start_research', entityGlobalId: props.entityGlobalId })
+    if (selectedEntities.length > 0) {
+      recordEvent({ action: 'start_comparison', entityGlobalId: props.entityGlobalId })
+    }
+
     const template = templateFor(props.entityType)
     const comparisonPrefix = selectedEntities.length > 0
       ? `比较 ${props.entityName} 与 ${selectedEntities.map((e) => e.name).join('、')}»`

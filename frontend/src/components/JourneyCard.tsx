@@ -1,4 +1,5 @@
 import type { EntityRelationship } from './EntityPage'
+import { recordEvent } from '../data/UserBehaviorEvent'
 
 export type JourneyCardProps = {
   /** All relationships from the /entity response. */
@@ -133,7 +134,10 @@ export function JourneyCardView({
               key={i}
               type="button"
               className="jc-card is-clickable"
-              onClick={() => onEntityClick?.(clickTarget(rec))}
+              onClick={() => {
+                recordEvent({ action: 'click_journey' })
+                onEntityClick?.(clickTarget(rec))
+              }}
             >
               <div className="jc-card-header">
                 <span className={`jc-badge ${badgeClass(rec.relType)}`}>

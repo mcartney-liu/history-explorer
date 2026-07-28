@@ -104,3 +104,50 @@ describe('ExplorationFunnelAnalysis', () => {
     expect(funnel.overallConversionRate).toBe(1)
   })
 })
+
+// ============================================================
+// M45 Phase 2 — Runtime simulation tests
+// ============================================================
+
+describe('ExplorationFunnelAnalysis (M45 runtime simulation)', () => {
+  it('Scenario 1: complete Discovery funnel via events', () => {
+    clearEvents()
+    recordEvent({ action: 'open_discover' })
+    recordEvent({ action: 'click_entity' })
+    recordEvent({ action: 'open_entity' })
+
+    const funnel = analyzeDiscoveryFunnel()
+    expect(funnel.name).toBe('Discovery')
+    expect(funnel.overallConversionRate).toBe(1)
+    expect(funnel.bottleneckSteps).toHaveLength(0)
+  })
+
+  it('Scenario 2: Exploration funnel with tab switch + journey', () => {
+    clearEvents()
+    recordEvent({ action: 'open_entity' })
+    recordEvent({ action: 'switch_tab', tab: 'explore' })
+    recordEvent({ action: 'click_journey' })
+    recordEvent({ action: 'start_chat' })
+
+    const funnel = analyzeExplorationFunnel()
+    expect(funnel.steps[0].entered).toBe(1) // open_entity
+    expect(funnel.steps[1].entered).toBe(1) // composite: any_explore
+    expect(funnel.steps[2].entered).toBe(1) // click_journey
+  })
+
+  it('Scenario 3: Research loop start-save-restore-compare', () => {
+    clearEvents()
+    recordEvent({ action: 'start_research', entityGlobalId: 't:rome' })
+    recordEvent({ action: 'save_research', entityGlobalId: 't:rome' })
+    recordEvent({ action: 'restore_research', entityGlobalId: 't:rome' })
+    recordEvent({ action: 'start_comparison', entityGlobalId: 't:rome' })
+
+    const funnel = analyzeResearchFunnel()
+    expect(funnel.steps[0].entered).toBe(1) // start
+    expect(funnel.steps[1].entered).toBe(1) // save
+    expect(funnel.steps[2].entered).toBe(1) // restore
+    expect(funnel.steps[3].entered).toBe(1) // compare
+    expect(funnel.overallConversionRate).toBe(1)
+    expect(funnel.bottleneckSteps).toHaveLength(0)
+  })
+})

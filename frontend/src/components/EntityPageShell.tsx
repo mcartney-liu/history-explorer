@@ -1,5 +1,6 @@
-import { useState, useCallback, type ReactNode } from 'react'
+import { useState, useCallback, useEffect, type ReactNode } from 'react'
 import { guidanceFor } from '../data/EntityTabGuidance'
+import { recordEvent } from '../data/UserBehaviorEvent'
 
 // ============================================================
 // Types
@@ -114,9 +115,14 @@ export default function EntityPageShell(props: EntityPageShellProps) {
     () => loadSavedTab() ?? 'info',
   )
 
+  // M45: record entity page open
+  useEffect(() => { recordEvent({ action: 'open_entity' }) }, [])
+
   const handleTabChange = useCallback((tab: EntityTab) => {
     setActiveTab(tab)
     saveTab(tab)
+    // M45: record tab switch
+    recordEvent({ action: 'switch_tab', tab })
   }, [])
 
   return (

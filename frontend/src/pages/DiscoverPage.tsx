@@ -5,13 +5,14 @@
 //      and entity-type exploration entry points.
 // M44: added ProductIntro section — static capability showcase for new visitors.
 
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
 import { listResearch } from '../data/ResearchHistory'
 import { generateUserInterestProfile, insightSummary } from '../data/ResearchInsights'
 import type { SavedResearch } from '../data/ResearchHistory'
+import { recordEvent } from '../data/UserBehaviorEvent'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = '原来历史还能这样探索。'
@@ -219,6 +220,15 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
   )
   const researches = useMemo(() => listResearch(), [])
 
+  // M45: record discovery page visit
+  useEffect(() => { recordEvent({ action: 'open_discover' }) }, [])
+
+  // M45 Phase 3: wrap navigation to record click_entity
+  const handleTopicClick = useMemo(() => (slug: string) => {
+    recordEvent({ action: 'click_entity', entityType: slug })
+    onTopicClick(slug)
+  }, [onTopicClick])
+
   return (
     <section className="discover-page" aria-label="Discover history explorations">
       <div className="discover-hero">
@@ -250,7 +260,7 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
               className="discover-theme-card"
               data-topic={card.slug}
               aria-label={`探索 ${card.label}`}
-              onClick={() => onTopicClick(card.slug)}
+              onClick={() => handleTopicClick(card.slug)}
             >
               <span className="discover-theme-label">{card.label}</span>
               <span className="discover-theme-desc">{card.desc}</span>
@@ -265,7 +275,7 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
           type="button"
           className="discover-featured-card"
           aria-label={`Explore ${prettifySlug(FEATURED_TOPIC)}`}
-          onClick={() => onTopicClick(FEATURED_TOPIC)}
+          onClick={() => handleTopicClick(FEATURED_TOPIC)}
         >
           <span className="discover-featured-title">{prettifySlug(FEATURED_TOPIC)}</span>
           <span className="discover-featured-desc">
@@ -285,7 +295,7 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
                 className="discover-topic-card"
                 data-topic={slug}
                 aria-label={`Explore ${prettifySlug(slug)}`}
-                onClick={() => onTopicClick(slug)}
+                onClick={() => handleTopicClick(slug)}
               >
                 {prettifySlug(slug)}
               </button>
