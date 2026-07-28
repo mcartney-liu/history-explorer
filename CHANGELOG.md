@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM49] - 2026-07-28 (Project Release — M49)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Exploration Depth Layer — zero backend / schema / AI Gateway / dependency change. 14 consecutive milestones without backend changes.
+
+### Exploration Depth Layer (M49)
+
+**ExplorationDepth**: 5-level deterministic depth scoring from event sequences — 0=None, 1=Surface (open_discover/open_entity only), 2=Browse (+switch_tab), 3=Explore (+journey/chat), 4=Research (+start/save/restore), 5=Deep (+comparison or research loop). Highest depth wins. Deliberately avoids session/path reconstruction — localStorage lacks session context, so M49 measures depth rather than reconstructing journeys.
+
+**ProductUsageAnalysis integration**: `explorationDepth` field added (additive, backward compatible). Summary extended with `[探索深度]` section. Complements M48's ExplorationBehaviors ("what pattern") with depth quantification ("how deep").
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M49 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 14 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 92 files, 873 passed (+14 vs vM48).
+
 ## [vM48] - 2026-07-28 (Project Release — M48)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Exploration Behavior Intelligence — zero backend / schema / AI Gateway / dependency change. 13 consecutive milestones without backend changes.
