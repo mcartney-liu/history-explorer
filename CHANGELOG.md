@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM52] - 2026-07-28 (Project Release — M52)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Decision Insight Fusion Layer — zero backend / schema / AI Gateway / dependency change. 16 consecutive milestones without backend changes. **Convergence milestone** — closes the M43-M50 intelligence build cycle.
+
+### Product Decision Insight Fusion Layer (M52)
+
+**ProductDecisionInsight**: Deterministic fusion engine — converts 6 independent intelligence outputs (Funnel/Intelligence/Priority/Capability/Behaviors/Depth/Knowledge) into 1 explainable decision object with 9 fields: `overallStatus` (healthy/attention/critical from validated primaryIssue), `primaryIssue` (with validation gate: requires 2+ supporting modules or 3+ events), `recommendedAction` (evidence-derived with reason), `evidence` (sourceModules + keyMetrics + eventCount), `confidence` (0-1 evidence completeness, NOT AI probability), `summary` (one paragraph), `concerns` (ordered by severity), `positives` (what's working).
+
+**Semantic Hardening (Phase 2)**: Empty events → healthy + confidence 0 (no data ≠ bad product). OverallStatus from primaryIssue severity (not raw concern count). PrimaryIssue validation gate blocks single weak signals. Confidence bounds verified (0 ≤ c ≤ 1).
+
+**ProductUsageAnalysis integration**: `decisionInsight` field added (additive, backward compatible). Summary extended with `[决策]` section (status/confidence/primary issue/action).
+
+**M43-M52 Arc Complete**: Measure → Fix → Verify → Optimize → Decide → Behavior → Depth → Knowledge → Activation → Fusion.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M52 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 16 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 95 files, 899 passed (+16 vs vM50).
+
 ## [vM50] - 2026-07-28 (Project Release — M50)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Usage-Informed Knowledge Intelligence — zero backend / schema / AI Gateway / dependency change. 15 consecutive milestones without backend changes.
