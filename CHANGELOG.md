@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM48] - 2026-07-28 (Project Release — M48)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Exploration Behavior Intelligence — zero backend / schema / AI Gateway / dependency change. 13 consecutive milestones without backend changes.
+
+### Exploration Behavior Intelligence (M48)
+
+**ExplorationBehaviors**: Behavioral pattern detection from event sequences — 6 patterns: `comparison_research` (start_comparison), `research_loop` (start+save OR restore), `deep_exploration` (journey OR tab+chat), `limited_exploration` (entity only, neutral — not "failed"), `quick_lookup` (entity + exit), `unknown` (zero events). Deterministic rules, priority resolver (comparison > research > deep > limited > quick > unknown), rule confidence (0-0.9). Deliberately uses "behaviors" not "intent" — events show what users DO, not what they THINK.
+
+**ProductUsageAnalysis integration**: `explorationBehaviors` field added (additive, backward compatible). Summary extended with `[行为模式]` section showing dominant pattern, confidence, and insights.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M48 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 13 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 91 files, 859 passed (+14 vs vM47).
+
 ## [vM47] - 2026-07-28 (Project Release — M47)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Decision Intelligence Layer — zero backend / schema / AI Gateway / dependency change. 12 consecutive milestones without backend changes.
