@@ -1,0 +1,82 @@
+/* ============================================================
+   M60-002 — Shared Component Styles
+   Card, button, and container patterns reused across components.
+   ============================================================ */
+
+/* ---- Common card surface ---- */
+.surf-card {
+  background: var(--navy-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.surf-card-high {
+  background: linear-gradient(158deg, rgba(17,25,48,0.9), rgba(9,14,28,0.95));
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-lg);
+}
+
+.surf-card-gold {
+  background: linear-gradient(158deg, rgba(17,25,48,0.7), rgba(9,14,28,0.8));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+/* ---- Button base ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--animation-fast);
+  font-family: var(--sans);
+  border: 1px solid var(--line);
+  background: var(--navy-card);
+  color: var(--mid);
+}
+
+.btn:hover {
+  color: var(--hi);
+  border-color: var(--gold-line);
+}
+
+.btn-gold {
+  border-color: var(--gold-line);
+  color: var(--gold-hi);
+  background: var(--gold-glow);
+}
+
+.btn-gold:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--low);
+  font-size: var(--text-caption);
+}
+
+.btn-ghost:hover {
+  color: var(--hi);
+  background: var(--gold-glow);
+}
+
+/* ---- Section label ---- */
+.sec-label {
+  font-size: var(--text-label);
+  color: var(--low);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ---- Separator ---- */
+.hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: var(--space-4) 0;
+}

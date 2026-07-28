@@ -1,0 +1,25 @@
+/* ============================================================
+   M60-002 — Typography Scale
+   Unified headings, body, and caption sizes.
+   All components reference these instead of inline font-size.
+   ============================================================ */
+
+:root {
+  /* ---- Font families ---- */
+  --serif: 'Georgia', 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* ---- Heading scale ---- */
+  --text-h1:  2rem;
+  --text-h2:  1.3rem;
+  --text-h3:  1.1rem;
+
+  /* ---- Body ---- */
+  --text-body:   14px;
+  --text-body-sm:13px;
+
+  /* ---- Small / caption ---- */
+  --text-caption: 12px;
+  --text-label:   11px;
+  --text-micro:   10px;
+}

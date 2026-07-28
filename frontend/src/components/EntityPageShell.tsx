@@ -15,10 +15,8 @@ export interface TabConfig {
 }
 
 const TABS: TabConfig[] = [
-  { id: 'info', label: '了解', ariaLabel: '了解实体基本信息' },
-  { id: 'explore', label: '探索', ariaLabel: '探索相关实体与对话' },
-  { id: 'research', label: '研究', ariaLabel: '多维研究模式' },
-  { id: 'analyze', label: '分析', ariaLabel: '事件分析与AI解释' },
+  { id: 'info', label: '了解', ariaLabel: '了解实体基本信息与关系探索' },
+  { id: 'research', label: '研究', ariaLabel: '深度研究与分析' },
   { id: 'extensions', label: '扩展', ariaLabel: '扩展功能' },
 ]
 

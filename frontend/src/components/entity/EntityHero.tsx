@@ -10,7 +10,7 @@ import { getEntityLabel, getEntityIcon } from '../../data/entity/entityLabels'
 
 interface EntityHeroProps {
   identity: EntityViewModel['identity']
-  /** M59-016: AI Companion entry callback */
+  /** M59-016: AI Companion entry — hidden in M60 (mock AI is a liability) */
   onAskAI?: () => void
   /** M59-016: Research entry */
   onResearch?: () => void
@@ -18,13 +18,13 @@ interface EntityHeroProps {
   onCompare?: () => void
 }
 
-export function EntityHero({ identity, onAskAI, onResearch, onCompare }: EntityHeroProps) {
+export function EntityHero({ identity, onResearch, onCompare }: EntityHeroProps) {
   const { name, type, timeLabel, locationLabel, keyFacts } = identity
   const label = getEntityLabel(type)
   const icon = getEntityIcon(type)
 
   return (
-    <section className="eh" aria-label={`${name} — ${label}`}>
+    <section className="eh surf-card" aria-label={`${name} — ${label}`}>
       {/* Badge */}
       <div className="eh-badge">
         <span className="eh-badge-icon">{icon}</span>
@@ -57,18 +57,13 @@ export function EntityHero({ identity, onAskAI, onResearch, onCompare }: EntityH
 
       {/* M59-016: Quick actions */}
       <div className="eh-actions">
-        {onAskAI && (
-          <button type="button" className="eh-action eh-action-ai" onClick={onAskAI}>
-            <span>💬</span> 问历史助手
-          </button>
-        )}
         {onResearch && (
-          <button type="button" className="eh-action eh-action-research" onClick={onResearch}>
+          <button type="button" className="eh-action eh-action-research btn" onClick={onResearch}>
             <span>🔬</span> 深入研究
           </button>
         )}
         {onCompare && (
-          <button type="button" className="eh-action eh-action-compare" onClick={onCompare}>
+          <button type="button" className="eh-action eh-action-compare btn" onClick={onCompare}>
             <span>⇔</span> 加入对比
           </button>
         )}

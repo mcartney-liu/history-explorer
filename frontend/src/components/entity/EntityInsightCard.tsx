@@ -1,26 +1,41 @@
 // ============================================================
-// M59-019 — EntityInsightCard
-// Shows a historical insight summary for the current entity.
+// M60 — EntityInsightCard (upgraded)
+// Rich historical insight with key relationships as badges.
 // Data source: EntityInsightModel.buildInsight(entity).
-// Future: wire to AIOrchestrator for AI-generated insights.
 // ============================================================
 
+import type { EntityInsight } from '../../data/entity/EntityInsightModel'
+
 interface EntityInsightCardProps {
-  insight: string
-  onAskMore?: () => void
+  insight: EntityInsight
 }
 
-export function EntityInsightCard({ insight, onAskMore }: EntityInsightCardProps) {
+export function EntityInsightCard({ insight }: EntityInsightCardProps) {
   return (
-    <div className="eic">
+    <div className="eic surf-card-gold">
       <div className="eic-header">
         <span className="eic-label">历史洞察</span>
       </div>
-      <p className="eic-text">{insight}</p>
-      {onAskMore && (
-        <button type="button" className="eic-ask" onClick={onAskMore}>
-          💬 深入询问
-        </button>
+
+      {/* Narrative paragraph */}
+      <p className="eic-text">{insight.text}</p>
+
+      {/* Key relationships */}
+      {insight.keyNames.length > 0 && (
+        <div className="eic-badges">
+          {insight.keyNames.map((name) => (
+            <span key={name} className="eic-badge">{name}</span>
+          ))}
+        </div>
+      )}
+
+      {/* Timeline highlights */}
+      {insight.timelineHighlights.length > 0 && (
+        <div className="eic-timeline-chips">
+          {insight.timelineHighlights.map((event, i) => (
+            <span key={i} className="eic-chip">◷ {event}</span>
+          ))}
+        </div>
       )}
     </div>
   )

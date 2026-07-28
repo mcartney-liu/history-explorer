@@ -606,3 +606,18 @@ hr{border:none;border-top:1px solid var(--line);margin:16px 0}
 .epc-step{font-size:13px;color:var(--hi);display:flex;align-items:center;gap:var(--space-2)}
 .epc-arrow{color:var(--gold);font-size:14px}
 .epc-name{font-family:var(--serif)}
+
+/* ========== ENTITY INSIGHT CARD (M60 upgrade) ========== */
+.eic{padding:var(--space-5);background:linear-gradient(158deg,rgba(17,25,48,0.8),rgba(9,14,28,0.9));
+  border:1px solid var(--gold-line);border-radius:var(--radius-xl);margin:var(--space-4) 0}
+.eic-header{display:flex;align-items:center;margin-bottom:var(--space-3)}
+.eic-label{font-size:var(--text-label);color:var(--mid);letter-spacing:2px}
+.eic-text{font-size:var(--text-body);color:var(--hi);line-height:1.85;margin:0}
+.eic-badges{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
+.eic-badge{font-size:var(--text-caption);color:var(--gold-hi);background:var(--gold-glow);
+  border:1px solid var(--gold-line);border-radius:6px;padding:3px 10px}
+.eic-timeline-chips{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
+.eic-chip{font-size:var(--text-caption);color:var(--mid);background:var(--navy-card);
+  border:1px solid var(--line);border-radius:6px;padding:3px 10px}
+/* Remove old eic-ask since AI button is hidden */
+.eic-ask{display:none}

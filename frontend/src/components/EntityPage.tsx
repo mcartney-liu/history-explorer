@@ -187,9 +187,6 @@ function EntityPage({
                     hero={
                       <EntityHero
                         identity={viewModel.identity}
-                        onAskAI={() => {
-                          console.log('[AI Companion] Ask about:', viewModel.identity.name)
-                        }}
                         onResearch={() => {
                           console.log('[Research] Start research:', viewModel.identity.name)
                         }}
@@ -201,10 +198,7 @@ function EntityPage({
                     guide={
                       <>
                         <EntityInsightCard
-                          insight={buildInsight(entity).text}
-                          onAskMore={() => {
-                            console.log('[AI] Ask more about:', viewModel.identity.name)
-                          }}
+                          insight={buildInsight(entity)}
                         />
                         <ExplorationGuide
                           entityName={viewModel.identity.name}
@@ -241,22 +235,9 @@ function EntityPage({
                     </div>
                   )}
 
-                  {/* M59-016: RelationshipView/TimelinePanel/GraphViewPanel removed from info tab.
-                      Covered by ConnectionExplorer (Graph | Timeline | Map views).
-                      Files preserved for rollback and other tabs. */}
-
-                  {/* Layer 4: Data provenance */}
-                  <ProvenancePanel entityId={entity.id} />
-                </>
-              )
-
-            // ---- EXPLORE TAB ----
-            case 'explore':
-              return (
-                <>
-                  {/* M44: HistorianChat visibility hint */}
+                  {/* M60-001: AI conversation + exploration recommendations — from old 'explore' tab */}
                   <p className="explore-hint">
-                    不知道从哪里开始？可以试试下方的推荐探索，或向下滚动与 AI 历史学家对话。
+                    需要更多探索灵感？向下滚动与 AI 历史学家对话，或查看推荐探索路径。
                   </p>
                   {entityGlobalId ? (
                     <ResearchDiscoveryPanel
@@ -286,15 +267,17 @@ function EntityPage({
                       relationships={entity.relationships}
                     />
                   ) : null}
-                  <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
-                  <ExplorationFlowGuide />
-                  {onTopicClick && (
-                    <CrossTopicTopicList relatedTopics={entity.related_topics} onTopicClick={onTopicClick} />
-                  )}
+
+                  {/* M59-016: RelationshipView/TimelinePanel/GraphViewPanel removed from info tab.
+                      Covered by ConnectionExplorer (Graph | Timeline | Map views).
+                      Files preserved for rollback and other tabs. */}
+
+                  {/* Layer 4: Data provenance */}
+                  <ProvenancePanel entityId={entity.id} />
                 </>
               )
 
-            // ---- RESEARCH TAB ----
+            // M60-001: 'explore' merged into 'info', 'analyze' merged into 'research'
             case 'research':
               return (
                 <>
@@ -307,13 +290,7 @@ function EntityPage({
                     />
                   ) : null}
                   <ResearchLibrary />
-                </>
-              )
-
-            // ---- ANALYZE TAB ----
-            case 'analyze':
-              return (
-                <>
+                  {/* M60-001: analyze tab merged into research */}
                   {entity.type === 'Event' && (
                     <>
                       <EventCausalChain
@@ -352,16 +329,13 @@ function EntityPage({
                     )}
                     onNodeClick={onNodeClick}
                   />
-                  <ExplorationPathsPanel
-                    connections={entity.connections_explained}
-                    onNodeClick={onNodeClick}
+                  <AIExplanationPanel entity={entity} />
+                  <GroundedAnswer
+                    entityGlobalId={entityGlobalId}
+                    entityName={entity.name}
+                    relationships={entity.relationships}
+                    onEntityClick={onEntityClick}
                   />
-                  {entityGlobalId ? (
-                    <AIExplanationPanel
-                      contextGlobalIds={entityContext(entityGlobalId)}
-                      onCitationClick={onNodeClick}
-                    />
-                  ) : null}
                 </>
               )
 

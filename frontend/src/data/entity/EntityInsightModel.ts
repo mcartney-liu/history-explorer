@@ -1,56 +1,109 @@
 // ============================================================
-// M59-019 — EntityInsightModel
-// Builds an "insight" summary from EntityViewModel data.
-// No AI. Pure deterministic extraction. Future: generateInsight().
+// M60 — EntityInsightModel (upgraded)
+// Builds a human-readable narrative from EntityViewModel data.
+// No AI. Uses existing data: summary, timeline, relationships.
+// Future: generateInsight(entity, context) → AIOrchestrator.
 // ============================================================
 
 import type { EntityDetail } from './entityTypes'
 
 export interface EntityInsight {
   text: string
+  /** Key relationship names for UI badges */
+  keyNames: string[]
+  /** Timeline highlights for UI timeline chip */
+  timelineHighlights: string[]
   sourceFields: string[]
 }
 
+const TYPE_NAMES: Record<string, string> = {
+  Person: '人物',
+  Event: '历史事件',
+  Civilization: '文明',
+  Dynasty: '朝代',
+  Battle: '战役',
+  Period: '历史时期',
+  Document: '典籍',
+  Concept: '思想',
+  Location: '地区',
+}
+
 /**
- * Build an insight summary from entity summary data.
- * Returns a human-readable paragraph of key facts.
+ * Build a natural-language insight narrative from entity data.
+ * Priority: description → significance → relationships → timeline.
  * Future: replace with generateInsight(entity, context) that calls AIOrchestrator.
  */
 export function buildInsight(entity: EntityDetail): EntityInsight {
-  const summary = entity.summary
+  const name = entity.name
+  const typeLabel = TYPE_NAMES[entity.type] || entity.type
+  const summary = entity.summary ?? {}
+  const timeline = entity.timeline ?? []
+  const relationships = entity.relationships ?? []
+
+  // Extract description
+  const description =
+    (typeof summary['description'] === 'string' && summary['description'].length > 20
+      ? summary['description']
+      : typeof summary['summary'] === 'string' && summary['summary'].length > 20
+        ? summary['summary']
+        : typeof summary['abstract'] === 'string' && summary['abstract'].length > 20
+          ? summary['abstract']
+          : '')
+
+  // Extract significance
+  const significance =
+    (typeof summary['significance'] === 'string' && summary['significance'].length > 10
+      ? summary['significance']
+      : '')
+
+  // Build narrative
   const parts: string[] = []
 
-  // Try known fields
-  const description = summary['description'] ?? summary['summary'] ?? summary['abstract']
-  if (typeof description === 'string' && description.length > 20) {
-    parts.push(description)
+  if (description) {
+    // Truncate very long descriptions
+    const short = description.length > 300 ? description.slice(0, 300) + '...' : description
+    parts.push(short)
+  } else {
+    // Fallback: build from structure
+    parts.push(`${name} 是历史上重要的${typeLabel}。`)
   }
 
-  const significance = summary['significance'] ?? summary['historical_significance'] ?? summary['legacy']
-  if (typeof significance === 'string' && significance.length > 10) {
+  if (significance && !description?.includes(significance.slice(0, 20))) {
     parts.push(significance)
   }
 
-  // Relationships hint
-  if (entity.relationships.length > 0 && parts.length === 0) {
-    const names = entity.relationships
-      .slice(0, 3)
-      .map((r) => r.other.name)
-      .join('、')
-    parts.push(`${entity.name} 与 ${names} 等重要历史对象存在关联。`)
+  // Relationship narrative — meaningful, not "exists"
+  const topRelations = relationships.slice(0, 5)
+  if (topRelations.length > 0) {
+    const names = [...new Set(topRelations.map((r) => r.other.name))]
+    if (names.length === 1) {
+      parts.push(`${name} 与 ${names[0]} 有着密不可分的历史关联。`)
+    } else if (names.length > 1) {
+      parts.push(`${name} 与 ${names.join('、')} 等重要历史对象紧密关联。`)
+    }
   }
 
-  // Timeline hint
-  if (entity.timeline.length > 0 && parts.length === 0) {
-    parts.push(`${entity.name} 的历史时间线包含 ${entity.timeline.length} 个关键时间节点。`)
+  // Timeline narrative
+  const topEvents = timeline.slice(0, 4)
+  const timelineHighlights = topEvents.map((t) => t.event ?? t.period ?? '')
+    .filter(Boolean)
+
+  if (timelineHighlights.length > 0) {
+    const eventList = timelineHighlights.slice(0, 3).join('、')
+    parts.push(`关键事件包括：${eventList}。`)
   }
 
-  const text = parts.join(' ') || `${entity.name} 是一个${entity.type}类型的历史实体。`
+  const text = parts.join(' ')
 
   return {
     text,
-    sourceFields: parts.length > 0
-      ? ['summary.description', 'summary.significance', 'relationships', 'timeline']
-      : ['entity.type'],
+    keyNames: [...new Set(relationships.slice(0, 5).map((r) => r.other.name))],
+    timelineHighlights: timelineHighlights.slice(0, 5),
+    sourceFields: [
+      ...(description ? ['summary.description'] : []),
+      ...(significance ? ['summary.significance'] : []),
+      ...(relationships.length > 0 ? ['relationships'] : []),
+      ...(timeline.length > 0 ? ['timeline'] : []),
+    ],
   }
 }

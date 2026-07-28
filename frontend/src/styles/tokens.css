@@ -1,0 +1,50 @@
+/* ============================================================
+   M60-002 — Design Tokens
+   Centralized color, spacing, radius, and shadow definitions.
+   Source of truth for all components.
+   ============================================================ */
+
+:root {
+  /* ---- Colors (dark theme) ---- */
+  --navy-deep:   #090e1c;
+  --navy:        #0e1426;
+  --navy-card:   rgba(14, 20, 38, 0.6);
+  --navy-surface:rgba(18, 26, 48, 0.5);
+
+  --gold:        #D4A84B;
+  --gold-hi:     #E8C873;
+  --gold-line:   rgba(212, 168, 75, 0.25);
+  --gold-glow:   rgba(212, 168, 75, 0.08);
+
+  --hi:          #f7f5f0;
+  --mid:         #8a8478;
+  --low:         #5a5650;
+  --line:        rgba(255,255,255,0.06);
+  --line-soft:   rgba(255,255,255,0.04);
+
+  --shadow-glow: 0 0 20px rgba(212, 168, 75, 0.12);
+
+  /* ---- Spacing ---- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-8:  48px;
+  --space-12: 64px;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius:    8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+
+  /* ---- Shadows ---- */
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.3);
+
+  /* ---- Animation ---- */
+  --animation-fast: 0.15s ease;
+  --animation-normal: 0.3s ease;
+}
