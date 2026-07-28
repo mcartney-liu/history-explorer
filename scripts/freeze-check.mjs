@@ -389,6 +389,11 @@ export const SCOPE_ALLOWLIST = [
   // M49 — ExplorationDepth (exploration depth scoring)
   "frontend/src/data/ExplorationDepth.ts",
   "frontend/src/data/ExplorationDepth.test.ts",
+  // M43-M49 pipeline integration smoke tests
+  "frontend/src/data/__smoke__/pipeline-integration.test.ts",
+  // M50 — KnowledgeUsageCoverage (usage-informed knowledge coverage)
+  "frontend/src/data/KnowledgeUsageCoverage.ts",
+  "frontend/src/data/KnowledgeUsageCoverage.test.ts",
 ];
 
 function _scopeAllowed(file) {

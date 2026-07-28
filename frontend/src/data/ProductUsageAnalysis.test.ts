@@ -183,3 +183,46 @@ describe('ProductUsageAnalysis (M49 exploration depth)', () => {
     expect(analysis.summary).toContain('[探索深度]')
   })
 })
+
+// ============================================================
+// M50 Phase 1 — KnowledgeUsageCoverage integration
+// ============================================================
+
+describe('ProductUsageAnalysis (M50 knowledge usage)', () => {
+  it('empty events return no explored entity types', () => {
+    clearEvents()
+    const analysis = analyzeProductUsage(getEvents())
+    expect(analysis.knowledgeUsageCoverage.exploredEntityTypes).toHaveLength(0)
+    expect(analysis.knowledgeUsageCoverage.unexploredEntityTypes.length).toBeGreaterThan(0)
+  })
+
+  it('entity types tracked from click_entity events', () => {
+    clearEvents()
+    recordEvent({ action: 'click_entity', entityType: 'Civilization' })
+    recordEvent({ action: 'click_entity', entityType: 'Event' })
+    const analysis = analyzeProductUsage(getEvents())
+    expect(analysis.knowledgeUsageCoverage.exploredEntityTypes).toContain('Civilization')
+    expect(analysis.knowledgeUsageCoverage.exploredEntityTypes).toContain('Event')
+  })
+
+  it('summary includes knowledge usage section', () => {
+    clearEvents()
+    recordEvent({ action: 'click_entity', entityType: 'Person' })
+    const analysis = analyzeProductUsage(getEvents())
+    expect(analysis.summary).toContain('[知识使用]')
+    expect(analysis.summary).toContain('实体类型')
+  })
+
+  it('all existing fields remain after M50 integration', () => {
+    clearEvents()
+    recordEvent({ action: 'open_entity' })
+    const analysis = analyzeProductUsage(getEvents())
+    expect(analysis.funnelMetrics).toHaveLength(3)
+    expect(analysis.intelligence).toBeTruthy()
+    expect(analysis.priority).toBeTruthy()
+    expect(analysis.capabilityHealth).toHaveLength(6)
+    expect(analysis.explorationBehaviors).toBeTruthy()
+    expect(analysis.explorationDepth).toBeTruthy()
+    expect(analysis.knowledgeUsageCoverage).toBeTruthy()
+  })
+})

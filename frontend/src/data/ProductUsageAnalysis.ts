@@ -17,6 +17,8 @@ import { analyzeExplorationBehaviors } from './ExplorationBehaviors'
 import type { ExplorationBehaviors } from './ExplorationBehaviors'
 import { analyzeExplorationDepth } from './ExplorationDepth'
 import type { ExplorationDepth } from './ExplorationDepth'
+import { analyzeKnowledgeUsageCoverage } from './KnowledgeUsageCoverage'
+import type { KnowledgeUsageCoverage } from './KnowledgeUsageCoverage'
 
 // -----------------------------------------------------------
 // Types
@@ -29,6 +31,7 @@ export interface ProductUsageAnalysis {
   capabilityHealth: CapabilityHealth[]
   explorationBehaviors: ExplorationBehaviors
   explorationDepth: ExplorationDepth
+  knowledgeUsageCoverage: KnowledgeUsageCoverage
   summary: string
 }
 
@@ -44,7 +47,8 @@ export function analyzeProductUsage(
   const decision = generateDecisionIntelligence(intelligence, funnelMetrics)
   const explorationBehaviors = analyzeExplorationBehaviors(events)
   const explorationDepth = analyzeExplorationDepth(events)
-  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors, explorationDepth)
+  const knowledgeUsageCoverage = analyzeKnowledgeUsageCoverage(events)
+  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors, explorationDepth, knowledgeUsageCoverage)
 
   return {
     funnelMetrics,
@@ -53,6 +57,7 @@ export function analyzeProductUsage(
     capabilityHealth: decision.capabilityHealth,
     explorationBehaviors,
     explorationDepth,
+    knowledgeUsageCoverage,
     summary,
   }
 }
@@ -67,6 +72,7 @@ function buildSummary(
   decision: { priority: OptimizationPriority; capabilityHealth: CapabilityHealth[] },
   eb: ExplorationBehaviors,
   ed: ExplorationDepth,
+  kc: KnowledgeUsageCoverage,
 ): string {
   const lines: string[] = []
 
@@ -102,6 +108,15 @@ function buildSummary(
 
   // M49: Exploration depth
   lines.push(`[探索深度] 最高等级: ${ed.maxDepth}  ${ed.insights[0]}`)
+
+  // M50: Knowledge usage coverage
+  const totalEntities = kc.exploredEntityTypes.length + kc.unexploredEntityTypes.length
+  if (kc.relationshipDataAvailable) {
+    const totalRelations = kc.exploredRelationshipTypes.length + kc.unexploredRelationshipTypes.length
+    lines.push(`[知识使用] 实际触达实体类型: ${kc.exploredEntityTypes.length}/${totalEntities}, 关系类型: ${kc.exploredRelationshipTypes.length}/${totalRelations}`)
+  } else {
+    lines.push(`[知识使用] 实际触达实体类型: ${kc.exploredEntityTypes.length}/${totalEntities}, 关系使用数据不可用`)
+  }
 
   return lines.join('\n')
 }
