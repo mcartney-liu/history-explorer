@@ -19,6 +19,8 @@ import { analyzeExplorationDepth } from './ExplorationDepth'
 import type { ExplorationDepth } from './ExplorationDepth'
 import { analyzeKnowledgeUsageCoverage } from './KnowledgeUsageCoverage'
 import type { KnowledgeUsageCoverage } from './KnowledgeUsageCoverage'
+import { generateProductDecisionInsight } from './ProductDecisionInsight'
+import type { ProductDecisionInsight } from './ProductDecisionInsight'
 
 // -----------------------------------------------------------
 // Types
@@ -32,6 +34,7 @@ export interface ProductUsageAnalysis {
   explorationBehaviors: ExplorationBehaviors
   explorationDepth: ExplorationDepth
   knowledgeUsageCoverage: KnowledgeUsageCoverage
+  decisionInsight: ProductDecisionInsight
   summary: string
 }
 
@@ -48,7 +51,16 @@ export function analyzeProductUsage(
   const explorationBehaviors = analyzeExplorationBehaviors(events)
   const explorationDepth = analyzeExplorationDepth(events)
   const knowledgeUsageCoverage = analyzeKnowledgeUsageCoverage(events)
-  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors, explorationDepth, knowledgeUsageCoverage)
+  const decisionInsight = generateProductDecisionInsight({
+    funnels: funnelMetrics,
+    intelligence,
+    priority: decision.priority,
+    capabilityHealth: decision.capabilityHealth,
+    behaviors: explorationBehaviors,
+    depth: explorationDepth,
+    knowledge: knowledgeUsageCoverage,
+  })
+  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors, explorationDepth, knowledgeUsageCoverage, decisionInsight)
 
   return {
     funnelMetrics,
@@ -58,6 +70,7 @@ export function analyzeProductUsage(
     explorationBehaviors,
     explorationDepth,
     knowledgeUsageCoverage,
+    decisionInsight,
     summary,
   }
 }
@@ -73,6 +86,7 @@ function buildSummary(
   eb: ExplorationBehaviors,
   ed: ExplorationDepth,
   kc: KnowledgeUsageCoverage,
+  di: ProductDecisionInsight,
 ): string {
   const lines: string[] = []
 
@@ -118,5 +132,38 @@ function buildSummary(
     lines.push(`[知识使用] 实际触达实体类型: ${kc.exploredEntityTypes.length}/${totalEntities}, 关系使用数据不可用`)
   }
 
+  // M52: Decision fusion
+  lines.push(`[决策] 状态: ${di.overallStatus}  置信度: ${Math.round(di.confidence * 100)}%`)
+  if (di.primaryIssue) {
+    lines.push(`[决策] 首要问题: ${di.primaryIssue.problem}`)
+    lines.push(`[决策] 建议: ${di.recommendedAction.action}`)
+  } else {
+    lines.push('[决策] 当前无紧急产品问题')
+  }
+
   return lines.join('\n')
+}
+
+// ============================================================
+// M51 — DevTools console entry point
+// Exposes `__pa()` in browser console to run the full
+// intelligence pipeline on current localStorage events.
+// Tree-shaken from production builds (never imported by UI).
+// ============================================================
+
+if (typeof window !== 'undefined') {
+  ;(window as any).__pa = function __pa() {
+    const raw = localStorage.getItem('history-explorer.events.v1')
+    if (!raw) { console.log('[pa] No events in localStorage yet. Use the product first — browse entities, start research, chat with AI.'); return }
+    try {
+      const events = JSON.parse(raw)
+      const result = analyzeProductUsage(events)
+      console.log('[pa] Product Usage Analysis Summary:\n' + result.summary)
+      console.log('[pa] Full result:', result)
+      return result
+    } catch (e) {
+      console.error('[pa] Failed to parse events:', e)
+    }
+  }
+  console.log('[pa] DevTools ready. Type __pa() in console to analyze product usage.')
 }

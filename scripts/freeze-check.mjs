@@ -394,6 +394,11 @@ export const SCOPE_ALLOWLIST = [
   // M50 — KnowledgeUsageCoverage (usage-informed knowledge coverage)
   "frontend/src/data/KnowledgeUsageCoverage.ts",
   "frontend/src/data/KnowledgeUsageCoverage.test.ts",
+  // M51 — Intelligence Activation Audit (pipeline validation)
+  "frontend/src/data/M51_activation_audit.test.ts",
+  // M52 — ProductDecisionInsight (decision fusion layer)
+  "frontend/src/data/ProductDecisionInsight.ts",
+  "frontend/src/data/ProductDecisionInsight.test.ts",
 ];
 
 function _scopeAllowed(file) {
