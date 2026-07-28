@@ -41,6 +41,16 @@ export interface ProductDecisionInsight {
     description: string
   }>
   positives: string[]
+  // M56 Trust Layer
+  evidenceQuality: number
+  explanationChain: {
+    trigger: string
+    observations: string[]
+    reasoning: string
+    conclusion: string
+  }
+  counterSignals: string[]
+  confidenceMeaning: string
 }
 
 // -----------------------------------------------------------
@@ -72,6 +82,12 @@ export function generateProductDecisionInsight(
   const summary = buildSummary(primary, positives, input)
   const evidenceMetrics = buildMetrics(input)
 
+  // M56 Trust Layer
+  const evidenceQuality = computeEvidenceQuality(input, concerns)
+  const explanationChain = buildExplanationChain(input, primary, action, evidenceMetrics)
+  const counterSignals = buildCounterSignals(input, positives)
+  const confidenceMeaning = 'evidence_completeness'
+
   return {
     overallStatus: determineStatus(primary, concerns, input),
     primaryIssue: primary,
@@ -85,6 +101,10 @@ export function generateProductDecisionInsight(
     summary,
     concerns,
     positives,
+    evidenceQuality,
+    explanationChain,
+    counterSignals,
+    confidenceMeaning,
   }
 }
 
@@ -274,8 +294,17 @@ function determineStatus(
   concerns: ProductDecisionInsight['concerns'],
   input: DecisionFusionInput,
 ): ProductDecisionInsight['overallStatus'] {
-  if (input.intelligence.totalEvents === 0) return 'healthy' // No data ≠ bad product
-  if (primary?.severity === 'critical') return 'critical'
+  if (input.intelligence.totalEvents === 0) return 'healthy'
+
+  // M55: Positive signal — user completed a full exploration + research loop
+  const hasPositiveLoop =
+    input.depth.maxDepth >= 5 &&
+    input.behaviors.dominantPattern === 'research_loop' &&
+    input.intelligence.researchSaveRate >= 0.5
+
+  if (primary?.severity === 'critical') {
+    return hasPositiveLoop ? 'attention' : 'critical'
+  }
   if (concerns.length > 0) return 'attention'
   return 'healthy'
 }
@@ -324,4 +353,54 @@ function validatePriorityRecommendation(
 
   // Otherwise: data is insufficient, downgrade
   return false
+}
+
+// ============================================================
+// M56 — Trust Layer
+// ============================================================
+
+function computeEvidenceQuality(input: DecisionFusionInput, concerns: ProductDecisionInsight['concerns']): number {
+  const total = input.intelligence.totalEvents
+  const eventScore = total >= 10 ? 1 : total >= 5 ? 0.7 : total > 0 ? 0.4 : 0
+  const moduleCount = new Set(concerns.map((c) => c.module)).size
+  const moduleScore = moduleCount >= 3 ? 1 : moduleCount >= 2 ? 0.7 : moduleCount >= 1 ? 0.4 : 0
+  const journeyScore = input.depth.maxDepth / 5
+  const positives = input.capabilityHealth.filter((c) => c.severity === 'healthy').length
+  const balanceScore = positives / (positives + concerns.length + 1)
+
+  const raw = eventScore * 0.3 + moduleScore * 0.3 + journeyScore * 0.2 + balanceScore * 0.2
+  return Math.min(1, Math.max(0, +raw.toFixed(2)))
+}
+
+function buildExplanationChain(
+  input: DecisionFusionInput,
+  primary: ProductDecisionInsight['primaryIssue'],
+  action: ProductDecisionInsight['recommendedAction'],
+  metrics: Record<string, string | number>,
+): ProductDecisionInsight['explanationChain'] {
+  const cap = primary?.capability ?? ''
+  const trigger = cap.includes('Research') ? 'Research workflow detected'
+    : cap.includes('Discovery') || cap.includes('Discover') ? 'Discovery conversion issue detected'
+    : 'Product usage pattern detected'
+
+  const observations = Object.entries(metrics)
+    .filter(([, v]) => v !== undefined && v !== null)
+    .slice(0, 6)
+    .map(([k, v]) => `${k}: ${v}`)
+
+  const reasoning = primary
+    ? `Based on ${observations.slice(0, 3).join(', ')}, ${primary.problem}`
+    : 'No actionable issue identified'
+
+  return { trigger, observations, reasoning, conclusion: action.action }
+}
+
+function buildCounterSignals(input: DecisionFusionInput, positives: string[]): string[] {
+  const signals: string[] = []
+  if (input.depth.maxDepth >= 4) signals.push('User reached deep exploration level')
+  if (input.behaviors.dominantPattern === 'research_loop') signals.push('User demonstrated research behavior')
+  if (input.intelligence.researchSaveRate > 0) signals.push('Research completion signal detected')
+  if (input.intelligence.chatAdoptionRate > 0) signals.push('AI chat engagement detected')
+  if (positives.length > 0 && signals.length === 0) signals.push(positives[0])
+  return signals
 }

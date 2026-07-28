@@ -11,18 +11,14 @@ import type { ReactNode } from 'react'
 // in. Rendering the same hero copy the monolith used keeps the existing smoke
 // tests (App.smoke / SearchEntity) green — behavior is unchanged.
 type AppShellProps = {
-  // Search cluster (topic SearchBox + entity search + results). Rendered at the
-  // top of the explorer, exactly where App.tsx rendered it before.
   search?: ReactNode
-  // Navigation cluster (Breadcrumb + HistoryBar + ExplorationPathTree). Wrapped
-  // in the semantic nav shell ONLY when present, so the landing page (no active
-  // node) does not render an empty <nav>.
   nav?: ReactNode
-  // Main content: loading / error / topic view / entity view / landing page.
+  /** M59-009: Workspace panel — right sidebar. */
+  workspace?: ReactNode
   children?: ReactNode
 }
 
-function AppShell({ search, nav, children }: AppShellProps) {
+function AppShell({ search, nav, workspace, children }: AppShellProps) {
   return (
     <main className="app">
       <section className="hero">
@@ -42,6 +38,7 @@ function AppShell({ search, nav, children }: AppShellProps) {
           {children}
         </div>
       </section>
+      {workspace}
     </main>
   )
 }

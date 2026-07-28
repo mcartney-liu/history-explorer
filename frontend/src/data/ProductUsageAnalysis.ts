@@ -45,7 +45,7 @@ export interface ProductUsageAnalysis {
 export function analyzeProductUsage(
   events: UserBehaviorEvent[],
 ): ProductUsageAnalysis {
-  const funnelMetrics = allFunnelMetrics()
+  const funnelMetrics = allFunnelMetrics(events)
   const intelligence = generateProductIntelligence(events)
   const decision = generateDecisionIntelligence(intelligence, funnelMetrics)
   const explorationBehaviors = analyzeExplorationBehaviors(events)

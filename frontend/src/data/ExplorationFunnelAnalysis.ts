@@ -114,23 +114,31 @@ function buildFunnel(
 // -----------------------------------------------------------
 
 export function analyzeDiscoveryFunnel(): FunnelMetric {
-  return buildFunnel('Discovery', DISCOVERY_STEPS, getEvents())
+  return buildFunnel('Discovery', DISCOVERY_STEPS, _eventOverride ?? getEvents())
 }
 
 export function analyzeExplorationFunnel(): FunnelMetric {
-  return buildFunnel('Exploration', EXPLORATION_STEPS, getEvents())
+  return buildFunnel('Exploration', EXPLORATION_STEPS, _eventOverride ?? getEvents())
 }
 
 export function analyzeResearchFunnel(): FunnelMetric {
-  return buildFunnel('Research', RESEARCH_STEPS, getEvents())
+  return buildFunnel('Research', RESEARCH_STEPS, _eventOverride ?? getEvents())
 }
 
-export function allFunnelMetrics(): FunnelMetric[] {
-  return [
-    analyzeDiscoveryFunnel(),
-    analyzeExplorationFunnel(),
-    analyzeResearchFunnel(),
-  ]
+// M55: allow external event source override for pipeline alignment.
+let _eventOverride: UserBehaviorEvent[] | null = null
+
+export function allFunnelMetrics(events?: UserBehaviorEvent[]): FunnelMetric[] {
+  if (events) _eventOverride = events
+  try {
+    return [
+      analyzeDiscoveryFunnel(),
+      analyzeExplorationFunnel(),
+      analyzeResearchFunnel(),
+    ]
+  } finally {
+    _eventOverride = null
+  }
 }
 
 export function funnelSummaryText(): string {

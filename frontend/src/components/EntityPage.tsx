@@ -81,6 +81,17 @@ type EntityPageProps = {
 // GET /entity/{id} — summary, timeline, relationships, exploration. Every
 // related entity stays clickable so the Explore -> Connect -> Continue loop
 // keeps working from inside an entity page.
+// M59-005: EntityViewModel integration.
+// Build once per entity change. Panels still consume raw entity
+// for backward compat. Future panels will use viewModel directly.
+import { useMemo } from 'react'
+import { buildEntityViewModel } from '../data/entity/EntityViewModel'
+import { EntityHero } from './entity/EntityHero'
+import { ExplorationCard } from './entity/ExplorationCard'
+import { buildCardsFromViewModel } from '../data/entity/ExplorationCardModel'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { ConnectionExplorer } from './entity/ConnectionExplorer'
+
 function EntityPage({
   entity,
   onEntityClick,
@@ -91,6 +102,20 @@ function EntityPage({
   entityStarters,
   onStarterClick,
 }: EntityPageProps) {
+  // M59-005: build ViewModel once per entity change.
+  // Available for future EntityHero / AISidebar migration.
+  const viewModel = useMemo(() => buildEntityViewModel(entity), [entity])
+  const relatedCards = useMemo(
+    () =>
+      buildCardsFromViewModel(
+        viewModel.connections.graphNodes.filter((n) => n.id !== entity.id),
+        viewModel.connections.graphEdges,
+        getEntityLabel,
+        getEntityIcon,
+      ),
+    [viewModel, entity.id],
+  )
+
   const summaryObj = entity.summary ?? {}
   const description =
     typeof summaryObj.description === 'string' ? summaryObj.description : ''
@@ -152,7 +177,37 @@ function EntityPage({
             case 'info':
               return (
                 <>
-                  <MainEntityCard mainEntity={entity.exploration.main_entity} />
+                  {/* Layer 1: Identity */}
+                  <EntityHero identity={viewModel.identity} />
+
+                  {/* Layer 2: Understand */}
+                  <ConnectionsExplainedPanel connections={entity.connections_explained} />
+
+                  {/* Layer 3: Connect — three exploration views */}
+                  <ConnectionExplorer
+                    graphNodes={viewModel.connections.graphNodes}
+                    graphEdges={viewModel.connections.graphEdges}
+                    timeline={viewModel.connections.timeline}
+                    onEntityClick={onEntityClick}
+                  />
+
+                  {/* Layer 3: Related entities */}
+                  {relatedCards.length > 0 && (
+                    <div className="explore-section">
+                      <h4 className="explore-section-title">继续探索</h4>
+                      <div className="explore-section-grid">
+                        {relatedCards.map((card) => (
+                          <ExplorationCard
+                            key={card.id}
+                            model={card}
+                            onClick={(target) => onEntityClick(target)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Layer 4: Data tools (power users) */}
                   <RelationshipView
                     mainEntity={entity.exploration.main_entity}
                     relatedEntities={entity.exploration.related_entities}
@@ -160,8 +215,6 @@ function EntityPage({
                     onEntityClick={onEntityClick}
                     onNodeClick={onNodeClick}
                   />
-                  <ProvenancePanel entityId={entity.id} />
-                  <ConnectionsExplainedPanel connections={entity.connections_explained} />
                   <TimelinePanel
                     timeline={entity.timeline}
                     nameToId={nameToId}
@@ -175,6 +228,7 @@ function EntityPage({
                     nameById={nameById}
                     onEntityClick={onEntityClick}
                   />
+                  <ProvenancePanel entityId={entity.id} />
                 </>
               )
 
@@ -214,12 +268,6 @@ function EntityPage({
                       relationships={entity.relationships}
                     />
                   ) : null}
-                  <RelatedEntityList
-                    relatedEntities={entity.exploration.related_entities}
-                    nameById={nameById}
-                    mainEntityName={entity.name}
-                    onEntityClick={onEntityClick}
-                  />
                   <ThemesPanel relationships={entity.relationships} onNodeClick={onNodeClick} />
                   <ExplorationFlowGuide />
                   {onTopicClick && (

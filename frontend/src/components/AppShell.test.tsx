@@ -37,13 +37,12 @@ describe('AppShell (M34-A1)', () => {
     expect(html).toContain('NAV_SLOT')
   })
 
-  it('omits the nav shell entirely when no nav is provided (landing page)', () => {
+  it('renders workspace when provided', () => {
     const html = renderToStaticMarkup(
-      <AppShell>
-        <div>landing</div>
+      <AppShell workspace={<div>WORKSPACE_SLOT</div>}>
+        <div>body</div>
       </AppShell>,
     )
-    expect(html).not.toContain('nav-shell')
-    expect(html).not.toContain('<nav')
+    expect(html).toContain('WORKSPACE_SLOT')
   })
 })

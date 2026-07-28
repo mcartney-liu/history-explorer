@@ -119,3 +119,70 @@ describe('ProductDecisionInsight', () => {
     expect(di.evidence.eventCount).toBe(2)
   })
 })
+
+// ============================================================
+// M56 — Trust Layer tests
+// ============================================================
+
+describe('ProductDecisionInsight (M56 Trust Layer)', () => {
+  it('research issue produces explanationChain with trigger', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_entity', timestamp: '2026-07-28T10:00:00Z' },
+      { action: 'switch_tab', tab: 'explore', timestamp: '2026-07-28T10:01:00Z' },
+      { action: 'start_research', timestamp: '2026-07-28T10:02:00Z' },
+      { action: 'start_research', timestamp: '2026-07-28T10:03:00Z' },
+      { action: 'start_research', timestamp: '2026-07-28T10:04:00Z' },
+    ]
+    const input = buildInput(events)
+    const di = generateProductDecisionInsight(input)
+    expect(di.explanationChain.trigger).toContain('Research')
+    expect(di.explanationChain.observations.length).toBeGreaterThan(0)
+    expect(di.explanationChain.reasoning.length).toBeGreaterThan(5)
+    expect(di.explanationChain.conclusion.length).toBeGreaterThan(0)
+  })
+
+  it('full journey produces counter signals', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_entity', timestamp: '2026-07-28T10:00:00Z' },
+      { action: 'start_chat', timestamp: '2026-07-28T10:01:00Z' },
+      { action: 'start_research', timestamp: '2026-07-28T10:02:00Z' },
+      { action: 'save_research', timestamp: '2026-07-28T10:03:00Z' },
+    ]
+    const input = buildInput(events)
+    const di = generateProductDecisionInsight(input)
+    expect(di.counterSignals.length).toBeGreaterThan(0)
+    expect(di.counterSignals.some((s) => s.includes('research'))).toBe(true)
+  })
+
+  it('empty events: evidenceQuality is low, explanationChain valid', () => {
+    const input = buildInput([])
+    const di = generateProductDecisionInsight(input)
+    expect(di.evidenceQuality).toBeLessThan(0.3)
+    expect(di.explanationChain.conclusion).toBeTruthy()
+  })
+
+  it('evidenceQuality within 0-1 bounds', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'open_discover', timestamp: '2026-07-28T10:00:00Z' },
+      { action: 'click_entity', timestamp: '2026-07-28T10:01:00Z' },
+      { action: 'open_entity', timestamp: '2026-07-28T10:02:00Z' },
+      { action: 'start_research', timestamp: '2026-07-28T10:03:00Z' },
+      { action: 'save_research', timestamp: '2026-07-28T10:04:00Z' },
+    ]
+    const di = generateProductDecisionInsight(buildInput(events))
+    expect(di.evidenceQuality).toBeGreaterThanOrEqual(0)
+    expect(di.evidenceQuality).toBeLessThanOrEqual(1)
+  })
+
+  it('deterministic: same events, same trust output', () => {
+    const events: UserBehaviorEvent[] = [
+      { action: 'start_research', timestamp: '2026-07-28T10:00:00Z' },
+    ]
+    const di1 = generateProductDecisionInsight(buildInput(events))
+    const di2 = generateProductDecisionInsight(buildInput([...events]))
+    expect(di1.evidenceQuality).toBe(di2.evidenceQuality)
+    expect(di1.explanationChain.trigger).toBe(di2.explanationChain.trigger)
+    expect(di1.counterSignals).toEqual(di2.counterSignals)
+    expect(di1.confidenceMeaning).toBe('evidence_completeness')
+  })
+})

@@ -4,6 +4,7 @@
 // M42: personalized discovery using ResearchHistory, UserInterestProfile,
 //      and entity-type exploration entry points.
 // M44: added ProductIntro section — static capability showcase for new visitors.
+// M59-002: migrated cards to <Card> component.
 
 import { useMemo, useEffect } from 'react'
 import type { NavNode } from '../components/navigation'
@@ -13,6 +14,7 @@ import { listResearch } from '../data/ResearchHistory'
 import { generateUserInterestProfile, insightSummary } from '../data/ResearchInsights'
 import type { SavedResearch } from '../data/ResearchHistory'
 import { recordEvent } from '../data/UserBehaviorEvent'
+import { Card } from '../components/ui/Card'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = '原来历史还能这样探索。'
@@ -66,11 +68,11 @@ function ProductIntro() {
       <h3 className="discover-section-heading">History Explorer 能做什么</h3>
       <div className="discover-intro-grid">
         {PRODUCT_CAPABILITIES.map((cap) => (
-          <div key={cap.id} className="discover-intro-card">
+          <Card key={cap.id} variant="default" className="discover-intro-card">
             <span className="discover-intro-icon">{cap.icon}</span>
             <h4 className="discover-intro-title">{cap.title}</h4>
             <p className="discover-intro-desc">{cap.desc}</p>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

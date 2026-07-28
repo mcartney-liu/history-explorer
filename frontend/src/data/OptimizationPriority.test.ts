@@ -13,6 +13,7 @@ describe('OptimizationPriority', () => {
     const events: UserBehaviorEvent[] = [
       { action: 'open_entity', timestamp: '2026-01-01T00:00:00Z' },
       { action: 'open_entity', timestamp: '2026-01-01T00:01:00Z' },
+      { action: 'switch_tab', tab: 'explore', timestamp: '2026-01-01T00:02:00Z' },
       { action: 'start_research', timestamp: '2026-01-01T00:02:00Z' },
       { action: 'start_research', timestamp: '2026-01-01T00:03:00Z' },
       { action: 'start_research', timestamp: '2026-01-01T00:04:00Z' },
@@ -100,14 +101,14 @@ describe('CapabilityHealth', () => {
     expect(health.map((h) => h.capability)).toContain('Comparison 对比')
   })
 
-  it('Comparison is critical when never used', () => {
+  it('Comparison is warning when never used (not critical)', () => {
     const events: UserBehaviorEvent[] = [{ action: 'open_entity', timestamp: '2026-01-01T00:00:00Z' }]
     const pi = generateProductIntelligence(events)
     const funnels = allFunnelMetrics()
     const health = calculateCapabilityHealth(pi, funnels)
     const comparison = health.find((h) => h.capability === 'Comparison 对比')!
 
-    expect(comparison.severity).toBe('critical')
+    expect(comparison.severity).toBe('warning')
     expect(comparison.score).toBe(0)
   })
 

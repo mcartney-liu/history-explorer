@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import SearchBox from './components/SearchBox'
 import EntitySearchBox from './components/EntitySearchBox'
 import SummaryPanel from './components/SummaryPanel'
@@ -58,6 +58,7 @@ import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
 import AppShell from './components/AppShell'
+import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
@@ -593,8 +594,27 @@ function App() {
     </>
   ) : undefined
 
+  // M59-009: Workspace — build from navigation history
+  const workspaceItems: WorkspaceItem[] = useMemo(() => {
+    const items: WorkspaceItem[] = []
+    if (current && result) {
+      items.push({
+        id: current.type === 'entity' ? current.id : current.topic,
+        title: result.title || current.type === 'entity' ? entityData?.name ?? current.id : current.topic,
+        subtitle: current.type,
+        icon: current.type === 'entity' ? '\u{1F4D6}' : '\u{1F310}',
+      })
+    }
+    return items
+  }, [current, result, entityData])
+
   return (
-    <AppShell search={searchSlot} nav={navSlot}>
+    <AppShell search={searchSlot} nav={navSlot} workspace={
+      <WorkspacePanel
+        current={workspaceItems[0] ?? null}
+        onEntityClick={(id) => navigateToEntity(id)}
+      />
+    }>
           {loading && (
             <LoadingSkeleton
               label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'}

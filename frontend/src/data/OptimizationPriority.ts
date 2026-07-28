@@ -116,8 +116,8 @@ export function generateOptimizationPriority(
     })
   }
 
-  // Research save rate
-  if (pi.researchSaveRate < 0.5) {
+  // Research save rate — only if users actually attempted research
+  if (pi.researchSaveRate < 0.5 && pi.exploreEngagementRate > 0) {
     const reach = 1 - pi.researchSaveRate
     const sev = classifySeverity(pi.researchSaveRate, 0.4, 0.2)
     candidates.push({
@@ -230,9 +230,10 @@ export function calculateCapabilityHealth(
       capability: 'Comparison 对比',
       score: pi.unusedCapabilities.includes('多实体对比研究') ? 0 : 80,
       adoptionRate: pi.unusedCapabilities.includes('多实体对比研究') ? 0 : 0.8,
-      severity: pi.unusedCapabilities.includes('多实体对比研究') ? 'critical' : 'healthy',
+      // M55: unused capability ≠ broken. "critical" means attempted-but-failed.
+      severity: pi.unusedCapabilities.includes('多实体对比研究') ? 'warning' : 'healthy',
       gapDescription: pi.unusedCapabilities.includes('多实体对比研究')
-        ? '多实体对比能力完全未被使用'
+        ? '多实体对比能力当前未被触发——不一定是缺陷'
         : '对比功能被使用',
     },
     {

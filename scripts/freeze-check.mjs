@@ -402,6 +402,21 @@ export const SCOPE_ALLOWLIST = [
   // M53 — Pipeline Auto-Activation (intelligence activation gate)
   "frontend/src/data/ProductIntelligenceActivation.ts",
   "frontend/src/data/ProductIntelligenceActivation.test.ts",
+  // M54 — Reality Validation (pipeline output validation)
+  "frontend/src/data/M54_reality_validation.test.ts",
+  // M57 — Reality Validation 2 (5-scenario pipeline validation)
+  "frontend/src/data/M57_reality_validation.test.ts",
+  // M59 — UI Design System Foundation
+  "frontend/src/components/ui/",
+  // M59-005 — EntityViewModel data layer
+  "frontend/src/data/entity/",
+  // M59-006 — EntityHero component
+  "frontend/src/components/entity/",
+  // M59-009 — Exploration Workspace
+  "frontend/src/components/workspace/",
+  // M59-011 — AI Companion Architecture
+  "frontend/src/data/ai/",
+  "frontend/src/components/ai/",
 ];
 
 function _scopeAllowed(file) {

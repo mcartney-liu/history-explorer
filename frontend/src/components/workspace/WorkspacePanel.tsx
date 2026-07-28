@@ -1,0 +1,136 @@
+// ============================================================
+// M59-009 — WorkspacePanel
+// Museum-style exploration workspace. "Research desk" sidebar.
+// Sections: Current, History, Pinned, Notebook, Compare, AI.
+// Pure presentational. Mock state. Future backend wire point.
+// ============================================================
+
+import type { ReactNode } from 'react'
+
+// ---- Data types ----
+export interface WorkspaceItem {
+  id: string
+  title: string
+  subtitle: string
+  icon: string
+  timestamp?: string
+}
+
+interface WorkspaceSectionProps {
+  title: string
+  children: ReactNode
+  badge?: string
+}
+
+// ---- Section ----
+export function WorkspaceSection({ title, children, badge }: WorkspaceSectionProps) {
+  return (
+    <div className="ws-section">
+      <div className="ws-section-header">
+        <h4 className="ws-section-title">{title}</h4>
+        {badge && <span className="ws-section-badge">{badge}</span>}
+      </div>
+      <div className="ws-section-body">{children}</div>
+    </div>
+  )
+}
+
+// ---- Item ----
+export function WorkspaceItem({ item, onClick }: { item: WorkspaceItem; onClick?: () => void }) {
+  return (
+    <div className="ws-item" role="button" tabIndex={0} onClick={onClick}>
+      <span className="ws-item-icon">{item.icon}</span>
+      <div className="ws-item-body">
+        <span className="ws-item-title">{item.title}</span>
+        <span className="ws-item-subtitle">{item.subtitle}</span>
+      </div>
+      {item.timestamp && (
+        <span className="ws-item-time">{item.timestamp}</span>
+      )}
+    </div>
+  )
+}
+
+// ---- Placeholder ----
+export function WorkspacePlaceholder({ label }: { label: string }) {
+  return (
+    <div className="ws-placeholder">
+      <span className="ws-placeholder-icon">+</span>
+      <span className="ws-placeholder-label">{label}</span>
+    </div>
+  )
+}
+
+// ---- Main Panel ----
+interface WorkspacePanelProps {
+  current?: WorkspaceItem | null
+  history?: WorkspaceItem[]
+  onEntityClick?: (id: string) => void
+}
+
+export function WorkspacePanel({
+  current,
+  history = [],
+  onEntityClick,
+}: WorkspacePanelProps) {
+  return (
+    <aside className="ws" aria-label="探索工作台">
+      {/* Brand */}
+      <div className="ws-brand">
+        <span className="ws-brand-name">探索工作台</span>
+      </div>
+
+      {/* Current */}
+      <WorkspaceSection title="当前探索" badge={current ? '1' : undefined}>
+        {current ? (
+          <WorkspaceItem
+            item={current}
+            onClick={() => onEntityClick?.(current.id)}
+          />
+        ) : (
+          <WorkspacePlaceholder label="点击任意实体开始探索" />
+        )}
+      </WorkspaceSection>
+
+      {/* History */}
+      <WorkspaceSection title="探索足迹" badge={history.length > 0 ? String(history.length) : undefined}>
+        {history.length > 0 ? (
+          history.slice(0, 8).map((item) => (
+            <WorkspaceItem
+              key={item.id}
+              item={item}
+              onClick={() => onEntityClick?.(item.id)}
+            />
+          ))
+        ) : (
+          <WorkspacePlaceholder label="你探索过的实体会出现在这里" />
+        )}
+      </WorkspaceSection>
+
+      {/* Pinned */}
+      <WorkspaceSection title="已置顶">
+        <WorkspacePlaceholder label="长按实体卡片即可置顶，方便快速返回" />
+      </WorkspaceSection>
+
+      {/* Notebook */}
+      <WorkspaceSection title="研究笔记">
+        <WorkspacePlaceholder label="在研究面板中记录你的历史发现" />
+      </WorkspaceSection>
+
+      {/* Compare */}
+      <WorkspaceSection title="对比队列">
+        <WorkspacePlaceholder label="添加多个实体，横向对比时间线或关系" />
+      </WorkspaceSection>
+
+      {/* AI Assistant entry */}
+      <WorkspaceSection title="AI 助手">
+        <div className="ws-ai-entry">
+          <span className="ws-ai-icon">💬</span>
+          <span className="ws-ai-label">与历史学家对话</span>
+        </div>
+      </WorkspaceSection>
+    </aside>
+  )
+}
+
+export default WorkspacePanel
