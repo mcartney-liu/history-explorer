@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM47] - 2026-07-28 (Project Release — M47)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Decision Intelligence Layer — zero backend / schema / AI Gateway / dependency change. 12 consecutive milestones without backend changes.
+
+### Product Decision Intelligence Layer (M47)
+
+**OptimizationPriority**: Priority scoring engine — ranks optimization candidates by `reach × severity × fixProximity`. Generates `topRecommendation` + ranked list with severity levels (critical/warning/healthy) and human-readable reasons. Safe for empty data (returns "暂无数据").
+
+**CapabilityHealth**: 6 capabilities scored on 0-100 scale — Discovery (discoveryToEntityRate), Exploration (funnel conversion), AI Chat (chatAdoptionRate), Research (funnel conversion), Comparison (unused detection), Save & Restore (researchSaveRate). Each includes severity classification and gap description.
+
+**DecisionIntelligence**: Unified output combining priority + health. ProductUsageAnalysis extended with `priority` and `capabilityHealth` fields.
+
+**M47 bridges the gap** from "we see problems" to "this is the one to fix first." No more guessing which UX issue matters most.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+2 M47 entries). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 12 consecutive milestones — backend diff = 0.
+
+**Tests**: Backend 247 (+0). Frontend 90 files, 845 passed (+9 vs vM46).
+
 ## [vM46] - 2026-07-28 (Project Release — M46)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Product Optimization Loop — zero backend / schema / AI Gateway / dependency change. 11 consecutive milestones without backend changes.
