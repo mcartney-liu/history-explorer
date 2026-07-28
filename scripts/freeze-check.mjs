@@ -386,6 +386,9 @@ export const SCOPE_ALLOWLIST = [
   // M48 — ExplorationBehaviors (behavioral pattern detection)
   "frontend/src/data/ExplorationBehaviors.ts",
   "frontend/src/data/ExplorationBehaviors.test.ts",
+  // M49 — ExplorationDepth (exploration depth scoring)
+  "frontend/src/data/ExplorationDepth.ts",
+  "frontend/src/data/ExplorationDepth.test.ts",
 ];
 
 function _scopeAllowed(file) {

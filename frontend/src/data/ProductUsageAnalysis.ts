@@ -15,6 +15,8 @@ import { generateDecisionIntelligence } from './OptimizationPriority'
 import type { OptimizationPriority, CapabilityHealth } from './OptimizationPriority'
 import { analyzeExplorationBehaviors } from './ExplorationBehaviors'
 import type { ExplorationBehaviors } from './ExplorationBehaviors'
+import { analyzeExplorationDepth } from './ExplorationDepth'
+import type { ExplorationDepth } from './ExplorationDepth'
 
 // -----------------------------------------------------------
 // Types
@@ -26,6 +28,7 @@ export interface ProductUsageAnalysis {
   priority: OptimizationPriority
   capabilityHealth: CapabilityHealth[]
   explorationBehaviors: ExplorationBehaviors
+  explorationDepth: ExplorationDepth
   summary: string
 }
 
@@ -40,7 +43,8 @@ export function analyzeProductUsage(
   const intelligence = generateProductIntelligence(events)
   const decision = generateDecisionIntelligence(intelligence, funnelMetrics)
   const explorationBehaviors = analyzeExplorationBehaviors(events)
-  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors)
+  const explorationDepth = analyzeExplorationDepth(events)
+  const summary = buildSummary(funnelMetrics, intelligence, decision, explorationBehaviors, explorationDepth)
 
   return {
     funnelMetrics,
@@ -48,6 +52,7 @@ export function analyzeProductUsage(
     priority: decision.priority,
     capabilityHealth: decision.capabilityHealth,
     explorationBehaviors,
+    explorationDepth,
     summary,
   }
 }
@@ -61,6 +66,7 @@ function buildSummary(
   pi: ProductIntelligence,
   decision: { priority: OptimizationPriority; capabilityHealth: CapabilityHealth[] },
   eb: ExplorationBehaviors,
+  ed: ExplorationDepth,
 ): string {
   const lines: string[] = []
 
@@ -93,6 +99,9 @@ function buildSummary(
 
   // M48: Exploration behaviors
   lines.push(`[行为模式] 主要模式: ${eb.dominantPattern}  置信度: ${Math.round(eb.confidence * 100)}%${eb.insights.length > 0 ? `  洞察: ${eb.insights[0]}` : ''}`)
+
+  // M49: Exploration depth
+  lines.push(`[探索深度] 最高等级: ${ed.maxDepth}  ${ed.insights[0]}`)
 
   return lines.join('\n')
 }
