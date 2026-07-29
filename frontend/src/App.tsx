@@ -328,7 +328,8 @@ function App() {
   }
 
   function handleExplore(topicValue?: string) {
-    const trimmed = (topicValue ?? topic).trim()
+    const raw = topicValue ?? topic
+    const trimmed = typeof raw === 'string' ? raw.trim() : ''
     if (!trimmed) {
       setError('Please enter a historical topic.')
       return
