@@ -434,6 +434,13 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/pages/DevCatalog.tsx",
   "frontend/src/data/locale.tsx",
   "frontend/src/__tests__/",
+  // M61-bridge-build (TypeScript cleanup) — Frontend Freeze Revision Gate
+  // (lightweight ADR-0004; PO-approved 2026-07-29 as part of the vM60 harvest
+  // route). ConnectionsExplainedPanel was consumed by EntityPage from M36/M37
+  // but never registered in the allowlist; the M61 fix is a pure dead-code
+  // removal (unused-destructure TS6133). No backend / schema / enum / runtime
+  // / dependency change; runtime stays 0.13.0.
+  "frontend/src/components/ConnectionsExplainedPanel.tsx",
   "scripts/visual-check.mjs",
 ];
 
