@@ -31,6 +31,9 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# Pip install --target residue (environment artifact, not project dependency)
+.pip_target/
+
 # Vite temporary config files
 vite.config.ts.timestamp-*.mjs
 
