@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { ExplorationHistoryItem } from '../../data/workspace/ExplorationHistoryModel'
+import { Icon } from '../ui/Icon'
 
 interface ExplorationHistoryListProps {
   items: ExplorationHistoryItem[]
@@ -40,9 +41,11 @@ export function ExplorationHistoryList({ items, onItemClick }: ExplorationHistor
           onClick={() => onItemClick?.(item.entityId, item.name)}
         >
           <div className="ehl-item-left">
-            <span className="ehl-item-icon">
-              {item.type === 'entity' ? '\u{1F4D6}' : '\u{1F310}'}
-            </span>
+            <Icon
+              name={item.type === 'entity' ? 'book' : 'globe'}
+              size={16}
+              className="ehl-item-icon"
+            />
             <div>
               <span className="ehl-item-name">{item.name || item.id}</span>
               {i === items.length - 1 && (

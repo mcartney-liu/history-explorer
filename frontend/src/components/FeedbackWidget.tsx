@@ -6,6 +6,7 @@
 // tests / private mode never throw.
 
 import { useState } from 'react'
+import { Icon } from './ui/Icon'
 
 const STORAGE_KEY = 'history_explorer_feedback'
 
@@ -64,7 +65,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
           aria-label="有用"
           onClick={() => submit('up')}
         >
-          👍 有用
+          <Icon name="thumb-up" size={16} /> 有用
         </button>
         <button
           type="button"
@@ -73,7 +74,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
           aria-label="没用"
           onClick={() => submit('down')}
         >
-          👎 没用
+          <Icon name="thumb-down" size={16} /> 没用
         </button>
       </div>
       <textarea

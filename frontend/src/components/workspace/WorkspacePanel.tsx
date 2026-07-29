@@ -7,6 +7,8 @@
 
 // M59-020: now uses real navigation history data.
 import type { ReactNode } from 'react'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 import { ExplorationPathCard } from './ExplorationPathCard'
 import { ExplorationHistoryList } from './ExplorationHistoryList'
 
@@ -42,7 +44,7 @@ export function WorkspaceSection({ title, children, badge }: WorkspaceSectionPro
 export function WorkspaceItem({ item, onClick }: { item: WorkspaceItem; onClick?: () => void }) {
   return (
     <div className="ws-item" role="button" tabIndex={0} onClick={onClick}>
-      <span className="ws-item-icon">{item.icon}</span>
+      <Icon name={item.icon as IconName} size={16} className="ws-item-icon" />
       <div className="ws-item-body">
         <span className="ws-item-title">{item.title}</span>
         <span className="ws-item-subtitle">{item.subtitle}</span>
@@ -139,7 +141,7 @@ export function WorkspacePanel({
       {/* AI Assistant entry */}
       <WorkspaceSection title="AI 助手">
         <div className="ws-ai-entry">
-          <span className="ws-ai-icon">💬</span>
+          <Icon name="chat" size={16} className="ws-ai-icon" />
           <span className="ws-ai-label">与历史学家对话</span>
         </div>
       </WorkspaceSection>

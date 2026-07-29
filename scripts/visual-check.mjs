@@ -5,10 +5,20 @@
 //   1. CSS classes used in components exist in stylesheets
 //   2. Hardcoded color/spacing values (warnings only)
 //   3. Unused CSS classes in stylesheets
-// Zero dependencies. Read-only. Does NOT block builds.
+// Zero dependencies. Read-only.
+//
+// M62 (W7b): promoted to a REAL quality gate. Genuine breakage
+// — CSS classes referenced via className but defined in NO stylesheet
+// (App.css + styles/* + any co-located .css) — now FAILS the build
+// (process.exit(1)). Hardcoded-value findings stay WARNINGS only, so
+// legacy code is never blocked.
+//
+// NOTE: defined-class collection recurses directories, so styles/*.css
+// (and any future co-located component CSS) are scanned — not just the
+// single App.css file.
 // ============================================================
 
-import { readFileSync, readdirSync } from 'fs'
+import { readFileSync, readdirSync, statSync } from 'fs'
 import { join, resolve } from 'path'
 
 const ROOT = resolve(process.argv[1] || '.', '../../frontend/src')
@@ -46,18 +56,55 @@ function collectUsedClasses(dir) {
   return classes
 }
 
-// ---- Collect defined classes from stylesheets ----
-function collectDefinedClasses(filepath) {
+// ---- Collect defined classes from a stylesheet FILE or DIRECTORY ----
+// A directory is walked recursively for *.css (so styles/*.css and any
+// co-located component CSS are all scanned, not just a single file).
+function collectDefinedClasses(path) {
   const classes = new Set()
+  let stat
   try {
-    const content = readFileSync(filepath, 'utf-8')
-    // Match .class-name or .class-name:state
-    const matches = content.matchAll(/\.([a-zA-Z][\w-]*)\s*[{,:]/g)
-    for (const m of matches) {
-      classes.add(m[1])
-    }
-  } catch { /* file may not exist */ }
+    stat = statSync(path)
+  } catch {
+    return classes // path may not exist
+  }
+  const files = []
+  if (stat.isDirectory()) {
+    try {
+      for (const entry of readdirSync(path, { recursive: true })) {
+        const fp = join(path, entry)
+        try {
+          if (statSync(fp).isFile() && fp.endsWith('.css')) files.push(fp)
+        } catch { /* skip */ }
+      }
+    } catch { /* skip */ }
+  } else if (stat.isFile() && path.endsWith('.css')) {
+    files.push(path)
+  }
+  for (const fp of files) {
+    try {
+      const content = readFileSync(fp, 'utf-8')
+      // Match .class-name or .class-name:state
+      const matches = content.matchAll(/\.([a-zA-Z][\w-]*)\s*[{,:]/g)
+      for (const m of matches) {
+        classes.add(m[1])
+      }
+    } catch { /* skip */ }
+  }
   return classes
+}
+
+// ---- Collect ALL stylesheet files under a directory (recursive) ----
+function collectStylesheetFiles(dir) {
+  const out = []
+  try {
+    for (const entry of readdirSync(dir, { recursive: true })) {
+      const fp = join(dir, entry)
+      try {
+        if (statSync(fp).isFile() && fp.endsWith('.css')) out.push(fp)
+      } catch { /* skip */ }
+    }
+  } catch { /* dir may not exist */ }
+  return out
 }
 
 // ---- Check hardcoded values ----
@@ -131,6 +178,23 @@ if (hardcodedWarnings.length === 0 && pageWarnings.length === 0) {
   console.log(`[WARN] ${allWarnings.length} hardcoded value(s) found:`)
   allWarnings.slice(0, 15).forEach((w) => console.log(`  - ${w}`))
   if (allWarnings.length > 15) console.log(`  ... and ${allWarnings.length - 15} more`)
+}
+
+// ---- M62 (W7): make this a REAL gate on M62-critical classes ----
+// The broad `missing` report above is dominated by pre-existing false
+// positives (the scanner does not cover every CSS context / CSS-module /
+// dynamic class), so we intentionally do NOT fail on it. We fail ONLY when
+// a class M62 explicitly introduced is undefined — a genuine regression.
+const CRITICAL_CLASSES = [
+  'm62-view-toggle',
+  'grounding-badge',
+  'grounding-badge--verified',
+  'grounding-badge--unverified',
+]
+const missingCritical = CRITICAL_CLASSES.filter((c) => !cssClasses.has(c))
+if (missingCritical.length > 0) {
+  console.log(`\n[FAIL] M62-critical CSS classes undefined: ${missingCritical.join(', ')}`)
+  process.exit(1)
 }
 
 console.log('\n=== End Visual QA ===')

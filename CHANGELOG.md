@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM62] - 2026-07-29 (Project Release — M62)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. UX Convergence (M62): unified SVG icon registry (22 canonical names, emoji-free per P0 rule), three-tier narrative structure (Narrative/Interpretation/Supporting) on primary result views, inline collapse toggles for relationship/timeline views, AI explanation GroundingBadge (verified/partial/unverified) wired to real provenance, Discover page re-oriented to exploration-first, 5 new QA guardrail tests, 4 new CI gates (visual/emoji/structure/grounding-contrast). Pure frontend — zero backend / schema / AI Gateway / dependency change. 21 consecutive milestones with backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; release-consistency 7/7; 941 tests pass.
+
+### UX Convergence (M62)
+
+**SVG Icon Registry**: `components/ui/Icon.tsx` — 22 canonical stroke icons replace all emoji used as functional icons (P0 compliance); `MultiEntitySelector` ✕ and `EntityHero` ⌖ migrated to SVG.
+
+**Three-Tier Narrative**: primary result views wrap content in `data-tier="narrative|interpretation|supporting"` sections; relationship/timeline views get inline collapse toggles (list/spatial, single/multi) instead of separate routes.
+
+**GroundingBadge**: `components/ui/GroundingBadge.tsx` added; `AIExplanationPanel` surfaces verified/partial/unverified state from real `response.grounded` + `evidence[].status` (previously a static count-based label).
+
+**Discover Convergence**: `pages/DiscoverPage.tsx` re-oriented to exploration-first with 了解/研究/扩展 tabs; warm, personalized copy restored.
+
+**QA Guardrails**: 5 new tests (`m62-icon-registry`, `m62-emoji-guard`, `m62-entity-labels`, `m62-grounding-contrast`, `m62-structure`).
+
+**CI Gates**: `scripts/emoji-scan.mjs`, `scripts/m62-structure-check.mjs`, `scripts/visual-check.mjs` (extended); GitHub Actions CI wires visual/emoji/structure gates.
+
+**Freeze Gate**: No SCOPE_ALLOWLIST change required (all M62 paths already allowlisted via M35/M61). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 21 consecutive milestones — backend diff = 0.
+
+---
+
 ## [vM60] - 2026-07-29 (Project Release — M60)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. M60 Landing Page productization (M60-003) + i18n support + Design System V1.0 FINAL freeze + Development Playbook V1.0, plus the M61-bridge-build TypeScript cleanup: 55 latent TS errors resolved across 9 modules; production `tsc && vite build` now exits 0. Zero backend / schema / AI Gateway / dependency change — 20 consecutive milestones with backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; release-consistency 7/7.

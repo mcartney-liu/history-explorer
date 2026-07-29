@@ -208,7 +208,9 @@ input:focus,textarea:focus{border-color:var(--gold-line)}
 }
 .discover-theme-card:hover{
   border-color:var(--gold-line);
-  box-shadow:0 0 24px var(--gold-glow);
+  background:linear-gradient(158deg,rgba(28,40,72,0.96),rgba(15,22,42,0.98));
+  box-shadow:0 12px 38px var(--gold-glow);
+  transform:translateY(-4px);
 }
 .discover-theme-label{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--hi)}
 .discover-theme-desc{font-size:13px;color:var(--mid)}
@@ -222,7 +224,7 @@ input:focus,textarea:focus{border-color:var(--gold-line)}
   text-align:left;cursor:pointer;transition:.2s;font-family:var(--sans);
   margin-bottom:16px;
 }
-.discover-featured-card:hover{box-shadow:0 0 36px var(--gold-glow)}
+.discover-featured-card:hover{box-shadow:0 14px 46px var(--gold-glow);transform:translateY(-4px)}
 .discover-featured-title{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold-hi)}
 .discover-featured-desc{font-size:14px;color:var(--mid)}
 
@@ -234,19 +236,39 @@ input:focus,textarea:focus{border-color:var(--gold-line)}
   background:rgba(14,20,38,0.6);border:1px solid var(--line);
   color:var(--mid);cursor:pointer;transition:.18s;
 }
-.discover-topic-card:hover{color:var(--gold-hi);border-color:var(--gold-line);background:var(--gold-glow)}
+.discover-topic-card:hover{color:var(--gold-hi);border-color:var(--gold-line);background:var(--gold-glow);transform:translateY(-3px)}
 
 /* product intro */
 .discover-intro{margin:40px 0}
 .discover-intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .discover-intro-card{
   padding:24px;background:var(--navy-card);border:1px solid var(--line);
-  border-radius:14px;text-align:center;transition:.2s;
+  border-radius:14px;text-align:center;transition:border-color var(--animation-fast),transform var(--animation-fast),box-shadow var(--animation-fast);
 }
-.discover-intro-card:hover{border-color:var(--gold-line)}
-.discover-intro-icon{font-size:32px;display:block;margin-bottom:12px}
+.discover-intro-card:hover{border-color:var(--gold-line);transform:translateY(-4px);box-shadow:0 16px 40px var(--gold-glow)}
+.discover-intro-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--navy-surface);color:var(--gold-hi);margin-bottom:14px;
+}
 .discover-intro-title{font-family:var(--serif);font-size:16px;color:var(--hi);margin-bottom:6px}
 .discover-intro-desc{font-size:13px;color:var(--mid)}
+
+/* M62-A: tabbed landing */
+.discover-tabs{display:inline-flex;gap:6px;margin:24px 0;padding:0}
+.discover-tab{
+  appearance:none;border:0;background:transparent;color:var(--mid);
+  font-family:var(--sans);font-size:14px;font-weight:600;padding:8px 18px;
+  border-radius:9px;cursor:pointer;transition:var(--animation-fast);
+}
+.discover-tab:hover{color:var(--hi);background:var(--navy-card)}
+.discover-tab.active{background:var(--gold-glow);color:var(--gold-hi)}
+.discover-tab-panel{margin:8px 0}
+.discover-interest{margin:40px 0}
+
+/* M62-A: expand (roadmap) tab */
+.discover-expand{margin:40px 0;padding:var(--space-6);border:1px solid var(--line);border-radius:16px;background:var(--navy-card)}
+.discover-expand-soon{color:var(--gold);font-weight:600;margin-top:8px}
 
 /* recent */
 .discover-recent{margin:40px 0}
@@ -669,3 +691,25 @@ hr{border:none;border-top:1px solid var(--line);margin:16px 0}
 .he-card-cta{font-size:var(--text-caption);color:var(--gold);margin-top:auto}
 /* Loading/error */
 .he-landing .he-landing-head{display:none}
+
+/* ========== M62 W4 DISCOVER PRIMARY EXPLORE ========== */
+.discover-explore-primary{margin:40px 0}
+
+/* ========== M62 W3 VIEW TOGGLE ========== */
+.m62-view-toggle{display:inline-flex;gap:2px;margin:0 0 var(--space-4);padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--navy-surface)}
+.m62-view-toggle button{appearance:none;border:0;background:transparent;color:var(--mid);font-family:var(--sans);font-size:13px;font-weight:500;padding:6px 16px;border-radius:7px;cursor:pointer;transition:var(--animation-fast)}
+.m62-view-toggle button:hover{color:var(--hi)}
+.m62-view-toggle button.active{background:var(--gold-glow);color:var(--gold-hi);box-shadow:inset 0 0 0 1px var(--gold-line)}
+
+/* ========== M62 W5 GROUNDING BADGE ========== */
+/* Text contrast locked to >= 4.5:1 (WCAG AA):
+   verified:  #0E3B2C bg / #E9FBF3 text  (~11.9:1)
+   unverified:#D9C47E bg / #3B2F0E text  (~7.6:1) */
+.grounding-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;line-height:1;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.grounding-badge svg{display:block;flex-shrink:0}
+.grounding-badge--verified{background:#0E3B2C;color:#E9FBF3;border:1px solid #1E6B4E}
+.grounding-badge--unverified{background:#D9C47E;color:#3B2F0E;border:1px solid #B59A4A}
+
+/* ========== M62 W5 AI EXPLANATION HEADER ========== */
+.ae-header-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ae-grounding{margin:0}

@@ -38,7 +38,9 @@ describe('MultiEntitySelectorView', () => {
         onChange={() => {}}
       />,
     )
-    expect(html).toContain('✕')
+    // M62: the remove glyph is now the canonical registry icon (no emoji).
+    expect(html).toContain('mes-tag-remove-icon')
+    expect(html).toContain('<svg')
   })
 
   it('shows limit message when max reached', () => {

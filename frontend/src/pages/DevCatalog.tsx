@@ -29,7 +29,7 @@ const mockIdentity = {
   timeLabel: '100 BC – 44 BC',
   locationLabel: 'Rome',
   label: '军事统帅 · 政治家',
-  icon: '\u{1F3DB}',
+  icon: 'civilization',
   keyFacts: ['罗马共和国末期的军事统帅', '高卢战争的征服者', '被元老院刺杀于公元前44年'],
 }
 
@@ -125,11 +125,11 @@ export default function DevCatalog() {
       <Section label="ExplorationCard" purpose="Clickable related entity card. Reusable across entity/relationship types.">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <ExplorationCard
-            model={{ id: 'pompey', title: 'Pompey', entityType: 'Person', icon: '\u{1F464}', subtitle: 'Military rival of Caesar', target: 'pompey', summary: '', badges: [], meta: {} }}
+            model={{ id: 'pompey', title: 'Pompey', entityType: 'Person', icon: 'person', subtitle: 'Military rival of Caesar', target: 'pompey', summary: '', badges: [], meta: {} }}
             onClick={(id) => alert(`Go to ${id}`)}
           />
           <ExplorationCard
-            model={{ id: 'rome', title: 'Rome', entityType: 'Civilization', icon: '\u{1F3DB}', subtitle: 'Capital of the Roman Empire', target: 'rome', summary: '', badges: [], meta: {} }}
+            model={{ id: 'rome', title: 'Rome', entityType: 'Civilization', icon: 'civilization', subtitle: 'Capital of the Roman Empire', target: 'rome', summary: '', badges: [], meta: {} }}
             onClick={(id) => alert(`Go to ${id}`)}
           />
         </div>

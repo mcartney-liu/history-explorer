@@ -6,6 +6,7 @@
 // ============================================================
 
 import type { GraphNode, GraphEdge } from '../../data/entity/entityTypes'
+import { Icon } from '../ui/Icon'
 
 interface ExplorationGuideProps {
   /** Current entity name */
@@ -72,9 +73,19 @@ export function ExplorationGuide({
               className="eg-next-card"
               onClick={() => onExploreNode?.(nextNode.id)}
             >
-              <span className="eg-next-icon">
-                {nextNode.type === 'Person' ? '\u{1F464}' : nextNode.type === 'Civilization' ? '\u{1F3DB}' : nextNode.type === 'Event' ? '\u2694' : '\u{1F310}'}
-              </span>
+              <Icon
+                name={
+                  nextNode.type === 'Person'
+                    ? 'person'
+                    : nextNode.type === 'Civilization'
+                      ? 'civilization'
+                      : nextNode.type === 'Event'
+                        ? 'event'
+                        : 'globe'
+                }
+                size={20}
+                className="eg-next-icon"
+              />
               <div>
                 <span className="eg-next-name">{nextNode.name}</span>
                 <span className="eg-next-type">{nextNode.type}</span>

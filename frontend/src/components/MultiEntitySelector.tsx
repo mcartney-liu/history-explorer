@@ -1,3 +1,5 @@
+import { Icon } from './ui/Icon'
+
 export type SelectableEntity = {
   id: string
   globalId?: string
@@ -42,7 +44,7 @@ export function MultiEntitySelectorView({
             aria-label={`移除 ${e.name}`}
             onClick={() => onChange(selected.filter((s) => s.id !== e.id))}
           >
-            ✕
+            <Icon name="close" size={16} className="mes-tag-remove-icon" />
           </button>
         </span>
       ))}

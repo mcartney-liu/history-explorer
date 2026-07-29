@@ -73,3 +73,51 @@ jobs:
           node-version: "22"
       - name: Run freeze guard
         run: node scripts/freeze-check.mjs
+
+  visual-check:
+    name: Visual QA Gate (M62)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run visual QA (fails on M62-critical class regression)
+        run: node scripts/visual-check.mjs
+
+  emoji-scan:
+    name: Emoji Guard (M62)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Scan for emoji in source
+        run: node scripts/emoji-scan.mjs
+
+  structure-check:
+    name: Structure Gate (M62)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Assert narrative/interpretation/supporting tiers + allowlist
+        run: node scripts/m62-structure-check.mjs
+
+  release-consistency:
+    name: Release Consistency (advisory)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run release consistency check
+        run: node scripts/release-consistency-check.mjs

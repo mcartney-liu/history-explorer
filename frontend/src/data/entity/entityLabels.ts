@@ -16,14 +16,14 @@ export const ENTITY_TYPE_LABELS: Record<string, string> = {
 }
 
 export const ENTITY_TYPE_ICONS: Record<string, string> = {
-  Person: '\u{1F464}',
-  Civilization: '\u{1F3DB}',
-  Event: '\u2694',
-  Location: '\u{1F4CD}',
-  'Time Period': '\u23F3',
-  Technology: '\u2699',
-  Religion: '\u{1F6D0}',
-  Idea: '\u{1F4A1}',
+  Person: 'person',
+  Civilization: 'civilization',
+  Event: 'event',
+  Location: 'location',
+  'Time Period': 'time-period',
+  Technology: 'technology',
+  Religion: 'religion',
+  Idea: 'idea',
 }
 
 export function getEntityLabel(type: string): string {
@@ -31,5 +31,5 @@ export function getEntityLabel(type: string): string {
 }
 
 export function getEntityIcon(type: string): string {
-  return ENTITY_TYPE_ICONS[type] || '\u{1F310}'
+  return ENTITY_TYPE_ICONS[type] || 'globe'
 }

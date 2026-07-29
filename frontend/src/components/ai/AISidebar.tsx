@@ -6,6 +6,8 @@
 // ============================================================
 
 import { useState, useCallback } from 'react'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 import type { AIContext } from '../../data/ai/AIContext'
 import {
   createInteraction,
@@ -55,7 +57,7 @@ export function AISidebar({ context }: AISidebarProps) {
     return (
       <div className="ais">
         <div className="ais-collapsed" role="button" tabIndex={0}>
-          <span className="ais-icon">💬</span>
+          <Icon name="chat" size={20} className="ais-icon" />
           <span className="ais-label">AI Historian</span>
           <span className="ais-hint">选择实体后可用</span>
         </div>
@@ -72,7 +74,7 @@ export function AISidebar({ context }: AISidebarProps) {
           tabIndex={0}
           onClick={() => setExpanded(true)}
         >
-          <span className="ais-icon">💬</span>
+          <Icon name="chat" size={20} className="ais-icon" />
           <span className="ais-label">Ask Historian</span>
           <span className="ais-entity-name">{context.entity.name}</span>
         </div>
@@ -87,7 +89,7 @@ export function AISidebar({ context }: AISidebarProps) {
       {/* Header */}
       <div className="ais-header">
         <div className="ais-header-left">
-          <span className="ais-icon">💬</span>
+          <Icon name="chat" size={20} className="ais-icon" />
           <div>
             <span className="ais-title">AI Historian</span>
             <span className="ais-subtitle">你的历史研究伙伴</span>
@@ -142,7 +144,7 @@ function ActionListView({
           tabIndex={0}
           onClick={() => onAction(action)}
         >
-          <span className="ais-action-icon">{action.icon}</span>
+          <Icon name={action.icon as IconName} size={20} className="ais-action-icon" />
           <span>{action.label}</span>
         </div>
       ))}

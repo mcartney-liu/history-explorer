@@ -6,7 +6,7 @@
 // M44: added ProductIntro section — static capability showcase for new visitors.
 // M59-002: migrated cards to <Card> component.
 
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
@@ -15,6 +15,8 @@ import { generateUserInterestProfile } from '../data/ResearchInsights'
 import type { SavedResearch } from '../data/ResearchHistory'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import { Card } from '../components/ui/Card'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = '原来历史还能这样探索。'
@@ -38,25 +40,25 @@ const ENTITY_TYPE_CARDS = [
 const PRODUCT_CAPABILITIES = [
   {
     id: 'story',
-    icon: '📖',
+    icon: 'book',
     title: '历史叙事',
     desc: '从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。',
   },
   {
     id: 'explore',
-    icon: '🔗',
+    icon: 'link',
     title: '关系探索',
     desc: '穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。',
   },
   {
     id: 'research',
-    icon: '🔬',
+    icon: 'research',
     title: '深度研究',
     desc: '4 维度 AI 分析：政治、军事、经济、文化。支持多实体对比研究，结果可保存回顾。',
   },
   {
     id: 'chat',
-    icon: '💬',
+    icon: 'chat',
     title: 'AI 历史对话',
     desc: '向 AI 历史学家提问。每个回答都有事实溯源，没有经过验证的内容不会呈现。',
   },
@@ -69,7 +71,9 @@ function ProductIntro() {
       <div className="discover-intro-grid">
         {PRODUCT_CAPABILITIES.map((cap) => (
           <Card key={cap.id} variant="default" className="discover-intro-card">
-            <span className="discover-intro-icon">{cap.icon}</span>
+            <div className="discover-intro-icon">
+              <Icon name={cap.icon as IconName} size={24} />
+            </div>
             <h4 className="discover-intro-title">{cap.title}</h4>
             <p className="discover-intro-desc">{cap.desc}</p>
           </Card>
@@ -224,6 +228,9 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
   // M45: record discovery page visit
   useEffect(() => { recordEvent({ action: 'open_discover' }) }, [])
 
+  // M62-A: tabbed landing — understand (capability + start) / research (personal activity) / expand (roadmap)
+  const [tab, setTab] = useState<'understand' | 'research' | 'expand'>('understand')
+
   // M45 Phase 3: wrap navigation to record click_entity
   const handleTopicClick = useMemo(() => (slug: string) => {
     recordEvent({ action: 'click_entity', entityType: slug })
@@ -237,72 +244,143 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
         <p className="discover-hero-sub">{DISCOVER_HERO_SUB}</p>
       </div>
 
-      {/* M44: Product introduction for new visitors */}
-      <ProductIntro />
+      {/* M62-A: tabbed landing — 了解 (capability + start) / 研究 (personal activity) / 扩展 (roadmap) */}
+      <div className="discover-tabs" role="tablist" aria-label="探索分类">
+        <button
+          type="button"
+          role="tab"
+          id="tab-understand"
+          aria-selected={tab === 'understand'}
+          aria-controls="panel-understand"
+          className={`discover-tab${tab === 'understand' ? ' active' : ''}`}
+          onClick={() => setTab('understand')}
+        >
+          了解
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-research"
+          aria-selected={tab === 'research'}
+          aria-controls="panel-research"
+          className={`discover-tab${tab === 'research' ? ' active' : ''}`}
+          onClick={() => setTab('research')}
+        >
+          研究
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-expand"
+          aria-selected={tab === 'expand'}
+          aria-controls="panel-expand"
+          className={`discover-tab${tab === 'expand' ? ' active' : ''}`}
+          onClick={() => setTab('expand')}
+        >
+          扩展
+        </button>
+      </div>
 
-      {/* M42: Recent researches */}
-      <RecentResearches researches={researches} />
+      {/* 了解 — product capabilities + primary exploration entry */}
+      <div
+        className="discover-tab-panel"
+        role="tabpanel"
+        id="panel-understand"
+        aria-labelledby="tab-understand"
+        hidden={tab !== 'understand'}
+      >
+        {/* M62-A: surface the warm personalization copy + interest profile on the
+            default landing tab so it is visible without switching to 研究. */}
+        <InterestProfile />
+        <ProductIntro />
 
-      {/* M44: ResearchLibrary entry point */}
-      <ResearchLibraryEntry />
+        <div className="discover-explore-primary">
+          <h3 className="discover-section-heading">开始探索</h3>
+          <p className="discover-section-sub">选择一个历史主题或类型，进入交互式探索。</p>
 
-      {/* M42: Interest profile */}
-      <InterestProfile />
+          {/* M42: Entity type exploration */}
+          <div className="discover-themes">
+            <h3 className="discover-section-heading">探索主题</h3>
+            <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
+            <div className="discover-theme-grid">
+              {ENTITY_TYPE_CARDS.map((card) => (
+                <button
+                  key={card.slug}
+                  type="button"
+                  className="discover-theme-card"
+                  data-topic={card.slug}
+                  aria-label={`探索 ${card.label}`}
+                  onClick={() => handleTopicClick(card.slug)}
+                >
+                  <span className="discover-theme-label">{card.label}</span>
+                  <span className="discover-theme-desc">{card.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
-      {/* M42: Entity type exploration */}
-      <div className="discover-themes">
-        <h3 className="discover-section-heading">探索主题</h3>
-        <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
-        <div className="discover-theme-grid">
-          {ENTITY_TYPE_CARDS.map((card) => (
+          <div className="discover-featured" data-topic={FEATURED_TOPIC}>
+            <h3 className="discover-section-heading">精选探索 · Featured</h3>
             <button
-              key={card.slug}
               type="button"
-              className="discover-theme-card"
-              data-topic={card.slug}
-              aria-label={`探索 ${card.label}`}
-              onClick={() => handleTopicClick(card.slug)}
+              className="discover-featured-card"
+              aria-label={`Explore ${prettifySlug(FEATURED_TOPIC)}`}
+              onClick={() => handleTopicClick(FEATURED_TOPIC)}
             >
-              <span className="discover-theme-label">{card.label}</span>
-              <span className="discover-theme-desc">{card.desc}</span>
+              <span className="discover-featured-title">{prettifySlug(FEATURED_TOPIC)}</span>
+              <span className="discover-featured-desc">
+                一条路，连起罗马、波斯、印度与汉朝。从丝绸之路出发，看货物、信仰与技术如何跨越大陆。
+              </span>
             </button>
-          ))}
+            <StarterChips starters={featuredStarters} onStarterClick={onStarterClick} />
+          </div>
+
+          <div className="discover-popular">
+            <h3 className="discover-section-heading">热门探索 · Popular</h3>
+            <ul className="discover-topic-list">
+              {popularSlugs.map((slug) => (
+                <li key={slug}>
+                  <button
+                    type="button"
+                    className="discover-topic-card"
+                    data-topic={slug}
+                    aria-label={`Explore ${prettifySlug(slug)}`}
+                    onClick={() => handleTopicClick(slug)}
+                  >
+                    {prettifySlug(slug)}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div className="discover-featured" data-topic={FEATURED_TOPIC}>
-        <h3 className="discover-section-heading">精选探索 · Featured</h3>
-        <button
-          type="button"
-          className="discover-featured-card"
-          aria-label={`Explore ${prettifySlug(FEATURED_TOPIC)}`}
-          onClick={() => handleTopicClick(FEATURED_TOPIC)}
-        >
-          <span className="discover-featured-title">{prettifySlug(FEATURED_TOPIC)}</span>
-          <span className="discover-featured-desc">
-            一条路，连起罗马、波斯、印度与汉朝。从丝绸之路出发，看货物、信仰与技术如何跨越大陆。
-          </span>
-        </button>
-        <StarterChips starters={featuredStarters} onStarterClick={onStarterClick} />
+      {/* 研究 — personal research activity */}
+      <div
+        className="discover-tab-panel"
+        role="tabpanel"
+        id="panel-research"
+        aria-labelledby="tab-research"
+        hidden={tab !== 'research'}
+      >
+        <RecentResearches researches={researches} />
+        <ResearchLibraryEntry />
       </div>
 
-      <div className="discover-popular">
-        <h3 className="discover-section-heading">热门探索 · Popular</h3>
-        <ul className="discover-topic-list">
-          {popularSlugs.map((slug) => (
-            <li key={slug}>
-              <button
-                type="button"
-                className="discover-topic-card"
-                data-topic={slug}
-                aria-label={`Explore ${prettifySlug(slug)}`}
-                onClick={() => handleTopicClick(slug)}
-              >
-                {prettifySlug(slug)}
-              </button>
-            </li>
-          ))}
-        </ul>
+      {/* 扩展 — roadmap / upcoming */}
+      <div
+        className="discover-tab-panel"
+        role="tabpanel"
+        id="panel-expand"
+        aria-labelledby="tab-expand"
+        hidden={tab !== 'expand'}
+      >
+        <div className="discover-expand">
+          <h3 className="discover-section-heading">扩展功能</h3>
+          <p className="discover-section-sub">更多功能即将推出。包括 AI 内容创作、教育模块和社交探索。</p>
+          <p className="discover-expand-soon">敬请期待</p>
+        </div>
       </div>
     </section>
   )

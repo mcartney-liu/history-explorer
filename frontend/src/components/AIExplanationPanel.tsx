@@ -6,6 +6,7 @@ import {
 } from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
+import GroundingBadge from './ui/GroundingBadge'
 
 export type AIExplanationStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -112,7 +113,13 @@ export function AIExplanationView({
 }: AIExplanationViewProps) {
   return (
     <section className="ai-explanation" aria-label="AI 事实溯源解读">
-      <h3 className="ae-title">AI 事实溯源解读</h3>
+      <div className="ae-header-row">
+        <h3 className="ae-title">AI 事实溯源解读</h3>
+        <GroundingBadge
+          state={contextCount > 0 ? 'verified' : 'unverified'}
+          className="ae-grounding"
+        />
+      </div>
       <p className="ae-context-note">
         基于当前探索上下文（{contextCount} 个实体）提供可被知识图谱验证的解读。
       </p>

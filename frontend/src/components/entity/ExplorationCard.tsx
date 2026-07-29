@@ -6,6 +6,8 @@
 // ============================================================
 
 import type { ExplorationCardModel } from '../../data/entity/ExplorationCardModel'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 
 export type CardVariant = 'default' | 'compact' | 'featured'
 
@@ -33,8 +35,10 @@ export function ExplorationCard({
 
   return (
     <article className={cls} onClick={handleClick} role="button" tabIndex={0}>
-      {/* Icon */}
-      <div className="ec-icon">{icon}</div>
+      {/* Icon — registry key rendered as inline SVG (no emoji) */}
+      <div className="ec-icon">
+        <Icon name={icon as IconName} size={20} />
+      </div>
 
       {/* Body */}
       <div className="ec-body">

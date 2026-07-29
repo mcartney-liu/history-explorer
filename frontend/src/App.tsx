@@ -150,6 +150,11 @@ function App() {
   // every navigation (fetchNode) and on goHome, so it never leaks across pages.
   const [focusedEntityId, setFocusedEntityId] = useState<string | null>(null)
 
+  // M62 W3: relationship / timeline view toggles (no panel deletion — both
+  // views stay reachable; only one renders at a time to cut panel density).
+  const [relView, setRelView] = useState<'list' | 'spatial'>('list')
+  const [timeView, setTimeView] = useState<'single' | 'multi'>('single')
+
   // Load persisted recent explorations once on mount.
   useEffect(() => {
     setRecent(loadRecent())
@@ -609,7 +614,7 @@ function App() {
         id: current.type === 'entity' ? current.id : current.topic,
         title,
         subtitle: '',
-        icon: current.type === 'entity' ? '\u{1F4D6}' : '\u{1F310}',
+        icon: current.type === 'entity' ? 'book' : 'globe',
       })
     }
     return items
@@ -623,7 +628,7 @@ function App() {
         id: n.id,
         title: n.name || n.id,
         subtitle: '',
-        icon: '\u{1F4D6}',
+        icon: 'book',
         timestamp: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
       }))
       .reverse()
@@ -658,6 +663,7 @@ function App() {
 
           {!loading && !errorKind && current?.type === 'topic' && result && (
             <div className="result">
+              <section data-tier="narrative">
               <SummaryPanel title={result.title} summary={result.summary} />
               <FirstExplorationGuide
                 topic={current.topic}
@@ -671,6 +677,23 @@ function App() {
               <StorySection narrativeKey={current.topic} />
               <WhyImportantPanel narrativeKey={current.topic} />
               <MainEntityCard mainEntity={result.exploration.main_entity} />
+              </section>
+              <section data-tier="interpretation">
+              <div className="m62-view-toggle" role="group" aria-label="关系视图切换">
+                <button
+                  type="button"
+                  className={relView === 'list' ? 'active' : ''}
+                  aria-pressed={relView === 'list'}
+                  onClick={() => setRelView('list')}
+                >列表</button>
+                <button
+                  type="button"
+                  className={relView === 'spatial' ? 'active' : ''}
+                  aria-pressed={relView === 'spatial'}
+                  onClick={() => setRelView('spatial')}
+                >图谱</button>
+              </div>
+              {relView === 'list' ? (
               <RelationshipView
                 mainEntity={result.exploration.main_entity}
                 relatedEntities={result.exploration.related_entities}
@@ -680,14 +703,16 @@ function App() {
                 focusedId={focusedEntityId ?? undefined}
                 onEntityFocus={(gid) => setFocusedEntityId(gid)}
               />
-              {/* M34-A2: spatial view of the SAME main-entity + direct-neighbour
-                  data the RelationshipView lists. Self-drawn SVG, no new deps. */}
+              ) : (
               <GraphViewPanel
                 mainEntity={result.exploration.main_entity}
                 relatedEntities={result.exploration.related_entities}
                 nameById={exploreNameById}
                 onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
               />
+              )}
+              </section>
+              <section data-tier="supporting">
               <CrossTopicBridge
                 connections={result.exploration.cross_topic_related}
                 relatedTopics={result.related_topics}
@@ -701,6 +726,22 @@ function App() {
                 mainEntityName={result.exploration.main_entity.name}
                 onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
               />
+              <div className="m62-view-toggle" role="group" aria-label="时间线视图切换">
+                <button
+                  type="button"
+                  className={timeView === 'single' ? 'active' : ''}
+                  aria-pressed={timeView === 'single'}
+                  onClick={() => setTimeView('single')}
+                >单线</button>
+                <button
+                  type="button"
+                  className={timeView === 'multi' ? 'active' : ''}
+                  aria-pressed={timeView === 'multi'}
+                  onClick={() => setTimeView('multi')}
+                >多线</button>
+              </div>
+              {timeView === 'single' ? (
+              <>
               <TimelinePanel
                 timeline={result.timeline}
                 nameToId={exploreNameToId}
@@ -709,7 +750,10 @@ function App() {
                 focusedId={focusedEntityId ?? undefined}
               />
               <TemporalComparisonPanel entities={result.entities} />
+              </>
+              ) : (
               <MultiEntityTimeline entities={result.entities} />
+              )}
               <ConnectionsPanel connections={result.connections} />
               <ConnectionsExplainedPanel connections={result.connections_explained} onNodeClick={openNodeNamed} />
               <InterpretationPanel
@@ -764,6 +808,7 @@ function App() {
                 mainEntityName={result.exploration.main_entity.name}
                 nameByGlobalId={exploreNameByGlobalId}
               />
+              </section>
             </div>
           )}
 

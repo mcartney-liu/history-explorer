@@ -7,6 +7,8 @@
 
 import type { EntityViewModel } from '../../data/entity/entityTypes'
 import { getEntityLabel, getEntityIcon } from '../../data/entity/entityLabels'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 
 interface EntityHeroProps {
   identity: EntityViewModel['identity']
@@ -27,7 +29,7 @@ export function EntityHero({ identity, onResearch, onCompare }: EntityHeroProps)
     <section className="eh surf-card" aria-label={`${name} — ${label}`}>
       {/* Badge */}
       <div className="eh-badge">
-        <span className="eh-badge-icon">{icon}</span>
+        <Icon name={icon as IconName} size={20} className="eh-badge-icon" />
         <span className="eh-badge-label">{label}</span>
       </div>
 
@@ -44,7 +46,7 @@ export function EntityHero({ identity, onResearch, onCompare }: EntityHeroProps)
         )}
         {locationLabel && (
           <span className="eh-meta-item">
-            <span className="eh-meta-icon">⌖</span>
+            <Icon name="location" size={16} className="eh-meta-icon" />
             {locationLabel}
           </span>
         )}
@@ -59,7 +61,7 @@ export function EntityHero({ identity, onResearch, onCompare }: EntityHeroProps)
       <div className="eh-actions">
         {onResearch && (
           <button type="button" className="eh-action eh-action-research btn" onClick={onResearch}>
-            <span>🔬</span> 深入研究
+            <Icon name="research" size={16} /> 深入研究
           </button>
         )}
         {onCompare && (
