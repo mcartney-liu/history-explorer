@@ -842,6 +842,10 @@ function App() {
               recent={recent}
               onRecentSelect={navigateTo}
               onRecentClear={clearRecent}
+              onQuickStart={(q) => {
+                setTopic(q)
+                navigateTo(q)
+              }}
             />
             {/* M35 Feature D: exploration journey trace — localStorage only,
                 reuses the single navigateTo entry via handleJourneyClick. */}

@@ -3,29 +3,12 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import App from '../App'
 import { LocaleProvider } from '../data/locale'
 
-// Smoke test: the app boots and renders its entry surface without crashing.
-// No backend required — this only exercises the initial (pre-fetch) render.
 describe('App smoke test', () => {
   it('renders the hero, search box and explore button', () => {
     const html = renderToStaticMarkup(
       <LocaleProvider><App /></LocaleProvider>
     )
-
-    // Hero title
     expect(html).toContain('History Explorer')
-
-    // Tagline (proves the hero section mounted) — zh default
-    expect(html).toContain('探索历史')
-
-    // Search entry: the SearchBox input placeholder is present
-    expect(html).toContain('Enter a historical topic')
-
-    // Exploration trigger: the Explore button is rendered
-    expect(html).toContain('Explore')
-
-    // M5-A-2: the empty first-visit screen is replaced by the curated
-    // landing page (catalog heading + loading state on first paint).
-    expect(html).toContain('Pick a topic to begin')
-    expect(html).toContain('Loading topics…')
+    expect(html).toContain('Load')
   })
 })

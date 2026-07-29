@@ -422,6 +422,10 @@ export const SCOPE_ALLOWLIST = [
   // M59-016 — entity flow consolidation (test updates)
   "frontend/src/__tests__/M2_003.test.tsx",
   "frontend/src/__tests__/SearchEntity.test.tsx",
+  // M60-003 — Landing page productization
+  "frontend/src/components/LandingPage.tsx",
+  "frontend/src/components/SearchBox.tsx",
+  "frontend/src/components/AppShell.tsx",
   // M59-020 — Exploration Memory & Workspace
   "frontend/src/data/workspace/",
   // M59-021 — Layout Grid + Dev Catalog + Visual QA

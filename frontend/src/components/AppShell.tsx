@@ -14,25 +14,14 @@ type AppShellProps = {
 function AppShell({ search, nav, workspace, children }: AppShellProps) {
   const { locale, setLocale, t } = useLocale()
 
-  const navItems = [
-    { id: 'discover', label: t('nav.discover') },
-    { id: 'explore', label: t('nav.explore') },
-    { id: 'research', label: t('nav.research') },
-    { id: 'workspace', label: t('nav.workspace') },
-  ]
+  // M60-003: nav tabs hidden — no real routing or scroll-to-section yet.
+  // Keep brand + locale only.
 
   return (
     <main className="app">
       <header className="app-nav">
         <span className="app-nav-brand">History Explorer</span>
         <div className="app-nav-right">
-          <nav className="app-nav-links" aria-label="产品导航">
-            {navItems.map(({ id, label }) => (
-              <span key={id} className="app-nav-link" data-nav={id}>
-                {label}
-              </span>
-            ))}
-          </nav>
           <button
             type="button"
             className="app-locale-btn"

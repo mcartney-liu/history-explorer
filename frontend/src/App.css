@@ -647,3 +647,25 @@ hr{border:none;border-top:1px solid var(--line);margin:16px 0}
 .ws-item-subtitle:empty{display:none}
 /* Tab bar anchored */
 .ep-shell{margin-top:var(--space-4)}
+
+/* ========== LANDING PAGE (M60-003) ========== */
+.he-landing{padding:var(--space-6) 0}
+.he-hero{text-align:center;padding:var(--space-8) 0 var(--space-5)}
+.he-hero-title{font-family:var(--serif);font-size:var(--text-h1);color:var(--hi);margin-bottom:var(--space-3)}
+.he-hero-sub{font-size:var(--text-body);color:var(--mid);line-height:1.8;max-width:480px;margin:0 auto}
+.he-quick{display:flex;flex-wrap:wrap;gap:var(--space-2);justify-content:center;margin-bottom:var(--space-6)}
+.he-quick-label{font-size:var(--text-caption);color:var(--low);align-self:center}
+.he-quick-btn{font-size:var(--text-caption);color:var(--gold);background:transparent;border:1px solid var(--gold-line);
+  border-radius:var(--radius);padding:4px 12px;cursor:pointer;transition:var(--animation-fast)}
+.he-quick-btn:hover{background:var(--gold-glow);color:var(--gold-hi)}
+/* Topic cards */
+.he-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-4)}
+.he-card{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-2);
+  padding:var(--space-4);background:var(--navy-card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);cursor:pointer;transition:var(--animation-fast);text-align:left}
+.he-card:hover{border-color:var(--gold-line);background:linear-gradient(158deg,rgba(17,25,48,0.8),rgba(9,14,28,0.9))}
+.he-card-title{font-family:var(--serif);font-size:var(--text-h3);color:var(--hi)}
+.he-card-summary{font-size:var(--text-caption);color:var(--low);line-height:1.6}
+.he-card-cta{font-size:var(--text-caption);color:var(--gold);margin-top:auto}
+/* Loading/error */
+.he-landing .he-landing-head{display:none}

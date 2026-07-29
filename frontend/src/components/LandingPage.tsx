@@ -1,25 +1,13 @@
-// Curated Landing Page (M5-A-2), extended with a Featured strip (M5-A-3).
-// Replaces the previous empty first-visit screen (a bare, often-empty
-// "Recent Explorations" list) with an immediate entry point: a topic catalog
-// fetched from GET /topics, plus loading / empty / error states.
-//
-// Deliberately additive and architecture-preserving:
-//  - It is a pure presentational component. All I/O (fetching the catalog,
-//    loading/error state, and the click→explore wiring) lives in App.
-//  - Clicking a topic calls `onTopicClick(topic)`, which App wires to the
-//    SAME `navigateTo` the rest of the app uses (SearchResults,
-//    CrossTopicTopicList, FeaturedTopics). No second navigation mechanism,
-//    no duplicated explore logic.
-//  - It reuses the unified LoadingSkeleton / EmptyState / ErrorCard and the
-//    existing RecentExplorations chip list (shown only for returning users
-//    who have history), so no capability is lost.
+// M60-003 — Landing Page 产品化
+// Product value proposition + quick starts + topic cards.
+// No AI, no backend, no new capabilities.
 
 import LoadingSkeleton from './LoadingSkeleton'
 import EmptyState from './EmptyState'
 import ErrorCard, { ErrorKind } from './ErrorCard'
-import RecentExplorations from './RecentExplorations'
 import FeaturedTopics from './FeaturedTopics'
-import { NavNode } from './navigation'
+import RecentExplorations from './RecentExplorations'
+import type { NavNode } from './navigation'
 
 export type TopicSummary = {
   topic: string
@@ -32,17 +20,24 @@ type LandingPageProps = {
   loading: boolean
   error: '' | ErrorKind
   onTopicClick: (topic: string) => void
-  // Curated "start here" subset (M5-A-3). Optional: when present and
-  // non-empty it renders a highlighted FeaturedTopics strip above the full
-  // catalog. Purely additive — when omitted the landing page behaves exactly
-  // as M5-A-2 did.
   featured?: TopicSummary[]
-  // Returning-user quick links. Optional: only rendered when present and non-empty,
-  // so the first-visit experience stays focused on the catalog.
   recent?: NavNode[]
   onRecentSelect?: (node: NavNode) => void
   onRecentClear?: () => void
+  /** M60: quick start suggestion click → fill search */
+  onQuickStart?: (query: string) => void
 }
+
+const QUICK_STARTS = [
+  '凯撒为什么重要？',
+  '秦始皇统一六国以后发生了什么？',
+  '罗马为什么灭亡？',
+  '丝绸之路改变了什么？',
+]
+
+export const LANDING_HERO = '用 AI 探索历史文明'
+export const LANDING_SUB =
+  '探索人物、国家、战争、文明之间的联系，理解历史为什么会这样发生。'
 
 function LandingPage({
   topics,
@@ -53,23 +48,40 @@ function LandingPage({
   recent,
   onRecentSelect,
   onRecentClear,
+  onQuickStart,
 }: LandingPageProps) {
   return (
-    <section className="he-landing" aria-label="Explore a topic">
-      <div className="he-landing-head">
-        <h2 className="he-landing-heading">Pick a topic to begin</h2>
-        <p className="he-landing-intro">
-          Start with any civilization below, or use the search above to dive into
-          a specific person, place, or event.
-        </p>
+    <section className="he-landing" aria-label="探索历史">
+      {/* Hero */}
+      <div className="he-hero">
+        <h1 className="he-hero-title">{LANDING_HERO}</h1>
+        <p className="he-hero-sub">{LANDING_SUB}</p>
       </div>
 
-      {loading && <LoadingSkeleton label="Loading topics…" />}
+      {/* Quick starts */}
+      {onQuickStart && (
+        <div className="he-quick">
+          <span className="he-quick-label">试试：</span>
+          {QUICK_STARTS.map((q) => (
+            <button
+              key={q}
+              type="button"
+              className="he-quick-btn"
+              onClick={() => onQuickStart(q)}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Topics */}
+      {loading && <LoadingSkeleton label="加载中…" />}
 
       {!loading && error && <ErrorCard kind={error} />}
 
       {!loading && !error && topics.length === 0 && (
-        <EmptyState message="No topics available yet." />
+        <EmptyState message="暂无探索主题。" />
       )}
 
       {!loading && !error && topics.length > 0 && (
@@ -77,30 +89,35 @@ function LandingPage({
           {featured && featured.length > 0 && (
             <FeaturedTopics topics={featured} onTopicClick={onTopicClick} />
           )}
-          <ul className="he-topic-grid">
-            {topics.map((t) => (
-              <li key={t.topic}>
-                <button
-                  type="button"
-                  className="he-topic-card"
-                  data-topic={t.topic}
-                  aria-label={`Explore ${t.title}`}
-                  onClick={() => onTopicClick(t.topic)}
-                >
-                  <span className="he-topic-title">{t.title}</span>
-                  {t.summary ? (
-                    <span className="he-topic-summary">{t.summary}</span>
-                  ) : null}
-                </button>
-              </li>
+          <div className="he-grid">
+            {topics.slice(0, 8).map((t) => (
+              <button
+                key={t.topic}
+                type="button"
+                className="he-card"
+                data-topic={t.topic}
+                aria-label={`探索 ${t.title}`}
+                onClick={() => onTopicClick(t.topic)}
+              >
+                <span className="he-card-title">{t.title}</span>
+                {t.summary && (
+                  <span className="he-card-summary">{t.summary}</span>
+                )}
+                <span className="he-card-cta">开始探索 →</span>
+              </button>
             ))}
-          </ul>
+          </div>
         </>
       )}
 
-      {recent && recent.length > 0 && onRecentSelect ? (
-        <RecentExplorations items={recent} onSelect={onRecentSelect} onClear={onRecentClear} />
-      ) : null}
+      {/* Recent explorations (returning user) */}
+      {recent && recent.length > 0 && (
+        <RecentExplorations
+          items={recent}
+          onSelect={onRecentSelect}
+          onClear={onRecentClear}
+        />)
+      )}
     </section>
   )
 }
