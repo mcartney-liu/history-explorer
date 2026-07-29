@@ -44,7 +44,7 @@ function RelatedEntityList({
             const displayName = getDisplayName(nameById?.[item.id] ?? item.id, locale, prefs.properNameMode)
             return (
             <li
-              key={item.id}
+              key={`${item.id}::${item.relationship}`}
               className="is-clickable"
               role="button"
               tabIndex={0}
