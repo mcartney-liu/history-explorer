@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM60] - 2026-07-29 (Project Release — M60)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. M60 Landing Page productization (M60-003) + i18n support + Design System V1.0 FINAL freeze + Development Playbook V1.0, plus the M61-bridge-build TypeScript cleanup: 55 latent TS errors resolved across 9 modules; production `tsc && vite build` now exits 0. Zero backend / schema / AI Gateway / dependency change — 20 consecutive milestones with backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; release-consistency 7/7.
+
+### Landing Page Productization & Build Stabilization (M60)
+
+**Landing Page (M60-003)**: Productized landing page with curated topic entries, hero identity, and product capability framing — pure-frontend, no new API.
+
+**i18n Support**: Internationalization layer for the homepage/layout; locale-aware copy for core surfaces.
+
+**Design System V1.0 FINAL**: `docs/design-system/` frozen as the authoritative V1.0 design system (Chapter 0–15); `scripts/freeze-check.mjs` SCOPE_ALLOWLIST extended for the design-system docs path.
+
+**Development Playbook V1.0**: `docs/DEVELOPMENT_PLAYBOOK.md` added — canonical engineering runbook; build (`tsc && vite build`) must exit 0, latent TS errors are release blockers.
+
+**M61-bridge-build (TypeScript cleanup)**: Resolved 55 latent TypeScript errors (20 real type errors across 9 files + 35 unused-declaration dead code from refactors); production build now passes `tsc --noEmit` + `vite build`. No public type contracts changed; App.tsx and tests unaffected.
+
+**Freeze Gate**: SCOPE_ALLOWLIST extended (+ design-system docs path). ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 20 consecutive milestones — backend diff = 0.
+
+---
+
 ## [vM53] - 2026-07-28 (Project Release — M53)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Pipeline Auto-Activation — zero backend / schema / AI Gateway / dependency change. 17 consecutive milestones without backend changes.
