@@ -599,10 +599,11 @@ function App() {
   const workspaceItems: WorkspaceItem[] = useMemo(() => {
     const items: WorkspaceItem[] = []
     if (current && result) {
+      const title = result.title || (entityData?.name ?? current.topic)
       items.push({
         id: current.type === 'entity' ? current.id : current.topic,
-        title: result.title || current.type === 'entity' ? entityData?.name ?? current.id : current.topic,
-        subtitle: current.type,
+        title,
+        subtitle: '',
         icon: current.type === 'entity' ? '\u{1F4D6}' : '\u{1F310}',
       })
     }
@@ -616,7 +617,7 @@ function App() {
       .map((n) => ({
         id: n.id,
         title: n.name || n.id,
-        subtitle: n.type,
+        subtitle: '',
         icon: '\u{1F4D6}',
         timestamp: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
       }))
