@@ -28,6 +28,7 @@
 .workspace-column {
   grid-column: 10 / 13;
   min-width: 0;
+  align-self: start;
 }
 
 /* ---- Section spacing tokens ---- */
