@@ -334,6 +334,12 @@ function App() {
       setError('Please enter a historical topic.')
       return
     }
+    // Backend TOPIC_PATTERN = ^[a-z0-9_-]+$ — reject non-ASCII early
+    // so the user gets a clear message instead of a misleading 400 / "无法连通后端服务器".
+    if (!/^[a-z0-9_-]+$/.test(trimmed)) {
+      setError('请输入英文主题名（如 roman_empire、ancient_civilizations）。当前不支持中文搜索。')
+      return
+    }
     setError('')
     navigateTo({ type: 'topic', topic: trimmed, title: prettifyTopic(trimmed) })
   }
