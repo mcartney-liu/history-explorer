@@ -7,7 +7,9 @@ import type { ExplorationHistoryItem } from '../../data/workspace/ExplorationHis
 
 interface ExplorationHistoryListProps {
   items: ExplorationHistoryItem[]
-  onItemClick?: (id: string) => void
+  // name is passed so the parent can navigate by local id while still keeping
+  // the human-readable display name (e.g. for breadcrumbs / journey entries).
+  onItemClick?: (id: string, name?: string) => void
 }
 
 function timeAgo(ts: number): string {
@@ -35,7 +37,7 @@ export function ExplorationHistoryList({ items, onItemClick }: ExplorationHistor
           className="ehl-item"
           role="button"
           tabIndex={0}
-          onClick={() => onItemClick?.(item.entityId)}
+          onClick={() => onItemClick?.(item.entityId, item.name)}
         >
           <div className="ehl-item-left">
             <span className="ehl-item-icon">

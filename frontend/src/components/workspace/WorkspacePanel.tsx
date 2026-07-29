@@ -68,7 +68,9 @@ export function WorkspacePlaceholder({ label }: { label: string }) {
 interface WorkspacePanelProps {
   current?: WorkspaceItem | null
   history?: WorkspaceItem[]
-  onEntityClick?: (id: string) => void
+  // name is passed so the breadcrumb can display the human-readable entity
+  // name (e.g. "凯撒") instead of the local id (e.g. "person-julius-caesar").
+  onEntityClick?: (id: string, name?: string) => void
 }
 
 export function WorkspacePanel({
@@ -88,7 +90,7 @@ export function WorkspacePanel({
         {current ? (
           <WorkspaceItem
             item={current}
-            onClick={() => onEntityClick?.(current.id)}
+            onClick={() => onEntityClick?.(current.id, current.title)}
           />
         ) : (
           <WorkspacePlaceholder label="点击任意实体开始探索" />
@@ -111,7 +113,7 @@ export function WorkspacePanel({
                 source: 'related' as const,
                 depth: i,
               }))}
-              onItemClick={(id) => onEntityClick?.(id)}
+              onItemClick={(id, name) => onEntityClick?.(id, name)}
             />
           </>
         ) : (

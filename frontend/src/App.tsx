@@ -599,7 +599,13 @@ function App() {
   const workspaceItems: WorkspaceItem[] = useMemo(() => {
     const items: WorkspaceItem[] = []
     if (current && result) {
-      const title = result.title || (entityData?.name ?? current.topic)
+      // NavNode is a discriminated union: `topic` lives on the topic branch,
+      // `id` on the entity branch. The original `current.topic` read silently
+      // worked at runtime (when the field was always present in the M2 era)
+      // but the type guard makes the entity branch explicit.
+      const fallbackName =
+        current.type === 'entity' ? current.id : current.topic
+      const title = result.title || (entityData?.name ?? fallbackName)
       items.push({
         id: current.type === 'entity' ? current.id : current.topic,
         title,
@@ -635,8 +641,7 @@ function App() {
       <WorkspacePanel
         current={workspaceItems[0] ?? null}
         history={workspaceHistory}
-        onEntityClick={(id) => navigateToEntity(id)}
-        onEntityClick={(id) => navigateToEntity(id)}
+        onEntityClick={(id, name) => openEntity(id, name)}
       />
     }>
           {loading && (
@@ -844,7 +849,10 @@ function App() {
               onRecentClear={clearRecent}
               onQuickStart={(q) => {
                 setTopic(q)
-                navigateTo(q)
+                // navigateTo requires a NavNode (topic | entity). The
+                // quick-start is a topic search; wrap the string into the
+                // topic branch with the query itself as the title.
+                navigateTo({ type: 'topic', topic: q, title: q })
               }}
             />
             {/* M35 Feature D: exploration journey trace — localStorage only,

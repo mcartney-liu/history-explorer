@@ -114,9 +114,9 @@ function LandingPage({
       {recent && recent.length > 0 && (
         <RecentExplorations
           items={recent}
-          onSelect={onRecentSelect}
+          onSelect={(node) => onRecentSelect?.(node)}
           onClear={onRecentClear}
-        />)
+        />
       )}
     </section>
   )

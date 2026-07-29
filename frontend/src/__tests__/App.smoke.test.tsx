@@ -9,6 +9,10 @@ describe('App smoke test', () => {
       <LocaleProvider><App /></LocaleProvider>
     )
     expect(html).toContain('History Explorer')
-    expect(html).toContain('Load')
+    // Default locale is 'zh' (M60 i18n); the loading skeleton copy is
+    // "加载中…". We keep the brand assertion locale-agnostic and assert on
+    // the loading state in the active locale so the smoke test catches a
+    // blank render even after copy changes.
+    expect(html).toContain('加载中')
   })
 })

@@ -19,16 +19,28 @@ describe('M2-002 search & entity UI', () => {
   })
 
   it('SearchResults renders ranked entities', () => {
+    // M4-004 unified Search v2 shape: items carry `result_type: 'Entity'`,
+    // rendered as rows under the "Entities" section. The old M2-002 shape
+    // (entity_id / global_id / onSelect / onExplore) was retired in
+    // commit b15cfb2; this test was never updated. Using the current API.
     const items: SearchResultItem[] = [
-      { entity_id: 'person-caesar', name: 'Julius Caesar', global_id: 'roman_republic:person-caesar' },
-      { entity_id: 'person-augustus', name: 'Augustus', global_id: 'roman_republic:person-augustus' },
+      { id: 'person-caesar', name: 'Julius Caesar', type: 'Person', result_type: 'Entity' as const },
+      { id: 'person-augustus', name: 'Augustus', type: 'Person', result_type: 'Entity' as const },
     ]
     const html = renderToStaticMarkup(
-      <SearchResults items={items} cursor={0} onSelect={() => {}} onExplore={() => {}} />,
+      <SearchResults
+        query="caesar"
+        results={items}
+        onSelectItem={() => {}}
+      />,
     )
     expect(html).toContain('Julius Caesar')
     expect(html).toContain('Augustus')
-    expect(html).toContain('<button')
+    // M4-004 unified Search renders each row as a <li role="button"> for
+    // keyboard accessibility, rather than a native <button>. Assert on the
+    // accessible name + button role instead of the literal element.
+    expect(html).toContain('role="button"')
+    expect(html).toContain('aria-label="Open Julius Caesar"')
   })
 
   it('nextSelectionIndex wraps correctly', () => {
