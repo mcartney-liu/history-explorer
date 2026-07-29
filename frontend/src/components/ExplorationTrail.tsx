@@ -21,6 +21,8 @@
 // Declared as a discriminated union (same two node shapes App's NavNode uses)
 // so each branch narrows to a concrete string — no `string | undefined` leaks
 // into the render path.
+import { useLocale } from '../data/locale'
+
 type TrailNode =
   | { type: 'topic'; topic: string; title: string }
   | { type: 'entity'; id: string; name: string }
@@ -41,12 +43,13 @@ function stepKey(node: TrailNode, i: number): string {
 }
 
 function ExplorationTrail({ history, cursor, onStepClick }: ExplorationTrailProps) {
+  const { t } = useLocale()
   // A trail is only meaningful once there is more than one stop.
   if (!history || history.length < 2) return null
 
   return (
-    <section className="he-trail result-section" aria-label="Exploration trail">
-      <h3>Your Exploration Trail</h3>
+    <section className="he-trail result-section" aria-label={t('discover.trailAria')}>
+      <h3>{t('discover.trailHeading')}</h3>
       <ol className="he-trail-list">
         {history.map((node, i) => {
           const isCurrent = i === cursor
@@ -55,14 +58,14 @@ function ExplorationTrail({ history, cursor, onStepClick }: ExplorationTrailProp
               <button
                 type="button"
                 className={isCurrent ? 'he-trail-node is-current' : 'he-trail-node'}
-                aria-label={
-                  isCurrent ? `Current: ${stepLabel(node)}` : `Return to ${stepLabel(node)}`
-                }
+                aria-label={t(isCurrent ? 'discover.currentAria' : 'discover.returnToAria', {
+                  label: stepLabel(node),
+                })}
                 aria-current={isCurrent ? 'step' : undefined}
                 onClick={() => onStepClick(i)}
               >
                 <span className="he-trail-kind">
-                  {node.type === 'topic' ? 'Topic' : 'Entity'}
+                  {node.type === 'topic' ? t('common.kindTopic') : t('common.kindEntity')}
                 </span>
                 <span className="he-trail-label">{stepLabel(node)}</span>
               </button>

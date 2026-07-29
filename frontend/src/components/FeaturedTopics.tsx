@@ -14,6 +14,7 @@
 //  - TopicSummary is the shared shape already exported by LandingPage, so the
 //    card structure here stays identical to the normal catalog cards.
 
+import { useLocale } from '../data/locale'
 import type { TopicSummary } from './LandingPage'
 
 type FeaturedTopicsProps = {
@@ -22,22 +23,23 @@ type FeaturedTopicsProps = {
 }
 
 function FeaturedTopics({ topics, onTopicClick }: FeaturedTopicsProps) {
+  const { t } = useLocale()
   return (
-    <section className="he-featured" aria-label="Start here">
-      <h3 className="he-featured-heading">Start here</h3>
+    <section className="he-featured" aria-label={t('discover.startHereAria')}>
+      <h3 className="he-featured-heading">{t('discover.startHere')}</h3>
       <ul className="he-featured-grid">
-        {topics.map((t) => (
-          <li key={t.topic}>
+        {topics.map((topic) => (
+          <li key={topic.topic}>
             <button
               type="button"
               className="he-featured-card"
-              data-topic={t.topic}
-              aria-label={`Explore ${t.title}`}
-              onClick={() => onTopicClick(t.topic)}
+              data-topic={topic.topic}
+              aria-label={t('discover.exploreTopicAria', { title: topic.title })}
+              onClick={() => onTopicClick(topic.topic)}
             >
-              <span className="he-topic-title">{t.title}</span>
-              {t.summary ? (
-                <span className="he-topic-summary">{t.summary}</span>
+              <span className="he-topic-title">{topic.title}</span>
+              {topic.summary ? (
+                <span className="he-topic-summary">{topic.summary}</span>
               ) : null}
             </button>
           </li>

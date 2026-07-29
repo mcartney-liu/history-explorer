@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { useLocale } from '../data/locale'
+import LanguageSwitcher from './LanguageSwitcher'
 
 // AppShell — presentational chrome. Hero band + explorer container + nav shell.
 // M60: added locale switcher in nav bar.
@@ -12,7 +13,7 @@ type AppShellProps = {
 }
 
 function AppShell({ search, nav, workspace, children }: AppShellProps) {
-  const { locale, setLocale, t } = useLocale()
+  const { t } = useLocale()
 
   // M60-003: nav tabs hidden — no real routing or scroll-to-section yet.
   // Keep brand + locale only.
@@ -22,14 +23,7 @@ function AppShell({ search, nav, workspace, children }: AppShellProps) {
       <header className="app-nav">
         <span className="app-nav-brand">History Explorer</span>
         <div className="app-nav-right">
-          <button
-            type="button"
-            className="app-locale-btn"
-            onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-            title={locale === 'zh' ? 'Switch to English' : '切换到中文'}
-          >
-            {locale === 'zh' ? 'EN' : '中'}
-          </button>
+          <LanguageSwitcher />
         </div>
       </header>
 

@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM62.5] - 2026-07-30 (Project Release — M62.5)
+
+> **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Global Language Experience System (M62.5): i18n runtime with live locale switching (zh/en/ja), full l10n resource skeletons across namespaces, Terminology layer (`getTermLabel`) for consistent proper-noun rendering, LanguageSwitcher UX, and Preference foundation (localStorage language/theme persistence). Closes the W10 R14 English-string blind-spot audit. Includes emoji-free hardening: tightened `scripts/emoji-scan.mjs` to cover the Geometric Shapes block and removed the dingbat carve-out; migrated 13 component/test files off `★☆✓✗⚠○◷●` symbol icons to the canonical SVG registry (`star`/`warning`/`circle`/`cross`/`time-period`). Pure frontend — zero backend / schema / AI Gateway / dependency change. 22 consecutive milestones with backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; emoji-scan EXIT 0; release-consistency 7/7; 941 tests pass.
+
+### Global Language Experience System (M62.5)
+
+**i18n Runtime**: `data/locale.tsx` — `LocaleProvider` + `useLocale` with live switching across zh/en/ja; resource loading and fallback chain wired through `lib/preferences.ts`.
+
+**l10n Resources**: `locales/{zh,en,ja}/*` — namespace resource skeletons (common / entity / discover / relationship / etc.) externalizing UI copy from hardcoded strings.
+
+**Terminology Layer**: `getTermLabel` consistent proper-noun rendering across surfaces (W4 Proper Name Display Policy).
+
+**Language UX**: `LanguageSwitcher.tsx` replaces the inline toggle in `AppShell.tsx`; preference persisted via `lib/preferences.ts` (localStorage).
+
+**W10 R14 Closure**: test suite migrated to locale-aware assertions (Chinese under `<LocaleProvider>`); full vitest 941/941 green.
+
+**Emoji-Free Hardening (Gate 2)**: tightened `emoji-scan.mjs` (Geometric Shapes block + removed dingbat carve-out); 13 files migrated off symbol icons (`★☆✓✗⚠○◷●`) to the canonical SVG registry. `m62-icon-registry` guardrail extended (new icons render real `<svg><path>`).
+
+**Freeze Gate**: `scripts/freeze-check.mjs` SCOPE_ALLOWLIST extended — `frontend/src/components/__tests__/` (W10 migrated tests) + the 13 symbol-icon fix files already covered by `entity/` / `components/` prefixes. ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. 22 consecutive milestones — backend diff = 0.
+
+---
+
 ## [vM62] - 2026-07-29 (Project Release — M62)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. UX Convergence (M62): unified SVG icon registry (22 canonical names, emoji-free per P0 rule), three-tier narrative structure (Narrative/Interpretation/Supporting) on primary result views, inline collapse toggles for relationship/timeline views, AI explanation GroundingBadge (verified/partial/unverified) wired to real provenance, Discover page re-oriented to exploration-first, 5 new QA guardrail tests, 4 new CI gates (visual/emoji/structure/grounding-contrast). Pure frontend — zero backend / schema / AI Gateway / dependency change. 21 consecutive milestones with backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; release-consistency 7/7; 941 tests pass.

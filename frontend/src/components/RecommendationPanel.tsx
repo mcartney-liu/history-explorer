@@ -17,6 +17,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import LoadingSkeleton from './LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './ErrorCard'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 // Same externalized base URL contract as App.tsx (L54) — inlined to avoid
 // widening App's export surface and to keep this file self-contained.
@@ -147,13 +150,16 @@ export function RecommendationPanelView({
   seenGlobalIds,
   onNodeClick,
 }: RecommendationPanelViewProps) {
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
   return (
     <div className="result-section he-recommend">
-      <h3>下一站探索</h3>
+      <h3>{t('discover.recommendHeading')}</h3>
       <ul className="he-recommend-list">
         {recommendations.map((rec, idx) => {
           const gid = rec.target_entity.global_id
           const name = rec.target_entity.name || localName(gid)
+          const displayName = getDisplayName(name, locale, prefs.properNameMode)
           const type = rec.target_entity.type
           const seen = seenGlobalIds?.has(gid) ?? false
           return (
@@ -161,14 +167,14 @@ export function RecommendationPanelView({
               <button
                 type="button"
                 className={seen ? 'he-recommend-node is-seen' : 'he-recommend-node'}
-                aria-label={`Explore ${name}`}
+                aria-label={t('entity.exploreAria', { name: displayName })}
                 onClick={() => onNodeClick?.(gid, buildRecommendationContext(rec))}
               >
-                <span className="he-recommend-name">{name}</span>
-                {type ? <span className="he-recommend-type">{type}</span> : null}
+                <span className="he-recommend-name">{displayName}</span>
+                {type ? <span className="he-recommend-type">{getEntityLabel(type, locale)}</span> : null}
                 {seen ? (
                   <span className="he-recommend-seen" aria-hidden="true">
-                    seen
+                    {t('discover.recommendSeen')}
                   </span>
                 ) : null}
               </button>
@@ -187,7 +193,10 @@ export function RecommendationPanelView({
                     <span
                       key={i}
                       className="he-recommend-path-step"
-                      title={`${step.direction} · weight ${step.weight}`}
+                      title={t('discover.recommendPathTitle', {
+                        direction: step.direction,
+                        weight: String(step.weight),
+                      })}
                     >
                       <span className="he-recommend-path-from">{localName(step.from)}</span>
                       <span className="he-recommend-path-arrow" aria-hidden="true">
@@ -225,6 +234,7 @@ function RecommendationPanel({
   max = 5,
   onNodeClick,
 }: RecommendationPanelProps) {
+  const { t } = useLocale()
   const [status, setStatus] = useState<'loading' | 'error' | 'success'>('loading')
   const [data, setData] = useState<RecommendationResult | null>(null)
   const [errorKind, setErrorKind] = useState<ErrorKind>('network')
@@ -249,7 +259,7 @@ function RecommendationPanel({
   if (status === 'loading') {
     return (
       <div className="result-section he-recommend">
-        <LoadingSkeleton label="推荐探索路径…" />
+        <LoadingSkeleton label={t('discover.recommendLoading')} />
       </div>
     )
   }

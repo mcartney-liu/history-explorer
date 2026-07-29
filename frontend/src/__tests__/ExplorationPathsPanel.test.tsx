@@ -1,11 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
+import type { ReactElement } from 'react'
+import { LocaleProvider } from '../data/locale'
 import ExplorationPathsPanel from '../components/ExplorationPathsPanel'
 import { ConnectionExplained } from '../components/ConnectionsExplainedPanel'
 
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
+
 describe('ExplorationPathsPanel (M3.5-004)', () => {
   it('renders nothing when connections are absent (additive, non-breaking)', () => {
-    const html = renderToStaticMarkup(<ExplorationPathsPanel />)
+    const html = render(<ExplorationPathsPanel />)
     expect(html).toBe('')
   })
 
@@ -36,11 +40,11 @@ describe('ExplorationPathsPanel (M3.5-004)', () => {
         explanation: 'Rome reached Han via the Silk Road.',
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationPathsPanel connections={connections} />,
     )
     // Heading present.
-    expect(html).toContain('Exploration Paths')
+    expect(html).toContain('探索路径')
     // All three path nodes rendered (local names after ':').
     expect(html).toContain('rome')
     expect(html).toContain('silk_road')
@@ -49,8 +53,8 @@ describe('ExplorationPathsPanel (M3.5-004)', () => {
     expect(html).toContain('[traded_with outgoing]')
     expect(html).toContain('[spread outgoing]')
     // Each node is a cross-topic clickable button carrying its global_id.
-    expect(html).toContain('aria-label="Open rome"')
-    expect(html).toContain('aria-label="Open silk_road"')
+    expect(html).toContain('aria-label="打开 rome"')
+    expect(html).toContain('aria-label="打开 silk_road"')
   })
 
   it('is defensive: missing steps still render nodes with a plain connector', () => {
@@ -65,7 +69,7 @@ describe('ExplorationPathsPanel (M3.5-004)', () => {
         explanation: '',
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationPathsPanel connections={connections} />,
     )
     expect(html).toContain('rome')

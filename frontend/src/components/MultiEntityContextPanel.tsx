@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AIExplanationPanel from './AIExplanationPanel'
+import { useLocale } from '../data/locale'
 import { multiEntityContext } from '../data/aiContext'
 import type { Candidate } from '../data/candidateUtils'
 
@@ -114,13 +115,14 @@ export function MultiEntityContextView({
   onToggle,
   onCitationClick,
 }: MultiEntityContextViewProps) {
+  const { t } = useLocale()
   const contextIds = multiEntityContext(selectedGids)
 
   return (
-    <section className="multi-entity-context" aria-label="AI 多实体联合解读">
-      <h3 className="mec-title">AI 多实体联合解读</h3>
+    <section className="multi-entity-context" aria-label={t('workspace.mecTitle')}>
+      <h3 className="mec-title">{t('workspace.mecTitle')}</h3>
       <p className="mec-hint">
-        勾选多个实体，向 AI 提出一个跨实体的事实溯源问题（已选 {selectedGids.length}/{maxSelectable}）。
+        {t('workspace.mecHint', { n: String(selectedGids.length), max: String(maxSelectable) })}
       </p>
       <ul className="mec-candidates">
         {candidates.map((c) => {
@@ -151,10 +153,10 @@ export function MultiEntityContextView({
         adds NO new state and does not change the context builder.
       */}
       <div className="mec-resolved" aria-label="已解析上下文">
-        <span className="mec-resolved-count">已解析上下文 {contextIds.length} 个 global_id</span>
+        <span className="mec-resolved-count">{t('workspace.mecResolved', { n: String(contextIds.length) })}</span>
         {contextIds.length > 0 && (
           <details className="mec-context-preview">
-            <summary>预览将发送的 global_id</summary>
+            <summary>{t('workspace.mecPreview')}</summary>
             <ul className="mec-context-ids">
               {contextIds.map((id) => (
                 <li key={id} className="mec-context-id">{id}</li>

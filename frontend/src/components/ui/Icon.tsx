@@ -44,6 +44,10 @@ export type IconName =
   | 'religion'
   | 'idea'
   | 'close'
+  | 'star'
+  | 'warning'
+  | 'circle'
+  | 'cross'
 
 const PATHS: Record<IconName, JSX.Element> = {
   // 📖 open book
@@ -207,6 +211,29 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M6 6l12 12M18 6 6 18" />
     </>
   ),
+  // ★ star (bookmark / favorite; solid when `filled`)
+  star: (
+    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+  ),
+  // ⚠ warning (triangle with exclamation)
+  warning: (
+    <>
+      <path d="M12 4l9 16H3L12 4Z" />
+      <path d="M12 10v4" />
+      <path d="M12 17h.01" />
+    </>
+  ),
+  // ○ neutral circle (status ring)
+  circle: (
+    <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" />
+  ),
+  // ✗ error (circle with cross)
+  cross: (
+    <>
+      <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" />
+      <path d="M9 9l6 6M15 9l-6 6" />
+    </>
+  ),
 }
 
 const SIZES = { 16: 16, 20: 20, 24: 24 } as const
@@ -218,11 +245,12 @@ export interface IconProps {
   className?: string
   style?: CSSProperties
   title?: string
+  filled?: boolean
 }
 
 // If a non-registry key ever slips through, we render nothing visible
 // (never an emoji). This makes the contract self-enforcing.
-export function Icon({ name, size = 20, className, style, title }: IconProps) {
+export function Icon({ name, size = 20, className, style, title, filled }: IconProps) {
   const path = PATHS[name]
   if (!path) return null
   return (
@@ -232,7 +260,7 @@ export function Icon({ name, size = 20, className, style, title }: IconProps) {
       width={SIZES[size]}
       height={SIZES[size]}
       viewBox="0 0 24 24"
-      fill="none"
+      fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth={1.5}
       strokeLinecap="round"

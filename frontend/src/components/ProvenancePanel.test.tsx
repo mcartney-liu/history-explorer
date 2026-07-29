@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { ProvenancePanelView } from './ProvenancePanel'
+import { LocaleProvider } from '../data/locale'
 import type { ProvenanceRecord } from '../data/provenanceApi'
 
 const records: ProvenanceRecord[] = [
@@ -42,14 +43,16 @@ describe('ProvenancePanelView', () => {
 
   it('renders error card with retry', () => {
     const html = renderToStaticMarkup(
-      <ProvenancePanelView
-        status="error"
-        records={[]}
-        errorKind="network"
-        onRetry={() => {}}
-      />,
+      <LocaleProvider>
+        <ProvenancePanelView
+          status="error"
+          records={[]}
+          errorKind="network"
+          onRetry={() => {}}
+        />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Try again')
+    expect(html).toContain('重试')
   })
 
   it('renders records on success and hides subject_id', () => {

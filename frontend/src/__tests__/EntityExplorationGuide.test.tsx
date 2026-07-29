@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
+import { LocaleProvider } from '../data/locale'
 import EntityExplorationGuide from '../components/EntityExplorationGuide'
 import { resolveEntityStarters, DEFAULT_ENTITY_STARTERS } from '../data/explorationStarters'
+
+const render = (el: ReactElement) =>
+  renderToStaticMarkup(<LocaleProvider>{el}</LocaleProvider>)
 
 // M5-A-5 Entity Exploration Guide tests.
 // No new test dependency: render with renderToStaticMarkup and assert on the
@@ -15,7 +20,7 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
   const starters = resolveEntityStarters('roman_empire:civ-roman')
 
   it('renders the guide heading + intro for the given entity', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityExplorationGuide
         entityId="roman_empire:civ-roman"
         entityName="Roman Civilization"
@@ -24,12 +29,12 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
       />,
     )
     expect(html).toContain('he-guide')
-    expect(html).toContain('Explore Roman Civilization')
+    expect(html).toContain('探索 Roman Civilization')
     expect(html).toContain('he-guide-intro')
   })
 
   it('renders one button per starter carrying the real global_id + label', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityExplorationGuide
         entityId="roman_empire:civ-roman"
         entityName="Roman Civilization"
@@ -41,15 +46,15 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
     expect(html).toContain('data-starter="roman_empire:event-roman-empire-established"')
     expect(html).toContain('data-starter="roman_empire:loc-rome"')
     expect(html).toContain('data-starter="hellenistic_world:civ-greek"')
-    expect(html).toContain('aria-label="Explore Roman Empire Established"')
-    expect(html).toContain('aria-label="Explore Rome"')
-    expect(html).toContain('aria-label="Explore Ancient Greek Civilization"')
+    expect(html).toContain('aria-label="探索 Roman Empire Established"')
+    expect(html).toContain('aria-label="探索 Rome"')
+    expect(html).toContain('aria-label="探索 Ancient Greek Civilization"')
     expect(html).toContain('Roman Empire Established')
     expect(html).toContain('Rome')
   })
 
   it('renders the dismiss control', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityExplorationGuide
         entityId="roman_empire:civ-roman"
         entityName="Roman Civilization"
@@ -58,11 +63,11 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
       />,
     )
     expect(html).toContain('he-guide-dismiss')
-    expect(html).toContain('aria-label="Dismiss this guide"')
+    expect(html).toContain('aria-label="关闭引导"')
   })
 
   it('renders the guide copy but no starter buttons when starters is empty', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityExplorationGuide
         entityId="some:unknown-entity"
         entityName="Unknown Entity"

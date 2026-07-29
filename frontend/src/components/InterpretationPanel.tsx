@@ -5,6 +5,7 @@
 // anything, and it does NOT import navigation. All data arrives pre-mapped via
 // `interpretations` (see interpretationFormatter.ts, which preserves the
 // backend's deterministic `explanation` verbatim — no AI, no invented text).
+import { useLocale } from '../data/locale'
 import { InterpretationViewModel } from '../data/interpretationFormatter'
 import type { UnderstandingViewModel } from '../data/understandingRules'
 
@@ -25,17 +26,20 @@ type InterpretationPanelProps = {
 function InterpretationPanel({
   interpretations,
   understandings,
-  title = 'Why these connections are worth exploring',
+  title,
   onNodeClick,
 }: InterpretationPanelProps) {
+  const { t } = useLocale()
   const hasInterpretations = !!interpretations && interpretations.length > 0
   const hasUnderstandings = !!understandings && understandings.length > 0
   // Strictly additive: nothing to interpret -> render nothing (no empty shell).
   if (!hasInterpretations && !hasUnderstandings) return null
 
+  const resolvedTitle = title ?? t('discover.interpretationTitle')
+
   return (
     <div className="result-section interpretation-panel">
-      <h3>{title}</h3>
+      <h3>{resolvedTitle}</h3>
       {hasInterpretations && (
         <div className="he-interpret-list">
           {interpretations!.map((item, idx) => (
@@ -46,7 +50,7 @@ function InterpretationPanel({
                     type="button"
                     className="he-interpret-node is-clickable"
                     data-node={item.global_id}
-                    aria-label={`Open ${item.localName}`}
+                    aria-label={t('discover.openAria', { name: item.localName })}
                     onClick={() => onNodeClick(item.global_id)}
                   >
                     {item.localName}
@@ -55,7 +59,7 @@ function InterpretationPanel({
                   <span className="he-interpret-name">{item.localName}</span>
                 )}
                 {typeof item.score === 'number' && (
-                  <span className="he-interpret-score">{`score ${item.score}`}</span>
+                  <span className="he-interpret-score">{t('discover.score', { score: String(item.score) })}</span>
                 )}
               </div>
               {item.explanation && (
@@ -67,7 +71,7 @@ function InterpretationPanel({
       )}
       {hasUnderstandings && (
         <div className="he-meaning-block">
-          <h4 className="he-meaning-title">Historical Meaning</h4>
+          <h4 className="he-meaning-title">{t('discover.historicalMeaning')}</h4>
           <div className="he-interpret-list">
             {understandings!.map((u, idx) => (
               <div className="he-interpret-item he-meaning-item" key={idx}>
@@ -80,7 +84,7 @@ function InterpretationPanel({
                 <p className="he-interpret-why">{u.meaning}</p>
                 {u.timeContext && (
                   <p className="he-meaning-time">
-                    <span className="he-meaning-time-label">Time:</span> {u.timeContext}
+                    <span className="he-meaning-time-label">{t('discover.timeLabel')}</span> {u.timeContext}
                   </p>
                 )}
               </div>

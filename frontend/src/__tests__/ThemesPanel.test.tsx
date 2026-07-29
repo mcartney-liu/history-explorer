@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { LocaleProvider } from '../data/locale'
 import ThemesPanel from '../components/ThemesPanel'
 import { EntityRelationship } from '../components/EntityPage'
+
+const render = (el: import('react').ReactElement) =>
+  renderToStaticMarkup(<LocaleProvider>{el}</LocaleProvider>)
 
 function rel(
   type: string,
@@ -18,7 +22,7 @@ function rel(
 
 describe('ThemesPanel (M3.5-004)', () => {
   it('renders nothing when relationships are absent (additive, non-breaking)', () => {
-    const html = renderToStaticMarkup(<ThemesPanel />)
+    const html = render(<ThemesPanel />)
     expect(html).toBe('')
   })
 
@@ -46,9 +50,9 @@ describe('ThemesPanel (M3.5-004)', () => {
         topic: 'egypt',
       }),
     ]
-    const html = renderToStaticMarkup(<ThemesPanel relationships={relationships} />)
+    const html = render(<ThemesPanel relationships={relationships} />)
     // Heading + mapped theme names.
-    expect(html).toContain('Themes')
+    expect(html).toContain('主题')
     expect(html).toContain('Imperial Conquest')
     expect(html).toContain('Trade &amp; Exchange')
     expect(html).toContain('Cultural Inheritance')
@@ -57,9 +61,9 @@ describe('ThemesPanel (M3.5-004)', () => {
     expect(html).toContain('Silk Road')
     expect(html).toContain('Ancient Egypt')
     // Chips are cross-topic clickable (aria-label uses the resolved name).
-    expect(html).toContain('aria-label="Explore Hellenistic World"')
+    expect(html).toContain('aria-label="探索 Hellenistic World"')
     // ENTITY_TYPES thread (Civilization) surfaced from other.type.
-    expect(html).toContain('Civilization')
+    expect(html).toContain('文明')
   })
 
   it('is defensive: unknown relationship types are title-cased; missing global_id falls back to local id', () => {
@@ -70,9 +74,9 @@ describe('ThemesPanel (M3.5-004)', () => {
         type: 'Person',
       }),
     ]
-    const html = renderToStaticMarkup(<ThemesPanel relationships={relationships} />)
+    const html = render(<ThemesPanel relationships={relationships} />)
     expect(html).toContain('Participated In')
     // No global_id -> chip still renders with local id fallback (aria-label).
-    expect(html).toContain('aria-label="Explore Augustus"')
+    expect(html).toContain('aria-label="探索 Augustus"')
   })
 })

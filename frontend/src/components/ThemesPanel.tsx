@@ -9,6 +9,9 @@
 // untouched.
 import { EntityRelationship } from './EntityPage'
 import { ConnectionExplained } from './ConnectionsExplainedPanel'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 type ThemesPanelProps = {
   relationships?: EntityRelationship[]
@@ -55,6 +58,7 @@ function globalIdFor(other: {
 }
 
 function ThemesPanel({ relationships, onNodeClick }: ThemesPanelProps) {
+  const { t, locale } = useLocale()
   if (!relationships || relationships.length === 0) return null
 
   const relThemes: Record<string, EntityRelationship[]> = {}
@@ -78,16 +82,17 @@ function ThemesPanel({ relationships, onNodeClick }: ThemesPanelProps) {
     name,
     members: relThemes[name],
   }))
-  const typeGroups = Object.keys(typeThreads).map((name) => ({
-    name,
-    members: typeThreads[name],
+  const typeGroups = Object.keys(typeThreads).map((type) => ({
+    name: getEntityLabel(type, locale),
+    raw: type,
+    members: typeThreads[type],
   }))
 
   if (relGroups.length === 0 && typeGroups.length === 0) return null
 
   return (
     <div className="result-section">
-      <h3>Themes</h3>
+      <h3>{t('discover.themesHeading')}</h3>
       <div className="th-list">
         {relGroups.map((group) => (
           <ThemeGroup
@@ -98,11 +103,11 @@ function ThemesPanel({ relationships, onNodeClick }: ThemesPanelProps) {
           />
         ))}
         {typeGroups.length > 0 && (
-          <div className="th-subhead">Threads by Type</div>
+          <div className="th-subhead">{t('discover.threadsByType')}</div>
         )}
         {typeGroups.map((group) => (
           <ThemeGroup
-            key={group.name}
+            key={group.raw}
             name={group.name}
             members={group.members}
             onNodeClick={onNodeClick}
@@ -120,6 +125,8 @@ type ThemeGroupProps = {
 }
 
 function ThemeGroup({ name, members, onNodeClick }: ThemeGroupProps) {
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
   return (
     <div className="th-group">
       <h4 className="th-head">
@@ -130,16 +137,17 @@ function ThemeGroup({ name, members, onNodeClick }: ThemeGroupProps) {
         {members.map((r, i) => {
           const other = r.other!
           const gid = globalIdFor(other)
+          const displayName = getDisplayName(other.name, locale, prefs.properNameMode)
           return (
             <button
               type="button"
               key={`${gid}-${i}`}
               className="th-chip is-clickable"
-              aria-label={`Explore ${other.name}`}
+              aria-label={t('entity.exploreAria', { name: displayName })}
               onClick={() => onNodeClick?.(gid)}
             >
-              <span className="th-chip-name">{other.name}</span>
-              <span className="th-chip-type">{other.type}</span>
+              <span className="th-chip-name">{displayName}</span>
+              <span className="th-chip-type">{getEntityLabel(other.type, locale)}</span>
             </button>
           )
         })}

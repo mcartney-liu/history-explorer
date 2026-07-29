@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import TimelinePanel from '../components/TimelinePanel'
+import { LocaleProvider } from '../data/locale'
 
 describe('M6-P4 TimelinePanel — sorting & time buckets', () => {
   it('sorts BCE before CE and renders fixed time-bucket headers in order', () => {
@@ -47,27 +48,37 @@ describe('M6-P4 TimelinePanel — sorting & time buckets', () => {
       { period: '27 BC', event: 'Roman Empire Established', date: { value: -27, label: '27 BC' } },
     ]
     const html = renderToStaticMarkup(
-      <TimelinePanel
-        timeline={timeline}
-        nameToId={{ 'Roman Empire Established': 'event-roman-empire-established' }}
-        onEventClick={() => {}}
-      />,
+      <LocaleProvider>
+        <TimelinePanel
+          timeline={timeline}
+          nameToId={{ 'Roman Empire Established': 'event-roman-empire-established' }}
+          onEventClick={() => {}}
+        />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Open Roman Empire Established')
+    expect(html).toContain('打开 Roman Empire Established')
   })
 
   it('stays static (no Open button) when event is not linked to an entity', () => {
     const timeline = [
       { period: '27 BC', event: 'Roman Empire Established', date: { value: -27, label: '27 BC' } },
     ]
-    const html = renderToStaticMarkup(<TimelinePanel timeline={timeline} />)
-    expect(html).not.toContain('Open Roman Empire Established')
+    const html = renderToStaticMarkup(
+      <LocaleProvider>
+        <TimelinePanel timeline={timeline} />
+      </LocaleProvider>,
+    )
+    expect(html).not.toContain('打开 Roman Empire Established')
     expect(html).toContain('Roman Empire Established')
   })
 
   it('renders EmptyState when timeline is empty', () => {
-    const html = renderToStaticMarkup(<TimelinePanel timeline={[]} />)
-    expect(html).toContain('No timeline data.')
+    const html = renderToStaticMarkup(
+      <LocaleProvider>
+        <TimelinePanel timeline={[]} />
+      </LocaleProvider>,
+    )
+    expect(html).toContain('暂无时间线数据。')
   })
 })
 

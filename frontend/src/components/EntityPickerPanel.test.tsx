@@ -1,13 +1,18 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
 import type { SearchResultItem } from './SearchResults'
 import type { Candidate } from '../data/candidateUtils'
+import { LocaleProvider } from '../data/locale'
 import { EntityPickerView } from './EntityPickerPanel'
 import {
   resultsToCandidates,
   addCandidate,
   removeCandidate,
 } from './EntityPickerPanel'
+
+const r2s = renderToStaticMarkup
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 const QIN: Candidate = { gid: 'qin_dynasty:person-qsh', name: '秦始皇', type: 'Person', topic: 'qin_dynasty' }
 const ALEX: Candidate = { gid: 'ancient_greece:person-alex', name: '亚历山大', type: 'Person', topic: 'ancient_greece' }
@@ -48,7 +53,7 @@ describe('addCandidate / removeCandidate (M14 selection)', () => {
 
 describe('EntityPickerView (M14 presentational)', () => {
   it('renders the search input and title', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         query=""
         results={[]}
@@ -66,7 +71,7 @@ describe('EntityPickerView (M14 presentational)', () => {
   })
 
   it('shows friendly name/type/topic for each result row', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         query="人"
         results={[QIN, ALEX]}
@@ -86,7 +91,7 @@ describe('EntityPickerView (M14 presentational)', () => {
   })
 
   it('renders selected chips and marks already-added results', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         query="人"
         results={[QIN, ALEX]}
@@ -104,7 +109,7 @@ describe('EntityPickerView (M14 presentational)', () => {
   })
 
   it('shows an error message when present', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         query="x"
         results={[]}
@@ -133,7 +138,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
   }
 
   it('renders topic filter chips (incl. 全部) when topics + handler provided', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={[QIN, ALEX]}
@@ -150,7 +155,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
   })
 
   it('marks the active topic chip with aria-pressed', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={[QIN]}
@@ -165,7 +170,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
   })
 
   it('renders the sort control when a handler is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={[QIN, ALEX]}
@@ -180,7 +185,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
   })
 
   it('renders reorder arrows and a clear-all button for the selection', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={[]}
@@ -195,7 +200,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
   })
 
   it('disables up on the first and down on the last selected chip', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={[]}
@@ -215,7 +220,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
       name: `E${i}`,
       topic: 't',
     }))
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={many}
@@ -230,7 +235,7 @@ describe('EntityPickerView — M15 enhanced UX', () => {
   })
 
   it('stays backward-compatible: omitting M15 props renders no chips/sort/arrows', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <EntityPickerView
         {...base}
         results={[QIN]}

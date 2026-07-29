@@ -1,8 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
 import TemporalComparisonPanel, {
   type TemporalEntity,
 } from '../components/TemporalComparisonPanel'
+import { LocaleProvider } from '../data/locale'
+
+const r2s = renderToStaticMarkup
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // NOTE: the project's frozen dependency set does NOT include
 // @testing-library/react / jsdom (vitest runs in `node` environment, per
@@ -36,10 +41,10 @@ const undated: TemporalEntity = {
 
 describe('TemporalComparisonPanel', () => {
   it('shows comparison facts for two dated entities (Rome vs Han)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <TemporalComparisonPanel entities={[rome, han]} />,
     )
-    expect(html).toContain('Temporal Comparison')
+    expect(html).toContain('时间对比')
     // Deterministic engine output: overlap = 422, start gap = 551, duration diff = 807.
     expect(html).toContain('Rome and Han Dynasty overlapped for 422 years.')
     expect(html).toContain('Rome began 551 years before Han Dynasty.')
@@ -47,18 +52,18 @@ describe('TemporalComparisonPanel', () => {
   })
 
   it('renders empty state when fewer than 2 entities are available', () => {
-    const one = renderToStaticMarkup(
+    const one = render(
       <TemporalComparisonPanel entities={[rome]} />,
     )
     expect(one).toContain(
-      'Not enough entities with temporal data for comparison.',
+      '时间数据不足以进行比较。',
     )
 
-    const none = renderToStaticMarkup(
+    const none = render(
       <TemporalComparisonPanel entities={[]} />,
     )
     expect(none).toContain(
-      'Not enough entities with temporal data for comparison.',
+      '时间数据不足以进行比较。',
     )
   })
 
@@ -66,7 +71,7 @@ describe('TemporalComparisonPanel', () => {
     // Default selection: A = first dated (Rome), B = first different dated
     // (Ancient Egypt); Han Dynasty is now the third option and must NOT be
     // the active comparison target.
-    const html = renderToStaticMarkup(
+    const html = render(
       <TemporalComparisonPanel entities={[rome, egypt, han]} />,
     )
     expect(html).not.toContain('Rome began 551 years before Han Dynasty.')
@@ -75,17 +80,17 @@ describe('TemporalComparisonPanel', () => {
   })
 
   it('does not crash when a selected entity has no date data', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <TemporalComparisonPanel entities={[rome, undated]} />,
     )
     // Engine reports comparable=false -> graceful empty state, no throw.
     expect(html).toContain(
-      'Selected entities lack sufficient date data for comparison.',
+      '所选实体缺乏足够的时间数据用于比较。',
     )
   })
 
   it('freeze-compliant: emits no AI / interpretation / ranking language', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <TemporalComparisonPanel entities={[rome, han]} />,
     )
     expect(html).not.toMatch(/influence|important|cause|recommendation|ranking/i)

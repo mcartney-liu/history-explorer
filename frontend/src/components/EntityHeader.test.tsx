@@ -7,14 +7,14 @@ import EntityHeader from './EntityHeader'
 describe('EntityHeader (M34-A1)', () => {
   it('renders the "Entity" label and the type badge', () => {
     const html = renderToStaticMarkup(<EntityHeader type="Person" />)
-    expect(html).toContain('Entity')
-    expect(html).toContain('Person')
+    expect(html).toContain('实体')
+    expect(html).toContain('人物')
     expect(html).toContain('class="result-section entity-page-head"')
     expect(html).toContain('class="re-type"')
   })
 
   it('reflects whatever entity type it is given', () => {
     const html = renderToStaticMarkup(<EntityHeader type="Civilization" />)
-    expect(html).toContain('Civilization')
+    expect(html).toContain('文明')
   })
 })

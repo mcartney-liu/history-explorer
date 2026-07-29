@@ -1,12 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { LocaleProvider } from '../data/locale'
 import ConnectionsExplainedPanel, {
   ConnectionExplained,
 } from '../components/ConnectionsExplainedPanel'
 
+const r2s = renderToStaticMarkup
+const render = (el: Parameters<typeof r2s>[0]) => r2s(<LocaleProvider>{el}</LocaleProvider>)
+
 describe('ConnectionsExplainedPanel (M3.5-004)', () => {
   it('renders nothing when connections are absent (additive, non-breaking)', () => {
-    const html = renderToStaticMarkup(<ConnectionsExplainedPanel />)
+    const html = render(<ConnectionsExplainedPanel />)
     expect(html).toBe('')
   })
 
@@ -22,13 +26,13 @@ describe('ConnectionsExplainedPanel (M3.5-004)', () => {
         explanation: 'Connected through overland trade routes.',
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ConnectionsExplainedPanel connections={connections} />,
     )
-    expect(html).toContain('Explainable Connections')
+    expect(html).toContain('可解释关联')
     expect(html).toContain('han_dynasty') // local name after ':'
-    expect(html).toContain('depth 2')
-    expect(html).toContain('score 0.81')
+    expect(html).toContain('深度 2')
+    expect(html).toContain('评分 0.81')
     expect(html).toContain('Connected through overland trade routes.')
   })
 
@@ -44,7 +48,7 @@ describe('ConnectionsExplainedPanel (M3.5-004)', () => {
         explanation: '',
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ConnectionsExplainedPanel connections={connections} />,
     )
     expect(html).toContain('roman_empire:rome')

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import EmptyState from './EmptyState'
+import { useLocale } from '../data/locale'
 import { formatDateRange, type TimeValue } from '../data/temporalUtils'
 import {
   compareTemporalRanges,
@@ -34,6 +35,7 @@ function hasDate(e: TemporalEntity): boolean {
 }
 
 function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
+  const { t } = useLocale()
   // 1. Keep named entities only, dedupe by name, preserve input order.
   //    No sorting — avoids any hidden ranking / similarity behavior.
   const seen = new Set<string>()
@@ -65,9 +67,9 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
   if (named.length < 2) {
     return (
       <div className="result-section">
-        <h3>Temporal Comparison</h3>
+        <h3>{t('temporal.title')}</h3>
         <p className="temporal-comparison-empty">
-          Not enough entities with temporal data for comparison.
+          {t('temporal.notEnough')}
         </p>
       </div>
     )
@@ -86,11 +88,11 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
     : []
 
   const rangeText = (e: TemporalEntity) =>
-    formatDateRange(e.start_date, e.end_date) ?? 'No date data'
+    formatDateRange(e.start_date, e.end_date) ?? t('temporal.noDateData')
 
   return (
     <div className="result-section">
-      <h3>Temporal Comparison</h3>
+      <h3>{t('temporal.title')}</h3>
       <div className="temporal-comparison-panel">
         <div className="temporal-comparison-selects">
           <div className="temporal-comparison-field">
@@ -98,12 +100,12 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
               className="temporal-comparison-field-label"
               htmlFor="tc-entity-a"
             >
-              Entity A
+              {t('temporal.entityA')}
             </label>
             <select
               id="tc-entity-a"
               className="temporal-comparison-select"
-              aria-label="Entity A"
+              aria-label={t('temporal.entityA')}
               value={safeA}
               onChange={(e) => setAIdx(Number(e.target.value))}
             >
@@ -119,12 +121,12 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
               className="temporal-comparison-field-label"
               htmlFor="tc-entity-b"
             >
-              Entity B
+              {t('temporal.entityB')}
             </label>
             <select
               id="tc-entity-b"
               className="temporal-comparison-select"
-              aria-label="Entity B"
+              aria-label={t('temporal.entityB')}
               value={safeB}
               onChange={(e) => setBIdx(Number(e.target.value))}
             >
@@ -163,11 +165,11 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
             </ul>
           ) : (
             <p className="temporal-comparison-empty">
-              No temporal relationship could be determined from the available dates.
+              {t('temporal.noRelation')}
             </p>
           )
         ) : (
-          <EmptyState message="Selected entities lack sufficient date data for comparison." />
+          <EmptyState message={t('temporal.insufficient')} />
         )}
       </div>
     </div>

@@ -10,6 +10,7 @@ import {
   reorderCandidates,
   clearCandidates,
 } from '../data/pickerUtils'
+import { useLocale } from '../data/locale'
 
 // M14 (Cross Topic Selection Picker): search ANY topic, then hand-pick N real
 // entities across different topics into a friendly candidate list. The picked
@@ -34,6 +35,9 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 // UI-only cap on how many result rows to render at once (overflow handling).
 // Not a data limit — the full list is still searchable via a narrower query.
 const MAX_VISIBLE_RESULTS = 50
+
+// Sort keys (the human label is localized via t() at render time).
+const SORT_KEYS: SortKey[] = ['name', 'type', 'topic', 'gid']
 
 /**
  * Map a raw /search response into selectable candidates: drop non-entity /
@@ -91,6 +95,7 @@ export default function EntityPickerPanel({
   onCandidatesChange,
   search = defaultSearch,
 }: EntityPickerPanelProps) {
+  const { t } = useLocale()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Candidate[]>([])
   const [selected, setSelected] = useState<Candidate[]>([])
@@ -119,7 +124,7 @@ export default function EntityPickerPanel({
       setResults(resultsToCandidates(raw))
       setActiveTopic('') // new result set → clear any stale topic filter
     } catch {
-      setError('Unable to search. Is the backend running?')
+      setError(t('picker.searchError'))
       setResults([])
     } finally {
       setLoading(false)
@@ -145,7 +150,7 @@ export default function EntityPickerPanel({
       onSearch={() => runSearch(query)}
       onAdd={(c) => emit(addCandidate(selected, c))}
       onRemove={(gid) => emit(removeCandidate(selected, gid))}
-      onTopicFilter={(t) => setActiveTopic(t)}
+      onTopicFilter={(tt) => setActiveTopic(tt)}
       onSortChange={(k) => setSortKey(k)}
       onReorder={(from, to) => emit(reorderCandidates(selected, from, to))}
       onClearAll={() => emit(clearCandidates())}
@@ -174,13 +179,6 @@ export type EntityPickerViewProps = {
   onClearAll?: () => void
 }
 
-const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: 'name', label: '名称' },
-  { key: 'type', label: '类型' },
-  { key: 'topic', label: '主题' },
-  { key: 'gid', label: '标识' },
-]
-
 // Presentational view — every visual state derives purely from props.
 export function EntityPickerView({
   query,
@@ -201,17 +199,16 @@ export function EntityPickerView({
   onReorder,
   onClearAll,
 }: EntityPickerViewProps) {
+  const { t } = useLocale()
   const selectedGids = new Set(selected.map((c) => c.gid))
   const cap = typeof maxVisibleResults === 'number' ? maxVisibleResults : results.length
   const shown = results.slice(0, cap)
   const overflow = results.length - shown.length
 
   return (
-    <section className="entity-picker" aria-label="跨主题实体选择器">
-      <h3 className="ep-title">跨主题实体选择器</h3>
-      <p className="ep-hint">
-        搜索任意主题，挑选多个实体（可跨主题），再向 AI 提出一个联合事实溯源问题。
-      </p>
+    <section className="entity-picker" aria-label={t('picker.title')}>
+      <h3 className="ep-title">{t('picker.title')}</h3>
+      <p className="ep-hint">{t('picker.hint')}</p>
 
       <form
         className="ep-search"
@@ -224,29 +221,31 @@ export function EntityPickerView({
           type="search"
           className="ep-input"
           value={query}
-          placeholder="搜索实体，如 秦始皇 / 亚历山大 / 罗马帝国"
-          aria-label="搜索实体"
+          placeholder={t('picker.searchPlaceholder')}
+          aria-label={t('picker.searchAria')}
           onChange={(e) => onQueryChange(e.target.value)}
         />
         <button type="submit" className="ep-search-btn" disabled={loading}>
-          {loading ? '搜索中…' : '搜索'}
+          {loading ? t('picker.searchBtnLoading') : t('picker.searchBtn')}
         </button>
       </form>
 
       {error && <p className="ep-error" role="alert">{error}</p>}
 
       {selected.length > 0 && (
-        <div className="ep-selected" aria-label="已选实体">
+        <div className="ep-selected" aria-label={t('picker.selectedAria')}>
           <div className="ep-selected-head">
-            <span className="ep-selected-label">已选 {selected.length}：</span>
+            <span className="ep-selected-label">
+              {t('picker.selectedLabel', { n: String(selected.length) })}
+            </span>
             {onClearAll && (
               <button
                 type="button"
                 className="ep-clear-all"
-                aria-label="清空已选"
+                aria-label={t('picker.clearAria')}
                 onClick={() => onClearAll()}
               >
-                清空
+                {t('picker.clear')}
               </button>
             )}
           </div>
@@ -257,7 +256,7 @@ export function EntityPickerView({
                   <button
                     type="button"
                     className="ep-chip-up"
-                    aria-label={`上移 ${c.name}`}
+                    aria-label={t('picker.upAria', { name: c.name })}
                     disabled={i === 0}
                     onClick={() => onReorder(i, i - 1)}
                   >
@@ -268,7 +267,7 @@ export function EntityPickerView({
                   <button
                     type="button"
                     className="ep-chip-down"
-                    aria-label={`下移 ${c.name}`}
+                    aria-label={t('picker.downAria', { name: c.name })}
                     disabled={i === selected.length - 1}
                     onClick={() => onReorder(i, i + 1)}
                   >
@@ -280,7 +279,7 @@ export function EntityPickerView({
                 <button
                   type="button"
                   className="ep-chip-remove"
-                  aria-label={`移除 ${c.name}`}
+                  aria-label={t('picker.removeAria', { name: c.name })}
                   onClick={() => onRemove(c.gid)}
                 >
                   ×
@@ -292,24 +291,24 @@ export function EntityPickerView({
       )}
 
       {onTopicFilter && topics.length > 0 && (
-        <div className="ep-topics" aria-label="按主题筛选">
+        <div className="ep-topics" aria-label={t('picker.topicFilterAria')}>
           <button
             type="button"
             className={`ep-topic-chip${activeTopic === '' ? ' is-active' : ''}`}
             aria-pressed={activeTopic === ''}
             onClick={() => onTopicFilter('')}
           >
-            全部
+            {t('picker.all')}
           </button>
-          {topics.map((t) => (
+          {topics.map((topic) => (
             <button
-              key={t}
+              key={topic}
               type="button"
-              className={`ep-topic-chip${activeTopic === t ? ' is-active' : ''}`}
-              aria-pressed={activeTopic === t}
-              onClick={() => onTopicFilter(t)}
+              className={`ep-topic-chip${activeTopic === topic ? ' is-active' : ''}`}
+              aria-pressed={activeTopic === topic}
+              onClick={() => onTopicFilter(topic)}
             >
-              {t}
+              {topic}
             </button>
           ))}
         </div>
@@ -318,7 +317,7 @@ export function EntityPickerView({
       {onSortChange && results.length > 0 && (
         <div className="ep-sort">
           <label className="ep-sort-label" htmlFor="ep-sort-select">
-            排序
+            {t('picker.sortLabel')}
           </label>
           <select
             id="ep-sort-select"
@@ -326,9 +325,9 @@ export function EntityPickerView({
             value={sortKey}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
           >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.key} value={o.key}>
-                {o.label}
+            {SORT_KEYS.map((k) => (
+              <option key={k} value={k}>
+                {t(`picker.sort${k.charAt(0).toUpperCase()}${k.slice(1)}`)}
               </option>
             ))}
           </select>
@@ -337,7 +336,7 @@ export function EntityPickerView({
 
       <ul className="ep-results">
         {!loading && results.length === 0 && query.trim().length > 0 && !error && (
-          <li className="ep-empty">没有可选的实体结果。</li>
+          <li className="ep-empty">{t('picker.emptyResults')}</li>
         )}
         {shown.map((c) => {
           const isSelected = selectedGids.has(c.gid)
@@ -350,17 +349,17 @@ export function EntityPickerView({
                 type="button"
                 className="ep-add"
                 disabled={isSelected}
-                aria-label={`添加 ${c.name}`}
+                aria-label={t('picker.addAria', { name: c.name })}
                 onClick={() => onAdd(c)}
               >
-                {isSelected ? '已添加' : '添加'}
+                {isSelected ? t('picker.added') : t('picker.add')}
               </button>
             </li>
           )
         })}
         {overflow > 0 && (
-          <li className="ep-overflow" aria-label="结果超出显示上限">
-            还有 {overflow} 个结果，请缩小搜索范围。
+          <li className="ep-overflow" aria-label={t('picker.resultOverflowAria')}>
+            {t('picker.overflow', { n: String(overflow) })}
           </li>
         )}
       </ul>

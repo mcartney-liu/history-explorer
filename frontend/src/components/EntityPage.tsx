@@ -28,6 +28,7 @@ import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
 import EntityPageShell from './EntityPageShell'
 import type { EntityTab } from './EntityPageShell'
+import { useLocale } from '../data/locale'
 
 export type EntityRelationship = {
   type: string
@@ -99,6 +100,7 @@ function EntityPage({
   entityStarters,
   onStarterClick,
 }: EntityPageProps) {
+  const { t } = useLocale()
   // M59-005: build ViewModel once per entity change.
   // Available for future EntityHero / AISidebar migration.
   const viewModel = useMemo(
@@ -218,7 +220,7 @@ function EntityPage({
                   {/* Layer 3: Related entities */}
                   {relatedCards.length > 0 && (
                     <div className="explore-section">
-                      <h4 className="explore-section-title">继续探索</h4>
+                      <h4 className="explore-section-title">{t('entity.continue')}</h4>
                       <div className="explore-section-grid">
                         {relatedCards.map((card) => (
                           <ExplorationCard
@@ -233,7 +235,7 @@ function EntityPage({
 
                   {/* M60-001: AI conversation + exploration recommendations — from old 'explore' tab */}
                   <p className="explore-hint">
-                    需要更多探索灵感？向下滚动与 AI 历史学家对话，或查看推荐探索路径。
+                    {t('entity.exploreHint')}
                   </p>
                   {entityGlobalId ? (
                     <ResearchDiscoveryPanel
@@ -338,7 +340,7 @@ function EntityPage({
             case 'extensions':
               return (
                 <div className="result">
-                  <p>更多功能即将推出。包括：AI 内容创作、教育模块、社交探索。</p>
+                  <p>{t('entity.extensionsComing')}</p>
                 </div>
               )
 

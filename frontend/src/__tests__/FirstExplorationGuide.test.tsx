@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
+import { LocaleProvider } from '../data/locale'
 import FirstExplorationGuide from '../components/FirstExplorationGuide'
 import { resolveStarters, DEFAULT_STARTERS } from '../data/explorationStarters'
+
+const render = (el: ReactElement) =>
+  renderToStaticMarkup(<LocaleProvider>{el}</LocaleProvider>)
 
 // M5-A-4 First Exploration Guide tests.
 // No new test dependency: render with renderToStaticMarkup and assert on the
@@ -15,39 +20,39 @@ describe('FirstExplorationGuide — presentational first-explore nudge', () => {
   const starters = resolveStarters('roman_empire')
 
   it('renders the guide heading + intro for the given topic', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <FirstExplorationGuide topic="roman_empire" title="Roman Empire" starters={starters} onStarterClick={() => {}} />,
     )
     expect(html).toContain('he-guide')
-    expect(html).toContain('Explore Roman Empire')
+    expect(html).toContain('探索 Roman Empire')
     expect(html).toContain('he-guide-intro')
   })
 
   it('renders one button per starter carrying the real global_id + label', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <FirstExplorationGuide topic="roman_empire" title="Roman Empire" starters={starters} onStarterClick={() => {}} />,
     )
     // Three REAL starters for roman_empire (global_ids from data/examples)
     expect(html).toContain('data-starter="roman_empire:person-augustus"')
     expect(html).toContain('data-starter="roman_empire:civ-roman"')
     expect(html).toContain('data-starter="roman_empire:religion-christianity"')
-    expect(html).toContain('aria-label="Explore Augustus"')
-    expect(html).toContain('aria-label="Explore Roman Civilization"')
-    expect(html).toContain('aria-label="Explore Christianity"')
+    expect(html).toContain('aria-label="探索 Augustus"')
+    expect(html).toContain('aria-label="探索 Roman Civilization"')
+    expect(html).toContain('aria-label="探索 Christianity"')
     expect(html).toContain('Augustus')
     expect(html).toContain('Roman Civilization')
   })
 
   it('renders the dismiss control', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <FirstExplorationGuide topic="roman_empire" title="Roman Empire" starters={starters} onStarterClick={() => {}} />,
     )
     expect(html).toContain('he-guide-dismiss')
-    expect(html).toContain('aria-label="Dismiss this guide"')
+    expect(html).toContain('aria-label="关闭引导"')
   })
 
   it('renders the guide copy but no starter buttons when starters is empty', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <FirstExplorationGuide topic="unknown_topic" title="Unknown" starters={[]} onStarterClick={() => {}} />,
     )
     expect(html).toContain('he-guide')

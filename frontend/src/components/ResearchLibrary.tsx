@@ -4,6 +4,7 @@ import {
   deleteResearch,
   type SavedResearch,
 } from '../data/ResearchHistory'
+import Icon from './ui/Icon'
 
 export type ResearchLibraryProps = {
   onSelect?: (research: SavedResearch) => void
@@ -43,7 +44,7 @@ export function ResearchLibraryView({
             <div key={r.id} className="rlib-card">
               <div className="rlib-card-header">
                 <span className="rlib-card-type">{r.entityType}</span>
-                {r.bookmarked && <span className="rlib-card-star">★</span>}
+                {r.bookmarked && <Icon name="star" size={16} className="rlib-card-star" filled />}
               </div>
               <h4 className="rlib-card-name">{r.entityName}</h4>
               {r.comparedNames.length > 0 && (

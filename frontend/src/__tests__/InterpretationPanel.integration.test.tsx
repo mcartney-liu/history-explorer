@@ -1,11 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
+import type { ReactElement } from 'react'
+import { LocaleProvider } from '../data/locale'
 import ConnectionsExplainedPanel, {
   ConnectionExplained,
 } from '../components/ConnectionsExplainedPanel'
 import ExplorationPathsPanel from '../components/ExplorationPathsPanel'
 import InterpretationPanel from '../components/InterpretationPanel'
 import { toInterpretationViewModels } from '../data/interpretationFormatter'
+
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // M5-A-6: verify the frozen panel order (WHAT -> WHY -> HOW) for both the Topic
 // and Entity views, using the same real ConnectionExplained shape both panels
@@ -47,10 +51,10 @@ function Stack() {
 
 describe('InterpretationPanel integration (M5-A-6)', () => {
   it('renders panels in the frozen WHAT -> WHY -> HOW order', () => {
-    const html = renderToStaticMarkup(<Stack />)
-    const what = html.indexOf('Explainable Connections')
-    const why = html.indexOf('Why these connections are worth exploring')
-    const how = html.indexOf('Exploration Paths')
+    const html = render(<Stack />)
+    const what = html.indexOf('可解释关联')
+    const why = html.indexOf('为何这些关联值得探索')
+    const how = html.indexOf('探索路径')
     expect(what).toBeGreaterThan(-1)
     expect(why).toBeGreaterThan(-1)
     expect(how).toBeGreaterThan(-1)
@@ -59,10 +63,10 @@ describe('InterpretationPanel integration (M5-A-6)', () => {
   })
 
   it('does not change ConnectionsExplainedPanel output (isolation)', () => {
-    const standalone = renderToStaticMarkup(
+    const standalone = render(
       <ConnectionsExplainedPanel connections={connections} />,
     )
-    const stacked = renderToStaticMarkup(<Stack />)
+    const stacked = render(<Stack />)
     // the standalone ConnectionsExplained markup still appears intact inside the stack
     expect(stacked).toContain(standalone)
   })

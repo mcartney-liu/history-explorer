@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
+import type { ReactElement } from 'react'
+import { LocaleProvider } from '../data/locale'
 import InterpretationPanel from '../components/InterpretationPanel'
 import { InterpretationViewModel } from '../data/interpretationFormatter'
 import type { UnderstandingViewModel } from '../data/understandingRules'
+
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // M5-A-6: InterpretationPanel is a pure presentational component. As with the
 // other panels, we assert on the static markup (no jsdom, no snapshot). Click
@@ -27,38 +31,38 @@ const vms: InterpretationViewModel[] = [
 
 describe('InterpretationPanel (M5-A-6)', () => {
   it('Case1: renders title, localName, score and explanation', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel interpretations={vms} />,
     )
-    expect(html).toContain('Why these connections are worth exploring')
+    expect(html).toContain('为何这些关联值得探索')
     expect(html).toContain('han_dynasty')
-    expect(html).toContain('score 0.81')
+    expect(html).toContain('评分 0.81')
     expect(html).toContain('Connected through overland trade routes.')
   })
 
   it('Case2: renders nothing for empty / absent interpretations (no empty shell)', () => {
-    expect(renderToStaticMarkup(<InterpretationPanel interpretations={[]} />)).toBe('')
-    expect(renderToStaticMarkup(<InterpretationPanel />)).toBe('')
+    expect(render(<InterpretationPanel interpretations={[]} />)).toBe('')
+    expect(render(<InterpretationPanel />)).toBe('')
   })
 
   it('Case3: preserves input order across multiple items', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel interpretations={vms} />,
     )
     expect(html.indexOf('han_dynasty')).toBeLessThan(html.indexOf('rome'))
   })
 
   it('Case4: clickable nodes carry data-node and aria-label when onNodeClick is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel interpretations={vms} onNodeClick={() => {}} />,
     )
     expect(html).toContain('data-node="silk_road:han_dynasty"')
-    expect(html).toContain('aria-label="Open han_dynasty"')
+    expect(html).toContain('aria-label="打开 han_dynasty"')
     expect(html).toContain('<button')
   })
 
   it('Case5: renders non-interactive names (no button) when onNodeClick is absent', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel interpretations={vms} />,
     )
     expect(html).not.toContain('<button')
@@ -81,11 +85,11 @@ describe('InterpretationPanel (M5-A-6)', () => {
   ]
 
   it('M5-D Case6: renders Historical Meaning block AND preserves existing interpretations (additive)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel interpretations={vms} understandings={understandings} onNodeClick={() => {}} />,
     )
     // New Historical Meaning layer present
-    expect(html).toContain('Historical Meaning')
+    expect(html).toContain('历史意涵')
     expect(html).toContain('Rome conquered Greece')
     expect(html).toContain('as conqueror')
     // Existing interpretation layer still rendered (additive, not replacing)
@@ -95,17 +99,17 @@ describe('InterpretationPanel (M5-A-6)', () => {
   })
 
   it('M5-D Case7: empty understandings array renders nothing (no empty shell)', () => {
-    expect(renderToStaticMarkup(<InterpretationPanel understandings={[]} />)).toBe('')
+    expect(render(<InterpretationPanel understandings={[]} />)).toBe('')
   })
 
   it('M5-D Case8: old behavior preserved when understandings absent', () => {
     // Re-run the original Case1 assertion shape to guard against regression.
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel interpretations={vms} />,
     )
-    expect(html).toContain('Why these connections are worth exploring')
+    expect(html).toContain('为何这些关联值得探索')
     expect(html).toContain('han_dynasty')
-    expect(html).not.toContain('Historical Meaning')
+    expect(html).not.toContain('历史意涵')
   })
 
   // --- M6-P1: Temporal Context Injection (additive Time sub-line) ---------
@@ -123,23 +127,23 @@ describe('InterpretationPanel (M5-A-6)', () => {
   ]
 
   it('M6-P1 Case9: renders Time sub-line when timeContext present', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel understandings={understandingsWithTime} />,
     )
     // Historical Meaning block still present (additive, not replacing)
-    expect(html).toContain('Historical Meaning')
+    expect(html).toContain('历史意涵')
     expect(html).toContain('Rome conquered Egypt')
     // New Time sub-line
-    expect(html).toContain('Time:')
+    expect(html).toContain('时间：')
     expect(html).toContain('30 BC')
     expect(html).toContain('he-meaning-time')
   })
 
   it('M6-P1 Case10: no Time sub-line when timeContext absent (old behavior)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <InterpretationPanel understandings={understandings} />,
     )
-    expect(html).toContain('Historical Meaning')
+    expect(html).toContain('历史意涵')
     expect(html).not.toContain('Time:')
     expect(html).not.toContain('he-meaning-time')
   })

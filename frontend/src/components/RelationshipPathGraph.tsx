@@ -18,6 +18,7 @@
 
 import { useState } from 'react'
 import type { RelationshipPath } from '../data/relationshipUtils'
+import { useLocale } from '../data/locale'
 
 export type RelationshipPathGraphProps = {
   /** Pre-computed paths (nodes + edges) over EXISTING relationship edges. */
@@ -67,6 +68,7 @@ export default function RelationshipPathGraph({
   nameByGlobalId,
   defaultLayout = 'horizontal',
 }: RelationshipPathGraphProps) {
+  const { t } = useLocale()
   // Hover state is a VIEW-ONLY selection of which path to emphasise; it is
   // component-local, never persisted, and never alters the underlying data.
   const [hovered, setHovered] = useState<number | null>(null)
@@ -75,7 +77,7 @@ export default function RelationshipPathGraph({
   const [layout, setLayout] = useState<LayoutMode>(defaultLayout)
 
   if (!paths || paths.length === 0) {
-    return <p className="rpg-empty">No relationship path available</p>
+    return <p className="rpg-empty">{t('rpg.empty')}</p>
   }
 
   const maxNodes = paths.reduce((m, p) => Math.max(m, p.nodes?.length ?? 0), 0)
@@ -109,14 +111,14 @@ export default function RelationshipPathGraph({
 
   return (
     <div className="rpg-wrap" data-layout={layout}>
-      <div className="rpg-layout-toggle" role="group" aria-label="布局切换">
+      <div className="rpg-layout-toggle" role="group" aria-label={t('rpg.layoutToggleAria')}>
         <button
           type="button"
           className="rpg-layout-btn"
           aria-pressed={layout === 'horizontal'}
           onClick={() => setLayout('horizontal')}
         >
-          横向链
+          {t('rpg.layoutHorizontal')}
         </button>
         <button
           type="button"
@@ -124,7 +126,7 @@ export default function RelationshipPathGraph({
           aria-pressed={layout === 'grid'}
           onClick={() => setLayout('grid')}
         >
-          紧凑网格
+          {t('rpg.layoutGrid')}
         </button>
       </div>
       <svg
@@ -133,7 +135,7 @@ export default function RelationshipPathGraph({
         height={svgHeight}
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         role="img"
-        aria-label="Relationship path graph"
+        aria-label={t('rpg.ariaLabel')}
       >
         {paths.map((path, pi) => {
           const positions = (path.nodes ?? []).map((_, j) => nodeTopLeft(pi, j))

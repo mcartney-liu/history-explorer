@@ -55,7 +55,7 @@ describe('ResearchLibraryView', () => {
     const html = renderToStaticMarkup(
       <ResearchLibraryView items={[mkItem({ bookmarked: true })]} />,
     )
-    expect(html).toContain('★')
+    expect(html).toContain('rlib-card-star')
   })
 
   it('renders open and delete buttons', () => {

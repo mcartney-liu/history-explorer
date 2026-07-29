@@ -9,6 +9,7 @@
 // When onNodeClick is provided and a connection has path data, a clickable
 // node chain is rendered below the explanation row.
 import { Fragment } from 'react'
+import { useLocale } from '../data/locale'
 export type ConnectionExplained = {
   global_id: string
   depth: number
@@ -38,21 +39,22 @@ function resolveLocalName(globalId: string): string {
 }
 
 function ConnectionsExplainedPanel({ connections, onNodeClick }: ConnectionsExplainedPanelProps) {
+  const { t } = useLocale()
   if (!connections || connections.length === 0) return null
 
   return (
     <div className="result-section">
-      <h3>Explainable Connections</h3>
+      <h3>{t('common.explainableConnections')}</h3>
       <div className="ce-list">
         {connections.map((item, idx) => (
           <div className="main-entity ce-item" key={idx}>
             <div className="ce-head">
               <span className="re-name">{resolveLocalName(item.global_id)}</span>
               {item.depth != null && (
-                <span className="me-type">{`depth ${item.depth}`}</span>
+                <span className="me-type">{t('common.depthLabel', { n: String(item.depth) })}</span>
               )}
               {typeof item.score === 'number' && (
-                <span className="me-type">{`score ${item.score}`}</span>
+                <span className="me-type">{t('common.scoreLabel', { n: String(item.score) })}</span>
               )}
             </div>
             <span className="re-rel">{item.explanation || item.global_id}</span>
@@ -83,7 +85,7 @@ function ConnectionsExplainedPanel({ connections, onNodeClick }: ConnectionsExpl
                         <button
                           type="button"
                           className="ep-node is-clickable"
-                          aria-label={`Open ${resolveLocalName(node)}`}
+                          aria-label={t('common.openLabel', { name: resolveLocalName(node) })}
                           onClick={() => onNodeClick(node)}
                         >
                           {resolveLocalName(node)}

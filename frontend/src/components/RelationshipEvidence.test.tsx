@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { RelationshipEvidenceView } from './RelationshipEvidence'
+import { LocaleProvider } from '../data/locale'
 import { getProvenance, type ProvenanceRecord } from '../data/provenanceApi'
 
 const records: ProvenanceRecord[] = [
@@ -42,14 +43,16 @@ describe('RelationshipEvidenceView', () => {
 
   it('renders error card with retry', () => {
     const html = renderToStaticMarkup(
-      <RelationshipEvidenceView
-        status="error"
-        records={[]}
-        errorKind="network"
-        onRetry={() => {}}
-      />,
+      <LocaleProvider>
+        <RelationshipEvidenceView
+          status="error"
+          records={[]}
+          errorKind="network"
+          onRetry={() => {}}
+        />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Try again')
+    expect(html).toContain('重试')
   })
 
   it('renders records on success (reuses provenance list, hides subject_id)', () => {

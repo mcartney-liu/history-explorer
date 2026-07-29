@@ -1,4 +1,6 @@
 import EmptyState from './EmptyState'
+import { useLocale } from '../data/locale'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 export type SearchResultItem = {
   // M4-004 (additive): unified results[] — every row carries a `result_type`.
@@ -89,6 +91,7 @@ function SearchResults({
   onClear,
   selectedIndex = -1,
 }: SearchResultsProps) {
+  const { t, locale } = useLocale()
   const topics = results.filter((r) => r.result_type === 'Topic')
   const entities = results.filter((r) => r.result_type !== 'Topic')
 
@@ -103,7 +106,7 @@ function SearchResults({
         role="button"
         tabIndex={0}
         aria-selected={selected}
-        aria-label={`Open ${item.name}`}
+        aria-label={t('common.openLabel', { name: item.name })}
         onClick={() => onSelectItem(item)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -114,7 +117,7 @@ function SearchResults({
       >
         <span className="re-name">{item.name}</span>
         <span className="re-type">
-          {isTopic ? 'Topic' : item.type}
+          {isTopic ? t('common.kindTopic') : getEntityLabel(item.type ?? '', locale)}
         </span>
         {item.description ? (
           <span className="re-desc">{item.description}</span>
@@ -136,10 +139,10 @@ function SearchResults({
   return (
     <div className="result result-section search-results">
       <div className="search-results-head">
-        <h3>Search results for “{query}”</h3>
+        <h3>{t('search.resultsFor', { query })}</h3>
         {onClear && (
           <button className="link-button" type="button" onClick={onClear}>
-            Clear
+            {t('common.clear')}
           </button>
         )}
       </div>
@@ -148,7 +151,7 @@ function SearchResults({
         <>
           {topics.length > 0 && (
             <>
-              <h4 className="search-section-title">Topics</h4>
+              <h4 className="search-section-title">{t('search.topicsHeading')}</h4>
               <ul className="related-list search-list">
                 {topics.map(renderRow)}
               </ul>
@@ -156,7 +159,7 @@ function SearchResults({
           )}
           {entities.length > 0 && (
             <>
-              <h4 className="search-section-title">Entities</h4>
+              <h4 className="search-section-title">{t('search.entitiesHeading')}</h4>
               <ul className="related-list search-list">
                 {entities.map(renderRow)}
               </ul>
@@ -164,7 +167,7 @@ function SearchResults({
           )}
         </>
       ) : (
-        <EmptyState message="No results found." />
+        <EmptyState message={t('search.noResults')} />
       )}
     </div>
   )

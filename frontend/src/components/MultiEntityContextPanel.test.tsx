@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { LocaleProvider } from '../data/locale'
 import type { Candidate } from '../data/candidateUtils'
+
+const r2s = renderToStaticMarkup
+const render = (el: Parameters<typeof r2s>[0]) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 import MultiEntityContextPanel, {
   MultiEntityContextView,
   applyToggleSelection,
@@ -15,7 +19,7 @@ const CANDIDATES: Candidate[] = [
 
 describe('MultiEntityContextView (M13/M14)', () => {
   it('renders the heading and every candidate as an unchecked box (friendly name/type)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
         selectedGids={[]}
@@ -31,7 +35,7 @@ describe('MultiEntityContextView (M13/M14)', () => {
   })
 
   it('marks selected candidates as checked and shows the count', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
         selectedGids={['qin_dynasty:person-qsh', 'ancient_greece:person-alex']}
@@ -45,7 +49,7 @@ describe('MultiEntityContextView (M13/M14)', () => {
   })
 
   it('disables unchecked boxes once the selection cap is reached (MAX_N is UI-only)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
         selectedGids={['qin_dynasty:person-qsh']}
@@ -60,7 +64,7 @@ describe('MultiEntityContextView (M13/M14)', () => {
 
 describe('MultiEntityContextView — M15 resolved-context transparency', () => {
   it('shows a resolved-context count of 0 with no preview when nothing is selected', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
         selectedGids={[]}
@@ -73,7 +77,7 @@ describe('MultiEntityContextView — M15 resolved-context transparency', () => {
   })
 
   it('mirrors multiEntityContext: count + collapsible list of the exact ids sent', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
         selectedGids={['qin_dynasty:person-qsh', 'ancient_greece:person-alex']}
@@ -127,7 +131,7 @@ describe('resolveCandidates (M14 compatibility-first resolution)', () => {
 
 describe('MultiEntityContextPanel container (M13/M14)', () => {
   it('backward-compatible: renders from bare candidateGids (name === gid)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextPanel candidateGids={GIDS} onCitationClick={() => {}} />,
     )
     expect(html).toContain('AI 多实体联合解读')
@@ -136,7 +140,7 @@ describe('MultiEntityContextPanel container (M13/M14)', () => {
   })
 
   it('M14: renders friendly candidates when the candidates prop is supplied', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextPanel candidates={CANDIDATES} onCitationClick={() => {}} />,
     )
     expect(html).toContain('秦始皇')
@@ -144,7 +148,7 @@ describe('MultiEntityContextPanel container (M13/M14)', () => {
   })
 
   it('M14: candidates wins over candidateGids when both are supplied', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityContextPanel
         candidates={CANDIDATES}
         candidateGids={GIDS}

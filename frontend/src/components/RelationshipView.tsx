@@ -5,6 +5,9 @@ import EmptyState from './EmptyState'
 import AIExplanationPanel from './AIExplanationPanel'
 import RelationshipEvidence from './RelationshipEvidence'
 import { relationshipContext } from '../data/aiContext'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 type RelationshipViewProps = {
   mainEntity: MainEntity
@@ -50,6 +53,8 @@ function RelationshipView({
   onNodeClick,
 }: RelationshipViewProps) {
   const [evidenceFor, setEvidenceFor] = useState<string | null>(null)
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
 
   if (!mainEntity?.id) {
     return null
@@ -57,16 +62,16 @@ function RelationshipView({
 
   return (
     <div className="result-section">
-      <h3>Relationship Network</h3>
+      <h3>{t('relationship.network')}</h3>
       <div className="rel-network">
         <div className="rel-root">
-          <span className="rel-root-name">{mainEntity.name}</span>
-          <span className="rel-root-type">{mainEntity.type}</span>
+          <span className="rel-root-name">{getDisplayName(mainEntity.name, locale, prefs.properNameMode)}</span>
+          <span className="rel-root-type">{getEntityLabel(mainEntity.type, locale)}</span>
         </div>
         {relatedEntities.length > 0 ? (
           <ul className="rel-branches">
             {relatedEntities.map((item) => {
-              const displayName = nameById?.[item.id] ?? item.id
+              const displayName = getDisplayName(nameById?.[item.id] ?? item.id, locale, prefs.properNameMode)
               const clickable = typeof onEntityClick === 'function'
               // M10-2: resolve this branch's global_id so it can (a) act as a
               // focus producer and (b) mirror the focused state. Falls back to
@@ -80,31 +85,31 @@ function RelationshipView({
               const content = (
                 <>
                   <span className="rel-target-name">{displayName}</span>
-                  <span className="rel-target-type">{item.type}</span>
+                  <span className="rel-target-type">{getEntityLabel(item.type, locale)}</span>
                   <span className="rel-edge">{item.relationship}</span>
                   {focusable && (
                     <button
                       type="button"
                       className="rel-focus-btn"
-                      aria-label={`Focus ${displayName}`}
+                      aria-label={t('relationship.focusAria', { name: displayName })}
                       onClick={(e) => {
                         e.stopPropagation()
                         onEntityFocus!(branchGlobalId)
                       }}
                     >
-                      Focus
+                      {t('relationship.focus')}
                     </button>
                   )}
                   <button
                     type="button"
                     className="explore-button rel-evidence-btn"
-                    aria-label={`查看 ${displayName} 的依据`}
+                    aria-label={t('relationship.viewEvidenceAria', { name: displayName })}
                     onClick={(e) => {
                       e.stopPropagation()
                       setEvidenceFor((prev) => (prev === item.id ? null : item.id))
                     }}
                   >
-                    查看依据
+                    {t('relationship.viewEvidence')}
                   </button>
                 </>
               )
@@ -114,7 +119,7 @@ function RelationshipView({
                   className={className}
                   role="button"
                   tabIndex={0}
-                  aria-label={`Explore ${displayName}`}
+                  aria-label={t('entity.exploreAria', { name: displayName })}
                   onClick={() => onEntityClick!(item.id)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -139,7 +144,7 @@ function RelationshipView({
             })}
           </ul>
         ) : (
-          <EmptyState message="No connected entities." />
+          <EmptyState message={t('relationship.noConnected')} />
         )}
       </div>
 

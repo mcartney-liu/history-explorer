@@ -7,7 +7,7 @@ describe('ResearchBookmarkView', () => {
     const html = renderToStaticMarkup(
       <ResearchBookmarkView researchId="r_1" bookmarked={false} />,
     )
-    expect(html).toContain('☆ 收藏研究')
+    expect(html).toContain('收藏研究')
     expect(html).not.toContain('已收藏')
   })
 
@@ -15,7 +15,7 @@ describe('ResearchBookmarkView', () => {
     const html = renderToStaticMarkup(
       <ResearchBookmarkView researchId="r_1" bookmarked={true} />,
     )
-    expect(html).toContain('★ 已收藏')
+    expect(html).toContain('已收藏')
   })
 
   it('renders labels when present', () => {

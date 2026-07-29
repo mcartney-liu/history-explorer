@@ -1,6 +1,7 @@
 import type { AICitation } from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
+import Icon from './ui/Icon'
 
 export type DimensionStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -47,7 +48,11 @@ export function ResearchDimensionCardView({ dimension }: ResearchDimensionCardPr
         <div className="rdc-answer">
           {dimension.grounded !== undefined && (
             <span className={`rdc-grounded-badge ${dimension.grounded ? 'rdc-grounded-true' : 'rdc-grounded-false'}`}>
-              {dimension.grounded ? '✓ 已验证' : '⚠ 部分验证'}
+              {dimension.grounded ? (
+                <><Icon name="check" size={16} /> 已验证</>
+              ) : (
+                <><Icon name="warning" size={16} /> 部分验证</>
+              )}
             </span>
           )}
           {dimension.citations && dimension.citations.length > 0 && (

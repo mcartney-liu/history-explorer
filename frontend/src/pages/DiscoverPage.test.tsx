@@ -115,7 +115,7 @@ describe('DiscoverPage (M42 Activation)', () => {
     )
     expect(html).toContain('最近研究')
     expect(html).toContain('Roman Empire')
-    expect(html).toContain('★')
+    expect(html).toContain('discover-recent-star')
   })
 
   it('renders interest profile when multiple researches', () => {

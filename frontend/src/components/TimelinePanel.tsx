@@ -4,6 +4,8 @@ import { sortTimeline, groupTimeline } from '../data/timelineUtils'
 import type { TimeValue } from '../data/temporalUtils'
 import AIExplanationPanel from './AIExplanationPanel'
 import { entityContext } from '../data/aiContext'
+import { useLocale } from '../data/locale'
+import { getTermLabel } from '../locales/terminology'
 
 export type TimelineItem = {
   period: string
@@ -45,6 +47,7 @@ function TimelinePanel({
   entityGlobalId,
   onNodeClick,
 }: TimelinePanelProps) {
+  const { t, locale } = useLocale()
   const clickable = typeof onEventClick === 'function' && !!nameToId
 
   // M6-P4: deterministic ordering + fixed time-bucket grouping.
@@ -64,7 +67,7 @@ function TimelinePanel({
 
   return (
     <div className="result-section">
-      <h3>Timeline</h3>
+      <h3>{getTermLabel('Timeline', locale)}</h3>
       {timeline.length > 0 ? (
         <div className="timeline-flow">
           {flatItems.map((item, idx) => {
@@ -88,7 +91,7 @@ function TimelinePanel({
                   <button
                     type="button"
                     className={`timeline-event is-clickable${focusCls}`}
-                    aria-label={`Open ${item.event}`}
+                    aria-label={t('timeline.openAria', { event: item.event })}
                     onClick={() => onEventClick!(entityId!)}
                   >
                     {item.event}
@@ -123,7 +126,7 @@ function TimelinePanel({
           })}
         </div>
       ) : (
-        <EmptyState message="No timeline data." />
+        <EmptyState message={t('timeline.noData')} />
       )}
 
       {entityGlobalId ? (

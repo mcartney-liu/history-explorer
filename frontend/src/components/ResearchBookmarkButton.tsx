@@ -1,4 +1,5 @@
 import { updateResearch } from '../data/ResearchHistory'
+import Icon from './ui/Icon'
 
 export type ResearchBookmarkButtonProps = {
   researchId: string
@@ -23,7 +24,11 @@ export function ResearchBookmarkView({
         onUpdate?.()
       }}
     >
-      {bookmarked ? '★ 已收藏' : '☆ 收藏研究'}
+      {bookmarked ? (
+        <><Icon name="star" size={16} filled /> 已收藏</>
+      ) : (
+        <><Icon name="star" size={16} /> 收藏研究</>
+      )}
       {labels && labels.length > 0 && (
         <span className="rbk-labels">
           {labels.slice(0, 3).map((l, i) => (

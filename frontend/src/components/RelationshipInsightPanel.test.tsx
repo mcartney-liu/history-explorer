@@ -5,10 +5,15 @@
 
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
 import RelationshipInsightPanel from './RelationshipInsightPanel'
+import { LocaleProvider } from '../data/locale'
 import type { Candidate } from '../data/candidateUtils'
 import type { EntityRelationship } from './EntityPage'
 import { serializeInsightReportAsCsv } from '../data/insightExport'
+
+const r2s = renderToStaticMarkup
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 const qin: Candidate = { gid: 'china:qin', name: '秦始皇', type: 'Person', topic: 'china' }
 const alex: Candidate = { gid: 'greece:alex', name: '亚历山大', type: 'Person', topic: 'greece' }
@@ -32,7 +37,7 @@ const timeMap: Record<string, string> = {
 
 describe('RelationshipInsightPanel', () => {
   it('prompts for at least two entities when fewer than 2 candidates are selected', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin]} relationships={[]} timeMap={timeMap} />,
     )
     expect(html).toContain('relationship-insight-panel')
@@ -42,7 +47,7 @@ describe('RelationshipInsightPanel', () => {
   })
 
   it('does not fetch and only renders existing relationship metadata', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={relationships}
@@ -59,7 +64,7 @@ describe('RelationshipInsightPanel', () => {
   })
 
   it('reports "no existing relationship metadata" for a pair with no edge', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[qin, alex]}
         relationships={relationships}
@@ -72,7 +77,7 @@ describe('RelationshipInsightPanel', () => {
   })
 
   it('renders timeline status and a no-geo note for every pair', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     expect(html).toContain('时间线对比')
@@ -82,7 +87,7 @@ describe('RelationshipInsightPanel', () => {
   })
 
   it('uses collapsible <details> elements (native fold state, no React state)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, alex, rome]} relationships={[]} timeMap={timeMap} />,
     )
     // 3 candidates -> 3 pairs -> 3 <details class="rip-pair">.
@@ -117,7 +122,7 @@ describe('RelationshipInsightPanel (M17 analytics)', () => {
   ]
 
   it('renders the relationship type summary with counts (no causal text)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={m17Relationships}
@@ -133,7 +138,7 @@ describe('RelationshipInsightPanel (M17 analytics)', () => {
   })
 
   it('renders the relationship type matrix as source → type → target rows', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={m17Relationships}
@@ -152,7 +157,7 @@ describe('RelationshipInsightPanel (M17 analytics)', () => {
       ...timeMap,
       周朝: '1046 BC - 256 BC',
     }
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, zhou]} relationships={[]} timeMap={bandTimeMap} />,
     )
     expect(html).toContain('多实体时间线带')
@@ -161,7 +166,7 @@ describe('RelationshipInsightPanel (M17 analytics)', () => {
   })
 
   it('does not emit inferred/discovered edge language in any analytics section', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex, qin]}
         relationships={m17Relationships}
@@ -197,7 +202,7 @@ describe('RelationshipInsightPanel (M18 controls)', () => {
   ]
 
   it('renders matrix filter and sort controls with all/original defaults', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={m18Relationships}
@@ -216,7 +221,7 @@ describe('RelationshipInsightPanel (M18 controls)', () => {
   })
 
   it('renders timeline band sort controls (start/name, asc/desc)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     expect(html).toContain('排序依据')
@@ -226,7 +231,7 @@ describe('RelationshipInsightPanel (M18 controls)', () => {
   })
 
   it('default view still shows every matrix row (controls are additive, not destructive)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={m18Relationships}
@@ -243,7 +248,7 @@ describe('RelationshipInsightPanel (M18 controls)', () => {
   it('controls introduce no persistence or inference language', () => {
     // Pair rome+alex has an existing edge, so the M16 "不做推断" disclaimer for
     // empty pairs is absent — any 推断/发现/保存 here would come from M18 controls.
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={m18Relationships}
@@ -263,7 +268,7 @@ describe('RelationshipInsightPanel (M18 controls)', () => {
 
 describe('RelationshipInsightPanel (M18 export)', () => {
   it('renders JSON download and print buttons with the local-only note', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     expect(html).toContain('rip-export')
@@ -273,7 +278,7 @@ describe('RelationshipInsightPanel (M18 export)', () => {
   })
 
   it('export buttons are plain <button type="button"> elements (no form submit, no links out)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     const buttons = html.match(/class="rip-export-btn"/g) ?? []
@@ -292,7 +297,7 @@ describe('RelationshipInsightPanel (M18 export)', () => {
 
 describe('M19 — Relationship Centrality & Pair Explorer', () => {
   it('renders the centrality block with degree counts over existing edges', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={relationships}
@@ -307,7 +312,7 @@ describe('M19 — Relationship Centrality & Pair Explorer', () => {
   })
 
   it('pair explorer shows the existing edge between the selected two entities', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={relationships}
@@ -323,7 +328,7 @@ describe('M19 — Relationship Centrality & Pair Explorer', () => {
   })
 
   it('pair explorer reports no edge for a pair with no existing relationship', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[qin, alex]}
         relationships={relationships}
@@ -335,7 +340,7 @@ describe('M19 — Relationship Centrality & Pair Explorer', () => {
   })
 
   it('honours an injected nameByGlobalId map to label target entities outside the candidate set', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome]}
         relationships={relationships}
@@ -390,7 +395,7 @@ describe('M20 — Relationship Connectivity Explorer', () => {
   }
 
   it('renders the connectivity explorer block with source/target/hops controls and a boundary disclaimer', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={m20Relationships}
@@ -410,7 +415,7 @@ describe('M20 — Relationship Connectivity Explorer', () => {
   })
 
   it('never emits 推断 / 发现 / 因果 anywhere in the rendered output', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={m20Relationships}
@@ -435,7 +440,7 @@ describe('M20 — Relationship Connectivity Explorer', () => {
         other: { id: 'end', name: '终点', type: 'X', global_id: 'z:end', topic: 't' },
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={rels}
@@ -465,7 +470,7 @@ describe('M20 — Relationship Connectivity Explorer', () => {
         other: { id: 'first', name: '甲', type: 'X', global_id: 'a:first', topic: 't' },
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={rels}
@@ -487,7 +492,7 @@ describe('M20 — Relationship Connectivity Explorer', () => {
         other: { id: 'end', name: '终点', type: 'X', global_id: 'z:end', topic: 't' },
       },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={rels}
@@ -536,7 +541,7 @@ describe('M22 — Insight Share / Copy Enhancement (A3)', () => {
   }
 
   it('renders a local-only Copy Markdown Report button (no upload / no links out)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     expect(html).toContain('rip-export')
@@ -547,7 +552,7 @@ describe('M22 — Insight Share / Copy Enhancement (A3)', () => {
   })
 
   it('renders a Copy Relationship Path Text button when connectivity paths exist', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={m22Relationships}
@@ -562,7 +567,7 @@ describe('M22 — Insight Share / Copy Enhancement (A3)', () => {
   })
 
   it('copy buttons are plain <button type="button"> (no form submit, no links out, no third-party service)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[]}
         relationships={m22Relationships}
@@ -609,7 +614,7 @@ describe('M23 — Timeline Zoom/Pan, Entity Comparison, CSV Export', () => {
       ...timeMap,
       周朝: '1046 BC - 256 BC',
     }
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, zhou]} relationships={[]} timeMap={bandTimeMap} />,
     )
     expect(html).toContain('rip-timeline-svg')
@@ -628,7 +633,7 @@ describe('M23 — Timeline Zoom/Pan, Entity Comparison, CSV Export', () => {
   })
 
   it('M23-A2 renders a read-only entity comparison table over existing metrics', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel
         candidates={[rome, alex]}
         relationships={m23Relationships}
@@ -646,7 +651,7 @@ describe('M23 — Timeline Zoom/Pan, Entity Comparison, CSV Export', () => {
   })
 
   it('M23-A3 renders local-only Copy CSV / Download CSV buttons without breaking the exact 3-button rule', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipInsightPanel candidates={[qin, rome]} relationships={[]} timeMap={timeMap} />,
     )
     expect(html).toContain('复制 CSV 报告')

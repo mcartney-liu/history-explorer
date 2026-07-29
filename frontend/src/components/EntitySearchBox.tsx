@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocale } from '../data/locale'
 
 type EntitySearchBoxProps = {
   onSearch: (query: string) => void
@@ -26,6 +27,7 @@ function EntitySearchBox({
   onEscape,
 }: EntitySearchBoxProps) {
   const [value, setValue] = useState('')
+  const { t } = useLocale()
 
   function submit() {
     const q = value.trim()
@@ -39,7 +41,7 @@ function EntitySearchBox({
           className="topic-input"
           type="text"
           value={value}
-          placeholder="Search entities (e.g. Augustus, Rome, papyrus)"
+          placeholder={t('common.searchEntityPlaceholder')}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'ArrowDown') {
@@ -64,7 +66,7 @@ function EntitySearchBox({
           }}
         />
         <button className="explore-button" onClick={submit} disabled={loading}>
-          {loading ? 'Searching…' : 'Search'}
+          {loading ? t('common.searching') : t('search.button')}
         </button>
       </div>
 

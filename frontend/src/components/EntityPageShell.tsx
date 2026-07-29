@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react'
 import { guidanceFor } from '../data/EntityTabGuidance'
 import { recordEvent } from '../data/UserBehaviorEvent'
+import { useLocale } from '../data/locale'
 
 // ============================================================
 // Types
@@ -15,9 +16,9 @@ export interface TabConfig {
 }
 
 const TABS: TabConfig[] = [
-  { id: 'info', label: '了解', ariaLabel: '了解实体基本信息与关系探索' },
-  { id: 'research', label: '研究', ariaLabel: '深度研究与分析' },
-  { id: 'extensions', label: '扩展', ariaLabel: '扩展功能' },
+  { id: 'info', label: 'entity.tabInfo', ariaLabel: 'entity.tabInfoAria' },
+  { id: 'research', label: 'entity.tabResearch', ariaLabel: 'entity.tabResearchAria' },
+  { id: 'extensions', label: 'entity.tabExtensions', ariaLabel: 'entity.tabExtensionsAria' },
 ]
 
 // ============================================================
@@ -59,10 +60,11 @@ export function EntityPageShellView({
   onTabChange = () => {},
   tabs = TABS,
 }: EntityPageShellProps) {
+  const { t } = useLocale()
   return (
     <div className="eps">
       {/* Tab navigation */}
-      <nav className="eps-nav" role="tablist" aria-label="实体页面导航">
+      <nav className="eps-nav" role="tablist" aria-label={t('entity.tabNavAria')}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -70,10 +72,10 @@ export function EntityPageShellView({
             role="tab"
             className={`eps-tab${activeTab === tab.id ? ' eps-tab--active' : ''}`}
             aria-selected={activeTab === tab.id}
-            aria-label={tab.ariaLabel}
+            aria-label={t(tab.ariaLabel)}
             onClick={() => onTabChange(tab.id)}
           >
-            {tab.label}
+            {t(tab.label)}
           </button>
         ))}
       </nav>
@@ -82,7 +84,7 @@ export function EntityPageShellView({
       {(() => {
         const g = guidanceFor(activeTab)
         return (
-          <div className="eps-guidance" role="complementary" aria-label={`${g.title} 说明`}>
+          <div className="eps-guidance" role="complementary" aria-label={`${g.title} ${t('entity.guidanceSuffix')}`}>
             <p className="eps-guidance-title">{g.title}</p>
             <p className="eps-guidance-desc">{g.description}</p>
             {g.recommendedActions.length > 0 && (

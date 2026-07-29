@@ -40,7 +40,7 @@ export function EntityHero({ identity, onResearch, onCompare }: EntityHeroProps)
       <div className="eh-meta">
         {timeLabel && (
           <span className="eh-meta-item">
-            <span className="eh-meta-icon">◷</span>
+            <Icon name="time-period" size={16} className="eh-meta-icon" />
             {timeLabel}
           </span>
         )}

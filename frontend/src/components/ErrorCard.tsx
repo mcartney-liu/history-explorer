@@ -2,6 +2,7 @@
 // One presentation for every failure mode: 404 (entity not found), network
 // failure, and parse/response failure. The caller passes a kind so the copy
 // stays accurate, but the visual treatment is always the same.
+import { useLocale } from '../data/locale'
 
 export type ErrorKind = 'notfound' | 'network' | 'parse'
 
@@ -10,30 +11,22 @@ type ErrorCardProps = {
   onRetry?: () => void
 }
 
-const COPY: Record<ErrorKind, { title: string; message: string }> = {
-  notfound: {
-    title: 'Not found',
-    message: 'We could not find that entity. It may belong to another topic.',
-  },
-  network: {
-    title: 'Connection problem',
-    message: 'Unable to reach the backend. Is the server running on :8000?',
-  },
-  parse: {
-    title: 'Something went wrong',
-    message: 'The response could not be read. Please try again.',
-  },
+const COPY: Record<ErrorKind, { titleKey: string; messageKey: string }> = {
+  notfound: { titleKey: 'error.notFoundTitle', messageKey: 'error.notFoundMessage' },
+  network: { titleKey: 'error.networkTitle', messageKey: 'error.networkMessage' },
+  parse: { titleKey: 'error.parseTitle', messageKey: 'error.parseMessage' },
 }
 
 function ErrorCard({ kind, onRetry }: ErrorCardProps) {
+  const { t } = useLocale()
   const copy = COPY[kind]
   return (
     <div className="he-error-card" role="alert">
-      <h3 className="he-error-title">{copy.title}</h3>
-      <p className="he-error-message">{copy.message}</p>
+      <h3 className="he-error-title">{t(copy.titleKey)}</h3>
+      <p className="he-error-message">{t(copy.messageKey)}</p>
       {onRetry && (
         <button className="explore-button he-error-retry" type="button" onClick={onRetry}>
-          Try again
+          {t('common.retry')}
         </button>
       )}
     </div>

@@ -26,8 +26,32 @@ export const ENTITY_TYPE_ICONS: Record<string, string> = {
   Idea: 'idea',
 }
 
-export function getEntityLabel(type: string): string {
-  return ENTITY_TYPE_LABELS[type] || type
+// W3 — 实体类型本地化（补充 en/ja；zh 复用既有 ENTITY_TYPE_LABELS 以保持向后兼容）
+const ENTITY_TYPE_LABELS_EN: Record<string, string> = {
+  Person: 'Person',
+  Civilization: 'Civilization',
+  Event: 'Event',
+  Location: 'Location',
+  'Time Period': 'Time Period',
+  Technology: 'Technology',
+  Religion: 'Religion',
+  Idea: 'Idea',
+}
+
+const ENTITY_TYPE_LABELS_JA: Record<string, string> = {
+  Person: '人物',
+  Civilization: '文明',
+  Event: '事件',
+  Location: '地点',
+  'Time Period': '時期',
+  Technology: '技術',
+  Religion: '宗教',
+  Idea: '思想',
+}
+
+export function getEntityLabel(type: string, locale: 'zh' | 'en' | 'ja' = 'zh'): string {
+  const map = locale === 'en' ? ENTITY_TYPE_LABELS_EN : locale === 'ja' ? ENTITY_TYPE_LABELS_JA : ENTITY_TYPE_LABELS
+  return map[type] || ENTITY_TYPE_LABELS[type] || type
 }
 
 export function getEntityIcon(type: string): string {

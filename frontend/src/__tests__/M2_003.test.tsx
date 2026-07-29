@@ -9,6 +9,7 @@ import LoadingSkeleton from '../components/LoadingSkeleton'
 import ErrorCard from '../components/ErrorCard'
 import EmptyState from '../components/EmptyState'
 import EntityPage, { EntityDetail } from '../components/EntityPage'
+import { LocaleProvider } from '../data/locale'
 import { NavNode } from '../components/navigation'
 
 const crumbs = [
@@ -56,9 +57,11 @@ describe('M2-003 RecentExplorations', () => {
 
   it('renders clickable chips with type + label', () => {
     const html = renderToStaticMarkup(
-      <RecentExplorations items={items} onSelect={() => {}} />,
+      <LocaleProvider>
+        <RecentExplorations items={items} onSelect={() => {}} />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Recent Explorations')
+    expect(html).toContain('最近浏览')
     expect(html).toContain('Roman Empire')
     expect(html).toContain('Augustus')
     expect(html).toContain('he-recent-chip')
@@ -78,26 +81,30 @@ describe('M2-003 Relationship navigation', () => {
 
   it('makes every relationship branch clickable when onEntityClick is provided', () => {
     const html = renderToStaticMarkup(
-      <RelationshipView
-        mainEntity={mainEntity}
-        relatedEntities={related}
-        nameById={{ 'event-x': 'Battle of Actium' }}
-        onEntityClick={() => {}}
-      />,
+      <LocaleProvider>
+        <RelationshipView
+          mainEntity={mainEntity}
+          relatedEntities={related}
+          nameById={{ 'event-x': 'Battle of Actium' }}
+          onEntityClick={() => {}}
+        />
+      </LocaleProvider>,
     )
     expect(html).toContain('role="button"')
-    expect(html).toContain('Explore Battle of Actium')
+    expect(html).toContain('探索 Battle of Actium')
   })
 
   it('falls back to the raw id when no name is available', () => {
     const html = renderToStaticMarkup(
-      <RelationshipView
-        mainEntity={mainEntity}
-        relatedEntities={related}
-        onEntityClick={() => {}}
-      />,
+      <LocaleProvider>
+        <RelationshipView
+          mainEntity={mainEntity}
+          relatedEntities={related}
+          onEntityClick={() => {}}
+        />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Explore event-x')
+    expect(html).toContain('探索 event-x')
   })
 })
 
@@ -106,18 +113,24 @@ describe('M2-003 Timeline navigation', () => {
 
   it('makes an event clickable when its name maps to an entity', () => {
     const html = renderToStaticMarkup(
-      <TimelinePanel
-        timeline={timeline}
-        nameToId={{ 'Roman Empire Established': 'event-roman-empire-established' }}
-        onEventClick={() => {}}
-      />,
+      <LocaleProvider>
+        <TimelinePanel
+          timeline={timeline}
+          nameToId={{ 'Roman Empire Established': 'event-roman-empire-established' }}
+          onEventClick={() => {}}
+        />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Open Roman Empire Established')
+    expect(html).toContain('打开 Roman Empire Established')
   })
 
   it('stays static when the event is not linked to an entity', () => {
-    const html = renderToStaticMarkup(<TimelinePanel timeline={timeline} />)
-    expect(html).not.toContain('Open Roman Empire Established')
+    const html = renderToStaticMarkup(
+      <LocaleProvider>
+        <TimelinePanel timeline={timeline} />
+      </LocaleProvider>,
+    )
+    expect(html).not.toContain('打开 Roman Empire Established')
     expect(html).toContain('Roman Empire Established')
   })
 
@@ -163,8 +176,8 @@ describe('M2-003 unified states', () => {
   })
 
   it('ErrorCard shows accurate copy per kind', () => {
-    expect(renderToStaticMarkup(<ErrorCard kind="notfound" />)).toContain('Not found')
-    expect(renderToStaticMarkup(<ErrorCard kind="network" />)).toContain('Connection problem')
-    expect(renderToStaticMarkup(<ErrorCard kind="parse" />)).toContain('Something went wrong')
+    expect(renderToStaticMarkup(<LocaleProvider><ErrorCard kind="notfound" /></LocaleProvider>)).toContain('未找到')
+    expect(renderToStaticMarkup(<LocaleProvider><ErrorCard kind="network" /></LocaleProvider>)).toContain('连接问题')
+    expect(renderToStaticMarkup(<LocaleProvider><ErrorCard kind="parse" /></LocaleProvider>)).toContain('出错了')
   })
 })

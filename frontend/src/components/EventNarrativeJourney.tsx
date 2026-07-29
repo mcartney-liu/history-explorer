@@ -1,4 +1,5 @@
 import type { EntityRelationship } from './EntityPage'
+import { Icon } from './ui/Icon'
 
 export type EventNarrativeJourneyProps = {
   /** All relationships from the /entity response. */
@@ -137,7 +138,7 @@ export function EventNarrativeJourneyView({
             <span className="enj-node-type">Event</span>
             <span className="enj-node-name">{centerEntityName}</span>
           </span>
-          <span className="enj-center-marker">● 当前</span>
+          <span className="enj-center-marker"><Icon name="circle" filled size={16} /> 当前</span>
         </div>
 
         {outgoing.length > 0 && (

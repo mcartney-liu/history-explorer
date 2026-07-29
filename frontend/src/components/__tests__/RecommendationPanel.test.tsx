@@ -1,11 +1,15 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
+import { LocaleProvider } from '../../data/locale'
+import type { ReactElement } from 'react'
 import RecommendationPanel, {
   RecommendationPanelView,
   fetchRecommendations,
   type RecommendationItem,
   type RecommendationResult,
 } from '../RecommendationPanel'
+
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // --- Sample engine response (mirrors backend RecommendationResult.to_dict) ---
 
@@ -100,7 +104,7 @@ describe('RecommendationPanelView (M9-002 presentational)', () => {
     const items = [
       rec('roman_empire:octavian', 'Octavian', 'person', ['Same dynasty successor.', 'Linked by influence.']),
     ]
-    const html = renderToStaticMarkup(<RecommendationPanelView recommendations={items} />)
+    const html = render(<RecommendationPanelView recommendations={items} />)
     expect(html).toContain('下一站探索')
     expect(html).toContain('Octavian')
     expect(html).toContain('person')
@@ -115,7 +119,7 @@ describe('RecommendationPanelView (M9-002 presentational)', () => {
       rec('t:second', 'Second', 'person', ['b']),
       rec('t:third', 'Third', 'person', ['c']),
     ]
-    const html = renderToStaticMarkup(<RecommendationPanelView recommendations={items} />)
+    const html = render(<RecommendationPanelView recommendations={items} />)
     expect(html.indexOf('First')).toBeLessThan(html.indexOf('Second'))
     expect(html.indexOf('Second')).toBeLessThan(html.indexOf('Third'))
   })
@@ -123,7 +127,7 @@ describe('RecommendationPanelView (M9-002 presentational)', () => {
   it('weakly marks already-seen nodes without reordering them', () => {
     const items = [rec('t:seen_node', 'Seen', 'person', ['a']), rec('t:new_node', 'New', 'person', ['b'])]
     const seen = new Set(['t:seen_node'])
-    const html = renderToStaticMarkup(<RecommendationPanelView recommendations={items} seenGlobalIds={seen} />)
+    const html = render(<RecommendationPanelView recommendations={items} seenGlobalIds={seen} />)
     expect(html).toContain('is-seen')
     // Seen node stays first (no reordering by this panel).
     expect(html.indexOf('seen_node')).toBeLessThan(html.indexOf('new_node'))
@@ -133,7 +137,7 @@ describe('RecommendationPanelView (M9-002 presentational)', () => {
 describe('RecommendationPanel route compatibility (M9-002)', () => {
   it('binds each card to the engine target via aria-label (route-compatibility contract)', () => {
     const items = [rec('roman_empire:octavian', 'Octavian', 'person', ['Same dynasty successor.'])]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RecommendationPanelView recommendations={items} onNodeClick={() => {}} />,
     )
     // Route-compatibility contract: each card is a clickable action whose
@@ -142,12 +146,12 @@ describe('RecommendationPanel route compatibility (M9-002)', () => {
     // openEntity — so a click navigates to exactly the engine's suggested node.
     // Actual DOM-click dispatch needs jsdom (intentionally unavailable here);
     // it is covered by dev-server verification per M9-002.1 Phase 5.
-    expect(html).toContain('aria-label="Explore Octavian"')
+    expect(html).toContain('aria-label="探索 Octavian"')
     expect(html).toContain('octavian')
   })
 
   it('renders a loading skeleton in static markup without invoking fetch (useEffect is not run)', () => {
-    const html = renderToStaticMarkup(<RecommendationPanel entityId="roman_empire:augustus" />)
+    const html = render(<RecommendationPanel entityId="roman_empire:augustus" />)
     expect(html).toContain('he-skeleton')
   })
 })

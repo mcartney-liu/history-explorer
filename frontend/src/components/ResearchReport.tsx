@@ -1,5 +1,6 @@
 import type { ResearchDimension } from './ResearchDimensionCard'
 import type { AICitation } from '../data/aiClient'
+import Icon from './ui/Icon'
 
 export type ResearchReportProps = {
   /** Entity being researched. */
@@ -109,7 +110,13 @@ export function ResearchReportView({ entityName, entityType, dimensions, compare
               key={dim.id}
               className={`rreport-coverage-item rreport-coverage--${dim.status}`}
             >
-              {dim.status === 'success' ? '✓' : dim.status === 'error' ? '✗' : '○'}
+              {dim.status === 'success' ? (
+                <Icon name="check" size={16} />
+              ) : dim.status === 'error' ? (
+                <Icon name="cross" size={16} />
+              ) : (
+                <Icon name="circle" size={16} />
+              )}
               {' '}{dim.title}
             </span>
           ))}

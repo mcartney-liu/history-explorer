@@ -16,6 +16,8 @@
 //    it never writes to storage (no new storage contract).
 
 import { useState } from 'react'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
 import type { NavNode } from './navigation'
 import type { StarterItem } from '../data/explorationStarters'
 
@@ -33,24 +35,26 @@ function EntityExplorationGuide({
   onStarterClick,
 }: EntityExplorationGuideProps) {
   const [dismissed, setDismissed] = useState(false)
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
 
   if (dismissed) return null
 
   return (
-    <section className="he-guide" aria-label="Explore this entity" data-entity={entityId}>
+    <section className="he-guide" aria-label={t('discover.guideEntityAria')} data-entity={entityId}>
       <div className="he-guide-head">
-        <h3 className="he-guide-heading">Explore {entityName}</h3>
+        <h3 className="he-guide-heading">{t('discover.exploreEntityHeading', { name: entityName })}</h3>
         <button
           type="button"
           className="he-guide-dismiss"
-          aria-label="Dismiss this guide"
+          aria-label={t('discover.dismissAria')}
           onClick={() => setDismissed(true)}
         >
           &times;
         </button>
       </div>
       <p className="he-guide-intro">
-        Pick a thread below to keep exploring {entityName} — follow people, ideas, and events connected to it.
+        {t('discover.entityGuideIntro', { name: entityName })}
       </p>
       {starters.length > 0 ? (
         <ul className="he-guide-list">
@@ -60,10 +64,14 @@ function EntityExplorationGuide({
                 type="button"
                 className="he-guide-card"
                 data-starter={s.id}
-                aria-label={`Explore ${s.label}`}
+                aria-label={t('discover.exploreStarterAria', {
+                  label: getDisplayName(s.label, locale, prefs.properNameMode),
+                })}
                 onClick={() => onStarterClick(s.target)}
               >
-                <span className="he-guide-label">{s.label}</span>
+                <span className="he-guide-label">
+                  {getDisplayName(s.label, locale, prefs.properNameMode)}
+                </span>
                 {s.description ? (
                   <span className="he-guide-desc">{s.description}</span>
                 ) : null}

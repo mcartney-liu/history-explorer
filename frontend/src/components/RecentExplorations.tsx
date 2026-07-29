@@ -4,6 +4,8 @@
 // can jump straight back into an exploration. Pure presentational component.
 
 import { NavNode } from './navigation'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
 
 type RecentExplorationsProps = {
   items: NavNode[]
@@ -12,14 +14,16 @@ type RecentExplorationsProps = {
 }
 
 function RecentExplorations({ items, onSelect, onClear }: RecentExplorationsProps) {
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
   if (items.length === 0) return null
   return (
-    <section className="he-recent result-section" aria-label="Recent explorations">
+    <section className="he-recent result-section" aria-label={t('common.recentAria')}>
       <div className="search-results-head">
-        <h3>Recent Explorations</h3>
+        <h3>{t('common.recentHeading')}</h3>
         {onClear && (
           <button className="link-button" type="button" onClick={onClear}>
-            Clear
+            {t('common.clear')}
           </button>
         )}
       </div>
@@ -31,9 +35,15 @@ function RecentExplorations({ items, onSelect, onClear }: RecentExplorationsProp
               className="he-recent-chip"
               onClick={() => onSelect(node)}
             >
-              <span className="he-recent-kind">{node.type === 'topic' ? 'Topic' : 'Entity'}</span>
+              <span className="he-recent-kind">
+                {node.type === 'topic' ? t('common.kindTopic') : t('common.kindEntity')}
+              </span>
               <span className="he-recent-label">
-                {node.type === 'topic' ? node.title : node.name}
+                {getDisplayName(
+                  node.type === 'topic' ? node.title : node.name,
+                  locale,
+                  prefs.properNameMode,
+                )}
               </span>
             </button>
           </li>

@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { LocaleProvider } from '../data/locale'
 import GraphViewPanel from './GraphViewPanel'
+
+const r2s = renderToStaticMarkup
+const render = (el: Parameters<typeof r2s>[0]) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // M34-A2: the SVG renderer is asserted via renderToStaticMarkup (no DOM),
 // matching the repo's environment:'node' test style.
@@ -18,18 +22,18 @@ const related = [
 
 describe('GraphViewPanel (M34-A2)', () => {
   it('renders an SVG graph titled and captioned', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <GraphViewPanel mainEntity={main} relatedEntities={related} />,
     )
-    expect(html).toContain('Knowledge Graph')
+    expect(html).toContain('知识图谱')
     expect(html).toContain('<svg')
-    expect(html).toContain('aria-label="Knowledge graph for Augustus"')
+    expect(html).toContain('aria-label="Augustus 的知识图谱"')
     // Caption reports the direct-connection count.
-    expect(html).toContain('2 direct connections')
+    expect(html).toContain('2 个直接关联')
   })
 
   it('draws the main entity and its neighbours as nodes', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <GraphViewPanel mainEntity={main} relatedEntities={related} />,
     )
     expect(html).toContain('Augustus')
@@ -40,7 +44,7 @@ describe('GraphViewPanel (M34-A2)', () => {
   })
 
   it('marks neighbour nodes clickable when onEntityClick is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <GraphViewPanel
         mainEntity={main}
         relatedEntities={related}
@@ -48,19 +52,19 @@ describe('GraphViewPanel (M34-A2)', () => {
       />,
     )
     expect(html).toContain('role="button"')
-    expect(html).toContain('Open Roman Empire Established')
-    expect(html).toContain('Open Rome')
+    expect(html).toContain('打开 Roman Empire Established')
+    expect(html).toContain('打开 Rome')
   })
 
   it('does not mark nodes clickable without an onEntityClick handler', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <GraphViewPanel mainEntity={main} relatedEntities={related} />,
     )
     expect(html).not.toContain('role="button"')
   })
 
   it('resolves neighbour names via nameById when the neighbour omits a name', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <GraphViewPanel
         mainEntity={main}
         relatedEntities={[
@@ -73,16 +77,16 @@ describe('GraphViewPanel (M34-A2)', () => {
   })
 
   it('shows an empty-connections caption for a lone main entity', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <GraphViewPanel mainEntity={main} relatedEntities={[]} />,
     )
-    expect(html).toContain('no direct connections')
+    expect(html).toContain('目前没有直接关联可绘制')
     // Still renders the main node.
     expect(html).toContain('Augustus')
   })
 
   it('returns nothing when there is no main entity', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       // @ts-expect-error deliberately invalid main entity for the guard test
       <GraphViewPanel mainEntity={{}} relatedEntities={related} />,
     )

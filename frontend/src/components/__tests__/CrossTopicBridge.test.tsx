@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
 import CrossTopicBridge from '../CrossTopicBridge'
 import type { CrossTopicRelated, RelatedTopic } from '../crossTopic'
+import { LocaleProvider } from '../../data/locale'
+import type { ReactElement } from 'react'
+
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // M10-2: CrossTopicBridge is a composition-only layer. It OWNS no data, state,
 // or navigation — it threads props through to the two preserved child panels
@@ -35,7 +39,7 @@ describe('M10-2 CrossTopicBridge — composition layer', () => {
   ]
 
   it('threads focusedId into the connections panel so the matching neighbor highlights', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <CrossTopicBridge
         connections={connections}
         relatedTopics={relatedTopics}
@@ -47,12 +51,12 @@ describe('M10-2 CrossTopicBridge — composition layer', () => {
     // The focused neighbor's chip carries the is-focused marker.
     expect(html).toContain('is-focused')
     // Both chips still render (highlight, not hide).
-    expect(html).toContain('Open Augustus')
-    expect(html).toContain('Open Cleopatra')
+    expect(html).toContain('打开 Augustus')
+    expect(html).toContain('打开 Cleopatra')
   })
 
   it('renders no is-focused marker when focusedId is undefined', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <CrossTopicBridge
         connections={connections}
         relatedTopics={relatedTopics}
@@ -64,7 +68,7 @@ describe('M10-2 CrossTopicBridge — composition layer', () => {
   })
 
   it('renders both child panels (connections + connected topics)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <CrossTopicBridge
         connections={connections}
         relatedTopics={relatedTopics}
@@ -72,17 +76,17 @@ describe('M10-2 CrossTopicBridge — composition layer', () => {
         onTopicClick={() => {}}
       />,
     )
-    expect(html).toContain('Cross-Topic Connections')
-    expect(html).toContain('Connected Topics')
+    expect(html).toContain('跨主题关联')
+    expect(html).toContain('关联主题')
     expect(html).toContain('Ptolemaic Egypt')
     expect(html).toContain('Greek City States')
   })
 
   it('self-hides entirely when neither panel has data (no empty chrome)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <CrossTopicBridge onEntityClick={() => {}} onTopicClick={() => {}} />,
     )
-    expect(html).not.toContain('Cross-Topic Connections')
-    expect(html).not.toContain('Connected Topics')
+    expect(html).not.toContain('跨主题关联')
+    expect(html).not.toContain('关联主题')
   })
 })

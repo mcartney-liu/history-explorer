@@ -442,6 +442,89 @@ export const SCOPE_ALLOWLIST = [
   // / dependency change; runtime stays 0.13.0.
   "frontend/src/components/ConnectionsExplainedPanel.tsx",
   "scripts/visual-check.mjs",
+  // M62.5 (Global Language Experience System) — Frontend Freeze Revision Gate
+  // (lightweight ADR-M62.5-Freeze-Revision; same mechanism as M30-A/M34/M35/M59/M61).
+  // Purely additive frontend change: i18n resource framework + Language UX +
+  // unified preference foundation. ZERO backend / schema / enum / dependency
+  // change; runtime stays 0.13.0.
+  //   - locales/                       : i18n resource framework (terminology.ts + zh/en/ja/*)
+  //   - lib/format.ts                  : Intl date/number formatting (O6)
+  //   - lib/preferences.ts             : unified preference store (he-prefs) + migration (PF-01)
+  //   - components/LanguageSwitcher.tsx: LUX-01 language switch UX
+  // Least Privilege notes:
+  //   - lib/ has NO directory prefix (only exact entries, e.g. graphLayout.ts),
+  //     so each new lib file is enumerated precisely — not a broad lib/ open.
+  //   - components/ has NO broad prefix; LanguageSwitcher is an exact top-level entry.
+  //   - PreferencePanel (P1) and context/PreferenceContext.tsx (D7 prefers lib/)
+  //     are intentionally EXCLUDED from M62.5 scope.
+  //   - Test files (format.test.ts / preferences.test.ts) are NOT pre-added to the
+  //     allowlist; they will be registered only when W1 actually creates them.
+  "frontend/src/locales/",
+  "frontend/src/lib/format.ts",
+  "frontend/src/lib/preferences.ts",
+  "frontend/src/components/LanguageSwitcher.tsx",
+  // M62.5 W10 (Test Migration) — Frontend Freeze Revision Gate continuation.
+  // W10 migrates component co-located integration tests to locale-aware
+  // assertions (wrap in <LocaleProvider>, assert zh). These tests live under
+  // frontend/src/components/__tests__/ (distinct from the already-allowlisted
+  // frontend/src/__tests__/ dir). Directory-prefix entry, test files only.
+  "frontend/src/components/__tests__/",
+
+  // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
+  // Adds the precise set of files that Stage B i18n externalization will touch.
+  // Least Privilege: every entry is an EXACT file path — NO components/** broad
+  // prefix, NO backend / dependency / runtime / schema / enum opening.
+  // ADR restriction per entry: "仅允许 i18n 字符串外置 — 禁止业务逻辑修改、
+  // 禁止 API 修改、禁止数据结构修改、禁止枚举修改。"
+  // Rationale: each listed component/data file contains user-visible hardcoded
+  // strings (zh + en, per R14 English-string blind-spot audit) that Stage B will
+  // externalize via t()/getTermLabel()/getDisplayName() only.
+
+  // --- B1/B3/B4/B6 data-layer source strings (exact paths) ---
+  "frontend/src/data/understandingRules.ts",        // B1 relationship "meaning/perspective" templates (en)
+  "frontend/src/data/insightExport.ts",             // B1/B6 export report copy (zh)
+  "frontend/src/data/explorationStarters.ts",       // B4 Discover starter descriptions (en)
+  "frontend/src/data/compareTemporal.ts",           // B3 TemporalComparison sentences (en)
+
+  // --- Top-level components requiring i18n externalization (exact paths, no broad prefix) ---
+  "frontend/src/components/TimelinePanel.tsx",
+  "frontend/src/components/Breadcrumb.tsx",
+  "frontend/src/components/ConnectionsPanel.tsx",
+  "frontend/src/components/ContinueExploringPanel.tsx",
+  "frontend/src/components/CrossTopicBridge.tsx",
+  "frontend/src/components/CrossTopicConnectionsPanel.tsx",
+  "frontend/src/components/CrossTopicTopicList.tsx",
+  "frontend/src/components/EmptyState.tsx",
+  "frontend/src/components/EntityExplorationGuide.tsx",
+  "frontend/src/components/EntitySearchBox.tsx",
+  "frontend/src/components/ErrorCard.tsx",
+  "frontend/src/components/ExplorationJourney.tsx",
+  "frontend/src/components/ExplorationPathTree.tsx",
+  "frontend/src/components/ExplorationPathsPanel.tsx",
+  "frontend/src/components/ExplorationTrail.tsx",
+  "frontend/src/components/FeaturedTopics.tsx",
+  "frontend/src/components/FirstExplorationGuide.tsx",
+  "frontend/src/components/HistoryBar.tsx",
+  "frontend/src/components/InterpretationPanel.tsx",
+  "frontend/src/components/LoadingSkeleton.tsx",
+  "frontend/src/components/MainEntityCard.tsx",
+  "frontend/src/components/MultiEntityTimeline.tsx",
+  "frontend/src/components/RecentExplorations.tsx",
+  "frontend/src/components/RecommendationPanel.tsx",
+  "frontend/src/components/RelatedEntityList.tsx",
+  "frontend/src/components/SummaryPanel.tsx",
+  "frontend/src/components/TemporalComparisonPanel.tsx",
+  "frontend/src/components/ThemesPanel.tsx",
+  "frontend/src/components/TopicComparisonPanel.tsx",
+  "frontend/src/components/SearchResults.tsx",
+  "frontend/src/components/EntityPickerPanel.tsx",
+  "frontend/src/components/EntityPickerPanel.test.tsx",        // B7 co-located test (i18n wrap)
+  "frontend/src/components/MultiEntityContextPanel.tsx",
+  "frontend/src/components/MultiEntityContextPanel.test.tsx",  // B7 co-located test (i18n wrap)
+  "frontend/src/components/RelationshipPathGraph.tsx",
+  "frontend/src/components/RelationshipPathGraph.test.tsx",    // B7 co-located test (i18n wrap)
+  "frontend/src/components/RelationshipInsightPanel.tsx",
+  "frontend/src/components/RelationshipInsightPanel.test.tsx", // B7 co-located test (i18n wrap)
 ];
 
 function _scopeAllowed(file) {

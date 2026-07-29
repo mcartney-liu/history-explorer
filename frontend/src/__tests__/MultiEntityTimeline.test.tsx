@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
 import MultiEntityTimeline from '../components/MultiEntityTimeline'
+import { LocaleProvider } from '../data/locale'
+
+// M62.5: components now render localized copy via t(); wrap in LocaleProvider
+// (zh default) so assertions match the rendered Chinese strings.
+const render = (ui: ReactElement) =>
+  renderToStaticMarkup(<LocaleProvider>{ui}</LocaleProvider>)
 
 // Same test environment as the M7 panel tests: react-dom/server
 // renderToStaticMarkup (no jsdom, no @testing-library — frozen deps).
@@ -12,7 +19,7 @@ const entities = [
 
 describe('MultiEntityTimeline', () => {
   it('renders one row per named entity', () => {
-    const html = renderToStaticMarkup(<MultiEntityTimeline entities={entities} />)
+    const html = render(<MultiEntityTimeline entities={entities} />)
     expect(html).toContain('Rome')
     expect(html).toContain('Han Dynasty')
     expect(html).toContain('Ancient Egypt')
@@ -21,38 +28,38 @@ describe('MultiEntityTimeline', () => {
   })
 
   it('preserves input order (no sorting / ranking)', () => {
-    const html = renderToStaticMarkup(<MultiEntityTimeline entities={entities} />)
+    const html = render(<MultiEntityTimeline entities={entities} />)
     expect(html.indexOf('Rome')).toBeLessThan(html.indexOf('Han Dynasty'))
     expect(html.indexOf('Han Dynasty')).toBeLessThan(html.indexOf('Ancient Egypt'))
   })
 
   it('renders deterministic date-range labels', () => {
-    const html = renderToStaticMarkup(<MultiEntityTimeline entities={entities} />)
+    const html = render(<MultiEntityTimeline entities={entities} />)
     expect(html).toContain('753 BC - 476 CE')
   })
 
   it('shows "No date data" for an undated entity without crashing', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityTimeline entities={[...entities, { name: 'Mystery' }]} />,
     )
     expect(html).toContain('Mystery')
-    expect(html).toContain('No date data')
+    expect(html).toContain('没有日期数据')
   })
 
   it('renders an empty state for an empty array', () => {
-    const html = renderToStaticMarkup(<MultiEntityTimeline entities={[]} />)
-    expect(html).toContain('No entities with temporal data')
+    const html = render(<MultiEntityTimeline entities={[]} />)
+    expect(html).toContain('没有可放置于时间线的实体。')
   })
 
   it('renders an empty state when no entity has any date', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <MultiEntityTimeline entities={[{ name: 'A' }, { name: 'B' }]} />,
     )
-    expect(html).toContain('No entities with temporal data')
+    expect(html).toContain('没有可放置于时间线的实体。')
   })
 
   it('renders reused mechanical overlap facts', () => {
-    const html = renderToStaticMarkup(<MultiEntityTimeline entities={entities} />)
+    const html = render(<MultiEntityTimeline entities={entities} />)
     expect(html).toContain('overlapped for 422 years')
   })
 

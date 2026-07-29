@@ -3,6 +3,8 @@ import {
   formatRelationship,
   formatTopicLabel,
 } from './crossTopic'
+import { useLocale } from '../data/locale'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 type CrossTopicConnectionsPanelProps = {
   // Direct cross-topic neighbors of the Explore centered entity. ONLY present
@@ -27,12 +29,13 @@ function CrossTopicConnectionsPanel({
   onEntityClick,
   focusedId,
 }: CrossTopicConnectionsPanelProps) {
+  const { t, locale } = useLocale()
   if (!connections || connections.length === 0) {
     return null
   }
   return (
     <div className="result-section">
-      <h3>Cross-Topic Connections</h3>
+      <h3>{t('discover.crossTopicConnectionsHeading')}</h3>
       <ul className="related-list">
         {connections
           .filter(
@@ -45,7 +48,9 @@ function CrossTopicConnectionsPanel({
               className={`is-clickable${item.global_id === focusedId ? ' is-focused' : ''}`}
               role="button"
               tabIndex={0}
-              aria-label={`Open ${item.name ?? item.global_id}`}
+              aria-label={t('discover.openAria', {
+                name: item.name ?? item.global_id,
+              })}
               onClick={() => onEntityClick(item.global_id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -55,7 +60,7 @@ function CrossTopicConnectionsPanel({
               }}
             >
               <span className="re-name">{item.name ?? item.id ?? 'Unknown'}</span>
-              <span className="re-type">{item.type ?? 'entity'}</span>
+              <span className="re-type">{getEntityLabel(item.type ?? 'entity', locale)}</span>
               <span className="re-rel">
                 {formatTopicLabel(item.topic ?? '')} ·{' '}
                 {formatRelationship(item.relationship)}

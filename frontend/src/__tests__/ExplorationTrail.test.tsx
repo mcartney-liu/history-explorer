@@ -1,18 +1,22 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
+import type { ReactElement } from 'react'
+import { LocaleProvider } from '../data/locale'
 import ExplorationTrail from '../components/ExplorationTrail'
 import { NavNode } from '../components/navigation'
+
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 const noop = () => {}
 
 describe('ExplorationTrail (M5-B-2)', () => {
   it('renders nothing for an empty or single-stop journey (additive)', () => {
     expect(
-      renderToStaticMarkup(<ExplorationTrail history={[]} cursor={-1} onStepClick={noop} />),
+      render(<ExplorationTrail history={[]} cursor={-1} onStepClick={noop} />),
     ).toBe('')
     const single: NavNode[] = [{ type: 'topic', topic: 'roman_empire', title: 'Roman Empire' }]
     expect(
-      renderToStaticMarkup(<ExplorationTrail history={single} cursor={0} onStepClick={noop} />),
+      render(<ExplorationTrail history={single} cursor={0} onStepClick={noop} />),
     ).toBe('')
   })
 
@@ -22,16 +26,16 @@ describe('ExplorationTrail (M5-B-2)', () => {
       { type: 'entity', id: 'roman_empire:augustus', name: 'Augustus' },
       { type: 'entity', id: 'silk_road:han_dynasty', name: 'Han Dynasty' },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationTrail history={history} cursor={2} onStepClick={noop} />,
     )
-    expect(html).toContain('Your Exploration Trail')
+    expect(html).toContain('你的探索足迹')
     expect(html).toContain('Roman Empire')
     expect(html).toContain('Augustus')
     expect(html).toContain('Han Dynasty')
     // Kinds shown for topic vs entity.
-    expect(html).toContain('Topic')
-    expect(html).toContain('Entity')
+    expect(html).toContain('主题')
+    expect(html).toContain('实体')
   })
 
   it('marks the current position (aria-current + is-current)', () => {
@@ -39,14 +43,14 @@ describe('ExplorationTrail (M5-B-2)', () => {
       { type: 'topic', topic: 'roman_empire', title: 'Roman Empire' },
       { type: 'entity', id: 'roman_empire:augustus', name: 'Augustus' },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationTrail history={history} cursor={0} onStepClick={noop} />,
     )
     expect(html).toContain('is-current')
     expect(html).toContain('aria-current="step"')
     // The current node's label is exposed for return; the non-current invites return.
-    expect(html).toContain('Current: Roman Empire')
-    expect(html).toContain('Return to Augustus')
+    expect(html).toContain('当前：Roman Empire')
+    expect(html).toContain('返回 Augustus')
   })
 
   it('shows the full journey even beyond the cursor (unlike Breadcrumb)', () => {
@@ -57,7 +61,7 @@ describe('ExplorationTrail (M5-B-2)', () => {
       { type: 'entity', id: 'roman_empire:augustus', name: 'Augustus' },
       { type: 'entity', id: 'silk_road:han_dynasty', name: 'Han Dynasty' },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationTrail history={history} cursor={0} onStepClick={noop} />,
     )
     expect(html).toContain('Augustus')

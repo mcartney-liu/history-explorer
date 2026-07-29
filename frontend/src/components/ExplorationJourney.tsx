@@ -17,6 +17,7 @@
 
 import type { NavNode } from './navigation'
 import type { RelationPathStep } from './RecommendationPanel'
+import { useLocale } from '../data/locale'
 
 // --- Types ---
 
@@ -90,14 +91,15 @@ type ExplorationJourneyViewProps = {
 }
 
 export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJourneyViewProps) {
+  const { t } = useLocale()
   // A journey is only meaningful once there is more than one stop — matches
   // ExplorationTrail's "don't render a single node" rule. This is also the
   // empty / no-journey state: render nothing.
   if (!entries || entries.length < 2) return null
 
   return (
-    <section className="he-journey result-section" aria-label="Exploration journey">
-      <h3>Your Exploration Journey</h3>
+    <section className="he-journey result-section" aria-label={t('discover.journeyAria')}>
+      <h3>{t('discover.journeyHeading')}</h3>
       <ol className="he-journey-list">
         {entries.map((e) => (
           <li key={e.key} className="he-journey-step">
@@ -105,19 +107,25 @@ export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJour
               type="button"
               className={e.isCurrent ? 'he-journey-node is-current' : 'he-journey-node'}
               aria-current={e.isCurrent ? 'step' : undefined}
-              aria-label={e.isCurrent ? `Current: ${e.label}` : `Return to ${e.label}`}
+              aria-label={t(e.isCurrent ? 'discover.currentAria' : 'discover.returnToAria', {
+                label: e.label,
+              })}
               onClick={() => onStepClick?.(e.index)}
             >
-              <span className="he-journey-kind">{e.type === 'topic' ? 'Topic' : 'Entity'}</span>
+              <span className="he-journey-kind">
+                {e.type === 'topic' ? t('common.kindTopic') : t('common.kindEntity')}
+              </span>
               <span className="he-journey-label">{e.label}</span>
             </button>
 
             {e.incomingWhy ? (
               <div
                 className="he-journey-why"
-                title={`Suggested because: ${e.incomingWhy.reasons.join(' ')}`}
+                title={`${t('discover.suggestedBecause')} ${e.incomingWhy.reasons.join(' ')}`}
               >
-                <span className="he-journey-why-from">via {e.incomingWhy.fromName}</span>
+                <span className="he-journey-why-from">
+                  {t('discover.via', { name: e.incomingWhy.fromName })}
+                </span>
                 {e.incomingWhy.reasons.length > 0 ? (
                   <ul className="he-journey-reasons">
                     {e.incomingWhy.reasons.map((r, i) => (

@@ -19,6 +19,7 @@ import { useState } from 'react'
 import type { Candidate } from '../data/candidateUtils'
 import type { EntityRelationship } from './EntityPage'
 import type { GeoPoint } from '../data/relationshipUtils'
+import { useLocale } from '../data/locale'
 import {
   pairEntities,
   findExistingRelationships,
@@ -36,7 +37,6 @@ import {
   filterEdgesBetweenPair,
   findRelationshipPaths,
   RELATIONSHIP_FILTER_ALL,
-  type TimelineOverlapStatus,
   type RelationshipPath,
 } from '../data/relationshipUtils'
 import {
@@ -64,13 +64,6 @@ export type RelationshipInsightPanelProps = {
    * are NOT in the candidate set can still be labelled. Never fabricated.
    */
   nameByGlobalId?: Record<string, string>
-}
-
-const STATUS_LABEL: Record<TimelineOverlapStatus, string> = {
-  overlap: '时间重叠',
-  gap: '时间无重叠',
-  partial: '时间数据不足',
-  unknown: '无时间数据',
 }
 
 // Local display helper (negative = BCE, positive = CE). Mirrors relationshipUtils.fmtYear.
@@ -102,6 +95,7 @@ function RelationshipPairRow({
   geoMap?: Record<string, GeoPoint>
   mainGlobalId?: string
 }) {
+  const { t } = useLocale()
   const pair: [Candidate, Candidate] = [a, b]
   const rels = findExistingRelationships(pair, relationships, mainGlobalId)
   const overlap = timelineOverlap(pair, timeMap)
@@ -114,9 +108,9 @@ function RelationshipPairRow({
       </summary>
 
       <section className="rip-section rip-relationships" aria-label="existing-relationships">
-        <h5 className="rip-section-title">既有关系元数据</h5>
+        <h5 className="rip-section-title">{t('rip.existingRelMeta')}</h5>
         {rels.length === 0 ? (
-          <p className="rip-muted">无既有关系元数据（仅展示已存在的关系，不做推断）。</p>
+          <p className="rip-muted">{t('rip.noExistingRelMetaInfer')}</p>
         ) : (
           <ul className="rip-rel-list">
             {rels.map((rel, idx) => (
@@ -132,15 +126,15 @@ function RelationshipPairRow({
       </section>
 
       <section className="rip-section rip-timeline" aria-label="timeline-overlap">
-        <h5 className="rip-section-title">时间线对比</h5>
+        <h5 className="rip-section-title">{t('rip.timelineCompare')}</h5>
         <span className={`rip-status rip-status-${overlap.status}`}>
-          {STATUS_LABEL[overlap.status]}
+          {t(`rip.status${overlap.status}`)}
         </span>
         <p className="rip-note">{overlap.note}</p>
       </section>
 
       <section className="rip-section rip-geo" aria-label="geographic-comparison">
-        <h5 className="rip-section-title">地理对比</h5>
+        <h5 className="rip-section-title">{t('rip.geoCompare')}</h5>
         <p className="rip-note">{geo.note}</p>
       </section>
     </details>
@@ -156,6 +150,7 @@ export default function RelationshipInsightPanel({
   mainEntityName,
   nameByGlobalId: injectedNameByGlobalId,
 }: RelationshipInsightPanelProps) {
+  const { t } = useLocale()
   const pairs = pairEntities(candidates)
 
   // M17 analytics: pure summaries of EXISTING metadata only (no inference).
@@ -377,22 +372,22 @@ export default function RelationshipInsightPanel({
 
   return (
     <div className="relationship-insight-panel" data-testid="relationship-insight-panel">
-      <h4 className="rip-title">关系洞察（可视化既有元数据）</h4>
+      <h4 className="rip-title">{t('rip.title')}</h4>
 
       {/* M18 — local-only export controls (Blob download / print view). */}
       <div className="rip-controls rip-export" aria-label="insight-export">
         <button type="button" className="rip-export-btn" onClick={handleDownloadJson}>
-          下载 JSON 报告
+          {t('rip.downloadJson')}
         </button>
         <button type="button" className="rip-export-btn" onClick={handlePrintView}>
-          打印视图
+          {t('rip.printView' )}
         </button>
         <button
           type="button"
           className="rip-export-btn"
           onClick={() => handleCopy(serializeInsightReportAsMarkdown(exportInput))}
         >
-          复制 Markdown 报告
+          {t('rip.copyMarkdown')}
         </button>
         {/* M23-A3 — local-only CSV copy/download. Same rip-export-btn base class
             but a rip-csv modifier, so the M18 exact-match test (class=
@@ -403,29 +398,29 @@ export default function RelationshipInsightPanel({
           className="rip-export-btn rip-csv"
           onClick={() => handleCopy(serializeInsightReportAsCsv(exportInput))}
         >
-          复制 CSV 报告
+          {t('rip.copyCsv')}
         </button>
         <button
           type="button"
           className="rip-export-btn rip-csv"
           onClick={handleDownloadCsv}
         >
-          下载 CSV
+          {t('rip.downloadCsv')}
         </button>
-        <span className="rip-export-note">仅本地生成，不上传。</span>
+        <span className="rip-export-note">{t('rip.exportNote')}</span>
         {copyMsg === 'ok' && (
-          <span className="rip-copy-status rip-copy-ok">已复制到剪贴板</span>
+          <span className="rip-copy-status rip-copy-ok">{t('rip.copyOk')}</span>
         )}
         {copyMsg === 'error' && (
-          <span className="rip-copy-status rip-copy-error">复制失败，请手动选择文本复制</span>
+          <span className="rip-copy-status rip-copy-error">{t('rip.copyError')}</span>
         )}
       </div>
 
       {/* M17 — Relationship Type Summary (count only, no causal explanation). */}
       <details className="rip-block" open>
-        <summary className="rip-block-summary">关系类型汇总</summary>
+        <summary className="rip-block-summary">{t('rip.typeSummaryTitle')}</summary>
         {relationships.length === 0 ? (
-          <p className="rip-muted">无既有关系元数据。</p>
+          <p className="rip-muted">{t('rip.noExistingMeta')}</p>
         ) : (
           <ul className="rip-type-summary">
             {Object.entries(typeCounts).map(([type, count]) => (
@@ -441,14 +436,14 @@ export default function RelationshipInsightPanel({
       {/* M17 — Relationship Type Matrix (source → type → target, no narrative).
           M18 — adds view-only filter/sort controls over the SAME rows. */}
       <details className="rip-block">
-        <summary className="rip-block-summary">关系类型矩阵</summary>
+        <summary className="rip-block-summary">{t('rip.typeMatrixTitle')}</summary>
         {matrixRows.length === 0 ? (
-          <p className="rip-muted">无既有关系元数据。</p>
+          <p className="rip-muted">{t('rip.noExistingMeta')}</p>
         ) : (
           <>
             <div className="rip-controls" aria-label="matrix-controls">
               <label className="rip-control">
-                筛选类型
+                {t('rip.filterType')}
                 <select
                   className="rip-control-select"
                   value={matrixFilter}
@@ -456,16 +451,16 @@ export default function RelationshipInsightPanel({
                     setMatrixFilter(normalizeRelationshipFilter(e.target.value))
                   }
                 >
-                  <option value={RELATIONSHIP_FILTER_ALL}>全部类型</option>
-                  {filterOptions.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                  <option value={RELATIONSHIP_FILTER_ALL}>{t('rip.filterAll')}</option>
+                  {filterOptions.map((tt) => (
+                    <option key={tt} value={tt}>
+                      {tt}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="rip-control">
-                按数量排序
+                {t('rip.sortByCount')}
                 <select
                   className="rip-control-select"
                   value={matrixSort}
@@ -473,21 +468,21 @@ export default function RelationshipInsightPanel({
                     setMatrixSort(e.target.value as 'none' | 'desc' | 'asc')
                   }
                 >
-                  <option value="none">原始顺序</option>
-                  <option value="desc">数量降序</option>
-                  <option value="asc">数量升序</option>
+                  <option value="none">{t('rip.sortOriginal')}</option>
+                  <option value="desc">{t('rip.sortDesc')}</option>
+                  <option value="asc">{t('rip.sortAsc')}</option>
                 </select>
               </label>
             </div>
             {visibleRows.length === 0 ? (
-              <p className="rip-muted">当前筛选无匹配行（数据未改变，仅显示被过滤）。</p>
+              <p className="rip-muted">{t('rip.filterNoMatch')}</p>
             ) : (
               <table className="rip-matrix">
                 <thead>
                   <tr>
-                    <th>源实体</th>
-                    <th>关系类型</th>
-                    <th>目标实体</th>
+                    <th>{t('rip.thSource')}</th>
+                    <th>{t('rip.thRelType')}</th>
+                    <th>{t('rip.thTarget')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -507,18 +502,18 @@ export default function RelationshipInsightPanel({
 
       {/* M19 — Relationship Centrality (degree over EXISTING matrix only). */}
       <details className="rip-block">
-        <summary className="rip-block-summary">关系中心性（基于既有元数据）</summary>
+        <summary className="rip-block-summary">{t('rip.centralityTitle')}</summary>
         {matrixRows.length === 0 ? (
-          <p className="rip-muted">无既有关系元数据。</p>
+          <p className="rip-muted">{t('rip.noExistingMeta')}</p>
         ) : (
           <>
-            <p className="rip-note">基于已存在的关系边计数，仅供参考。</p>
+            <p className="rip-note">{t('rip.centralityNote')}</p>
             <table className="rip-matrix">
               <thead>
                 <tr>
-                  <th>实体</th>
-                  <th>global_id</th>
-                  <th>关系计数</th>
+                  <th>{t('rip.thEntity')}</th>
+                  <th>{t('rip.thGlobalId')}</th>
+                  <th>{t('rip.thRelCount')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -539,29 +534,29 @@ export default function RelationshipInsightPanel({
           metrics per entity. Pure presentation of EXISTING data; no new KG
           semantics, no inference, no causal narrative. */}
       <details className="rip-block">
-        <summary className="rip-block-summary">实体对比表（基于既有元数据）</summary>
+        <summary className="rip-block-summary">{t('rip.compareTitle')}</summary>
         {comparisonRows.length === 0 ? (
-          <p className="rip-muted">请选择实体以查看对比表。</p>
+          <p className="rip-muted">{t('rip.compareEmpty')}</p>
         ) : (
           <table className="rip-matrix rip-compare">
             <thead>
               <tr>
-                <th>实体</th>
-                <th>global_id</th>
-                <th>关系计数</th>
-                <th>关系类型数</th>
-                <th>有时间线</th>
-                <th>重叠数</th>
+                <th>{t('rip.thEntity')}</th>
+                <th>{t('rip.thGlobalId')}</th>
+                <th>{t('rip.thRelCount')}</th>
+                <th>{t('rip.thTypeCount')}</th>
+                <th>{t('rip.thHasTimeline')}</th>
+                <th>{t('rip.thOverlapCount')}</th>
               </tr>
             </thead>
             <tbody>
               {comparisonRows.map((row) => (
                 <tr key={row.gid}>
                   <td>{row.name}</td>
-                  <td className="rip-type">{row.gid}</td>
+                  <th className="rip-type">{row.gid}</th>
                   <td>{row.degree}</td>
                   <td>{row.typeCount}</td>
-                  <td>{row.hasTime ? '是' : '否'}</td>
+                  <td>{row.hasTime ? t('rip.yes') : t('rip.no')}</td>
                   <td>{row.overlapCount}</td>
                 </tr>
               ))}
@@ -572,14 +567,14 @@ export default function RelationshipInsightPanel({
 
       {/* M19 — Pair Relationship Explorer (existing edges only, no causal words). */}
       <details className="rip-block">
-        <summary className="rip-block-summary">成对关系探查（仅既有边）</summary>
+        <summary className="rip-block-summary">{t('rip.pairExplorerTitle')}</summary>
         {distinctGids.length < 2 ? (
-          <p className="rip-muted">请选择至少两个实体以使用成对关系探查。</p>
+          <p className="rip-muted">{t('rip.pairExplorerPrompt')}</p>
         ) : (
           <>
             <div className="rip-controls" aria-label="pair-explorer-controls">
               <label className="rip-control">
-                实体 A
+                {t('rip.entityA')}
                 <select
                   className="rip-control-select"
                   value={exploreA}
@@ -593,7 +588,7 @@ export default function RelationshipInsightPanel({
                 </select>
               </label>
               <label className="rip-control">
-                实体 B
+                {t('rip.entityB')}
                 <select
                   className="rip-control-select"
                   value={exploreB}
@@ -609,7 +604,7 @@ export default function RelationshipInsightPanel({
             </div>
             {exploreA && exploreB && exploreA !== exploreB ? (
               pairEdges.length === 0 ? (
-                <p className="rip-muted">所选两实体间无已存在的关系边。</p>
+                <p className="rip-muted">{t('rip.pairNoEdge')}</p>
               ) : (
                 <ul className="rip-rel-list">
                   {pairEdges.map((row, idx) => (
@@ -628,7 +623,7 @@ export default function RelationshipInsightPanel({
                 </ul>
               )
             ) : (
-              <p className="rip-muted">请选择两个不同的实体以查看它们之间的已存在关系边。</p>
+              <p className="rip-muted">{t('rip.pairDiffPrompt')}</p>
             )}
           </>
         )}
@@ -638,14 +633,14 @@ export default function RelationshipInsightPanel({
           causal/inferred language; the disclaimer deliberately avoids the words
           推断 / 发现 / 因果 per the frozen Relationship Layer boundary). */}
       <details className="rip-block">
-        <summary className="rip-block-summary">关系连通性探查（路径，仅既有边）</summary>
+        <summary className="rip-block-summary">{t('rip.connectivityTitle')}</summary>
         {connGids.length < 2 ? (
-          <p className="rip-muted">请选择至少两个实体以使用关系连通性探查。</p>
+          <p className="rip-muted">{t('rip.connectivityPrompt')}</p>
         ) : (
           <>
             <div className="rip-controls" aria-label="connectivity-controls">
               <label className="rip-control">
-                源实体
+                {t('rip.sourceEntity')}
                 <select
                   className="rip-control-select"
                   value={connSource}
@@ -659,7 +654,7 @@ export default function RelationshipInsightPanel({
                 </select>
               </label>
               <label className="rip-control">
-                目标实体
+                {t('rip.targetEntity')}
                 <select
                   className="rip-control-select"
                   value={connTarget}
@@ -673,26 +668,24 @@ export default function RelationshipInsightPanel({
                 </select>
               </label>
               <label className="rip-control">
-                最大跳数
+                {t('rip.maxHops')}
                 <select
                   className="rip-control-select"
                   value={String(connHops)}
                   onChange={(e) => setConnHops(Number(e.target.value))}
                 >
-                  <option value="1">1 跳</option>
-                  <option value="2">2 跳</option>
-                  <option value="3">3 跳</option>
+                  <option value="1">{t('rip.hop1')}</option>
+                  <option value="2">{t('rip.hop2')}</option>
+                  <option value="3">{t('rip.hop3')}</option>
                 </select>
               </label>
             </div>
-            <p className="rip-note">
-              本模块仅以图形方式呈现已存在的关系边所形成的路径；不新增连接，亦不提供任何解释。
-            </p>
+            <p className="rip-note">{t('rip.connectivityDisclaimer')}</p>
             {connSource === connTarget ? (
-              <p className="rip-muted">请选择两个不同的实体以查看它们之间的路径。</p>
+              <p className="rip-muted">{t('rip.pathDiffPrompt')}</p>
             ) : connectivityPaths.length === 0 ? (
               <p className="rip-muted">
-                所选两实体之间没有已存在的边所能组成的路径（在 {connHops} 跳内）。
+                {t('rip.noPath', { n: String(connHops) })}
               </p>
             ) : (
               <>
@@ -725,7 +718,7 @@ export default function RelationshipInsightPanel({
                     handleCopy(serializeRelationshipPathsAsText(connectivityPaths, nameByGlobalId))
                   }
                 >
-                  复制关系路径文本
+                  {t('rip.copyPathText')}
                 </button>
               </>
             )}
@@ -736,32 +729,32 @@ export default function RelationshipInsightPanel({
       {/* M17 — Multi Entity Timeline Band (bounds + overlap only, no history).
           M18 — adds a view-only sort control; bounds via normalizeTimelineRange. */}
       <details className="rip-block">
-        <summary className="rip-block-summary">多实体时间线带</summary>
+        <summary className="rip-block-summary">{t('rip.timelineBandTitle')}</summary>
         {timelineBand.length === 0 ? (
-          <p className="rip-muted">请选择实体以查看时间线带。</p>
+          <p className="rip-muted">{t('rip.bandEmpty')}</p>
         ) : (
           <>
             <div className="rip-controls" aria-label="timeline-band-controls">
               <label className="rip-control">
-                排序依据
+                {t('rip.sortBy')}
                 <select
                   className="rip-control-select"
                   value={bandSortBy}
                   onChange={(e) => setBandSortBy(e.target.value as 'start' | 'name')}
                 >
-                  <option value="start">起始时间</option>
-                  <option value="name">名称</option>
+                  <option value="start">{t('rip.sortStart')}</option>
+                  <option value="name">{t('rip.sortName')}</option>
                 </select>
               </label>
               <label className="rip-control">
-                顺序
+                {t('rip.order')}
                 <select
                   className="rip-control-select"
                   value={bandSortDir}
                   onChange={(e) => setBandSortDir(e.target.value as 'asc' | 'desc')}
                 >
-                  <option value="asc">升序</option>
-                  <option value="desc">降序</option>
+                  <option value="asc">{t('rip.asc')}</option>
+                  <option value="desc">{t('rip.desc')}</option>
                 </select>
               </label>
             </div>
@@ -772,13 +765,13 @@ export default function RelationshipInsightPanel({
               {tlSvg && (
                 <>
                   <div className="rip-controls" aria-label="timeline-zoom-pan">
-                    <button type="button" className="rip-tl-btn" onClick={() => setTlZoom((z) => Math.min(4, z * 1.2))}>放大</button>
-                    <button type="button" className="rip-tl-btn" onClick={() => setTlZoom((z) => Math.max(0.4, z / 1.2))}>缩小</button>
-                    <button type="button" className="rip-tl-btn" onClick={() => setTlPan((p) => p - 40)}>左移</button>
-                    <button type="button" className="rip-tl-btn" onClick={() => setTlPan((p) => p + 40)}>右移</button>
-                    <button type="button" className="rip-tl-btn" onClick={() => { setTlZoom(1); setTlPan(0) }}>重置视图</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlZoom((z) => Math.min(4, z * 1.2))}>{t('rip.zoomIn')}</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlZoom((z) => Math.max(0.4, z / 1.2))}>{t('rip.zoomOut')}</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlPan((p) => p - 40)}>{t('rip.panLeft')}</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => setTlPan((p) => p + 40)}>{t('rip.panRight')}</button>
+                    <button type="button" className="rip-tl-btn" onClick={() => { setTlZoom(1); setTlPan(0) }}>{t('rip.resetView')}</button>
                   </div>
-                  <svg className="rip-timeline-svg" viewBox={`0 0 ${TL_W} ${tlSvg.tlH}`} width="100%" role="img" aria-label="时间线视图">
+                  <svg className="rip-timeline-svg" viewBox={`0 0 ${TL_W} ${tlSvg.tlH}`} width="100%" role="img" aria-label={t('rip.timelineViewAria')}>
                     <g transform={`translate(${tlPan},0) scale(${tlZoom},1)`}>
                       <line x1={TL_PAD} y1={TL_TOP - 8} x2={TL_W - TL_PAD} y2={TL_TOP - 8} stroke="#999" strokeWidth="1" />
                       {tlSvg.validBands.map((b, i) => {
@@ -813,10 +806,10 @@ export default function RelationshipInsightPanel({
                     <span className="rip-band-range">
                       {range.start != null && range.end != null
                         ? `${formatYear(range.start)} – ${formatYear(range.end)}`
-                        : '无时间数据'}
+                        : t('rip.bandNoTime')}
                     </span>
                     {e.overlaps.length > 0 && (
-                      <span className="rip-band-overlap">时间重叠：{e.overlaps.join('、')}</span>
+                      <span className="rip-band-overlap">{t('rip.bandOverlap', { names: e.overlaps.join('、') })}</span>
                     )}
                   </li>
                 )
@@ -827,7 +820,7 @@ export default function RelationshipInsightPanel({
       </details>
 
       {pairs.length === 0 ? (
-        <p className="rip-muted">请选择至少两个实体以查看逐对关系洞察。</p>
+        <p className="rip-muted">{t('rip.pairsPrompt')}</p>
       ) : (
         <div className="rip-pairs">
           {pairs.map(([a, b]) => (

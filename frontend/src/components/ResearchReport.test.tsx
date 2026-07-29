@@ -90,7 +90,7 @@ describe('ResearchReportView', () => {
       />,
     )
     expect(html).toContain('维度覆盖')
-    expect(html).toContain('✓ A')
+    expect(html).toContain('A')
   })
 
   // --- M39 Phase 3: Comparative ---

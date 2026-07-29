@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { LocaleProvider } from '../data/locale'
 import ContinueExploringPanel from '../components/ContinueExploringPanel'
 import { ConnectionExplained } from '../components/ConnectionsExplainedPanel'
 import { CrossTopicRelated, RelatedTopic } from '../components/crossTopic'
+
+const render = (el: import('react').ReactElement) =>
+  renderToStaticMarkup(<LocaleProvider>{el}</LocaleProvider>)
 
 function conn(global_id: string, explanation = ''): ConnectionExplained {
   return {
@@ -18,9 +22,9 @@ function conn(global_id: string, explanation = ''): ConnectionExplained {
 
 describe('ContinueExploringPanel (M5-B-1)', () => {
   it('renders nothing when there is nothing to show (additive, non-breaking)', () => {
-    expect(renderToStaticMarkup(<ContinueExploringPanel />)).toBe('')
+    expect(render(<ContinueExploringPanel />)).toBe('')
     expect(
-      renderToStaticMarkup(
+      render(
         <ContinueExploringPanel connections={[]} crossTopicRelated={[]} relatedTopics={[]} />,
       ),
     ).toBe('')
@@ -31,16 +35,16 @@ describe('ContinueExploringPanel (M5-B-1)', () => {
       conn('roman_empire:augustus', 'Founder of the empire.'),
       conn('silk_road:han_dynasty', 'Reached via trade.'),
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ContinueExploringPanel connections={connections} />,
     )
-    expect(html).toContain('Continue Exploring')
+    expect(html).toContain('继续探索')
     expect(html).toContain('augustus')
     expect(html).toContain('han_dynasty')
     // The engine's "why" is shown.
     expect(html).toContain('Founder of the empire.')
     // Each next step is a labelled, clickable action carrying its global_id.
-    expect(html).toContain('aria-label="Continue to augustus"')
+    expect(html).toContain('aria-label="继续探索 augustus"')
   })
 
   it('preserves engine order and does NOT re-rank (top-N cap only)', () => {
@@ -52,7 +56,7 @@ describe('ContinueExploringPanel (M5-B-1)', () => {
       conn('t:fifth'),
       conn('t:sixth'),
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ContinueExploringPanel connections={connections} max={3} />,
     )
     // Only the first 3 (engine order) are shown; the rest are capped out.
@@ -67,11 +71,11 @@ describe('ContinueExploringPanel (M5-B-1)', () => {
   it('weakly marks already-seen nodes without reordering them', () => {
     const connections = [conn('t:seen_node'), conn('t:new_node')]
     const seen = new Set(['t:seen_node'])
-    const html = renderToStaticMarkup(
+    const html = render(
       <ContinueExploringPanel connections={connections} seenGlobalIds={seen} />,
     )
     expect(html).toContain('is-seen')
-    expect(html).toContain('seen')
+    expect(html).toContain('已查看')
     // The seen node stays first (no reordering).
     expect(html.indexOf('seen_node')).toBeLessThan(html.indexOf('new_node'))
   })
@@ -91,7 +95,7 @@ describe('ContinueExploringPanel (M5-B-1)', () => {
     const relatedTopics: RelatedTopic[] = [
       { topic: 'persian_empire', cross_topic_edge_count: 3 },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <ContinueExploringPanel
         connections={[]}
         crossTopicRelated={crossTopicRelated}
@@ -99,13 +103,13 @@ describe('ContinueExploringPanel (M5-B-1)', () => {
       />,
     )
     // Dead-end hint shown, and both fallbacks rendered.
-    expect(html).toContain('different direction')
+    expect(html).toContain('换个方向')
     expect(html).toContain('Plato')
     expect(html).toContain('Persian Empire')
   })
 
   it('does not show fallbacks when direct connections exist', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <ContinueExploringPanel
         connections={[conn('t:a')]}
         crossTopicRelated={[

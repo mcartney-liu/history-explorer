@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import RelationshipView from '../components/RelationshipView'
+import { LocaleProvider } from '../data/locale'
 import type { MainEntity } from '../components/MainEntityCard'
 import type { RelatedEntity } from '../components/RelatedEntityList'
 
@@ -31,18 +32,20 @@ describe('M10-2 RelationshipView — cross-panel focus PRODUCER', () => {
 
   it('renders a Focus button per branch when onEntityFocus is provided', () => {
     const html = renderToStaticMarkup(
-      <RelationshipView
-        mainEntity={mainEntity}
-        relatedEntities={relatedEntities}
-        nameById={nameById}
-        onEntityClick={() => {}}
-        onEntityFocus={() => {}}
-      />,
+      <LocaleProvider>
+        <RelationshipView
+          mainEntity={mainEntity}
+          relatedEntities={relatedEntities}
+          nameById={nameById}
+          onEntityClick={() => {}}
+          onEntityFocus={() => {}}
+        />
+      </LocaleProvider>,
     )
     const focusBtns = html.match(/class="rel-focus-btn"/g) || []
     expect(focusBtns.length).toBe(2)
-    expect(html).toContain('aria-label="Focus Tiberius"')
-    expect(html).toContain('aria-label="Focus Livia"')
+    expect(html).toContain('aria-label="聚焦 Tiberius"')
+    expect(html).toContain('aria-label="聚焦 Livia"')
   })
 
   it('omits the Focus button entirely when onEntityFocus is absent (no producer)', () => {

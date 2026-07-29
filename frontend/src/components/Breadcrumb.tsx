@@ -2,6 +2,7 @@
 // Home > Topic > Entity > Event ... — clicking any crumb returns to that
 // level. Index 0 is the synthetic "Home" root; the rest map to history
 // entries. Pure presentational component; App owns the click logic.
+import { useLocale } from '../data/locale'
 
 type Crumb = { key: string; label: string; index: number }
 
@@ -11,9 +12,10 @@ type BreadcrumbProps = {
 }
 
 function Breadcrumb({ crumbs, onCrumbClick }: BreadcrumbProps) {
+  const { t } = useLocale()
   if (crumbs.length <= 1) return null
   return (
-    <nav className="he-breadcrumb" aria-label="Breadcrumb">
+    <nav className="he-breadcrumb" aria-label={t('common.breadcrumbAria')}>
       <ol className="he-breadcrumb-list">
         {crumbs.map((c, i) => {
           const isLast = i === crumbs.length - 1

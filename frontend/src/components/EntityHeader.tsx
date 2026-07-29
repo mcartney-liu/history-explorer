@@ -4,15 +4,20 @@
 // label + the entity's type badge), so behavior and the existing DOM contract
 // are unchanged. Extracting it shrinks the entity view and gives the header its
 // own unit test.
+import { useLocale } from '../data/locale'
+import { getTermLabel } from '../locales/terminology'
+import { getEntityLabel } from '../data/entity/entityLabels'
+
 type EntityHeaderProps = {
   type: string
 }
 
 function EntityHeader({ type }: EntityHeaderProps) {
+  const { locale } = useLocale()
   return (
     <div className="result-section entity-page-head">
-      <h3>Entity</h3>
-      <span className="re-type">{type}</span>
+      <h3>{getTermLabel('Entity', locale)}</h3>
+      <span className="re-type">{getEntityLabel(type, locale)}</span>
     </div>
   )
 }

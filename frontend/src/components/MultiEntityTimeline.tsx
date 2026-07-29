@@ -11,6 +11,7 @@ import {
   compareTemporalRanges,
   buildTemporalComparisonText,
 } from '../data/compareTemporal'
+import { useLocale } from '../data/locale'
 
 // M8-P1: Multi-Entity Temporal Timeline (Explore page).
 //
@@ -31,6 +32,7 @@ interface MultiEntityTimelineProps {
 }
 
 function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
+  const { t } = useLocale()
   // Keep named entities, dedupe by name, preserve input order (no sorting).
   const seen = new Set<string>()
   const bars: TemporalBar[] = []
@@ -46,8 +48,8 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
   if (bars.length === 0 || !anyDated) {
     return (
       <div className="result-section">
-        <h3>Multi-Entity Timeline</h3>
-        <EmptyState message="No entities with temporal data to place on a timeline." />
+        <h3>{t('timeline.multiEntityHeading')}</h3>
+        <EmptyState message={t('timeline.noTemporalEntities')} />
       </div>
     )
   }
@@ -75,11 +77,11 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
   })
 
   const rangeText = (b: TemporalBar) =>
-    formatDateRange(b.start_date, b.end_date) ?? 'No date data'
+    formatDateRange(b.start_date, b.end_date) ?? t('timeline.noDateData')
 
   return (
     <div className="result-section">
-      <h3>Multi-Entity Timeline</h3>
+      <h3>{t('timeline.multiEntityHeading')}</h3>
       <div className="multi-entity-timeline">
         <div className="multi-entity-axis">
           <span className="multi-entity-axis-end">
@@ -98,16 +100,16 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
                 <span className="multi-entity-range">{rangeText(bars[i])}</span>
               </div>
               <div className="multi-entity-track">
-                {ticks.map((t) => (
+                {ticks.map((tick) => (
                   <span
-                    key={`tick-${t.value}`}
+                    key={`tick-${tick.value}`}
                     className="multi-entity-tick"
-                    style={{ left: `${t.leftPct}%` }}
+                    style={{ left: `${tick.leftPct}%` }}
                     aria-hidden="true"
                   />
                 ))}
                 {bar.partial === 'none' ? (
-                  <span className="multi-entity-nodate">No date data</span>
+                  <span className="multi-entity-nodate">{t('timeline.noDateData')}</span>
                 ) : bar.partial === 'full' ? (
                   <span
                     className="multi-entity-bar"
@@ -128,13 +130,13 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
 
         {ticks.length > 0 && (
           <div className="multi-entity-scale" aria-hidden="true">
-            {ticks.map((t) => (
+            {ticks.map((tick) => (
               <span
-                key={`scale-${t.value}`}
+                key={`scale-${tick.value}`}
                 className="multi-entity-scale-tick"
-                style={{ left: `${t.leftPct}%` }}
+                style={{ left: `${tick.leftPct}%` }}
               >
-                {formatTimeValue({ value: t.value })}
+                {formatTimeValue({ value: tick.value })}
               </span>
             ))}
           </div>
@@ -142,7 +144,7 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
 
         {overlapFacts.length > 0 && (
           <div className="multi-entity-overlaps">
-            <div className="multi-entity-overlaps-title">Overlapping spans</div>
+            <div className="multi-entity-overlaps-title">{t('timeline.overlappingSpans')}</div>
             <ul className="multi-entity-overlap-list">
               {overlapFacts.map((f) =>
                 f.sentences.map((s, i) => (

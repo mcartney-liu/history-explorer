@@ -15,6 +15,8 @@
 
 import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import { CrossTopicRelated, RelatedTopic, formatTopicLabel } from './crossTopic'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
 
 const DEFAULT_MAX = 5
 
@@ -44,6 +46,8 @@ function ContinueExploringPanel({
   onNodeClick,
   onTopicClick,
 }: ContinueExploringPanelProps) {
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
   // Engine-ranked next steps, consumed AS-IS (no re-rank). We only take the
   // top-N and mark already-seen nodes; the order is the engine's.
   const primary = (connections ?? [])
@@ -71,12 +75,10 @@ function ContinueExploringPanel({
 
   return (
     <div className="result-section he-continue">
-      <h3>Continue Exploring</h3>
+      <h3>{t('discover.continueHeading')}</h3>
 
       {isDeadEnd ? (
-        <p className="he-continue-hint">
-          No direct threads from here — try a different direction:
-        </p>
+        <p className="he-continue-hint">{t('discover.continueDeadEndHint')}</p>
       ) : null}
 
       {primary.length > 0 && (
@@ -89,13 +91,13 @@ function ContinueExploringPanel({
                 <button
                   type="button"
                   className={seen ? 'he-continue-node is-seen' : 'he-continue-node'}
-                  aria-label={`Continue to ${localName(gid)}`}
+                  aria-label={t('discover.continueToAria', { name: localName(gid) })}
                   onClick={() => onNodeClick?.(gid)}
                 >
                   <span className="he-continue-name">{localName(gid)}</span>
                   {seen && (
                     <span className="he-continue-seen" aria-hidden="true">
-                      seen
+                      {t('discover.continueSeen')}
                     </span>
                   )}
                 </button>
@@ -113,15 +115,20 @@ function ContinueExploringPanel({
           {fallbackEntities.map((c, idx) => {
             const gid = c.global_id as string
             const seen = seenGlobalIds?.has(gid) ?? false
+            const name = c.name || localName(gid)
             return (
               <li key={`${gid}-${idx}`} className="he-continue-item">
                 <button
                   type="button"
                   className={seen ? 'he-continue-node is-seen' : 'he-continue-node'}
-                  aria-label={`Continue to ${c.name || localName(gid)}`}
+                  aria-label={t('discover.continueToAria', {
+                    name: getDisplayName(name, locale, prefs.properNameMode),
+                  })}
                   onClick={() => onNodeClick?.(gid)}
                 >
-                  <span className="he-continue-name">{c.name || localName(gid)}</span>
+                  <span className="he-continue-name">
+                    {getDisplayName(name, locale, prefs.properNameMode)}
+                  </span>
                   {c.topic && (
                     <span className="he-continue-topic">{formatTopicLabel(c.topic)}</span>
                   )}
@@ -134,15 +141,17 @@ function ContinueExploringPanel({
 
       {isDeadEnd && fallbackTopics.length > 0 && (
         <ul className="he-continue-topics">
-          {fallbackTopics.map((t, idx) => (
-            <li key={`${t.topic}-${idx}`}>
+          {fallbackTopics.map((tt, idx) => (
+            <li key={`${tt.topic}-${idx}`}>
               <button
                 type="button"
                 className="he-continue-topic-chip"
-                aria-label={`Explore ${formatTopicLabel(t.topic)}`}
-                onClick={() => onTopicClick?.(t.topic)}
+                aria-label={t('discover.exploreTopicAria', {
+                  title: formatTopicLabel(tt.topic),
+                })}
+                onClick={() => onTopicClick?.(tt.topic)}
               >
-                {formatTopicLabel(t.topic)}
+                {formatTopicLabel(tt.topic)}
               </button>
             </li>
           ))}

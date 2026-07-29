@@ -5,6 +5,7 @@ import {
   type GraphNode,
   type GraphEdge,
 } from '../lib/graphLayout'
+import { useLocale } from '../data/locale'
 
 // M34-A2 (Knowledge Graph Visualization MVP) — a self-drawn SVG renderer.
 //
@@ -63,8 +64,9 @@ function GraphViewPanel({
   relatedEntities,
   nameById = {},
   onEntityClick,
-  title = 'Knowledge Graph',
+  title,
 }: GraphViewPanelProps) {
+  const { t } = useLocale()
   if (!mainEntity?.id) return null
 
   // Build the graph inputs from data already on the client. Neighbour display
@@ -92,26 +94,24 @@ function GraphViewPanel({
   // Only label edges when the graph is sparse enough to stay readable.
   const showEdgeLabels = layout.edges.length > 0 && layout.edges.length <= 8
 
+  const captionBase = neighbourCount > 0
+    ? t('graph.captionWith', { name: mainEntity.name, n: String(neighbourCount) })
+    : t('graph.captionNone', { name: mainEntity.name })
+  const caption = layout.truncated
+    ? `${captionBase} ${t('graph.mvpCap', { nodes: String(MAX_NODES), edges: String(MAX_EDGES) })}`
+    : captionBase
+
   return (
     <div className="result-section graph-view">
-      <h3>{title}</h3>
-      <p className="graph-view-caption">
-        {neighbourCount > 0
-          ? `${mainEntity.name} and ${neighbourCount} direct connection${
-              neighbourCount === 1 ? '' : 's'
-            }.`
-          : `${mainEntity.name} has no direct connections to graph yet.`}
-        {layout.truncated
-          ? ` Showing the first ${MAX_NODES} entities / ${MAX_EDGES} links (MVP cap).`
-          : ''}
-      </p>
+      <h3>{title ?? t('graph.title')}</h3>
+      <p className="graph-view-caption">{caption}</p>
 
       <svg
         className="graph-view-svg"
         viewBox={`0 0 ${layout.width} ${layout.height}`}
         width="100%"
         role="img"
-        aria-label={`Knowledge graph for ${mainEntity.name}`}
+        aria-label={t('graph.ariaLabel', { name: mainEntity.name })}
         style={{ maxWidth: '100%', height: 'auto' }}
       >
         <rect
@@ -164,7 +164,7 @@ function GraphViewPanel({
                 transform={`translate(${n.x} ${n.y})`}
                 role={clickable ? 'button' : undefined}
                 tabIndex={clickable ? 0 : undefined}
-                aria-label={clickable ? `Open ${n.name}` : undefined}
+                aria-label={clickable ? t('common.openLabel', { name: n.name }) : undefined}
                 style={clickable ? { cursor: 'pointer' } : undefined}
                 onClick={clickable ? () => onEntityClick!(n.id) : undefined}
                 onKeyDown={

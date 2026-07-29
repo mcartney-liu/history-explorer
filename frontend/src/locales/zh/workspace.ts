@@ -1,0 +1,16 @@
+export default {
+  'workspace.title': '探索工作台',
+  'workspace.current': '当前探索',
+  'workspace.history': '探索足迹',
+  'workspace.pinned': '已置顶',
+  'workspace.notes': '研究笔记',
+  'workspace.compare': '对比队列',
+  'workspace.empty_history': '你探索过的实体会出现在这里',
+  'workspace.empty_pinned': '长按实体卡片即可置顶到这里',
+  'workspace.empty_notes': '在研究面板中记录你的历史发现',
+  'workspace.empty_compare': '添加多个实体，横向对比他们的时间线和关系',
+  'workspace.mecTitle': 'AI 多实体联合解读',
+  'workspace.mecHint': '勾选多个实体，向 AI 提出一个跨实体的事实溯源问题（已选 %{n}/%{max}）。',
+  'workspace.mecResolved': '已解析上下文 %{n} 个 global_id',
+  'workspace.mecPreview': '预览将发送的 global_id',
+}

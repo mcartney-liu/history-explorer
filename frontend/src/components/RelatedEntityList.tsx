@@ -1,4 +1,7 @@
 import EmptyState from './EmptyState'
+import { useLocale } from '../data/locale'
+import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 export type RelatedEntity = {
   id: string
@@ -30,20 +33,22 @@ function RelatedEntityList({
   mainEntityName,
   onEntityClick,
 }: RelatedEntityListProps) {
+  const { t, locale } = useLocale()
+  const [prefs] = usePreferences()
   return (
     <div className="result-section">
-      <h3>Related Exploration</h3>
+      <h3>{t('entity.relatedExploration')}</h3>
       {relatedEntities.length > 0 ? (
         <ul className="related-list">
           {relatedEntities.map((item) => {
-            const displayName = nameById?.[item.id] ?? item.id
+            const displayName = getDisplayName(nameById?.[item.id] ?? item.id, locale, prefs.properNameMode)
             return (
             <li
               key={item.id}
               className="is-clickable"
               role="button"
               tabIndex={0}
-              aria-label={`Explore ${displayName}`}
+              aria-label={t('entity.exploreAria', { name: displayName })}
               onClick={() => onEntityClick?.(item.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -53,10 +58,10 @@ function RelatedEntityList({
               }}
             >
               <span className="re-name">{displayName}</span>
-              <span className="re-type">{item.type}</span>
+              <span className="re-type">{getEntityLabel(item.type, locale)}</span>
               <span className="re-rel">
                 {mainEntityName
-                  ? `Connected via ${item.relationship}`
+                  ? t('relationship.connectedVia', { rel: item.relationship })
                   : item.relationship}
               </span>
             </li>
@@ -64,7 +69,7 @@ function RelatedEntityList({
           })}
         </ul>
       ) : (
-        <EmptyState message="No related entities." />
+        <EmptyState message={t('entity.noRelated')} />
       )}
     </div>
   )

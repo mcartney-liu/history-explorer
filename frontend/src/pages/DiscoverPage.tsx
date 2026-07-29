@@ -112,7 +112,7 @@ function RecentResearches({ researches }: { researches: SavedResearch[] }) {
           <a key={r.id} href={`#/entity/${encodeURIComponent(r.entityGlobalId)}`} className="discover-recent-card">
             <span className="discover-recent-type">{r.entityType}</span>
             <span className="discover-recent-name">{r.entityName}</span>
-            {r.bookmarked && <span className="discover-recent-star">★</span>}
+            {r.bookmarked && <Icon name="star" size={16} className="discover-recent-star" filled />}
           </a>
         ))}
       </div>

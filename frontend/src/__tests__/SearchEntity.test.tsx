@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { LocaleProvider } from '../data/locale'
 import EntitySearchBox from '../components/EntitySearchBox'
 import SearchBox from '../components/SearchBox'
 import SearchResults, { SearchResultItem } from '../components/SearchResults'
@@ -7,8 +8,12 @@ import { nextSelectionIndex } from '../components/searchNav'
 
 describe('M2-002 search & entity UI', () => {
   it('EntitySearchBox exposes a search input and button', () => {
-    const html = renderToStaticMarkup(<EntitySearchBox onSearch={() => {}} />)
-    expect(html).toContain('Search entities')
+    const html = renderToStaticMarkup(
+      <LocaleProvider>
+        <EntitySearchBox onSearch={() => {}} />
+      </LocaleProvider>,
+    )
+    expect(html).toContain('搜索实体')
   })
 
   it('SearchBox renders topic input with placeholder', () => {
@@ -28,11 +33,13 @@ describe('M2-002 search & entity UI', () => {
       { id: 'person-augustus', name: 'Augustus', type: 'Person', result_type: 'Entity' as const },
     ]
     const html = renderToStaticMarkup(
-      <SearchResults
-        query="caesar"
-        results={items}
-        onSelectItem={() => {}}
-      />,
+      <LocaleProvider>
+        <SearchResults
+          query="caesar"
+          results={items}
+          onSelectItem={() => {}}
+        />
+      </LocaleProvider>,
     )
     expect(html).toContain('Julius Caesar')
     expect(html).toContain('Augustus')
@@ -40,7 +47,7 @@ describe('M2-002 search & entity UI', () => {
     // keyboard accessibility, rather than a native <button>. Assert on the
     // accessible name + button role instead of the literal element.
     expect(html).toContain('role="button"')
-    expect(html).toContain('aria-label="Open Julius Caesar"')
+    expect(html).toContain('aria-label="打开 Julius Caesar"')
   })
 
   it('nextSelectionIndex wraps correctly', () => {

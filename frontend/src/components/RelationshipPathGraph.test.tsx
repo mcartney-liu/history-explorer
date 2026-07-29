@@ -6,8 +6,13 @@
 
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReactElement } from 'react'
 import RelationshipPathGraph from './RelationshipPathGraph'
 import type { RelationshipPath } from '../data/relationshipUtils'
+import { LocaleProvider } from '../data/locale'
+
+const r2s = renderToStaticMarkup
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 const nameByGlobalId: Record<string, string> = {
   'rome:empire': '罗马帝国',
@@ -20,7 +25,7 @@ describe('RelationshipPathGraph (M21-A1)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
     expect(html).toContain('rpg-svg')
@@ -37,7 +42,7 @@ describe('RelationshipPathGraph (M21-A1)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
     expect(html).toContain('rpg-edge-label')
@@ -50,7 +55,7 @@ describe('RelationshipPathGraph (M21-A1)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex', 'persia:cyrus'], edges: ['conquered', 'traded_with'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
     expect(html).toContain('罗马帝国')
@@ -69,7 +74,7 @@ describe('RelationshipPathGraph (M21-A1)', () => {
       { nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] },
       { nodes: ['rome:empire', 'persia:cyrus'], edges: ['traded_with'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
     // Two independent path groups, each carrying a data-path-index.
@@ -80,10 +85,10 @@ describe('RelationshipPathGraph (M21-A1)', () => {
   })
 
   it('shows the empty state when no path is supplied', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={[]} nameByGlobalId={nameByGlobalId} />,
     )
-    expect(html).toContain('No relationship path available')
+    expect(html).toContain('暂无关系路径')
     // No SVG is rendered for the empty state.
     expect(html).not.toContain('rpg-svg')
   })
@@ -92,7 +97,7 @@ describe('RelationshipPathGraph (M21-A1)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
     expect(html).not.toContain('推断')
@@ -118,7 +123,7 @@ describe('RelationshipPathGraph (M22-A4 layout toggle)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
     expect(html).toContain('data-layout="horizontal"')
@@ -131,7 +136,7 @@ describe('RelationshipPathGraph (M22-A4 layout toggle)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex', 'persia:cyrus', 'x:d'], edges: ['conquered', 'traded_with', 'r'] },
     ]
-    const html = renderToStaticMarkup(
+    const html = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} defaultLayout="grid" />,
     )
     expect(html).toContain('data-layout="grid"')
@@ -140,13 +145,13 @@ describe('RelationshipPathGraph (M22-A4 layout toggle)', () => {
   })
 
   it('toggle control reflects the active layout and is wired (two buttons, pressed state matches layout)', () => {
-    const horizontal = renderToStaticMarkup(
+    const horizontal = render(
       <RelationshipPathGraph
         paths={[{ nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] }]}
         nameByGlobalId={nameByGlobalId}
       />,
     )
-    const grid = renderToStaticMarkup(
+    const grid = render(
       <RelationshipPathGraph
         paths={[{ nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] }]}
         nameByGlobalId={nameByGlobalId}
@@ -172,10 +177,10 @@ describe('RelationshipPathGraph (M22-A4 layout toggle)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex', 'persia:cyrus'], edges: ['conquered', 'traded_with'] },
     ]
-    const horizontal = renderToStaticMarkup(
+    const horizontal = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
-    const grid = renderToStaticMarkup(
+    const grid = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} defaultLayout="grid" />,
     )
     for (const html of [horizontal, grid]) {
@@ -188,10 +193,10 @@ describe('RelationshipPathGraph (M22-A4 layout toggle)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex'], edges: ['conquered'] },
     ]
-    const horizontal = renderToStaticMarkup(
+    const horizontal = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
-    const grid = renderToStaticMarkup(
+    const grid = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} defaultLayout="grid" />,
     )
     expect(horizontal).toContain('data-path-index="0"')
@@ -202,10 +207,10 @@ describe('RelationshipPathGraph (M22-A4 layout toggle)', () => {
     const paths: RelationshipPath[] = [
       { nodes: ['rome:empire', 'greece:alex', 'persia:cyrus'], edges: ['conquered', 'traded_with'] },
     ]
-    const horizontal = renderToStaticMarkup(
+    const horizontal = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} />,
     )
-    const grid = renderToStaticMarkup(
+    const grid = render(
       <RelationshipPathGraph paths={paths} nameByGlobalId={nameByGlobalId} defaultLayout="grid" />,
     )
     for (const html of [horizontal, grid]) {

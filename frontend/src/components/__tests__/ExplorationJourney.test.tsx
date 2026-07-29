@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as r2s } from 'react-dom/server'
+import { LocaleProvider } from '../../data/locale'
+import type { ReactElement } from 'react'
 import ExplorationJourney, {
   ExplorationJourneyView,
   buildJourney,
@@ -11,6 +13,8 @@ import {
   type RecommendationItem,
 } from '../RecommendationPanel'
 import type { NavNode } from '../navigation'
+
+const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
 
 // --- Fixtures ---
 
@@ -105,36 +109,36 @@ describe('buildJourney (M9-003 pure derivation)', () => {
 
 describe('ExplorationJourneyView (M9-003 presentational)', () => {
   it('renders nothing for a single node (empty / no-journey state)', () => {
-    const html = renderToStaticMarkup(<ExplorationJourneyView entries={[buildJourney([entityNode()], 0, new Map())[0]]} />)
+    const html = render(<ExplorationJourneyView entries={[buildJourney([entityNode()], 0, new Map())[0]]} />)
     expect(html).not.toContain('he-journey-list')
   })
 
   it('renders the full path with current marker and no why block when no annotation', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationJourneyView entries={buildJourney([topicNode(), entityNode()], 1, new Map())} />,
     )
     expect(html).toContain('he-journey-list')
     expect(html).toContain('Roman Empire')
     expect(html).toContain('Augustus')
     expect(html).toContain('is-current')
-    expect(html).toContain('Current: Augustus')
+    expect(html).toContain('当前：Augustus')
     expect(html).not.toContain('he-journey-why')
   })
 
   it('injects the recommendation payload (reasons + relation path) into the journey', () => {
     const reasons = new Map<string, JourneyWhyPayload>([['roman_empire:augustus', whyPayload()]])
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationJourneyView entries={buildJourney([topicNode(), entityNode()], 1, reasons)} />,
     )
     expect(html).toContain('he-journey-why')
     expect(html).toContain('Same dynasty successor.')
     expect(html).toContain('Linked by influence.')
     expect(html).toContain('influenced') // relation_path relationship
-    expect(html).toContain('via Augustus') // fromName
+    expect(html).toContain('经由 Augustus') // fromName
   })
 
   it('degrades gracefully when a node has no payload (label still shows)', () => {
-    const html = renderToStaticMarkup(
+    const html = render(
       <ExplorationJourneyView entries={buildJourney([topicNode(), entityNode()], 1, new Map())} />,
     )
     expect(html).toContain('Augustus')
@@ -147,7 +151,7 @@ describe('ExplorationJourneyView (M9-003 presentational)', () => {
 describe('ExplorationJourney container (M9-003 navigation ownership)', () => {
   it('renders exactly one button per history node — never a second navigation tree', () => {
     const history = [topicNode(), entityNode(), { type: 'entity', id: 'roman_empire:tiberius', name: 'Tiberius' }]
-    const html = renderToStaticMarkup(<ExplorationJourney history={history} cursor={2} journeyReasons={new Map()} onStepClick={() => {}} />)
+    const html = render(<ExplorationJourney history={history} cursor={2} journeyReasons={new Map()} onStepClick={() => {}} />)
     const buttons = html.match(/class="he-journey-node/g) ?? []
     expect(buttons).toHaveLength(history.length)
   })
@@ -160,9 +164,9 @@ describe('ExplorationJourney container (M9-003 navigation ownership)', () => {
     // goTo-style aria contract as ExplorationTrail — so navigation stays on the
     // single App.goTo path.
     const history = [topicNode(), entityNode()]
-    const html = renderToStaticMarkup(<ExplorationJourney history={history} cursor={1} journeyReasons={new Map()} onStepClick={() => {}} />)
-    expect(html).toContain('Return to Roman Empire')
-    expect(html).toContain('Current: Augustus')
+    const html = render(<ExplorationJourney history={history} cursor={1} journeyReasons={new Map()} onStepClick={() => {}} />)
+    expect(html).toContain('返回 Roman Empire')
+    expect(html).toContain('当前：Augustus')
   })
 })
 
@@ -181,11 +185,11 @@ describe('buildRecommendationContext (M9-003 producer contract)', () => {
 
   it('keeps RecommendationPanelView backward compatible (1-arg onNodeClick still works)', () => {
     const items = [rec('roman_empire:octavian', 'Octavian', 'person', ['Same dynasty successor.'])]
-    const html = renderToStaticMarkup(<RecommendationPanelView recommendations={items} onNodeClick={() => {}} />)
+    const html = render(<RecommendationPanelView recommendations={items} onNodeClick={() => {}} />)
     // Route-compatibility contract preserved: each card still binds the engine
     // target via aria-label. The new 2nd context arg is passed internally but
     // must not alter the rendered markup.
-    expect(html).toContain('aria-label="Explore Octavian"')
+    expect(html).toContain('aria-label="探索 Octavian"')
     expect(html).toContain('Octavian')
     expect(html).toContain('influenced')
   })

@@ -5,6 +5,7 @@
 // ============================================================
 
 import type { EntityInsight } from '../../data/entity/EntityInsightModel'
+import { Icon } from '../ui/Icon'
 
 interface EntityInsightCardProps {
   insight: EntityInsight
@@ -33,7 +34,7 @@ export function EntityInsightCard({ insight }: EntityInsightCardProps) {
       {insight.timelineHighlights.length > 0 && (
         <div className="eic-timeline-chips">
           {insight.timelineHighlights.map((event, i) => (
-            <span key={i} className="eic-chip">◷ {event}</span>
+            <span key={i} className="eic-chip"><Icon name="time-period" size={16} /> {event}</span>
           ))}
         </div>
       )}

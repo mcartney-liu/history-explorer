@@ -1,3 +1,5 @@
+import { useLocale } from '../data/locale'
+
 export type ConnectionItem = {
   type: string
   name: string
@@ -8,9 +10,10 @@ type ConnectionsPanelProps = {
 }
 
 function ConnectionsPanel({ connections }: ConnectionsPanelProps) {
+  const { t } = useLocale()
   return (
     <div className="result-section">
-      <h3>Connections</h3>
+      <h3>{t('common.connectionsHeading')}</h3>
       {connections.length > 0 ? (
         <ul className="connections-list">
           {connections.map((item, idx) => (
@@ -21,7 +24,7 @@ function ConnectionsPanel({ connections }: ConnectionsPanelProps) {
           ))}
         </ul>
       ) : (
-        <p className="empty">No connections.</p>
+        <p className="empty">{t('common.connectionsEmpty')}</p>
       )}
     </div>
   )

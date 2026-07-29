@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import LandingPage, { TopicSummary, LANDING_HERO } from '../components/LandingPage'
+import { LocaleProvider } from '../data/locale'
 import { NavNode } from '../components/navigation'
 
 const SAMPLE: TopicSummary[] = [
@@ -51,9 +52,11 @@ describe('LandingPage — loading / empty / error states', () => {
 
   it('shows the unified error card on a fetch failure', () => {
     const html = renderToStaticMarkup(
-      <LandingPage topics={[]} loading={false} error="network" onTopicClick={() => {}} />,
+      <LocaleProvider>
+        <LandingPage topics={[]} loading={false} error="network" onTopicClick={() => {}} />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Connection problem')
+    expect(html).toContain('连接问题')
   })
 })
 
@@ -64,16 +67,18 @@ describe('LandingPage — returning-user recent explorations', () => {
 
   it('renders the recent chip list when history exists', () => {
     const html = renderToStaticMarkup(
-      <LandingPage
-        topics={SAMPLE}
-        loading={false}
-        error=""
-        onTopicClick={() => {}}
-        recent={recent}
-        onRecentSelect={() => {}}
-      />,
+      <LocaleProvider>
+        <LandingPage
+          topics={SAMPLE}
+          loading={false}
+          error=""
+          onTopicClick={() => {}}
+          recent={recent}
+          onRecentSelect={() => {}}
+        />
+      </LocaleProvider>,
     )
-    expect(html).toContain('Recent Explorations')
+    expect(html).toContain('最近浏览')
     expect(html).toContain('he-recent-chip')
   })
 
@@ -81,7 +86,7 @@ describe('LandingPage — returning-user recent explorations', () => {
     const html = renderToStaticMarkup(
       <LandingPage topics={SAMPLE} loading={false} error="" onTopicClick={() => {}} />,
     )
-    expect(html).not.toContain('Recent Explorations')
+    expect(html).not.toContain('最近浏览')
   })
 })
 

@@ -10,6 +10,7 @@
 // when the field is absent or a path is empty, so legacy UI is untouched.
 import { Fragment } from 'react'
 import { ConnectionExplained } from './ConnectionsExplainedPanel'
+import { useLocale } from '../data/locale'
 
 type PathStep = {
   from_global_id: string
@@ -30,11 +31,12 @@ function localName(globalId: string): string {
 }
 
 function ExplorationPathsPanel({ connections, onNodeClick }: ExplorationPathsPanelProps) {
+  const { t } = useLocale()
   if (!connections || connections.length === 0) return null
 
   return (
     <div className="result-section">
-      <h3>Exploration Paths</h3>
+      <h3>{t('discover.pathsHeading')}</h3>
       <div className="ep-list">
         {connections.map((item, idx) => {
           const path = Array.isArray(item.path) ? (item.path as string[]) : []
@@ -59,7 +61,7 @@ function ExplorationPathsPanel({ connections, onNodeClick }: ExplorationPathsPan
                       <button
                         type="button"
                         className="ep-node is-clickable"
-                        aria-label={`Open ${localName(node)}`}
+                        aria-label={t('discover.openAria', { name: localName(node) })}
                         onClick={() => onNodeClick?.(node)}
                       >
                         {localName(node)}

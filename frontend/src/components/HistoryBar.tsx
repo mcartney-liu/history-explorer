@@ -2,6 +2,7 @@
 // Browser-style Back / Forward over the app's own exploration history
 // (not the URL). Buttons disable themselves when there is nowhere to go.
 // Pure presentational component; App owns the handlers.
+import { useLocale } from '../data/locale'
 
 type HistoryBarProps = {
   canBack: boolean
@@ -11,25 +12,26 @@ type HistoryBarProps = {
 }
 
 function HistoryBar({ canBack, canForward, onBack, onForward }: HistoryBarProps) {
+  const { t } = useLocale()
   return (
-    <div className="he-history-bar" role="group" aria-label="History navigation">
+    <div className="he-history-bar" role="group" aria-label={t('common.historyNavAria')}>
       <button
         type="button"
         className="he-history-btn"
         onClick={onBack}
         disabled={!canBack}
-        aria-label="Go back"
+        aria-label={t('common.goBackAria')}
       >
-        {'‹ Back'}
+        {t('common.back')}
       </button>
       <button
         type="button"
         className="he-history-btn"
         onClick={onForward}
         disabled={!canForward}
-        aria-label="Go forward"
+        aria-label={t('common.goForwardAria')}
       >
-        {'Forward ›'}
+        {t('common.forward')}
       </button>
     </div>
   )
