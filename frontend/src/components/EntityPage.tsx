@@ -329,13 +329,12 @@ function EntityPage({
                     )}
                     onNodeClick={onNodeClick}
                   />
-                  <AIExplanationPanel entity={entity} />
-                  <GroundedAnswer
-                    entityGlobalId={entityGlobalId}
-                    entityName={entity.name}
-                    relationships={entity.relationships}
-                    onEntityClick={onEntityClick}
-                  />
+                  {entityGlobalId ? (
+                    <AIExplanationPanel
+                      contextGlobalIds={entityContext(entityGlobalId)}
+                      onCitationClick={onNodeClick}
+                    />
+                  ) : null}
                 </>
               )
 
