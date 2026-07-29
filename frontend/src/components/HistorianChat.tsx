@@ -81,7 +81,6 @@ export function HistorianChatView({
   entityGlobalId,
   entityName,
   entityType,
-  relationships,
   // Stateful props for testability
   status = 'idle' as ChatStatus,
   messages = [] as ChatMessage[],
@@ -180,7 +179,7 @@ export function HistorianChatView({
               key={i}
               type="button"
               className="hc-suggest-btn"
-              disabled={status === 'loading'}
+              disabled={status !== 'idle'}
               onClick={() => onAsk(q)}
             >
               {q}

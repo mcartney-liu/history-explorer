@@ -89,10 +89,13 @@ function writeAll(events: UserBehaviorEvent[]): void {
 // Public API
 // -----------------------------------------------------------
 
-export function recordEvent(event: Omit<UserBehaviorEvent, 'timestamp'>): void {
+export function recordEvent(
+  event: Omit<UserBehaviorEvent, 'timestamp'>,
+  timestampOverride?: string,
+): void {
   const full: UserBehaviorEvent = {
     ...event,
-    timestamp: event.timestamp ?? new Date().toISOString(),
+    timestamp: timestampOverride ?? new Date().toISOString(),
   }
   const events = readAll()
   events.push(full)

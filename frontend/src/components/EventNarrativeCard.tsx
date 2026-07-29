@@ -37,7 +37,6 @@ const NARRATIVE_PROMPTS: { mode: string; label: string; question: string }[] = [
 type NarrativeStatus = 'idle' | 'loading' | 'success' | 'error'
 
 export function EventNarrativeCardView({
-  entityGlobalId,
   entityName,
   relationships,
   onEntityClick,

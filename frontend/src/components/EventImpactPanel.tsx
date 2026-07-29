@@ -54,7 +54,6 @@ function groupByType(items: EntityRelationship[]): Group[] {
 
 export function EventImpactPanelView({
   relationships,
-  centerEntityName,
   nameById,
   onEntityClick,
 }: EventImpactPanelProps) {

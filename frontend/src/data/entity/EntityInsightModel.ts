@@ -85,7 +85,8 @@ export function buildInsight(entity: EntityDetail): EntityInsight {
 
   // Timeline narrative
   const topEvents = timeline.slice(0, 4)
-  const timelineHighlights = topEvents.map((t) => t.event ?? t.period ?? '')
+  const timelineHighlights: string[] = topEvents
+    .map((t) => String(t.event ?? t.period ?? ''))
     .filter(Boolean)
 
   if (timelineHighlights.length > 0) {

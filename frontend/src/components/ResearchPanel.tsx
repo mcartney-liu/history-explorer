@@ -5,7 +5,7 @@ import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } f
 import ResearchReport from './ResearchReport'
 import ResearchSummary from './ResearchSummary'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
-import { loadResearch, type SavedResearch } from '../data/ResearchHistory'
+import { type SavedResearch } from '../data/ResearchHistory'
 import type { EntityRelationship } from './EntityPage'
 
 export type ResearchPanelProps = {
@@ -71,7 +71,6 @@ export function ResearchPanelView({
   entityGlobalId,
   entityName,
   entityType,
-  relationships,
   // Stateful props for testability
   mode = 'idle' as ResearchMode,
   dimensions = [] as ResearchDimension[],

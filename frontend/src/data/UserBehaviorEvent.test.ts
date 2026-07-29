@@ -33,7 +33,7 @@ beforeEach(() => {
 
 describe('UserBehaviorEvent', () => {
   it('records and retrieves events', () => {
-    recordEvent({ action: 'open_discover', timestamp: '2026-07-28T00:00:00Z' })
+    recordEvent({ action: 'open_discover' })
     const events = getEvents()
     expect(events).toHaveLength(1)
     expect(events[0].action).toBe('open_discover')
@@ -83,8 +83,8 @@ describe('UserBehaviorEvent', () => {
   })
 
   it('detects session longer than N minutes', () => {
-    recordEvent({ action: 'open_discover', timestamp: '2026-07-28T00:00:00Z' })
-    recordEvent({ action: 'click_entity', timestamp: '2026-07-28T00:20:00Z' })
+    recordEvent({ action: 'open_discover' }, '2026-07-28T00:00:00Z')
+    recordEvent({ action: 'click_entity' }, '2026-07-28T00:20:00Z')
     expect(lastsOver(15)).toBe(true)
     expect(lastsOver(30)).toBe(false)
   })

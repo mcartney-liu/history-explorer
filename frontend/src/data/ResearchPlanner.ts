@@ -52,12 +52,6 @@ const CAUSAL_RELATIONSHIPS = new Set([
   'participated_in', 'before', 'after',
 ])
 
-/** Relationship types that suggest immediate related exploration. */
-const RELATED_PRIORITY = new Set([
-  'expanded_from', 'part_of', 'led_to',
-  'founded', 'conquered', 'built',
-])
-
 function dimensionsForType(entityType: string): string[] {
   const map: Record<string, string[]> = {
     Civilization: ['政治制度', '军事体系', '经济网络', '文化影响'],
@@ -167,7 +161,6 @@ function historyBasedRecommendations(input: PlannerInput): ResearchRecommendatio
 
 function similarTypeRecommendations(input: PlannerInput): ResearchRecommendation[] {
   const currentType = input.currentEntity.type
-  const connectedIds = new Set(input.relationships.map((r) => r.other.globalId))
   const currentId = input.currentEntity.globalId
 
   // Entities of the same type that are NOT the current entity

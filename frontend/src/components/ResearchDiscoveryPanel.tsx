@@ -12,8 +12,6 @@ export type ResearchDiscoveryPanelProps = {
 }
 
 export function ResearchDiscoveryPanelView({
-  currentEntity,
-  relationships,
   onExplore,
   // Stateful props for testability
   recommendations = [] as ReturnType<typeof generateRecommendations>,

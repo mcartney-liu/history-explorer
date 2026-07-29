@@ -77,9 +77,9 @@ function mostExploredTypes(events: UserBehaviorEvent[]): string[] {
 
 function generateRecommendations(
   events: UserBehaviorEvent[],
-  discoveryRate: number,
-  engagementRate: number,
-  saveRate: number,
+  _discoveryRate: number,
+  _engagementRate: number,
+  _saveRate: number,
 ): string[] {
   const recs: string[] = []
   const hasClick = events.some((e) => e.action === 'click_entity')

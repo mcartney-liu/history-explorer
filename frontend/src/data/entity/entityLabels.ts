@@ -4,8 +4,6 @@
 // for all 8 entity types. Single source of truth.
 // ============================================================
 
-import type { EntityType } from './entityTypes'
-
 export const ENTITY_TYPE_LABELS: Record<string, string> = {
   Person: '人物',
   Civilization: '文明',

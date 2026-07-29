@@ -11,7 +11,7 @@ import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
 import { listResearch } from '../data/ResearchHistory'
-import { generateUserInterestProfile, insightSummary } from '../data/ResearchInsights'
+import { generateUserInterestProfile } from '../data/ResearchInsights'
 import type { SavedResearch } from '../data/ResearchHistory'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import { Card } from '../components/ui/Card'
@@ -156,7 +156,6 @@ function InterestProfile() {
     )
   }
   const profile = useMemo(() => generateUserInterestProfile(researches), [researches])
-  const summary = useMemo(() => insightSummary({ researchCount: profile.activeExplorationDays + 1, favoriteEntityTypes: profile.topEntityTypes.map((t) => t.type), favoriteDimensions: profile.topDimensions.map((d) => d.dimension), exploredRelationships: [], frequentThemes: profile.topThemes } as any), [profile])
 
   return (
     <div className="discover-interest">

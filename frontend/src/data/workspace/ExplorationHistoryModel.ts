@@ -27,17 +27,18 @@ export function buildExplorationHistory(nodes: NavNode[]): ExplorationHistory {
   const items: ExplorationHistoryItem[] = nodes.map((n, i) => ({
     id: n.type === 'entity' ? n.id : n.topic,
     entityId: n.type === 'entity' ? n.id : n.topic,
-    name: n.name || n.type === 'entity' ? n.id : n.topic,
+    name: n.type === 'entity' ? (n.name || n.id) : n.topic,
     type: n.type,
     visitedAt: Date.now() - (nodes.length - i) * 60000,
     source: i === 0 ? 'direct' : 'related',
     depth: i,
   }))
 
+  const last = nodes[nodes.length - 1]
   return {
     items,
-    currentPath: nodes.map((n) => (n.type === 'entity' ? n.name || n.id : n.topic)),
-    currentEntityId: nodes.length > 0 ? (nodes[nodes.length - 1].type === 'entity' ? nodes[nodes.length - 1].id : nodes[nodes.length - 1].topic) : undefined,
+    currentPath: nodes.map((n) => (n.type === 'entity' ? (n.name || n.id) : n.topic)),
+    currentEntityId: last ? (last.type === 'entity' ? last.id : last.topic) : undefined,
   }
 }
 

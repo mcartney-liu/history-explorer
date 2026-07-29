@@ -75,7 +75,6 @@ function buildFunnel(
   events: UserBehaviorEvent[],
 ): FunnelMetric {
   const steps: FunnelStep[] = []
-  let previousEntered = events.length > 0 ? 1 : 0 // use 1 as base for ratio calc
 
   for (let i = 0; i < stepDefs.length; i++) {
     const def = stepDefs[i]
@@ -93,7 +92,7 @@ function buildFunnel(
     })
 
     if (i > 0 && steps[i - 1].entered > 0 && !entered) {
-      previousEntered = 0
+      // previous step had entered but this step did not
     }
   }
 

@@ -16,8 +16,8 @@ type JourneyRecommendation = {
   otherId: string
   otherName: string
   otherType: string
-  otherGlobalId?: string
-  otherTopic?: string
+  otherGlobalId: string | undefined
+  otherTopic: string | undefined
   relType: string
   direction: string
   reason: string

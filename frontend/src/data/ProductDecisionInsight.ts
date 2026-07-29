@@ -373,7 +373,7 @@ function computeEvidenceQuality(input: DecisionFusionInput, concerns: ProductDec
 }
 
 function buildExplanationChain(
-  input: DecisionFusionInput,
+  _input: DecisionFusionInput,
   primary: ProductDecisionInsight['primaryIssue'],
   action: ProductDecisionInsight['recommendedAction'],
   metrics: Record<string, string | number>,

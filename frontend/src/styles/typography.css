@@ -1,13 +1,18 @@
 /* ============================================================
-   M60-002 — Typography Scale
+   M60-002 / M61 — Typography Scale (aligned to DS V1.0 FINAL)
    Unified headings, body, and caption sizes.
    All components reference these instead of inline font-size.
+
+   Font stack:
+     Display  Spectral, Noto Serif SC
+     UI       Inter, Noto Sans SC
+     Fallback Georgia / system-ui
    ============================================================ */
 
 :root {
-  /* ---- Font families ---- */
-  --serif: 'Georgia', 'Times New Roman', serif;
-  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  /* ---- Font families (DS V1.0 FINAL with CJK + legacy fallback) ---- */
+  --serif: 'Spectral', 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+  --sans:  'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 
   /* ---- Heading scale ---- */
   --text-h1:  2rem;

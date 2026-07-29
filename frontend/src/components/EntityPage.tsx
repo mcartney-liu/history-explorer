@@ -1,25 +1,19 @@
 import SummaryPanel from './SummaryPanel'
-import MainEntityCard, { MainEntity } from './MainEntityCard'
-import RelationshipView from './RelationshipView'
-import RelatedEntityList, { RelatedEntity } from './RelatedEntityList'
-import TimelinePanel, { TimelineItem } from './TimelinePanel'
-import ConnectionsExplainedPanel, { ConnectionExplained } from './ConnectionsExplainedPanel'
-import ExplorationPathsPanel from './ExplorationPathsPanel'
+import { MainEntity } from './MainEntityCard'
+import { RelatedEntity } from '../data/entity/entityTypes'
+import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import InterpretationPanel from './InterpretationPanel'
 import { toInterpretationViewModels } from '../data/interpretationFormatter'
 import { buildUnderstandingsFromRelationships } from '../data/understandingRules'
 import { buildEntityTimeMap, type TimeValue } from '../data/temporalUtils'
-import ThemesPanel from './ThemesPanel'
-import CrossTopicTopicList from './CrossTopicTopicList'
+import { TimelineEvent } from '../data/entity/entityTypes'
 import EntityExplorationGuide from './EntityExplorationGuide'
 import type { NavNode } from './navigation'
 import type { StarterItem } from '../data/explorationStarters'
 import { RelatedTopic } from './crossTopic'
 import AIExplanationPanel from './AIExplanationPanel'
 import ProvenancePanel from './ProvenancePanel'
-import ExplorationFlowGuide from './ExplorationFlowGuide'
 import EntityHeader from './EntityHeader'
-import GraphViewPanel from './GraphViewPanel'
 import EventCausalChain from './EventCausalChain'
 import EventImpactPanel from './EventImpactPanel'
 import EventNarrativeCard from './EventNarrativeCard'
@@ -48,7 +42,7 @@ export type EntityDetail = {
   type: string
   name: string
   summary: Record<string, unknown>
-  timeline: TimelineItem[]
+  timeline: TimelineEvent[]
   relationships: EntityRelationship[]
   connections_explained?: ConnectionExplained[]
   related_topics?: RelatedTopic[]
@@ -100,7 +94,6 @@ function EntityPage({
   entity,
   onEntityClick,
   onNodeClick,
-  onTopicClick,
   entityId,
   entityName,
   entityStarters,
@@ -108,7 +101,10 @@ function EntityPage({
 }: EntityPageProps) {
   // M59-005: build ViewModel once per entity change.
   // Available for future EntityHero / AISidebar migration.
-  const viewModel = useMemo(() => buildEntityViewModel(entity), [entity])
+  const viewModel = useMemo(
+    () => buildEntityViewModel(entity as Parameters<typeof buildEntityViewModel>[0]),
+    [entity],
+  )
   const relatedCards = useMemo(
     () =>
       buildCardsFromViewModel(
@@ -306,7 +302,7 @@ function EntityPage({
                         onEntityClick={onEntityClick}
                       />
                       <EventNarrativeCard
-                        entityGlobalId={entityGlobalId}
+                        entityGlobalId={entityGlobalId ?? ''}
                         entityName={entity.name}
                         relationships={entity.relationships}
                         onEntityClick={onEntityClick}

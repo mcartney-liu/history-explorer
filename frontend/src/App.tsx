@@ -8,7 +8,6 @@ import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
 import ConnectionsExplainedPanel from './components/ConnectionsExplainedPanel'
-import ExplorationPathsPanel from './components/ExplorationPathsPanel'
 import ThemesPanel from './components/ThemesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import TemporalComparisonPanel from './components/TemporalComparisonPanel'
@@ -712,7 +711,7 @@ function App() {
               <TemporalComparisonPanel entities={result.entities} />
               <MultiEntityTimeline entities={result.entities} />
               <ConnectionsPanel connections={result.connections} />
-              <ConnectionsExplainedPanel connections={result.connections_explained} />
+              <ConnectionsExplainedPanel connections={result.connections_explained} onNodeClick={openNodeNamed} />
               <InterpretationPanel
                 interpretations={toInterpretationViewModels(result.connections_explained)}
                 understandings={buildUnderstandingsFromConnectionsExplained(
@@ -726,10 +725,6 @@ function App() {
                   ),
                   exploreEntityTimeByName,
                 )}
-                onNodeClick={openNodeNamed}
-              />
-              <ExplorationPathsPanel
-                connections={result.connections_explained}
                 onNodeClick={openNodeNamed}
               />
               <ThemesPanel

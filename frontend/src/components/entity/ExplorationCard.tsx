@@ -26,7 +26,7 @@ export function ExplorationCard({
   variant = 'default',
   onClick,
 }: ExplorationCardProps) {
-  const { title, subtitle, entityType, icon, summary, badges, meta, target } = model
+  const { title, subtitle, icon, summary, badges, target } = model
   const cls = variantClass[variant]
 
   const handleClick = () => (onClick ? onClick(target) : undefined)

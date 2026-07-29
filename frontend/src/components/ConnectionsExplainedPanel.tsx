@@ -4,6 +4,11 @@
 // a top-level `connections_explained: ConnectionExplained[]`. This panel is
 // strictly additive: when the field is absent it renders nothing, so the legacy
 // UI (and the legacy <ConnectionsPanel/>) is untouched.
+//
+// M61: merged ExplorationPathsPanel's path-chain rendering into this component.
+// When onNodeClick is provided and a connection has path data, a clickable
+// node chain is rendered below the explanation row.
+import { Fragment } from 'react'
 export type ConnectionExplained = {
   global_id: string
   depth: number
@@ -14,8 +19,17 @@ export type ConnectionExplained = {
   explanation: string
 }
 
+type PathStep = {
+  from_global_id: string
+  to_global_id: string
+  relationship: string
+  direction: string
+  weight?: number
+}
+
 type ConnectionsExplainedPanelProps = {
   connections?: ConnectionExplained[]
+  onNodeClick?: (globalId: string) => void
 }
 
 function resolveLocalName(globalId: string): string {
@@ -23,7 +37,7 @@ function resolveLocalName(globalId: string): string {
   return globalId.split(':').slice(1).join(':') || globalId
 }
 
-function ConnectionsExplainedPanel({ connections }: ConnectionsExplainedPanelProps) {
+function ConnectionsExplainedPanel({ connections, onNodeClick }: ConnectionsExplainedPanelProps) {
   if (!connections || connections.length === 0) return null
 
   return (
@@ -45,6 +59,59 @@ function ConnectionsExplainedPanel({ connections }: ConnectionsExplainedPanelPro
           </div>
         ))}
       </div>
+      {onNodeClick && (
+        <div className="ep-list">
+          {connections.map((item, idx) => {
+            const path = Array.isArray(item.path) ? (item.path as string[]) : []
+            const steps = Array.isArray(item.steps) ? (item.steps as PathStep[]) : []
+            if (path.length === 0) return null
+            return (
+              <div className="main-entity ep-item" key={`path-${idx}`}>
+                <div className="ep-chain">
+                  {path.map((node, i) => {
+                    const edge =
+                      i < path.length - 1
+                        ? steps.find(
+                            (s) =>
+                              s.from_global_id === node &&
+                              s.to_global_id === path[i + 1],
+                          )
+                        : undefined
+                    const isIncoming = edge?.direction === 'incoming'
+                    return (
+                      <Fragment key={`${node}-${i}`}>
+                        <button
+                          type="button"
+                          className="ep-node is-clickable"
+                          aria-label={`Open ${resolveLocalName(node)}`}
+                          onClick={() => onNodeClick(node)}
+                        >
+                          {resolveLocalName(node)}
+                        </button>
+                        {i < path.length - 1 && (
+                          <span className="ep-edge" aria-hidden="true">
+                            {edge ? (
+                              <>
+                                {isIncoming ? '\u2190' : '\u2014'}
+                                <span className="ep-edge-label">
+                                  [{edge.relationship} {edge.direction}]
+                                </span>
+                                {isIncoming ? '\u2014' : '\u2192'}
+                              </>
+                            ) : (
+                              '\u2192'
+                            )}
+                          </span>
+                        )}
+                      </Fragment>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

@@ -4,7 +4,6 @@ import {
   deleteResearch,
   type SavedResearch,
 } from '../data/ResearchHistory'
-import ResearchBookmarkView from './ResearchBookmarkButton'
 
 export type ResearchLibraryProps = {
   onSelect?: (research: SavedResearch) => void

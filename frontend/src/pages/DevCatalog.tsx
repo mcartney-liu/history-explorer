@@ -5,6 +5,7 @@
 // ============================================================
 
 import { useState } from 'react'
+import type { EntityInsight } from '../data/entity/EntityInsightModel'
 
 // Entity components
 import { EntityHero } from '../components/entity/EntityHero'
@@ -22,6 +23,7 @@ import { AISidebar } from '../components/ai/AISidebar'
 
 // ---- Mock data ----
 const mockIdentity = {
+  id: 'caesar',
   name: 'Julius Caesar',
   type: 'Person',
   timeLabel: '100 BC – 44 BC',
@@ -47,6 +49,13 @@ const mockTimeline = [
   { year: -58, event: 'Gallic Wars begin' },
   { year: -44, event: 'Assassinated' },
 ]
+
+const mockInsight: EntityInsight = {
+  text: 'Julius Caesar 是罗马共和国末期最重要的军事与政治人物之一。他的征服和改革改变了罗马政治结构，并最终推动共和国向帝国转变。',
+  keyNames: ['Pompey', 'Rome'],
+  timelineHighlights: ['高卢战争', '被刺杀'],
+  sourceFields: ['summary.description', 'relationships'],
+}
 
 // ---- Section helper ----
 function Section({ label, purpose, children }: { label: string; purpose: string; children: React.ReactNode }) {
@@ -81,8 +90,7 @@ export default function DevCatalog() {
 
       <Section label="EntityInsightCard" purpose="Historical insight summary between hero and guide.">
         <EntityInsightCard
-          insight="Julius Caesar 是罗马共和国末期最重要的军事与政治人物之一。他的征服和改革改变了罗马政治结构，并最终推动共和国向帝国转变。"
-          onAskMore={() => alert('Ask more')}
+          insight={mockInsight}
         />
       </Section>
 
@@ -91,7 +99,7 @@ export default function DevCatalog() {
           hero={<EntityHero identity={mockIdentity} />}
           guide={
             <>
-              <EntityInsightCard insight="Julius Caesar 是罗马共和国末期最重要的军事与政治人物之一。" />
+              <EntityInsightCard insight={mockInsight} />
               <ExplorationGuide
                 entityName="Julius Caesar"
                 nodes={mockNodes}
@@ -117,11 +125,11 @@ export default function DevCatalog() {
       <Section label="ExplorationCard" purpose="Clickable related entity card. Reusable across entity/relationship types.">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <ExplorationCard
-            model={{ id: 'pompey', name: 'Pompey', type: 'Person', icon: '\u{1F464}', subtitle: 'Military rival of Caesar', targetId: 'pompey' }}
+            model={{ id: 'pompey', title: 'Pompey', entityType: 'Person', icon: '\u{1F464}', subtitle: 'Military rival of Caesar', target: 'pompey', summary: '', badges: [], meta: {} }}
             onClick={(id) => alert(`Go to ${id}`)}
           />
           <ExplorationCard
-            model={{ id: 'rome', name: 'Rome', type: 'Civilization', icon: '\u{1F3DB}', subtitle: 'Capital of the Roman Empire', targetId: 'rome' }}
+            model={{ id: 'rome', title: 'Rome', entityType: 'Civilization', icon: '\u{1F3DB}', subtitle: 'Capital of the Roman Empire', target: 'rome', summary: '', badges: [], meta: {} }}
             onClick={(id) => alert(`Go to ${id}`)}
           />
         </div>

@@ -181,7 +181,6 @@ export function calculateCapabilityHealth(
   pi: ProductIntelligence,
   funnels: FunnelMetric[],
 ): CapabilityHealth[] {
-  const discoveryFunnel = funnels.find((f) => f.name === 'Discovery')
   const explorationFunnel = funnels.find((f) => f.name === 'Exploration')
   const researchFunnel = funnels.find((f) => f.name === 'Research')
 

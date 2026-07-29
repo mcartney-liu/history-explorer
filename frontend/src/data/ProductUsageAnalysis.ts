@@ -9,7 +9,7 @@
 
 import type { UserBehaviorEvent } from './UserBehaviorEvent'
 import { allFunnelMetrics, type FunnelMetric } from './ExplorationFunnelAnalysis'
-import { generateProductIntelligence, intelligenceSummary } from './ProductIntelligence'
+import { generateProductIntelligence } from './ProductIntelligence'
 import type { ProductIntelligence } from './ProductIntelligence'
 import { generateDecisionIntelligence } from './OptimizationPriority'
 import type { OptimizationPriority, CapabilityHealth } from './OptimizationPriority'

@@ -63,11 +63,10 @@ const ENTITY_TYPES = [
 
 export function calculateKnowledgeCoverage(
   entities: EntityRecord[],
-  sources?: SourceRecord[],
+  _sources?: SourceRecord[],
   claims?: ClaimRecord[],
 ): CoverageMetrics[] {
   const safeEntities = entities.filter((e) => e && typeof e.type === 'string')
-  const safeSources = sources ?? []
   const safeClaims = claims ?? []
 
   // Group entities by type
