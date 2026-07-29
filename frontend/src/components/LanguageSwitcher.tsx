@@ -11,19 +11,18 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useLocale()
 
   return (
-    <div className="language-switcher" role="group" aria-label="Language">
+    <select
+      className="app-locale-select"
+      value={locale}
+      onChange={(e) => setLocale(e.target.value as Locale)}
+      aria-label="Language"
+    >
       {SUPPORTED_LOCALES.map(({ code, label }) => (
-        <button
-          key={code}
-          type="button"
-          className={code === locale ? 'lang-btn lang-btn--active' : 'lang-btn'}
-          aria-pressed={code === locale}
-          onClick={() => setLocale(code)}
-        >
+        <option key={code} value={code}>
           {label}
-        </button>
+        </option>
       ))}
-    </div>
+    </select>
   )
 }
 
