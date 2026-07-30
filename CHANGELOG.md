@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM66] - 2026-07-31 — Non-runtime release (M66 project release)
+
+> **Non-runtime release** (M66 project release). `frontend/package.json` remains `[0.13.0]`. M66 — Exploration Intelligence Convergence: surfaces the M43–M53 dark-pipeline intelligence as a user-visible, non-AI exploration-context capability. A deterministic local analysis bridge (companion context bridge) narrow-projects `ProductUsageAnalysis` output into `ExplorationContextIntelligence` and renders it via `ExplorationInsightPanel` — delivering intelligence visibility without user profiling, scoring, recommendation, or AI reasoning. Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; visual-check EXIT 0; tsc EXIT 0; release-consistency 7/7; 967 tests passed (110 files).
+
+---
+
 ## [vM65] - 2026-07-31 (Project Release — M65)
 
 > **Non-runtime release** (M65 milestone release). `frontend/package.json` remains `[0.13.0]`. M65 — Companion AI Foundation & Graph Governance: companion-centric AI model decision (ADR-0007), Companion Shell visual baseline within the Exploration Space architecture using Design System tokens only (zero hardcoded color), graph visualization components governance improvement with `entityColors.ts` single source of truth (zero hardcoded hex), real AI call-chain test coverage plus a CompanionContext `SET_ERROR` reducer production fix, and a Workspace Rail overflow + accessibility fix. Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; visual-check EXIT 0; release-consistency 7/7; 962 tests passed (108 files).
