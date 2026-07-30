@@ -6,8 +6,7 @@ import MainEntityCard, { MainEntity } from './components/MainEntityCard'
 import RelatedEntityList, { RelatedEntity } from './components/RelatedEntityList'
 import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
-import ConnectionsPanel, { ConnectionItem } from './components/ConnectionsPanel'
-import ConnectionsExplainedPanel from './components/ConnectionsExplainedPanel'
+import type { ConnectionItem } from './components/ConnectionsPanel'
 import ThemesPanel from './components/ThemesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import TemporalComparisonPanel from './components/TemporalComparisonPanel'
@@ -31,7 +30,6 @@ import SearchResults, {
   resolveSearchResultTarget,
 } from './components/SearchResults'
 import EntityPage, { EntityDetail, EntityRelationship } from './components/EntityPage'
-import RelationshipInsightPanel from './components/RelationshipInsightPanel'
 import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
 import { nextSelectionIndex } from './components/searchNav'
 import {
@@ -58,6 +56,7 @@ import { buildUnderstandingsFromConnectionsExplained } from './data/understandin
 import { buildEntityTimeMap } from './data/temporalUtils'
 import { ExplorationShell } from './components/shell/ExplorationShell'
 import { CompanionShell } from './components/ai/CompanionShell'
+import RelationshipContext from './components/RelationshipContext'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import DevCatalog from './pages/DevCatalog'
 import GraphViewPanel from './components/GraphViewPanel'
@@ -768,8 +767,17 @@ function App() {
               ) : (
               <MultiEntityTimeline entities={result.entities} />
               )}
-              <ConnectionsPanel connections={result.connections} />
-              <ConnectionsExplainedPanel connections={result.connections_explained} onNodeClick={openNodeNamed} />
+              <RelationshipContext
+                connections={result.connections}
+                connectionsExplained={result.connections_explained}
+                onNodeClick={openNodeNamed}
+                candidates={pickedCandidates}
+                relationships={exploreThemesRelationships}
+                timeMap={exploreEntityTimeByName}
+                mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]}
+                mainEntityName={result.exploration.main_entity.name}
+                nameByGlobalId={exploreNameByGlobalId}
+              />
               <InterpretationPanel
                 interpretations={toInterpretationViewModels(result.connections_explained)}
                 understandings={buildUnderstandingsFromConnectionsExplained(
@@ -813,14 +821,6 @@ function App() {
                 candidates={pickedCandidates}
                 candidateGids={Object.values(exploreEntityGlobalById)}
                 onCitationClick={(gid) => openEntity(gid)}
-              />
-              <RelationshipInsightPanel
-                candidates={pickedCandidates}
-                relationships={exploreThemesRelationships}
-                timeMap={exploreEntityTimeByName}
-                mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]}
-                mainEntityName={result.exploration.main_entity.name}
-                nameByGlobalId={exploreNameByGlobalId}
               />
               </section>
             </div>
