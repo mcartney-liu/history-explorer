@@ -487,6 +487,13 @@ export const SCOPE_ALLOWLIST = [
   // No backend / dependency / runtime / schema / enum change.
   "frontend/src/components/discover/",
 
+  // M65 Phase 2C (Connections Merge) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-30). Adds the unified RelationshipContext entry:
+  //   - RelationshipContext.tsx     wraps ConnectionsPanel + ConnectionsExplainedPanel
+  //                                + RelationshipInsightPanel (composition only)
+  // Exact file path — Least Privilege. No backend / dependency / schema change.
+  "frontend/src/components/RelationshipContext.tsx",
+
   // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
   // Adds the precise set of files that Stage B i18n externalization will touch.
   // Least Privilege: every entry is an EXACT file path — NO components/** broad
