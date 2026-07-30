@@ -17,8 +17,8 @@ import {
   getPinnedEntities,
   addPinnedEntity,
   removePinnedEntity,
-  type PinnedEntity,
-} from '../../lib/pinnedStore'
+} from '../../lib/workspaceStore'
+import type { PinnedEntity } from '../../lib/pinnedStore'
 
 // ---- Data types ----
 export interface WorkspaceItem {
