@@ -644,6 +644,15 @@ function App() {
       .slice(0, 8)
   }, [history])
 
+  // M65 Phase 3B: read-only workspace context for AI Companion
+  const workspaceContext = useMemo(() => ({
+    currentEntityId: current?.type === 'entity' ? current.id : undefined,
+    currentEntityName: current?.type === 'entity' ? current.name : current?.title,
+    recentEntityIds: workspaceHistory.map((h) => h.id),
+    pinnedEntityIds: workspaceItems.map((w) => w.id),
+    explorationPathLength: history.length,
+  }), [current, workspaceHistory, workspaceItems, history.length])
+
   // M59-021: Dev catalog route — hash-based, dev only
   if (typeof window !== 'undefined' && window.location.hash === '#/dev/catalog') {
     return <DevCatalog />
@@ -658,7 +667,7 @@ function App() {
           onEntityClick={(id, name) => openEntity(id, name)}
         />
       }
-      companion={<CompanionShell />}
+      companion={<CompanionShell workspaceContext={workspaceContext} />}
       timelineItems={result?.timeline}
       timelineActiveLabel={result?.title || (current?.type === 'entity' ? current.id : current?.title)}
       timelineActiveIndex={selectedTimelineIndex}

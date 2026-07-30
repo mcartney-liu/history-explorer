@@ -6,7 +6,7 @@
 // Internal context scope — not exposed to App or global.
 // ============================================================
 
-import { CompanionProvider, useCompanion, type CompanionMode } from './CompanionContext'
+import { CompanionProvider, useCompanion, type CompanionMode, type WorkspaceContextData } from './CompanionContext'
 import { CompanionRouter } from './CompanionRouter'
 
 const MODES: { id: CompanionMode; label: string }[] = [
@@ -43,9 +43,9 @@ function CompanionInner() {
   )
 }
 
-export function CompanionShell() {
+export function CompanionShell({ workspaceContext }: { workspaceContext?: WorkspaceContextData }) {
   return (
-    <CompanionProvider>
+    <CompanionProvider workspace={workspaceContext}>
       <CompanionInner />
     </CompanionProvider>
   )

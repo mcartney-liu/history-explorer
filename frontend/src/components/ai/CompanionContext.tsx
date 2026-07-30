@@ -4,6 +4,9 @@
 // for mode management, conversation history, and entity context.
 // Scope: CompanionShell subtree ONLY. Not exposed to App or global.
 // Uses React useReducer — zero new dependencies.
+//
+// M65 Phase 3B: added read-only external workspace context (bridge from
+// App/Workspace → Companion). Separate from internal AI reducer state.
 // ============================================================
 
 import { createContext, useContext, useReducer, type ReactNode } from 'react'
@@ -67,18 +70,37 @@ const initialState: CompanionState = {
   currentEntityName: null,
 }
 
+// ---- External workspace bridge (Phase 3B) ----
+
+/** Read-only workspace context passed from App → CompanionShell → CompanionContext */
+export interface WorkspaceContextData {
+  /** ID of the entity currently being explored */
+  currentEntityId?: string | null
+  /** Human-readable name of current entity */
+  currentEntityName?: string | null
+  /** Recent exploration history (last N items) */
+  recentEntityIds?: string[]
+  /** Pinned entity ids */
+  pinnedEntityIds?: string[]
+  /** Length of the full exploration path */
+  explorationPathLength?: number
+}
+
 // ---- Context ----
 interface CompanionContextValue {
   state: CompanionState
   dispatch: React.Dispatch<CompanionAction>
+  /** Read-only workspace context. Supplied by CompanionShell, consumed by AI views. */
+  workspace: WorkspaceContextData
 }
 
 const CompanionContext = createContext<CompanionContextValue | null>(null)
 
-export function CompanionProvider({ children }: { children: ReactNode }) {
+export function CompanionProvider({ children, workspace }: { children: ReactNode; workspace?: WorkspaceContextData }) {
   const [state, dispatch] = useReducer(companionReducer, initialState)
+  const workspaceCtx: WorkspaceContextData = workspace ?? {}
   return (
-    <CompanionContext.Provider value={{ state, dispatch }}>
+    <CompanionContext.Provider value={{ state, dispatch, workspace: workspaceCtx }}>
       {children}
     </CompanionContext.Provider>
   )
