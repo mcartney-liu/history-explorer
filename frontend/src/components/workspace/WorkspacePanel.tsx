@@ -6,7 +6,8 @@
 // ============================================================
 
 // M59-020: now uses real navigation history data.
-import type { ReactNode } from 'react'
+// M65 Phase 1: left-rail layout with collapsed/expanded visual state.
+import { useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 import type { IconName } from '../ui/Icon'
 import { ExplorationPathCard } from './ExplorationPathCard'
@@ -80,11 +81,61 @@ export function WorkspacePanel({
   history = [],
   onEntityClick,
 }: WorkspacePanelProps) {
+  const [collapsed, setCollapsed] = useState(true)
+
+  if (collapsed) {
+    return (
+      <aside className="ws-rail-collapsed" aria-label="探索工作台">
+        <button
+          className="ws-rail-expand"
+          onClick={() => setCollapsed(false)}
+          aria-label="展开工作台"
+          title="展开工作台"
+        >
+          <Icon name="book" size={20} />
+        </button>
+        {current && (
+          <button
+            className="ws-rail-current"
+            onClick={() => onEntityClick?.(current.id, current.title)}
+            aria-label={current.title}
+            title={current.title}
+          >
+            <span className="ws-rail-dot" />
+          </button>
+        )}
+        {history.length > 0 && (
+          <div className="ws-rail-history">
+            {history.slice(0, 5).map((h) => (
+              <button
+                key={h.id}
+                className="ws-rail-node"
+                onClick={() => onEntityClick?.(h.id, h.title)}
+                aria-label={h.title}
+                title={h.title}
+              >
+                <span className="ws-rail-dot-sm" />
+              </button>
+            ))}
+          </div>
+        )}
+      </aside>
+    )
+  }
+
   return (
     <aside className="ws" aria-label="探索工作台">
-      {/* Brand */}
+      {/* Brand + collapse */}
       <div className="ws-brand">
         <span className="ws-brand-name">探索工作台</span>
+        <button
+          className="ws-rail-collapse"
+          onClick={() => setCollapsed(true)}
+          aria-label="折叠工作台"
+          title="折叠工作台"
+        >
+          <Icon name="arrow-right" size={16} />
+        </button>
       </div>
 
       {/* Current */}
