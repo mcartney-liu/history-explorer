@@ -1,13 +1,13 @@
 // ============================================================
-// M54 — Reality Validation
-// Simulates a real user session and evaluates pipeline output.
+// M54 — Scenario Logic Regression (synthetic fixtures, NOT real replay; see M66_real_event_replay.test.ts)
+// Simulates a synthetic user session and evaluates pipeline output.
 // ============================================================
 
 import { describe, it, expect } from 'vitest'
 import { analyzeProductUsage } from './ProductUsageAnalysis'
 import type { UserBehaviorEvent } from './UserBehaviorEvent'
 
-describe('M54 Reality Validation', () => {
+describe('M54 Scenario Logic Regression', () => {
   it('Scenario: user completes full exploration + research journey', () => {
     // Simulate a realistic user session:
     // Open discover → pick a topic → open entity → explore tabs →
@@ -29,7 +29,7 @@ describe('M54 Reality Validation', () => {
     const di = result.decisionInsight
 
     console.log('\n========================================')
-    console.log('  M54 REALITY VALIDATION REPORT')
+    console.log('  M54 SCENARIO LOGIC REGRESSION REPORT')
     console.log('========================================\n')
     console.log('=== User Flow ===')
     console.log('Discover → Civilization entity → Explore tab → Journey card →')

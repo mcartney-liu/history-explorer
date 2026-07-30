@@ -1,6 +1,6 @@
 // ============================================================
-// M57 — Reality Validation 2
-// 5 real-world user scenarios through the complete
+// M57 — Scenario Logic Regression 2 (synthetic fixtures, NOT real replay; see M66_real_event_replay.test.ts)
+// 5 synthetic scenario-logic cases through the complete
 // M43-M56 intelligence pipeline.
 // ============================================================
 
@@ -30,7 +30,7 @@ function evalDecision(di: any) {
   }
 }
 
-describe('M57 Reality Validation 2', () => {
+describe('M57 Scenario Logic Regression 2', () => {
   // ====================================================================
   // Case 1: Complete Research Journey
   // ====================================================================

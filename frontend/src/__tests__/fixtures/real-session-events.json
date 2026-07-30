@@ -1,0 +1,20 @@
+[
+  { "action": "open_discover", "timestamp": "2026-07-30T14:00:00.000Z" },
+  { "action": "click_entity", "entityGlobalId": "g-akhenaten", "entityType": "person", "timestamp": "2026-07-30T14:00:30.000Z" },
+  { "action": "open_entity", "entityGlobalId": "g-akhenaten", "entityType": "person", "timestamp": "2026-07-30T14:00:45.000Z" },
+  { "action": "switch_tab", "tab": "relationships", "timestamp": "2026-07-30T14:01:20.000Z" },
+  { "action": "click_relationship", "entityGlobalId": "g-akhenaten", "timestamp": "2026-07-30T14:01:40.000Z" },
+  { "action": "open_entity", "entityGlobalId": "g-nefertiti", "entityType": "person", "timestamp": "2026-07-30T14:02:10.000Z" },
+  { "action": "switch_tab", "tab": "journey", "timestamp": "2026-07-30T14:02:50.000Z" },
+  { "action": "click_journey", "entityGlobalId": "g-nefertiti", "timestamp": "2026-07-30T14:03:05.000Z" },
+  { "action": "start_chat", "entityGlobalId": "g-nefertiti", "timestamp": "2026-07-30T14:03:40.000Z" },
+  { "action": "switch_tab", "tab": "research", "timestamp": "2026-07-30T14:04:20.000Z" },
+  { "action": "start_research", "entityGlobalId": "g-nefertiti", "timestamp": "2026-07-30T14:04:35.000Z" },
+  { "action": "save_research", "entityGlobalId": "g-nefertiti", "timestamp": "2026-07-30T14:05:00.000Z" },
+  { "action": "restore_research", "entityGlobalId": "g-nefertiti", "timestamp": "2026-07-30T14:05:30.000Z" },
+  { "action": "start_comparison", "entityGlobalId": "g-akhenaten", "timestamp": "2026-07-30T14:06:00.000Z" },
+  { "action": "open_entity", "entityGlobalId": "g-tutankhamun", "entityType": "person", "timestamp": "2026-07-30T14:06:40.000Z" },
+  { "action": "click_relationship", "entityGlobalId": "g-tutankhamun", "timestamp": "2026-07-30T14:07:00.000Z" },
+  { "action": "switch_tab", "tab": "overview", "timestamp": "2026-07-30T14:07:30.000Z" },
+  { "action": "delete_research", "entityGlobalId": "g-nefertiti", "timestamp": "2026-07-30T14:08:00.000Z" }
+]
