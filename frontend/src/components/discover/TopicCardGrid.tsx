@@ -30,7 +30,7 @@ export function TopicCardGrid({
     return (
       <div className="discover-theme-grid">
         {visible.map((card) => (
-          <TopicCard key={card.slug} card={card} onClick={onCardClick} />
+          <TopicCard key={card.slug} card={card} onClick={onCardClick} variant="entity" />
         ))}
       </div>
     )

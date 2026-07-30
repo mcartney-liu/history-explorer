@@ -5,6 +5,7 @@
 //      and entity-type exploration entry points.
 // M44: added ProductIntro section — static capability showcase for new visitors.
 // M59-002: migrated cards to <Card> component.
+// M65 Phase 2A: entity-type cards migrated to TopicCardGrid.
 
 import { useMemo, useEffect, useState } from 'react'
 import type { NavNode } from '../components/navigation'
@@ -17,6 +18,8 @@ import { recordEvent } from '../data/UserBehaviorEvent'
 import { Card } from '../components/ui/Card'
 import { Icon } from '../components/ui/Icon'
 import type { IconName } from '../components/ui/Icon'
+import { TopicCardGrid } from '../components/discover/TopicCardGrid'
+import type { TopicCardData } from '../components/discover/TopicCard'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = '原来历史还能这样探索。'
@@ -298,25 +301,16 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
           <h3 className="discover-section-heading">开始探索</h3>
           <p className="discover-section-sub">选择一个历史主题或类型，进入交互式探索。</p>
 
-          {/* M42: Entity type exploration */}
+          {/* M42 / M65 Phase 2A: Entity type exploration */}
           <div className="discover-themes">
             <h3 className="discover-section-heading">探索主题</h3>
             <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
-            <div className="discover-theme-grid">
-              {ENTITY_TYPE_CARDS.map((card) => (
-                <button
-                  key={card.slug}
-                  type="button"
-                  className="discover-theme-card"
-                  data-topic={card.slug}
-                  aria-label={`探索 ${card.label}`}
-                  onClick={() => handleTopicClick(card.slug)}
-                >
-                  <span className="discover-theme-label">{card.label}</span>
-                  <span className="discover-theme-desc">{card.desc}</span>
-                </button>
-              ))}
-            </div>
+            <TopicCardGrid
+              variant="entity"
+              cards={ENTITY_TYPE_CARDS.map((c): TopicCardData => ({ slug: c.slug, label: c.label, desc: c.desc }))}
+              onCardClick={handleTopicClick}
+              maxCards={6}
+            />
           </div>
 
           <div className="discover-featured" data-topic={FEATURED_TOPIC}>
