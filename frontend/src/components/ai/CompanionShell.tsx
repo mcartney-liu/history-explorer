@@ -8,6 +8,7 @@
 
 import { CompanionProvider, useCompanion, type CompanionMode, type WorkspaceContextData } from './CompanionContext'
 import { CompanionRouter } from './CompanionRouter'
+import { ExplorationInsightPanel } from './ExplorationInsightPanel'
 
 const MODES: { id: CompanionMode; label: string }[] = [
   { id: 'explain', label: '解释' },
@@ -37,6 +38,10 @@ function CompanionInner({ onNavigateEntity }: { onNavigateEntity?: (globalId: st
           </button>
         ))}
       </nav>
+
+      {/* M66-A: read-only exploration-context panel — rendered OUTSIDE the AI-mode
+          router so it never enters AI runtime / explainAI channel. */}
+      <ExplorationInsightPanel />
 
       <CompanionRouter onNavigateEntity={onNavigateEntity} />
     </div>

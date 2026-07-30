@@ -156,6 +156,66 @@
   margin: 0;
 }
 
+/* M66-A: Exploration context panel (read-only, non-AI) */
+.exploration-insight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.exploration-insight-title {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--hi);
+  margin: 0;
+}
+.exploration-insight-badge {
+  font-size: 0.7rem;
+  color: var(--low);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.exploration-insight-list {
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.exploration-insight-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: 0.875rem;
+}
+.exploration-insight-row dt {
+  color: var(--mid);
+  margin: 0;
+}
+.exploration-insight-row dd {
+  color: var(--hi);
+  margin: 0;
+  font-weight: 500;
+}
+.exploration-insight-signals {
+  margin-top: var(--space-3);
+}
+.exploration-insight-signals-label {
+  font-size: 0.8rem;
+  color: var(--mid);
+  margin: 0 0 var(--space-1);
+}
+.exploration-insight-signals ul {
+  margin: 0;
+  padding-left: var(--space-4);
+  color: var(--low);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
 /* Bottom timeline strip */
 .timeline-strip {
   grid-area: strip;
