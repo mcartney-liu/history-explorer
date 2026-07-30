@@ -18,9 +18,8 @@ import AIExplanationPanel from './components/AIExplanationPanel'
 import MultiEntityContextPanel from './components/MultiEntityContextPanel'
 import EntityPickerPanel from './components/EntityPickerPanel'
 import type { Candidate } from './data/candidateUtils'
-import ExplorationJourney from './components/ExplorationJourney'
+import ExplorationPath from './components/ExplorationPath'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
-import ExplorationPathTree from './components/ExplorationPathTree'
 import { loadPath, savePath, loadReasons, saveReasons } from './utils/explorationPersistence'
 import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
@@ -63,7 +62,6 @@ import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
 import DiscoverPage from './pages/DiscoverPage'
-import JourneyPanel from './components/journey/JourneyPanel'
 import { addJourneyEntry, entryFromNode, type JourneyEntry } from './lib/journey'
 import FeedbackWidget from './components/FeedbackWidget'
 
@@ -597,7 +595,8 @@ function App() {
           full-journey view here (it supersedes the earlier
           ExplorationTrail, which is retained but no longer rendered by
           default). ExplorationJourney still renders on the entity page. */}
-      <ExplorationPathTree
+      <ExplorationPath
+        view="tree"
         history={history}
         cursor={cursor}
         journeyReasons={journeyReasons}
@@ -838,7 +837,8 @@ function App() {
                 onNodeClick={openNode}
                 onTopicClick={handleTopicClick}
               />
-              <ExplorationJourney
+              <ExplorationPath
+                view="journey"
                 history={history}
                 cursor={cursor}
                 journeyReasons={journeyReasons}
@@ -911,7 +911,7 @@ function App() {
             />
             {/* M35 Feature D: exploration journey trace — localStorage only,
                 reuses the single navigateTo entry via handleJourneyClick. */}
-            <JourneyPanel onNavigate={handleJourneyClick} />
+            <ExplorationPath view="panel" onNavigate={handleJourneyClick} />
             {/* M35 Feature E: lightweight feedback — localStorage only, no API. */}
             <FeedbackWidget page="discover" />
             </>

@@ -494,6 +494,13 @@ export const SCOPE_ALLOWLIST = [
   // Exact file path — Least Privilege. No backend / dependency / schema change.
   "frontend/src/components/RelationshipContext.tsx",
 
+  // M65 Phase 2C (Journey Merge) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-30). Adds the unified ExplorationPath entry:
+  //   - ExplorationPath.tsx         wraps ExplorationPathTree + ExplorationJourney
+  //                                + JourneyPanel (composition only)
+  // Exact file path — Least Privilege. No backend / dependency / schema change.
+  "frontend/src/components/ExplorationPath.tsx",
+
   // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
   // Adds the precise set of files that Stage B i18n externalization will touch.
   // Least Privilege: every entry is an EXACT file path — NO components/** broad
