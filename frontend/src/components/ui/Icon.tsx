@@ -143,7 +143,7 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M13 6l6 6-6 6" />
     </>
   ),
-  // ✓ check (grounding verified)
+  // check (grounding verified)
   check: (
     <path d="M5 12.5l4 4 10-10" />
   ),
@@ -211,11 +211,11 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M6 6l12 12M18 6 6 18" />
     </>
   ),
-  // ★ star (bookmark / favorite; solid when `filled`)
+  // star (bookmark / favorite; solid when `filled`)
   star: (
     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
   ),
-  // ⚠ warning (triangle with exclamation)
+  // warning (triangle with exclamation)
   warning: (
     <>
       <path d="M12 4l9 16H3L12 4Z" />
@@ -223,11 +223,11 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M12 17h.01" />
     </>
   ),
-  // ○ neutral circle (status ring)
+  // circle (status ring)
   circle: (
     <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" />
   ),
-  // ✗ error (circle with cross)
+  // cross (circle with cross)
   cross: (
     <>
       <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" />

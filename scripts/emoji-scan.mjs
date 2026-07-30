@@ -51,6 +51,35 @@ walk(ROOT, (file) => {
   })
 })
 
+// ---- symbol dingbat guard (M62.5 Batch 01) ----
+// P0-1 bans ★☆✓✗○⚠ as functional icons. Unlike the emoji-re check above
+// (which strips string literals to avoid doc-string false positives), this
+// check scans ALL source positions EXCEPT line comments, catching cases
+// where a symbol dingbat is embedded in a JSX text node or string literal.
+// Historical text in data/ files is NOT scanned (data/ is outside frontend/src).
+const SYMBOL_DINGBAT_RE = /[\u{2605}\u{2606}\u{2713}\u{2717}\u{25CB}\u{26A0}]/u
+
+let symbolViolations = []
+walk(ROOT, (file) => {
+  if (!exts.has(file.slice(file.lastIndexOf('.')))) return
+  const lines = readFileSync(file, 'utf8').split('\n')
+  lines.forEach((raw, i) => {
+    // Strip only line comments — keep string/JSX text and template literals visible
+    const code = raw.replace(/\/\/.*$/, '')
+    const m = code.match(SYMBOL_DINGBAT_RE)
+    if (m) {
+      symbolViolations.push(`${file}:${i + 1}`)
+    }
+  })
+})
+
+if (symbolViolations.length > 0) {
+  console.log(`\n[SYMBOL GUARD] FAILED — ${symbolViolations.length} line(s) contain banned symbol dingbat (★☆✓✗○⚠):`)
+  symbolViolations.slice(0, 30).forEach((v) => console.log('  - ' + v))
+  process.exit(1)
+}
+console.log('[SYMBOL GUARD] PASSED — no banned symbol dingbats in frontend source.')
+
 if (violations.length > 0) {
   console.log(`\n[EMOJI GUARD] FAILED — ${violations.length} line(s) contain emoji:`)
   violations.slice(0, 30).forEach((v) => console.log('  - ' + v))
