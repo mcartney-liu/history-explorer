@@ -57,7 +57,7 @@ import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
 import { ExplorationShell } from './components/shell/ExplorationShell'
-import { CompanionPlaceholder } from './components/shell/CompanionPlaceholder'
+import { CompanionShell } from './components/ai/CompanionShell'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import DevCatalog from './pages/DevCatalog'
 import GraphViewPanel from './components/GraphViewPanel'
@@ -657,7 +657,7 @@ function App() {
           onEntityClick={(id, name) => openEntity(id, name)}
         />
       }
-      companion={<CompanionPlaceholder />}
+      companion={<CompanionShell />}
       timeline={<></>}
     >
       {searchSlot}

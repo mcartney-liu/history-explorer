@@ -34,6 +34,6 @@ describe('M62 — three-tier narrative structure in App.tsx', () => {
   // M65 Phase 1: invariant — ExplorationShell must exist
   it('uses slot-based ExplorationShell layout', () => {
     expect(src).toContain('ExplorationShell')
-    expect(src).toContain('companion={<CompanionPlaceholder />}')
+    expect(src).toContain('companion={<CompanionShell />}')
   })
 })
