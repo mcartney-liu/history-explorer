@@ -656,7 +656,8 @@ function App() {
         />
       }
       companion={<CompanionShell />}
-      timeline={<></>}
+      timelineItems={result?.timeline}
+      timelineActiveLabel={result?.title || (current?.type === 'entity' ? current.id : current?.title)}
     >
       {searchSlot}
       {navSlot}
