@@ -11,7 +11,7 @@ import ThemesPanel from './components/ThemesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import MultiEntityTimeline from './components/MultiEntityTimeline'
-import CrossTopicBridge from './components/CrossTopicBridge'
+import CrossTopicView from './components/CrossTopicView'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
 import RecommendationPanel from './components/RecommendationPanel'
 import AIExplanationPanel from './components/AIExplanationPanel'
@@ -725,7 +725,7 @@ function App() {
               )}
               </section>
               <section data-tier="supporting">
-              <CrossTopicBridge
+              <CrossTopicView
                 connections={result.exploration.cross_topic_related}
                 relatedTopics={result.related_topics}
                 focusedId={focusedEntityId ?? undefined}

@@ -501,6 +501,13 @@ export const SCOPE_ALLOWLIST = [
   // Exact file path — Least Privilege. No backend / dependency / schema change.
   "frontend/src/components/ExplorationPath.tsx",
 
+  // M65 Phase 2C (CrossTopic Merge) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-30). Adds the unified CrossTopicView entry:
+  //   - CrossTopicView.tsx           wraps CrossTopicBridge (which composes
+  //                                CrossTopicConnectionsPanel + CrossTopicTopicList)
+  // Exact file path — Least Privilege. No backend / dependency / schema change.
+  "frontend/src/components/CrossTopicView.tsx",
+
   // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
   // Adds the precise set of files that Stage B i18n externalization will touch.
   // Least Privilege: every entry is an EXACT file path — NO components/** broad
