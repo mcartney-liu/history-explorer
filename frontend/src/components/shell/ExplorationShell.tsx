@@ -5,15 +5,29 @@
 // ============================================================
 
 import type { ReactNode } from 'react'
+import { TimelineStrip } from '../TimelineStrip'
+import type { TimelineItem } from '../TimelinePanel'
 
 interface ExplorationShellProps {
   workspace: ReactNode
   companion: ReactNode
-  timeline: ReactNode
+  /** Slot-based timeline (backward compatible). Overridden by data props. */
+  timeline?: ReactNode
+  /** Timeline items for the bottom strip (data-driven). When provided, replaces slot. */
+  timelineItems?: TimelineItem[]
+  /** Active time point label for the strip */
+  timelineActiveLabel?: string
   children: ReactNode
 }
 
-export function ExplorationShell({ workspace, companion, timeline, children }: ExplorationShellProps) {
+export function ExplorationShell({
+  workspace,
+  companion,
+  timeline,
+  timelineItems,
+  timelineActiveLabel,
+  children,
+}: ExplorationShellProps) {
   return (
     <div className="exploration-space">
       <aside className="ws-rail" aria-label="探索工作台">
@@ -29,7 +43,11 @@ export function ExplorationShell({ workspace, companion, timeline, children }: E
       </aside>
 
       <footer className="timeline-strip" aria-label="时间轴">
-        {timeline}
+        {timelineItems && timelineItems.length > 0 ? (
+          <TimelineStrip items={timelineItems} activeLabel={timelineActiveLabel} />
+        ) : (
+          timeline
+        )}
       </footer>
     </div>
   )
