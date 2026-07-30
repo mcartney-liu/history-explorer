@@ -39,3 +39,52 @@
 .layout-section:last-child {
   margin-bottom: 0;
 }
+
+/* ---- M65 Phase 1: Exploration Space Grid ---- */
+
+/* Full-bleed exploration shell — left rail | content | companion */
+.exploration-space {
+  display: grid;
+  grid-template-columns: 48px 1fr 360px;
+  grid-template-rows: 1fr 48px;
+  grid-template-areas:
+    "rail  content companion"
+    "strip strip   strip";
+  min-height: 100vh;
+  max-width: 100%;
+}
+
+/* Left workspace rail — 48px collapsed, icon-only */
+.ws-rail {
+  grid-area: rail;
+  background: var(--bg-base);
+  border-right: 1px solid var(--border-subtle);
+  overflow-y: auto;
+}
+
+/* Main content canvas */
+.explore-canvas {
+  grid-area: content;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--space-6) var(--space-8);
+}
+
+/* Right companion panel */
+.companion-panel {
+  grid-area: companion;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  padding: var(--space-5);
+}
+
+/* Bottom timeline strip */
+.timeline-strip {
+  grid-area: strip;
+  background: var(--bg-base);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+}

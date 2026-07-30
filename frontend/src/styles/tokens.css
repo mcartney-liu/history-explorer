@@ -66,4 +66,17 @@
   /* ---- Animation ---- */
   --animation-fast: 0.15s ease;
   --animation-normal: 0.3s ease;
+
+  /* ---- M65 Phase 1: DS-aligned additions (no existing tokens removed) ---- */
+
+  /* Text — DS V1.0 FINAL naming (aliased for future migration) */
+  --text-high:  #F2EBDD;
+  --text-mid:   #C9BFA8;
+  --text-low:   #8C8270;
+  --text-faint: #5E5648;
+
+  /* Borders — DS V1.0 FINAL */
+  --border-subtle:  #2E281D;
+  --border-default: #3A3324;
+  --border-strong:  #4A412E;
 }

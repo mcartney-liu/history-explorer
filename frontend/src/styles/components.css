@@ -5,19 +5,19 @@
 
 /* ---- Common card surface ---- */
 .surf-card {
-  background: var(--navy-card);
+  background: var(--bg-surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
 }
 
 .surf-card-high {
-  background: linear-gradient(158deg, rgba(17,25,48,0.9), rgba(9,14,28,0.95));
+  background: linear-gradient(158deg, rgba(22,19,14,0.9), rgba(22,19,14,0.95));
   border: 1px solid var(--gold-line);
   border-radius: var(--radius-lg);
 }
 
 .surf-card-gold {
-  background: linear-gradient(158deg, rgba(17,25,48,0.7), rgba(9,14,28,0.8));
+  background: linear-gradient(158deg, rgba(22,19,14,0.7), rgba(22,19,14,0.8));
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
 }
@@ -35,7 +35,7 @@
   transition: var(--animation-fast);
   font-family: var(--sans);
   border: 1px solid var(--line);
-  background: var(--navy-card);
+  background: var(--bg-surface);
   color: var(--mid);
 }
 
