@@ -1,9 +1,10 @@
 // ============================================================
-// M65 Phase 2B — CompanionRouter
+// M65 Phase 2B/3C/3D — CompanionRouter
 // Routes activeMode to the corresponding AI View component.
 //
-// M65 Phase 3C-1: Explain mode wired to real AI runtime via useCompanionAI.
-// Chat / Research / Discover remain idle — activated in 3C-2.
+// M65 Phase 3C-1: Explain mode wired to real AI runtime.
+// M65 Phase 3D-1: Chat mode activated — real messages + sendChat.
+// Research / Discover remain idle.
 // ============================================================
 
 import { useState } from 'react'
@@ -17,8 +18,11 @@ import { ResearchDiscoveryPanelView } from '../ResearchDiscoveryPanel'
 export function CompanionRouter() {
   const { state, workspace } = useCompanion()
   const { activeMode } = state
-  const { status, response, error, ask } = useCompanionAI()
+  const { status, response, error, ask, chatMessages, sendChat, clearChat } = useCompanionAI()
   const [question, setQuestion] = useState('')
+
+  // Map CompanionContext status to View-compatible status union
+  const chatStatus = status as 'idle' | 'loading' | 'error'
 
   const contextCount = workspace.currentEntityId ? 1 : 0
 
@@ -41,14 +45,14 @@ export function CompanionRouter() {
     case 'chat':
       return (
         <HistorianChatView
-          entityGlobalId=""
+          entityGlobalId={workspace.currentEntityId ?? ''}
           entityName={workspace.currentEntityName ?? ''}
-          entityType=""
-          status="idle"
-          messages={[]}
-          error=""
-          onAsk={() => {}}
-          onClear={() => {}}
+          entityType={workspace.entityType ?? ''}
+          status={chatStatus}
+          messages={chatMessages}
+          error={error}
+          onAsk={(q: string) => sendChat(q)}
+          onClear={clearChat}
         />
       )
 
