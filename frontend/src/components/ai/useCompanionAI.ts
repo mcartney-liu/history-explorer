@@ -6,7 +6,7 @@
 // Separates AI runtime logic from routing — CompanionRouter stays
 // focused on mode → View mapping.
 
-import { useRef, useCallback, useState } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import { useCompanion } from './CompanionContext'
 import { explainAI, type AIResponse } from '../../data/aiClient'
 
@@ -28,6 +28,21 @@ export function useCompanionAI(): UseCompanionAIReturn {
   const controllerRef = useRef<AbortController | null>(null)
 
   const [response, setResponse] = useState<AIResponse | null>(null)
+
+  // ---- Entity change detection (Phase 3C-3) ----
+  const resetAIContext = useCallback(() => {
+    controllerRef.current?.abort()
+    setResponse(null)
+    dispatch({ type: 'SET_STATUS', payload: 'idle' })
+    dispatch({ type: 'SET_ERROR', payload: '' })
+  }, [dispatch])
+
+  useEffect(() => {
+    resetAIContext()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspace.currentEntityId])
+
+  // ---- AI runtime ----
 
   const ask = useCallback(
     async (question: string, mode?: string) => {
