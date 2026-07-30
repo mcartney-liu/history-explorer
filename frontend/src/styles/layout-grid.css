@@ -54,12 +54,17 @@
   max-width: 100%;
 }
 
-/* Left workspace rail — 48px collapsed, icon-only */
+/* Left workspace rail — 48px collapsed, icon-only.
+   NOTE: overflow MUST stay `visible`. The expanded panel (.ws) is an absolutely
+   positioned overlay that extends beyond this 48px column; any non-visible
+   overflow value on either axis makes the other axis compute to `auto`,
+   turning this rail into a clipping container and hiding the overlay.
+   Scrolling is delegated to the inner .ws-rail-collapsed / .ws elements. */
 .ws-rail {
   grid-area: rail;
   background: var(--bg-base);
   border-right: 1px solid var(--border-subtle);
-  overflow-y: auto;
+  overflow: visible;
   position: relative;
 }
 
@@ -70,6 +75,8 @@
   left: 48px;
   width: 280px;
   min-height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
   background: var(--bg-surface);
   border-right: 1px solid var(--border-subtle);
   z-index: 10;
@@ -161,27 +168,45 @@
 
 /* ---- M65: Workspace rail states ---- */
 
-/* Collapsed rail — icon column only */
+/* Collapsed rail — icon column only.
+   Owns the vertical scroll so the parent .ws-rail can stay overflow:visible. */
 .ws-rail-collapsed {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .ws-rail-expand,
 .ws-rail-collapse {
-  background: none;
-  border: none;
-  color: var(--low);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--mid);
   cursor: pointer;
   padding: var(--space-1);
-  transition: color var(--animation-fast);
+  transition:
+    color var(--animation-fast),
+    background var(--animation-fast),
+    border-color var(--animation-fast);
 }
 .ws-rail-expand:hover,
 .ws-rail-collapse:hover {
   color: var(--hi);
+  background: var(--bg-surface);
+  border-color: var(--border-default);
+}
+.ws-rail-expand:focus-visible,
+.ws-rail-collapse:focus-visible {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
 }
 
 .ws-rail-current {

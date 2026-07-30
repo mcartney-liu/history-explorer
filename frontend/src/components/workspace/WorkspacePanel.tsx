@@ -123,6 +123,7 @@ export function WorkspacePanel({
           className="ws-rail-expand"
           onClick={() => setCollapsed(false)}
           aria-label="展开工作台"
+          aria-expanded={false}
           title="展开工作台"
         >
           <Icon name="book" size={20} />
@@ -165,6 +166,7 @@ export function WorkspacePanel({
           className="ws-rail-collapse"
           onClick={() => setCollapsed(true)}
           aria-label="折叠工作台"
+          aria-expanded={true}
           title="折叠工作台"
         >
           <Icon name="arrow-right" size={16} />
