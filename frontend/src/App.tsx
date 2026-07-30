@@ -153,6 +153,9 @@ function App() {
   const [relView, setRelView] = useState<'list' | 'spatial'>('list')
   const [timeView, setTimeView] = useState<'single' | 'multi'>('single')
 
+  // M65 Phase 3A: controlled timeline strip index (click a dot → parent state flows back)
+  const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0)
+
   // Load persisted recent explorations once on mount.
   useEffect(() => {
     setRecent(loadRecent())
@@ -658,6 +661,8 @@ function App() {
       companion={<CompanionShell />}
       timelineItems={result?.timeline}
       timelineActiveLabel={result?.title || (current?.type === 'entity' ? current.id : current?.title)}
+      timelineActiveIndex={selectedTimelineIndex}
+      onTimelineSelect={setSelectedTimelineIndex}
     >
       {searchSlot}
       {navSlot}

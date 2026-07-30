@@ -17,6 +17,10 @@ interface ExplorationShellProps {
   timelineItems?: TimelineItem[]
   /** Active time point label for the strip */
   timelineActiveLabel?: string
+  /** Controlled active index for the strip dot */
+  timelineActiveIndex?: number
+  /** Callback when user selects a timeline dot */
+  onTimelineSelect?: (index: number) => void
   children: ReactNode
 }
 
@@ -26,6 +30,8 @@ export function ExplorationShell({
   timeline,
   timelineItems,
   timelineActiveLabel,
+  timelineActiveIndex,
+  onTimelineSelect,
   children,
 }: ExplorationShellProps) {
   return (
@@ -44,7 +50,12 @@ export function ExplorationShell({
 
       <footer className="timeline-strip" aria-label="时间轴">
         {timelineItems && timelineItems.length > 0 ? (
-          <TimelineStrip items={timelineItems} activeLabel={timelineActiveLabel} />
+          <TimelineStrip
+            items={timelineItems}
+            activeLabel={timelineActiveLabel}
+            activeIndex={timelineActiveIndex}
+            onSelect={onTimelineSelect}
+          />
         ) : (
           timeline
         )}
