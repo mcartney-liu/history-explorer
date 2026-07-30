@@ -56,7 +56,8 @@ import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
-import AppShell from './components/AppShell'
+import { ExplorationShell } from './components/shell/ExplorationShell'
+import { CompanionPlaceholder } from './components/shell/CompanionPlaceholder'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import DevCatalog from './pages/DevCatalog'
 import GraphViewPanel from './components/GraphViewPanel'
@@ -648,13 +649,19 @@ function App() {
   }
 
   return (
-    <AppShell search={searchSlot} nav={navSlot} workspace={
-      <WorkspacePanel
-        current={workspaceItems[0] ?? null}
-        history={workspaceHistory}
-        onEntityClick={(id, name) => openEntity(id, name)}
-      />
-    }>
+    <ExplorationShell
+      workspace={
+        <WorkspacePanel
+          current={workspaceItems[0] ?? null}
+          history={workspaceHistory}
+          onEntityClick={(id, name) => openEntity(id, name)}
+        />
+      }
+      companion={<CompanionPlaceholder />}
+      timeline={<></>}
+    >
+      {searchSlot}
+      {navSlot}
           {loading && (
             <LoadingSkeleton
               label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'}
@@ -909,7 +916,7 @@ function App() {
             <FeedbackWidget page="discover" />
             </>
           )}
-    </AppShell>
+    </ExplorationShell>
   )
 }
 
