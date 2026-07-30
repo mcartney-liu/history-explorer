@@ -470,6 +470,14 @@ export const SCOPE_ALLOWLIST = [
   // frontend/src/__tests__/ dir). Directory-prefix entry, test files only.
   "frontend/src/components/__tests__/",
 
+  // M65 Phase 1 (Exploration Space Foundation) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-30). Adds the exploration shell directory prefix:
+  //   - ExplorationShell.tsx         unified spatial layout (slot-based)
+  //   - CompanionPlaceholder.tsx     static AI placeholder (no logic)
+  // Least Privilege: directory prefix gated to components/shell/ ONLY.
+  // No backend / dependency / runtime / schema / enum change.
+  "frontend/src/components/shell/",
+
   // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
   // Adds the precise set of files that Stage B i18n externalization will touch.
   // Least Privilege: every entry is an EXACT file path — NO components/** broad
