@@ -508,6 +508,14 @@ export const SCOPE_ALLOWLIST = [
   // Exact file path — Least Privilege. No backend / dependency / schema change.
   "frontend/src/components/CrossTopicView.tsx",
 
+  // M65 Phase 2C (Research Panel Merge) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-30). Adds the unified ResearchSuite entry:
+  //   - ResearchSuite.tsx            wraps ResearchSummary + ResearchReport
+  //                                + ResearchDimensionCard + ResearchRecommendationCard
+  //                                (composition only — no AI state migration)
+  // Exact file path — Least Privilege. No backend / dependency / schema change.
+  "frontend/src/components/ResearchSuite.tsx",
+
   // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
   // Adds the precise set of files that Stage B i18n externalization will touch.
   // Least Privilege: every entry is an EXACT file path — NO components/** broad
