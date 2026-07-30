@@ -894,5 +894,186 @@
     "source_ids": [
       "src-tacitus-ann"
     ]
+  },
+  {
+    "id": "ec-cn-001",
+    "subject_type": "relationship",
+    "subject_id": "event-keju-established->idea-keju",
+    "source_id": "src-cn-textbook",
+    "claim": "科举制度创立于隋、定型于唐，通过分科考试选拔官员，成为此后历代王朝延续的核心选官制度。",
+    "notes": "人工策划（human-curated），非自动生成。M68 中国文明V1扩展包·制度演化链。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-textbook",
+      "src-cn-qianmu"
+    ]
+  },
+  {
+    "id": "ec-cn-002",
+    "subject_type": "relationship",
+    "subject_id": "idea-keju->idea-wenguan",
+    "source_id": "src-cn-qianmu",
+    "claim": "宋代在唐代科举基础上扩大取士规模并推行重文政策，形成以科举出身士大夫为主体的文官政治体制。",
+    "notes": "人工策划（human-curated），非自动生成。制度演化链关键继承环节：科举→文官体制。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ]
+  },
+  {
+    "id": "ec-cn-003",
+    "subject_type": "relationship",
+    "subject_id": "idea-tangshi->idea-songci",
+    "source_id": "src-cn-textbook",
+    "claim": "唐诗的格律传统与抒情范式深刻影响了宋词的发展，宋词在继承唐代诗歌传统的基础上开拓了长短句的新体裁。",
+    "notes": "人工策划（human-curated），非自动生成。思想文化链：唐诗→宋词。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-textbook",
+      "src-cn-qianmu"
+    ]
+  },
+  {
+    "id": "ec-cn-004",
+    "subject_type": "relationship",
+    "subject_id": "idea-lixue->idea-xinxue",
+    "source_id": "src-cn-qianmu",
+    "claim": "宋代程朱理学构成明代阳明心学的思想前提，心学在批判与继承理学'格物穷理'路径中转向'心即理'。",
+    "notes": "人工策划（human-curated），非自动生成。思想文化链：理学→心学。influenced 语义审核通过：属思想体系间的批判性继承与影响。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ]
+  },
+  {
+    "id": "ec-cn-005",
+    "subject_type": "entity",
+    "subject_id": "idea-zongjiao-ronghe",
+    "source_id": "src-cn-textbook",
+    "claim": "唐宋以来佛教中国化进程加深，儒、释、道三教在思想与民间信仰层面渐趋融合，构成中国宗教文化的显著特征。",
+    "notes": "人工策划（human-curated），非自动生成。思想文化链：宗教融合。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-cn-textbook",
+      "src-cn-cambridge"
+    ]
+  },
+  {
+    "id": "ec-cn-006",
+    "subject_type": "relationship",
+    "subject_id": "tech-yinshua->idea-shangye-chengshi",
+    "source_id": "src-cn-textbook",
+    "claim": "雕版与活字印刷术的普及降低了书籍成本，推动宋代城市商业文化与市民阅读风气的兴起。",
+    "notes": "人工策划（human-curated），非自动生成。技术传播链：印刷术→商业城市文化。spread 语义审核通过：技术扩散带动文化形态传播。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-textbook",
+      "src-cn-cambridge",
+      "src-cn-museum"
+    ]
+  },
+  {
+    "id": "ec-cn-007",
+    "subject_type": "relationship",
+    "subject_id": "tech-yinshua->loc-quanzhou",
+    "source_id": "src-cn-museum",
+    "claim": "宋元时期泉州作为海上贸易大港，印刷品与技术经此向海外传播；泉州港的枢纽地位延续至明代前期。",
+    "notes": "人工策划（human-curated），非自动生成。技术传播链：印刷术经泉州外传。关联关系 loc-quanzhou->tp-ming 经 Semantic Review 由 traded_with 修正为 related_to。",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-cn-museum",
+      "src-cn-cambridge"
+    ]
+  },
+  {
+    "id": "ec-cn-008",
+    "subject_type": "relationship",
+    "subject_id": "event-zheng-he->tech-hanghai",
+    "source_id": "src-cn-textbook",
+    "claim": "郑和七下西洋（1405-1433）体现了明代造船与航海技术的高峰，宝船队远达东非，是古代中国航海技术的集中展示。",
+    "notes": "人工策划（human-curated），非自动生成。技术传播链：航海技术。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-textbook",
+      "src-cn-museum"
+    ]
+  },
+  {
+    "id": "ec-cn-009",
+    "subject_type": "relationship",
+    "subject_id": "person-zhu-xi->idea-lixue",
+    "source_id": "src-cn-qianmu",
+    "claim": "朱熹集北宋二程理学之大成，建立系统的理学体系，其《四书章句集注》成为元明清科举的官方标准。",
+    "notes": "人工策划（human-curated），非自动生成。思想文化链：朱熹与理学。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ]
+  },
+  {
+    "id": "ec-cn-010",
+    "subject_type": "relationship",
+    "subject_id": "person-wang-yangming->idea-xinxue",
+    "source_id": "src-cn-qianmu",
+    "claim": "王阳明提出'心即理''知行合一''致良知'，创立阳明心学，成为明代中后期最具影响力的思想流派。",
+    "notes": "人工策划（human-curated），非自动生成。思想文化链：王阳明与心学。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ]
+  },
+  {
+    "id": "ec-cn-011",
+    "subject_type": "relationship",
+    "subject_id": "tp-tang->tp-song",
+    "source_id": "src-cn-textbook",
+    "claim": "唐朝（618-907）在时间上先于宋朝（960-1279），其间经历五代十国过渡期。",
+    "notes": "人工策划（human-curated），非自动生成。时间骨架关系（before）。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "source_ids": [
+      "src-cn-textbook"
+    ]
+  },
+  {
+    "id": "ec-cn-012",
+    "subject_type": "relationship",
+    "subject_id": "event-jingnan->idea-neige",
+    "source_id": "src-cn-qianmu",
+    "claim": "靖难之役后明成祖设立内阁辅政，内阁制度经永乐、宣德时期逐步定型，成为明清两代中枢决策机制。",
+    "notes": "人工策划（human-curated），非自动生成。制度演化链末端：文官体制→内阁。influenced 语义审核通过：事件推动制度形成。",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ],
+    "interpretation_note": "内阁并非靖难之役直接产物，而是永乐帝即位后为强化皇权、替代丞相职能逐步建立；此处 influenced 表示事件与制度间的间接推动关系，非直接因果。"
   }
 ]

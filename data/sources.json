@@ -428,5 +428,53 @@
     "license": "Open",
     "publisher_or_archive": "The British Museum",
     "tier": "reference"
+  },
+  {
+    "id": "src-cn-textbook",
+    "type": "literature",
+    "title": "中国历史（义务教育教科书）",
+    "creator": "人民教育出版社",
+    "year": 2019,
+    "reference": "《中国历史》七年级至九年级. 人民教育出版社.",
+    "license": "Proprietary",
+    "publisher_or_archive": "人民教育出版社",
+    "tier": "primary",
+    "verification_status": "verified"
+  },
+  {
+    "id": "src-cn-qianmu",
+    "type": "literature",
+    "title": "国史大纲",
+    "creator": "钱穆",
+    "year": 1940,
+    "reference": "钱穆. 国史大纲. 商务印书馆.",
+    "license": "Proprietary",
+    "publisher_or_archive": "商务印书馆",
+    "tier": "academic",
+    "verification_status": "verified"
+  },
+  {
+    "id": "src-cn-cambridge",
+    "type": "secondary",
+    "title": "The Cambridge History of China",
+    "creator": "Denis Twitchett and John K. Fairbank",
+    "year": 1978,
+    "reference": "Twitchett, D. and Fairbank, J. K. (eds.) The Cambridge History of China. Cambridge University Press.",
+    "license": "Proprietary",
+    "publisher_or_archive": "Cambridge University Press",
+    "tier": "academic",
+    "verification_status": "verified"
+  },
+  {
+    "id": "src-cn-museum",
+    "type": "archival",
+    "title": "中国国家博物馆·古代中国基本陈列",
+    "creator": "中国国家博物馆",
+    "year": 2023,
+    "reference": "中国国家博物馆. 古代中国基本陈列（官网与展厅说明）.",
+    "license": "Open",
+    "publisher_or_archive": "中国国家博物馆",
+    "tier": "primary",
+    "verification_status": "verified"
   }
 ]
