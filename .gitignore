@@ -3,6 +3,7 @@
 
 # Generated task report artifacts
 REPOSITORY_INIT_REPORT.html
+artifacts/
 
 # Environment files
 .env

@@ -48,8 +48,17 @@ function companionReducer(state: CompanionState, action: CompanionAction): Compa
       return { ...state, activeMode: action.payload, error: '' }
     case 'SET_STATUS':
       return { ...state, status: action.payload }
+    // A non-empty payload reports a failure and moves status to 'error'.
+    // An empty payload only CLEARS the error text and must NOT overwrite
+    // status — callers use it to reset the message before entering
+    // 'loading' / 'idle', and clobbering status there would surface a
+    // phantom error state in the UI.
     case 'SET_ERROR':
-      return { ...state, status: 'error', error: action.payload }
+      return {
+        ...state,
+        status: action.payload ? 'error' : state.status,
+        error: action.payload,
+      }
     case 'ADD_MESSAGE':
       return { ...state, messages: [...state.messages, action.payload] }
     case 'SET_ENTITY_CONTEXT':

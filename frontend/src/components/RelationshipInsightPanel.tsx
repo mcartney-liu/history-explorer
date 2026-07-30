@@ -773,7 +773,7 @@ export default function RelationshipInsightPanel({
                   </div>
                   <svg className="rip-timeline-svg" viewBox={`0 0 ${TL_W} ${tlSvg.tlH}`} width="100%" role="img" aria-label={t('rip.timelineViewAria')}>
                     <g transform={`translate(${tlPan},0) scale(${tlZoom},1)`}>
-                      <line x1={TL_PAD} y1={TL_TOP - 8} x2={TL_W - TL_PAD} y2={TL_TOP - 8} stroke="#999" strokeWidth="1" />
+                      <line x1={TL_PAD} y1={TL_TOP - 8} x2={TL_W - TL_PAD} y2={TL_TOP - 8} style={{ stroke: 'var(--border-default)' }} strokeWidth="1" />
                       {tlSvg.validBands.map((b, i) => {
                         const y = TL_TOP + i * TL_ROW
                         const x1 = tlSvg.xOf(b.start as number)
@@ -782,18 +782,18 @@ export default function RelationshipInsightPanel({
                         const rw = Math.max(Math.abs(x2 - x1), 2)
                         const ry = y + 4
                         const rh = TL_ROW - 12
-                        const overlapFill = b.overlaps.length > 0 ? '#e8a33d' : '#5b8fb0'
+                        const overlapFill = b.overlaps.length > 0 ? 'var(--unverified)' : 'var(--info)'
                         return (
                           <g key={b.gid ?? b.name}>
-                            <rect x={rx} y={ry} width={rw} height={rh} rx="2" fill={overlapFill} opacity="0.85" />
-                            <text x={rx + 4} y={ry + rh / 2 + 4} fontSize="11" fill="#1a1a1a">{b.name}</text>
-                            <text x={rx + rw - 4} y={ry + rh / 2 + 4} fontSize="10" fill="#ffffff" textAnchor="end">{`${formatYear(b.start as number)} – ${formatYear(b.end as number)}`}</text>
+                            <rect x={rx} y={ry} width={rw} height={rh} rx="2" style={{ fill: overlapFill }} opacity="0.85" />
+                            <text x={rx + 4} y={ry + rh / 2 + 4} fontSize="11" style={{ fill: 'var(--hi)' }}>{b.name}</text>
+                            <text x={rx + rw - 4} y={ry + rh / 2 + 4} fontSize="10" style={{ fill: 'var(--hi)' }} textAnchor="end">{`${formatYear(b.start as number)} – ${formatYear(b.end as number)}`}</text>
                           </g>
                         )
                       })}
                     </g>
-                    <text x={TL_PAD} y={TL_TOP - 12} fontSize="10" fill="#666">{formatYear(tlSvg.minYear)}</text>
-                    <text x={TL_W - TL_PAD} y={TL_TOP - 12} fontSize="10" fill="#666" textAnchor="end">{formatYear(tlSvg.maxYear)}</text>
+                    <text x={TL_PAD} y={TL_TOP - 12} fontSize="10" style={{ fill: 'var(--low)' }}>{formatYear(tlSvg.minYear)}</text>
+                    <text x={TL_W - TL_PAD} y={TL_TOP - 12} fontSize="10" style={{ fill: 'var(--low)' }} textAnchor="end">{formatYear(tlSvg.maxYear)}</text>
                   </svg>
                 </>
               )}

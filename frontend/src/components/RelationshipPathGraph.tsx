@@ -47,11 +47,11 @@ const GRID_STEP_X = NODE_W + 46
 const GRID_STEP_Y = NODE_H + 46
 const GRID_PATH_GAP = 40
 
-const NODE_FILL = '#f4f4f5'
-const NODE_STROKE = '#52525b'
-const TEXT_FILL = '#18181b'
-const EDGE_STROKE = '#a1a1aa'
-const EDGE_TEXT_FILL = '#3f3f46'
+const NODE_FILL = 'var(--bg-elevated)'
+const NODE_STROKE = 'var(--border-default)'
+const TEXT_FILL = 'var(--hi)'
+const EDGE_STROKE = 'var(--border-subtle)'
+const EDGE_TEXT_FILL = 'var(--mid)'
 
 /** Top-left (x, y) of node `j` within path `pi`, for the active layout. */
 function gridPathTop(pi: number, paths: RelationshipPath[]): number {
@@ -167,7 +167,7 @@ export default function RelationshipPathGraph({
                       y1={aCy}
                       x2={bCx}
                       y2={bCy}
-                      stroke={EDGE_STROKE}
+                      style={{ stroke: EDGE_STROKE }}
                       strokeWidth={2}
                     />
                     <text
@@ -176,7 +176,7 @@ export default function RelationshipPathGraph({
                       y={midY - 6}
                       textAnchor="middle"
                       fontSize={12}
-                      fill={EDGE_TEXT_FILL}
+                      style={{ fill: EDGE_TEXT_FILL }}
                     >
                       {relType}
                     </text>
@@ -197,8 +197,7 @@ export default function RelationshipPathGraph({
                       height={NODE_H}
                       rx={6}
                       ry={6}
-                      fill={NODE_FILL}
-                      stroke={NODE_STROKE}
+                      style={{ fill: NODE_FILL, stroke: NODE_STROKE }}
                       strokeWidth={1.5}
                     />
                     <text
@@ -208,7 +207,7 @@ export default function RelationshipPathGraph({
                       textAnchor="middle"
                       dominantBaseline="central"
                       fontSize={13}
-                      fill={TEXT_FILL}
+                      style={{ fill: TEXT_FILL }}
                     >
                       {labelOf(gid)}
                     </text>

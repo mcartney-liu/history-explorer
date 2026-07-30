@@ -6,6 +6,7 @@ import {
   type GraphEdge,
 } from '../lib/graphLayout'
 import { useLocale } from '../data/locale'
+import { colorFor } from '../lib/entityColors'
 
 // M34-A2 (Knowledge Graph Visualization MVP) — a self-drawn SVG renderer.
 //
@@ -35,24 +36,6 @@ type GraphViewPanelProps = {
   title?: string
 }
 
-// The 8 frozen entity types (backend/app/validation.py ENTITY_TYPES) → a stable,
-// readable palette on the app's light background (#f7f5f0). Unknown types fall
-// back to a neutral slate. No new types are introduced here.
-const TYPE_COLORS: Record<string, string> = {
-  Event: '#dc2626',
-  Person: '#2563eb',
-  Civilization: '#7c3aed',
-  Location: '#059669',
-  'Time Period': '#d97706',
-  Technology: '#0891b2',
-  Religion: '#db2777',
-  Idea: '#4b5563',
-}
-const FALLBACK_COLOR = '#6b7280'
-
-function colorFor(type: string): string {
-  return TYPE_COLORS[type] ?? FALLBACK_COLOR
-}
 
 // Keep node labels short on screen; the full name stays in the title/aria-label.
 function shorten(name: string, max = 16): string {
@@ -119,10 +102,9 @@ function GraphViewPanel({
           y={0}
           width={layout.width}
           height={layout.height}
-          rx={12}
-          fill="#fdfcfa"
-          stroke="#e7e3da"
-        />
+        rx={12}
+        style={{ fill: 'var(--bg-surface)', stroke: 'var(--border-subtle)' }}
+      />
 
         {/* Edges first so nodes render on top. */}
         <g className="graph-edges">
@@ -133,7 +115,7 @@ function GraphViewPanel({
                 y1={e.y1}
                 x2={e.x2}
                 y2={e.y2}
-                stroke="#c3bcae"
+                style={{ stroke: 'var(--border-default)' }}
                 strokeWidth={1.5}
               />
               {showEdgeLabels ? (
@@ -142,7 +124,7 @@ function GraphViewPanel({
                   y={e.my - 3}
                   textAnchor="middle"
                   fontSize={9}
-                  fill="#8a8478"
+                  style={{ fill: 'var(--mid)' }}
                 >
                   {e.type.replace(/_/g, ' ')}
                 </text>
@@ -178,14 +160,14 @@ function GraphViewPanel({
                     : undefined
                 }
               >
-                <circle r={r} fill={fill} stroke="#ffffff" strokeWidth={2} />
+                <circle r={r} fill={fill} style={{ stroke: 'var(--hi)' }} strokeWidth={2} />
                 <title>{`${n.name} (${n.type})`}</title>
                 <text
                   y={r + 13}
                   textAnchor="middle"
                   fontSize={11}
                   fontWeight={n.isMain ? 700 : 500}
-                  fill="#1a1a1a"
+                  style={{ fill: 'var(--hi)' }}
                 >
                   {label}
                 </text>

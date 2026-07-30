@@ -228,6 +228,9 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/EntityHeader.test.tsx",
   "frontend/src/components/GraphViewPanel.tsx",
   "frontend/src/components/GraphViewPanel.test.tsx",
+  //   M65-A03 (H7 fix): entity visual identity SSOT — domain semantic color
+  //   source migrated out of the graph components (PO-approved A+ 2026-07-30).
+  "frontend/src/lib/entityColors.ts",
   "frontend/src/lib/graphLayout.ts",
   "frontend/src/lib/graphLayout.test.ts",
   "frontend/src/App.tsx",
@@ -276,6 +279,7 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/ai_gateway/answer_service.py",
   "backend/app/ai_gateway/config.py",
   "frontend/src/data/aiClient.ts",
+  "frontend/src/data/aiClient.test.ts",  // M65-A04 (PO-approved) — AI client contract tests (H9 real-AI link)
   "frontend/src/components/AIExplanationPanel.tsx",
   "frontend/src/components/GroundedAnswer.tsx",
   "frontend/src/components/CitationList.tsx",

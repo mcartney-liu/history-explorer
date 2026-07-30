@@ -94,6 +94,61 @@
   padding: var(--space-5);
 }
 
+/* ---- M65-A02: Companion shell visual baseline (DS-aligned, tokens only) ---- */
+.companion-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.companion-title {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: var(--hi);
+  margin: 0;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.companion-modes {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.companion-mode-btn {
+  appearance: none;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--mid);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--animation-fast);
+}
+.companion-mode-btn:hover {
+  color: var(--hi);
+  border-color: var(--border-strong);
+}
+.companion-mode-btn.active {
+  background: var(--gold-glow);
+  color: var(--gold-hi);
+  border-color: var(--gold-line);
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+}
+.companion-section {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+.companion-hint {
+  color: var(--low);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
 /* Bottom timeline strip */
 .timeline-strip {
   grid-area: strip;
