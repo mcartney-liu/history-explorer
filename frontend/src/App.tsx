@@ -43,6 +43,9 @@ import {
 } from './components/navigation'
 import { loadRecent, pushRecent, saveRecent } from './components/recentStore'
 import Breadcrumb from './components/Breadcrumb'
+import { getEvents } from './data/UserBehaviorEvent'
+import { analyzeProductUsage } from './data/ProductUsageAnalysis'
+import type { ExplorationContextIntelligence } from './components/ai/CompanionContext'
 import HistoryBar from './components/HistoryBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
@@ -659,6 +662,34 @@ function App() {
       .slice(0, 8)
   }, [history])
 
+  // M66: read-only exploration context intelligence (narrow projection of
+  // ProductDecisionInsight). Recomputed on exploration activity; safe because
+  // the Companion panel is the only consumer. Falls back to null on any error.
+  const [intelTick, setIntelTick] = useState(0)
+  useEffect(() => {
+    const t = setInterval(() => setIntelTick((n) => n + 1), 20000)
+    return () => clearInterval(t)
+  }, [])
+  const workspaceIntelligence = useMemo<ExplorationContextIntelligence | null>(() => {
+    try {
+      const analysis = analyzeProductUsage(getEvents())
+      const di = analysis.decisionInsight
+      const km = di.evidence.keyMetrics
+      return {
+        explorationDepth: typeof km.maxDepth === 'number' ? km.maxDepth : 0,
+        explorationPattern: String(km.dominantPattern ?? 'unknown'),
+        knowledgeCoverage: typeof km.entityCoverage === 'number' ? km.entityCoverage : 0,
+        knowledgeConnectionAvailable: km.relationshipDataAvailable === 'yes',
+        explorationActivityCount: typeof km.totalEvents === 'number' ? km.totalEvents : 0,
+        evidenceCompleteness: typeof di.confidence === 'number' ? di.confidence : 0,
+        evidenceQuality: typeof di.evidenceQuality === 'number' ? di.evidenceQuality : 0,
+        explorationSignals: Array.isArray(di.counterSignals) ? di.counterSignals : [],
+      }
+    } catch {
+      return null
+    }
+  }, [history.length, intelTick])
+
   // M65 Phase 3B: read-only workspace context for AI Companion
   // M65 Phase 3C-2: extended with entityType + multi-entity contextGlobalIds
   const workspaceContext = useMemo(() => ({
@@ -669,7 +700,8 @@ function App() {
     recentEntityIds: workspaceHistory.map((h) => h.id),
     pinnedEntityIds: workspaceItems.map((w) => w.id),
     explorationPathLength: history.length,
-  }), [current, workspaceHistory, workspaceItems, history.length, entityData?.type, aiContextIds])
+    intelligence: workspaceIntelligence,
+  }), [current, workspaceHistory, workspaceItems, history.length, entityData?.type, aiContextIds, workspaceIntelligence])
 
   // M59-021: Dev catalog route — hash-based, dev only
   if (typeof window !== 'undefined' && window.location.hash === '#/dev/catalog') {

@@ -81,6 +81,32 @@ const initialState: CompanionState = {
 
 // ---- External workspace bridge (Phase 3B) ----
 
+/**
+ * M66 — Exploration Context Intelligence (read-only, narrow projection).
+ * Deliberately a SUBSET of ProductDecisionInsight: only neutral exploration-
+ * space facts. User-judgement fields (primaryIssue, recommendedAction, summary,
+ * concerns, positives) are intentionally excluded so they can never cross the
+ * bridge into the Companion UI.
+ */
+export interface ExplorationContextIntelligence {
+  /** Exploration depth level reached (0–5). */
+  explorationDepth: number
+  /** Dominant exploration pattern, e.g. 'research_loop' | 'quick_lookup'. */
+  explorationPattern: string
+  /** Knowledge-domain coverage ratio (0–1). */
+  knowledgeCoverage: number
+  /** Whether relationship usage data is available to connect further. */
+  knowledgeConnectionAvailable: boolean
+  /** Count of local exploration events recorded this session. */
+  explorationActivityCount: number
+  /** Evidence completeness (0–1) — NOT a prediction. */
+  evidenceCompleteness: number
+  /** M56 Trust Layer evidence quality (0–1). */
+  evidenceQuality: number
+  /** Neutral exploration signals (de-user-ified counterSignals). */
+  explorationSignals: string[]
+}
+
 /** Read-only workspace context passed from App → CompanionShell → CompanionContext */
 export interface WorkspaceContextData {
   /** ID of the entity currently being explored */
@@ -97,6 +123,8 @@ export interface WorkspaceContextData {
   pinnedEntityIds?: string[]
   /** Length of the full exploration path */
   explorationPathLength?: number
+  /** M66: read-only exploration context intelligence (narrow projection only). */
+  intelligence?: ExplorationContextIntelligence | null
 }
 
 // ---- Context ----
