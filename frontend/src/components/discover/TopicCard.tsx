@@ -26,7 +26,8 @@ export function TopicCard({ card, onClick }: TopicCardProps) {
       onClick={() => onClick(card.slug)}
     >
       <span className="he-card-title">{card.label}</span>
-      {card.desc && <span className="he-card-desc">{card.desc}</span>}
+      {card.desc && <span className="he-card-summary">{card.desc}</span>}
+      <span className="he-card-cta">开始探索 →</span>
     </button>
   )
 }

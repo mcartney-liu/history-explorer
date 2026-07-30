@@ -1,4 +1,4 @@
-// M60-003 — Landing Page 产品化
+// M60-003 / M65 Phase 2A — Landing Page 产品化
 // Product value proposition + quick starts + topic cards.
 // No AI, no backend, no new capabilities.
 
@@ -8,6 +8,9 @@ import ErrorCard, { ErrorKind } from './ErrorCard'
 import FeaturedTopics from './FeaturedTopics'
 import RecentExplorations from './RecentExplorations'
 import type { NavNode } from './navigation'
+import { QuickStartChips } from './discover/QuickStartChips'
+import { TopicCardGrid } from './discover/TopicCardGrid'
+import type { TopicCardData } from './discover/TopicCard'
 
 export type TopicSummary = {
   topic: string
@@ -60,19 +63,7 @@ function LandingPage({
 
       {/* Quick starts */}
       {onQuickStart && (
-        <div className="he-quick">
-          <span className="he-quick-label">试试：</span>
-          {QUICK_STARTS.map((q) => (
-            <button
-              key={q}
-              type="button"
-              className="he-quick-btn"
-              onClick={() => onQuickStart(q)}
-            >
-              {q}
-            </button>
-          ))}
-        </div>
+        <QuickStartChips questions={QUICK_STARTS} onSelect={onQuickStart} />
       )}
 
       {/* Topics */}
@@ -89,24 +80,11 @@ function LandingPage({
           {featured && featured.length > 0 && (
             <FeaturedTopics topics={featured} onTopicClick={onTopicClick} />
           )}
-          <div className="he-grid">
-            {topics.slice(0, 8).map((t) => (
-              <button
-                key={t.topic}
-                type="button"
-                className="he-card"
-                data-topic={t.topic}
-                aria-label={`探索 ${t.title}`}
-                onClick={() => onTopicClick(t.topic)}
-              >
-                <span className="he-card-title">{t.title}</span>
-                {t.summary && (
-                  <span className="he-card-summary">{t.summary}</span>
-                )}
-                <span className="he-card-cta">开始探索 →</span>
-              </button>
-            ))}
-          </div>
+          <TopicCardGrid
+            cards={topics.map((t): TopicCardData => ({ slug: t.topic, label: t.title, desc: t.summary }))}
+            onCardClick={onTopicClick}
+            maxCards={8}
+          />
         </>
       )}
 
