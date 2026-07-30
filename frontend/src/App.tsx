@@ -288,6 +288,21 @@ function App() {
     navigateTo({ type: 'entity', id, name: name || id })
   }
 
+  // M65 Phase 3D-2: timeline dot → entity navigation. Reuses the exact resolve
+  // chain that TimelinePanel's onEventClick uses (event name → local id →
+  // openEntity), so the bottom strip and the TimelinePanel stay semantically
+  // aligned. Dots whose event name does not match an entity stay inert — no
+  // error, no navigation.
+  function handleTimelineSelect(index: number) {
+    setSelectedTimelineIndex(index)
+    const item = result?.timeline?.[index]
+    if (!item) return
+    const localId = exploreNameToId[item.event]
+    if (localId) {
+      openEntity(localId, exploreNameById[localId] ?? item.event)
+    }
+  }
+
   function goTo(newCursor: number) {
     if (newCursor < 0 || newCursor >= history.length) return
     setCursor(newCursor)
@@ -674,7 +689,7 @@ function App() {
       timelineItems={result?.timeline}
       timelineActiveLabel={result?.title || (current?.type === 'entity' ? current.id : current?.title)}
       timelineActiveIndex={selectedTimelineIndex}
-      onTimelineSelect={setSelectedTimelineIndex}
+      onTimelineSelect={handleTimelineSelect}
     >
       {searchSlot}
       {navSlot}
