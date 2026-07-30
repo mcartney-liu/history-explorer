@@ -78,6 +78,10 @@ export interface WorkspaceContextData {
   currentEntityId?: string | null
   /** Human-readable name of current entity */
   currentEntityName?: string | null
+  /** Entity type (person, event, place, etc.) */
+  entityType?: string | null
+  /** Multi-entity context for AI calls (main entity + related entities' global_ids) */
+  contextGlobalIds?: string[]
   /** Recent exploration history (last N items) */
   recentEntityIds?: string[]
   /** Pinned entity ids */

@@ -34,10 +34,14 @@ export function useCompanionAI(): UseCompanionAIReturn {
       const trimmed = (question ?? '').trim()
       if (!trimmed) return
 
-      const contextGlobalIds: string[] = []
-      if (workspace.currentEntityId) {
-        contextGlobalIds.push(workspace.currentEntityId)
-      }
+      // Build context from workspace bridge (read-only).
+      // Priority: multi-entity contextGlobalIds > single currentEntityId > empty
+      const contextGlobalIds: string[] =
+        workspace.contextGlobalIds && workspace.contextGlobalIds.length > 0
+          ? workspace.contextGlobalIds
+          : workspace.currentEntityId
+            ? [workspace.currentEntityId]
+            : []
 
       controllerRef.current?.abort()
       const controller = new AbortController()

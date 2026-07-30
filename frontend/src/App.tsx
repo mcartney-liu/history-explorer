@@ -645,13 +645,16 @@ function App() {
   }, [history])
 
   // M65 Phase 3B: read-only workspace context for AI Companion
+  // M65 Phase 3C-2: extended with entityType + multi-entity contextGlobalIds
   const workspaceContext = useMemo(() => ({
     currentEntityId: current?.type === 'entity' ? current.id : undefined,
     currentEntityName: current?.type === 'entity' ? current.name : current?.title,
+    entityType: current?.type === 'entity' ? entityData?.type ?? null : null,
+    contextGlobalIds: aiContextIds,
     recentEntityIds: workspaceHistory.map((h) => h.id),
     pinnedEntityIds: workspaceItems.map((w) => w.id),
     explorationPathLength: history.length,
-  }), [current, workspaceHistory, workspaceItems, history.length])
+  }), [current, workspaceHistory, workspaceItems, history.length, entityData?.type, aiContextIds])
 
   // M59-021: Dev catalog route — hash-based, dev only
   if (typeof window !== 'undefined' && window.location.hash === '#/dev/catalog') {
