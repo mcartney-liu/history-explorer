@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM65] - 2026-07-31 (Project Release — M65)
+
+> **Non-runtime release** (M65 milestone release). `frontend/package.json` remains `[0.13.0]`. M65 — Companion AI Foundation & Graph Governance: companion-centric AI model decision (ADR-0007), Companion Shell visual baseline within the Exploration Space architecture using Design System tokens only (zero hardcoded color), graph visualization components governance improvement with `entityColors.ts` single source of truth (zero hardcoded hex), real AI call-chain test coverage plus a CompanionContext `SET_ERROR` reducer production fix, and a Workspace Rail overflow + accessibility fix. Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; visual-check EXIT 0; release-consistency 7/7; 962 tests passed (108 files).
+
+### Companion AI Foundation & Graph Governance (M65)
+
+**Companion AI Foundation (A01 / A04)**: `docs/15_DECISIONS/ADR-0007-ai-companion-model.md` — companion-centric AI model ratified; real AI call-chain test coverage and a `CompanionContext` `SET_ERROR` reducer production fix so an empty payload no longer flips status to `error`.
+
+**Graph Governance**: `lib/entityColors.ts` single source of truth for entity colors; graph visualization components (`GraphViewPanel` / `RelationshipInsightPanel` / `RelationshipPathGraph`) migrated off hardcoded hex to `var(--…)` tokens.
+
+**Exploration Space & Companion Shell visual baseline (A02)**: product-space tokens and layout foundation plus the AI companion UI surface, both using Design System tokens exclusively — zero hardcoded color.
+
+**Workspace Rail Fix**: `.ws-rail` `overflow: visible` so the expanded overlay panel is no longer clipped by the 48px column; scroll delegated to inner rail; `WorkspacePanel.tsx` gains `aria-expanded` on toggle buttons.
+
+**Tooling**: improved frontend test environment support and freeze-check coverage.
+
+**Freeze Gate**: No backend / schema / dependency change. ENTITY_TYPES=8, RELATIONSHIP_TYPES=18, runtime 0.13.0 — untouched. backend diff = 0.
+
+---
+
 ## [vM62.5] - 2026-07-30 (Project Release — M62.5)
 
 > **Non-runtime release.** `frontend/package.json` remains `[0.13.0]`. Global Language Experience System (M62.5): i18n runtime with live locale switching (zh/en/ja), full l10n resource skeletons across namespaces, Terminology layer (`getTermLabel`) for consistent proper-noun rendering, LanguageSwitcher UX, and Preference foundation (localStorage language/theme persistence). Closes the W10 R14 English-string blind-spot audit. Includes emoji-free hardening: tightened `scripts/emoji-scan.mjs` to cover the Geometric Shapes block and removed the dingbat carve-out; migrated 13 component/test files off `★☆✓✗⚠○◷●` symbol icons to the canonical SVG registry (`star`/`warning`/`circle`/`cross`/`time-period`). Pure frontend — zero backend / schema / AI Gateway / dependency change. 22 consecutive milestones with backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; emoji-scan EXIT 0; release-consistency 7/7; 941 tests pass.
