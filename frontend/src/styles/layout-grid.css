@@ -165,3 +165,32 @@
   cursor: pointer;
   padding: 2px;
 }
+
+/* ---- Workspace Pin ---- */
+.ws-current-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.ws-current-row .ws-item {
+  flex: 1;
+}
+
+.ws-pin-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--low);
+  cursor: pointer;
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ws-pin-btn:hover {
+  color: var(--gold-500);
+  border-color: var(--gold-500);
+}

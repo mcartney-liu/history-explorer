@@ -522,6 +522,12 @@ export const SCOPE_ALLOWLIST = [
   // Exact file path — Least Privilege. No backend / dependency / schema change.
   "frontend/src/components/TimelineStrip.tsx",
 
+  // M65 Phase 3B (Workspace Completion) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-30). Adds the pinned entity store:
+  //   - lib/pinnedStore.ts            localStorage-backed pin/unpin store
+  // Exact file path — Least Privilege. No backend / dependency / schema change.
+  "frontend/src/lib/pinnedStore.ts",
+
   // M62.5 W0-bis Freeze Supplement (ADR-M62.5-Freeze-Revision, continuation).
   // Adds the precise set of files that Stage B i18n externalization will touch.
   // Least Privilege: every entry is an EXACT file path — NO components/** broad

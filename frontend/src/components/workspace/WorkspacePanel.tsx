@@ -7,11 +7,18 @@
 
 // M59-020: now uses real navigation history data.
 // M65 Phase 1: left-rail layout with collapsed/expanded visual state.
+// M65 Phase 3B: real pin/unpin with localStorage persistence.
 import { useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 import type { IconName } from '../ui/Icon'
 import { ExplorationPathCard } from './ExplorationPathCard'
 import { ExplorationHistoryList } from './ExplorationHistoryList'
+import {
+  getPinnedEntities,
+  addPinnedEntity,
+  removePinnedEntity,
+  type PinnedEntity,
+} from '../../lib/pinnedStore'
 
 // ---- Data types ----
 export interface WorkspaceItem {
@@ -82,6 +89,32 @@ export function WorkspacePanel({
   onEntityClick,
 }: WorkspacePanelProps) {
   const [collapsed, setCollapsed] = useState(true)
+  const [pinned, setPinned] = useState<PinnedEntity[]>(getPinnedEntities)
+
+  // Refresh pinned list on expand (in case external changes occurred)
+  const pinnedIds = pinned.map((p) => p.id)
+  const currentIsPinned = current ? pinnedIds.includes(current.id) : false
+
+  const handlePin = () => {
+    if (!current) return
+    if (currentIsPinned) {
+      setPinned(removePinnedEntity(current.id))
+    } else {
+      setPinned(
+        addPinnedEntity({
+          id: current.id,
+          title: current.title,
+          subtitle: current.subtitle,
+          icon: current.icon,
+          pinnedAt: Date.now(),
+        })
+      )
+    }
+  }
+
+  const handleUnpin = (id: string) => {
+    setPinned(removePinnedEntity(id))
+  }
 
   if (collapsed) {
     return (
@@ -141,10 +174,20 @@ export function WorkspacePanel({
       {/* Current */}
       <WorkspaceSection title="当前探索" badge={current ? '1' : undefined}>
         {current ? (
-          <WorkspaceItem
-            item={current}
-            onClick={() => onEntityClick?.(current.id, current.title)}
-          />
+          <div className="ws-current-row">
+            <WorkspaceItem
+              item={current}
+              onClick={() => onEntityClick?.(current.id, current.title)}
+            />
+            <button
+              className="ws-pin-btn"
+              onClick={handlePin}
+              aria-label={currentIsPinned ? '取消置顶' : '置顶'}
+              title={currentIsPinned ? '取消置顶' : '置顶'}
+            >
+              <Icon name="star" size={16} />
+            </button>
+          </div>
         ) : (
           <WorkspacePlaceholder label="点击任意实体开始探索" />
         )}
@@ -175,8 +218,27 @@ export function WorkspacePanel({
       </WorkspaceSection>
 
       {/* Pinned */}
-      <WorkspaceSection title="已置顶">
-        <WorkspacePlaceholder label="长按实体卡片即可置顶，方便快速返回" />
+      <WorkspaceSection title="已置顶" badge={pinned.length > 0 ? String(pinned.length) : undefined}>
+        {pinned.length > 0 ? (
+          pinned.map((p) => (
+            <div key={p.id} className="ws-current-row">
+              <WorkspaceItem
+                item={{ id: p.id, title: p.title, subtitle: p.subtitle, icon: p.icon }}
+                onClick={() => onEntityClick?.(p.id, p.title)}
+              />
+              <button
+                className="ws-pin-btn"
+                onClick={() => handleUnpin(p.id)}
+                aria-label="取消置顶"
+                title="取消置顶"
+              >
+                <Icon name="star" size={16} />
+              </button>
+            </div>
+          ))
+        ) : (
+          <WorkspacePlaceholder label="点击实体旁的星标即可置顶，方便快速返回" />
+        )}
       </WorkspaceSection>
 
       {/* Notebook */}
