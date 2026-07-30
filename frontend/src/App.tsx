@@ -685,7 +685,7 @@ function App() {
           onEntityClick={(id, name) => openEntity(id, name)}
         />
       }
-      companion={<CompanionShell workspaceContext={workspaceContext} />}
+      companion={<CompanionShell workspaceContext={workspaceContext} onNavigateEntity={openNode} />}
       timelineItems={result?.timeline}
       timelineActiveLabel={result?.title || (current?.type === 'entity' ? current.id : current?.title)}
       timelineActiveIndex={selectedTimelineIndex}

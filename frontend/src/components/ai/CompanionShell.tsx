@@ -16,7 +16,7 @@ const MODES: { id: CompanionMode; label: string }[] = [
   { id: 'discover', label: '发现' },
 ]
 
-function CompanionInner() {
+function CompanionInner({ onNavigateEntity }: { onNavigateEntity?: (globalId: string) => void }) {
   const { state, dispatch } = useCompanion()
 
   return (
@@ -38,15 +38,15 @@ function CompanionInner() {
         ))}
       </nav>
 
-      <CompanionRouter />
+      <CompanionRouter onNavigateEntity={onNavigateEntity} />
     </div>
   )
 }
 
-export function CompanionShell({ workspaceContext }: { workspaceContext?: WorkspaceContextData }) {
+export function CompanionShell({ workspaceContext, onNavigateEntity }: { workspaceContext?: WorkspaceContextData; onNavigateEntity?: (globalId: string) => void }) {
   return (
     <CompanionProvider workspace={workspaceContext}>
-      <CompanionInner />
+      <CompanionInner onNavigateEntity={onNavigateEntity} />
     </CompanionProvider>
   )
 }

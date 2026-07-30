@@ -7,15 +7,15 @@
 // Research / Discover remain idle.
 // ============================================================
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useCompanion } from './CompanionContext'
 import { useCompanionAI } from './useCompanionAI'
 import { AIExplanationView, type AIExplanationViewProps } from '../AIExplanationPanel'
 import { HistorianChatView } from '../HistorianChat'
 import { ResearchPanelView } from '../ResearchPanel'
-import { ResearchDiscoveryPanelView } from '../ResearchDiscoveryPanel'
+import RecommendationPanel from '../RecommendationPanel'
 
-export function CompanionRouter() {
+export function CompanionRouter({ onNavigateEntity }: { onNavigateEntity?: (globalId: string) => void }) {
   const { state, workspace } = useCompanion()
   const { activeMode } = state
   const { status, response, error, ask, chatMessages, sendChat, clearChat } = useCompanionAI()
@@ -25,6 +25,12 @@ export function CompanionRouter() {
   const chatStatus = status as 'idle' | 'loading' | 'error'
 
   const contextCount = workspace.currentEntityId ? 1 : 0
+
+  // M65 Phase 3D-3: seen entity IDs for discover recommendation dedup
+  const discoverSeenIds = useMemo(
+    () => new Set(workspace.recentEntityIds ?? []),
+    [workspace.recentEntityIds],
+  )
 
   switch (activeMode) {
     case 'explain': {
@@ -71,13 +77,19 @@ export function CompanionRouter() {
       )
 
     case 'discover':
+      if (!workspace.currentEntityId) {
+        return (
+          <div className="companion-section">
+            <p className="companion-hint">选择一个实体后，将为您发现相关探索方向。</p>
+          </div>
+        )
+      }
       return (
-        <ResearchDiscoveryPanelView
-          currentEntity={{ globalId: '', name: '', type: '' }}
-          relationships={[]}
-          onExplore={() => {}}
-          recommendations={[]}
-          insightText={null}
+        <RecommendationPanel
+          entityId={workspace.currentEntityId}
+          seenGlobalIds={discoverSeenIds}
+          max={5}
+          onNodeClick={(gid) => onNavigateEntity?.(gid)}
         />
       )
 
