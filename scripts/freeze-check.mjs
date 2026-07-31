@@ -665,13 +665,19 @@ export const SCOPE_ALLOWLIST = [
   // (data/ skipped — M33 precedent; content change approved: additive only).
   // Phase2-C: frontend/public/ — favicon.svg (kills /favicon.ico 404 noise);
   // index.html (already allowlisted) now links it. Static asset, zero logic.
+  // Phase3-A: frontend/package-lock.json — npm install -D @playwright/test
+  // touches the lockfile (checkScope scans frontend/* without extension filter);
+  // DEP lockdown guarantees dependencies/ stays frozen, only devDependencies
+  // may add @playwright/test.
   // Least Privilege: no backend / LLM / accounts / cloud / community change.
   // backend diff = 0; runtime 0.13.0 unchanged.
   "frontend/src/hooks/",
   "frontend/package.json",
+  "frontend/package-lock.json",
   "frontend/e2e/",
   "frontend/playwright.config.ts",
   "frontend/public/",
+  "frontend/.gitignore",
 ];
 
 function _scopeAllowed(file) {

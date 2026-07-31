@@ -17,3 +17,7 @@ yarn-error.log*
 !.vscode/extensions.json
 .DS_Store
 *.local
+
+# Playwright (M73 Phase3-A — local Alpha regression infra)
+test-results/
+playwright-report/
