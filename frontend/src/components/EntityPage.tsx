@@ -173,6 +173,7 @@ function EntityPage({
       <WhyImportantPanel narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
 
       <EntityPageShell
+        entityGlobalId={entityGlobalId}
         renderTab={(activeTab: EntityTab) => {
           switch (activeTab) {
             // ---- INFO TAB ----

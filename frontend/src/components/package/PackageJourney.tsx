@@ -9,6 +9,8 @@ interface PackageJourneyProps {
   locale?: Locale
   onEntityClick?: (gid: string) => void
   onOpenPackage?: (slug: string) => void
+  /** M72 Line2 — view_source passthrough to SourceChain (telemetry wiring in page). */
+  onSourceClick?: (sourceId: string) => void
 }
 
 // The second layer of ExplorationPackagePage: the actual Exploration Journey.
@@ -19,6 +21,7 @@ export default function PackageJourney({
   locale = 'zh',
   onEntityClick,
   onOpenPackage,
+  onSourceClick,
 }: PackageJourneyProps) {
   return (
     <div className="package-journey" id="package-journey">
@@ -43,7 +46,7 @@ export default function PackageJourney({
         <p className="journey-section-sub">
           每一步都有据可查：关系背后的证据与来源。
         </p>
-        <SourceChain pkg={pkg} locale={locale} />
+        <SourceChain pkg={pkg} locale={locale} onSourceClick={onSourceClick} />
       </section>
 
       <section className="journey-section">

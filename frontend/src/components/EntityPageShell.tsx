@@ -47,6 +47,9 @@ export type EntityPageShellProps = {
   children?: ReactNode
   /** Render function per tab. */
   renderTab?: (tab: EntityTab) => ReactNode
+  /** M72 Line2 (finding E): entity global id for open_entity telemetry —
+   *  Depth / Package-Coverage / Guide positioning all rely on it. */
+  entityGlobalId?: string
   // Stateful props for testability
   activeTab?: EntityTab
   onTabChange?: (tab: EntityTab) => void
@@ -115,8 +118,16 @@ export default function EntityPageShell(props: EntityPageShellProps) {
     () => loadSavedTab() ?? 'info',
   )
 
-  // M45: record entity page open
-  useEffect(() => { recordEvent({ action: 'open_entity' }) }, [])
+  // M45: record entity page open.
+  // M72 Line2 (finding E): attach the entity global id so Depth / Package
+  // Coverage / Guide positioning can attribute the visit. Behavior-analysis
+  // only — never used for recommendation/personalization.
+  useEffect(() => {
+    recordEvent({
+      action: 'open_entity',
+      ...(props.entityGlobalId ? { entityGlobalId: props.entityGlobalId } : {}),
+    })
+  }, [props.entityGlobalId])
 
   const handleTabChange = useCallback((tab: EntityTab) => {
     setActiveTab(tab)

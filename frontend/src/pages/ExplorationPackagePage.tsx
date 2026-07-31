@@ -99,6 +99,9 @@ export default function ExplorationPackagePage({
           locale={locale}
           onEntityClick={onEntityClick}
           onOpenPackage={onOpenPackage}
+          onSourceClick={(sourceId) =>
+            recordEvent({ action: 'view_source', sourceId })
+          }
         />
       </div>
     </section>

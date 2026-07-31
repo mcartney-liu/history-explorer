@@ -10,6 +10,10 @@ import { getRelationshipLabel } from '../../data/entity/entityLabels'
 interface SourceChainProps {
   pkg: ExplorationPackage
   locale?: Locale
+  /** M72 Line2 — fired when a claim source badge is clicked (view_source
+   *  telemetry, M73 Pilot data base). Presentational passthrough only;
+   *  wiring lives in the page layer. Default no-op keeps tests untouched. */
+  onSourceClick?: (sourceId: string) => void
 }
 
 function tierLabel(tier: string): string {
@@ -24,7 +28,7 @@ function tierLabel(tier: string): string {
 // from the local JSON (evidence_claims.json + sources.json). No backend call, no
 // hallucination: every claim and source id was already graph-grounded by the
 // Phase-1 validator. The user can see exactly what backs each relationship.
-export default function SourceChain({ pkg, locale = 'zh' }: SourceChainProps) {
+export default function SourceChain({ pkg, locale = 'zh', onSourceClick }: SourceChainProps) {
   const edgesWithEvidence = pkg.relationship_paths.filter(
     (p) => p.evidence && p.evidence.length > 0,
   )
@@ -46,9 +50,10 @@ export default function SourceChain({ pkg, locale = 'zh' }: SourceChainProps) {
                 <ul className="source-badges">
                   {ev.sources.map((s) => (
                     <li
-                      className={`source-badge source-badge--${(s.tier || 'unknown').toLowerCase()}`}
+                      className={`source-badge source-badge--${(s.tier || 'unknown').toLowerCase()}${onSourceClick ? ' source-badge--clickable' : ''}`}
                       key={s.id}
                       title={s.creator ? `${s.creator} (${s.year})` : s.id}
+                      onClick={onSourceClick ? () => onSourceClick(s.id) : undefined}
                     >
                       <span className="source-badge-tier">{tierLabel(s.tier)}</span>
                       <span className="source-badge-title">{s.title}</span>

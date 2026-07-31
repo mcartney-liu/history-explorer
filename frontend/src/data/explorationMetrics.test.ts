@@ -117,4 +117,26 @@ describe('explorationMetrics (deterministic, M71)', () => {
     expect(x.distinctPackageCount).toBe(0)
     expect(x.crossRate).toBe(0)
   })
+
+  // M72 Line2 — view_source events must NOT pollute Depth counters, and
+  // open_entity with a gid attributes correctly (finding E fix).
+  it('view_source events do not inflate Depth (journey-node / entity counts)', () => {
+    const t = (iso: string) => ({ timestamp: iso })
+    const stream: UserBehaviorEvent[] = [
+      { action: 'open_package', packageSlug: 'china-civilization-v1', ...t('2026-07-31T12:00:00Z') },
+      { action: 'open_entity', entityGlobalId: 'china_v1:idea-keju', ...t('2026-07-31T12:00:10Z') },
+      { action: 'view_source', sourceId: 'src-cn-qianmu', ...t('2026-07-31T12:00:20Z') },
+      { action: 'view_source', sourceId: 'src-cn-museum', ...t('2026-07-31T12:00:25Z') },
+      { action: 'open_entity', entityGlobalId: 'china_v1:idea-keju', ...t('2026-07-31T12:00:30Z') },
+    ]
+    const d = computeExplorationDepth(stream)
+    // Same entity visited twice -> deduped to 1 distinct entity.
+    expect(d.totalEntityViews).toBe(1)
+    // view_source is NOT a journey node / relationship click.
+    expect(d.totalJourneyNodes).toBe(0)
+    expect(d.totalRelationshipClicks).toBe(0)
+    const cov = computePackageCoverage(stream)
+    const china = cov.find((c) => c.packageSlug === 'china-civilization-v1')!
+    expect(china.visitedEntities).toBe(1)
+  })
 })
