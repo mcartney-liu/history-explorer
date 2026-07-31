@@ -11,7 +11,10 @@
 //   - Package Coverage Rate
 //   - Cross Package Expansion
 //   - Guide Interaction
-// Deferred (no stable product definition yet): Completion Rate.
+//   - Source View (M73 Phase3-B Metrics Closure — aggregates the ALREADY
+//     emitted view_source stream; NO new telemetry, NO behavior change)
+// Deferred (no stable product definition yet): Completion Rate
+// (complete_package remains deferred — M73 Phase3-B PO decision).
 //
 // Zero AI. Zero backend. Zero personalization. Metrics are
 // descriptive aggregates only — NOT used for ranking/recommendation.
@@ -286,6 +289,54 @@ export function computeGuideInteraction(events: UserBehaviorEvent[]): GuideMetri
 }
 
 // -----------------------------------------------------------
+// 5. Source View — did users dig into claim evidence?
+//    M73 Phase3-B Metrics Closure: aggregates the view_source events
+//    ALREADY emitted by the page layer (SourceChain claim badge clicks,
+//    M72 wiring). Read-only — adds NO new telemetry and never writes.
+// -----------------------------------------------------------
+
+export interface SourceViewMetric {
+  /** Total view_source events (raw badge clicks). */
+  totalViews: number
+  /** Distinct source records opened (deduped by sourceId). */
+  distinctSources: number
+  /** Average view_source events per session. */
+  avgViewsPerSession: number
+  /** Sessions containing at least one view_source event. */
+  sessionsWithSourceViews: number
+  /** sessionsWithSourceViews / totalSessions (0 when no sessions). */
+  sourceUsageRate: number
+  /** Most-viewed sources, descending (top 5 by view count). */
+  topSources: { sourceId: string; count: number }[]
+}
+
+const TOP_SOURCES_LIMIT = 5
+
+export function computeSourceViews(events: UserBehaviorEvent[]): SourceViewMetric {
+  const sessions = sessionize(events)
+  const viewEvents = events.filter((e) => e.action === 'view_source' && e.sourceId)
+  const counts = new Map<string, number>()
+  for (const e of viewEvents) {
+    counts.set(e.sourceId as string, (counts.get(e.sourceId as string) ?? 0) + 1)
+  }
+  const topSources = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, TOP_SOURCES_LIMIT)
+    .map(([sourceId, count]) => ({ sourceId, count }))
+  const sessionsWithSourceViews = sessions.filter((s) =>
+    s.events.some((e) => e.action === 'view_source' && e.sourceId),
+  ).length
+  return {
+    totalViews: viewEvents.length,
+    distinctSources: counts.size,
+    avgViewsPerSession: sessions.length === 0 ? 0 : viewEvents.length / sessions.length,
+    sessionsWithSourceViews,
+    sourceUsageRate: sessions.length === 0 ? 0 : sessionsWithSourceViews / sessions.length,
+    topSources,
+  }
+}
+
+// -----------------------------------------------------------
 // Combined snapshot — one call, all approved metrics.
 // -----------------------------------------------------------
 
@@ -294,6 +345,7 @@ export interface ExplorationMetricsSnapshot {
   coverage: PackageCoverageMetric[]
   expansion: ExpansionMetric
   guide: GuideMetric
+  sourceViews: SourceViewMetric
   generatedAt: string
 }
 
@@ -303,6 +355,7 @@ export function computeExplorationMetrics(events: UserBehaviorEvent[]): Explorat
     coverage: computePackageCoverage(events),
     expansion: computeCrossPackageExpansion(events),
     guide: computeGuideInteraction(events),
+    sourceViews: computeSourceViews(events),
     generatedAt: new Date().toISOString(),
   }
 }

@@ -6,6 +6,7 @@ import {
   computePackageCoverage,
   computeCrossPackageExpansion,
   computeGuideInteraction,
+  computeSourceViews,
   computeExplorationMetrics,
 } from './explorationMetrics'
 
@@ -98,12 +99,14 @@ describe('explorationMetrics (deterministic, M71)', () => {
     expect(g.avgDepthWithoutGuide).toBe(1)
   })
 
-  it('combined snapshot exposes all four approved metrics', () => {
+  it('combined snapshot exposes all five approved metrics', () => {
     const snap = computeExplorationMetrics(fixture())
     expect(snap.depth.totalSessions).toBe(2)
     expect(snap.coverage.length).toBeGreaterThanOrEqual(3)
     expect(snap.expansion.distinctPackageCount).toBe(3)
     expect(snap.guide.guideNextClicks).toBe(1)
+    expect(snap.sourceViews.totalViews).toBe(0)
+    expect(snap.sourceViews.distinctSources).toBe(0)
     expect(typeof snap.generatedAt).toBe('string')
   })
 
@@ -138,5 +141,51 @@ describe('explorationMetrics (deterministic, M71)', () => {
     const cov = computePackageCoverage(stream)
     const china = cov.find((c) => c.packageSlug === 'china-civilization-v1')!
     expect(china.visitedEntities).toBe(1)
+  })
+
+  // M73 Phase3-B Metrics Closure — Source View aggregates the ALREADY
+  // emitted view_source stream (no new telemetry).
+  it('computes Source View (total / distinct / per-session / top sources)', () => {
+    const t = (iso: string) => ({ timestamp: iso })
+    const stream: UserBehaviorEvent[] = [
+      // Session 1: 3 views across 2 distinct sources (one repeat).
+      { action: 'open_package', packageSlug: 'china-civilization-v1', ...t('2026-07-31T13:00:00Z') },
+      { action: 'view_source', sourceId: 'src-cn-qianmu', ...t('2026-07-31T13:00:10Z') },
+      { action: 'view_source', sourceId: 'src-cn-qianmu', ...t('2026-07-31T13:00:20Z') },
+      { action: 'view_source', sourceId: 'src-cn-museum', ...t('2026-07-31T13:00:30Z') },
+      // Session 2 (gap > 30min): 1 view of another source.
+      { action: 'open_package', packageSlug: 'roman-empire-exploration', ...t('2026-07-31T14:00:00Z') },
+      { action: 'view_source', sourceId: 'src-rom-augustus', ...t('2026-07-31T14:00:10Z') },
+    ]
+    const s = computeSourceViews(stream)
+    expect(s.totalViews).toBe(4)
+    expect(s.distinctSources).toBe(3)
+    expect(s.avgViewsPerSession).toBe(2)
+    expect(s.sessionsWithSourceViews).toBe(2)
+    expect(s.sourceUsageRate).toBe(1)
+    expect(s.topSources).toHaveLength(3)
+    expect(s.topSources[0]).toEqual({ sourceId: 'src-cn-qianmu', count: 2 })
+  })
+
+  it('Source View ignores view_source events without a sourceId (defensive)', () => {
+    const t = (iso: string) => ({ timestamp: iso })
+    const stream: UserBehaviorEvent[] = [
+      { action: 'view_source', ...t('2026-07-31T15:00:00Z') },
+      { action: 'view_source', sourceId: 'src-cn-qianmu', ...t('2026-07-31T15:00:10Z') },
+    ]
+    const s = computeSourceViews(stream)
+    expect(s.totalViews).toBe(1)
+    expect(s.distinctSources).toBe(1)
+    expect(s.topSources).toEqual([{ sourceId: 'src-cn-qianmu', count: 1 }])
+  })
+
+  it('Source View returns zero-valued metrics for an empty stream', () => {
+    const s = computeSourceViews([])
+    expect(s.totalViews).toBe(0)
+    expect(s.distinctSources).toBe(0)
+    expect(s.avgViewsPerSession).toBe(0)
+    expect(s.sessionsWithSourceViews).toBe(0)
+    expect(s.sourceUsageRate).toBe(0)
+    expect(s.topSources).toEqual([])
   })
 })
