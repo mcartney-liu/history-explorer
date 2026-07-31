@@ -134,3 +134,73 @@ def _period_label(entry) -> str:
     if isinstance(period, dict):
         return str(period.get("label") or period.get("value") or "unknown")
     return str(period or "unknown")
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 5): output-side Claim/Source binding Trust Gate.
+# Input is the EvidenceSelection (already sourced from a ClaimGraph) — this
+# validator NEVER re-queries KnowledgeService and never bypasses selection.
+# It independently re-checks every claim (defense in depth — the gate does
+# not trust upstream flags):
+#
+#   Claim exists  AND  Source exists  AND  Evidence binding valid
+#   else -> REJECT (never "warn and continue").
+#
+# Distinguishes: valid grounded / missing_claim / missing_source /
+# unresolved / invalid_binding. Structured + auditable result.
+# ---------------------------------------------------------------------------
+
+class EvidenceValidator:
+    """Final Trust Gate over a selected EvidenceSelection."""
+
+    def validate(self, selection) -> "ClaimValidationResult":
+        from .citation_model import (
+            ClaimValidationResult,
+            REASON_INVALID_BINDING,
+            REASON_MISSING_CLAIM,
+            REASON_MISSING_SOURCE,
+            REASON_UNRESOLVED,
+        )
+
+        source_ids = {s.get("id") for s in selection.sources if s.get("id")}
+        valid: list = []
+        rejected: list = []
+        reasons: dict = {}
+
+        for claim in selection.claims:
+            # 1) unresolved — Grounding Gate (independent re-check)
+            if not claim.resolved:
+                rejected.append(claim)
+                reasons[claim.claim_id or "<no-id>"] = REASON_UNRESOLVED
+                continue
+            # 2) Claim exists
+            if not claim.claim_id:
+                rejected.append(claim)
+                reasons["<no-id>"] = REASON_MISSING_CLAIM
+                continue
+            # 3) Source exists (must be in the selection's source set)
+            if not claim.source_id or claim.source_id not in source_ids:
+                rejected.append(claim)
+                reasons[claim.claim_id] = REASON_MISSING_SOURCE
+                continue
+            # 4) Evidence binding valid:
+            #    entity claim -> subject_global_id required, object must be None
+            #    pair claim    -> subject_global_id AND object_global_id required
+            if not claim.subject_global_id:
+                rejected.append(claim)
+                reasons[claim.claim_id] = REASON_INVALID_BINDING
+                continue
+            if (claim.object_global_id is None) != (claim.relationship is None):
+                # entity claim with a relationship, or pair claim without one —
+                # inconsistent binding shape.
+                rejected.append(claim)
+                reasons[claim.claim_id] = REASON_INVALID_BINDING
+                continue
+            valid.append(claim)
+
+        return ClaimValidationResult(
+            passed=len(valid) > 0,
+            valid_claims=valid,
+            rejected_claims=rejected,
+            reasons=reasons,
+        )

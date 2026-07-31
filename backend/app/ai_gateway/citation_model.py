@@ -170,3 +170,38 @@ class EvidenceSelection:
             "sources": list(self.sources),
             "records": [r.to_dict() if hasattr(r, "to_dict") else r for r in self.records],
         }
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 5): output-side Claim/Source binding validation — the
+# final Trust Gate. Structured + auditable: every rejected claim carries a
+# machine-readable reason.
+# ---------------------------------------------------------------------------
+
+# Canonical reject reasons (stable, auditable).
+REASON_MISSING_CLAIM = "missing_claim"
+REASON_MISSING_SOURCE = "missing_source"
+REASON_UNRESOLVED = "unresolved"
+REASON_INVALID_BINDING = "invalid_binding"
+
+
+@dataclass
+class ClaimValidationResult:
+    """Trust Gate result: claims safe to emit vs rejected (with reasons)."""
+
+    passed: bool
+    valid_claims: list
+    rejected_claims: list
+    reasons: dict  # claim_id -> reason
+
+    def to_dict(self) -> dict:
+        return {
+            "passed": self.passed,
+            "valid_claims": [
+                c.to_dict() if hasattr(c, "to_dict") else c for c in self.valid_claims
+            ],
+            "rejected_claims": [
+                c.to_dict() if hasattr(c, "to_dict") else c for c in self.rejected_claims
+            ],
+            "reasons": dict(self.reasons),
+        }

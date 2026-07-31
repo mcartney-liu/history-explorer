@@ -286,3 +286,119 @@ def test_selection_real_claim_graph_is_deterministic():
     assert len(sel1.records) == len(graph.claims)
     kept = [c for c in sel1.claims if c.resolved]
     assert all(c.resolved for c in kept)
+
+
+# ---------------------------------------------------------------------------
+# Step 5 — EvidenceValidator: Claim/Source binding Trust Gate
+# ---------------------------------------------------------------------------
+
+def _selection(claims, sources):
+    from app.ai_gateway.citation_model import EvidenceSelection
+    return EvidenceSelection(claims=claims, sources=sources, records=[])
+
+
+def _entity_claim(cid, source, resolved=True, subject_gid="t:person-x"):
+    from app.ai_gateway.citation_model import ClaimEntry
+    return ClaimEntry(cid, "person-x", "claim text", source,
+                      subject_gid, None, None, resolved)
+
+
+def test_validation_full_claim_and_source_passes():
+    """Complete Claim+Source binding -> valid grounded response."""
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    sel = _selection(
+        [_entity_claim("ec-ok", "src-a")],
+        [{"id": "src-a", "tier": "primary"}],
+    )
+    res = EvidenceValidator().validate(sel)
+    assert res.passed is True
+    assert [c.claim_id for c in res.valid_claims] == ["ec-ok"]
+    assert res.rejected_claims == [] and res.reasons == {}
+
+
+def test_validation_missing_source_rejects():
+    """Claim exists but its Source is absent from the selection -> REJECT."""
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    sel = _selection(
+        [_entity_claim("ec-nosrc", "src-missing")],
+        [{"id": "src-a", "tier": "primary"}],  # src-missing NOT here
+    )
+    res = EvidenceValidator().validate(sel)
+    assert res.passed is False
+    assert res.reasons.get("ec-nosrc") == "missing_source"
+    assert res.valid_claims == []
+
+
+def test_validation_unresolved_rejects():
+    """unresolved claim -> REJECT (Grounding Gate)."""
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    sel = _selection(
+        [_entity_claim("ec-ux", "src-a", resolved=False)],
+        [{"id": "src-a", "tier": "primary"}],
+    )
+    res = EvidenceValidator().validate(sel)
+    assert res.passed is False
+    assert res.reasons.get("ec-ux") == "unresolved"
+
+
+def test_validation_invalid_binding_rejects():
+    """Missing subject_global_id -> invalid evidence binding -> REJECT."""
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    sel = _selection(
+        [_entity_claim("ec-nobind", "src-a", subject_gid=None)],
+        [{"id": "src-a", "tier": "primary"}],
+    )
+    res = EvidenceValidator().validate(sel)
+    assert res.passed is False
+    assert res.reasons.get("ec-nobind") == "invalid_binding"
+
+
+def test_validation_mixed_partial_failure_handled():
+    """Multi-claim: valid kept, invalid rejected — audited per claim."""
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    sel = _selection(
+        [
+            _entity_claim("ec-good", "src-a"),
+            _entity_claim("ec-bad-src", "src-missing"),
+            _entity_claim("ec-bad-ux", "src-a", resolved=False),
+        ],
+        [{"id": "src-a", "tier": "primary"}],
+    )
+    res = EvidenceValidator().validate(sel)
+    assert res.passed is True                      # valid subset remains
+    assert [c.claim_id for c in res.valid_claims] == ["ec-good"]
+    assert set(res.reasons) == {"ec-bad-src", "ec-bad-ux"}
+    assert res.reasons["ec-bad-src"] == "missing_source"
+    assert res.reasons["ec-bad-ux"] == "unresolved"
+
+
+def test_validation_empty_evidence_rejects():
+    """Empty evidence -> no grounded response (REJECT)."""
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    res = EvidenceValidator().validate(_selection([], []))
+    assert res.passed is False
+    assert res.valid_claims == [] and res.reasons == {}
+
+
+def test_validation_pair_claim_binding_shape():
+    """Pair claim: subject+object+relationship consistent -> passes."""
+    from app.ai_gateway.citation_model import ClaimEntry
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    pair = ClaimEntry("ec-pair", "person-x->event-y", "pair text", "src-a",
+                      "t:person-x", "t:event-y", "participated_in", True)
+    res = EvidenceValidator().validate(_selection([pair], [{"id": "src-a", "tier": "primary"}]))
+    assert res.passed is True
+    assert [c.claim_id for c in res.valid_claims] == ["ec-pair"]
+    # entity claim with a relationship (inconsistent shape) -> invalid_binding
+    weird = ClaimEntry("ec-weird", "person-x", "text", "src-a",
+                       "t:person-x", None, "participated_in", True)
+    res2 = EvidenceValidator().validate(_selection([weird], [{"id": "src-a", "tier": "primary"}]))
+    assert res2.passed is False
+    assert res2.reasons.get("ec-weird") == "invalid_binding"
