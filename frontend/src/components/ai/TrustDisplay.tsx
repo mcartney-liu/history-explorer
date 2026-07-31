@@ -14,6 +14,10 @@ interface TrustDisplayProps {
   evidence?: AIEvidence[]
   nextExploration?: AINextExploration[]
   engine?: AIEngine
+  /** M74-003 (C3-2): optional navigation — fired with the suggestion's
+   *  global_id when a next-exploration item is clicked. The consumer wires
+   *  this to the EXISTING onEntityClick path; no new navigation logic here. */
+  onNextClick?: (globalId: string) => void
 }
 
 function engineBadge(engine: AIEngine | undefined, t: (k: string) => string): {
@@ -29,7 +33,7 @@ function engineBadge(engine: AIEngine | undefined, t: (k: string) => string): {
   return null
 }
 
-export function TrustDisplay({ evidence, nextExploration, engine }: TrustDisplayProps) {
+export function TrustDisplay({ evidence, nextExploration, engine, onNextClick }: TrustDisplayProps) {
   const { t } = useLocale()
   const evidenceList = evidence ?? []
   const nextList = nextExploration ?? []
@@ -56,8 +60,21 @@ export function TrustDisplay({ evidence, nextExploration, engine }: TrustDisplay
           <ul className="trust-display-next">
             {nextList.map((item) => (
               <li key={item.global_id} className="trust-display-next-item">
-                <span className="trust-display-next-name">{item.label}</span>
-                <span className="trust-display-next-rel">{item.relationship}</span>
+                {onNextClick ? (
+                  <button
+                    type="button"
+                    className="trust-display-next-btn"
+                    onClick={() => onNextClick(item.global_id)}
+                  >
+                    <span className="trust-display-next-name">{item.label}</span>
+                    <span className="trust-display-next-rel">{item.relationship}</span>
+                  </button>
+                ) : (
+                  <>
+                    <span className="trust-display-next-name">{item.label}</span>
+                    <span className="trust-display-next-rel">{item.relationship}</span>
+                  </>
+                )}
                 <code className="trust-display-source">{item.source_id}</code>
               </li>
             ))}

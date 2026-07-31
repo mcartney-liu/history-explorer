@@ -284,6 +284,11 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/ai_gateway/config.py",
   "frontend/src/data/aiClient.ts",
   "frontend/src/data/aiClient.test.ts",  // M65-A04 (PO-approved) — AI client contract tests (H9 real-AI link)
+  // M74-003 (C3-2, PO-approved): AI exploration suggestions build-time flag.
+  // Pure frontend additive; default OFF keeps M73 behaviour byte-identical
+  // (parent-mount gate => zero render + zero request).
+  "frontend/src/data/aiFeatureFlag.ts",
+  "frontend/src/data/aiFeatureFlag.test.ts",
   "frontend/src/components/AIExplanationPanel.tsx",
   "frontend/src/components/GroundedAnswer.tsx",
   "frontend/src/components/CitationList.tsx",

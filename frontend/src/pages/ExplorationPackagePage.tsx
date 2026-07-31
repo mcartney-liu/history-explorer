@@ -5,6 +5,8 @@ import { visitedFromEvents } from '../data/explorationGuide'
 import { getEvents, recordEvent } from '../data/UserBehaviorEvent'
 import PackageJourney from '../components/package/PackageJourney'
 import GuidePanel from '../components/guide/GuidePanel'
+import ExplorationSuggestions from '../components/ai/ExplorationSuggestions'
+import { AI_SUGGESTIONS_ENABLED } from '../data/aiFeatureFlag'
 import { Button } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
 import '../styles/package.css'
@@ -95,6 +97,18 @@ export default function ExplorationPackagePage({
           onEntityClick={onEntityClick}
           onNextClick={(to) => recordEvent({ action: 'click_guide_next', entityGlobalId: to })}
         />
+
+        {/* M74-003 (C3-2) — AI Exploration Suggestions (T1): evidence-bound
+            exploration touchpoint, an ENHANCEMENT LAYER beside (never replacing)
+            the deterministic Guide. Flag-gated at the parent so OFF = zero
+            render + zero requests (M73 byte-identical). Anchor = first package
+            entity reference; every fact comes from the backend response. */}
+        {AI_SUGGESTIONS_ENABLED && pkg.entity_references[0] && (
+          <ExplorationSuggestions
+            anchorGlobalId={pkg.entity_references[0]}
+            onEntityClick={onEntityClick}
+          />
+        )}
 
         <PackageJourney
           pkg={pkg}
