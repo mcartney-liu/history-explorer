@@ -12,7 +12,8 @@
         "Mauryan Empire"
       ],
       "labels": {
-        "en": "Maurya Empire"
+        "en": "Maurya Empire",
+        "zh": "孔雀王朝"
       },
       "start_date": {
         "value": -322,
@@ -64,7 +65,8 @@
       "global_id": "ancient_india:person-chandragupta",
       "aliases": [],
       "labels": {
-        "en": "Chandragupta Maurya"
+        "en": "Chandragupta Maurya",
+        "zh": "旃陀罗笈多·孔雀"
       },
       "start_date": {
         "value": -340,
@@ -127,7 +129,8 @@
         "Aśoka"
       ],
       "labels": {
-        "en": "Ashoka the Great"
+        "en": "Ashoka the Great",
+        "zh": "阿育王"
       },
       "start_date": {
         "value": -304,
@@ -190,7 +193,8 @@
         "Patna"
       ],
       "labels": {
-        "en": "Pataliputra"
+        "en": "Pataliputra",
+        "zh": "华氏城"
       },
       "start_date": null,
       "end_date": null,
@@ -234,7 +238,8 @@
         "Buddha Dharma"
       ],
       "labels": {
-        "en": "Buddhism"
+        "en": "Buddhism",
+        "zh": "佛教"
       },
       "start_date": null,
       "end_date": null,
@@ -279,7 +284,8 @@
         "Gautama"
       ],
       "labels": {
-        "en": "Siddhartha Gautama"
+        "en": "Siddhartha Gautama",
+        "zh": "释迦牟尼"
       },
       "start_date": {
         "value": -563,
@@ -342,7 +348,8 @@
         "Sindhu"
       ],
       "labels": {
-        "en": "Indus Valley"
+        "en": "Indus Valley",
+        "zh": "印度河流域"
       },
       "start_date": null,
       "end_date": null,
@@ -380,7 +387,8 @@
       "global_id": "ancient_india:event-kalinga-war",
       "aliases": [],
       "labels": {
-        "en": "Kalinga War"
+        "en": "Kalinga War",
+        "zh": "羯陵伽战争"
       },
       "start_date": null,
       "end_date": null,
@@ -424,7 +432,8 @@
         "Dhamma"
       ],
       "labels": {
-        "en": "Dharma"
+        "en": "Dharma",
+        "zh": "正法（达摩）"
       },
       "start_date": null,
       "end_date": null,
@@ -461,7 +470,8 @@
       "global_id": "ancient_india:tp-maurya",
       "aliases": [],
       "labels": {
-        "en": "Maurya Era"
+        "en": "Maurya Era",
+        "zh": "孔雀王朝时期"
       },
       "start_date": {
         "value": -322,
@@ -510,7 +520,8 @@
         "Gupta Empire"
       ],
       "labels": {
-        "en": "Gupta Period"
+        "en": "Gupta Period",
+        "zh": "笈多时期"
       },
       "start_date": {
         "value": 320,
@@ -555,7 +566,8 @@
       "global_id": "ancient_india:person-kalidasa",
       "aliases": [],
       "labels": {
-        "en": "Kalidasa"
+        "en": "Kalidasa",
+        "zh": "迦梨陀娑"
       },
       "start_date": {
         "value": 400,
@@ -602,7 +614,8 @@
         "Shunya"
       ],
       "labels": {
-        "en": "Zero and Decimal System"
+        "en": "Zero and Decimal System",
+        "zh": "零与十进制"
       },
       "start_date": null,
       "end_date": null,
@@ -638,7 +651,8 @@
       "global_id": "ancient_india:person-aryabhata",
       "aliases": [],
       "labels": {
-        "en": "Aryabhata"
+        "en": "Aryabhata",
+        "zh": "阿耶波多"
       },
       "start_date": {
         "value": 476,

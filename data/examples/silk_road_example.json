@@ -13,7 +13,8 @@
         "Seidenstraße"
       ],
       "labels": {
-        "en": "Silk Road"
+        "en": "Silk Road",
+        "zh": "丝绸之路"
       },
       "start_date": {
         "value": -130,
@@ -190,7 +191,8 @@
       "global_id": "silk_road:event-silk-road-opened",
       "aliases": [],
       "labels": {
-        "en": "Silk Road Opened"
+        "en": "Silk Road Opened",
+        "zh": "丝绸之路开辟"
       },
       "start_date": {
         "value": -130,
@@ -249,7 +251,8 @@
       "global_id": "silk_road:loc-samarkand",
       "aliases": [],
       "labels": {
-        "en": "Samarkand"
+        "en": "Samarkand",
+        "zh": "撒马尔罕"
       }
     },
     {
@@ -260,7 +263,8 @@
       "global_id": "silk_road:loc-kashgar",
       "aliases": [],
       "labels": {
-        "en": "Kashgar"
+        "en": "Kashgar",
+        "zh": "喀什"
       }
     },
     {
@@ -271,7 +275,8 @@
       "global_id": "silk_road:person-ban-chao",
       "aliases": [],
       "labels": {
-        "en": "Ban Chao"
+        "en": "Ban Chao",
+        "zh": "班超"
       }
     },
     {
@@ -282,7 +287,8 @@
       "global_id": "silk_road:tech-glass",
       "aliases": [],
       "labels": {
-        "en": "Glassmaking"
+        "en": "Glassmaking",
+        "zh": "玻璃制造术"
       }
     },
     {
@@ -295,7 +301,8 @@
         "Hanyu"
       ],
       "labels": {
-        "en": "Chinese Language"
+        "en": "Chinese Language",
+        "zh": "汉语"
       }
     }
   ],

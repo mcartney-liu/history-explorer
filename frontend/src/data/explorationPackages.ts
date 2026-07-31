@@ -218,7 +218,10 @@ export function getEntityByGlobalId(globalId: string): any | null {
 export function getEntityDisplayName(globalId: string, locale: Locale = 'zh'): string {
   const e = getEntityByGlobalId(globalId)
   if (!e) return globalId
-  if (locale !== 'zh' && e.labels && e.labels[locale]) return e.labels[locale] as string
+  // M73 Phase2-A: localized labels win for any locale (zh/en/ja); falls back to
+  // the data-level `name` when that locale has no label. Previously zh always
+  // returned `name`, so roman/silk/india entities stayed English in the zh UI.
+  if (e.labels && e.labels[locale]) return e.labels[locale] as string
   return (e.name as string) || globalId
 }
 

@@ -4,6 +4,7 @@ import {
   getPackageBySlug,
   validatePackage,
   validateAllPackages,
+  getEntityDisplayName,
 } from "./explorationPackages";
 
 const china = () => getPackages().find((p) => p.slug === "china-civilization-v1")!;
@@ -196,6 +197,54 @@ describe("M72 india-classical-civilization (cross-civilization focus)", () => {
           expect(rec.label.zh).not.toContain("规划中");
         }
       }
+    }
+  });
+});
+
+describe("M73 Phase2-A entity display name localization (labels.zh)", () => {
+  it("zh locale shows Chinese labels for roman/silk/india entities", () => {
+    expect(getEntityDisplayName("roman_empire:civ-roman", "zh")).toBe("罗马文明");
+    expect(getEntityDisplayName("roman_empire:person-augustus", "zh")).toBe("奥古斯都");
+    expect(getEntityDisplayName("silk_road:silk_road", "zh")).toBe("丝绸之路");
+    expect(getEntityDisplayName("ancient_india:civ-maurya", "zh")).toBe("孔雀王朝");
+    expect(getEntityDisplayName("ancient_india:religion-buddhism", "zh")).toBe("佛教");
+  });
+
+  it("en locale is unchanged (labels.en wins)", () => {
+    expect(getEntityDisplayName("roman_empire:civ-roman", "en")).toBe("Roman Civilization");
+    expect(getEntityDisplayName("silk_road:han_dynasty", "en")).toBe("Han Dynasty");
+    expect(getEntityDisplayName("ancient_india:person-ashoka", "en")).toBe("Ashoka the Great");
+  });
+
+  it("china package regression: zh labels still win, name fallback intact", () => {
+    expect(getEntityDisplayName("china_v1:idea-keju", "zh")).toBe("科举制度");
+    // entity without a zh label (defensive) falls back to data-level name
+    expect(getEntityDisplayName("roman_empire:event-empire-fall", "ja")).toBe("Fall of the Western Roman Empire");
+  });
+
+  it("all 42 entities across the 3 datasets carry labels.en AND labels.zh (bi-lingual parity)", () => {
+    for (const gid of [
+      "roman_empire:event-roman-empire-established", "roman_empire:civ-roman",
+      "roman_empire:loc-rome", "roman_empire:tp-27bc", "roman_empire:roman_egypt",
+      "roman_empire:civ-byzantine", "roman_empire:religion-christianity", "roman_empire:tp-republic",
+      "roman_empire:person-constantine", "roman_empire:person-julius-caesar",
+      "roman_empire:loc-constantinople", "roman_empire:event-edict-milan",
+      "roman_empire:event-republic-end", "roman_empire:event-pax-romana",
+      "roman_empire:event-empire-fall", "silk_road:silk_road", "silk_road:han_dynasty",
+      "silk_road:person-zhang-qian", "silk_road:loc-chang-an", "silk_road:tech-paper",
+      "silk_road:event-silk-road-opened", "silk_road:tech-silk", "silk_road:loc-samarkand",
+      "silk_road:loc-kashgar", "silk_road:person-ban-chao", "silk_road:tech-glass",
+      "silk_road:idea-chinese-language", "ancient_india:civ-maurya", "ancient_india:person-chandragupta",
+      "ancient_india:person-ashoka", "ancient_india:loc-pataliputra", "ancient_india:religion-buddhism",
+      "ancient_india:person-siddhartha", "ancient_india:loc-indus-valley", "ancient_india:event-kalinga-war",
+      "ancient_india:idea-dharma", "ancient_india:tp-maurya", "ancient_india:tp-guupta",
+      "ancient_india:person-kalidasa", "ancient_india:tech-zero", "ancient_india:person-aryabhata",
+    ]) {
+      const zh = getEntityDisplayName(gid, "zh");
+      const en = getEntityDisplayName(gid, "en");
+      expect(zh).not.toBe(en); // zh must actually be Chinese, not the English name
+      expect(zh).not.toBe(gid);
+      expect(/[\u4e00-\u9fa5]/.test(zh)).toBe(true);
     }
   });
 });

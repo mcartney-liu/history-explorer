@@ -14,7 +14,8 @@
       ],
       "labels": {
         "en": "Roman Empire Established",
-        "la": "Imperium Romanum Conditum"
+        "la": "Imperium Romanum Conditum",
+        "zh": "罗马帝国建立"
       },
       "start_date": {
         "value": -27,
@@ -150,7 +151,8 @@
       ],
       "labels": {
         "en": "Roman Civilization",
-        "la": "Civilitas Romana"
+        "la": "Civilitas Romana",
+        "zh": "罗马文明"
       },
       "start_date": {
         "value": -27,
@@ -210,7 +212,8 @@
       ],
       "labels": {
         "en": "Rome",
-        "it": "Roma"
+        "it": "Roma",
+        "zh": "罗马"
       },
       "start_date": null,
       "end_date": null,
@@ -262,7 +265,8 @@
         "Year of the Principate"
       ],
       "labels": {
-        "en": "27 BC"
+        "en": "27 BC",
+        "zh": "公元前27年"
       },
       "start_date": null,
       "end_date": null,
@@ -314,7 +318,8 @@
         "Roman Province of Egypt"
       ],
       "labels": {
-        "en": "Roman Egypt (Aegyptus)"
+        "en": "Roman Egypt (Aegyptus)",
+        "zh": "罗马治下的埃及"
       },
       "start_date": {
         "value": -30,
@@ -374,7 +379,8 @@
       ],
       "labels": {
         "en": "Byzantine Empire",
-        "el": "Vasileia Rhomaion"
+        "el": "Vasileia Rhomaion",
+        "zh": "拜占庭帝国"
       },
       "start_date": {
         "value": 330,
@@ -432,7 +438,8 @@
         "Christendom"
       ],
       "labels": {
-        "en": "Christianity"
+        "en": "Christianity",
+        "zh": "基督教"
       },
       "start_date": {
         "value": 30,
@@ -490,7 +497,8 @@
         "Roman Republic"
       ],
       "labels": {
-        "en": "Roman Republic"
+        "en": "Roman Republic",
+        "zh": "罗马共和国"
       },
       "period": null,
       "region": "Roman Italy",
@@ -534,7 +542,8 @@
         "Saint Constantine"
       ],
       "labels": {
-        "en": "Constantine the Great"
+        "en": "Constantine the Great",
+        "zh": "君士坦丁大帝"
       },
       "birth": {
         "value": 272,
@@ -591,7 +600,8 @@
         "Dictator"
       ],
       "labels": {
-        "en": "Julius Caesar"
+        "en": "Julius Caesar",
+        "zh": "尤利乌斯·凯撒"
       },
       "birth": {
         "value": -100,
@@ -648,7 +658,8 @@
         "Constantinople (modern Istanbul)"
       ],
       "labels": {
-        "en": "Constantinople"
+        "en": "Constantinople",
+        "zh": "君士坦丁堡"
       },
       "geo": {
         "lat": 41.0082,
@@ -690,7 +701,8 @@
         "Milan Proclamation"
       ],
       "labels": {
-        "en": "Edict of Milan"
+        "en": "Edict of Milan",
+        "zh": "米兰敕令"
       },
       "period": null,
       "region": "Roman Empire",
@@ -733,7 +745,8 @@
         "Roman Civil Wars"
       ],
       "labels": {
-        "en": "End of the Roman Republic"
+        "en": "End of the Roman Republic",
+        "zh": "罗马共和国终结"
       },
       "start_date": {
         "value": -49,
@@ -794,7 +807,8 @@
         "Augustan Peace"
       ],
       "labels": {
-        "en": "Pax Romana"
+        "en": "Pax Romana",
+        "zh": "罗马和平"
       },
       "start_date": {
         "value": -27,
@@ -858,7 +872,8 @@
         "Collapse of the Western Empire"
       ],
       "labels": {
-        "en": "Fall of the Western Roman Empire"
+        "en": "Fall of the Western Roman Empire",
+        "zh": "西罗马帝国灭亡"
       },
       "start_date": {
         "value": 376,

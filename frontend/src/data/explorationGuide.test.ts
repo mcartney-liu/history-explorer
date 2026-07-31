@@ -120,7 +120,8 @@ describe('Exploration Guide — snapshot & generalization (multi-civilization su
     // zhang-qian -> silk-road-opened is reachable and unvisited
     const next = snap.nextSteps.find((s) => s.edge.type === 'participated_in')
     expect(next).toBeDefined()
-    expect(next!.toName).toContain('Silk Road Opened')
+    // M73 Phase2-A: zh locale shows labels.zh (丝绸之路开辟), not the raw name
+    expect(next!.toName).toContain('丝绸之路开辟')
   })
 
   it('generalizes to the Roman Empire package (evidence-bound edges)', () => {
