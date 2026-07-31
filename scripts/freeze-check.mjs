@@ -663,12 +663,15 @@ export const SCOPE_ALLOWLIST = [
   // package/page components (5-8 high-frequency button consolidation).
   // data/examples/*.json labels.zh patch is out of scope-check by design
   // (data/ skipped — M33 precedent; content change approved: additive only).
+  // Phase2-C: frontend/public/ — favicon.svg (kills /favicon.ico 404 noise);
+  // index.html (already allowlisted) now links it. Static asset, zero logic.
   // Least Privilege: no backend / LLM / accounts / cloud / community change.
   // backend diff = 0; runtime 0.13.0 unchanged.
   "frontend/src/hooks/",
   "frontend/package.json",
   "frontend/e2e/",
   "frontend/playwright.config.ts",
+  "frontend/public/",
 ];
 
 function _scopeAllowed(file) {
