@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM69] - 2026-07-31 — Non-runtime release (M69 project release)
+
+> **Non-runtime release** (M69 project release). `frontend/package.json` remains `[0.13.0]`. M69 — Exploration Package: establishes Exploration Package as the core product object. Data contract + graph-grounded validation (`data/exploration_packages.json`; `explorationPackages.ts` validatePackage — zero dangling refs; `userPackage.ts` contract-only stub; `type/visibility/status` reserved, runtime official-only per PO adjustments A/B) plus journey UI (PackageCard / PackageJourney / TimelineChain / RelationshipChain / SourceChain / RecommendedNext; ExplorationPackagePage; Discover official-packages block + My Exploration placeholder; `#/package/:slug` route). Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0; no new dependency; no LLM runtime. freeze-check EXIT 0; tsc EXIT 0; 33 M69 tests + 18 DiscoverPage regression green.
+
+---
+
 ## [vM68] - 2026-07-31 — Non-runtime release (M68 project release)
 
 > **Non-runtime release** (M68 project release). `frontend/package.json` remains `[0.13.0]`. M68 — China Civilization V1 + Frontend Business i18n: China civilization dataset V1 (`data/examples/china_civilization_v1_example.json` +729 / `data/sources.json` +48 / `data/evidence_claims.json` +181 per git stat) validating the Tang→Song→Yuan→Ming→Qing cultural / institutional / technological diffusion chains; frontend business i18n (`getRelationshipLabel` covering all 18 frozen relationship types zh/en/ja; 14 components converged from raw English slugs to business labels; 3 test assertions synced). Data-only + presentation-only — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0; no new dependency; no LLM runtime. freeze-check EXIT 0; tsc EXIT 0.
