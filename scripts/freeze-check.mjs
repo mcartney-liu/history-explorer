@@ -593,6 +593,21 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/RelationshipPathGraph.test.tsx",    // B7 co-located test (i18n wrap)
   "frontend/src/components/RelationshipInsightPanel.tsx",
   "frontend/src/components/RelationshipInsightPanel.test.tsx", // B7 co-located test (i18n wrap)
+
+  // M69 (Exploration Package — Core Product Object) — Frontend Freeze Revision Gate
+  // (PO-approved 2026-07-31). Adds the official Exploration Package layer:
+  //   - data/explorationPackages.ts        Package type + loader + graph-grounded validator
+  //   - data/explorationPackages.test.ts   reference-resolvability gate (no dangling ids)
+  //   - data/userPackage.ts                UserPackage type-only stub (@future, no logic)
+  //   - components/package/                 PackageCard / PackageJourney / TimelineChain /
+  //                                         RelationshipChain / SourceChain / RecommendedNext (+ tests)
+  // Least Privilege: no backend / dependency / schema / enum / runtime change.
+  // backend diff = 0; runtime 0.13.0 unchanged. No AI/LLM runtime (future AI steps are
+  // contract-only placeholders, never executed). data/ JSON is out of scope-check by design.
+  "frontend/src/data/explorationPackages.ts",
+  "frontend/src/data/explorationPackages.test.ts",
+  "frontend/src/data/userPackage.ts",
+  "frontend/src/components/package/",
 ];
 
 function _scopeAllowed(file) {

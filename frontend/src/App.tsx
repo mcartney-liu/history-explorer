@@ -43,7 +43,7 @@ import {
 } from './components/navigation'
 import { loadRecent, pushRecent, saveRecent } from './components/recentStore'
 import Breadcrumb from './components/Breadcrumb'
-import { getEvents } from './data/UserBehaviorEvent'
+import { getEvents, recordEvent } from './data/UserBehaviorEvent'
 import { analyzeProductUsage } from './data/ProductUsageAnalysis'
 import type { ExplorationContextIntelligence } from './components/ai/CompanionContext'
 import HistoryBar from './components/HistoryBar'
@@ -67,6 +67,9 @@ import WhyImportantPanel from './components/exploration/WhyImportantPanel'
 import DiscoverPage from './pages/DiscoverPage'
 import { addJourneyEntry, entryFromNode, type JourneyEntry } from './lib/journey'
 import FeedbackWidget from './components/FeedbackWidget'
+
+// M69 — Exploration Package page
+import ExplorationPackagePage from './pages/ExplorationPackagePage'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
@@ -150,6 +153,9 @@ function App() {
   // journeyReasons, or explorationPersistence/localStorage. It is cleared on
   // every navigation (fetchNode) and on goHome, so it never leaks across pages.
   const [focusedEntityId, setFocusedEntityId] = useState<string | null>(null)
+
+  // M69 — Package page state (renders instead of Discover when set)
+  const [packageSlug, setPackageSlug] = useState<string | null>(null)
 
   // M62 W3: relationship / timeline view toggles (no panel deletion — both
   // views stay reachable; only one renders at a time to cut panel density).
@@ -369,6 +375,25 @@ function App() {
   // no second navigation mechanism.
   function handleTopicClick(t: string) {
     navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
+  }
+
+  // M69 — Open an Exploration Package page (overlays Discover/home)
+  function openPackage(slug: string) {
+    recordEvent({ action: 'open_package' as any, entityType: slug })
+    setPackageSlug(slug)
+    if (typeof window !== 'undefined') {
+      window.location.hash = `#/package/${encodeURIComponent(slug)}`
+    }
+  }
+
+  function closePackage() {
+    setPackageSlug(null)
+    if (
+      typeof window !== 'undefined' &&
+      window.location.hash.startsWith('#/package/')
+    ) {
+      window.location.hash = ''
+    }
   }
 
   function clearRecent() {
@@ -950,12 +975,21 @@ function App() {
           )}
 
           {!current && (
+            packageSlug ? (
+              <ExplorationPackagePage
+                slug={packageSlug}
+                onEntityClick={(gid) => openEntity(gid)}
+                onOpenPackage={(s) => openPackage(s)}
+                onBack={closePackage}
+              />
+            ) : (
             <>
             {/* M35: Discover experience — presentational; both callbacks reuse
                 the single navigation truth (navigateTo via handleTopicClick). */}
             <DiscoverPage
               onTopicClick={handleTopicClick}
               onStarterClick={(t) => navigateTo(t)}
+              onPackageClick={(s) => openPackage(s)}
             />
             <LandingPage
               topics={topics}
@@ -980,7 +1014,7 @@ function App() {
             {/* M35 Feature E: lightweight feedback — localStorage only, no API. */}
             <FeedbackWidget page="discover" />
             </>
-          )}
+          ))}
     </ExplorationShell>
   )
 }
