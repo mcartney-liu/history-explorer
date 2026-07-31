@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react'
 import { useLocale } from '../data/locale'
 import { getPackageBySlug, type ExplorationPackage } from '../data/explorationPackages'
 import { visitedFromEvents } from '../data/explorationGuide'
-import { getEvents } from '../data/UserBehaviorEvent'
+import { getEvents, recordEvent } from '../data/UserBehaviorEvent'
 import PackageJourney from '../components/package/PackageJourney'
 import GuidePanel from '../components/guide/GuidePanel'
 import '../styles/package.css'
@@ -83,12 +83,15 @@ export default function ExplorationPackagePage({
       </header>
 
       <div ref={journeyRef}>
-        {/* M70 — Exploration Guide: deterministic navigation (position / next / reason / coverage) */}
+        {/* M70 — Exploration Guide: deterministic navigation (position / next / reason / coverage).
+            M71 — click_guide_next telemetry wired at the page layer (behavior-analysis only;
+            view_source / complete_package contract reserved but NOT emitted yet — PO deferral). */}
         <GuidePanel
           pkg={pkg}
           visited={visited}
           locale={locale}
           onEntityClick={onEntityClick}
+          onNextClick={(to) => recordEvent({ action: 'click_guide_next', entityGlobalId: to })}
         />
 
         <PackageJourney

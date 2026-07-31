@@ -107,4 +107,42 @@ describe('UserBehaviorEvent', () => {
     clearEvents()
     expect(getEvents()).toHaveLength(0)
   })
+
+  // M71 — Exploration Validation telemetry contract
+  it('records the new exploration-package actions (open_package / click_guide_next / view_source / complete_package)', () => {
+    recordEvent({ action: 'open_package', packageSlug: 'china-civilization-v1' })
+    recordEvent({ action: 'click_guide_next', entityGlobalId: 'china_v1:idea-wenguan' })
+    recordEvent({ action: 'view_source', sourceId: 'src-cn-qianmu' })
+    recordEvent({ action: 'complete_package', packageSlug: 'silk-road-exploration' })
+
+    const events = getEvents()
+    expect(events.map((e) => e.action)).toEqual([
+      'open_package',
+      'click_guide_next',
+      'view_source',
+      'complete_package',
+    ])
+    // New optional fields serialize round-trip through localStorage.
+    const pkg = events[0]
+    expect(pkg.packageSlug).toBe('china-civilization-v1')
+    const src = events[2]
+    expect(src.sourceId).toBe('src-cn-qianmu')
+    // Filters work for the new actions too.
+    expect(getEventsByAction('open_package')).toHaveLength(1)
+    expect(getEventsByAction('click_guide_next')[0].entityGlobalId).toBe(
+      'china_v1:idea-wenguan',
+    )
+    expect(getEventsByAction('complete_package')[0].packageSlug).toBe(
+      'silk-road-exploration',
+    )
+  })
+
+  it('keeps recordEvent interface backward-compatible (no new required fields)', () => {
+    recordEvent({ action: 'open_entity', entityGlobalId: 't:rome' })
+    recordEvent({ action: 'open_package', packageSlug: 'roman-empire-exploration' })
+    const events = getEvents()
+    // Existing events carry no packageSlug/sourceId — optional fields default undefined.
+    expect(events[0].packageSlug).toBeUndefined()
+    expect(events[1].sourceId).toBeUndefined()
+  })
 })

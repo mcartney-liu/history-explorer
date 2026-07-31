@@ -25,6 +25,11 @@ export type BehaviorAction =
   | 'click_relationship'
   | 'click_journey'
   | 'start_chat'
+  // Exploration Package funnel (M71 — behavior-analysis only)
+  | 'open_package'
+  | 'click_guide_next'
+  | 'view_source'
+  | 'complete_package'
   // Research funnel
   | 'start_research'
   | 'save_research'
@@ -45,6 +50,10 @@ export interface UserBehaviorEvent {
   entityType?: string
   /** Which tab was involved (for switch_tab events). */
   tab?: string
+  /** Exploration Package slug (for open_package / complete_package / related). */
+  packageSlug?: string
+  /** Source record id (for view_source events). */
+  sourceId?: string
   /** ISO 8601 timestamp of the event. */
   timestamp: string
 }

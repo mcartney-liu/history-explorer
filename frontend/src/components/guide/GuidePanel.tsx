@@ -12,6 +12,10 @@ interface GuidePanelProps {
   visited: string[]
   locale?: Locale
   onEntityClick?: (gid: string) => void
+  /** M71 — fired when the user clicks a "next step" suggestion. Presentational
+   *  passthrough only; telemetry wiring lives in the page layer (behavior-
+   *  analysis only, no recommendation logic). */
+  onNextClick?: (to: string) => void
 }
 
 const MAX_NEXT_STEPS = 5
@@ -25,6 +29,7 @@ export default function GuidePanel({
   visited,
   locale = 'zh',
   onEntityClick,
+  onNextClick,
 }: GuidePanelProps) {
   const snap = getGuideSnapshot(pkg, visited, locale)
   if (!snap.position) return null
@@ -59,7 +64,10 @@ export default function GuidePanel({
                 <button
                   type="button"
                   className="guide-next-btn"
-                  onClick={() => onEntityClick?.(step.edge.to)}
+                  onClick={() => {
+                    onEntityClick?.(step.edge.to)
+                    onNextClick?.(step.edge.to)
+                  }}
                 >
                   <span className="guide-next-arrow">
                     {entityName(step.edge.from)} {getRelationshipLabel(step.edge.type, locale)}{' '}

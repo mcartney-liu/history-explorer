@@ -623,6 +623,24 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/explorationGuide.ts",
   "frontend/src/data/explorationGuide.test.ts",
   "frontend/src/components/guide/",
+
+  // M71 (Exploration Validation — minimal telemetry + deterministic metrics) —
+  // Frontend Freeze Revision Gate (PO-approved 2026-07-31). Validates whether
+  // Package + Journey + Guide drive real exploration. Only behavior-analysis
+  // telemetry + read-only metric aggregation; NO recommendation / personalization.
+  //   - data/explorationMetrics.ts     deterministic metric engine (Depth /
+  //                                    Coverage Rate / Cross-Package Expansion /
+  //                                    Guide Interaction; Completion deferred —
+  //                                    complete_package lacks stable product def)
+  //   - data/explorationMetrics.test.ts  metric unit tests (test file follows
+  //                                    the main file — not a separate request)
+  // UserBehaviorEvent.ts is ALREADY allowlisted (M43) — this gate only approves
+  // its content change (+4 BehaviorAction, +packageSlug?/+sourceId? optional
+  // fields; recordEvent/read/write signatures unchanged).
+  // Least Privilege: no KG / Package-contract / Guide-logic / backend / LLM /
+  // accounts / cloud / personalization change. backend diff = 0; runtime 0.13.0.
+  "frontend/src/data/explorationMetrics.ts",
+  "frontend/src/data/explorationMetrics.test.ts",
 ];
 
 function _scopeAllowed(file) {

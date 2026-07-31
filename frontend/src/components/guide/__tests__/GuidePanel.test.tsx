@@ -51,4 +51,22 @@ describe('GuidePanel (deterministic exploration navigation)', () => {
     )
     expect(html).toContain('本包探索已全部完成')
   })
+
+  // M71 — onNextClick passthrough: optional prop must not change rendering.
+  // The wiring itself (page layer -> recordEvent) is typed by tsc and its event
+  // consumption is asserted in explorationMetrics.test.ts (Guide Interaction).
+  it('renders identically when onNextClick is provided (optional passthrough)', () => {
+    const html = renderToStaticMarkup(
+      <GuidePanel
+        pkg={china()}
+        visited={[]}
+        locale="zh"
+        onEntityClick={noop}
+        onNextClick={noop}
+      />,
+    )
+    expect(html).toContain('探索向导')
+    expect(html).toContain('下一步可以探索')
+    expect(html).toContain('查看')
+  })
 })

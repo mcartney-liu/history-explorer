@@ -377,9 +377,11 @@ function App() {
     navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
   }
 
-  // M69 — Open an Exploration Package page (overlays Discover/home)
+  // M69 — Open an Exploration Package page (overlays Discover/home).
+  // M71 — formalized telemetry: packageSlug field (was `as any` + entityType
+  // misuse). Behavior-analysis only; NOT used for recommendation/personalization.
   function openPackage(slug: string) {
-    recordEvent({ action: 'open_package' as any, entityType: slug })
+    recordEvent({ action: 'open_package', packageSlug: slug })
     setPackageSlug(slug)
     if (typeof window !== 'undefined') {
       window.location.hash = `#/package/${encodeURIComponent(slug)}`
