@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM70] - 2026-07-31 — Non-runtime release (M70 project release)
+
+> **Non-runtime release** (M70 project release). `frontend/package.json` remains `[0.13.0]`. M70 — **Multi-Dataset Exploration Package + Deterministic Exploration Guide**: expands the official Exploration Package library to three civilizations (China / Silk Road / Roman Empire) and upgrades Package validation to a cross-dataset Knowledge Graph index (zero dangling references across 9 example datasets); introduces the deterministic Exploration Guide (探索向导) — a non-AI navigation aid giving current position, graph-reachable next steps with template-based reasons, and exploration coverage, driven purely by the frozen KG + Package contract + local behavior events. Explicitly NOT: LLM runtime, free-form Q&A, generated facts, scoring / ranking / personalization. localStorage holds only anonymous local exploration-event cache — no accounts, no cloud sync, no user profiling. Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0; no new dependency. freeze-check EXIT 0; tsc EXIT 0; 60 M70 tests + 18 DiscoverPage regression green.
+
+---
+
 ## [vM69] - 2026-07-31 — Non-runtime release (M69 project release)
 
 > **Non-runtime release** (M69 project release). `frontend/package.json` remains `[0.13.0]`. M69 — Exploration Package: establishes Exploration Package as the core product object. Data contract + graph-grounded validation (`data/exploration_packages.json`; `explorationPackages.ts` validatePackage — zero dangling refs; `userPackage.ts` contract-only stub; `type/visibility/status` reserved, runtime official-only per PO adjustments A/B) plus journey UI (PackageCard / PackageJourney / TimelineChain / RelationshipChain / SourceChain / RecommendedNext; ExplorationPackagePage; Discover official-packages block + My Exploration placeholder; `#/package/:slug` route). Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0; no new dependency; no LLM runtime. freeze-check EXIT 0; tsc EXIT 0; 33 M69 tests + 18 DiscoverPage regression green.
