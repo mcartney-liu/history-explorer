@@ -132,4 +132,34 @@ describe('TrustDisplay', () => {
     expect(text).toContain('src-tacitus-ann')
     expect(text).not.toContain('推荐原因')          // no reason -> no reason row
   })
+
+  // ---- M74-004-003 (G1-G4): Trust Experience Finalization assertions ----
+
+  it('G1: tier badge maps to the Design System semantic tone (primary)', () => {
+    const el = renderTrust({ nextExploration: NEXT_FULL, engine: 'deterministic' })
+    const tierBadge = el.querySelector('.trust-display-next-source .badge')
+    expect(tierBadge).not.toBeNull()
+    expect(tierBadge!.className).toContain('badge--primary')  // NOT neutral
+    expect(tierBadge!.className).not.toContain('badge--neutral')
+  })
+
+  it('G2: next section label is "推荐探索" — differentiated from GuidePanel', () => {
+    const el = renderTrust({ nextExploration: NEXT_FULL, engine: 'deterministic' })
+    expect(el.textContent ?? '').toContain('推荐探索')
+    // title (Trust Boundary marker) stays untouched
+    expect(el.textContent ?? '').toContain('基于知识库证据的探索建议')
+  })
+
+  it('G3: confidence is localised to zh (no English High/Medium/Low)', () => {
+    const el = renderTrust({ evidence: EVIDENCE, engine: 'deterministic', confidence: 'high' })
+    const text = el.textContent ?? ''
+    expect(text).toContain('可信度：高')
+    expect(text).not.toMatch(/High|Medium|Low/)
+  })
+
+  it('G4: section exposes an aria-label (GuidePanel accessibility pattern)', () => {
+    const el = renderTrust({ evidence: EVIDENCE, nextExploration: NEXT, engine: 'deterministic' })
+    const section = el.querySelector('[data-testid="trust-display"]')
+    expect(section!.getAttribute('aria-label')).toBe('基于知识库证据的探索建议')
+  })
 })

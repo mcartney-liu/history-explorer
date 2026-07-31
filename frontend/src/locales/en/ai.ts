@@ -5,8 +5,11 @@ export default {
   // M74-003 (C3): Trust Display copy — evidence-based, never "AI-generated"
   // for deterministic output (PO Condition 2).
   'ai.trust_title': 'Exploration suggestions based on knowledge-base evidence',
+  'ai.trust_aria_label': 'Exploration suggestions based on knowledge-base evidence',
   'ai.trust_evidence_label': 'Evidence',
-  'ai.trust_next_label': 'Explore next',
+  // M74-004-003 (G2): section label differentiated from GuidePanel's "Explore
+  // next" — two suggestion sources must not share the same copy.
+  'ai.trust_next_label': 'Recommended',
   'ai.trust_engine_deterministic': 'Deterministic output',
   'ai.trust_engine_ai': 'AI-generated',
   'ai.trust_verified': 'Verified',
@@ -16,6 +19,10 @@ export default {
   'ai.evidence_claim': 'Evidence',
   'ai.evidence_source': 'Source',
   'ai.evidence_confidence': 'Confidence',
+  // M74-004-003 (G3): confidence localisation (frontend presentation only).
+  'ai.confidence_high': 'High',
+  'ai.confidence_medium': 'Medium',
+  'ai.confidence_low': 'Low',
   'ai.tier_primary': 'Primary source',
   'ai.tier_academic': 'Academic',
   'ai.tier_reference': 'Reference',

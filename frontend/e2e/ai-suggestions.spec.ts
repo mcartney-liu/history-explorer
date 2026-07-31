@@ -90,6 +90,9 @@ test.describe('AI suggestions — Feature ON (:5174, mocked backend)', () => {
     await expect(suggestions.getByText('Augustus 成为首位罗马皇帝。')).toBeVisible()
     await expect(suggestions.getByText('塔西佗编年史')).toBeVisible()
     await expect(suggestions.getByText('一手史料')).toBeVisible()
+    // M74-004-003 (G2/G3): differentiated section label + zh confidence
+    await expect(suggestions.getByText('推荐探索')).toBeVisible()
+    await expect(suggestions.getByText('确定性输出')).toBeVisible()
     // deterministic output must NOT be labeled AI-generated
     await expect(suggestions.getByText('AI 生成')).toHaveCount(0)
   })

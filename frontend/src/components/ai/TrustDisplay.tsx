@@ -53,14 +53,33 @@ function tierLabel(tier: string | undefined, t: (k: string) => string): string {
   }
 }
 
+// M74-004-003 (G1): map source tier to the EXISTING Design System Badge
+// semantic tones (primary / academic / reference) — reuses DS Lite, no new
+// color system. Unknown tiers fall back to neutral.
+function tierTone(tier: string | undefined): BadgeTone {
+  switch (tier) {
+    case 'primary':
+      return 'primary'
+    case 'academic':
+      return 'academic'
+    case 'reference':
+      return 'reference'
+    default:
+      return 'neutral'
+  }
+}
+
+// M74-004-003 (G3): confidence localisation — pure frontend presentation
+// mapping. The backend confidence enum (high/medium/low) is unchanged; the
+// labels come from locale keys so zh never shows English confidence text.
 function confidenceLabel(confidence: AIConfidence | undefined, t: (k: string) => string): string {
   switch (confidence) {
     case 'high':
-      return `${t('ai.evidence_confidence')}: High`
+      return `${t('ai.evidence_confidence')}：${t('ai.confidence_high')}`
     case 'medium':
-      return `${t('ai.evidence_confidence')}: Medium`
+      return `${t('ai.evidence_confidence')}：${t('ai.confidence_medium')}`
     case 'low':
-      return `${t('ai.evidence_confidence')}: Low`
+      return `${t('ai.evidence_confidence')}：${t('ai.confidence_low')}`
     default:
       return ''
   }
@@ -81,14 +100,14 @@ export function TrustDisplay({
 
   if (evidenceList.length === 0 && nextList.length === 0) {
     return (
-      <section className="trust-display" data-testid="trust-display">
+      <section className="trust-display" data-testid="trust-display" aria-label={t('ai.trust_aria_label')}>
         <p className="trust-display-empty">{t('ai.trust_no_evidence')}</p>
       </section>
     )
   }
 
   return (
-    <section className="trust-display" data-testid="trust-display">
+    <section className="trust-display" data-testid="trust-display" aria-label={t('ai.trust_aria_label')}>
       <header className="trust-display-header">
         <h3 className="trust-display-title">{t('ai.trust_title')}</h3>
         <span className="trust-display-meta">
@@ -139,7 +158,7 @@ export function TrustDisplay({
                     <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
                     {item.source_title && <span className="trust-display-source-title">{item.source_title}</span>}
                     {item.source_tier && (
-                      <Badge tone="neutral">{tierLabel(item.source_tier, t)}</Badge>
+                      <Badge tone={tierTone(item.source_tier)}>{tierLabel(item.source_tier, t)}</Badge>
                     )}
                     {/* source_id always surfaces — auditable reference id */}
                     <code className="trust-display-source">{item.source_id}</code>

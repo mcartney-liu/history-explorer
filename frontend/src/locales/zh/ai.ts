@@ -5,8 +5,11 @@ export default {
   // M74-003 (C3): Trust Display copy — evidence-based, never "AI-generated"
   // for deterministic output (PO Condition 2).
   'ai.trust_title': '基于知识库证据的探索建议',
+  'ai.trust_aria_label': '基于知识库证据的探索建议',
   'ai.trust_evidence_label': '证据依据',
-  'ai.trust_next_label': '下一步可以探索',
+  // M74-004-003 (G2): section label differentiated from GuidePanel's
+  // "下一步可以探索" — two suggestion sources must not share the same copy.
+  'ai.trust_next_label': '推荐探索',
   'ai.trust_engine_deterministic': '确定性输出',
   'ai.trust_engine_ai': 'AI 生成',
   'ai.trust_verified': '已校验',
@@ -16,6 +19,10 @@ export default {
   'ai.evidence_claim': '证据原文',
   'ai.evidence_source': '来源',
   'ai.evidence_confidence': '可信度',
+  // M74-004-003 (G3): confidence localisation (zh never shows English).
+  'ai.confidence_high': '高',
+  'ai.confidence_medium': '中',
+  'ai.confidence_low': '低',
   'ai.tier_primary': '一手史料',
   'ai.tier_academic': '学术文献',
   'ai.tier_reference': '参考资料',
