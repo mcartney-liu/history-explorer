@@ -64,6 +64,37 @@ not weaken the deterministic core; the in-memory graph remains the single source
 - The AI module lives **inside** `backend/app/` (within `freeze-check` scan scope). The
   reserved root `ai/` placeholder is **outside** scan scope and MUST NOT host runtime AI code.
 
+### Approved Exception — M74 AI Grounding Runtime (PO Freeze Revision, vM74)
+
+M74 activates the M11 exception (ADR-0003) under the **frozen Trust Boundary**
+(KG = fact layer, AI = interpretation layer, AI never a fact source — ADR-0011 AI Runtime
+Architecture, docs/15_DECISIONS). Approved via M74 Phase0 Approval Package + Phase2
+Freeze Gate + AIRequest Freeze Revision Request (PO-approved, 2026-07-31/08-01).
+
+- **Extended allowed scope** (all inside `backend/app/ai_gateway/` + one read-only core
+  extension + one additive API field):
+  - `grounding_builder.py` — ClaimGraph assembly (lazy), EvidenceSelector, deterministic
+    `derive_next_exploration` (+ claim_text / source_title / source_tier additive fields)
+  - `citation_model.py` / `response_validator.py` — ClaimEntry / ClaimGraph / SelectionRecord /
+    EvidenceSelection / ClaimValidationResult models + EvidenceValidator Trust Gate
+  - `exploration_planner.py` — state-aware Exploration Planner (P7 self-exclusion,
+    P2 visited-aware, deterministic reason, evidence-aware ranking)
+  - `answer_service.py` — deterministic grounded OFF-branch (ClaimGraph → Selection →
+    Validation → renderer; engine=deterministic, grounded=true, 4-field contract)
+  - `knowledge_service.py` — read-only local-id→global-id mapping + claim/source lazy loaders
+  - `main.py` — AIRequest **additive fields only**: `visited: list[str]` +
+    `package_context: Optional[str]` (no new endpoint, no route change, no field semantics change)
+- **Runtime remains OFF by default**: `AI_GATEWAY_ENABLED=false`; LLM provider unconfigured
+  → `grounded_answer` returns the deterministic grounded output (never 500, never guesses).
+  Frontend AI touchpoints behind `VITE_AI_SUGGESTIONS_ENABLED` (default OFF = M73 byte-identical).
+- **Evaluation baseline** (frozen): golden set 20 (entity 8 / relationship 7 / next 5);
+  Grounding 100% / Citation 100% / Hallucination 0 / Helpfulness proxy 100%.
+- **Remain forbidden** (unchanged): KG writes by AI, generated facts, free-form chat,
+  scoring / ranking / personalization, vector DB / RAG / Neo4j / Redis / GIS / auth,
+  new runtime dependencies, agent / multi-agent.
+- **Trust Experience frozen** (vM74): recommendation presentation / evidence card /
+  reason / trust metadata display — no further changes without a new Freeze Revision Gate.
+
 ## 4. Revision Mechanism — Freeze Revision Gate
 
 Any proposal that touches the freeze boundary (AI runtime, Neo4j, GIS, new datastore,
