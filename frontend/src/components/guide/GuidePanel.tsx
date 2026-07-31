@@ -5,6 +5,7 @@ import {
 } from '../../data/explorationPackages'
 import { getGuideSnapshot } from '../../data/explorationGuide'
 import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import { Button } from '../ui/Button'
 
 interface GuidePanelProps {
   pkg: ExplorationPackage
@@ -43,13 +44,13 @@ export default function GuidePanel({
 
       <div className="guide-position">
         <span className="guide-position-label">你现在在</span>
-        <button
-          type="button"
+        <Button
+          variant="text"
           className="guide-position-value"
           onClick={() => onEntityClick?.(snap.position!.entityGlobalId)}
         >
           {snap.position.name}
-        </button>
+        </Button>
         {snap.position.atEntry && (
           <span className="guide-position-hint">（本包入口）</span>
         )}
@@ -61,8 +62,8 @@ export default function GuidePanel({
           <ul className="guide-next-list">
             {snap.nextSteps.slice(0, MAX_NEXT_STEPS).map((step, i) => (
               <li key={i} className="guide-next-item">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className="guide-next-btn"
                   onClick={() => {
                     onEntityClick?.(step.edge.to)
@@ -74,7 +75,7 @@ export default function GuidePanel({
                     {step.toName}
                   </span>
                   <span className="guide-next-cta">查看 {step.toName} →</span>
-                </button>
+                </Button>
                 <p className="guide-next-reason">{step.reason}</p>
               </li>
             ))}

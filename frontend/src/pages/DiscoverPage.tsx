@@ -18,6 +18,7 @@ import { recordEvent } from '../data/UserBehaviorEvent'
 import { Card } from '../components/ui/Card'
 import { Icon } from '../components/ui/Icon'
 import type { IconName } from '../components/ui/Icon'
+import { Tabs } from '../components/ui/Tabs'
 import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
 import { getPackages } from '../data/explorationPackages'
@@ -251,41 +252,18 @@ function DiscoverPage({ onTopicClick, onStarterClick, onPackageClick = () => {} 
       </div>
 
       {/* M62-A: tabbed landing — 了解 (capability + start) / 研究 (personal activity) / 扩展 (roadmap) */}
-      <div className="discover-tabs" role="tablist" aria-label="探索分类">
-        <button
-          type="button"
-          role="tab"
-          id="tab-understand"
-          aria-selected={tab === 'understand'}
-          aria-controls="panel-understand"
-          className={`discover-tab${tab === 'understand' ? ' active' : ''}`}
-          onClick={() => setTab('understand')}
-        >
-          了解
-        </button>
-        <button
-          type="button"
-          role="tab"
-          id="tab-research"
-          aria-selected={tab === 'research'}
-          aria-controls="panel-research"
-          className={`discover-tab${tab === 'research' ? ' active' : ''}`}
-          onClick={() => setTab('research')}
-        >
-          研究
-        </button>
-        <button
-          type="button"
-          role="tab"
-          id="tab-expand"
-          aria-selected={tab === 'expand'}
-          aria-controls="panel-expand"
-          className={`discover-tab${tab === 'expand' ? ' active' : ''}`}
-          onClick={() => setTab('expand')}
-        >
-          扩展
-        </button>
-      </div>
+      <Tabs
+        className="discover-tabs"
+        tabClassName="discover-tab"
+        ariaLabel="探索分类"
+        items={[
+          { id: 'understand', label: '了解', ariaControls: 'panel-understand' },
+          { id: 'research', label: '研究', ariaControls: 'panel-research' },
+          { id: 'expand', label: '扩展', ariaControls: 'panel-expand' },
+        ]}
+        active={tab}
+        onChange={setTab}
+      />
 
       {/* 了解 — product capabilities + primary exploration entry */}
       <div

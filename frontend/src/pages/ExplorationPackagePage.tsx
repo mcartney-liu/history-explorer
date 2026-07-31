@@ -5,6 +5,8 @@ import { visitedFromEvents } from '../data/explorationGuide'
 import { getEvents, recordEvent } from '../data/UserBehaviorEvent'
 import PackageJourney from '../components/package/PackageJourney'
 import GuidePanel from '../components/guide/GuidePanel'
+import { Button } from '../components/ui/Button'
+import { EmptyState } from '../components/ui/EmptyState'
 import '../styles/package.css'
 
 interface ExplorationPackagePageProps {
@@ -44,10 +46,10 @@ export default function ExplorationPackagePage({
   if (!pkg) {
     return (
       <section className="package-page package-page--missing" aria-label="探索包未找到">
-        <p className="package-missing-text">未找到探索包：{slug}</p>
-        <button type="button" className="package-back" onClick={onBack}>
+        <EmptyState title={`未找到探索包：${slug}`} description="请返回首页重新选择一个官方探索包。" />
+        <Button variant="ghost" className="package-back" onClick={onBack}>
           ← 返回探索
-        </button>
+        </Button>
       </section>
     )
   }
@@ -63,9 +65,9 @@ export default function ExplorationPackagePage({
 
   return (
     <section className="package-page" aria-label={`探索包 ${title}`}>
-      <button type="button" className="package-back" onClick={onBack}>
+      <Button variant="ghost" className="package-back" onClick={onBack}>
         ← 返回探索
-      </button>
+      </Button>
 
       <header className="package-hero">
         <span className="package-badge">{typeLabel}</span>
@@ -77,9 +79,9 @@ export default function ExplorationPackagePage({
           <p className="package-goals-text">{goals}</p>
         </div>
 
-        <button type="button" className="package-start" onClick={scrollToJourney}>
+        <Button variant="gold" className="package-start" onClick={scrollToJourney}>
           开始探索 ↓
-        </button>
+        </Button>
       </header>
 
       <div ref={journeyRef}>

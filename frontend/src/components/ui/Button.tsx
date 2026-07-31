@@ -10,6 +10,8 @@ interface ButtonProps {
   className?: string
   onClick?: () => void
   type?: 'button' | 'submit'
+  /** Accessible label — passed through to aria-label (M73 Phase2-B). */
+  ariaLabel?: string
 }
 
 const base = 'btn'
@@ -32,10 +34,11 @@ export function Button({
   className = '',
   onClick,
   type = 'button',
+  ariaLabel,
 }: ButtonProps) {
   const classes = [base, variantClass[variant], sizeClass[size], className].filter(Boolean).join(' ')
   return (
-    <button type={type} className={classes} onClick={onClick}>
+    <button type={type} className={classes} onClick={onClick} aria-label={ariaLabel}>
       {children}
     </button>
   )

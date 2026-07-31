@@ -1,0 +1,58 @@
+/* ============================================================
+   M73 Phase2-B — DS Lite (Design System Lite)
+   Minimal primitives built on tokens.css (dark museum theme).
+   Badge / Tabs / EmptyState base styles. Page-specific class
+   names (discover-tab, package-back, ...) remain their own CSS.
+   ============================================================ */
+
+/* --- Badge (semantic tone chip) --- */
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+.badge--primary {
+  color: var(--gold-hi);
+  background: rgba(203, 161, 53, 0.12);
+  border: 1px solid rgba(203, 161, 53, 0.3);
+}
+.badge--academic {
+  color: var(--verified);
+  background: rgba(79, 167, 132, 0.12);
+  border: 1px solid rgba(79, 167, 132, 0.3);
+}
+.badge--reference,
+.badge--neutral {
+  color: var(--mid);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+}
+
+/* --- Tabs (minimal flex row; page passes its own tab classes) --- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+/* --- EmptyState --- */
+.empty-state {
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--mid);
+}
+.empty-state-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--hi);
+}
+.empty-state-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+}

@@ -3,6 +3,7 @@ import {
   type ExplorationPackage,
   type Locale,
 } from '../../data/explorationPackages'
+import { Button } from '../ui/Button'
 
 interface RecommendedNextProps {
   pkg: ExplorationPackage
@@ -33,28 +34,28 @@ export default function RecommendedNext({
           if (rec.kind === 'package') {
             return (
               <li key={i}>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className="recommended-next-btn"
                   onClick={() => onOpenPackage?.(rec.ref)}
                 >
                   <span className="recommended-next-kind">探索包</span>
                   {label} →
-                </button>
+                </Button>
               </li>
             )
           }
 
           return (
             <li key={i}>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 className="recommended-next-btn"
                 onClick={() => onEntityClick?.(rec.ref)}
               >
                 <span className="recommended-next-kind">实体</span>
                 {label} →
-              </button>
+              </Button>
             </li>
           )
         })}

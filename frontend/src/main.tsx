@@ -6,6 +6,7 @@ import './styles/tokens.css'
 import './styles/typography.css'
 import './styles/layout-grid.css'
 import './styles/components.css'
+import './styles/ui.css'
 import './App.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

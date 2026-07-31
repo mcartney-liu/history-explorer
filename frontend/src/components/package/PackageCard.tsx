@@ -1,4 +1,5 @@
 import type { ExplorationPackage, Locale } from '../../data/explorationPackages'
+import { Button } from '../ui/Button'
 
 interface PackageCardProps {
   pkg: ExplorationPackage
@@ -18,14 +19,14 @@ export default function PackageCard({ pkg, locale = 'zh', onOpen }: PackageCardP
       <span className="pkg-card-badge">{typeLabel}</span>
       <h3 className="pkg-card-title">{title}</h3>
       <p className="pkg-card-summary">{summary}</p>
-      <button
-        type="button"
+      <Button
+        variant="gold"
         className="pkg-card-open"
-        aria-label={`开始探索 ${title}`}
+        ariaLabel={`开始探索 ${title}`}
         onClick={() => onOpen(pkg.slug)}
       >
         开始探索 →
-      </button>
+      </Button>
     </article>
   )
 }

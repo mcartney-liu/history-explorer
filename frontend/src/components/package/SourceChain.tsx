@@ -6,6 +6,7 @@ import {
   type Locale,
 } from '../../data/explorationPackages'
 import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import { Badge, type BadgeTone } from '../ui/Badge'
 
 interface SourceChainProps {
   pkg: ExplorationPackage
@@ -21,6 +22,13 @@ function tierLabel(tier: string): string {
   if (tier === 'academic') return '学术来源'
   if (tier === 'reference') return '参考来源'
   return tier || '来源'
+}
+
+// M73 Phase2-B: map source tier to the DS Lite Badge tone.
+function tierTone(tier: string): BadgeTone {
+  if (tier === 'primary') return 'primary'
+  if (tier === 'academic') return 'academic'
+  return 'reference'
 }
 
 // Source / Provenance Chain. For every relationship path that carries an
@@ -55,7 +63,9 @@ export default function SourceChain({ pkg, locale = 'zh', onSourceClick }: Sourc
                       title={s.creator ? `${s.creator} (${s.year})` : s.id}
                       onClick={onSourceClick ? () => onSourceClick(s.id) : undefined}
                     >
-                      <span className="source-badge-tier">{tierLabel(s.tier)}</span>
+                      <Badge tone={tierTone(s.tier)} className="source-badge-tier">
+                        {tierLabel(s.tier)}
+                      </Badge>
                       <span className="source-badge-title">{s.title}</span>
                     </li>
                   ))}
@@ -76,7 +86,9 @@ export default function SourceChain({ pkg, locale = 'zh', onSourceClick }: Sourc
                 className={`source-badge source-badge--${(s?.tier || 'unknown').toLowerCase()}`}
                 key={sid}
               >
-                <span className="source-badge-tier">{tierLabel(s?.tier || '')}</span>
+                <Badge tone={tierTone(s?.tier || '')} className="source-badge-tier">
+                  {tierLabel(s?.tier || '')}
+                </Badge>
                 <span className="source-badge-title">{s?.title ?? sid}</span>
               </li>
             )
