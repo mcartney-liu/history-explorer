@@ -120,7 +120,7 @@ def _parse_ai_json(raw: str) -> Optional[Dict[str, Any]]:
     return data if isinstance(data, dict) else None
 
 
-def _deterministic_grounded_response(builder, question, context, mode):
+def _deterministic_grounded_response(builder, question, context, mode, visited=None, package_context=None):
     """Runtime OFF: Phase2 pipeline-driven deterministic grounded response.
 
     context_global_ids -> ClaimGraph -> EvidenceSelection -> EvidenceValidation
@@ -133,11 +133,13 @@ def _deterministic_grounded_response(builder, question, context, mode):
         itself, not invented); the prefix labels it as evidence-based, never
         as AI-generated (PO Condition 3).
       - evidence/citations come from the validated claims (status: verified).
-      - next_exploration comes from the C1 evidence-bound derivation,
-        restricted to the validated claim subset.
+      - next_exploration comes from the Exploration Planner (M74-004-002):
+        evidence-bound, self-free (P7 fix), visited-aware (P2), with a
+        deterministic reason — restricted to the validated claim subset.
     """
     from .citation_model import ClaimGraph
-    from .grounding_builder import EvidenceSelector, derive_next_exploration
+    from .exploration_planner import plan_exploration
+    from .grounding_builder import EvidenceSelector
     from .response_validator import EvidenceValidator
 
     if not context:
@@ -184,14 +186,19 @@ def _deterministic_grounded_response(builder, question, context, mode):
     grounded = valid > 0
     confidence = _compute_confidence(grounded, valid, len(result.valid_claims))
 
-    # --- next_exploration restricted to the validated claim subset (C1) ---
+    # --- next_exploration via the Exploration Planner (M74-004-002) ---
     narrowed = ClaimGraph(
         focus_global_id=graph.focus_global_id,
         neighbors=graph.neighbors,
         claims=list(result.valid_claims),
         sources=list(selection.sources),
     )
-    next_exploration = derive_next_exploration(narrowed, limit=3)
+    next_exploration = plan_exploration(
+        narrowed,
+        visited=visited,
+        package_context=package_context,
+        limit=3,
+    )
 
     payload = {
         "answer": answer,
@@ -212,6 +219,8 @@ def grounded_answer(
     question: str,
     context_global_ids: Sequence[str],
     mode: str = "explain",
+    visited: Optional[Sequence[str]] = None,
+    package_context: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Produce a grounded answer. Pure function of inputs — no state stored.
 
@@ -228,6 +237,10 @@ def grounded_answer(
     and next_exploration comes from the evidence-bound derivation (C1).
     engine stays "deterministic": this output is explicitly NOT presented as
     AI-generated (PO Condition 3).
+
+    M74-004-002 (additive): `visited` (already-explored entity ids) and
+    `package_context` are exploration-state inputs for the Exploration
+    Planner — the frontend only supplies id lists, never facts.
     """
     question = (question or "").strip()
     context = [g for g in (context_global_ids or []) if isinstance(g, str)]
@@ -237,7 +250,9 @@ def grounded_answer(
     # M74-003 (C2): Runtime OFF branch — Phase2 pipeline deterministic grounded.
     provider = get_provider()
     if provider is None:
-        deterministic = _deterministic_grounded_response(builder, question, context, mode)
+        deterministic = _deterministic_grounded_response(
+            builder, question, context, mode, visited, package_context
+        )
         if deterministic is not None:
             return deterministic
         return _with_echo(get_fallback_response(reason="ai_unavailable"), question, context, mode)

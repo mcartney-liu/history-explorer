@@ -501,6 +501,11 @@ def derive_next_exploration(claim_graph, limit: int = 3) -> list:
     Pure function of a ClaimGraph — never touches KnowledgeService. Every
     returned item carries `source_id` and `claim_ids` so the frontend can
     render a Trust Display without any local fact assembly.
+
+    M74-004-002 (additive): each item additionally carries `claim_text`,
+    `source_title` and `source_tier` (looked up from the SAME ClaimGraph —
+    still zero KnowledgeService re-query) so the Trust Display can render
+    concrete evidence without any frontend join.
     """
     # Neighbor labels (ClaimGraph.neighbors entries: global_id / name / ...).
     labels: dict = {}
@@ -509,6 +514,12 @@ def derive_next_exploration(claim_graph, limit: int = 3) -> list:
         name = n.get("name") if isinstance(n, dict) else getattr(n, "name", None)
         if gid:
             labels[gid] = name or gid
+
+    # M74-004-002: in-graph lookups for the additive Trust fields.
+    claims_by_id = {c.claim_id: c for c in claim_graph.claims if c.claim_id}
+    sources_by_id = {
+        s.get("id"): s for s in claim_graph.sources if isinstance(s, dict) and s.get("id")
+    }
 
     by_target: dict = {}
     for c in claim_graph.claims:
@@ -528,13 +539,21 @@ def derive_next_exploration(claim_graph, limit: int = 3) -> list:
     items = sorted(by_target.items(), key=lambda kv: (-len(kv[1]["claim_ids"]), kv[0]))
     result = []
     for gid, bucket in items[:limit]:
+        source_id = sorted(bucket["source_ids"])[0]
+        first_claim_id = sorted(bucket["claim_ids"])[0]
+        claim_entry = claims_by_id.get(first_claim_id)
+        source = sources_by_id.get(source_id) or {}
         result.append(
             {
                 "global_id": gid,
                 "label": labels.get(gid, gid),
                 "relationship": sorted(bucket["relationships"])[0],
-                "source_id": sorted(bucket["source_ids"])[0],
+                "source_id": source_id,
                 "claim_ids": sorted(bucket["claim_ids"]),
+                # M74-004-002 additive Trust fields (backend-output, no FE join).
+                "claim_text": (claim_entry.claim_text if claim_entry else "") or "",
+                "source_title": (source.get("title") or "") or "",
+                "source_tier": (source.get("tier") or "") or "",
             }
         )
     return result

@@ -617,3 +617,116 @@ def test_next_exploration_empty_graph_safe():
     from app.ai_gateway.grounding_builder import derive_next_exploration
 
     assert derive_next_exploration(ClaimGraph("no-such:x", [], [], [])) == []
+
+
+# ---------------------------------------------------------------------------
+# M74-004-002 (Commit 1) — Exploration Planner: P7 fix / P2 visited / reason
+# ---------------------------------------------------------------------------
+
+def _planner_graph():
+    """Hand-built ClaimGraph covering the P7 (self) and P2 (visited) cases."""
+    from app.ai_gateway.citation_model import ClaimEntry, ClaimGraph
+
+    claims = [
+        # pair claims around focus "t:person-x"
+        ClaimEntry("ec-ok-a", "person-x->event-y", "event y text", "src-a",
+                   "t:person-x", "t:event-y", "participated_in", True),
+        ClaimEntry("ec-ok-b", "person-x->person-z", "person z text", "src-b",
+                   "t:person-x", "t:person-z", "influenced", True),
+        # P7 case: claim whose OBJECT is the focus itself
+        ClaimEntry("ec-self", "person-w->person-x", "self text", "src-a",
+                   "t:person-w", "t:person-x", "influenced", True),
+    ]
+    sources = [
+        {"id": "src-a", "title": "Primary Source A", "tier": "primary"},
+        {"id": "src-b", "title": "Academic Source B", "tier": "academic"},
+    ]
+    return ClaimGraph("t:person-x", [], claims, sources)
+
+
+def test_planner_excludes_self_recommendation_p7():
+    """P7 fix: a claim whose object IS the focus must never be recommended."""
+    from app.ai_gateway.exploration_planner import ExplorationPlanner
+
+    recs = ExplorationPlanner().plan(_planner_graph())
+    gids = [r["global_id"] for r in recs]
+    assert "t:person-x" not in gids          # focus never recommended
+    assert "t:event-y" in gids and "t:person-z" in gids
+
+
+def test_planner_excludes_visited_p2():
+    """P2: already-explored targets are dropped."""
+    from app.ai_gateway.exploration_planner import ExplorationPlanner
+
+    recs = ExplorationPlanner().plan(_planner_graph(), visited=["t:event-y"])
+    gids = [r["global_id"] for r in recs]
+    assert "t:event-y" not in gids
+    assert "t:person-z" in gids
+
+
+def test_planner_reason_from_claim_text():
+    """reason is deterministic and derived from the validated claim text."""
+    from app.ai_gateway.exploration_planner import ExplorationPlanner
+
+    recs = ExplorationPlanner().plan(_planner_graph())
+    event = next(r for r in recs if r["global_id"] == "t:event-y")
+    assert event["reason"]
+    assert "event y text" in event["reason"]   # grounded in claim text
+
+
+def test_planner_additive_trust_fields():
+    """next_exploration now carries claim_text / source_title / source_tier."""
+    from app.ai_gateway.exploration_planner import ExplorationPlanner
+
+    recs = ExplorationPlanner().plan(_planner_graph())
+    event = next(r for r in recs if r["global_id"] == "t:event-y")
+    assert event["claim_text"] == "event y text"
+    assert event["source_title"] == "Primary Source A"
+    assert event["source_tier"] == "primary"
+
+
+def test_planner_stable_ordering_by_evidence_tier():
+    """Ordering: evidence strength desc, then tier asc, then gid asc."""
+    from app.ai_gateway.citation_model import ClaimEntry, ClaimGraph
+    from app.ai_gateway.exploration_planner import ExplorationPlanner
+
+    # event-y has 2 claims (primary), person-z has 1 (primary) -> event first
+    claims = [
+        ClaimEntry("ec-a1", "person-x->event-y", "t1", "src-a",
+                   "t:person-x", "t:event-y", "participated_in", True),
+        ClaimEntry("ec-a2", "person-x->event-y", "t2", "src-a",
+                   "t:person-x", "t:event-y", "participated_in", True),
+        ClaimEntry("ec-b1", "person-x->person-z", "t3", "src-b",
+                   "t:person-x", "t:person-z", "influenced", True),
+    ]
+    sources = [
+        {"id": "src-a", "title": "A", "tier": "primary"},
+        {"id": "src-b", "title": "B", "tier": "academic"},
+    ]
+    recs = ExplorationPlanner().plan(ClaimGraph("t:person-x", [], claims, sources))
+    assert [r["global_id"] for r in recs] == ["t:event-y", "t:person-z"]
+
+
+def test_planner_real_data_self_free():
+    """Real audit targets: self-recommendations are gone (P7 on real data)."""
+    from app.ai_gateway.exploration_planner import ExplorationPlanner
+    from app.ai_gateway.grounding_builder import GroundingBuilder
+
+    planner = ExplorationPlanner()
+    builder = GroundingBuilder(knowledge_service)
+    # Audit found self-refs on these foci
+    foci = [
+        "ancient_india:event-kalinga-war",
+        "china_v1:tp-song",
+        "china_v1:idea-keju",
+        "china_v1:idea-wenguan",
+    ]
+    total = 0
+    for gid in foci:
+        graph = builder.build_claim_graph(gid)
+        if not graph.claims:
+            continue
+        for r in planner.plan(graph, limit=3):
+            total += 1
+            assert r["global_id"] != gid, f"self-ref survived for {gid}"
+    assert total >= 0

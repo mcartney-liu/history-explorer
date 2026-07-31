@@ -696,6 +696,12 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/ai_gateway/citation_model.py",
   "backend/app/ai_gateway/response_validator.py",
   "backend/app/ai_gateway/answer_service.py",
+  // M74-004-002 (PO-approved): Exploration Planner backend orchestration —
+  // state-aware recommendations (P7 self-fix / P2 visited / deterministic
+  // reason). Pure additive inside the approved ai_gateway module; no
+  // ClaimGraph / Evidence contract change, no LLM / provider / prompt touch.
+  "backend/app/ai_gateway/exploration_planner.py",
+  "backend/app/main.py",
   "frontend/src/hooks/",
   "frontend/package.json",
   "frontend/package-lock.json",

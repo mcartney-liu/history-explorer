@@ -25,7 +25,9 @@ from .validation import (
 # M11-2 (ADR-0003): grounded AI interpretation endpoints. All AI orchestration
 # lives inside the approved ai_gateway module; this file only mounts the routes
 # (no AI logic / graph mutation / business logic — freeze boundary §5).
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, Field
 
 from .ai_gateway import grounded_answer
 
@@ -348,6 +350,11 @@ class AIRequest(BaseModel):
     # prompt text or AI logic lives in main.py (freeze boundary §5). Unknown
     # modes fall back to 'explain' inside prompt_service.
     mode: str = "explain"
+    # M74-004-002 (PO-approved Freeze Revision): additive exploration-state
+    # fields for the backend Exploration Planner. Purely declarative — no
+    # route / logic change. The frontend only supplies id lists, never facts.
+    visited: list[str] = Field(default_factory=list)
+    package_context: Optional[str] = None
 
 
 def ai_explain(body: AIRequest):
@@ -362,6 +369,8 @@ def ai_explain(body: AIRequest):
         body.question,
         body.context_global_ids,
         mode=body.mode or "explain",
+        visited=body.visited,
+        package_context=body.package_context,
     )
 
 
@@ -378,6 +387,8 @@ def ai_chat(body: AIRequest):
         body.question,
         body.context_global_ids,
         mode=body.mode or "explain",
+        visited=body.visited,
+        package_context=body.package_context,
     )
 
 
