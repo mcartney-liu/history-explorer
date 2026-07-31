@@ -7,6 +7,8 @@ import {
 } from "./explorationPackages";
 
 const china = () => getPackages().find((p) => p.slug === "china-civilization-v1")!;
+const silkRoad = () => getPackages().find((p) => p.slug === "silk-road-exploration")!;
+const romanEmpire = () => getPackages().find((p) => p.slug === "roman-empire-exploration")!;
 
 describe("M69 Exploration Package contract (graph-grounded)", () => {
   it("registry exposes the official China package", () => {
@@ -69,5 +71,66 @@ describe("M69 Exploration Package contract (graph-grounded)", () => {
   it("single-package validation reports no errors", () => {
     const report = validatePackage(china());
     expect(report.ok, report.errors.join("\n")).toBe(true);
+  });
+});
+
+describe("M70 cross-dataset packages (silk-road / roman-empire)", () => {
+  it("registry exposes silk-road and roman-empire packages (official)", () => {
+    expect(silkRoad().type).toBe("official");
+    expect(romanEmpire().type).toBe("official");
+  });
+
+  it("silk-road package resolves cross-dataset edges (ancient_india -> silk_road, silk_road -> roman_empire)", () => {
+    const paths = silkRoad().relationship_paths;
+    expect(paths).toContainEqual(
+      expect.objectContaining({
+        from: "ancient_india:religion-buddhism",
+        to: "silk_road:silk_road",
+        type: "spread",
+        evidence: ["ec-023"],
+      }),
+    );
+    expect(paths).toContainEqual(
+      expect.objectContaining({
+        from: "silk_road:silk_road",
+        to: "roman_empire:civ-roman",
+        type: "traded_with",
+      }),
+    );
+    const report = validatePackage(silkRoad());
+    expect(report.ok, report.errors.join("\n")).toBe(true);
+  });
+
+  it("roman-empire package validates with evidence-bound paths (ec-rom-*)", () => {
+    const report = validatePackage(romanEmpire());
+    expect(report.ok, report.errors.join("\n")).toBe(true);
+    const withEvidence = romanEmpire().relationship_paths.filter((p) => p.evidence?.length);
+    expect(withEvidence.length).toBeGreaterThanOrEqual(8);
+    expect(romanEmpire().relationship_paths).toContainEqual(
+      expect.objectContaining({
+        from: "roman_empire:civ-roman",
+        to: "silk_road:silk_road",
+        type: "traded_with",
+        evidence: ["ec-rom-027"],
+      }),
+    );
+  });
+
+  it("timeline slices and recommended entity refs resolve across datasets", () => {
+    expect(silkRoad().timeline_slices.map((s) => s.entity)).toEqual([
+      "silk_road:person-zhang-qian",
+      "silk_road:event-silk-road-opened",
+      "silk_road:tech-paper",
+    ]);
+    expect(romanEmpire().timeline_slices.map((s) => s.entity)).toEqual([
+      "roman_empire:tp-republic",
+      "roman_empire:tp-27bc",
+      "roman_empire:event-roman-empire-established",
+      "roman_empire:event-empire-fall",
+    ]);
+    for (const pkg of [silkRoad(), romanEmpire()]) {
+      const report = validatePackage(pkg);
+      expect(report.ok, report.errors.join("\n")).toBe(true);
+    }
   });
 });

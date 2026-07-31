@@ -1,5 +1,13 @@
 import registry from "../../../data/exploration_packages.json";
 import exampleRaw from "../../../data/examples/china_civilization_v1_example.json";
+import silkRoadRaw from "../../../data/examples/silk_road_example.json";
+import romanEmpireRaw from "../../../data/examples/roman_empire_example.json";
+import ancientIndiaRaw from "../../../data/examples/ancient_india_example.json";
+import earlyChristianityRaw from "../../../data/examples/early_christianity_example.json";
+import egyptTechRaw from "../../../data/examples/egypt_technology_religion_example.json";
+import greekPhilosophyRaw from "../../../data/examples/greek_philosophy_example.json";
+import hellenisticRaw from "../../../data/examples/hellenistic_world_example.json";
+import persianEmpireRaw from "../../../data/examples/persian_empire_example.json";
 import evidenceClaimsRaw from "../../../data/evidence_claims.json";
 import sourcesRaw from "../../../data/sources.json";
 
@@ -69,6 +77,32 @@ const evidenceClaims = evidenceClaimsRaw as any[];
 const sources = sourcesRaw as any[];
 const registryData = registry as PackageRegistry;
 
+// M70 — cross-dataset Knowledge Graph index. An Exploration Package may
+// reference entities from ANY frozen example dataset (china / silk_road /
+// roman_empire), and relationship paths may even cross datasets (e.g.
+// silk_road:silk_road -> roman_empire:civ-roman : traded_with). The index maps
+// every global_id to its owning dataset + local id so validation resolves
+// endpoints regardless of which dataset a Package is curated over. Pure index
+// build — no schema / contract change.
+const DATASETS = [
+  { id: "china_civilization_v1", data: example },
+  { id: "silk_road", data: silkRoadRaw },
+  { id: "roman_empire", data: romanEmpireRaw },
+  { id: "ancient_india", data: ancientIndiaRaw },
+  { id: "early_christianity", data: earlyChristianityRaw },
+  { id: "egypt_technology_religion", data: egyptTechRaw },
+  { id: "greek_philosophy", data: greekPhilosophyRaw },
+  { id: "hellenistic_world", data: hellenisticRaw },
+  { id: "persian_empire", data: persianEmpireRaw },
+] as const;
+
+const GLOBAL_INDEX = new Map<string, { dataset: string; localId: string }>();
+for (const ds of DATASETS) {
+  for (const e of (ds.data as any).entities ?? []) {
+    if (e.global_id) GLOBAL_INDEX.set(e.global_id, { dataset: ds.id, localId: e.id });
+  }
+}
+
 export function getPackages(): ExplorationPackage[] {
   return registryData.packages;
 }
@@ -78,8 +112,25 @@ export function getPackageBySlug(slug: string): ExplorationPackage | undefined {
 }
 
 function globalToLocal(globalId: string): string | null {
-  const found = (example.entities as any[]).find((e: any) => e.global_id === globalId);
-  return found ? found.id : null;
+  return GLOBAL_INDEX.get(globalId)?.localId ?? null;
+}
+
+// True iff a real frozen edge exists between the two global_ids. Edges may be
+// written in ANY indexed dataset's relationships[], and cross-dataset edges use
+// global_id endpoints while intra-dataset edges use local ids — so the search
+// scans every dataset and accepts both id forms for source and target.
+function hasRealEdge(fromGid: string, toGid: string, type: string): boolean {
+  const fromLocal = globalToLocal(fromGid);
+  const toLocal = globalToLocal(toGid);
+  if (!fromLocal || !toLocal) return false;
+  return DATASETS.some((ds) =>
+    (ds.data as any).relationships.some(
+      (r: any) =>
+        (r.source === fromLocal || r.source === fromGid) &&
+        (r.target === toLocal || r.target === toGid) &&
+        r.type === type,
+    ),
+  );
 }
 
 export interface ValidationReport {
@@ -92,10 +143,6 @@ export interface ValidationReport {
 // runtime guards. Zero tolerance for dangling pointers (no hallucination).
 export function validatePackage(pkg: ExplorationPackage): ValidationReport {
   const errors: string[] = [];
-  const entIds = new Set((example.entities as any[]).map((e: any) => e.global_id));
-  const relSet = new Set(
-    (example.relationships as any[]).map((r: any) => `${r.source}->${r.target}:${r.type}`)
-  );
   const evIds = new Set((evidenceClaims as any[]).map((c: any) => c.id));
   const srcIds = new Set((sources as any[]).map((s: any) => s.id));
 
@@ -105,10 +152,10 @@ export function validatePackage(pkg: ExplorationPackage): ValidationReport {
   }
 
   for (const ref of pkg.entity_references) {
-    if (!entIds.has(ref)) errors.push(`package ${pkg.slug}: entity_reference '${ref}' not in Knowledge Graph`);
+    if (!GLOBAL_INDEX.has(ref)) errors.push(`package ${pkg.slug}: entity_reference '${ref}' not in Knowledge Graph`);
   }
   for (const slice of pkg.timeline_slices) {
-    if (!entIds.has(slice.entity)) errors.push(`package ${pkg.slug}: timeline_slice '${slice.entity}' not in Knowledge Graph`);
+    if (!GLOBAL_INDEX.has(slice.entity)) errors.push(`package ${pkg.slug}: timeline_slice '${slice.entity}' not in Knowledge Graph`);
   }
   for (const path of pkg.relationship_paths) {
     const fromLocal = globalToLocal(path.from);
@@ -117,7 +164,7 @@ export function validatePackage(pkg: ExplorationPackage): ValidationReport {
       errors.push(`package ${pkg.slug}: relationship_path endpoint unresolved ('${path.from}'/'${path.to}')`);
       continue;
     }
-    if (!relSet.has(`${fromLocal}->${toLocal}:${path.type}`)) {
+    if (!hasRealEdge(path.from, path.to, path.type)) {
       errors.push(`package ${pkg.slug}: relationship_path ${path.from}->${path.to}:${path.type} is not a real edge`);
     }
     for (const ev of path.evidence ?? []) {
@@ -131,7 +178,7 @@ export function validatePackage(pkg: ExplorationPackage): ValidationReport {
   // entity / timeline_slice refs must resolve to the Knowledge Graph.
   for (const rec of pkg.recommended_next_exploration) {
     if (rec.kind === "entity" || rec.kind === "timeline_slice") {
-      if (!entIds.has(rec.ref)) errors.push(`package ${pkg.slug}: recommended_next ref '${rec.ref}' not in Knowledge Graph`);
+      if (!GLOBAL_INDEX.has(rec.ref)) errors.push(`package ${pkg.slug}: recommended_next ref '${rec.ref}' not in Knowledge Graph`);
     }
     // package-kind refs are forward pointers (may not exist yet); allowed.
   }
@@ -154,8 +201,11 @@ export function validateAllPackages(): ValidationReport {
 export type Locale = 'zh' | 'en' | 'ja'
 
 export function getEntityByGlobalId(globalId: string): any | null {
-  const found = (example.entities as any[]).find((e: any) => e.global_id === globalId)
-  return found ?? null
+  const idx = GLOBAL_INDEX.get(globalId);
+  if (!idx) return null;
+  const ds = DATASETS.find((d) => d.id === idx.dataset);
+  if (!ds) return null;
+  return (ds.data as any).entities.find((e: any) => e.id === idx.localId) ?? null;
 }
 
 export function getEntityDisplayName(globalId: string, locale: Locale = 'zh'): string {

@@ -608,6 +608,21 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/explorationPackages.test.ts",
   "frontend/src/data/userPackage.ts",
   "frontend/src/components/package/",
+
+  // M70 (Exploration Guide — deterministic exploration navigation) — Frontend
+  // Freeze Revision Gate (PO-approved 2026-07-31). Adds the deterministic
+  // Exploration Guide: a NON-AI navigation aid (current position / next
+  // graph-reachable step / reason via relationship templates / coverage) built
+  // purely from the frozen Knowledge Graph + Package contract + behavior events.
+  //   - data/explorationGuide.ts        pure-function engine (no LLM, no scoring)
+  //   - data/explorationGuide.test.ts   unit tests incl. Package Generalization
+  //   - components/guide/                GuidePanel presentation (+ tests)
+  // Least Privilege: no backend / LLM / accounts / storage / recommendation
+  // algorithm. backend diff = 0; runtime 0.13.0 unchanged. Existing files
+  // (pages/, App.tsx, data/explorationPackages.*) already covered above.
+  "frontend/src/data/explorationGuide.ts",
+  "frontend/src/data/explorationGuide.test.ts",
+  "frontend/src/components/guide/",
 ];
 
 function _scopeAllowed(file) {

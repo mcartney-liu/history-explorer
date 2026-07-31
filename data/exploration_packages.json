@@ -73,6 +73,154 @@
           "label": { "zh": "宋代文化繁荣探索包（规划中）", "en": "Song Cultural Flourishing Package (planned)" }
         }
       ]
+    },
+    {
+      "slug": "silk-road-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "title": {
+        "zh": "丝绸之路探索包 V1",
+        "en": "Silk Road Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从张骞凿空西域到汉朝与罗马的间接贸易：一条路如何连起汉、贵霜、波斯与罗马，运送丝绸、造纸术与佛教信仰。",
+        "en": "From Zhang Qian's westward missions to indirect Han–Rome trade: how one network linked Han China, Parthia, Persia and Rome, carrying silk, papermaking and Buddhism."
+      },
+      "seed_topic": "silk_road",
+      "exploration_goals": {
+        "zh": "理解丝绸之路作为跨文明网络的运作方式：张骞如何打开东西通道，汉朝技术（造纸/丝织）如何西传，佛教如何沿路东行，以及罗马如何经由中间商获得丝绸。",
+        "en": "Understand the Silk Road as a cross-civilization network: how Zhang Qian opened the east-west corridor, how Han technologies (paper/silk) spread west, how Buddhism travelled east along the routes, and how Rome obtained silk through intermediaries."
+      },
+      "entity_references": [
+        "silk_road:silk_road",
+        "silk_road:han_dynasty",
+        "silk_road:person-zhang-qian",
+        "silk_road:loc-chang-an",
+        "silk_road:tech-paper",
+        "silk_road:tech-silk",
+        "silk_road:event-silk-road-opened",
+        "silk_road:loc-samarkand",
+        "silk_road:loc-kashgar",
+        "silk_road:person-ban-chao",
+        "silk_road:tech-glass",
+        "silk_road:idea-chinese-language"
+      ],
+      "relationship_paths": [
+        { "from": "silk_road:person-zhang-qian", "to": "silk_road:event-silk-road-opened", "type": "participated_in" },
+        { "from": "silk_road:event-silk-road-opened", "to": "silk_road:loc-chang-an", "type": "located_at" },
+        { "from": "silk_road:han_dynasty", "to": "silk_road:tech-paper", "type": "invented" },
+        { "from": "silk_road:tech-paper", "to": "roman_empire:civ-roman", "type": "spread" },
+        { "from": "silk_road:tech-silk", "to": "roman_empire:civ-roman", "type": "spread" },
+        { "from": "silk_road:silk_road", "to": "roman_empire:civ-roman", "type": "traded_with" },
+        { "from": "silk_road:silk_road", "to": "silk_road:han_dynasty", "type": "traded_with" },
+        { "from": "ancient_india:religion-buddhism", "to": "silk_road:silk_road", "type": "spread", "evidence": ["ec-023"] }
+      ],
+      "timeline_slices": [
+        { "entity": "silk_road:person-zhang-qian" },
+        { "entity": "silk_road:event-silk-road-opened" },
+        { "entity": "silk_road:tech-paper" }
+      ],
+      "source_references": [
+        "src-silk-road-archives",
+        "src-cn-textbook",
+        "src-cn-qianmu"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "roman_empire:civ-roman",
+          "label": { "zh": "罗马帝国（丝路西端）", "en": "Roman Empire (western terminus)" }
+        },
+        {
+          "kind": "entity",
+          "ref": "ancient_india:religion-buddhism",
+          "label": { "zh": "佛教的印度起源", "en": "Buddhism's Indian origins" }
+        },
+        {
+          "kind": "package",
+          "ref": "china-civilization-v1",
+          "label": { "zh": "中国文明演化探索包 V1", "en": "China Civilization Evolution Package V1" }
+        }
+      ]
+    },
+    {
+      "slug": "roman-empire-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "title": {
+        "zh": "罗马帝国探索包 V1",
+        "en": "Roman Empire Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从共和国终结到帝国建立、罗马和平、帝国衰亡与拜占庭继承：理解罗马如何塑造地中海世界，并接纳基督教与东方式丝绸贸易。",
+        "en": "From the fall of the Republic to the Principate, Pax Romana, the fall of the West and the Byzantine succession: how Rome shaped the Mediterranean, embraced Christianity and traded for Eastern silk."
+      },
+      "seed_topic": "roman_empire",
+      "exploration_goals": {
+        "zh": "梳理罗马的制度与文明演化：共和国如何终结（凯撒/奥古斯都），帝国如何建立并迎来罗马和平，基督教如何在帝国内传播，以及帝国衰亡后拜占庭如何继承罗马制度。",
+        "en": "Trace Rome's institutional and civilizational evolution: how the Republic ended (Caesar/Augustus), how the Principate was established and brought Pax Romana, how Christianity spread within the empire, and how Byzantium inherited Roman institutions after the fall."
+      },
+      "entity_references": [
+        "roman_empire:tp-republic",
+        "roman_empire:tp-27bc",
+        "roman_empire:event-roman-empire-established",
+        "roman_empire:person-augustus",
+        "roman_empire:person-julius-caesar",
+        "roman_empire:civ-roman",
+        "roman_empire:loc-rome",
+        "roman_empire:event-pax-romana",
+        "roman_empire:event-empire-fall",
+        "roman_empire:civ-byzantine",
+        "roman_empire:event-edict-milan",
+        "roman_empire:person-constantine",
+        "roman_empire:religion-christianity"
+      ],
+      "relationship_paths": [
+        { "from": "roman_empire:tp-republic", "to": "roman_empire:tp-27bc", "type": "before", "evidence": ["ec-rom-032"] },
+        { "from": "roman_empire:event-republic-end", "to": "roman_empire:event-roman-empire-established", "type": "caused" },
+        { "from": "roman_empire:person-augustus", "to": "roman_empire:event-roman-empire-established", "type": "participated_in", "evidence": ["ec-rom-021"] },
+        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:civ-roman", "type": "related_to", "evidence": ["ec-rom-022"] },
+        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:tp-27bc", "type": "related_to", "evidence": ["ec-rom-024"] },
+        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:event-pax-romana", "type": "caused" },
+        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:event-empire-fall", "type": "before" },
+        { "from": "roman_empire:civ-roman", "to": "roman_empire:religion-christianity", "type": "practiced", "evidence": ["ec-rom-030"] },
+        { "from": "roman_empire:person-constantine", "to": "roman_empire:event-edict-milan", "type": "participated_in", "evidence": ["ec-rom-036"] },
+        { "from": "roman_empire:event-edict-milan", "to": "roman_empire:religion-christianity", "type": "related_to", "evidence": ["ec-rom-037"] },
+        { "from": "roman_empire:event-empire-fall", "to": "roman_empire:civ-byzantine", "type": "influenced" },
+        { "from": "roman_empire:civ-byzantine", "to": "roman_empire:civ-roman", "type": "inherited", "evidence": ["ec-rom-029"] },
+        { "from": "roman_empire:civ-roman", "to": "silk_road:silk_road", "type": "traded_with", "evidence": ["ec-rom-027"] }
+      ],
+      "timeline_slices": [
+        { "entity": "roman_empire:tp-republic" },
+        { "entity": "roman_empire:tp-27bc" },
+        { "entity": "roman_empire:event-roman-empire-established" },
+        { "entity": "roman_empire:event-empire-fall" }
+      ],
+      "source_references": [
+        "src-cah",
+        "src-oxford-roman",
+        "src-livy",
+        "src-tacitus-ann"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "silk_road:silk_road",
+          "label": { "zh": "丝绸之路（罗马的东方贸易）", "en": "Silk Road (Rome's eastern trade)" }
+        },
+        {
+          "kind": "entity",
+          "ref": "hellenistic_world:civ-greek",
+          "label": { "zh": "希腊化世界（罗马的文化源头）", "en": "Hellenistic world (Roman cultural root)" }
+        },
+        {
+          "kind": "package",
+          "ref": "silk-road-exploration",
+          "label": { "zh": "丝绸之路探索包 V1", "en": "Silk Road Exploration Package V1" }
+        }
+      ]
     }
   ]
 }
