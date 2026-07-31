@@ -81,7 +81,7 @@ export default function GuidePanel({
           {snap.coverage.entityPercent}%
         </span>
         {snap.nextSteps.length === 0 && (
-          <span className="guide-coverage-done">—— 本包探索已全部完成 🎉</span>
+          <span className="guide-coverage-done">—— 本包探索已全部完成</span>
         )}
       </div>
     </section>

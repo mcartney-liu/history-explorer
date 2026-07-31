@@ -51,11 +51,11 @@ describe('ThemesPanel (M3.5-004)', () => {
       }),
     ]
     const html = render(<ThemesPanel relationships={relationships} />)
-    // Heading + mapped theme names.
+    // Heading + mapped theme names (M68 business i18n contract).
     expect(html).toContain('主题')
-    expect(html).toContain('Imperial Conquest')
-    expect(html).toContain('Trade &amp; Exchange')
-    expect(html).toContain('Cultural Inheritance')
+    expect(html).toContain('帝国征服')
+    expect(html).toContain('贸易与交流')
+    expect(html).toContain('文化传承')
     // Member chips show names.
     expect(html).toContain('Hellenistic World')
     expect(html).toContain('Silk Road')
@@ -75,7 +75,7 @@ describe('ThemesPanel (M3.5-004)', () => {
       }),
     ]
     const html = render(<ThemesPanel relationships={relationships} />)
-    expect(html).toContain('Participated In')
+    expect(html).toContain('参与')
     // No global_id -> chip still renders with local id fallback (aria-label).
     expect(html).toContain('aria-label="探索 Augustus"')
   })

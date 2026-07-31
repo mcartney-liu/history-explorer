@@ -10,12 +10,14 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { CompanionProvider, type WorkspaceContextData } from './CompanionContext'
 import { useCompanionAI, type UseCompanionAIReturn, type ChatMessage } from './useCompanionAI'
-import { explainAI, type AIResponse } from '../../data/aiClient'
+import type { AIResponse } from '../../data/aiClient'
+import * as aiClient from '../../data/aiClient'
 
 ;(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
-vi.mock('../../data/aiClient')
-const mockedExplainAI = vi.mocked(explainAI)
+// M71 Phase 0: vi.mock('../../data/aiClient') does not apply in this vitest 4
+// setup (module-level function mock fails to install), so the aiClient module
+// is spied on directly — same test semantics, no product-code change.
 
 function makeResponse(answer: string, mode = 'explain'): AIResponse {
   return {
@@ -54,13 +56,13 @@ function render(root: Root, ws?: WorkspaceContextData) {
 }
 
 beforeEach(() => {
-  mockedExplainAI.mockReset()
+  vi.restoreAllMocks()
   ref.current = null
 })
 
 describe('useCompanionAI (real hook chain)', () => {
   it('ask success populates response and sets status to success', async () => {
-    mockedExplainAI.mockResolvedValue(makeResponse('Rome was pivotal.'))
+    vi.spyOn(aiClient, 'explainAI').mockResolvedValue(makeResponse('Rome was pivotal.'))
     const { root, container } = makeRoot()
     render(root, { currentEntityId: 'e1' })
 
@@ -76,7 +78,7 @@ describe('useCompanionAI (real hook chain)', () => {
   })
 
   it('ask error sets status to error and records the message', async () => {
-    mockedExplainAI.mockRejectedValue(new Error('AI request failed (500)'))
+    vi.spyOn(aiClient, 'explainAI').mockRejectedValue(new Error('AI request failed (500)'))
     const { root, container } = makeRoot()
     render(root, { currentEntityId: 'e1' })
 
@@ -93,7 +95,7 @@ describe('useCompanionAI (real hook chain)', () => {
 
   it('reflects loading status while the request is in flight', async () => {
     let resolve: (v: AIResponse) => void = () => {}
-    mockedExplainAI.mockImplementation(() => new Promise<AIResponse>((r) => { resolve = r }))
+    vi.spyOn(aiClient, 'explainAI').mockImplementation(() => new Promise<AIResponse>((r) => { resolve = r }))
     const { root, container } = makeRoot()
     render(root, { currentEntityId: 'e1' })
 
@@ -111,7 +113,7 @@ describe('useCompanionAI (real hook chain)', () => {
   })
 
   it('resets response and status when the explored entity changes', async () => {
-    mockedExplainAI.mockResolvedValue(makeResponse('Rome context.'))
+    vi.spyOn(aiClient, 'explainAI').mockResolvedValue(makeResponse('Rome context.'))
     const { root, container } = makeRoot()
     render(root, { currentEntityId: 'e1' })
 
@@ -132,7 +134,7 @@ describe('useCompanionAI (real hook chain)', () => {
   })
 
   it('sendChat appends user and assistant messages and succeeds', async () => {
-    mockedExplainAI.mockResolvedValue(makeResponse('Chat reply.', 'chat'))
+    vi.spyOn(aiClient, 'explainAI').mockResolvedValue(makeResponse('Chat reply.', 'chat'))
     const { root, container } = makeRoot()
     render(root, { currentEntityId: 'e1' })
 
