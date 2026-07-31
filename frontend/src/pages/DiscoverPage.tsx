@@ -20,6 +20,8 @@ import { Icon } from '../components/ui/Icon'
 import type { IconName } from '../components/ui/Icon'
 import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
+import { getPackages } from '../data/explorationPackages'
+import PackageCard from '../components/package/PackageCard'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = '原来历史还能这样探索。'
@@ -192,6 +194,7 @@ export function prettifySlug(t: string): string {
 type DiscoverPageProps = {
   onTopicClick: (topic: string) => void
   onStarterClick: (target: NavNode) => void
+  onPackageClick?: (slug: string) => void
 }
 
 function StarterChips({
@@ -221,7 +224,7 @@ function StarterChips({
   )
 }
 
-function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
+function DiscoverPage({ onTopicClick, onStarterClick, onPackageClick = () => {} }: DiscoverPageProps) {
   const featuredStarters = TOPIC_STARTERS[FEATURED_TOPIC] ?? []
   const popularSlugs = Object.keys(TOPIC_STARTERS).filter(
     (slug) => slug !== FEATURED_TOPIC,
@@ -311,6 +314,27 @@ function DiscoverPage({ onTopicClick, onStarterClick }: DiscoverPageProps) {
               onCardClick={handleTopicClick}
               maxCards={6}
             />
+          </div>
+
+          {/* M69 — 官方探索包（核心产品对象），与 6 固定主题并列，不替代 */}
+          <div className="discover-packages">
+            <h3 className="discover-section-heading">官方探索包 · Exploration Packages</h3>
+            <p className="discover-section-sub">由编辑策展的历史探索旅程：可溯源、沿时间与关系展开。</p>
+            <div className="discover-package-grid">
+              {getPackages().map((p) => (
+                <PackageCard key={p.slug} pkg={p} onOpen={(slug) => onPackageClick(slug)} />
+              ))}
+            </div>
+          </div>
+
+          {/* M69 — 未来用户探索空间（占位，不实现生成/存储/社区） */}
+          <div className="discover-user-space">
+            <h3 className="discover-section-heading">我的探索空间 · My Exploration</h3>
+            <p className="discover-section-sub">未来你将能创建自己的探索路径、保存视角与学习轨迹。（规划中）</p>
+            <div className="discover-user-space-card discover-user-space-card--locked">
+              <span className="discover-user-space-lock">即将推出</span>
+              <p>用户探索包、社区精选探索功能正在规划中。</p>
+            </div>
           </div>
 
           <div className="discover-featured" data-topic={FEATURED_TOPIC}>
