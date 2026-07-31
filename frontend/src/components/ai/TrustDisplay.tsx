@@ -137,11 +137,12 @@ export function TrustDisplay({
                 {(item.source_title || item.source_tier) && (
                   <p className="trust-display-next-source">
                     <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
-                    {item.source_title || item.source_id}
+                    {item.source_title && <span className="trust-display-source-title">{item.source_title}</span>}
                     {item.source_tier && (
                       <Badge tone="neutral">{tierLabel(item.source_tier, t)}</Badge>
                     )}
-                    {!item.source_title && <code className="trust-display-source">{item.source_id}</code>}
+                    {/* source_id always surfaces — auditable reference id */}
+                    <code className="trust-display-source">{item.source_id}</code>
                   </p>
                 )}
                 {!item.reason && !item.claim_text && !item.source_title && !item.source_tier && (

@@ -26,6 +26,11 @@ const AI_RESPONSE = {
       relationship: 'participated_in',
       source_id: 'src-tacitus-ann',
       claim_ids: ['ec-rom-021'],
+      // M74-004-002 (2B): Evidence Card detail — backend Planner fields.
+      reason: '因为该事件与焦点实体的关系有已校验证据支持',
+      claim_text: 'Augustus 成为首位罗马皇帝。',
+      source_title: '塔西佗编年史',
+      source_tier: 'primary',
     },
   ],
 }
@@ -78,6 +83,13 @@ test.describe('AI suggestions — Feature ON (:5174, mocked backend)', () => {
     await expect(suggestions.getByText('Roman Empire Established')).toBeVisible()
     await expect(suggestions.getByText('participated_in')).toBeVisible()
     await expect(suggestions.getByText('src-tacitus-ann')).toBeVisible()
+    // M74-004-002 (2B): Evidence Card — reason / claim_text / source_title / tier
+    await expect(suggestions.getByText('推荐原因')).toBeVisible()
+    await expect(suggestions.getByText('因为该事件与焦点实体的关系有已校验证据支持')).toBeVisible()
+    await expect(suggestions.getByText('证据原文')).toBeVisible()
+    await expect(suggestions.getByText('Augustus 成为首位罗马皇帝。')).toBeVisible()
+    await expect(suggestions.getByText('塔西佗编年史')).toBeVisible()
+    await expect(suggestions.getByText('一手史料')).toBeVisible()
     // deterministic output must NOT be labeled AI-generated
     await expect(suggestions.getByText('AI 生成')).toHaveCount(0)
   })
