@@ -54,6 +54,7 @@ import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
+import { resolveTopic } from './data/topicResolver'
 import { ExplorationShell } from './components/shell/ExplorationShell'
 import { CompanionShell } from './components/ai/CompanionShell'
 import RelationshipContext from './components/RelationshipContext'
@@ -989,10 +990,19 @@ function App() {
               onRecentClear={clearRecent}
               onQuickStart={(q) => {
                 setTopic(q)
-                // navigateTo requires a NavNode (topic | entity). The
-                // quick-start is a topic search; wrap the string into the
-                // topic branch with the query itself as the title.
-                navigateTo({ type: 'topic', topic: q, title: q })
+                // M74 Phase1: QuickStart questions are natural-language. Resolve
+                // them to a package / entity via the deterministic resolver;
+                // unknown -> search feedback (empty-state hint). NEVER navigate
+                // a raw Chinese question as a topic — the backend TOPIC_PATTERN
+                // (^[a-z0-9_-]+$) would reject it with 400 + misleading copy.
+                const resolved = resolveTopic(q)
+                if (resolved?.kind === 'package') {
+                  openPackage(resolved.slug)
+                } else if (resolved?.kind === 'entity') {
+                  openEntity(resolved.globalId)
+                } else {
+                  handleSearch(q)
+                }
               }}
             />
             {/* M35 Feature D: exploration journey trace — localStorage only,
