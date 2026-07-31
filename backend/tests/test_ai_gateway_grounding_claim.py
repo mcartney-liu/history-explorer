@@ -465,3 +465,83 @@ def test_runtime_off_fallback_behavior():
     assert resp["confidence"] == "low"
     assert resp["grounded"] is False
     assert "unavailable" in resp["answer"].lower()
+
+
+# ---------------------------------------------------------------------------
+# M74-003 (C1) — derive_next_exploration (deterministic, evidence-bound)
+# ---------------------------------------------------------------------------
+
+def _pair_claim(cid, obj_gid, source="src-a", resolved=True, relationship="participated_in"):
+    from app.ai_gateway.citation_model import ClaimEntry
+    return ClaimEntry(cid, "person-x->obj-y", "pair text", source,
+                      "t:person-x", obj_gid, relationship, resolved)
+
+
+def test_next_exploration_from_real_claim_graph():
+    """Real Augustus ClaimGraph yields evidence-bound next explorations."""
+    from app.ai_gateway.grounding_builder import GroundingBuilder, derive_next_exploration
+
+    graph = GroundingBuilder(knowledge_service).build_claim_graph(
+        "roman_empire:person-augustus"
+    )
+    items = derive_next_exploration(graph)
+    assert len(items) >= 1
+    for it in items:
+        assert it["global_id"]
+        assert it["source_id"]                       # evidence bound
+        assert it["claim_ids"]                       # auditable
+        assert it["relationship"]
+
+
+def test_next_exploration_honors_evidence_constraint():
+    """unresolved / source-less claims must NOT produce suggestions."""
+    from app.ai_gateway.citation_model import ClaimGraph
+    from app.ai_gateway.grounding_builder import derive_next_exploration
+
+    claims = [
+        _pair_claim("ec-ok", "t:event-y", source="src-a", resolved=True),
+        _pair_claim("ec-ux", "t:event-z", source="src-a", resolved=False),   # rejected
+        _pair_claim("ec-nosrc", "t:event-w", source="", resolved=True),      # invalid
+        _pair_claim("", "t:event-v", source="src-a", resolved=True),         # invalid (no claim id)
+    ]
+    graph = ClaimGraph("t:person-x", [], claims, [])
+    items = derive_next_exploration(graph)
+    gids = [it["global_id"] for it in items]
+    assert gids == ["t:event-y"]                     # only the bound pair claim
+
+
+def test_next_exploration_skips_entity_claims():
+    """Entity-subject claims (object None) are about the focus — no next hop."""
+    from app.ai_gateway.citation_model import ClaimEntry, ClaimGraph
+    from app.ai_gateway.grounding_builder import derive_next_exploration
+
+    entity_claim = ClaimEntry("ec-ent", "person-x", "entity text", "src-a",
+                              "t:person-x", None, None, True)
+    graph = ClaimGraph("t:person-x", [], [entity_claim], [])
+    assert derive_next_exploration(graph) == []
+
+
+def test_next_exploration_bounded_and_stable():
+    """limit truncates; deterministic ordering (claim count desc, id asc)."""
+    from app.ai_gateway.citation_model import ClaimGraph
+    from app.ai_gateway.grounding_builder import derive_next_exploration
+
+    claims = [
+        _pair_claim("ec-a1", "t:event-a"), _pair_claim("ec-a2", "t:event-a"),
+        _pair_claim("ec-b1", "t:event-b"),
+    ]
+    graph = ClaimGraph("t:person-x", [], claims, [])
+    bounded = derive_next_exploration(graph, limit=1)
+    assert len(bounded) == 1
+    assert bounded[0]["global_id"] == "t:event-a"    # most evidence first
+    r1 = derive_next_exploration(graph)
+    r2 = derive_next_exploration(graph)
+    assert [it["global_id"] for it in r1] == [it["global_id"] for it in r2]
+
+
+def test_next_exploration_empty_graph_safe():
+    """Empty / unknown-focus graph -> [] (never crash)."""
+    from app.ai_gateway.citation_model import ClaimGraph
+    from app.ai_gateway.grounding_builder import derive_next_exploration
+
+    assert derive_next_exploration(ClaimGraph("no-such:x", [], [], [])) == []

@@ -479,3 +479,62 @@ class EvidenceSelector:
             if sid in sources_by_id
         ]
         return EvidenceSelection(claims=selected, sources=sources, records=records)
+
+
+# ---------------------------------------------------------------------------
+# M74-003 (C1): deterministic next-exploration derivation.
+# Input is the ClaimGraph ONLY — no KnowledgeService re-query (the Runtime has
+# a single data flow). Output items are evidence-bound: only claims that are
+# resolved AND carry a source id are considered (same Grounding Gate
+# constraint EvidenceSelector applies). Entity claims (object side None) are
+# about the focus itself and yield no next hop; relationship-pair claims yield
+# one suggestion per distinct object. Suggestions are ordered by evidence
+# strength (claim count desc, then global id asc for stability) and truncated
+# to `limit`.
+# NOTE (tech debt, PO-recorded): this may be split into a standalone
+# Exploration Planner in M75+ — kept here as a pure function for now.
+# ---------------------------------------------------------------------------
+
+def derive_next_exploration(claim_graph, limit: int = 3) -> list:
+    """Deterministic, evidence-bound next-exploration suggestions.
+
+    Pure function of a ClaimGraph — never touches KnowledgeService. Every
+    returned item carries `source_id` and `claim_ids` so the frontend can
+    render a Trust Display without any local fact assembly.
+    """
+    # Neighbor labels (ClaimGraph.neighbors entries: global_id / name / ...).
+    labels: dict = {}
+    for n in claim_graph.neighbors or []:
+        gid = n.get("global_id") if isinstance(n, dict) else getattr(n, "global_id", None)
+        name = n.get("name") if isinstance(n, dict) else getattr(n, "name", None)
+        if gid:
+            labels[gid] = name or gid
+
+    by_target: dict = {}
+    for c in claim_graph.claims:
+        # Evidence constraint (Grounding Gate): resolved + source bound.
+        if not c.resolved or not c.source_id or not c.claim_id:
+            continue
+        if not c.object_global_id:
+            continue  # entity claim — focus itself, no next hop
+        bucket = by_target.setdefault(
+            c.object_global_id,
+            {"relationships": set(), "source_ids": set(), "claim_ids": []},
+        )
+        bucket["relationships"].add(c.relationship or "related")
+        bucket["source_ids"].add(c.source_id)
+        bucket["claim_ids"].append(c.claim_id)
+
+    items = sorted(by_target.items(), key=lambda kv: (-len(kv[1]["claim_ids"]), kv[0]))
+    result = []
+    for gid, bucket in items[:limit]:
+        result.append(
+            {
+                "global_id": gid,
+                "label": labels.get(gid, gid),
+                "relationship": sorted(bucket["relationships"])[0],
+                "source_id": sorted(bucket["source_ids"])[0],
+                "claim_ids": sorted(bucket["claim_ids"]),
+            }
+        )
+    return result
