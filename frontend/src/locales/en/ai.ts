@@ -11,6 +11,15 @@ export default {
   'ai.trust_engine_ai': 'AI-generated',
   'ai.trust_verified': 'Verified',
   'ai.trust_no_evidence': 'No knowledge-base evidence available for this topic yet.',
+  // M74-004-002 (Commit 2B): Evidence Card — per-recommendation trust detail.
+  'ai.evidence_reason': 'Why',
+  'ai.evidence_claim': 'Evidence',
+  'ai.evidence_source': 'Source',
+  'ai.evidence_confidence': 'Confidence',
+  'ai.tier_primary': 'Primary source',
+  'ai.tier_academic': 'Academic',
+  'ai.tier_reference': 'Reference',
+  'ai.tier_unknown': 'Unknown tier',
   // M74-004-002 (Commit 2A): Journey Trail — exploration path visualization.
   'ai.journey_trail_title': 'Exploration trail',
 }

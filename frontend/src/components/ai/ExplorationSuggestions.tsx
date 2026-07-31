@@ -67,6 +67,7 @@ export function ExplorationSuggestions({
         evidence={response.evidence}
         nextExploration={response.next_exploration}
         engine={response.engine}
+        confidence={response.confidence}
         onNextClick={onEntityClick}
       />
     </section>

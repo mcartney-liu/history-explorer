@@ -12,7 +12,7 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { LocaleProvider } from '../../data/locale'
 import { TrustDisplay } from './TrustDisplay'
-import type { AIEvidence, AIEngine, AINextExploration } from '../../data/aiClient'
+import type { AIConfidence, AIEvidence, AIEngine, AINextExploration } from '../../data/aiClient'
 
 ;(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
@@ -26,6 +26,16 @@ const NEXT: AINextExploration[] = [
     relationship: 'participated_in',
     source_id: 'src-tacitus-ann',
     claim_ids: ['ec-rom-021'],
+  },
+]
+// M74-004-002 (2B): Evidence Card detail — all fields from the backend Planner.
+const NEXT_FULL: AINextExploration[] = [
+  {
+    ...NEXT[0],
+    reason: '因为该事件与焦点实体的关系有两条已校验证据支持',
+    claim_text: 'Augustus 成为首位罗马皇帝。',
+    source_title: '塔西佗编年史',
+    source_tier: 'primary',
   },
 ]
 
@@ -49,6 +59,7 @@ function renderTrust(props: {
   evidence?: AIEvidence[]
   nextExploration?: AINextExploration[]
   engine?: AIEngine
+  confidence?: AIConfidence
 }) {
   act(() => {
     root.render(
@@ -94,5 +105,31 @@ describe('TrustDisplay', () => {
   it('renders the empty state when nothing is available', () => {
     const el = renderTrust({})
     expect(el.textContent ?? '').toContain('暂无可用知识库证据')
+  })
+
+  // ---- M74-004-002 (Commit 2B): Evidence Card detail assertions ----
+
+  it('renders reason / claim_text / source_title / source_tier from the backend', () => {
+    const el = renderTrust({ nextExploration: NEXT_FULL, engine: 'deterministic' })
+    const text = el.textContent ?? ''
+    expect(text).toContain('推荐原因')
+    expect(text).toContain('因为该事件与焦点实体的关系有两条已校验证据支持')
+    expect(text).toContain('证据原文')
+    expect(text).toContain('Augustus 成为首位罗马皇帝。')
+    expect(text).toContain('塔西佗编年史')          // source_title surfaced
+    expect(text).toContain('一手史料')              // source_tier label (primary)
+    expect(text).not.toContain('AI 生成')          // deterministic ≠ AI-generated
+  })
+
+  it('renders confidence when provided (server-side binding indicator)', () => {
+    const el = renderTrust({ evidence: EVIDENCE, engine: 'deterministic', confidence: 'high' })
+    expect(el.textContent ?? '').toContain('可信度')
+  })
+
+  it('keeps legacy next items (no detail fields) rendering source_id only', () => {
+    const el = renderTrust({ nextExploration: NEXT, engine: 'deterministic' })
+    const text = el.textContent ?? ''
+    expect(text).toContain('src-tacitus-ann')
+    expect(text).not.toContain('推荐原因')          // no reason -> no reason row
   })
 })

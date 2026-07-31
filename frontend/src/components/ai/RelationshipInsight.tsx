@@ -58,6 +58,7 @@ export function RelationshipInsight({ entityGlobalId }: RelationshipInsightProps
         evidence={response.evidence}
         nextExploration={response.next_exploration}
         engine={response.engine}
+        confidence={response.confidence}
       />
     </section>
   )

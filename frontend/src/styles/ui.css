@@ -185,3 +185,38 @@
   padding: 3px 8px;
   border-radius: 999px;
 }
+
+/* --- TrustDisplay Evidence Card detail (M74-004-002 2B) --- */
+.trust-display-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.trust-display-confidence {
+  font-size: 11px;
+  color: var(--mid);
+}
+.trust-display-next-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trust-display-next-reason,
+.trust-display-next-claim,
+.trust-display-next-source {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mid);
+  width: 100%;
+}
+.trust-display-detail-label {
+  font-weight: 600;
+  color: var(--hi);
+}
+.trust-display-next-source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
