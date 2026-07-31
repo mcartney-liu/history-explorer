@@ -23,6 +23,38 @@ describe('ExplorationPackagePage', () => {
     expect(html).toContain('科举')
   })
 
+  it('renders the Exploration Guide (deterministic navigation)', () => {
+    const html = renderToStaticMarkup(
+      <LocaleProvider>
+        <ExplorationPackagePage
+          slug="china-civilization-v1"
+          onEntityClick={noop}
+          onOpenPackage={noop}
+          onBack={noop}
+        />
+      </LocaleProvider>,
+    )
+    expect(html).toContain('探索向导')
+    expect(html).toContain('你现在在')
+    expect(html).toContain('下一步可以探索')
+    expect(html).toContain('已探索')
+  })
+
+  it('renders a different official package (silk road) with its own journey', () => {
+    const html = renderToStaticMarkup(
+      <LocaleProvider>
+        <ExplorationPackagePage
+          slug="silk-road-exploration"
+          onEntityClick={noop}
+          onOpenPackage={noop}
+          onBack={noop}
+        />
+      </LocaleProvider>,
+    )
+    expect(html).toContain('丝绸之路探索包 V1')
+    expect(html).toContain('探索向导')
+  })
+
   it('renders the Timeline Chain (five dynasties)', () => {
     const html = renderToStaticMarkup(
       <LocaleProvider>

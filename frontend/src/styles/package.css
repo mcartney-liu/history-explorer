@@ -445,3 +445,117 @@
   font-size: 14px;
   line-height: 1.6;
 }
+
+/* ---- M70 Exploration Guide (deterministic navigation) ---- */
+.guide-panel {
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, var(--bg-surface), var(--bg-elevated));
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+.guide-title {
+  font-size: 18px;
+  color: var(--text-high);
+  margin: 0 0 var(--space-2);
+}
+.guide-sub {
+  color: var(--text-low);
+  font-size: 13px;
+  margin: 0 0 var(--space-5);
+}
+
+.guide-position {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+.guide-position-label {
+  color: var(--text-mid);
+  font-size: 13px;
+}
+.guide-position-value {
+  background: var(--bg-elevated);
+  border: 1px solid var(--gold-500);
+  border-radius: var(--radius);
+  color: var(--gold-hi);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: transform var(--animation-fast);
+}
+.guide-position-value:hover {
+  transform: translateY(-1px);
+}
+.guide-position-hint {
+  color: var(--text-low);
+  font-size: 12px;
+}
+
+.guide-next {
+  margin-bottom: var(--space-4);
+}
+.guide-next-label {
+  color: var(--text-mid);
+  font-size: 13px;
+  margin: 0 0 var(--space-3);
+}
+.guide-next-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+}
+.guide-next-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  color: var(--text-high);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color var(--animation-fast);
+}
+.guide-next-btn:hover {
+  border-color: var(--gold-500);
+}
+.guide-next-arrow {
+  display: block;
+  color: var(--text-high);
+}
+.guide-next-cta {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--gold-hi);
+}
+.guide-next-reason {
+  color: var(--text-mid);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 6px 2px 0;
+}
+
+.guide-coverage {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.guide-coverage-text {
+  color: var(--text-mid);
+  font-size: 13px;
+}
+.guide-coverage-done {
+  color: var(--verified);
+  font-size: 13px;
+}

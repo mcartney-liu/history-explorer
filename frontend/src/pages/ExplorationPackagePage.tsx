@@ -1,7 +1,10 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useLocale } from '../data/locale'
 import { getPackageBySlug, type ExplorationPackage } from '../data/explorationPackages'
+import { visitedFromEvents } from '../data/explorationGuide'
+import { getEvents } from '../data/UserBehaviorEvent'
 import PackageJourney from '../components/package/PackageJourney'
+import GuidePanel from '../components/guide/GuidePanel'
 import '../styles/package.css'
 
 interface ExplorationPackagePageProps {
@@ -13,8 +16,9 @@ interface ExplorationPackagePageProps {
 
 // ExplorationPackagePage — a curated EXPLORATION JOURNEY, not an encyclopedia
 // detail page. First screen: title + summary + exploration_goals (the "why").
-// Second layer (PackageJourney): the traceable path through time, relationships,
-// and sources. Clicking a journey node drills into the Knowledge Graph.
+// Second layer: Exploration Guide (deterministic navigation) + PackageJourney
+// (traceable path through time, relationships, and sources). Clicking a journey
+// node drills into the Knowledge Graph.
 export default function ExplorationPackagePage({
   slug,
   onEntityClick,
@@ -24,6 +28,18 @@ export default function ExplorationPackagePage({
   const { locale } = useLocale()
   const journeyRef = useRef<HTMLDivElement>(null)
   const pkg: ExplorationPackage | undefined = getPackageBySlug(slug)
+
+  // M70 — visited-entity trail from the behavior event stream (localStorage).
+  // Reuses the SAME UserBehaviorEvent stream that powers the deterministic
+  // ProductUsageAnalysis — consume-only, no new state source. Falls back to
+  // an empty trail when storage is unavailable (e.g. SSR / tests).
+  const visited = useMemo<string[]>(() => {
+    try {
+      return visitedFromEvents(getEvents())
+    } catch {
+      return []
+    }
+  }, [])
 
   if (!pkg) {
     return (
@@ -67,6 +83,14 @@ export default function ExplorationPackagePage({
       </header>
 
       <div ref={journeyRef}>
+        {/* M70 — Exploration Guide: deterministic navigation (position / next / reason / coverage) */}
+        <GuidePanel
+          pkg={pkg}
+          visited={visited}
+          locale={locale}
+          onEntityClick={onEntityClick}
+        />
+
         <PackageJourney
           pkg={pkg}
           locale={locale}
