@@ -673,8 +673,13 @@ export const SCOPE_ALLOWLIST = [
   // touches the lockfile (checkScope scans frontend/* without extension filter);
   // DEP lockdown guarantees dependencies/ stays frozen, only devDependencies
   // may add @playwright/test.
+  // M74 Phase1 (PO-approved): frontend/src/data/topicResolver.ts + .test.ts —
+  // deterministic Topic Resolution (中文问题/别名 -> 包/实体 slug)。Pure
+  // frontend, zero AI, zero backend, zero data change. Backend diff stays 0.
   // Least Privilege: no backend / LLM / accounts / cloud / community change.
   // backend diff = 0; runtime 0.13.0 unchanged.
+  "frontend/src/data/topicResolver.ts",
+  "frontend/src/data/topicResolver.test.ts",
   "frontend/src/hooks/",
   "frontend/package.json",
   "frontend/package-lock.json",
