@@ -1,0 +1,78 @@
+{
+  "packages": [
+    {
+      "slug": "china-civilization-v1",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "title": {
+        "zh": "中国文明演化探索包 V1",
+        "en": "China Civilization Evolution Package V1"
+      },
+      "summary": {
+        "zh": "聚焦唐→宋→元→明→清五个朝代的文化演化、制度演化与技术扩散三条探索链，验证『可探索、可追溯、时间空间锚定的历史知识网络』。",
+        "en": "Focuses on the three exploration chains — cultural, institutional, and technological diffusion — across the Tang, Song, Yuan, Ming, and Qing dynasties, demonstrating a traceable, time-and-space-anchored historical knowledge network."
+      },
+      "seed_topic": "china_civilization_v1",
+      "exploration_goals": {
+        "zh": "搞懂唐→清的制度演化：科举如何孕育文官体系，又如何承续为明代内阁；并理解佛教本土化、理学—心学转折与郑和航海所代表的文化与技术扩散。",
+        "en": "Understand the institutional evolution from Tang to Qing: how the imperial examination gave rise to the civil service system and continued into the Ming cabinet; and how Buddhist localization, the Neo-Confucianism-to-Mind-school turn, and Zheng He's voyages represent cultural and technological diffusion."
+      },
+      "entity_references": [
+        "china_v1:tp-tang",
+        "china_v1:tp-song",
+        "china_v1:tp-yuan",
+        "china_v1:tp-ming",
+        "china_v1:tp-qing",
+        "china_v1:idea-keju",
+        "china_v1:idea-wenguan",
+        "china_v1:idea-neige",
+        "china_v1:civ-zhonghua",
+        "china_v1:event-jingnan",
+        "china_v1:person-song-taizu",
+        "china_v1:event-keju-established"
+      ],
+      "relationship_paths": [
+        { "from": "china_v1:tp-tang", "to": "china_v1:tp-song", "type": "before", "evidence": ["ec-cn-011"] },
+        { "from": "china_v1:tp-song", "to": "china_v1:tp-yuan", "type": "before" },
+        { "from": "china_v1:tp-yuan", "to": "china_v1:tp-ming", "type": "before" },
+        { "from": "china_v1:tp-ming", "to": "china_v1:tp-qing", "type": "before" },
+        { "from": "china_v1:idea-keju", "to": "china_v1:idea-wenguan", "type": "inherited", "evidence": ["ec-cn-001"] },
+        { "from": "china_v1:idea-wenguan", "to": "china_v1:idea-neige", "type": "inherited", "evidence": ["ec-cn-002"] },
+        { "from": "china_v1:event-jingnan", "to": "china_v1:idea-neige", "type": "influenced", "evidence": ["ec-cn-012"] },
+        { "from": "china_v1:person-song-taizu", "to": "china_v1:idea-wenguan", "type": "influenced", "evidence": ["ec-cn-002"] },
+        { "from": "china_v1:event-keju-established", "to": "china_v1:idea-keju", "type": "caused", "evidence": ["ec-cn-001"] }
+      ],
+      "timeline_slices": [
+        { "entity": "china_v1:tp-tang" },
+        { "entity": "china_v1:tp-song" },
+        { "entity": "china_v1:tp-yuan" },
+        { "entity": "china_v1:tp-ming" },
+        { "entity": "china_v1:tp-qing" }
+      ],
+      "source_references": [
+        "src-cn-textbook",
+        "src-cn-qianmu",
+        "src-cn-cambridge",
+        "src-cn-museum"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "china_v1:idea-lixue",
+          "label": { "zh": "宋代理学", "en": "Song Neo-Confucianism" }
+        },
+        {
+          "kind": "entity",
+          "ref": "china_v1:tech-hanghai",
+          "label": { "zh": "明代航海技术", "en": "Ming Maritime Technology" }
+        },
+        {
+          "kind": "package",
+          "ref": "song-cultural-flourishing",
+          "label": { "zh": "宋代文化繁荣探索包（规划中）", "en": "Song Cultural Flourishing Package (planned)" }
+        }
+      ]
+    }
+  ]
+}
