@@ -54,6 +54,24 @@ class KnowledgeService:
             for topic, data in self._topic_datasets
         }
 
+        # M74 Phase2 (Step 1): local-id -> global-id index for ClaimGraph
+        # binding. EvidenceClaim.subject_id values are LOCAL ids (no topic
+        # prefix, e.g. "person-augustus"). This map resolves them to global
+        # ids so claims can bind to graph objects. Verified against the frozen
+        # dataset: all 145 local ids are globally unique (zero conflicts), so
+        # a plain dict is unambiguous; conflicts (defensive) are skipped.
+        self._local_to_global: dict[str, str] = {}
+        for _topic, data in self._topic_datasets:
+            for ent in data.get("entities", []):
+                lid = ent.get("id")
+                gid = ent.get("global_id")
+                if not lid or not gid:
+                    continue
+                prev = self._local_to_global.get(lid)
+                if prev is not None and prev != gid:
+                    continue  # ambiguous local id — never bind
+                self._local_to_global[lid] = gid
+
     # --- Topic / dataset access (delegates to repository) ----------------
     def list_topics(self) -> list[str]:
         return self._registry.list_topics()
@@ -86,6 +104,18 @@ class KnowledgeService:
 
     def find_by_name(self, name: str) -> Optional[EntityRef]:
         return self._registry.find_by_name(name)
+
+    def find_global_id(self, local_id: str) -> Optional[str]:
+        """Resolve a local entity id to its global id (read-only).
+
+        M74 Phase2 (Step 1): EvidenceClaim.subject_id values are local ids
+        without a topic prefix; this is the local -> global direction of the
+        GlobalGraph index. Returns None when unknown or ambiguous (caller
+        must NOT bind — Trust Rule 2). Pure lookup, no graph mutation.
+        """
+        if not isinstance(local_id, str) or not local_id:
+            return None
+        return self._local_to_global.get(local_id)
 
     # --- Graph / traversal (delegates to graph) --------------------------
     def get_graph(self, topic: str) -> DirectedGraph:

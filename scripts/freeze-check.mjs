@@ -676,10 +676,21 @@ export const SCOPE_ALLOWLIST = [
   // M74 Phase1 (PO-approved): frontend/src/data/topicResolver.ts + .test.ts —
   // deterministic Topic Resolution (中文问题/别名 -> 包/实体 slug)。Pure
   // frontend, zero AI, zero backend, zero data change. Backend diff stays 0.
+  // M74 Phase2 (Freeze Gate APPROVED): backend Grounding Claim Binding —
+  // knowledge_service.py gains a READ-ONLY local-id->global-id mapping
+  // (Step 1); ai_gateway modules gain claim/source grounding (Steps 3-5).
+  // All changes read-only, no new endpoints, no new deps; AI_GATEWAY_ENABLED
+  // stays false (runtime default OFF — M73 behaviour byte-identical).
   // Least Privilege: no backend / LLM / accounts / cloud / community change.
   // backend diff = 0; runtime 0.13.0 unchanged.
   "frontend/src/data/topicResolver.ts",
   "frontend/src/data/topicResolver.test.ts",
+  "backend/app/core/knowledge_service.py",
+  "backend/tests/test_ai_gateway_grounding_claim.py",
+  "backend/app/ai_gateway/grounding_builder.py",
+  "backend/app/ai_gateway/citation_model.py",
+  "backend/app/ai_gateway/response_validator.py",
+  "backend/app/ai_gateway/answer_service.py",
   "frontend/src/hooks/",
   "frontend/package.json",
   "frontend/package-lock.json",
