@@ -14,6 +14,8 @@
 // `AI_SUGGESTIONS_ENABLED && <RelationshipInsight/>`, so OFF = zero request.
 import { useEffect, useRef, useState } from 'react'
 import { exploreSuggestions, type AIResponse } from '../../data/aiClient'
+import { visitedFromEvents } from '../../data/explorationGuide'
+import { getEvents } from '../../data/UserBehaviorEvent'
 import { TrustDisplay } from './TrustDisplay'
 
 interface RelationshipInsightProps {
@@ -32,7 +34,11 @@ export function RelationshipInsight({ entityGlobalId }: RelationshipInsightProps
     setResponse(null)
     setFailed(false)
 
-    exploreSuggestions([entityGlobalId], controller.signal)
+    // M74-004-002 (P2): frontend supplies only raw visited ids from the
+    // existing event stream — backend Planner owns filtering.
+    const visited = visitedFromEvents(getEvents())
+
+    exploreSuggestions([entityGlobalId], { signal: controller.signal, visited })
       .then((res) => {
         if (seq === requestSeq.current) setResponse(res)
       })

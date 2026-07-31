@@ -34,6 +34,13 @@ export type AINextExploration = {
   relationship: string
   source_id: string
   claim_ids: string[]
+  // --- M74-004-002 (Commit 1 backend): additive Trust fields ---
+  // Every value is produced by the backend Planner from validated claims /
+  // registered sources — the frontend only renders them (no local join).
+  reason?: string
+  claim_text?: string
+  source_title?: string
+  source_tier?: string
 }
 
 export type AIConfidence = 'high' | 'medium' | 'low'
@@ -74,18 +81,27 @@ export type AIAskOptions = {
   /** M36.0: prompt mode key — pure pass-through to backend. */
   mode?: string
   signal?: AbortSignal
+  // --- M74-004-002 (PO Freeze Revision approved): additive exploration
+  // context. Frontend only supplies raw entity ids / package slug — the
+  // backend Planner owns filtering (P2 visited) and recommendation logic. ---
+  visited?: string[]
+  packageContext?: string
 }
 
 function postAI(path: string, opts: AIAskOptions): Promise<AIResponse> {
-  const body = JSON.stringify({
+  const body: Record<string, unknown> = {
     question: opts.question,
     context_global_ids: opts.context_global_ids,
     mode: opts.mode ?? 'explain',
-  })
+  }
+  // M74-004-002: additive exploration context — omitted when absent so the
+  // request stays byte-identical to M74-003 (backward compatible).
+  if (opts.visited && opts.visited.length) body.visited = opts.visited
+  if (opts.packageContext) body.package_context = opts.packageContext
   return fetch(`${API_BASE}${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body,
+    body: JSON.stringify(body),
     signal: opts.signal,
   }).then((resp) => {
     if (!resp.ok) {
@@ -111,15 +127,34 @@ export function explainAI(
  * validated fields (evidence / next_exploration). The frontend renders them
  * as-is; it never assembles facts locally (PO Condition 3).
  */
+export type ExploreSuggestionsOptions = {
+  /** Abort signal for cancellation. */
+  signal?: AbortSignal
+  /** M74-004-002: raw entity ids already explored (from the event stream). */
+  visited?: string[]
+  /** M74-004-002: package slug the user is exploring (optional context). */
+  packageContext?: string
+}
+
+/**
+ * Evidence-bound exploration suggestions for a focus entity.
+ *
+ * The backend owns ALL recommendation logic (ClaimGraph -> EvidenceSelection
+ * -> EvidenceValidation -> Planner). The frontend only supplies raw entity ids
+ * and renders the response as-is; it never assembles facts locally
+ * (PO Condition 3).
+ */
 export function exploreSuggestions(
   context_global_ids: string[],
-  signal?: AbortSignal,
+  opts?: ExploreSuggestionsOptions,
 ): Promise<AIResponse> {
   return postAI('/api/v1/ai/explain', {
     question: '探索建议',
     context_global_ids,
-    signal,
+    signal: opts?.signal,
     mode: 'explain',
+    visited: opts?.visited,
+    packageContext: opts?.packageContext,
   })
 }
 

@@ -11,4 +11,6 @@ export default {
   'ai.trust_engine_ai': 'AI-generated',
   'ai.trust_verified': 'Verified',
   'ai.trust_no_evidence': 'No knowledge-base evidence available for this topic yet.',
+  // M74-004-002 (Commit 2A): Journey Trail — exploration path visualization.
+  'ai.journey_trail_title': 'Exploration trail',
 }

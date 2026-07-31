@@ -14,6 +14,7 @@ import { RelatedTopic } from './crossTopic'
 import AIExplanationPanel from './AIExplanationPanel'
 import ProvenancePanel from './ProvenancePanel'
 import RelationshipInsight from './ai/RelationshipInsight'
+import JourneyTrail from './ai/JourneyTrail'
 import { AI_SUGGESTIONS_ENABLED } from '../data/aiFeatureFlag'
 import EntityHeader from './EntityHeader'
 import EventCausalChain from './EventCausalChain'
@@ -180,6 +181,11 @@ function EntityPage({
           + zero requests (M73 byte-identical). Input = the entity GLOBAL id
           (entityId prop); every fact comes from the backend response. */}
       {AI_SUGGESTIONS_ENABLED && entityId && <RelationshipInsight entityGlobalId={entityId} />}
+
+      {/* M74-004-002 (2A) — Journey Trail: exploration path visualization.
+          Consumes ONLY the existing UserBehaviorEvent stream (no new
+          collection, no profiling). Same flag so OFF = M73 byte-identical. */}
+      {AI_SUGGESTIONS_ENABLED && <JourneyTrail onEntityClick={onEntityClick} />}
 
       <EntityPageShell
         entityGlobalId={entityGlobalId}

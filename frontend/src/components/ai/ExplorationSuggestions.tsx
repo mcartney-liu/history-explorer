@@ -16,6 +16,8 @@
 // so when the flag is OFF this component never mounts and no request is made.
 import { useEffect, useRef, useState } from 'react'
 import { exploreSuggestions, type AIResponse } from '../../data/aiClient'
+import { visitedFromEvents } from '../../data/explorationGuide'
+import { getEvents } from '../../data/UserBehaviorEvent'
 import { TrustDisplay } from './TrustDisplay'
 
 interface ExplorationSuggestionsProps {
@@ -39,7 +41,12 @@ export function ExplorationSuggestions({
     setResponse(null)
     setFailed(false)
 
-    exploreSuggestions([anchorGlobalId], controller.signal)
+    // M74-004-002 (P2): the frontend ONLY supplies raw visited entity ids
+    // (from the existing event stream — no new collection). The backend
+    // Planner owns filtering and recommendation logic.
+    const visited = visitedFromEvents(getEvents())
+
+    exploreSuggestions([anchorGlobalId], { signal: controller.signal, visited })
       .then((res) => {
         if (seq === requestSeq.current) setResponse(res)
       })
