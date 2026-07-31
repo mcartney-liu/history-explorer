@@ -92,9 +92,13 @@ function getChangedFiles() {
   if (process.env.GITHUB_BASE_REF) files = tryDiff(process.env.GITHUB_BASE_REF);
   if (!files) files = tryDiff("master");
   if (!files) {
-    const st = execSync("git status --porcelain", { cwd: ROOT })
-      .toString()
-      .trim();
+    // NOTE (M73 Phase3-B Bug Sweep): do NOT .trim() the raw output before
+    // splitting. Porcelain lines are "<XY> <path>" — a leading space is the
+    // X (staged) column for modified files. Trimming the whole string strips
+    // that space from the FIRST line, so the 3-char status strip below eats
+    // the path's first letter (e.g. "rontend/...") and the file silently
+    // escapes the scope check. split/filter already drop trailing empties.
+    const st = execSync("git status --porcelain", { cwd: ROOT }).toString();
     files = st
       ? st.split("\n").filter(Boolean).map((l) => l.replace(/^[\w\W]{3}/, "").trim())
       : [];

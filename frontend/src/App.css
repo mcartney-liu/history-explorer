@@ -717,3 +717,15 @@ hr{border:none;border-top:1px solid var(--line);margin:16px 0}
 /* ========== M62 W5 AI EXPLANATION HEADER ========== */
 .ae-header-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ae-grounding{margin:0}
+
+/* ========== M73 PHASE3-B BUG SWEEP — RESPONSIVE GRIDS ========== */
+/* Fixed 3-column grids overflowed narrow viewports (375px: cards
+   compressed to ~102px, page scrolled horizontally). Desktop layout
+   unchanged; below 640px these stacks to a single column.
+   CSS-only additive — no template change. */
+@media (max-width: 640px) {
+  .discover-theme-grid,
+  .discover-intro-grid {
+    grid-template-columns: 1fr;
+  }
+}

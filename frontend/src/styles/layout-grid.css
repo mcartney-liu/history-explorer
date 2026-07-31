@@ -334,3 +334,29 @@
   color: var(--gold-500);
   border-color: var(--gold-500);
 }
+
+/* -----------------------------------------------------------
+   M73 Phase3-B Bug Sweep — responsive fallback for the
+   Exploration Space. Desktop unchanged (48px rail | content |
+   360px companion). On narrow viewports the fixed 360px companion
+   column overflowed the viewport; below, the companion stacks
+   full-width beneath the strip so no functionality is lost.
+   CSS-only additive — no DOM/template change.
+   ----------------------------------------------------------- */
+@media (max-width: 768px) {
+  .exploration-space {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: 1fr 48px auto;
+    grid-template-areas:
+      "rail  content"
+      "strip strip"
+      "companion companion";
+  }
+  .companion-panel {
+    border-left: 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .explore-canvas {
+    padding: var(--space-4);
+  }
+}
