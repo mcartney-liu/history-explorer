@@ -66,6 +66,13 @@ export interface ExplorationPackage {
   timeline_slices: { entity: string }[];
   source_references: string[];
   recommended_next_exploration: NextExplorationPointer[];
+  // M73 Phase1 — @future M77 Creator Ecosystem compatibility reservation.
+  // OPTIONAL reserved-only fields: no UI, no business logic, no validation
+  // depends on them today; they exist so Official / User / Community packages
+  // can later carry ownership + versioning without a schema break.
+  owner?: string;
+  version?: string;
+  sourcePackage?: string;
 }
 
 interface PackageRegistry {

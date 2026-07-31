@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
+import { useNavigationHistory } from './hooks/useNavigationHistory'
+import { usePackageContext } from './hooks/usePackageContext'
 import SearchBox from './components/SearchBox'
 import EntitySearchBox from './components/EntitySearchBox'
 import SummaryPanel from './components/SummaryPanel'
@@ -20,7 +22,7 @@ import EntityPickerPanel from './components/EntityPickerPanel'
 import type { Candidate } from './data/candidateUtils'
 import ExplorationPath from './components/ExplorationPath'
 import type { JourneyWhyPayload } from './components/ExplorationJourney'
-import { loadPath, savePath, loadReasons, saveReasons } from './utils/explorationPersistence'
+import { loadReasons, saveReasons } from './utils/explorationPersistence'
 import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
 import SearchResults, {
@@ -33,12 +35,8 @@ import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
 import { nextSelectionIndex } from './components/searchNav'
 import {
   NavNode,
-  pushHistory,
   canBack,
   canForward,
-  backCursor,
-  forwardCursor,
-  crumbCursor,
   buildBreadcrumb,
 } from './components/navigation'
 import { loadRecent, pushRecent, saveRecent } from './components/recentStore'
@@ -135,10 +133,31 @@ function App() {
   // M2-003: own exploration history (not the browser URL). The history stack
   // plus a cursor power back/forward; the derived `current` node drives what
   // we render. Recent explorations persist to localStorage.
-  const [history, setHistory] = useState<NavNode[]>([])
-  const [cursor, setCursor] = useState(-1)
-  const [recent, setRecent] = useState<NavNode[]>([])
-  const [errorKind, setErrorKind] = useState<ErrorKind | ''>('')
+  // M73 Phase1: the navigation state machine + package lifecycle moved into
+  // dedicated hooks (useNavigationHistory / usePackageContext) — App now only
+  // wires the two together and keeps view-state (result/entityData/...) local.
+  const nav = useNavigationHistory({
+    onNavigate: (node, targetCursor) => {
+      // M35 Feature D: record every navigation in the journey trace.
+      addJourneyEntry(entryFromNode(node))
+      fetchNode(node, targetCursor)
+    },
+    // Home exit (breadcrumb Home / goHome): exit package context AND reset
+    // App's view state (result/entity/search/journey annotations/focus).
+    onHomeExit: () => {
+      closePackage()
+      setResult(null)
+      setEntityData(null)
+      setSearchResults(null)
+      setJourneyReasons(new Map())
+      setFocusedEntityId(null)
+      setLoading(false)
+    },
+  })
+  const pkg = usePackageContext({
+    onOpenPackage: (slug) => recordEvent({ action: 'open_package', packageSlug: slug }),
+  })
+  const { history, cursor, recent, errorKind, setErrorKind, setRecent, setHistory } = nav
 
   // M9-003: per-target "why this node was suggested" annotations, captured when
   // the user follows a recommendation. This is an ANNOTATION map (gid ->
@@ -154,8 +173,9 @@ function App() {
   // every navigation (fetchNode) and on goHome, so it never leaks across pages.
   const [focusedEntityId, setFocusedEntityId] = useState<string | null>(null)
 
-  // M69 — Package page state (renders instead of Discover when set)
-  const [packageSlug, setPackageSlug] = useState<string | null>(null)
+  // M69 — Package page state (renders instead of Discover when set).
+  // M73 Phase1: lifecycle + hash ownership moved to usePackageContext (pkg).
+  const packageSlug = pkg.packageSlug
 
   // M62 W3: relationship / timeline view toggles (no panel deletion — both
   // views stay reachable; only one renders at a time to cut panel density).
@@ -170,16 +190,12 @@ function App() {
     setRecent(loadRecent())
   }, [])
 
-  // M10-1: restore the persisted exploration trail (history + cursor +
-  // journeyReasons) once on mount so a refresh resumes the user's path.
-  // Single navigation truth stays in App (history/cursor/journeyReasons);
-  // the persistence adapter only reads storage — no second state source.
+  // M10-1: restore the persisted exploration trail (history + cursor are
+  // restored inside useNavigationHistory's initializer; here we re-fetch the
+  // current node and restore journeyReasons). Mount-only, not reactive.
   useEffect(() => {
-    const p = loadPath()
-    if (p && p.history.length > 0) {
-      setHistory(p.history)
-      setCursor(p.cursor)
-      fetchNode(p.history[p.cursor], p.cursor)
+    if (history.length > 0 && cursor >= 0) {
+      fetchNode(history[cursor], cursor)
     }
     const r = loadReasons()
     if (r) setJourneyReasons(r)
@@ -271,16 +287,13 @@ function App() {
     }
   }
 
-  // Push a node onto the history and load it.
+  // ---- M73 Phase1: navigation / package functions now delegate to the hooks.
+  // App keeps the same function names so call sites / render tree stay stable;
+  // the state-machine + hash + telemetry logic lives in the hooks.
+
+  // Push a node onto the history and load it (hook state machine + onNavigate).
   function navigateTo(node: NavNode) {
-    const { history: h, cursor: c } = pushHistory(history, cursor, node)
-    setHistory(h)
-    setCursor(c)
-    savePath(h, c)
-    // M35 Feature D: record every navigation in the journey trace (localStorage).
-    // Single unified entry point => complete path coverage with no second mechanism.
-    addJourneyEntry(entryFromNode(node))
-    fetchNode(node, c)
+    nav.navigateTo(node)
   }
 
   // M35 Feature D: re-open a journey entry from the JourneyPanel.
@@ -313,47 +326,25 @@ function App() {
   }
 
   function goTo(newCursor: number) {
-    if (newCursor < 0 || newCursor >= history.length) return
-    setCursor(newCursor)
-    savePath(history, newCursor)
-    fetchNode(history[newCursor], newCursor)
+    nav.goTo(newCursor)
   }
 
   function goBack() {
-    if (canBack(cursor)) goTo(backCursor(cursor))
+    nav.goBack()
   }
 
   function goForward() {
-    if (canForward(cursor, history.length)) goTo(forwardCursor(cursor, history.length))
+    nav.goForward()
   }
 
-  function goHome() {
-    setHistory([])
-    setCursor(-1)
-    setResult(null)
-    setEntityData(null)
-    setSearchResults(null)
-    setErrorKind('')
-    // Reset journey annotations with the exploration — they are session-scoped
-    // and only meaningful within a single continuous exploration.
-    setJourneyReasons(new Map())
-    // M10-2: clear the cross-panel focus when leaving the exploration entirely.
-    setFocusedEntityId(null)
-    savePath([], -1)
-    saveReasons(new Map())
-    setLoading(false)
-  }
+  // goHome lives in the hook (resets history/cursor/errorKind + persists +
+  // fires onHomeExit=closePackage); view-state resets were folded into
+  // onCrumbClick's Home branch via the hook's onHomeExit wiring.
 
   function onCrumbClick(index: number) {
-    if (index <= 0) {
-      // M72 Line1 (finding C): Home must exit the package context too —
-      // otherwise the breadcrumb "Home" left users inside the package page
-      // (packageSlug stayed set). closePackage clears the slug + #/package/ hash.
-      closePackage()
-      goHome()
-      return
-    }
-    goTo(crumbCursor(index))
+    // M72 Line1 (finding C) preserved: hook's Home branch (index 0) fires
+    // onHomeExit → closePackage, so breadcrumb Home exits the package context.
+    nav.onCrumbClick(index)
   }
 
   function handleExplore(topicValue?: string) {
@@ -382,24 +373,14 @@ function App() {
   }
 
   // M69 — Open an Exploration Package page (overlays Discover/home).
-  // M71 — formalized telemetry: packageSlug field (was `as any` + entityType
-  // misuse). Behavior-analysis only; NOT used for recommendation/personalization.
+  // M73 Phase1 — lifecycle + #/package/ hash + open_package telemetry now live
+  // in usePackageContext (telemetry injected via onOpenPackage callback).
   function openPackage(slug: string) {
-    recordEvent({ action: 'open_package', packageSlug: slug })
-    setPackageSlug(slug)
-    if (typeof window !== 'undefined') {
-      window.location.hash = `#/package/${encodeURIComponent(slug)}`
-    }
+    pkg.openPackage(slug)
   }
 
   function closePackage() {
-    setPackageSlug(null)
-    if (
-      typeof window !== 'undefined' &&
-      window.location.hash.startsWith('#/package/')
-    ) {
-      window.location.hash = ''
-    }
+    pkg.closePackage()
   }
 
   function clearRecent() {

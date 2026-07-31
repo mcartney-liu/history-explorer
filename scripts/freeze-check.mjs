@@ -641,6 +641,34 @@ export const SCOPE_ALLOWLIST = [
   // accounts / cloud / personalization change. backend diff = 0; runtime 0.13.0.
   "frontend/src/data/explorationMetrics.ts",
   "frontend/src/data/explorationMetrics.test.ts",
+
+  // M73 (Alpha Hardening — architecture debt + UI polish + QA + readiness) —
+  // Frontend Freeze Revision Gate (PO-approved 2026-07-31). Alpha product
+  // hardening: reduce tech debt, raise stability, prepare for M74 external
+  // user validation. NO new product capability / community / creator /
+  // accounts / cloud / LLM / personalization.
+  //   - hooks/                 useNavigationHistory + usePackageContext
+  //                            (App.tsx de-complexity: hash parse, history
+  //                            state machine, package lifecycle, telemetry
+  //                            moved out of App's direct responsibility)
+  //   - package.json           devDependencies ONLY += @playwright/test (local
+  //                            Alpha regression test infra; dependencies
+  //                            untouched — DEP rule below guards it)
+  //   - e2e/ + playwright.config.ts   three critical-path specs
+  //                            (main chain / cross-package / edge cases);
+  //                            vitest include stays src/** so no interference
+  // Existing-file content changes approved here: App.tsx (hook adoption),
+  // explorationPackages.ts (+owner?/version?/sourcePackage? reserved-only),
+  // components/ui/ (Badge/Tabs/EmptyState — dir already listed),
+  // package/page components (5-8 high-frequency button consolidation).
+  // data/examples/*.json labels.zh patch is out of scope-check by design
+  // (data/ skipped — M33 precedent; content change approved: additive only).
+  // Least Privilege: no backend / LLM / accounts / cloud / community change.
+  // backend diff = 0; runtime 0.13.0 unchanged.
+  "frontend/src/hooks/",
+  "frontend/package.json",
+  "frontend/e2e/",
+  "frontend/playwright.config.ts",
 ];
 
 function _scopeAllowed(file) {
@@ -710,6 +738,51 @@ export function checkTokens(violations, root = ROOT) {
 }
 
 // ---- 3. dependency check ----
+// M73 (PO-approved 2026-07-31) dependency lockdown, enforced against git HEAD:
+//   - `dependencies`   MUST be byte-identical to HEAD (no production dep may be
+//                      added / removed / version-changed — ever)
+//   - `devDependencies` may ONLY add "@playwright/test" (local Alpha e2e infra);
+//                      any other new devDep requires a new Freeze Revision Gate.
+// Baseline = git HEAD:frontend/package.json. Skipped if HEAD is unavailable
+// (fresh clone before first commit).
+function checkM73DependencyLockdown(violations, pkg, root) {
+  let headPkg = null;
+  try {
+    headPkg = JSON.parse(
+      execSync("git show HEAD:frontend/package.json", {
+        cwd: root,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      })
+    );
+  } catch {
+    return; // no HEAD baseline available — skip lockdown (AI-SDK checks still run)
+  }
+  const cur = pkg.dependencies || {};
+  const base = headPkg.dependencies || {};
+  for (const d of Object.keys(cur)) {
+    if (base[d] === undefined) {
+      violations.push(`DEP: frontend/package.json dependencies must not gain "${d}" (M73 lockdown)`);
+    } else if (base[d] !== cur[d]) {
+      violations.push(`DEP: frontend/package.json dependencies version change for "${d}" (M73 lockdown)`);
+    }
+  }
+  for (const d of Object.keys(base)) {
+    if (cur[d] === undefined) {
+      violations.push(`DEP: frontend/package.json dependencies must not remove "${d}" (M73 lockdown)`);
+    }
+  }
+  const curDev = pkg.devDependencies || {};
+  const baseDev = headPkg.devDependencies || {};
+  for (const d of Object.keys(curDev)) {
+    if (baseDev[d] === undefined && d !== "@playwright/test") {
+      violations.push(
+        `DEP: frontend/package.json devDependencies may only add "@playwright/test" (got "${d}") (M73 lockdown)`
+      );
+    }
+  }
+}
+
 export function checkDeps(violations, root = ROOT) {
   const pkgPath = path.join(root, "frontend/package.json");
   if (fs.existsSync(pkgPath)) {
@@ -727,6 +800,7 @@ export function checkDeps(violations, root = ROOT) {
         violations.push(`DEP: frontend/package.json contains forbidden dependency "${d}"`);
       }
     }
+    checkM73DependencyLockdown(violations, pkg, root);
   }
   for (const rf of ["backend/requirements.txt", "backend/requirements-dev.txt"]) {
     const p = path.join(root, rf);

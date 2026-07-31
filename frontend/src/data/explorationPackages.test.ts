@@ -36,6 +36,17 @@ describe("M69 Exploration Package contract (graph-grounded)", () => {
     expect(["draft", "reviewed", "featured"]).toContain(pkg.status);
   });
 
+  it("M73 contract reservation: owner/version/sourcePackage optional, undefined, zero validation impact", () => {
+    const pkg = china();
+    // Reserved-only fields must be absent today (no UI / no logic depends on them).
+    expect(pkg.owner).toBeUndefined();
+    expect(pkg.version).toBeUndefined();
+    expect(pkg.sourcePackage).toBeUndefined();
+    // validatePackage must stay green without them (no new required checks).
+    const report = validatePackage(pkg);
+    expect(report.ok, report.errors.join("\n")).toBe(true);
+  });
+
   it("china package timeline chain == 唐→宋→元→明→清 (before edges, in order)", () => {
     const before = china()
       .relationship_paths.filter((r) => r.type === "before")
