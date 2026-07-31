@@ -448,9 +448,9 @@ def test_pipeline_handles_relationship_pair_focus():
 
 
 def test_runtime_off_fallback_behavior():
-    """AI_GATEWAY_ENABLED unset/False -> /ai/explain returns the deterministic
-    fallback (engine=deterministic, HTTP 200), never 500 — M73 behaviour of the
-    AI endpoints is unchanged while the Runtime is OFF."""
+    """AI_GATEWAY_ENABLED unset/False + EMPTY context -> the AI endpoints keep
+    the deterministic unavailable fallback (engine=deterministic, HTTP 200),
+    never 500 — the existing fallback path is preserved."""
     from app.ai_gateway import config as ai_config
 
     assert ai_config.get_config().is_enabled is False   # default OFF
@@ -459,12 +459,84 @@ def test_runtime_off_fallback_behavior():
     resp = grounded_answer(
         knowledge_service,
         "why caesar matters",
-        ["roman_empire:person-caesar"],
+        [],                                          # empty context -> fallback
     )
     assert resp["engine"] == "deterministic"
     assert resp["confidence"] == "low"
     assert resp["grounded"] is False
     assert "unavailable" in resp["answer"].lower()
+
+
+# ---------------------------------------------------------------------------
+# M74-003 (C2) — OFF branch upgraded: Phase2 pipeline deterministic grounded
+# ---------------------------------------------------------------------------
+
+def test_off_branch_valid_context_returns_grounded_deterministic():
+    """Runtime OFF + valid context -> engine=deterministic, grounded=True,
+    evidence non-empty, next_exploration non-empty (upgraded semantics)."""
+    from app.ai_gateway.answer_service import grounded_answer
+
+    resp = grounded_answer(
+        knowledge_service,
+        "why does augustus matter",
+        ["roman_empire:person-augustus"],
+    )
+    assert resp["engine"] == "deterministic"
+    assert resp["grounded"] is True
+    assert len(resp["evidence"]) > 0                  # validated claims rendered
+    assert len(resp["next_exploration"]) > 0          # evidence-bound suggestions
+    assert "基于知识库证据" in resp["answer"]          # NOT presented as AI
+    assert "unavailable" not in resp["answer"].lower()
+
+
+def test_off_branch_invalid_context_falls_back_safely():
+    """Runtime OFF + unresolvable context -> safe fallback, no crash."""
+    from app.ai_gateway.answer_service import grounded_answer
+
+    resp = grounded_answer(
+        knowledge_service,
+        "anything",
+        ["no-such:entity-xyz"],
+    )
+    assert resp["engine"] == "deterministic"
+    assert resp["grounded"] is False
+    assert "unavailable" in resp["answer"].lower()
+
+
+def test_off_branch_entity_without_claims_falls_back_safely():
+    """Runtime OFF + valid entity with NO claims in the curated set (caesar
+    has none) -> falls back gracefully (no guesses, no crash)."""
+    from app.ai_gateway.answer_service import grounded_answer
+
+    resp = grounded_answer(
+        knowledge_service,
+        "why does caesar matter",
+        ["roman_empire:person-caesar"],
+    )
+    assert resp["engine"] == "deterministic"
+    assert resp["grounded"] is False
+    assert "unavailable" in resp["answer"].lower()
+
+
+def test_off_branch_response_contract_four_fields():
+    """Response contract: answer / evidence / confidence / next_exploration
+    are all present on the deterministic grounded response."""
+    from app.ai_gateway.answer_service import grounded_answer
+
+    resp = grounded_answer(
+        knowledge_service,
+        "augustus",
+        ["roman_empire:person-augustus"],
+    )
+    assert isinstance(resp["answer"], str) and resp["answer"].strip()
+    assert isinstance(resp["evidence"], list)
+    assert resp["confidence"] in ("high", "medium", "low")
+    assert isinstance(resp["next_exploration"], list)
+    # evidence entries carry the verified marker (reuses ON-branch view)
+    for ev in resp["evidence"]:
+        assert ev["status"] == "verified"
+        assert ev["global_id"]
+
 
 
 # ---------------------------------------------------------------------------

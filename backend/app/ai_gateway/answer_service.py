@@ -120,6 +120,93 @@ def _parse_ai_json(raw: str) -> Optional[Dict[str, Any]]:
     return data if isinstance(data, dict) else None
 
 
+def _deterministic_grounded_response(builder, question, context, mode):
+    """Runtime OFF: Phase2 pipeline-driven deterministic grounded response.
+
+    context_global_ids -> ClaimGraph -> EvidenceSelection -> EvidenceValidation
+    -> deterministic renderer. Returns None when there is nothing valid to
+    render (empty context / no validated evidence) — the caller then falls
+    back to the unavailable placeholder (never crash, never guess).
+
+    Strictly grounded:
+      - answer text is built ONLY from validated claim text (claim data
+        itself, not invented); the prefix labels it as evidence-based, never
+        as AI-generated (PO Condition 3).
+      - evidence/citations come from the validated claims (status: verified).
+      - next_exploration comes from the C1 evidence-bound derivation,
+        restricted to the validated claim subset.
+    """
+    from .citation_model import ClaimGraph
+    from .grounding_builder import EvidenceSelector, derive_next_exploration
+    from .response_validator import EvidenceValidator
+
+    if not context:
+        return None
+
+    try:
+        graph = builder.build_claim_graph(context[0])
+        selection = EvidenceSelector().select(graph)
+        result = EvidenceValidator().validate(selection)
+    except Exception:
+        # Defensive: any pipeline failure (e.g. a KS lacking Phase2 methods)
+        # must degrade to the unavailable fallback — never 500, never guess.
+        return None
+
+    if not result.passed or not result.valid_claims:
+        return None
+
+    # --- deterministic renderer: answer strictly from validated claim text ---
+    seen: set = set()
+    claim_texts: List[str] = []
+    for c in result.valid_claims:
+        text = (c.claim_text or "").strip()
+        if text and text not in seen:
+            seen.add(text)
+            claim_texts.append(text)
+    if claim_texts:
+        answer = "基于知识库证据：" + "；".join(claim_texts[:3])
+    else:
+        answer = "该主题暂无可用知识库证据展示。"
+
+    # --- citations / evidence bound to the focus (validated claims only) ---
+    citations: List[Citation] = []
+    for c in result.valid_claims:
+        if c.subject_global_id:
+            citations.append(
+                Citation(
+                    global_id=c.subject_global_id,
+                    kind="entity",
+                    label=c.subject or c.subject_global_id,
+                )
+            )
+
+    valid = len(citations)
+    grounded = valid > 0
+    confidence = _compute_confidence(grounded, valid, len(result.valid_claims))
+
+    # --- next_exploration restricted to the validated claim subset (C1) ---
+    narrowed = ClaimGraph(
+        focus_global_id=graph.focus_global_id,
+        neighbors=graph.neighbors,
+        claims=list(result.valid_claims),
+        sources=list(selection.sources),
+    )
+    next_exploration = derive_next_exploration(narrowed, limit=3)
+
+    payload = {
+        "answer": answer,
+        "perspectives": [],
+        "evidence": _build_evidence(citations),
+        "confidence": confidence,
+        "citations": [c.to_dict() for c in citations],
+        "rejected_citations": [],
+        "grounded": grounded,
+        "engine": "deterministic",
+        "next_exploration": next_exploration,
+    }
+    return _with_echo(payload, question, context, mode)
+
+
 def grounded_answer(
     knowledge_service,
     question: str,
@@ -132,18 +219,34 @@ def grounded_answer(
     deterministic fallback (engine="deterministic", HTTP 200). On a successful
     but unverifiable AI reply, returns engine="ai" with grounded reflecting the
     validation result.
+
+    M74-003 (C2): with the Runtime OFF (no provider configured) the endpoint no
+    longer returns a bare "unavailable" placeholder for a valid context — it
+    runs the Phase2 pipeline (ClaimGraph -> EvidenceSelection ->
+    EvidenceValidation) and renders a deterministic grounded response. The
+    answer text is built ONLY from validated claim text (never invented facts)
+    and next_exploration comes from the evidence-bound derivation (C1).
+    engine stays "deterministic": this output is explicitly NOT presented as
+    AI-generated (PO Condition 3).
     """
     question = (question or "").strip()
     context = [g for g in (context_global_ids or []) if isinstance(g, str)]
 
     builder = GroundingBuilder(knowledge_service)
+
+    # M74-003 (C2): Runtime OFF branch — Phase2 pipeline deterministic grounded.
+    provider = get_provider()
+    if provider is None:
+        deterministic = _deterministic_grounded_response(builder, question, context, mode)
+        if deterministic is not None:
+            return deterministic
+        return _with_echo(get_fallback_response(reason="ai_unavailable"), question, context, mode)
+
     grounding: GroundingResult = builder.build(context, question)
 
-    # No context / AI disabled / empty facts -> deterministic fallback.
-    provider = get_provider()
-    if provider is None or not grounding.facts:
-        reason = "ai_unavailable" if provider is None else "no_grounding_context"
-        return _with_echo(get_fallback_response(reason=reason), question, context, mode)
+    # AI disabled / empty facts -> deterministic fallback.
+    if not grounding.facts:
+        return _with_echo(get_fallback_response(reason="no_grounding_context"), question, context, mode)
 
     prompt_service = PromptService()
     user_prompt = prompt_service.user_prompt(question, grounding.facts) + _CITATION_INSTRUCTION
