@@ -13,6 +13,8 @@ import type { StarterItem } from '../data/explorationStarters'
 import { RelatedTopic } from './crossTopic'
 import AIExplanationPanel from './AIExplanationPanel'
 import ProvenancePanel from './ProvenancePanel'
+import RelationshipInsight from './ai/RelationshipInsight'
+import { AI_SUGGESTIONS_ENABLED } from '../data/aiFeatureFlag'
 import EntityHeader from './EntityHeader'
 import EventCausalChain from './EventCausalChain'
 import EventImpactPanel from './EventImpactPanel'
@@ -171,6 +173,13 @@ function EntityPage({
           but narrative keys are global_ids). No AI — copy is hand-authored. */}
       <StorySection narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
       <WhyImportantPanel narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
+
+      {/* M74-003 (C3-2) — Relationship Insight (T2): evidence-bound AI
+          exploration touchpoint, an ENHANCEMENT LAYER beside (never replacing)
+          the curated narrative. Flag-gated at the parent so OFF = zero render
+          + zero requests (M73 byte-identical). Input = the entity GLOBAL id
+          (entityId prop); every fact comes from the backend response. */}
+      {AI_SUGGESTIONS_ENABLED && entityId && <RelationshipInsight entityGlobalId={entityId} />}
 
       <EntityPageShell
         entityGlobalId={entityGlobalId}
