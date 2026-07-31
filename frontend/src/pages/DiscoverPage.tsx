@@ -154,12 +154,12 @@ function InterestProfile() {
   if (researches.length < 2) {
     return (
       <div className="discover-interest discover-interest--empty">
-        <h3 className="discover-section-heading">我的探索兴趣</h3>
+        <h3 className="discover-section-heading">我的探索足迹</h3>
         <p className="discover-empty-text">
-          完成几次探索后，这里会生成你的历史兴趣画像。
+          保存研究后，这里会汇总你的探索足迹与关注主题。
         </p>
         <p className="discover-empty-sub">
-          你探索得越多，推荐会越贴近你的兴趣方向。
+          它反映你浏览与保存过的话题，便于回顾你的探索路径。
         </p>
       </div>
     )
@@ -168,7 +168,7 @@ function InterestProfile() {
 
   return (
     <div className="discover-interest">
-      <h3 className="discover-section-heading">我的探索兴趣</h3>
+      <h3 className="discover-section-heading">我的探索足迹</h3>
       {profile.topThemes.length > 0 && (
         <div className="discover-interest-themes">
           {profile.topThemes.slice(0, 4).map((theme) => (

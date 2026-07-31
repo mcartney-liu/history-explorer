@@ -133,7 +133,7 @@ describe('DiscoverPage (M42 Activation)', () => {
     const html = renderToStaticMarkup(
       <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
     )
-    expect(html).toContain('我的探索兴趣')
+    expect(html).toContain('我的探索足迹')
     expect(html).toContain('古代文明')
   })
 })
@@ -185,7 +185,7 @@ describe('DiscoverPage (M44 Empty States)', () => {
     const html = renderToStaticMarkup(
       <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
     )
-    expect(html).toContain('历史兴趣画像')
+    expect(html).toContain('探索足迹')
   })
 
   it('shows recent data when ResearchHistory has content', () => {

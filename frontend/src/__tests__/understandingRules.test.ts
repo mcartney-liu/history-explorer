@@ -3,6 +3,7 @@ import {
   buildUnderstanding,
   buildUnderstandingsFromRelationships,
   buildUnderstandingsFromConnectionsExplained,
+  getRelationshipTemplate,
   type UnderstandingInput,
   type UnderstandingViewModel,
 } from '../data/understandingRules'
@@ -196,5 +197,21 @@ describe('understandingRules (M5-D)', () => {
     const a: UnderstandingViewModel = buildUnderstanding(input)
     const b: UnderstandingViewModel = buildUnderstanding(input)
     expect(a).toStrictEqual(b)
+  })
+
+  // M72 Line1 — Guide reason i18n (finding A)
+  it('getRelationshipTemplate(zh) returns Chinese meaning for inherited', () => {
+    const tpl = getRelationshipTemplate('inherited', 'zh')!
+    expect(tpl.forward({ relationType: 'inherited', direction: 'forward', actorName: '文官体系', targetName: '科举制度' }).meaning).toContain('承继')
+  })
+
+  it('getRelationshipTemplate(en) keeps the original English meaning', () => {
+    const tpl = getRelationshipTemplate('inherited', 'en')!
+    expect(tpl.forward({ relationType: 'inherited', direction: 'forward', actorName: 'Civil Service', targetName: 'Imperial Exams' }).meaning).toContain('inherited')
+  })
+
+  it('getRelationshipTemplate(zh) falls back to EN for unknown relation types', () => {
+    const tpl = getRelationshipTemplate('no_such_relation', 'zh')
+    expect(tpl).toBeUndefined()
   })
 })

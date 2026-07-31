@@ -5,7 +5,7 @@ import {
   type Locale,
   type RelationshipPathRef,
 } from './explorationPackages'
-import { RELATIONSHIP_TEMPLATES } from './understandingRules'
+import { getRelationshipTemplate } from './understandingRules'
 import type { UserBehaviorEvent } from './UserBehaviorEvent'
 
 // ============================================================================
@@ -111,7 +111,7 @@ export function getNextSteps(
     if (!nothingVisited && !v.has(edge.from)) continue
     const fromName = entityLabel(edge.from, locale)
     const toName = entityLabel(edge.to, locale)
-    const template = RELATIONSHIP_TEMPLATES[edge.type]
+    const template = getRelationshipTemplate(edge.type, locale)
     const explained = template
       ? template.forward({
           relationType: edge.type,

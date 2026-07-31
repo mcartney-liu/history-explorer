@@ -346,6 +346,10 @@ function App() {
 
   function onCrumbClick(index: number) {
     if (index <= 0) {
+      // M72 Line1 (finding C): Home must exit the package context too —
+      // otherwise the breadcrumb "Home" left users inside the package page
+      // (packageSlug stayed set). closePackage clears the slug + #/package/ hash.
+      closePackage()
       goHome()
       return
     }
