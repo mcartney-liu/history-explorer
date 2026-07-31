@@ -15,7 +15,7 @@ The three `kind` values mirror the grounding sources:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 # The complete, closed set of citation kinds the validator will accept.
 ALLOWED_KINDS = ("entity", "relationship", "timeline")
@@ -54,3 +54,32 @@ class Citation:
             kind=kind.strip(),
             label="" if label is None else str(label),
         )
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 2): relationship-pair (A->B) structured result.
+# EvidenceClaim.subject_id may be an "A->B" pair (36 of 76 claims). The
+# resolver parses it into this structured object — NEVER a raw string.
+# `relationship` is the ACTUAL graph edge type when A-B share an edge in the
+# frozen KG, else None (the resolver never guesses an edge).
+# `resolved=False` means Grounding Gate Reject (unresolvable side).
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RelationshipPair:
+    subject: str
+    object: str
+    subject_global_id: Optional[str]
+    object_global_id: Optional[str]
+    relationship: Optional[str]
+    resolved: bool
+
+    def to_dict(self) -> dict:
+        return {
+            "subject": self.subject,
+            "object": self.object,
+            "subject_global_id": self.subject_global_id,
+            "object_global_id": self.object_global_id,
+            "relationship": self.relationship,
+            "resolved": self.resolved,
+        }

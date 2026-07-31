@@ -18,13 +18,81 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Sequence
 
-from .citation_model import Citation
+from .citation_model import Citation, RelationshipPair
 
 # M36.0: hard cap on how many NEW second-hop entities expand_context() may add.
 # Prevents context explosion on dense hubs (e.g. an empire node with dozens of
 # edges) while still covering multi-civilization chains such as
 # Buddhism -> Silk Road -> China.
 MAX_EXPANDED_ENTITIES = 25
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 2): deterministic relationship-pair (A->B) resolution.
+# Independent resolver — parsing logic lives HERE, not scattered across the
+# GroundingBuilder. Grounding Gate semantics: any unresolvable side returns
+# None (REJECT) — never guess, never auto-complete, never degrade.
+# ---------------------------------------------------------------------------
+
+class RelationshipResolver:
+    """Parse an EvidenceClaim "A->B" subject_id into a structured pair.
+
+    Two-format id resolution per side (deterministic, not guessing):
+      1) local id  -> global id (KnowledgeService.find_global_id)
+      2) raw global id        (KnowledgeService.find_by_global_id — the
+                               subject_id may already BE a global id, e.g.
+                               "religion-buddhism->silk_road:silk_road")
+    Any side that resolves in neither format -> None (Grounding Gate Reject).
+
+    `relationship` is the ACTUAL graph edge type (via global_neighbors) when
+    the two global ids share an edge; None when no edge exists — never guessed.
+    """
+
+    def __init__(self, knowledge_service):
+        self._ks = knowledge_service
+
+    def parse(self, subject_id) -> "RelationshipPair | None":
+        """Resolve a raw "A->B" subject_id. None on ANY failure (Reject)."""
+        if not isinstance(subject_id, str):
+            return None
+        text = subject_id.strip()
+        if "->" not in text:
+            return None  # not a pair — caller should use the entity path
+        a_raw, b_raw = (p.strip() for p in text.split("->", 1))
+        a_gid = self._resolve_id(a_raw)
+        b_gid = self._resolve_id(b_raw)
+        if not a_gid or not b_gid:
+            return None  # unresolvable side -> Grounding Gate Reject
+        return RelationshipPair(
+            subject=a_raw,
+            object=b_raw,
+            subject_global_id=a_gid,
+            object_global_id=b_gid,
+            relationship=self._find_edge(a_gid, b_gid),
+            resolved=True,
+        )
+
+    def _resolve_id(self, raw: str) -> "str | None":
+        """local id -> gid, else verify raw is itself a valid global id."""
+        if not raw:
+            return None
+        gid = self._ks.find_global_id(raw)
+        if gid:
+            return gid
+        ref = self._ks.find_by_global_id(raw)
+        return raw if ref is not None else None
+
+    def _find_edge(self, src_gid: str, tgt_gid: str) -> "str | None":
+        """Actual relationship type on the frozen KG edge (bidirectional)."""
+        try:
+            for nbr in self._ks.global_neighbors(src_gid, direction="both"):
+                if nbr.get("global_id") == tgt_gid:
+                    rel = nbr.get("relationship")
+                    if isinstance(rel, str) and rel:
+                        return rel
+        except Exception:
+            pass
+        return None
 
 
 def timeline_period_label(entry: dict) -> str:
