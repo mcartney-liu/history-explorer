@@ -1,0 +1,153 @@
+{
+  "version": "1.0",
+  "baseline_commit": "2490a6a",
+  "created": "2026-08-01",
+  "note": "M74-004-004 Evaluation Baseline golden set. Based on the FROZEN Trust Experience (2490a6a). Each case targets a focus with REAL grounded evidence (no empty-sample pollution). Categories: entity_explanation 8 / relationship_explanation 7 / next_recommendation 5.",
+  "categories": {
+    "entity_explanation": 8,
+    "relationship_explanation": 7,
+    "next_recommendation": 5
+  },
+  "cases": [
+    {
+      "id": "ent-001",
+      "category": "entity_explanation",
+      "focus_global_id": "roman_empire:person-augustus",
+      "question": "为什么奥古斯都重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-002",
+      "category": "entity_explanation",
+      "focus_global_id": "roman_empire:person-constantine",
+      "question": "君士坦丁大帝为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-003",
+      "category": "entity_explanation",
+      "focus_global_id": "roman_empire:person-julius-caesar",
+      "question": "凯撒为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-004",
+      "category": "entity_explanation",
+      "focus_global_id": "ancient_india:person-ashoka",
+      "question": "阿育王为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-005",
+      "category": "entity_explanation",
+      "focus_global_id": "ancient_india:civ-maurya",
+      "question": "孔雀王朝为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-006",
+      "category": "entity_explanation",
+      "focus_global_id": "china_v1:idea-keju",
+      "question": "科举制度为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-007",
+      "category": "entity_explanation",
+      "focus_global_id": "china_v1:idea-lixue",
+      "question": "理学为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "ent-008",
+      "category": "entity_explanation",
+      "focus_global_id": "roman_empire:event-roman-empire-established",
+      "question": "罗马帝国的建立为什么重要？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_citations": 1 }
+    },
+    {
+      "id": "rel-001",
+      "category": "relationship_explanation",
+      "focus_global_id": "roman_empire:civ-roman",
+      "question": "罗马文明与哪些文明存在联系？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "rel-002",
+      "category": "relationship_explanation",
+      "focus_global_id": "roman_empire:religion-christianity",
+      "question": "基督教在罗马帝国中的影响是什么？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "rel-003",
+      "category": "relationship_explanation",
+      "focus_global_id": "roman_empire:civ-byzantine",
+      "question": "拜占庭帝国与罗马帝国的关系是什么？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "rel-004",
+      "category": "relationship_explanation",
+      "focus_global_id": "roman_empire:event-edict-milan",
+      "question": "米兰敕令与君士坦丁的关系是什么？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "rel-005",
+      "category": "relationship_explanation",
+      "focus_global_id": "ancient_india:religion-buddhism",
+      "question": "佛教与丝绸之路的联系是什么？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "rel-006",
+      "category": "relationship_explanation",
+      "focus_global_id": "ancient_india:event-kalinga-war",
+      "question": "羯陵伽之战与阿育王的关系是什么？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "rel-007",
+      "category": "relationship_explanation",
+      "focus_global_id": "china_v1:idea-xinxue",
+      "question": "心学与理学的关系是什么？",
+      "expect": { "grounded": true, "min_evidence": 1, "min_pair_relations": 1 }
+    },
+    {
+      "id": "nxt-001",
+      "category": "next_recommendation",
+      "focus_global_id": "roman_empire:person-augustus",
+      "question": "接下来可以探索什么？",
+      "expect": { "grounded": true, "min_next": 1, "next_has_source": true, "no_self_recommendation": true }
+    },
+    {
+      "id": "nxt-002",
+      "category": "next_recommendation",
+      "focus_global_id": "roman_empire:civ-roman",
+      "question": "接下来可以探索什么？",
+      "expect": { "grounded": true, "min_next": 1, "next_has_source": true, "no_self_recommendation": true }
+    },
+    {
+      "id": "nxt-003",
+      "category": "next_recommendation",
+      "focus_global_id": "roman_empire:event-roman-empire-established",
+      "question": "接下来可以探索什么？",
+      "expect": { "grounded": true, "min_next": 1, "next_has_source": true, "no_self_recommendation": true }
+    },
+    {
+      "id": "nxt-004",
+      "category": "next_recommendation",
+      "focus_global_id": "china_v1:tech-yinshua",
+      "question": "接下来可以探索什么？",
+      "expect": { "grounded": true, "min_next": 1, "next_has_source": true, "no_self_recommendation": true }
+    },
+    {
+      "id": "nxt-005",
+      "category": "next_recommendation",
+      "focus_global_id": "ancient_india:person-ashoka",
+      "question": "接下来可以探索什么？",
+      "expect": { "grounded": true, "min_next": 1, "next_has_source": true, "no_self_recommendation": true }
+    }
+  ]
+}
