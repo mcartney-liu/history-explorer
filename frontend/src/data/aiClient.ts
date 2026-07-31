@@ -23,6 +23,19 @@ export type AIEvidence = {
   status: string
 }
 
+/**
+ * M74-003 (C1/C2): deterministic next-exploration suggestion. Produced
+ * server-side from the ClaimGraph (evidence-bound); the frontend only
+ * renders it — it never assembles facts locally (PO Condition 3).
+ */
+export type AINextExploration = {
+  global_id: string
+  label: string
+  relationship: string
+  source_id: string
+  claim_ids: string[]
+}
+
 export type AIConfidence = 'high' | 'medium' | 'low'
 
 export type AIEngine = 'ai' | 'ai_unverified' | 'deterministic'
@@ -42,6 +55,8 @@ export type AIResponse = {
   perspectives?: string[]
   evidence?: AIEvidence[]
   confidence?: AIConfidence
+  // --- M74-003 (C2): evidence-bound next exploration (additive) ---
+  next_exploration?: AINextExploration[]
 }
 
 /** M36.0 prompt modes map to backend PromptService._MODE_DIRECTIVES. */
@@ -87,6 +102,25 @@ export function explainAI(
   mode?: string,
 ): Promise<AIResponse> {
   return postAI('/api/v1/ai/explain', { question, context_global_ids, signal, mode })
+}
+
+/**
+ * M74-003 (C2): evidence-bound exploration suggestions for a focus entity.
+ * Thin semantic wrapper over explainAI — the backend runs the Phase2 pipeline
+ * (ClaimGraph → EvidenceSelection → EvidenceValidation) and returns only
+ * validated fields (evidence / next_exploration). The frontend renders them
+ * as-is; it never assembles facts locally (PO Condition 3).
+ */
+export function exploreSuggestions(
+  context_global_ids: string[],
+  signal?: AbortSignal,
+): Promise<AIResponse> {
+  return postAI('/api/v1/ai/explain', {
+    question: '探索建议',
+    context_global_ids,
+    signal,
+    mode: 'explain',
+  })
 }
 
 export function chatAI(

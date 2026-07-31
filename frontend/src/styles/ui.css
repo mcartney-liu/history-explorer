@@ -56,3 +56,75 @@
   font-size: 13px;
   line-height: 1.7;
 }
+
+/* --- TrustDisplay (M74-003 C3-1): evidence-bound exploration output --- */
+.trust-display {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.trust-display-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.trust-display-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hi);
+}
+.trust-display-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.trust-display-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mid);
+}
+.trust-display-next,
+.trust-display-evidence {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.trust-display-next-item,
+.trust-display-evidence-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.trust-display-next-name,
+.trust-display-evidence-name {
+  color: var(--hi);
+  font-weight: 500;
+}
+.trust-display-next-rel {
+  color: var(--accent);
+  font-size: 12px;
+}
+.trust-display-source {
+  font-size: 11px;
+  color: var(--mid);
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.trust-display-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--mid);
+}
