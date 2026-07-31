@@ -280,7 +280,13 @@ function App() {
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)
       const status = msg.includes(':') ? msg.split(':')[1] : ''
-      setErrorKind(status === '404' ? 'notfound' : 'network')
+      // M74 Phase1 (C3): 400 = backend rejected the topic format
+      // (TOPIC_PATTERN). Classify it as 'invalid' (backend is online — the
+      // input is wrong), NOT 'network' which misled users into checking the
+      // backend. 404 stays 'notfound'; everything else stays 'network'.
+      if (status === '400') setErrorKind('invalid')
+      else if (status === '404') setErrorKind('notfound')
+      else setErrorKind('network')
       setResult(null)
       setEntityData(null)
     } finally {
