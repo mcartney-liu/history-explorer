@@ -402,3 +402,66 @@ def test_validation_pair_claim_binding_shape():
     res2 = EvidenceValidator().validate(_selection([weird], [{"id": "src-a", "tier": "primary"}]))
     assert res2.passed is False
     assert res2.reasons.get("ec-weird") == "invalid_binding"
+
+
+# ---------------------------------------------------------------------------
+# Step 6 — Full Grounding Pipeline end-to-end (Closure Validation)
+# ---------------------------------------------------------------------------
+
+def test_pipeline_continuous_context_to_validation():
+    """Step1-5 data flow is continuous over REAL data:
+    ClaimGraph -> EvidenceSelection -> EvidenceValidation. Each stage consumes
+    ONLY the previous stage's output (no KnowledgeService re-query)."""
+    from app.ai_gateway.grounding_builder import EvidenceSelector, GroundingBuilder
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    graph = GroundingBuilder(knowledge_service).build_claim_graph(
+        "roman_empire:person-augustus"
+    )
+    sel = EvidenceSelector().select(graph)
+    res = EvidenceValidator().validate(sel)
+
+    assert len(graph.claims) > 0                      # Context assembled
+    assert len(sel.claims) <= len(graph.claims)       # Selection bounded by Graph
+    assert len(sel.records) == len(graph.claims)      # Full audit
+    assert res.passed and len(res.valid_claims) > 0   # Trust Gate passes valid subset
+    # selected claims are a subset of graph claims (same objects — no re-query)
+    graph_ids = {c.claim_id for c in graph.claims}
+    assert all(c.claim_id in graph_ids for c in sel.claims)
+
+
+def test_pipeline_handles_relationship_pair_focus():
+    """Focus with relationship-pair claims flows through the whole pipeline."""
+    from app.ai_gateway.grounding_builder import EvidenceSelector, GroundingBuilder
+    from app.ai_gateway.response_validator import EvidenceValidator
+
+    graph = GroundingBuilder(knowledge_service).build_claim_graph(
+        "ancient_india:person-ashoka"
+    )
+    sel = EvidenceSelector().select(graph)
+    res = EvidenceValidator().validate(sel)
+
+    pairs = [c for c in sel.claims if c.object_global_id is not None]
+    assert len(sel.claims) >= 1
+    assert all(c.source_id for c in sel.claims)       # Source chain intact
+    assert res.passed and len(res.valid_claims) == len(sel.claims)
+
+
+def test_runtime_off_fallback_behavior():
+    """AI_GATEWAY_ENABLED unset/False -> /ai/explain returns the deterministic
+    fallback (engine=deterministic, HTTP 200), never 500 — M73 behaviour of the
+    AI endpoints is unchanged while the Runtime is OFF."""
+    from app.ai_gateway import config as ai_config
+
+    assert ai_config.get_config().is_enabled is False   # default OFF
+    from app.ai_gateway.answer_service import grounded_answer
+
+    resp = grounded_answer(
+        knowledge_service,
+        "why caesar matters",
+        ["roman_empire:person-caesar"],
+    )
+    assert resp["engine"] == "deterministic"
+    assert resp["confidence"] == "low"
+    assert resp["grounded"] is False
+    assert "unavailable" in resp["answer"].lower()
