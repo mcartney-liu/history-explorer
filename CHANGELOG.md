@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM68] - 2026-07-31 — Non-runtime release (M68 project release)
+
+> **Non-runtime release** (M68 project release). `frontend/package.json` remains `[0.13.0]`. M68 — China Civilization V1 + Frontend Business i18n: China civilization dataset V1 (`data/examples/china_civilization_v1_example.json` +729 / `data/sources.json` +48 / `data/evidence_claims.json` +181 per git stat) validating the Tang→Song→Yuan→Ming→Qing cultural / institutional / technological diffusion chains; frontend business i18n (`getRelationshipLabel` covering all 18 frozen relationship types zh/en/ja; 14 components converged from raw English slugs to business labels; 3 test assertions synced). Data-only + presentation-only — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0; no new dependency; no LLM runtime. freeze-check EXIT 0; tsc EXIT 0.
+
+---
+
 ## [vM66] - 2026-07-31 — Non-runtime release (M66 project release)
 
 > **Non-runtime release** (M66 project release). `frontend/package.json` remains `[0.13.0]`. M66 — Exploration Intelligence Convergence: surfaces the M43–M53 dark-pipeline intelligence as a user-visible, non-AI exploration-context capability. A deterministic local analysis bridge (companion context bridge) narrow-projects `ProductUsageAnalysis` output into `ExplorationContextIntelligence` and renders it via `ExplorationInsightPanel` — delivering intelligence visibility without user profiling, scoring, recommendation, or AI reasoning. Pure frontend — zero backend / schema / AI Gateway / dependency change, backend diff = 0. Invariants: ENTITY_TYPES=8 / RELATIONSHIP_TYPES=18 untouched; runtime 0.13.0. freeze-check EXIT 0; visual-check EXIT 0; tsc EXIT 0; release-consistency 7/7; 967 tests passed (110 files).
