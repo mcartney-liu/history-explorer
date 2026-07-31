@@ -83,3 +83,58 @@ class RelationshipPair:
             "relationship": self.relationship,
             "resolved": self.resolved,
         }
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 3): ClaimGraph — the Runtime's single processing unit.
+# Entity-subject claims and relationship-pair claims share ONE ClaimEntry
+# model (no dual models): an entity claim is a pair whose object is None.
+# `resolved=False` means the claim could not bind (Grounding Gate Reject —
+# it is carried but never used as evidence).
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ClaimEntry:
+    claim_id: str
+    subject: str
+    claim_text: str
+    source_id: str
+    subject_global_id: Optional[str]
+    object_global_id: Optional[str]
+    relationship: Optional[str]
+    resolved: bool
+
+    def to_dict(self) -> dict:
+        return {
+            "claim_id": self.claim_id,
+            "subject": self.subject,
+            "claim_text": self.claim_text,
+            "source_id": self.source_id,
+            "subject_global_id": self.subject_global_id,
+            "object_global_id": self.object_global_id,
+            "relationship": self.relationship,
+            "resolved": self.resolved,
+        }
+
+
+@dataclass
+class ClaimGraph:
+    """Lazy-assembled context around ONE focus entity.
+
+    Only what the current Runtime request needs is assembled (never the full
+    76-claim set). The GroundingBuilder assembles; Reasoning belongs to a
+    later Runtime stage.
+    """
+
+    focus_global_id: str
+    neighbors: list
+    claims: list
+    sources: list
+
+    def to_dict(self) -> dict:
+        return {
+            "focus_global_id": self.focus_global_id,
+            "neighbors": list(self.neighbors),
+            "claims": [c.to_dict() if hasattr(c, "to_dict") else c for c in self.claims],
+            "sources": list(self.sources),
+        }

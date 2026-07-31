@@ -336,3 +336,89 @@ class GroundingBuilder:
                 )
 
         return result
+
+    # ------------------------------------------------------------------
+    # M74 Phase2 (Step 3): ClaimGraph assembly — the Runtime's single
+    # processing unit. LAZY: only the current focus entity's neighbors,
+    # claims and sources are assembled (never the full 76-claim set).
+    # ASSEMBLY ONLY — reasoning belongs to a later Runtime stage.
+    # Entity-subject claims and relationship-pair claims share ONE
+    # ClaimEntry model (object=None for entity claims).
+    # ------------------------------------------------------------------
+
+    def build_claim_graph(
+        self, focus_global_id: str, max_claims: int = 10
+    ) -> "ClaimGraph":
+        """Assemble a lazy ClaimGraph around ONE focus entity.
+
+        Returns an empty graph (focus set, nothing else) when the focus id is
+        unknown — callers fall back to deterministic content (never crash,
+        never guess). Read-only; no graph mutation.
+        """
+        from .citation_model import ClaimEntry, ClaimGraph
+
+        focus = self._ks.find_by_global_id(focus_global_id)
+        if focus is None:
+            return ClaimGraph(focus_global_id, [], [], [])
+
+        neighbors = []
+        try:
+            neighbors = self._ks.global_neighbors(focus_global_id, direction="both")
+        except Exception:
+            neighbors = []
+
+        resolver = RelationshipResolver(self._ks)
+        claims_raw = self._ks.get_claims_for_entity(focus_global_id)[:max_claims]
+        claims: list = []
+        source_ids: set = set()
+        for claim in claims_raw:
+            sid = claim.get("subject_id")
+            entry = self._claim_to_entry(claim, sid, resolver)
+            claims.append(entry)
+            if entry.source_id:
+                source_ids.add(entry.source_id)
+
+        sources = [
+            s for s in (self._ks.get_source(sid) for sid in source_ids) if s
+        ]
+        return ClaimGraph(focus_global_id, neighbors, claims, sources)
+
+    def _claim_to_entry(self, claim: dict, subject_id, resolver) -> "ClaimEntry":
+        """Map a curated claim into the unified ClaimEntry model.
+
+        Grounding Gate semantics: a claim that cannot bind (unresolvable
+        subject / pair side) is carried with resolved=False — it is never
+        used as evidence. Never guessed, never auto-completed.
+        """
+        from .citation_model import ClaimEntry
+
+        cid = claim.get("id") or ""
+        text = claim.get("claim") or ""
+        source_id = claim.get("source_id") or ""
+        if not isinstance(subject_id, str) or not subject_id.strip():
+            return ClaimEntry(cid, "", text, source_id, None, None, None, False)
+
+        if "->" in subject_id:
+            pair = resolver.parse(subject_id)
+            if pair is None or not pair.resolved:
+                return ClaimEntry(
+                    cid, subject_id, text, source_id, None, None, None, False
+                )
+            return ClaimEntry(
+                cid,
+                pair.subject,
+                text,
+                source_id,
+                pair.subject_global_id,
+                pair.object_global_id,
+                pair.relationship,
+                True,
+            )
+
+        # Entity-subject claim (unified model: object side is None).
+        gid = self._ks.find_global_id(subject_id.strip())
+        if not gid:
+            return ClaimEntry(
+                cid, subject_id, text, source_id, None, None, None, False
+            )
+        return ClaimEntry(cid, subject_id.strip(), text, source_id, gid, None, None, True)

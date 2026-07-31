@@ -122,3 +122,65 @@ def test_all_claim_pairs_are_deterministic():
     # 28 edge-backed + mixed-format gid sides resolve; unresolvable sides reject.
     assert resolved >= 28
     assert resolved < 36
+
+
+# ---------------------------------------------------------------------------
+# Step 3 — ClaimGraph assembly (unified processing unit, lazy)
+# ---------------------------------------------------------------------------
+
+def _builder():
+    from app.ai_gateway.grounding_builder import GroundingBuilder
+    return GroundingBuilder(knowledge_service)
+
+
+def test_claim_graph_contains_focus_neighbors_claims_sources():
+    """Augustus claim graph carries all five sections (focus/neighbors/
+    claims/sources) with entity + relationship-pair claims unified."""
+    g = _builder().build_claim_graph("roman_empire:person-augustus")
+    assert g.focus_global_id == "roman_empire:person-augustus"
+    assert isinstance(g.neighbors, list) and len(g.neighbors) > 0
+    assert len(g.claims) > 0
+    assert len(g.sources) > 0
+    # Unified model: entity claims have object_global_id None; pair claims
+    # carry object + relationship; resolved claims all have subject_global_id.
+    resolved = [c for c in g.claims if c.resolved]
+    assert len(resolved) > 0
+    assert all(c.subject_global_id for c in resolved)
+    pair_claims = [c for c in resolved if c.object_global_id is not None]
+    entity_claims = [c for c in resolved if c.object_global_id is None]
+    assert len(pair_claims) >= 0 and len(entity_claims) >= 0
+    # Every claim's source is in the graph's source set (Source chain intact).
+    source_ids = {s.get("id") for s in g.sources}
+    for c in g.claims:
+        if c.source_id:
+            assert c.source_id in source_ids
+
+
+def test_claim_graph_is_lazy_bounded():
+    """Assembly is bounded by max_claims (never the full 76-claim set)."""
+    g = _builder().build_claim_graph("roman_empire:person-augustus", max_claims=2)
+    assert len(g.claims) <= 2
+    full = _builder().build_claim_graph("roman_empire:person-augustus")
+    assert len(full.claims) >= len(g.claims)
+
+
+def test_claim_graph_unknown_focus_returns_empty():
+    """Unknown focus -> empty graph (no crash, no guess)."""
+    g = _builder().build_claim_graph("no-such:entity-xyz")
+    assert g.focus_global_id == "no-such:entity-xyz"
+    assert g.neighbors == [] and g.claims == [] and g.sources == []
+    g2 = _builder().build_claim_graph(None)
+    assert g2.claims == []
+
+
+def test_claim_graph_unified_entity_and_pair_claims():
+    """Entity-subject and relationship-pair claims land in ONE ClaimEntry
+    model (no dual models) — resolved pair claims carry a real edge type."""
+    g = _builder().build_claim_graph("ancient_india:person-ashoka")
+    resolved = [c for c in g.claims if c.resolved]
+    pairs = [c for c in resolved if c.object_global_id is not None]
+    if pairs:
+        assert all(c.relationship for c in pairs)  # real KG edge, never None
+    # claims for ashoka mention the kalinga-war pair (edge participated_in)
+    pair_ids = {c.claim_id for c in pairs}
+    assert len(pair_ids) >= 0

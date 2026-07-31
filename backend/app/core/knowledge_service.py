@@ -18,6 +18,8 @@ purely from memory.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Optional
 
 from .repository import TopicRepository
@@ -28,6 +30,12 @@ from .exploration_engine import ExplorationEngine, RecommendationResult
 from .search import build_search_index, build_topic_index, SearchProvider
 from .timeline import TimelineIndex
 from .exploration import build_exploration_view
+
+# M74 Phase2 (Step 3): curated evidence layer location — repo-root/data.
+# knowledge_service.py lives at backend/app/core/, so parents[2] = backend/.
+_DATA_ROOT = Path(__file__).resolve().parents[2].parent / "data"
+_EVIDENCE_CLAIMS_PATH = _DATA_ROOT / "evidence_claims.json"
+_SOURCES_PATH = _DATA_ROOT / "sources.json"
 
 
 class KnowledgeService:
@@ -71,6 +79,39 @@ class KnowledgeService:
                 if prev is not None and prev != gid:
                     continue  # ambiguous local id — never bind
                 self._local_to_global[lid] = gid
+
+        # M74 Phase2 (Step 3): curated evidence layer (read-only, lazy).
+        # Claims (76) and sources (43) are loaded once at startup and indexed
+        # by subject local id so ClaimGraph assembly only pulls what the
+        # current Runtime request needs (Lazy Assembly — never the full set).
+        self._claims: list[dict] = self._load_json(_EVIDENCE_CLAIMS_PATH) or []
+        self._sources: list[dict] = self._load_json(_SOURCES_PATH) or []
+        self._sources_by_id: dict[str, dict] = {
+            s.get("id"): s for s in self._sources if s.get("id")
+        }
+        # local id -> claims whose subject_id mentions it (entity subject OR
+        # either side of an "A->B" pair). Both sources share ONE index — the
+        # ClaimGraph model is unified (Step 3 requirement 5).
+        self._claims_by_local: dict[str, list[dict]] = {}
+        for claim in self._claims:
+            sid = claim.get("subject_id")
+            if not isinstance(sid, str) or not sid:
+                continue
+            if "->" in sid:
+                parts = [p.strip() for p in sid.split("->", 1)]
+            else:
+                parts = [sid.strip()]
+            for part in parts:
+                if part in self._local_to_global:
+                    self._claims_by_local.setdefault(part, []).append(claim)
+
+    @staticmethod
+    def _load_json(path: Path) -> Optional[list]:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+        return data if isinstance(data, list) else None
 
     # --- Topic / dataset access (delegates to repository) ----------------
     def list_topics(self) -> list[str]:
@@ -116,6 +157,32 @@ class KnowledgeService:
         if not isinstance(local_id, str) or not local_id:
             return None
         return self._local_to_global.get(local_id)
+
+    # --- M74 Phase2 (Step 3): curated evidence layer (read-only) ----------
+
+    def get_claims(self) -> list[dict]:
+        """All curated Evidence Claims (frozen dataset, read-only)."""
+        return list(self._claims)
+
+    def get_claims_for_entity(self, global_id: str) -> list[dict]:
+        """Claims whose subject touches `global_id`'s entity (lazy subset).
+
+        Matches BOTH entity-subject claims and either side of "A->B" pair
+        claims — one unified lookup, no dual models (Step 3 req. 5).
+        Empty for unknown global ids; never raises.
+        """
+        if not isinstance(global_id, str):
+            return []
+        ref = self._registry.find_by_global_id(global_id)
+        if ref is None:
+            return []
+        return list(self._claims_by_local.get(ref.local_id, []))
+
+    def get_source(self, source_id: str) -> Optional[dict]:
+        """Look up a curated Source record by id (read-only)."""
+        if not isinstance(source_id, str):
+            return None
+        return self._sources_by_id.get(source_id)
 
     # --- Graph / traversal (delegates to graph) --------------------------
     def get_graph(self, topic: str) -> DirectedGraph:
