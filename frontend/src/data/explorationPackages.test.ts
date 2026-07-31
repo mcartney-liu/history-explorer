@@ -9,6 +9,7 @@ import {
 const china = () => getPackages().find((p) => p.slug === "china-civilization-v1")!;
 const silkRoad = () => getPackages().find((p) => p.slug === "silk-road-exploration")!;
 const romanEmpire = () => getPackages().find((p) => p.slug === "roman-empire-exploration")!;
+const india = () => getPackages().find((p) => p.slug === "india-classical-civilization")!;
 
 describe("M69 Exploration Package contract (graph-grounded)", () => {
   it("registry exposes the official China package", () => {
@@ -131,6 +132,59 @@ describe("M70 cross-dataset packages (silk-road / roman-empire)", () => {
     for (const pkg of [silkRoad(), romanEmpire()]) {
       const report = validatePackage(pkg);
       expect(report.ok, report.errors.join("\n")).toBe(true);
+    }
+  });
+});
+
+describe("M72 india-classical-civilization (cross-civilization focus)", () => {
+  it("registry exposes the India package (official, 4th package)", () => {
+    expect(india().type).toBe("official");
+    expect(getPackages().length).toBe(4);
+  });
+
+  it("india package resolves cross-civilization edges (buddhism -> silk road/han, maurya <-> persia)", () => {
+    const paths = india().relationship_paths;
+    expect(paths).toContainEqual(
+      expect.objectContaining({
+        from: "ancient_india:religion-buddhism",
+        to: "silk_road:silk_road",
+        type: "spread",
+        evidence: ["ec-023"],
+      }),
+    );
+    expect(paths).toContainEqual(
+      expect.objectContaining({
+        from: "ancient_india:religion-buddhism",
+        to: "silk_road:han_dynasty",
+        type: "spread",
+      }),
+    );
+    expect(paths).toContainEqual(
+      expect.objectContaining({
+        from: "ancient_india:civ-maurya",
+        to: "persian_empire:civ-persian",
+        type: "contemporary_with",
+      }),
+    );
+    const report = validatePackage(india());
+    expect(report.ok, report.errors.join("\n")).toBe(true);
+  });
+
+  it("india package sources include primary (ashoka edicts) + academic + reference tiers", () => {
+    expect(india().source_references).toContain("src-ashoka-edicts");
+    expect(india().source_references).toContain("src-thapar-early-india");
+    expect(india().source_references).toContain("src-silk-road-archives");
+  });
+
+  it("no recommended_next points to a 'planned' package anymore (closed loop)", () => {
+    const slugs = new Set(getPackages().map((p) => p.slug));
+    for (const pkg of getPackages()) {
+      for (const rec of pkg.recommended_next_exploration) {
+        if (rec.kind === "package") {
+          expect(slugs.has(rec.ref), `${pkg.slug} -> ${rec.ref} must be a real package`).toBe(true);
+          expect(rec.label.zh).not.toContain("规划中");
+        }
+      }
     }
   });
 });

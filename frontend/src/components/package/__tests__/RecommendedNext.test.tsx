@@ -22,7 +22,8 @@ describe('RecommendedNext', () => {
     const html = renderToStaticMarkup(
       <RecommendedNext pkg={china} locale="zh" onOpenPackage={noop} />,
     )
-    expect(html).toContain('宋代文化繁荣探索包（规划中）')
+    // M72 Line3: the 'planned' placeholder was backfilled with a real package.
+    expect(html).toContain('印度文明探索包 V1')
     // kind badge
     expect(html).toContain('探索包')
   })

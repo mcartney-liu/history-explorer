@@ -69,8 +69,8 @@
         },
         {
           "kind": "package",
-          "ref": "song-cultural-flourishing",
-          "label": { "zh": "宋代文化繁荣探索包（规划中）", "en": "Song Cultural Flourishing Package (planned)" }
+          "ref": "india-classical-civilization",
+          "label": { "zh": "印度文明探索包 V1（佛教的印度起源）", "en": "India Classical Civilization Package V1 (Buddhism's Indian origins)" }
         }
       ]
     },
@@ -219,6 +219,84 @@
           "kind": "package",
           "ref": "silk-road-exploration",
           "label": { "zh": "丝绸之路探索包 V1", "en": "Silk Road Exploration Package V1" }
+        }
+      ]
+    },
+    {
+      "slug": "india-classical-civilization",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "title": {
+        "zh": "印度文明探索包 V1",
+        "en": "India Classical Civilization Package V1"
+      },
+      "summary": {
+        "zh": "从孔雀王朝到笈多黄金时代：佛教如何从印度出发沿丝绸之路传向世界，零与十进制如何被体系化，印度又如何与波斯、希腊、罗马同时代对话。",
+        "en": "From the Maurya Empire to the Gupta Golden Age: how Buddhism set out from India along the Silk Road, how zero and the decimal system were formalized, and how India conversed with Persia, Greece and Rome."
+      },
+      "seed_topic": "ancient_india",
+      "exploration_goals": {
+        "zh": "理解印度古典文明的制度与文化演化：孔雀王朝的统一（旃陀罗笈多/阿育王）与阿育王转向佛教、正法（Dharma）思想的确立、笈多时代的古典黄金期（迦梨陀娑、阿耶波多、零的体系化），并重点追踪佛教沿丝绸之路传播至汉朝的跨文明连接。",
+        "en": "Understand the institutional and cultural evolution of classical India: the unification under the Mauryas (Chandragupta/Ashoka) and Ashoka's turn to Buddhism, the establishment of Dharma thought, the classical Golden Age of the Guptas (Kalidasa, Aryabhata, the formalization of zero), and — crucially — the cross-civilization spread of Buddhism along the Silk Road into Han China."
+      },
+      "entity_references": [
+        "ancient_india:civ-maurya",
+        "ancient_india:person-chandragupta",
+        "ancient_india:person-ashoka",
+        "ancient_india:loc-pataliputra",
+        "ancient_india:religion-buddhism",
+        "ancient_india:person-siddhartha",
+        "ancient_india:loc-indus-valley",
+        "ancient_india:event-kalinga-war",
+        "ancient_india:idea-dharma",
+        "ancient_india:tp-maurya",
+        "ancient_india:tp-guupta",
+        "ancient_india:person-kalidasa",
+        "ancient_india:tech-zero",
+        "ancient_india:person-aryabhata"
+      ],
+      "relationship_paths": [
+        { "from": "ancient_india:tp-maurya", "to": "ancient_india:tp-guupta", "type": "before" },
+        { "from": "ancient_india:person-chandragupta", "to": "ancient_india:civ-maurya", "type": "ruled" },
+        { "from": "ancient_india:person-ashoka", "to": "ancient_india:civ-maurya", "type": "ruled" },
+        { "from": "ancient_india:civ-maurya", "to": "ancient_india:religion-buddhism", "type": "practiced" },
+        { "from": "ancient_india:person-siddhartha", "to": "ancient_india:religion-buddhism", "type": "influenced" },
+        { "from": "ancient_india:person-siddhartha", "to": "ancient_india:idea-dharma", "type": "influenced" },
+        { "from": "ancient_india:person-ashoka", "to": "ancient_india:idea-dharma", "type": "influenced" },
+        { "from": "ancient_india:idea-dharma", "to": "ancient_india:religion-buddhism", "type": "influenced" },
+        { "from": "ancient_india:religion-buddhism", "to": "silk_road:silk_road", "type": "spread", "evidence": ["ec-023"] },
+        { "from": "ancient_india:religion-buddhism", "to": "silk_road:han_dynasty", "type": "spread" },
+        { "from": "ancient_india:civ-maurya", "to": "persian_empire:civ-persian", "type": "contemporary_with" },
+        { "from": "ancient_india:tech-zero", "to": "ancient_india:person-aryabhata", "type": "invented" },
+        { "from": "ancient_india:person-kalidasa", "to": "ancient_india:person-aryabhata", "type": "related_to" }
+      ],
+      "timeline_slices": [
+        { "entity": "ancient_india:tp-maurya" },
+        { "entity": "ancient_india:event-kalinga-war" },
+        { "entity": "ancient_india:tp-guupta" },
+        { "entity": "ancient_india:person-aryabhata" }
+      ],
+      "source_references": [
+        "src-thapar-early-india",
+        "src-ashoka-edicts",
+        "src-silk-road-archives"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "package",
+          "ref": "silk-road-exploration",
+          "label": { "zh": "丝绸之路探索包 V1（佛教东传之路）", "en": "Silk Road Exploration Package V1 (Buddhism's eastern route)" }
+        },
+        {
+          "kind": "package",
+          "ref": "roman-empire-exploration",
+          "label": { "zh": "罗马帝国探索包 V1（同时代的西方帝国）", "en": "Roman Empire Exploration Package V1 (the contemporary western empire)" }
+        },
+        {
+          "kind": "entity",
+          "ref": "silk_road:han_dynasty",
+          "label": { "zh": "汉朝（佛教传入之地）", "en": "Han Dynasty (where Buddhism arrived)" }
         }
       ]
     }
