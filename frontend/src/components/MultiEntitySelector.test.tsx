@@ -63,7 +63,7 @@ describe('MultiEntitySelectorView', () => {
       />,
     )
     // Han appears as a selected tag, but Persian should be in the dropdown
-    expect(html).toContain('Civilization: Persian Empire')
-    expect(html).not.toContain('Civilization: Han Dynasty')
+    expect(html).toContain('文明: Persian Empire')
+    expect(html).not.toContain('文明: Han Dynasty')
   })
 })

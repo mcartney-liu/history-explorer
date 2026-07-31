@@ -1,4 +1,5 @@
 import { useLocale } from '../data/locale'
+import { getRelationshipLabel } from '../data/entity/entityLabels'
 
 export type ConnectionItem = {
   type: string
@@ -10,7 +11,7 @@ type ConnectionsPanelProps = {
 }
 
 function ConnectionsPanel({ connections }: ConnectionsPanelProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   return (
     <div className="result-section">
       <h3>{t('common.connectionsHeading')}</h3>
@@ -18,7 +19,7 @@ function ConnectionsPanel({ connections }: ConnectionsPanelProps) {
         <ul className="connections-list">
           {connections.map((item, idx) => (
             <li key={idx}>
-              <span className="conn-type">{item.type}</span>
+              <span className="conn-type">{getRelationshipLabel(item.type, locale)}</span>
               <span className="conn-name">{item.name}</span>
             </li>
           ))}

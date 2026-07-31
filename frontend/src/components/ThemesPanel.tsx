@@ -11,7 +11,7 @@ import { EntityRelationship } from './EntityPage'
 import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
 
 type ThemesPanelProps = {
   relationships?: EntityRelationship[]
@@ -21,27 +21,21 @@ type ThemesPanelProps = {
   onNodeClick?: (globalId: string) => void
 }
 
-// Relationship type -> human, learner-facing theme name.
+// Relationship type -> human, learner-facing theme name (Chinese, business-friendly).
 const RELATIONSHIP_THEME: Record<string, string> = {
-  conquered: 'Imperial Conquest',
-  inherited: 'Cultural Inheritance',
-  spread: 'Diffusion & Spread',
-  traded_with: 'Trade & Exchange',
-  influenced: 'Influence',
-  invented: 'Innovation',
-  discovered: 'Innovation',
-  practiced: 'Practice & Language',
-  spoke: 'Practice & Language',
+  conquered: '帝国征服',
+  inherited: '文化传承',
+  spread: '传播与扩散',
+  traded_with: '贸易与交流',
+  influenced: '影响',
+  invented: '创新',
+  discovered: '创新',
+  practiced: '实践与语言',
+  spoke: '实践与语言',
 }
 
 // Frozen ENTITY_TYPES we surface as their own threads (M3.5-000 §2).
 const ENTITY_TYPE_THREADS = ['Civilization', 'Technology', 'Religion', 'Idea']
-
-function titleCase(rel: string): string {
-  return rel
-    .replace(/[_-]/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-}
 
 // Resolve a full global_id from a relationship `other` without re-prefixing:
 // prefer other.global_id, then topic:id, then fall back to the raw local id.
@@ -68,7 +62,7 @@ function ThemesPanel({ relationships, onNodeClick }: ThemesPanelProps) {
     const other = r.other
     if (!other) continue
 
-    const themeName = RELATIONSHIP_THEME[r.type] ?? titleCase(r.type)
+    const themeName = RELATIONSHIP_THEME[r.type] ?? getRelationshipLabel(r.type, locale)
     if (!relThemes[themeName]) relThemes[themeName] = []
     relThemes[themeName].push(r)
 

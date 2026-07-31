@@ -57,3 +57,86 @@ export function getEntityLabel(type: string, locale: 'zh' | 'en' | 'ja' = 'zh'):
 export function getEntityIcon(type: string): string {
   return ENTITY_TYPE_ICONS[type] || 'globe'
 }
+
+// ============================================================
+// Relationship type → Chinese business labels (single source of truth)
+// Mirrors the entity-label pattern above. Keys are the 18 frozen
+// relationship types (lowercase slugs from the schema). Display guarantees:
+// data layer keeps the English slug; only the presentation layer maps it.
+// ============================================================
+
+export const RELATIONSHIP_TYPE_LABELS: Record<string, string> = {
+  caused: '导致',
+  influenced: '影响',
+  participated_in: '参与',
+  located_at: '位于',
+  related_to: '关联',
+  before: '早于',
+  after: '晚于',
+  contemporary_with: '同时代',
+  part_of: '属于',
+  ruled: '统治',
+  traded_with: '贸易往来',
+  invented: '发明',
+  discovered: '发现',
+  practiced: '实践',
+  spoke: '使用语言',
+  inherited: '继承为',
+  conquered: '征服',
+  spread: '传播',
+}
+
+const RELATIONSHIP_TYPE_LABELS_EN: Record<string, string> = {
+  caused: 'Caused',
+  influenced: 'Influenced',
+  participated_in: 'Participated In',
+  located_at: 'Located At',
+  related_to: 'Related To',
+  before: 'Before',
+  after: 'After',
+  contemporary_with: 'Contemporary With',
+  part_of: 'Part Of',
+  ruled: 'Ruled',
+  traded_with: 'Traded With',
+  invented: 'Invented',
+  discovered: 'Discovered',
+  practiced: 'Practiced',
+  spoke: 'Spoke',
+  inherited: 'Inherited',
+  conquered: 'Conquered',
+  spread: 'Spread',
+}
+
+const RELATIONSHIP_TYPE_LABELS_JA: Record<string, string> = {
+  caused: '引き起こした',
+  influenced: '影響を与えた',
+  participated_in: '参加',
+  located_at: '所在',
+  related_to: '関連',
+  before: '以前',
+  after: '以後',
+  contemporary_with: '同時代',
+  part_of: '一部',
+  ruled: '支配',
+  traded_with: '交易',
+  invented: '発明',
+  discovered: '発見',
+  practiced: '実践',
+  spoke: '話した',
+  inherited: '継承',
+  conquered: '征服',
+  spread: '普及',
+}
+
+export function getRelationshipLabel(
+  relType: string,
+  locale: 'zh' | 'en' | 'ja' = 'zh',
+): string {
+  const map =
+    locale === 'en'
+      ? RELATIONSHIP_TYPE_LABELS_EN
+      : locale === 'ja'
+        ? RELATIONSHIP_TYPE_LABELS_JA
+        : RELATIONSHIP_TYPE_LABELS
+  return map[relType] || RELATIONSHIP_TYPE_LABELS[relType] || relType
+}

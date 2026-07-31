@@ -51,7 +51,7 @@ describe('EventImpactPanelView', () => {
         nameById={{ 'rel-1': 'Early Church' }}
       />,
     )
-    expect(html).toContain('Religion')
+    expect(html).toContain('宗教')
     expect(html).toContain('Early Church')
     expect(html).toContain('影响')
   })
@@ -69,8 +69,8 @@ describe('EventImpactPanelView', () => {
       />,
     )
     // Two groups rendered
-    const civCount = (html.match(/Civilization/g) || []).length
-    const relCount = (html.match(/Religion/g) || []).length
+    const civCount = (html.match(/文明/g) || []).length
+    const relCount = (html.match(/宗教/g) || []).length
     expect(civCount).toBeGreaterThanOrEqual(2)
     expect(relCount).toBeGreaterThanOrEqual(1)
     expect(html).toContain('Roman')

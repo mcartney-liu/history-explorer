@@ -17,6 +17,8 @@ import {
   type AIInteraction,
   type AIAction,
 } from '../../data/ai/AIAction'
+import { useLocale } from '../../data/locale'
+import { getEntityLabel } from '../../data/entity/entityLabels'
 import { executeAIActionAsync, type AIRequest } from '../../data/ai/AIOrchestrator'
 
 interface AISidebarProps {
@@ -25,6 +27,7 @@ interface AISidebarProps {
 
 
 export function AISidebar({ context }: AISidebarProps) {
+  const { locale } = useLocale()
   const [expanded, setExpanded] = useState(false)
   const [interaction, setInteraction] = useState<AIInteraction | null>(null)
 
@@ -108,7 +111,7 @@ export function AISidebar({ context }: AISidebarProps) {
 
       {/* Context */}
       <div className="ais-context">
-        <span className="ais-context-label">{context.entity.type}</span>
+        <span className="ais-context-label">{getEntityLabel(context.entity.type, locale)}</span>
         {context.entity.timeLabel && (
           <span className="ais-context-label">{context.entity.timeLabel}</span>
         )}

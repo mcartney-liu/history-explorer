@@ -85,7 +85,7 @@ describe('EntityPickerView (M14 presentational)', () => {
       />,
     )
     expect(html).toContain('秦始皇')
-    expect(html).toContain('Person')
+    expect(html).toContain('人物')
     expect(html).toContain('qin_dynasty')
     expect(html).toContain('亚历山大')
   })

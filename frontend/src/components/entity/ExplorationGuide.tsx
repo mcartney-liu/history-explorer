@@ -7,6 +7,8 @@
 
 import type { GraphNode, GraphEdge } from '../../data/entity/entityTypes'
 import { Icon } from '../ui/Icon'
+import { useLocale } from '../../data/locale'
+import { getEntityLabel } from '../../data/entity/entityLabels'
 
 interface ExplorationGuideProps {
   /** Current entity name */
@@ -31,6 +33,7 @@ export function ExplorationGuide({
   timelineCount,
   onExploreNode,
 }: ExplorationGuideProps) {
+  const { locale } = useLocale()
   const totalRelations = edges.length
   const totalRelated = nodes.filter((n) => n.id !== entityName && n.name !== entityName).length
   const visitedCount = visitedIds.length
@@ -88,7 +91,7 @@ export function ExplorationGuide({
               />
               <div>
                 <span className="eg-next-name">{nextNode.name}</span>
-                <span className="eg-next-type">{nextNode.type}</span>
+                <span className="eg-next-type">{getEntityLabel(nextNode.type, locale)}</span>
               </div>
               <span className="eg-next-arrow">→</span>
             </button>

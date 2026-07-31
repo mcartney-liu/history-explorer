@@ -11,6 +11,7 @@ import {
   clearCandidates,
 } from '../data/pickerUtils'
 import { useLocale } from '../data/locale'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 // M14 (Cross Topic Selection Picker): search ANY topic, then hand-pick N real
 // entities across different topics into a friendly candidate list. The picked
@@ -199,7 +200,7 @@ export function EntityPickerView({
   onReorder,
   onClearAll,
 }: EntityPickerViewProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const selectedGids = new Set(selected.map((c) => c.gid))
   const cap = typeof maxVisibleResults === 'number' ? maxVisibleResults : results.length
   const shown = results.slice(0, cap)
@@ -275,7 +276,7 @@ export function EntityPickerView({
                   </button>
                 )}
                 <span className="ep-chip-name">{c.name}</span>
-                {c.type && <span className="ep-chip-type">{c.type}</span>}
+                {c.type && <span className="ep-chip-type">{getEntityLabel(c.type, locale)}</span>}
                 <button
                   type="button"
                   className="ep-chip-remove"
@@ -343,7 +344,7 @@ export function EntityPickerView({
           return (
             <li key={c.gid} className="ep-result">
               <span className="ep-result-name">{c.name}</span>
-              {c.type && <span className="ep-result-type">{c.type}</span>}
+              {c.type && <span className="ep-result-type">{getEntityLabel(c.type, locale)}</span>}
               {c.topic && <span className="ep-result-topic">{c.topic}</span>}
               <button
                 type="button"

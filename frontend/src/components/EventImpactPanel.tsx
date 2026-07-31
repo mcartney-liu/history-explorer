@@ -1,4 +1,6 @@
 import type { EntityRelationship } from './EntityPage'
+import { useLocale } from '../data/locale'
+import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
 
 export type EventImpactPanelProps = {
   relationships: EntityRelationship[]
@@ -17,19 +19,6 @@ const IMPACT_TYPES = new Set([
   'conquered',
   'related_to',
 ])
-
-function labelFor(relType: string): string {
-  const map: Record<string, string> = {
-    influenced: '影响',
-    caused: '导致',
-    spread: '传播至',
-    invented: '发明',
-    discovered: '发现',
-    conquered: '征服',
-    related_to: '关联',
-  }
-  return map[relType] ?? relType
-}
 
 function impactRelationships(relationships: EntityRelationship[]) {
   return relationships.filter(
@@ -57,6 +46,7 @@ export function EventImpactPanelView({
   nameById,
   onEntityClick,
 }: EventImpactPanelProps) {
+  const { locale } = useLocale()
   const impacts = impactRelationships(relationships)
 
   if (impacts.length === 0) {
@@ -81,7 +71,7 @@ export function EventImpactPanelView({
 
       {groups.map((g, gi) => (
         <div key={gi} className="eip-group">
-          <h4 className="eip-group-type">{g.type}</h4>
+          <h4 className="eip-group-type">{getEntityLabel(g.type, locale)}</h4>
           <ul className="eip-list">
             {g.items.map((r, i) => {
               const name = nameById?.[r.other.id] ?? r.other.name
@@ -92,10 +82,10 @@ export function EventImpactPanelView({
                     className="eip-node is-clickable"
                     onClick={() => onEntityClick?.(r.other.id)}
                   >
-                    <span className="eip-node-type">{r.other.type}</span>
+                    <span className="eip-node-type">{getEntityLabel(r.other.type, locale)}</span>
                     <span className="eip-node-name">{name}</span>
                   </button>
-                  <span className="eip-rel-badge">{labelFor(r.type)}</span>
+                  <span className="eip-rel-badge">{getRelationshipLabel(r.type, locale)}</span>
                 </li>
               )
             })}

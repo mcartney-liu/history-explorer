@@ -1,4 +1,6 @@
 import type { EntityRelationship } from './EntityPage'
+import { useLocale } from '../data/locale'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 export type EventCausalChainProps = {
   /** All relationships from the /entity response. Filtered internally. */
@@ -38,6 +40,7 @@ export function EventCausalChainView({
   nameById,
   onEntityClick,
 }: EventCausalChainProps) {
+  const { locale } = useLocale()
   const chain = eventRelationships(relationships)
 
   if (chain.length === 0) {
@@ -76,7 +79,7 @@ export function EventCausalChainView({
                     className="ecc-node is-clickable"
                     onClick={() => onEntityClick?.(r.other.id)}
                   >
-                    <span className="ecc-node-type">{r.other.type}</span>
+                    <span className="ecc-node-type">{getEntityLabel(r.other.type, locale)}</span>
                     <span className="ecc-node-name">{name}</span>
                   </button>
                   <span className={`ecc-arrow ${badge(r.type)}`}>
@@ -91,7 +94,7 @@ export function EventCausalChainView({
 
       <div className="ecc-center">
         <span className="ecc-node ecc-node--center">
-          <span className="ecc-node-type">Event</span>
+          <span className="ecc-node-type">{getEntityLabel('Event', locale)}</span>
           <span className="ecc-node-name">{centerEntityName}</span>
         </span>
       </div>
@@ -112,7 +115,7 @@ export function EventCausalChainView({
                     className="ecc-node is-clickable"
                     onClick={() => onEntityClick?.(r.other.id)}
                   >
-                    <span className="ecc-node-type">{r.other.type}</span>
+                    <span className="ecc-node-type">{getEntityLabel(r.other.type, locale)}</span>
                     <span className="ecc-node-name">{name}</span>
                   </button>
                 </li>

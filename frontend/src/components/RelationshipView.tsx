@@ -7,7 +7,7 @@ import RelationshipEvidence from './RelationshipEvidence'
 import { relationshipContext } from '../data/aiContext'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
 
 type RelationshipViewProps = {
   mainEntity: MainEntity
@@ -86,7 +86,7 @@ function RelationshipView({
                 <>
                   <span className="rel-target-name">{displayName}</span>
                   <span className="rel-target-type">{getEntityLabel(item.type, locale)}</span>
-                  <span className="rel-edge">{item.relationship}</span>
+                  <span className="rel-edge">{getRelationshipLabel(item.relationship, locale)}</span>
                   {focusable && (
                     <button
                       type="button"

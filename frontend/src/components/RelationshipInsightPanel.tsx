@@ -20,6 +20,7 @@ import type { Candidate } from '../data/candidateUtils'
 import type { EntityRelationship } from './EntityPage'
 import type { GeoPoint } from '../data/relationshipUtils'
 import { useLocale } from '../data/locale'
+import { getRelationshipLabel } from '../data/entity/entityLabels'
 import {
   pairEntities,
   findExistingRelationships,
@@ -95,7 +96,7 @@ function RelationshipPairRow({
   geoMap?: Record<string, GeoPoint>
   mainGlobalId?: string
 }) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const pair: [Candidate, Candidate] = [a, b]
   const rels = findExistingRelationships(pair, relationships, mainGlobalId)
   const overlap = timelineOverlap(pair, timeMap)
@@ -115,9 +116,9 @@ function RelationshipPairRow({
           <ul className="rip-rel-list">
             {rels.map((rel, idx) => (
               <li className="rip-rel-card" key={`${rel.type}-${rel.other.global_id}-${idx}`}>
-                <span className="rip-rel-type">{rel.type}</span>
+                <span className="rip-rel-type">{getRelationshipLabel(rel.type, locale)}</span>
                 <span className="rip-rel-label">
-                  {a.name} 与 {b.name}：关系类型「{rel.type}」
+                  {a.name} 与 {b.name}：关系类型「{getRelationshipLabel(rel.type, locale)}」
                 </span>
               </li>
             ))}

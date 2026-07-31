@@ -10,6 +10,8 @@ import type { ViewMode } from './ViewSwitcher'
 import { ViewSwitcher } from './ViewSwitcher'
 import type { GraphNode, GraphEdge } from '../../data/entity/entityTypes'
 import type { TimelineEvent } from '../../data/entity/entityTypes'
+import { useLocale } from '../../data/locale'
+import { getEntityLabel } from '../../data/entity/entityLabels'
 
 interface ConnectionExplorerProps {
   graphNodes: GraphNode[]
@@ -24,6 +26,7 @@ export function ConnectionExplorer({
   timeline,
   onEntityClick,
 }: ConnectionExplorerProps) {
+  const { locale } = useLocale()
   const [mode, setMode] = useState<ViewMode>('graph')
 
   return (
@@ -46,7 +49,7 @@ export function ConnectionExplorer({
                     onClick={() => onEntityClick?.(node.id)}
                   >
                     <span className="ce-graph-node-name">{node.name}</span>
-                    <span className="ce-graph-node-type">{node.type}</span>
+                    <span className="ce-graph-node-type">{getEntityLabel(node.type, locale)}</span>
                   </div>
                 ))}
               </div>

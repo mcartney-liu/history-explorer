@@ -7,6 +7,7 @@ import {
 } from '../lib/graphLayout'
 import { useLocale } from '../data/locale'
 import { colorFor } from '../lib/entityColors'
+import { getRelationshipLabel, getEntityLabel } from '../data/entity/entityLabels'
 
 // M34-A2 (Knowledge Graph Visualization MVP) — a self-drawn SVG renderer.
 //
@@ -49,7 +50,7 @@ function GraphViewPanel({
   onEntityClick,
   title,
 }: GraphViewPanelProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   if (!mainEntity?.id) return null
 
   // Build the graph inputs from data already on the client. Neighbour display
@@ -126,7 +127,7 @@ function GraphViewPanel({
                   fontSize={9}
                   style={{ fill: 'var(--mid)' }}
                 >
-                  {e.type.replace(/_/g, ' ')}
+                  {getRelationshipLabel(e.type, locale)}
                 </text>
               ) : null}
             </g>
@@ -161,7 +162,7 @@ function GraphViewPanel({
                 }
               >
                 <circle r={r} fill={fill} style={{ stroke: 'var(--hi)' }} strokeWidth={2} />
-                <title>{`${n.name} (${n.type})`}</title>
+                <title>{`${n.name} (${getEntityLabel(n.type, locale)})`}</title>
                 <text
                   y={r + 13}
                   textAnchor="middle"

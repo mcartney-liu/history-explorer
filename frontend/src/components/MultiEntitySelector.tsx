@@ -1,4 +1,6 @@
 import { Icon } from './ui/Icon'
+import { useLocale } from '../data/locale'
+import { getEntityLabel } from '../data/entity/entityLabels'
 
 export type SelectableEntity = {
   id: string
@@ -24,6 +26,7 @@ export function MultiEntitySelectorView({
   maxEntities = 3,
   onChange,
 }: MultiEntitySelectorProps) {
+  const { locale } = useLocale()
   const remaining = maxEntities - 1 - selected.length
   const candidateEntities = available.filter(
     (a) => !selected.some((s) => s.id === a.id),
@@ -36,7 +39,7 @@ export function MultiEntitySelectorView({
       {/* Selected entities as tags */}
       {selected.map((e) => (
         <span key={e.id} className="mes-tag">
-          <span className="mes-tag-type">{e.type}</span>
+          <span className="mes-tag-type">{getEntityLabel(e.type, locale)}</span>
           {e.name}
           <button
             type="button"
@@ -63,7 +66,7 @@ export function MultiEntitySelectorView({
           <option value="">+ 添加比较对象</option>
           {candidateEntities.map((e) => (
             <option key={e.id} value={e.id}>
-              {e.type}: {e.name}
+              {getEntityLabel(e.type, locale)}: {e.name}
             </option>
           ))}
         </select>
