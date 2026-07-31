@@ -138,3 +138,35 @@ class ClaimGraph:
             "claims": [c.to_dict() if hasattr(c, "to_dict") else c for c in self.claims],
             "sources": list(self.sources),
         }
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 4): auditable evidence selection.
+# Every input claim yields a SelectionRecord (kept / filtered:<rule>) so the
+# selection is explainable — reserved now, rendered/audited by later stages.
+# ---------------------------------------------------------------------------
+
+@dataclass
+class SelectionRecord:
+    claim_id: str
+    reason: str  # 'kept' | 'filtered:unresolved' | 'filtered:invalid' | 'filtered:over-cap'
+    tier: Optional[str]
+
+    def to_dict(self) -> dict:
+        return {"claim_id": self.claim_id, "reason": self.reason, "tier": self.tier}
+
+
+@dataclass
+class EvidenceSelection:
+    """Deterministic selection result over a ClaimGraph."""
+
+    claims: list
+    sources: list
+    records: list
+
+    def to_dict(self) -> dict:
+        return {
+            "claims": [c.to_dict() if hasattr(c, "to_dict") else c for c in self.claims],
+            "sources": list(self.sources),
+            "records": [r.to_dict() if hasattr(r, "to_dict") else r for r in self.records],
+        }

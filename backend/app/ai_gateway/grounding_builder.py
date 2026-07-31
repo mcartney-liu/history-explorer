@@ -422,3 +422,60 @@ class GroundingBuilder:
                 cid, subject_id, text, source_id, None, None, None, False
             )
         return ClaimEntry(cid, subject_id.strip(), text, source_id, gid, None, None, True)
+
+
+# ---------------------------------------------------------------------------
+# M74 Phase2 (Step 4): deterministic Evidence Selection ON a ClaimGraph.
+# Input is the ClaimGraph ONLY — the selector never re-queries
+# KnowledgeService (no second data flow in the Runtime).
+#
+# Pure rules (no LLM, no prompt-driven evidence):
+#   1. unresolved claims are excluded      (Grounding Gate)
+#   2. invalid claims (no id/source/text)  excluded
+#   3. tier priority: primary > academic > reference
+#   4. bounded by max_claims (stable order: tier rank, then claim id)
+#   5. sources deduped by id
+# Every input claim yields an audit SelectionRecord (kept / filtered:<rule>).
+# ---------------------------------------------------------------------------
+
+class EvidenceSelector:
+    """Deterministic, auditable evidence selection."""
+
+    TIER_ORDER = {"primary": 0, "academic": 1, "reference": 2}
+
+    def select(self, graph, max_claims: int = 10) -> "EvidenceSelection":
+        from .citation_model import EvidenceSelection, SelectionRecord
+
+        sources_by_id = {s.get("id"): s for s in graph.sources if s.get("id")}
+        candidates: list = []  # (tier_rank, claim_id, claim)
+        records: list = []
+
+        # Pass 1 — rules 1/2: exclude unresolved / invalid, audit every claim.
+        for claim in graph.claims:
+            if not claim.resolved:
+                records.append(SelectionRecord(claim.claim_id, "filtered:unresolved", None))
+                continue
+            if not claim.claim_id or not claim.source_id or not claim.claim_text:
+                records.append(SelectionRecord(claim.claim_id, "filtered:invalid", None))
+                continue
+            source = sources_by_id.get(claim.source_id)
+            tier = source.get("tier") if source else None
+            rank = self.TIER_ORDER.get(tier, 99)
+            candidates.append((rank, claim.claim_id, claim))
+            records.append(SelectionRecord(claim.claim_id, "kept", tier))
+
+        # Rule 3+4 — tier priority, stable order, bounded.
+        candidates.sort(key=lambda x: (x[0], x[1]))
+        selected = [c[2] for c in candidates[:max_claims]]
+
+        # Rule 4 audit — over-cap claims are filtered (explainable).
+        for _rank, cid, _claim in candidates[max_claims:]:
+            records.append(SelectionRecord(cid, "filtered:over-cap", None))
+
+        # Rule 5 — source dedup by id (stable order).
+        sources = [
+            sources_by_id[sid]
+            for sid in dict.fromkeys(c.source_id for c in selected)
+            if sid in sources_by_id
+        ]
+        return EvidenceSelection(claims=selected, sources=sources, records=records)

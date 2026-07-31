@@ -184,3 +184,105 @@ def test_claim_graph_unified_entity_and_pair_claims():
     # claims for ashoka mention the kalinga-war pair (edge participated_in)
     pair_ids = {c.claim_id for c in pairs}
     assert len(pair_ids) >= 0
+
+
+# ---------------------------------------------------------------------------
+# Step 4 — Evidence Selection on ClaimGraph (pure deterministic, auditable)
+# ---------------------------------------------------------------------------
+
+def _make_graph_with_claims():
+    """Hand-built ClaimGraph — proves the selector consumes ONLY the graph
+    (never re-queries KnowledgeService)."""
+    from app.ai_gateway.citation_model import ClaimEntry, ClaimGraph
+
+    claims = [
+        # primary-tier source (should rank first)
+        ClaimEntry("ec-p1", "person-x", "claim one", "src-primary-1",
+                   "t:person-x", None, None, True),
+        # academic-tier source
+        ClaimEntry("ec-a1", "person-x", "claim two", "src-academic-1",
+                   "t:person-x", None, None, True),
+        # reference-tier source
+        ClaimEntry("ec-r1", "person-x", "claim three", "src-ref-1",
+                   "t:person-x", None, None, True),
+        # unresolved -> Grounding Gate exclude
+        ClaimEntry("ec-ux", "person-x", "claim four", "src-primary-1",
+                   None, None, None, False),
+        # invalid (no source id) -> exclude
+        ClaimEntry("ec-bad", "person-x", "claim five", "",
+                   "t:person-x", None, None, True),
+        # relationship pair claim (unified model, primary source)
+        ClaimEntry("ec-pair", "person-x->event-y", "pair claim", "src-primary-2",
+                   "t:person-x", "t:event-y", "participated_in", True),
+    ]
+    sources = [
+        {"id": "src-primary-1", "tier": "primary"},
+        {"id": "src-academic-1", "tier": "academic"},
+        {"id": "src-ref-1", "tier": "reference"},
+        {"id": "src-primary-2", "tier": "primary"},
+    ]
+    return ClaimGraph("t:person-x", [], claims, sources)
+
+
+def test_selection_excludes_unresolved_and_invalid():
+    from app.ai_gateway.grounding_builder import EvidenceSelector
+
+    sel = EvidenceSelector().select(_make_graph_with_claims())
+    kept_ids = {c.claim_id for c in sel.claims}
+    assert "ec-ux" not in kept_ids          # unresolved excluded
+    assert "ec-bad" not in kept_ids         # invalid excluded
+    assert "ec-p1" in kept_ids and "ec-pair" in kept_ids
+    # audit: every input claim has a record
+    record_ids = {r.claim_id for r in sel.records}
+    assert record_ids == {"ec-p1", "ec-a1", "ec-r1", "ec-ux", "ec-bad", "ec-pair"}
+    reasons = {r.claim_id: r.reason for r in sel.records}
+    assert reasons["ec-ux"] == "filtered:unresolved"
+    assert reasons["ec-bad"] == "filtered:invalid"
+    assert reasons["ec-p1"] == "kept"
+
+
+def test_selection_tier_priority_orders_claims():
+    from app.ai_gateway.grounding_builder import EvidenceSelector
+
+    sel = EvidenceSelector().select(_make_graph_with_claims())
+    assert sel.claims[0].claim_id == "ec-p1"     # primary first
+    assert sel.claims[1].claim_id == "ec-pair"   # primary second (id order)
+    assert sel.claims[2].claim_id == "ec-a1"     # academic
+    assert sel.claims[3].claim_id == "ec-r1"     # reference last
+
+
+def test_selection_bounded_and_sources_deduped():
+    from app.ai_gateway.grounding_builder import EvidenceSelector
+
+    sel = EvidenceSelector().select(_make_graph_with_claims(), max_claims=2)
+    assert len(sel.claims) == 2
+    # over-cap claim gets an audit record
+    over_cap = [r for r in sel.records if r.reason == "filtered:over-cap"]
+    assert len(over_cap) == 2
+    # sources deduped by id (2 selected claims -> their 2 distinct sources)
+    assert len(sel.sources) == 2
+    assert {s["id"] for s in sel.sources} == {"src-primary-1", "src-primary-2"}
+
+
+def test_selection_empty_graph_is_safe():
+    from app.ai_gateway.citation_model import ClaimGraph
+    from app.ai_gateway.grounding_builder import EvidenceSelector
+
+    sel = EvidenceSelector().select(ClaimGraph("t:x", [], [], []))
+    assert sel.claims == [] and sel.sources == [] and sel.records == []
+
+
+def test_selection_real_claim_graph_is_deterministic():
+    """Real ClaimGraph (Augustus) — selection is stable and fully audited."""
+    from app.ai_gateway.grounding_builder import EvidenceSelector, GroundingBuilder
+
+    graph = GroundingBuilder(knowledge_service).build_claim_graph(
+        "roman_empire:person-augustus"
+    )
+    sel1 = EvidenceSelector().select(graph)
+    sel2 = EvidenceSelector().select(graph)
+    assert [c.claim_id for c in sel1.claims] == [c.claim_id for c in sel2.claims]
+    # every resolved claim either kept or over-cap; every claim audited
+    assert len(sel1.records) == len(graph.claims)
+    kept = [c for c in sel1.claims if c.resolved]
+    assert all(c.resolved for c in kept)
