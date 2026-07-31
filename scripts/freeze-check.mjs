@@ -701,6 +701,9 @@ export const SCOPE_ALLOWLIST = [
   "frontend/package-lock.json",
   "frontend/e2e/",
   "frontend/playwright.config.ts",
+  // M74-003 (C3-2, PO-approved): Feature-ON E2E config (vite :5174 with
+  // VITE_AI_SUGGESTIONS_ENABLED=true) — pure frontend test infra addition.
+  "frontend/playwright.ai.config.ts",
   "frontend/public/",
   "frontend/.gitignore",
 ];

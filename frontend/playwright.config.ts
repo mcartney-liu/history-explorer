@@ -9,6 +9,11 @@ import { defineConfig } from '@playwright/test'
 // and fails with a clear message if it is not running.
 export default defineConfig({
   testDir: './e2e',
+  // M74-003 (C3-2): the Feature-ON cases (ai-suggestions.spec.ts) need a
+  // dedicated vite server with VITE_AI_SUGGESTIONS_ENABLED=true — they run
+  // under playwright.ai.config.ts. The default :5173 build is OFF, so the
+  // OFF verification lives in ai-suggestions-off.spec.ts (runs here).
+  testIgnore: /ai-suggestions\.spec\.ts/,
   timeout: 30_000,
   retries: 0,
   // Local Alpha regression: run serially. The home page runs a background
