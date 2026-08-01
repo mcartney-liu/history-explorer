@@ -17,6 +17,7 @@ from .schemas import DomainSchema
 # resolves WITHOUT any consumer (AcquisitionPipeline) involvement. Registration is a
 # side-effect of BaseDomainAdapter.__init__ writing into the module-level _ADAPTERS.
 _history_adapter = HistoryAdapter()
+AdapterRegistry.register(_history_adapter)
 
 __all__ = [
     "BaseDomainAdapter",

@@ -44,13 +44,6 @@ class AcquisitionPipeline:
     def __init__(self, domain_id: str, data_dir: Path) -> None:
         self._domain_id = domain_id
         self._data_dir = Path(data_dir)
-        # M75-A HistoryAdapter registers into module-level _ADAPTERS only on
-        # instantiation; the package __init__ does NOT auto-instantiate. Ensure
-        # registration here (idempotent) so AdapterRegistry.get() resolves.
-        from app.core.domain.history_adapter import HistoryAdapter
-
-        if not AdapterRegistry.is_registered(domain_id):
-            HistoryAdapter()
 
     def run(self) -> AcquisitionResult:
         adapter = AdapterRegistry.get(self._domain_id)

@@ -25,3 +25,7 @@ class AdapterRegistry:
     @classmethod
     def is_registered(cls, domain_id: str) -> bool:
         return domain_id in _ADAPTERS
+
+    @classmethod
+    def register(cls, adapter: "BaseDomainAdapter") -> None:
+        _ADAPTERS[adapter._metadata.domain_id] = adapter

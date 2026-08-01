@@ -67,7 +67,6 @@ class BaseDomainAdapter(DomainAdapterInterface):
     def __init__(self, metadata: DomainMetadata, rules: ValidationRules) -> None:
         self._metadata = metadata
         self._rules = rules
-        _ADAPTERS[metadata.domain_id] = self
 
     def validate(self, payload: Dict[str, Any]) -> bool:
         # Adapter only declares validation_rules; does NOT call Runtime TrustGate
@@ -80,7 +79,8 @@ class BaseDomainAdapter(DomainAdapterInterface):
         return self._metadata
 
     def register(self) -> None:
-        # Stored in _ADAPTERS at __init__; registration is idempotent
+        # Explicit registration is handled solely by AdapterRegistry.register();
+        # BaseDomainAdapter itself performs NO registration (no _ADAPTERS write).
         pass
 
     def load(self) -> Dict[str, Any]:
