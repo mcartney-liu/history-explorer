@@ -725,6 +725,12 @@ export const SCOPE_ALLOWLIST = [
   // additive unregister contract without touching Runtime Freeze. See
   // docs/10_ARCHITECTURE/ADR-M78-RL.md.
   "backend/tests/test_m78_2_registry_lifecycle.py",
+  // M78.3 (Freeze Revision via ADR-M78-SB enforcement) — Domain Contract
+  // Enforcement test. Verifies the ADR-M78-SB decoupling (Ontology stays a
+  // pure vocabulary, independent of the Global Schema Constraint 8/18) without
+  // touching Runtime Freeze or opening a new ADR. See
+  // docs/10_ARCHITECTURE/ADR-M78-SB.md.
+  "backend/tests/test_m78_3_domain_contract.py",
 ];
 
 function _scopeAllowed(file) {
