@@ -139,6 +139,9 @@ class DatasetProvider:
         self._meta = DatasetMetadataProvider(repo)
         self._creator = creator
         self._license = license
+        # Default SourceLoader for direct construction: EmptySourceLoader (returns []).
+        # When built via `build_dataset_provider()`, the factory ALWAYS wires the real
+        # `FileSourceLoader` (M26.1) so `load_sources()` reads curated `data/sources.json`.
         self._source_loader: SourceLoader = source_loader or EmptySourceLoader()
         self._evidence_path: Optional[Path] = Path(evidence_path) if evidence_path else None
 
@@ -222,12 +225,15 @@ def build_dataset_provider(
         sources_path = Path(data_dir).parent / "sources.json"
     if evidence_path is None:
         evidence_path = Path(data_dir).parent / "evidence_claims.json"
-    source_loader = None
-    if Path(sources_path).exists():
-        # Lazy import to avoid a circular import with `source_registry.py`.
-        from app.core.source_registry import FileSourceLoader
+    # M75-B Activation: the default construction ALWAYS wires the real
+    # `FileSourceLoader` (M26.1). It reads the curated `data/sources.json`;
+    # when that file is absent, `FileSourceLoader.load()` returns `[]`
+    # (graceful fallback, preserving M25.1 behavior). Activation is
+    # unconditional - no `if exists` guard. The import is lazy to avoid a
+    # circular import with `source_registry.py`.
+    from app.core.source_registry import FileSourceLoader
 
-        source_loader = FileSourceLoader(Path(sources_path))
+    source_loader = FileSourceLoader(Path(sources_path))
     return DatasetProvider(
         repo,
         creator=creator,
