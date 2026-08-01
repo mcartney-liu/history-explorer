@@ -29,3 +29,10 @@ class AdapterRegistry:
     @classmethod
     def register(cls, adapter: "BaseDomainAdapter") -> None:
         _ADAPTERS[adapter._metadata.domain_id] = adapter
+
+    @classmethod
+    def unregister(cls, domain_id: str) -> bool:
+        if domain_id in _ADAPTERS:
+            del _ADAPTERS[domain_id]
+            return True
+        return False

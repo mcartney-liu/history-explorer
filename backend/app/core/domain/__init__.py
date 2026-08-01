@@ -14,8 +14,8 @@ from .history_adapter import HistoryAdapter
 from .schemas import DomainSchema
 
 # Eagerly register domain adapters on package import so AdapterRegistry.get("history")
-# resolves WITHOUT any consumer (AcquisitionPipeline) involvement. Registration is a
-# side-effect of BaseDomainAdapter.__init__ writing into the module-level _ADAPTERS.
+# resolves WITHOUT any consumer (AcquisitionPipeline) involvement. Package initialization
+# explicitly performs AdapterRegistry.register() into the module-level _ADAPTERS.
 _history_adapter = HistoryAdapter()
 AdapterRegistry.register(_history_adapter)
 

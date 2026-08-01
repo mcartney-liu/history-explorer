@@ -62,7 +62,7 @@ class DomainAdapterInterface(ABC):
 
 
 class BaseDomainAdapter(DomainAdapterInterface):
-    """Base implementation. Self-registers into module-level _ADAPTERS (no cycle with registry.py)."""
+    """Base implementation. Registration is performed through AdapterRegistry.register() (no cycle with registry.py)."""
 
     def __init__(self, metadata: DomainMetadata, rules: ValidationRules) -> None:
         self._metadata = metadata
