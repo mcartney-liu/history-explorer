@@ -13,6 +13,11 @@ from .registry import AdapterRegistry
 from .history_adapter import HistoryAdapter
 from .schemas import DomainSchema
 
+# Eagerly register domain adapters on package import so AdapterRegistry.get("history")
+# resolves WITHOUT any consumer (AcquisitionPipeline) involvement. Registration is a
+# side-effect of BaseDomainAdapter.__init__ writing into the module-level _ADAPTERS.
+_history_adapter = HistoryAdapter()
+
 __all__ = [
     "BaseDomainAdapter",
     "DomainAdapterInterface",

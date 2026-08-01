@@ -12,7 +12,6 @@ Constraint check:
 from __future__ import annotations
 
 from .adapter import BaseDomainAdapter, DomainMetadata, ValidationRules
-from .registry import AdapterRegistry
 
 
 class HistoryAdapter(BaseDomainAdapter):
@@ -49,7 +48,3 @@ class HistoryAdapter(BaseDomainAdapter):
                 strict_mode=True,
             ),
         )
-
-
-# Register into AdapterRegistry (no Runtime modification)
-AdapterRegistry.is_registered("history")
