@@ -712,6 +712,14 @@ export const SCOPE_ALLOWLIST = [
   "frontend/playwright.ai.config.ts",
   "frontend/public/",
   "frontend/.gitignore",
+  // M78 (Freeze Revision ADR-M78-FR) — register domain framework into Freeze
+  // Governance. The multi-domain framework under backend/app/core/domain/ was
+  // released in M77-A (commit 73a8cbd) but was not present in SCOPE_ALLOWLIST,
+  // so changes under this path were not included in freeze-check scope
+  // evaluation. This entry brings the already-released directory under formal
+  // Freeze Governance. Additive only; no Runtime Freeze boundary, no Runtime
+  // behaviour, and no framework semantic change. See docs/10_ARCHITECTURE/ADR-M78-FR.md.
+  "backend/app/core/domain/",
 ];
 
 function _scopeAllowed(file) {
