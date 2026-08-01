@@ -11,7 +11,7 @@ Constraint check:
 """
 from __future__ import annotations
 
-from .adapter import BaseDomainAdapter, DomainMetadata, ValidationRules
+from .adapter import BaseDomainAdapter, DomainMetadata, ValidationRules, HISTORY_ONTOLOGY
 
 
 class HistoryAdapter(BaseDomainAdapter):
@@ -22,28 +22,14 @@ class HistoryAdapter(BaseDomainAdapter):
             DomainMetadata(
                 domain_id="history",
                 label="History Explorer",
-                entity_types=[
-                    "person",
-                    "place",
-                    "event",
-                    "organization",
-                    "period",
-                    "civilization",
-                ],
-                relationship_types=[
-                    "born_in",
-                    "ruled_in",
-                    "influenced_by",
-                    "part_of",
-                    "preceded_by",
-                ],
+                ontology=HISTORY_ONTOLOGY,
                 description=(
                     "History domain adapter for M75-A. Provides domain metadata / "
                     "ontology / schema / rules WITHOUT copying prompt_service historical prompt."
                 ),
             ),
             ValidationRules(
-                required_fields=["domain_id", "entity_types", "relationship_types"],
+                required_fields=["domain_id"],
                 allow_empty=False,
                 strict_mode=True,
             ),

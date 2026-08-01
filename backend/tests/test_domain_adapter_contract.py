@@ -14,6 +14,7 @@ from app.core.domain import BaseDomainAdapter, DomainMetadata, ValidationRules
 from app.core.domain.adapter import _ADAPTERS
 from app.core.domain.registry import AdapterRegistry
 from app.core.domain.history_adapter import HistoryAdapter
+from app.core.domain.ontology import Ontology
 from app.core.acquisition.pipeline import AcquisitionPipeline
 
 
@@ -25,8 +26,10 @@ class _TestAdapter(BaseDomainAdapter):
             DomainMetadata(
                 domain_id=domain_id,
                 label="Test Adapter",
-                entity_types=[],
-                relationship_types=[],
+                ontology=Ontology(
+                    entity_types=(),
+                    relationship_types=(),
+                ),
                 description="M76-B contract test adapter",
             ),
             ValidationRules(

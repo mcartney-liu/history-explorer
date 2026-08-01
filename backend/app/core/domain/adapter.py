@@ -11,6 +11,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
+from .ontology import Ontology, HISTORY_ONTOLOGY
 
 # Module-level registry (breaks import cycle with registry.py)
 _ADAPTERS: Dict[str, "BaseDomainAdapter"] = {}
@@ -36,8 +37,7 @@ class DomainMetadata:
     """Domain metadata / ontology / schema / rules — NOT copying prompt_service historical prompt."""
     domain_id: str
     label: str
-    entity_types: List[str] = field(default_factory=list)
-    relationship_types: List[str] = field(default_factory=list)
+    ontology: Ontology = HISTORY_ONTOLOGY
     description: str = ""
 
 
@@ -87,7 +87,7 @@ class BaseDomainAdapter(DomainAdapterInterface):
         return {
             "domain_id": self._metadata.domain_id,
             "label": self._metadata.label,
-            "entity_types": self._metadata.entity_types,
-            "relationship_types": self._metadata.relationship_types,
+            "entity_types": self._metadata.ontology.entity_types,
+            "relationship_types": self._metadata.ontology.relationship_types,
             "validation_rules": self._rules.to("--no-op--") if False else self._rules.to_dict(),
         }

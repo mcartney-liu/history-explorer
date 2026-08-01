@@ -61,8 +61,8 @@ class AcquisitionPipeline:
             name=metadata.domain_id,
             version="1.0",
             fields=(
-                list(metadata.entity_types)
-                + list(metadata.relationship_types)
+                list(metadata.ontology.entity_types)
+                + list(metadata.ontology.relationship_types)
                 + ["source_id", "title", "type", "reference", "creator", "year", "license"]
             ),
         )
