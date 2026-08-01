@@ -53,3 +53,8 @@ M77 完成后，应证明：
 - *Description*：`AdapterRegistry` 仅有 `register`，无 `unregister`/`deregister` API；"注册/注销生命周期"中"注销"一半缺支撑。
 - *M77 处理*：不纳入，挂账。
 - *Assigned*：Architecture Debt（建议 M78 或独立框架里程碑补 `unregister`，additive 非架构重设计）。
+
+**Debt-2（Causal Logic Representation Gap）**
+- *Description*：当前 `Ontology` 仅能表达 Entity + Relationship，缺少 Cause / Mechanism / Consequence / Confidence / Evidence 等因果表达维度。
+- *M77 处理*：不处理（M77 仅验证框架扩展性，非知识模型内容建设）。
+- *Assigned*：后续 M78 / M79 Planning（Causal Logic 属 M79 候选范围，或并入 M78 Ontology Evolution 一并评估）。
