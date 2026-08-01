@@ -731,6 +731,13 @@ export const SCOPE_ALLOWLIST = [
   // touching Runtime Freeze or opening a new ADR. See
   // docs/10_ARCHITECTURE/ADR-M78-SB.md.
   "backend/tests/test_m78_3_domain_contract.py",
+  // M79 (Freeze Revision) — Causal Semantic Layer foundation. Adds an
+  // independent backend/app/core/causal/ package (interpretive semantic layer,
+  // NOT a domain vocabulary extension) plus its enforcement test. Does not
+  // touch Runtime Freeze boundaries (Ontology / DomainSchema / Global
+  // Constraint 8/18). See docs/10_ARCHITECTURE/ADR-M79.md.
+  "backend/app/core/causal/",
+  "backend/tests/test_m79_causal_layer.py",
 ];
 
 function _scopeAllowed(file) {
