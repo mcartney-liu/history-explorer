@@ -720,6 +720,11 @@ export const SCOPE_ALLOWLIST = [
   // Freeze Governance. Additive only; no Runtime Freeze boundary, no Runtime
   // behaviour, and no framework semantic change. See docs/10_ARCHITECTURE/ADR-M78-FR.md.
   "backend/app/core/domain/",
+  // M78.2 (Freeze Revision via ADR-M78-RL) — AdapterRegistry unregister
+  // lifecycle test. Companion to backend/app/core/domain/ above; verifies the
+  // additive unregister contract without touching Runtime Freeze. See
+  // docs/10_ARCHITECTURE/ADR-M78-RL.md.
+  "backend/tests/test_m78_2_registry_lifecycle.py",
 ];
 
 function _scopeAllowed(file) {
