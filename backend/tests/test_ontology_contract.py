@@ -19,7 +19,7 @@ from app.core.domain.ontology import Ontology, HISTORY_ONTOLOGY
 
 # build_dataset_provider resolves sources.json as Path(data_dir).parent / "sources.json",
 # so data_dir must sit ONE level under the real data/ folder for the loader to find it.
-_DATA_DIR = Path(r"C:\Users\haizhi\WorkBuddy\2026-07-13-10-54-28\data") / "history"
+_DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "history"
 
 
 def test_tg1_ontology_is_frozen_dataclass():

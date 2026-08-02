@@ -13,7 +13,7 @@ from app.core.domain.ontology import HISTORY_ONTOLOGY
 from app.core.domain.registry import AdapterRegistry
 from app.validation import ENTITY_TYPES, RELATIONSHIP_TYPES
 
-_DATA_DIR = Path(r"C:\Users\haizhi\WorkBuddy\2026-07-13-10-54-28\data") / "history"
+_DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "history"
 
 
 def test_domain_schema_fields_follow_ontology_contract():
