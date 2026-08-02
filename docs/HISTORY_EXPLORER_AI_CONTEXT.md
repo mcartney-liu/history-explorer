@@ -130,7 +130,7 @@ implementation / release / emergency-fix).
 
 | Debt ID | Name | Severity | State |
 |---|---|---|---|
-| **DB-B01** | Domain Registry 全局单例跨文件污染 → 契约测试 RED | **High** | 未修；Gate B 停止根因 |
+| **DB-B01** | Domain Registry 全局单例跨文件污染 → 契约测试 RED | **High** | **已修（2026-08-02 L1）：`backend/conftest.py` autouse import-baseline 隔离已落地，pytest 331 passed，CI 恢复绿** |
 | DB-B02 | M75–M79 新层（domain/causal/acquisition）零 Runtime 消费（parallel wing） | Medium-High | 未接线 |
 | DB-B03 | `HISTORY_ONTOLOGY`(6/5) ↔ 全局白名单(8/18) 缺声明式映射层 | Medium | 4/5 关系类型不在白名单，接线即拒 |
 | DB-B04 | `RELATIONSHIP_MEANING`（第三词汇源）无漂移守卫 | Medium | 与 DB-B03 可合并 |
@@ -238,8 +238,9 @@ node scripts/release-consistency-check.mjs --verbose   # R1–R7 before any rele
 - **Latest release tag**: `vM77` (2026-08-01) — Multi-Domain Ontology Framework Validation.
   Runtime `v0.13.0`.
 - **Test truth (2026-08-02 实跑)**:
-  - Backend: **pytest 1 failed / 330 passed** — 唯一红灯 = `test_m78_2_registry_lifecycle`
-    （DB-B01，契约污染，详见 §6/§14）。**README 的 "318 passed" 已过时**，真实为 330 passed。
+  - Backend: **pytest 1 failed / 330 passed（修复前快照，2026-08-02 实跑）** — 唯一红灯 =
+    `test_m78_2_registry_lifecycle`（DB-B01，契约污染，详见 §6/§14）。**README 的 "318 passed" 已过时**。
+    **修复后（2026-08-02 L1，加 `backend/conftest.py` autouse 隔离）：`331 passed`，DB-B01 RED 已消除，CI 恢复绿。**
   - Frontend: **vitest 1123 passed**（用 `npm test` = `vitest run`，勿用裸 `vitest` 防 watch）。
   - E2E: Playwright 12 例本地 Alpha 回归（`workers=1` 串行防 flaky；后端 :8000 前置）。
 - **M78 + M79**: 12 commits already **pushed** to `origin/master` but **no tag / no Release Gate**
