@@ -28,6 +28,12 @@ All notable changes to this project will be documented in this file.
 - **Documentation synchronization** — `docs/HISTORY_EXPLORER_AI_CONTEXT.md`, `README.md`,
   `PROJECT_CONTEXT.md` and this changelog realigned to the current baseline: master `6d04f51`,
   pytest `331 passed`, `freeze-check` PASS, project docs version `vM78`.
+- **M80-A governance closure** (2026-08-02, documentation/ADR only) — `ADR-M78-RL` moves
+  `Proposed → Accepted` (`unregister` lifecycle already implemented and verified by automated
+  tests; no runtime content added). `docs/HISTORY_EXPLORER_AI_CONTEXT.md` debt recalibrated:
+  `DB-B07` Resolved, `DB-B08`/`DB-B09`/`DB-B10` remain open. `PROJECT_ROADMAP.md` backfilled
+  with M77/M78/M79 completed milestones. **Non-runtime: no backend/frontend/dependency/Freeze
+  Guard scope change.**
 
 ### Not included
 
