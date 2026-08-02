@@ -30,6 +30,9 @@ Development philosophy:
 - **M8** Multi-Entity Temporal Visualization (v0.9.0).
 - **M8.6** Release & Engineering Foundation - CI, Playbook, version single-source, freeze-check (v0.10.0).
 - **M9** Exploration Flow Enhancement (deterministic, zero-freeze-touch) - M9-001 Next-Node Recommendation Engine (v0.11.0) · M9-002 RecommendationPanel (v0.12.0) · M9-003 Exploration Journey Panel (v0.13.0).
+- **M77** Multi-Domain Ontology Framework Validation (project governance release, vM77, 2026-08-01).
+- **M78** Project Governance Closure — DB-B01 CI isolation, M79 ADR acceptance, vM78 docs sync (2026-08-02).
+- **M79** Causal Layer Boundary Contract — ADR-M79 Accepted (Option B, 6-field CausalStatement; relationship-kind owned by Graph Layer) (2026-08-02).
 
 
 # 3. Near-Term (within Current Architecture Freeze Baseline)

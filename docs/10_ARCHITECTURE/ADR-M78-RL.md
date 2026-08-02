@@ -1,7 +1,7 @@
 # ADR-M78-RL: AdapterRegistry `unregister` Lifecycle Completion
 
 ## Status
-Proposed
+Accepted (2026-08-02, PO-approved — registry lifecycle closure; no runtime content added)
 
 ## Context
 M78-FR has formally placed `backend/app/core/domain` under Freeze Governance, and
@@ -77,6 +77,15 @@ The following are explicitly out of scope for this ADR:
   modify `ai_gateway/` Runtime, and introduces no new dependency.
 - No **Freeze Revision** is required (the path is already under governance; this is an
   additive change).
+
+## Implementation Note (2026-08-02)
+
+The `unregister(cls, domain_id) -> bool` classmethod is implemented in
+`backend/app/core/domain/registry.py` and **implemented and verified by automated tests**,
+fully satisfying the Decision (symmetric lifecycle removal, idempotent, returns prior
+existence). This ADR introduces no runtime content; the original design is preserved. The
+governance closure (Proposed → Accepted) is a documentation action only — no code change was
+required, as the implementation already conformed to the contract.
 - No **new allowlist entry** is needed (`backend/app/core/domain/` is already present).
 
 ## References
