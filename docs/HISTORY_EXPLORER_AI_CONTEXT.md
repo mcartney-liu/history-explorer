@@ -255,7 +255,11 @@ node scripts/release-consistency-check.mjs --verbose   # R1–R7 before any rele
   **无代码变更**（见 §6 与 `ADR-M79.md` §Amendment History）。
 - **Acquisition / Causal**: built but **not wired into runtime** (见 §3, §6, §15)。
 - **Freeze**: PASSED — no D-class violation。
-- **M80**: "Intelligence Layer 收敛"进行中 (见 §17) —— Gate B 已完成待 PO Review 四项 Decision。
+- **M80**: "Intelligence Layer 收敛"分阶推进。
+  - **M80-A (CLOSED, 2026-08-02)**: 治理收口（ADR-M78-RL Accepted、DB-B07 Resolved、ROADMAP/CHANGELOG 同步），PR #4 已合并（merge `40f2209`）。
+  - **M80-B1 (DONE, 2026-08-02)**: 架构契约设计（L0/L1 文档），输出 ADR-M80-MAP / ADR-M80-RC 草案，明确 Layer 归属、provenance、三态、解耦 RELATIONSHIP_MEANING、Acquisition 数据流。
+  - **M80-B2 (2026-08-02, 进行中)**: 落盘 `ADR-M80-MAP.md` / `ADR-M80-RC.md`（Proposed，待 PO Accept）；新增 `backend/app/core/domain/mapping.py` 契约骨架（三态 MAPPED/PARTIAL/UNMAPPED + SemanticProvenance + 漂移守卫，不绑 RELATIONSHIP_MEANING、不扩白名单、不接 runtime/pipeline/causal/engine、无 AI）。**红线维持**：未改 `validation.py`、未改 `ENTITY_TYPES=8` / `RELATIONSHIP_TYPES=18`、未接 Graph runtime / Acquisition / Causal / Exploration Engine、未引入 AI/LLM。DB-B04 明确不在本里程碑关闭。
+  - **待 PO 决策**：测试文件 `backend/tests/test_m80_mapping_contract.py` 需登记进 `scripts/freeze-check.mjs` SCOPE_ALLOWLIST（M78.2/M78.3 同款配套动作）方可过 Freeze Gate；当前 freeze-check 因该测试路径未 allowlist 而 FAIL，mapping.py/dto/ADR 本身合规。
 
 ---
 
