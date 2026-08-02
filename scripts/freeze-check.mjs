@@ -742,6 +742,10 @@ export const SCOPE_ALLOWLIST = [
   // pytest fixture only. Isolates Domain Registry state between tests.
   // No runtime, schema, dependency, or business logic impact.
   "backend/conftest.py",
+  // M76-C1 contract test allowlist (PO-approved 2026-08-02):
+  // cross-platform data path fix only. No runtime, schema, dependency,
+  // or business logic impact.
+  "backend/tests/test_ontology_contract.py",
 ];
 
 function _scopeAllowed(file) {
