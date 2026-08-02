@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [vM78] - 2026-08-02 — Non-runtime project governance release (M78 Project Governance Closure)
+
+> **Non-runtime project governance release.** `frontend/package.json` remains `[0.13.0]`. No backend
+> logic, no frontend, no dependency, no Freeze Guard scope change.
+
+### Changed
+
+- **DB-B01 CI isolation fix** — Domain Registry global-singleton state leaked across test modules and
+  turned `test_m78_2_registry_lifecycle` RED. Closed by `backend/conftest.py` autouse import-baseline
+  isolation, plus `test_ontology_contract.py` / `test_m78_3_domain_contract.py` now resolving
+  `data/history` repo-relatively via `Path(__file__).resolve().parents[2]` instead of a hardcoded
+  absolute Windows path. Backend pytest **331 passed**; CI green.
+- **M79 ADR acceptance** — `docs/10_ARCHITECTURE/ADR-M79.md` moves `Proposed → Accepted`.
+- **Causal layer boundary clarification** — Option B amendment (PO-approved): `causal_type` is
+  removed from the `CausalStatement` contract, fixing it at **6 fields**
+  (`cause_id` / `effect_id` / `mechanism` / `consequence` / `confidence` / `evidence_refs`).
+  Relationship-kind semantics belong to the **Graph Layer** and stay owned by `RELATIONSHIP_TYPES`
+  (18 frozen types, `backend/app/validation.py`); the **Causal Layer owns interpretation only** and
+  must not hold a second graph relation vocabulary. **No code change** — the implementation was
+  already correct; the ADR text was the drift. Closes `DB-B06` (contract corrected) and `DB-B05`
+  (false positive).
+- **Documentation synchronization** — `docs/HISTORY_EXPLORER_AI_CONTEXT.md`, `README.md`,
+  `PROJECT_CONTEXT.md` and this changelog realigned to the current baseline: master `6d04f51`,
+  pytest `331 passed`, `freeze-check` PASS, project docs version `vM78`.
+
+### Not included
+
+- No runtime release (runtime stays `v0.13.0`), no `vM78` git tag (tagging is a separate PO-only
+  action), no `backend/` / `frontend/` / `scripts/` / dependency modification.
+
+---
+
 ## [vM77] - 2026-08-01 — Non-runtime release (M77 Multi-Domain Ontology Framework Validation project release)
 
 > **Non-runtime release**. `frontend/package.json` remains `[0.13.0]`. vM77 — **Multi-Domain Ontology Framework Validation**: proves the M76 Domain Adapter framework supports a second domain (Military History) plugged in non-invasively. Adds `backend/app/core/domain/military_ontology.py` (`MILITARY_HISTORY_ONTOLOGY`, 5 entity / 5 relationship types) + `military_adapter.py` (`MilitaryAdapter`) + `backend/tests/test_m77_multi_domain_framework.py` (14 tests) validating ontology independence, `AdapterRegistry` isolation, cross-binding, and framework regression under the Global Schema Constraint Baseline (system `ENTITY_TYPES=8` / `RELATIONSHIP_TYPES=18` untouched). Zero change to frozen runtime paths (`ai_gateway` / `evidence_claim` / `exploration` / `dataset_provider` / `source_registry` / `pipeline.py`); Runtime Freeze intact; runtime 0.13.0; no new dependency / AI / LLM. Backend pytest **318 passed**; `freeze-check` EXIT 0; consistency 7/7 (post-sync). Registers Architecture Debts: Debt-1 (HISTORY_ONTOLOGY 6/5 vs Global Schema 8/18 → M78), Debt-2 (Causal Logic Gap → M78/M79), Debt-3 (no adapter unregister API → Architecture Debt). Release tag: `vM77`.
