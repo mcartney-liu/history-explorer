@@ -136,10 +136,10 @@ implementation / release / emergency-fix).
 | DB-B04 | `RELATIONSHIP_MEANING`（第三词汇源）无漂移守卫 | Medium | 与 DB-B03 可合并 |
 | DB-B05 | ADR-M79 Rule 3 与 `validation.py` 冲突（白名单含 caused/influenced/before/after） | Medium | **Resolved（2026-08-02）：`validation.py` 与 ADR-M79 Rule 3 一致，不存在 causal vocabulary drift。此前判断为 false positive。** |
 | DB-B06 | ADR-M79 §Decision `causal_type` 漂移（实现无此字段） | Low | **Resolved（2026-08-02，PR-2 Option B）：ADR-M79 amendment aligns contract with implementation。`CausalStatement` uses 6-field interpretation model。** |
-| DB-B07 | backend 无 `conftest.py`，测试依赖字母序副作用 | Low-Med | 与 DB-B01 同批修 |
-| DB-B08 | `registry.py` 类型注解未导入 `typing` | Low-Med | PEP 563 暂掩 |
-| DB-B09 | `acquisition/` 绝对导入风格冲突 | Low-Med | 打包风险 |
-| DB-B10 | `adapter.py` 死代码 | Low | 顺手清 |
+| DB-B07 | backend 无 `conftest.py`，测试依赖字母序副作用 | Low-Med | **Resolved（2026-08-02，PR-1）：`backend/conftest.py` autouse 隔离已落地，字母序副作用消除；registry `unregister` 已实现并由自动化测试验证。** |
+| DB-B08 | `registry.py` 类型注解未导入 `typing` | Low-Med | **Open（未解决）：代码仍存在，`PEP 563` 暂掩，待后续清理** |
+| DB-B09 | `acquisition/` 绝对导入风格冲突 | Low-Med | **Open（未解决）：打包风险仍存在，待后续修复** |
+| DB-B10 | `adapter.py` 死代码 | Low | **Open（未解决）：死代码仍在，待顺手清理** |
 | DB-B11 | PRD 空间维度（四元之一）与 Freeze 排除边界断层未登记 | Medium | **需 PO 决策** |
 | DB-B12 | Timeline 架构承载深度低于 PRD（世界同步/朝代/导航滑块无后端结构） | Medium | 待 Gate E |
 
@@ -247,8 +247,8 @@ node scripts/release-consistency-check.mjs --verbose   # R1–R7 before any rele
   - E2E: Playwright 12 例本地 Alpha 回归（`workers=1` 串行防 flaky；后端 :8000 前置）。
 - **M78 + M79**: 12 commits already **pushed** to `origin/master` but **no tag / no Release Gate**
   (PO decision: push-only, tag-suspended). GitHub front shows vM77 — expected, not a miss.
-  ADR-M78/SB/RL（domain boundary + registry lifecycle）仍为 Proposed；**ADR-M79（causal boundary）
-  已 Accepted（2026-08-02）**。
+  **ADR-M78-RL（registry lifecycle）已 Accepted（2026-08-02，M80-A）**；ADR-M78-FR/SB 仍为 Proposed；
+  **ADR-M79（causal boundary）已 Accepted（2026-08-02）**。
 - **ADR drift** (DB-B05 Rule 3 / DB-B06 `causal_type`) — **resolved（2026-08-02）**：DB-B05 为
   false positive（`validation.py` 本就合规）；DB-B06 经 PO 批准以 Option B 修正 ADR（6 字段
   interpretation model，relationship-kind semantics 归 Graph Layer / `RELATIONSHIP_TYPES`），
