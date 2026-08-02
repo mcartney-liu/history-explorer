@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed
+Accepted (2026-08-02, PO-approved — Option B amendment: `causal_type` removed from the model
+contract; see §Decision and §Amendment History)
 
 ## Context
 
@@ -44,12 +45,11 @@ backend/app/core/causal/
 as the **Causal Semantic Layer**. It owns its own model and carries causal meaning by
 **referencing** existing Knowledge Graph / domain identifiers, never by extending the vocabulary.
 
-The layer's core model (`CausalStatement`, created in M79 Phase 3) is a design contract with these
-fields:
+The layer's core model (`CausalStatement`, created in M79 Phase 3) is a design contract with
+**exactly 6 fields**:
 
 - `cause_id: str` — reference to an existing entity / event / relationship id in the KG.
 - `effect_id: str` — reference to an existing entity / event / relationship id in the KG.
-- `causal_type: str` — the kind of causal relation (e.g. `enable` / `trigger` / `inhibit`).
 - `mechanism: str | None` — how the cause produces the effect.
 - `consequence: str | None` — the observed or inferred outcome.
 - `confidence: float | None` — strength / certainty of the causal claim.
@@ -57,6 +57,28 @@ fields:
 
 These fields define the layer's **model contract**. They do not imply a full causal-inference
 implementation in this milestone — M79 establishes the boundary and the model shape only.
+
+### Why there is no `causal_type` field
+
+**Relationship-kind semantics belong to the Graph Layer, not the Causal Layer.**
+
+The kind of link between two nodes (`caused` / `influenced` / `before` / `after` …) is *graph
+relation vocabulary*. That vocabulary has exactly one owner in this system:
+`RELATIONSHIP_TYPES` in `backend/app/validation.py` (the frozen 18-type Global Schema Constraint
+Baseline). Placing a `causal_type` string inside `CausalStatement` would create a **second,
+competing relation vocabulary** owned by the Causal Layer — which is precisely what Boundary
+Rules 3 and 5 forbid.
+
+Therefore the division of ownership is:
+
+| Concern | Owner | Carrier |
+|---|---|---|
+| *What kind of link is this?* (relation vocabulary) | **Graph Layer** | `RELATIONSHIP_TYPES` (`validation.py`, 18 frozen types) |
+| *What does the link mean?* (interpretation) | **Causal Layer** | `CausalStatement` (`mechanism` / `consequence` / `confidence` / `evidence_refs`) |
+
+The Causal Layer is responsible for **interpretation only**. It does **not** own, extend, or
+duplicate the graph relation vocabulary. A `CausalStatement` references ids whose link kind is
+already expressed — and validated — by the Graph Layer.
 
 `CausalStatement` is a **reference model**: it points at ids that already exist in the KG / domain
 model. It is not an `Entity`, not a `Relationship`, and not an `Ontology` extension.
@@ -163,3 +185,31 @@ M79 is the architectural boundary and model contract only.
 - `backend/tests/test_ai_gateway.py:209-218` (existing event causal edges `caused` / `influenced` / `before` / `after`).
 - M36.0 event causal layer (commit `f27d0b6`).
 - M79 Phase 1 Freeze Revision commit `ab101d7` (`chore(freeze): allow M79 causal layer scope`).
+
+## Amendment History
+
+### 2026-08-02 — Amendment 1 (Option B): `causal_type` removed from the model contract
+
+**Context.** The M79 closure audit (debt record `DB-B06`) found a contract/implementation drift:
+this ADR's §Decision specified a 7-field `CausalStatement`, while the implemented
+`backend/app/core/causal/model.py` defines 6 fields. The extra field in the ADR text was
+`causal_type`.
+
+**Options considered.**
+
+- *Option A* — change the code: add `causal_type` to `CausalStatement` to match the ADR.
+- *Option B* — change the ADR: remove `causal_type`, because the field itself violates this ADR's
+  own Boundary Rules 3 and 5 (the Causal Layer must not own graph relation vocabulary).
+
+**Decision.** **Option B**, PO-approved. The ADR was in error, not the implementation.
+`causal_type` would have made the Causal Layer a second owner of relationship-kind semantics,
+duplicating `RELATIONSHIP_TYPES` in `backend/app/validation.py`. Relation vocabulary stays in the
+Graph Layer; the Causal Layer carries interpretation only.
+
+**Effect.**
+
+- §Decision now specifies a 6-field `CausalStatement` and documents the ownership split.
+- **No code change.** `backend/app/core/causal/model.py` was already correct and is untouched.
+- **No Freeze Guard scope change**, no dependency change, no runtime change.
+- `DB-B06` is closed as *contract corrected*; `DB-B05` is closed as *false positive*
+  (`validation.py` was already consistent with Boundary Rule 3).
