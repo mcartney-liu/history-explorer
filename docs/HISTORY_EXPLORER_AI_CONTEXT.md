@@ -350,6 +350,14 @@ baseline** (Health Score **85/100**, Decision score 85/100, Tests 78/100). 13 Fi
 - **Gate B stopped at DB-B01** (contract RED). Did not advance to Gate C (data quality) or E
   (timeline depth). Push-only; no tag.
 - **4 PO Decisions required before M80 advances** (see §17).
+- **CI truth (verified 2026-08-02)**: `.github/workflows/ci.yml` runs 3 mandatory jobs on every
+  `push`/`pull_request` to `master` — `frontend` (`npm test` + `npm run build`), `backend`
+  (`python -m pytest -q`), `freeze-check`. **The backend job WILL fail on DB-B01 → CI is currently
+  RED on master** (this is the R-B2 red-line risk from Gate B, now confirmed by reading the workflow).
+  ⚠️ The file's header comments *say* "disable direct push to master (force feature-branch + --no-ff)",
+  but our earlier `git push origin master` succeeded — implying the branch-protection rule is **not
+  actually enforced**. Treat this as a real governance gap: DB-B01 must be fixed or CI stays red, and
+  master protection should be verified on GitHub.
 
 > ⚠️ `TECH_ROUTE_EVALUATION.md` (root) is **partially outdated**: its "M43–M49 zero consumption"
 > claim is false (consumed by `ExplorationInsightPanel` since M66), and its "dual AI" framing is
@@ -362,6 +370,22 @@ reads (per `data/README.md`). Verified 2026-08-02:
 - **9 topics / 145 entities / 211 relationships / 27 timeline nodes.**
 - This matches the handover report's "145/211/9" exactly — that report's data claim is **accurate**,
   not stale. (M68 "+729" is China dataset's *internal field count*, not total entity count.)
+- **Entity-type coverage (verified)**: 145 entities span all 8 declared types — Person 35 / Location
+  21 / Event 21 / Idea 21 / Technology 14 / Civilization 12 / Time Period 12 / Religion 9. No
+  zero-usage dead entity type.
+- **Relationship-type distribution (verified, 2026-08-02)** — 211 rels use **18 distinct types**:
+  `influenced` 44 / `located_at` 27 / `spread` 19 / `participated_in` 16 / `related_to` 14 /
+  `ruled` 9 / `practiced` 9 / `traded_with` 9 / `inherited` 7 / `caused` 10 / `before` 12 /
+  `invented` 12 / `part_of` 11 / `contemporary_with` 3 / `spoke` 3 / `conquered` 3 / `after` 2 /
+  `discovered` 1.
+  - **⚠️ White-list reality (corrects Gate B understatement)**: the 18-token frozen white-list
+    (`validation.py`) only *contains* 10 of the 18 types actually used in data — **8 used types are
+    OFF the white-list**: `located_at` (27, 2nd highest!), `practiced`, `spread`, `contemporary_with`,
+    `invented`, `inherited`, `spoke`, `discovered`. Causal types `caused`/`influenced`/`before`/`after`
+    are on the list (68 rels total), but **~143 / 211 (≈68%) of relationships use OFF-white-list
+    types**. If `validation.py` is ever enforced strictly at ingest, the KG would reject ~2/3 of its
+    own data. **DB-B03 severity is therefore HIGHER than Gate B's "4/5 types missing" wording implies
+    — it is 8/18 used types undeclared, including high-frequency ones.**
 
 **Other data files (also loaded, not the KG core)**:
 - `data/evidence_claims.json` — 76 evidence claims (`knowledge_service`).
@@ -416,6 +440,38 @@ Ontology MUST NOT gain AI/Reasoning fields. Gate B done & stopped; awaiting PO R
 
 **Release intent of M78/M79**: already pushed `origin/master`, intentionally **not tagged** (each
 Gate forbids `--tags`). This is a deliberate "push-only, release-deferred" flow, not a miss.
+
+## 18. Gate C/D verification + AI boundary iron laws (2026-08-02)
+
+**Gate C (data quality) — partly self-verified**: the 211-rel distribution above (§15) IS the Gate-C
+evidence Gate B deferred. Conclusion: data quality risk is **real and large** (68% of rels off
+white-list), but it is a *schema-declaration* gap (DB-B03), not corrupt data. Entity coverage is clean.
+Full Gate C (claim↔source↔entity traceability, zero-confidence cleanup) is still not executed.
+
+**Gate D (frontend integration) — spot-verified**:
+- `AIRegistry.ts` (M59-012) is a **frontend-side capability catalog** (`ALL_CAPABILITIES` in
+  `AICapabilities.ts`), triggered by `currentView` (timeline/graph/map/entity). It is **NOT** a 1:1
+  mirror of backend `ai_gateway` modules — the two are parallel capability declarations. Do not assume
+  "registry entry ⇔ backend module".
+- `MultiEntityTimeline.tsx` (M8-P1) is **PURE presentational**: derives bar ranges from existing entity
+  date fields via deterministic `temporalAxis`; explicitly forbids AI/LLM/sorting/civilization
+  inference. Confirms frontend self-aggregates (no new backend fetch) and obeys Freeze R7 (AI is an
+  additive overlay, never mutates deterministic behavior).
+- **AI-off degradation**: per ADR-0011 §7 + M74 Freeze, no-source / no-claim / low-confidence all fall
+  back to deterministic summary or graceful empty state (the `EmptyState` pattern exists in
+  `MultiEntityTimeline`). The 9 AI panels should render degraded, not error, when `AI_GATEWAY_ENABLED`
+  is false.
+- **QuickStart 400**: M74 §L1 already plans to fix its 400 defect (semantically rerouted to search).
+  Known + planned, not a surprise bug.
+
+**AI boundary iron laws (from M74 Freeze + ADR-0011, fully read)**:
+- AI = Interpretation Layer; KG = Fact Layer. **8 permanent red lines (R1–R8)**; **Agent / Multi-Agent
+  explicitly EXCLUDED by Freeze §9** (re-evaluated only at M80+).
+- ADR-0011 (PROPOSED) chose **Option B** (Backend AI Gateway + grounded generation); rejected
+  frontend-direct-LLM (key exposure) and agent frameworks. Activation needs a Freeze Revision Gate.
+- **Write-to-KG iron law**: any write must go through governance + a Gate — **never runtime-only
+  writes**. This single rule explains why `core/causal/model.py` is test-only and the M75–M79 layer
+  has zero runtime consumption: it is *intentional freeze discipline*, not a debt oversight.
 
 ---
 
