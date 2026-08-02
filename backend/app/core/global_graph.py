@@ -25,11 +25,12 @@ cross-topic-aware layer over it.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from .graph import DirectedGraph, Edge
 from .registry import KnowledgeRegistry
+from .domain.mapping import MappingState, resolve as _resolve_mapping
 
 
 @dataclass
@@ -44,6 +45,32 @@ class GlobalNode:
     entity: dict
 
 
+@dataclass
+class EdgeGovernanceRecord:
+    """M81 Semantic Governance Runtime Boundary — per-edge observe-only record.
+
+    Side Index entry, keyed by a monotonically increasing insertion ORDINAL
+    (never by (src, tgt, type), which is non-unique — see M81-A O1). The record
+    captures the MappingState of the edge's relation type at graph-build time and
+    retains its SemanticProvenance for audit/drift tracing.
+
+    Instance-scoped: lives only on this GlobalGraph instance, rebuilt whenever the
+    graph is rebuilt (M81-A O3). It NEVER mutates the underlying Edge, the
+    RELATIONSHIP_TYPES freeze baseline, or any admission behavior — UNMAPPED
+    edges are recorded, not rejected (M81-B constraint 2: observe-only, no
+    enforcement in M81).
+    """
+
+    ordinal: int
+    source: str
+    target: str
+    relation_type: str
+    mapping_state: MappingState
+    provenance_origin: Optional[str] = None
+    provenance_mapping_id: Optional[str] = None
+    untranslatable_aspect: Optional[str] = None
+
+
 class GlobalGraph:
     """A single unified, cross-topic directed graph over all topics."""
 
@@ -51,6 +78,11 @@ class GlobalGraph:
         self._registry = registry
         self._g = DirectedGraph()
         self._nodes: dict[str, GlobalNode] = {}
+        # M81 Side Index: ordinal-keyed, instance-scoped governance records.
+        # Monotonic insertion ordinal (O1) — unique across parallel edges and
+        # exact-duplicate (src,tgt,type) triples, so no silent state merge.
+        self._governance_index: dict[int, EdgeGovernanceRecord] = {}
+        self._ordinal_counter: int = 0
         self._build(topic_datasets, registry)
 
     # --- construction -------------------------------------------------------
@@ -114,7 +146,30 @@ class GlobalGraph:
                 self._register_node(tgt_ref.topic, tgt_ref.local_id)
                 src_key = self._canonical_key(src_ref.topic, src_ref.local_id)
                 tgt_key = self._canonical_key(tgt_ref.topic, tgt_ref.local_id)
-                self._g.add_edge(Edge(src_key, tgt_key, rel.get("type", "related_to")))
+                rel_type = rel.get("type", "related_to")
+                self._g.add_edge(Edge(src_key, tgt_key, rel_type))
+
+                # --- M81 Semantic Governance Runtime Boundary (observe-only) ---
+                # Record the edge's MappingState in the instance-scoped Side Index.
+                # UNMAPPED edges are recorded, NOT rejected — zero admission
+                # behavior change (M81-B constraint 2). No enforcement in M81.
+                result = _resolve_mapping(rel_type)
+                # Unregistered relation type -> UNMAPPED (observe-only, no
+                # rejection). Provenance is None for undeclared contracts.
+                state = result.state if result is not None else MappingState.UNMAPPED
+                prov = result.provenance if result is not None else None
+                aspect = result.untranslatable_aspect if result is not None else None
+                self._governance_index[self._ordinal_counter] = EdgeGovernanceRecord(
+                    ordinal=self._ordinal_counter,
+                    source=src_key,
+                    target=tgt_key,
+                    relation_type=rel_type,
+                    mapping_state=state,
+                    provenance_origin=prov.ontology_origin if prov is not None else None,
+                    provenance_mapping_id=prov.mapping_id if prov is not None else None,
+                    untranslatable_aspect=aspect,
+                )
+                self._ordinal_counter += 1
 
     # --- node access --------------------------------------------------------
     def get_node(self, global_id: str) -> Optional[GlobalNode]:
@@ -130,6 +185,22 @@ class GlobalGraph:
     @property
     def edge_count(self) -> int:
         return sum(len(edges) for edges in self._g.out.values())
+
+    # --- M81 Semantic Governance Runtime Boundary (read-only accessors) -----
+    def governance_record(self, ordinal: int) -> Optional[EdgeGovernanceRecord]:
+        """Return the governance record for a given insertion ordinal, or None."""
+        return self._governance_index.get(ordinal)
+
+    def all_governance_records(self) -> list[EdgeGovernanceRecord]:
+        """All governance records in insertion (ordinal) order."""
+        return [self._governance_index[k] for k in sorted(self._governance_index)]
+
+    def governance_summary(self) -> dict[MappingState, int]:
+        """Count of edges per MappingState across the Side Index."""
+        summary: dict[MappingState, int] = {}
+        for rec in self._governance_index.values():
+            summary[rec.mapping_state] = summary.get(rec.mapping_state, 0) + 1
+        return summary
 
     # --- adjacency (out / in) ----------------------------------------------
     def neighbors(self, global_id: str, direction: str = "both") -> list[Edge]:
