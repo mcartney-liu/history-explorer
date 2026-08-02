@@ -4,6 +4,11 @@
 > repository. Read this file in full before any task. Mode-specific prompts
 > live in `prompts/`.
 
+> **First-time / external AI onboarding**: If you are a new or external AI (ChatGPT, Claude,
+> Gemini, local Agent, etc.) entering this repo, read `docs/HISTORY_EXPLORER_AI_CONTEXT.md`
+> **first** — it is the single orientation index that points you to the authoritative sources
+> below and the freeze baseline. Then return here for the binding behavior contract.
+
 ## 1. Purpose
 
 This document is the behavior governance entry point for **every AI Agent**

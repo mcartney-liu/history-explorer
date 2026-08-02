@@ -45,6 +45,8 @@
 | `docs/15_DECISIONS/README.md` | 15_DECISIONS | Lead | As needed | 2026-07-21 | Decisions layer index |
 | `docs/15_DECISIONS/ADR_TEMPLATE.md` | 15_DECISIONS | Lead | As needed | 2026-07-21 | ADR template (architecture/feature/technology decisions; required for freeze revisions) |
 | `docs/AGENT_WORKFLOW_PROTOCOL.md` | Meta | Lead | As needed | 2026-07-24 | Agent Workflow & Contract Framework — Entry/Transition/Output contracts pinning TEAM_SPEC §11; Reference-not-Copy; Gate = No (ADR-0002) |
+| `docs/AGENT_OPERATION_PROTOCOL.md` | Meta | Lead | As needed | 2026-07-24 | **Mandatory AI Agent behavior contract** (L0–L3, Iron Laws). Every AI Agent reads this in full before any task. |
+| `docs/HISTORY_EXPLORER_AI_CONTEXT.md` | Meta (AI entry) | Lead | As needed | 2026-08-02 | **AI onboarding brain** — single orientation index for ANY external AI (ChatGPT/Claude/Gemini/local Agent). Read before `AGENT_OPERATION_PROTOCOL.md`. Points to, never replaces, authoritative sources. |
 | `docs/90_ARCHIVE/` | Archive | Lead | Historical | — | Superseded docs; NOT authoritative |
 | `PROJECT_CHARTER.md` | L3 support | Product Owner | Rare | (M1) | Foundational charter; referenced by Constitution §7 |
 | `docs/SUGGESTIONS.md` | Working | Lead | As needed | ongoing | Running suggestions backlog |
