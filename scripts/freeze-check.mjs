@@ -738,6 +738,10 @@ export const SCOPE_ALLOWLIST = [
   // Constraint 8/18). See docs/10_ARCHITECTURE/ADR-M79.md.
   "backend/app/core/causal/",
   "backend/tests/test_m79_causal_layer.py",
+  // DB-B01 Freeze Revision Gate (PO-approved 2026-08-02):
+  // pytest fixture only. Isolates Domain Registry state between tests.
+  // No runtime, schema, dependency, or business logic impact.
+  "backend/conftest.py",
 ];
 
 function _scopeAllowed(file) {
