@@ -261,6 +261,13 @@ node scripts/release-consistency-check.mjs --verbose   # R1–R7 before any rele
   - **M80-B2 (2026-08-02, 进行中)**: 落盘 `ADR-M80-MAP.md` / `ADR-M80-RC.md`（Proposed，待 PO Accept）；新增 `backend/app/core/domain/mapping.py` 契约骨架（三态 MAPPED/PARTIAL/UNMAPPED + SemanticProvenance + 漂移守卫，不绑 RELATIONSHIP_MEANING、不扩白名单、不接 runtime/pipeline/causal/engine、无 AI）。**红线维持**：未改 `validation.py`、未改 `ENTITY_TYPES=8` / `RELATIONSHIP_TYPES=18`、未接 Graph runtime / Acquisition / Causal / Exploration Engine、未引入 AI/LLM。DB-B04 明确不在本里程碑关闭。
   - **待 PO 决策**：测试文件 `backend/tests/test_m80_mapping_contract.py` 需登记进 `scripts/freeze-check.mjs` SCOPE_ALLOWLIST（M78.2/M78.3 同款配套动作）方可过 Freeze Gate；当前 freeze-check 因该测试路径未 allowlist 而 FAIL，mapping.py/dto/ADR 本身合规。
 
+  - **M81-B (MERGED, 2026-08-02, PR #6 → merge `0da15a2`)**: Semantic Governance Runtime Boundary。
+    **BASELINE LINEAGE NOTE（防 AI 误判 M81 scope）**:
+    1. **M81-B 基于 M80-B2 血统（lineage）**：`m81-b` 分支从 `m80-b2` 派生；因 M80-B2 merge 尚未反映在 `master` 历史，PR #6 对 `master` 的全量 diff 包含 M80-B2 资产。
+    2. **继承的 M80 assets 属历史祖先，非 M81 scope**：`backend/app/core/domain/mapping.py`、`backend/app/core/domain/test_mapping.py`、`docs/10_ARCHITECTURE/ADR-M80-MAP.md`、`docs/10_ARCHITECTURE/ADR-M80-RC.md`、`docs/HISTORY_EXPLORER_AI_CONTEXT.md` 等 M80 资产是 `m80-b2` 的祖先历史，**不是 M81-B 修改**。M81-B 实际新增 commit 仅 `cdbcd2d`。
+    3. **M81 生产改动面 = `global_graph.py` admission boundary + 验证测试**：实际仅 2 文件 —— `backend/app/core/global_graph.py`（唯一生产代码改动，挂接 instance-scoped Side Index / ordinal-keyed / observe-only UNMAPPED 准入）+ `backend/tests/test_m81_governance.py`（T1–T10 验证）。**未触碰** `validation.py` / `graph.py` / `exploration_engine.py` / `knowledge_service.py` / `acquisition/**` / `causal/**` / `freeze-check.mjs`；未改 `RELATIONSHIP_TYPES=18` / `ENTITY_TYPES=8`；未引入 AI/LLM；未新增架构层。
+    > ⚠️ **AI 陷阱警示**：若未来 Agent 看到 PR #6 或 `master..m81-b` 全量 diff 含 M80 文件，须识别其为祖先历史继承，**不得**将其计入 M81-B implementation scope，也**不得**据此认为 M81-B 修改了 mapping/validation/ontology 等文件。M81-B 的 scope 严格 = `global_graph.py` admission boundary + `test_m81_governance.py`。
+
 ---
 
 ## 11. How an external AI collaborates with the PO (decision protocol)
