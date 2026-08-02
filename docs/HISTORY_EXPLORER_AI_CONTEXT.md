@@ -34,7 +34,7 @@ active exploration over a **deterministic, in-memory knowledge graph**.
 - **No database, no GIS, no login/auth, no new dependencies** (frozen boundary —
   `docs/10_ARCHITECTURE/CURRENT_ARCHITECTURE_BASELINE.md` §3).
 - **Dual-track versioning**: Runtime version (e.g. `v0.13.0`) + Project milestone release
-  (e.g. `vM77`). See `README.md` §Project Status.
+  (e.g. `vM78`). See `README.md` §Project Status.
 - **Repository**: `https://github.com/mcartney-liu/history-explorer` (public).
 - **Product Owner (D8)**: the human "翔哥" — holds all release / tag / scope decision authority.
   An AI Agent holds **no decision authority**.
@@ -134,8 +134,8 @@ implementation / release / emergency-fix).
 | DB-B02 | M75–M79 新层（domain/causal/acquisition）零 Runtime 消费（parallel wing） | Medium-High | 未接线 |
 | DB-B03 | `HISTORY_ONTOLOGY`(6/5) ↔ 全局白名单(8/18) 缺声明式映射层 | Medium | 4/5 关系类型不在白名单，接线即拒 |
 | DB-B04 | `RELATIONSHIP_MEANING`（第三词汇源）无漂移守卫 | Medium | 与 DB-B03 可合并 |
-| DB-B05 | ADR-M79 Rule 3 与 `validation.py` 冲突（白名单含 caused/influenced/before/after） | Medium | 旧 "Debt-003"；下次 ADR 维护修 |
-| DB-B06 | ADR-M79 §Decision `causal_type` 漂移（实现无此字段） | Low | 旧 "Debt-001"；文档超前 |
+| DB-B05 | ADR-M79 Rule 3 与 `validation.py` 冲突（白名单含 caused/influenced/before/after） | Medium | **Resolved（2026-08-02）：`validation.py` 与 ADR-M79 Rule 3 一致，不存在 causal vocabulary drift。此前判断为 false positive。** |
+| DB-B06 | ADR-M79 §Decision `causal_type` 漂移（实现无此字段） | Low | **Resolved（2026-08-02，PR-2 Option B）：ADR-M79 amendment aligns contract with implementation。`CausalStatement` uses 6-field interpretation model。** |
 | DB-B07 | backend 无 `conftest.py`，测试依赖字母序副作用 | Low-Med | 与 DB-B01 同批修 |
 | DB-B08 | `registry.py` 类型注解未导入 `typing` | Low-Med | PEP 563 暂掩 |
 | DB-B09 | `acquisition/` 绝对导入风格冲突 | Low-Med | 打包风险 |
@@ -199,7 +199,7 @@ npm test           # vitest run
 **Validation gates (run before proposing/committing):**
 ```bash
 node scripts/freeze-check.mjs              # must EXIT 0 / "PASSED"
-cd backend && python -m pytest -q         # target: 318 passed (per README M77)
+cd backend && python -m pytest -q         # target: 331 passed (2026-08-02, post DB-B01 fix)
 cd frontend && npm test                   # vitest
 node scripts/release-consistency-check.mjs --verbose   # R1–R7 before any release
 ```
@@ -234,20 +234,25 @@ node scripts/release-consistency-check.mjs --verbose   # R1–R7 before any rele
 
 > Last grounded: 2026-08-02. Re-confirm with `git tag --list "vM*"` + `git log -1` before relying on it.
 
-- **Default branch**: `master`. Local == `origin/master` (`bb36a55…`, 0/0 sync, clean tree).
-- **Latest release tag**: `vM77` (2026-08-01) — Multi-Domain Ontology Framework Validation.
-  Runtime `v0.13.0`.
+- **Default branch**: `master`. Local == `origin/master` (`6d04f51…`, 0/0 sync, clean tree).
+- **Project docs version**: `vM78` (2026-08-02) — non-runtime governance release
+  (DB-B01 closure + M79 ADR acceptance + documentation sync). Latest **release tag** is still
+  `vM77` (2026-08-01, Multi-Domain Ontology Framework Validation); tagging `vM78` is a separate
+  PO-only (L2) action. Runtime `v0.13.0` unchanged.
 - **Test truth (2026-08-02 实跑)**:
   - Backend: **pytest 1 failed / 330 passed（修复前快照，2026-08-02 实跑）** — 唯一红灯 =
-    `test_m78_2_registry_lifecycle`（DB-B01，契约污染，详见 §6/§14）。**README 的 "318 passed" 已过时**。
+    `test_m78_2_registry_lifecycle`（DB-B01，契约污染，详见 §6/§14）。**旧 "318 passed" 基线已作废。**
     **修复后（2026-08-02 L1，加 `backend/conftest.py` autouse 隔离）：`331 passed`，DB-B01 RED 已消除，CI 恢复绿。**
   - Frontend: **vitest 1123 passed**（用 `npm test` = `vitest run`，勿用裸 `vitest` 防 watch）。
   - E2E: Playwright 12 例本地 Alpha 回归（`workers=1` 串行防 flaky；后端 :8000 前置）。
 - **M78 + M79**: 12 commits already **pushed** to `origin/master` but **no tag / no Release Gate**
   (PO decision: push-only, tag-suspended). GitHub front shows vM77 — expected, not a miss.
-  ADR-M78/SB/RL（domain boundary + registry lifecycle）与 ADR-M79（causal boundary）均 Proposed。
-- **ADR drift** (DB-B05 Rule 3 / DB-B06 `causal_type`) — **unfixed**; resolve before any M78/M79
-  release gate (见 §6)。
+  ADR-M78/SB/RL（domain boundary + registry lifecycle）仍为 Proposed；**ADR-M79（causal boundary）
+  已 Accepted（2026-08-02）**。
+- **ADR drift** (DB-B05 Rule 3 / DB-B06 `causal_type`) — **resolved（2026-08-02）**：DB-B05 为
+  false positive（`validation.py` 本就合规）；DB-B06 经 PO 批准以 Option B 修正 ADR（6 字段
+  interpretation model，relationship-kind semantics 归 Graph Layer / `RELATIONSHIP_TYPES`），
+  **无代码变更**（见 §6 与 `ADR-M79.md` §Amendment History）。
 - **Acquisition / Causal**: built but **not wired into runtime** (见 §3, §6, §15)。
 - **Freeze**: PASSED — no D-class violation。
 - **M80**: "Intelligence Layer 收敛"进行中 (见 §17) —— Gate B 已完成待 PO Review 四项 Decision。
@@ -433,8 +438,9 @@ Ontology MUST NOT gain AI/Reasoning fields. Gate B done & stopped; awaiting PO R
    already exists; the bug is cross-file `_ADAPTERS` global shared state.)*
 2. **Vocabulary governance** — how many relationship vocabularies? Map `HISTORY_ONTOLOGY`(6/5) ↔
    white-list(8/18) ↔ `RELATIONSHIP_MEANING` ↔ `exploration_packages.json` (DB-B03/04/11).
-3. **ADR-M79 drift** — resolve DB-B05 (Rule 3 vs validation) + DB-B06 (`causal_type`) before any
-   M78/M79 tag.
+3. ~~**ADR-M79 drift** — resolve DB-B05 (Rule 3 vs validation) + DB-B06 (`causal_type`) before any
+   M78/M79 tag.~~ **Closed 2026-08-02**: PO chose Option B — ADR-M79 amended to the 6-field
+   `CausalStatement` and Accepted; DB-B05 was a false positive. No code change.
 4. **PRD spatial dimension (DB-B11)** — is Map/GIS a P0/P1/P2? Today North Star text includes Map
    (4th pillar) but Freeze excludes GIS and no Map engine exists. Needs explicit PO ruling to close
    the product-architecture collision.
