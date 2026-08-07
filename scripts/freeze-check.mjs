@@ -774,6 +774,7 @@ export const SCOPE_ALLOWLIST = [
   // variables only (VS-01 semantic names, dark-compatible values); old tokens
   // retained. No backend / schema / enum / dependency / runtime change.
   "frontend/src/styles/tokens.css",
+  "frontend/src/styles/ui.css",
 ];
 
 function _scopeAllowed(file) {

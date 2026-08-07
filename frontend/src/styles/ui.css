@@ -220,3 +220,42 @@
   gap: 6px;
   flex-wrap: wrap;
 }
+
+/* --- History navigation (TP-20 轨迹链 · 常驻层) — P5-S2 VS-01 tokens ---
+   Back/Forward over the app exploration history (M2-003). Tokens are the
+   dark-compatible VS-01 layer (styles/tokens.css); values flip at theme flip. */
+.he-history-bar {
+  display: inline-flex;
+  gap: var(--space-2, 8px);
+  align-items: center;
+}
+.he-history-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--color-paper-300);
+  background: var(--color-paper-100);
+  color: var(--color-ink-700);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background var(--motion-duration-fast) var(--motion-ease-standard),
+    border-color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+.he-history-btn:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.he-history-btn:disabled {
+  color: var(--color-ink-300);
+  background: transparent;
+  border-color: var(--color-paper-200);
+  cursor: default;
+}
+.he-history-btn:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
