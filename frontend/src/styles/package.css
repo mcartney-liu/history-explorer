@@ -113,22 +113,21 @@
   gap: var(--space-8);
 }
 
+/* ---- Chain (shared by timeline + relationship) — P5-S2 TP-11/12 VS-01 ---- */
 .journey-section {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--color-paper-300);
   padding-top: var(--space-6);
 }
 .journey-section-title {
   font-size: 20px;
-  color: var(--text-high);
+  color: var(--color-ink-900);
   margin: 0 0 var(--space-2);
 }
 .journey-section-sub {
-  color: var(--text-low);
+  color: var(--color-ink-500);
   font-size: 14px;
   margin: 0 0 var(--space-5);
 }
-
-/* ---- Chain (shared by timeline + relationship) ---- */
 .journey-chain {
   display: flex;
   flex-wrap: wrap;
@@ -141,50 +140,47 @@
   align-items: center;
   gap: var(--space-2);
 }
-
 .journey-step {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
 }
-
 .journey-node {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius);
   padding: 10px 16px;
   cursor: pointer;
   text-align: left;
-  transition: border-color var(--animation-fast), transform var(--animation-fast);
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-standard), transform var(--motion-duration-fast) var(--motion-ease-standard);
 }
 .journey-node:hover {
-  border-color: var(--gold-500);
+  border-color: var(--color-accent);
   transform: translateY(-2px);
 }
 .journey-node-name {
-  color: var(--text-high);
+  color: var(--color-ink-900);
   font-size: 15px;
   font-weight: 600;
 }
 .journey-node-meta {
-  color: var(--text-low);
+  color: var(--color-ink-500);
   font-size: 12px;
 }
-
 .journey-arrow {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  color: var(--gold-hi);
+  color: var(--color-accent);
   min-width: 56px;
 }
 .journey-arrow-label {
   font-size: 11px;
-  color: var(--text-low);
+  color: var(--color-ink-500);
   margin-bottom: 2px;
 }
 .journey-arrow-glyph {
@@ -196,10 +192,10 @@
 .journey-side {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
-  border-top: 1px dashed var(--line);
+  border-top: 1px dashed var(--color-paper-300);
 }
 .journey-side-label {
-  color: var(--text-low);
+  color: var(--color-ink-500);
   font-size: 13px;
   margin: 0 0 var(--space-2);
 }
@@ -216,14 +212,14 @@
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
-  color: var(--text-mid);
+  color: var(--color-ink-500);
   font-size: 14px;
 }
 .journey-side-from,
 .journey-side-to {
   background: transparent;
   border: none;
-  color: var(--gold-hi);
+  color: var(--color-accent);
   cursor: pointer;
   padding: 0;
   font-size: 14px;
@@ -231,7 +227,7 @@
   text-underline-offset: 2px;
 }
 .journey-side-rel {
-  color: var(--text-low);
+  color: var(--color-ink-500);
   font-size: 13px;
 }
 

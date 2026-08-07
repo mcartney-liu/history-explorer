@@ -57,9 +57,11 @@ export function UnderstandingCard({
   confidence,
   curatorNote,
 }: UnderstandingCardProps) {
-  const goldHi = 'var(--gold-hi, #CBA135)'
-  const goldGlow = 'var(--gold-glow, rgba(203,161,53,0.08))'
-  const goldLine = 'var(--gold-line, rgba(203,161,53,0.2))'
+  // P5-S2 TP-13: VS-01 tokens — cognitive-transition card is Sub-layer
+  // (user's own understanding trajectory) → accent family; no gold/hex/ease.
+  const goldHi = 'var(--color-accent)'
+  const goldGlow = 'var(--color-accent-soft)'
+  const goldLine = 'var(--color-accent-soft)'
 
   return (
     <div style={{
@@ -67,15 +69,15 @@ export function UnderstandingCard({
       borderRadius: 'var(--radius-md, 8px)',
       border: `1px solid ${goldLine}`,
       background: goldGlow,
-      transition: 'border-color 0.2s ease',
+      transition: `border-color var(--motion-duration-fast) var(--motion-ease-standard)`,
     }}>
       {/* Before */}
       <div style={{
         fontSize: '0.8rem',
-        color: 'var(--low, #6B7280)',
+        color: 'var(--color-ink-500)',
         marginBottom: 12,
       }}>
-        <span style={{ fontWeight: 600, color: 'var(--mid, #9CA3AF)' }}>之前认为：</span>
+        <span style={{ fontWeight: 600, color: 'var(--color-ink-500)' }}>之前认为：</span>
         <span style={{ fontFamily: 'var(--serif, "Spectral", serif)', fontStyle: 'italic' }}>
           {before}
         </span>
@@ -86,7 +88,7 @@ export function UnderstandingCard({
         padding: '12px 16px',
         borderLeft: `3px solid ${goldHi}`,
         marginBottom: 12,
-        background: 'rgba(203,161,53,0.04)',
+        background: 'var(--color-accent-soft)',
       }}>
         <div style={{
           fontSize: '0.75rem',
@@ -100,7 +102,7 @@ export function UnderstandingCard({
               marginLeft: 8,
               fontSize: '0.7rem',
               fontWeight: 400,
-              color: 'var(--low, #6B7280)',
+              color: 'var(--color-ink-500)',
             }}>
               {(confidence * 100).toFixed(0)}% 置信度
             </span>
@@ -108,7 +110,7 @@ export function UnderstandingCard({
         </div>
         <div style={{
           fontSize: '0.85rem',
-          color: 'var(--hi, #F3F4F6)',
+          color: 'var(--color-ink-900)',
           lineHeight: 1.6,
         }}>
           {evidence}
@@ -118,7 +120,7 @@ export function UnderstandingCard({
       {/* After */}
       <div style={{
         fontSize: '0.85rem',
-        color: 'var(--hi, #F3F4F6)',
+        color: 'var(--color-ink-900)',
         fontFamily: 'var(--serif, "Spectral", serif)',
         lineHeight: 1.5,
         fontWeight: 500,
@@ -134,10 +136,10 @@ export function UnderstandingCard({
           paddingTop: 10,
           borderTop: `1px solid ${goldLine}`,
           fontSize: '0.75rem',
-          color: 'var(--low, #6B7280)',
+          color: 'var(--color-ink-500)',
           lineHeight: 1.5,
         }}>
-          <span style={{ fontWeight: 600, color: 'var(--mid, #9CA3AF)' }}>策展说明：</span>
+          <span style={{ fontWeight: 600, color: 'var(--color-ink-500)' }}>策展说明：</span>
           {curatorNote}
         </div>
       )}

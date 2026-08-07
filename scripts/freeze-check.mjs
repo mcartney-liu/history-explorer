@@ -776,7 +776,9 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/styles/tokens.css",
   "frontend/src/styles/ui.css",
   "frontend/src/styles/layout-grid.css",
+  "frontend/src/styles/package.css",
   "frontend/src/App.css",
+  "frontend/src/components/primitives/UnderstandingCard.tsx",
 ];
 
 function _scopeAllowed(file) {
