@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, lazy, useRef } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useNavigationHistory } from './hooks/useNavigationHistory'
 import { usePackageContext } from './hooks/usePackageContext'
 import SearchBox from './components/SearchBox'
@@ -59,7 +59,6 @@ import { ExplorerShell } from './components/shell/ExplorerShell'
 import { GlobalBar } from './components/shell/GlobalBar'
 import { QuestionHeader } from './components/shell/QuestionHeader'
 import { ModeBar } from './components/shell/ModeBar'
-import { NavigationContractBar } from './components/shell/NavigationContractBar'
 import { LandingTabs } from './components/shell/LandingTabs'
 import { ProductIntro } from './components/shell/ProductIntro'
 import { UnderstandingStatus } from './components/shell/UnderstandingStatus'
@@ -70,12 +69,11 @@ import { CompanionShell } from './components/ai/CompanionShell'
 import RelationshipContext from './components/RelationshipContext'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import { getCausalObjectName } from './data/causalObjectNames'
-import DevCatalog from './pages/DevCatalog'
 import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
 import DiscoverPage from './pages/DiscoverPage'
-import { addJourneyEntry, entryFromNode, type JourneyEntry } from './lib/journey'
+import { addJourneyEntry, entryFromNode } from './lib/journey'
 import FeedbackWidget from './components/FeedbackWidget'
 
 // M86.1 — Explorer Runtime Context（Experience Runtime 单一语义核心）
@@ -86,7 +84,6 @@ import {
   type CreateContextInput,
   type UpdateAnchorInput,
   type Anchor,
-  type Relation,
 } from './next/ExplorerRuntimeContext'
 
   // M86.1 Batch 3 — Understanding Projection Runtime
@@ -229,7 +226,7 @@ function App() {
   // Must run before useRouter() initializes so the parsed route sees the
   // canonical URL, not the legacy hash.
   // =========================================================================
-  const _redirected = runLegacyRedirect()
+  runLegacyRedirect()
 
   // =========================================================================
   // M90.3 Stage A — unified Router (single URL truth source, K-1.4)
@@ -306,7 +303,7 @@ function App() {
   // 消费 ProjectionDelta → MemoryPolicy → Decision<MemoryPersistencePayload>
   // =========================================================================
   const [lastProjection, setLastProjection] = useState<UnderstandingProjection | null>(null)
-  const [memoryDecision, setMemoryDecision] = useState<Decision<MemoryPersistencePayload> | null>(null)
+  const [, setMemoryDecision] = useState<Decision<MemoryPersistencePayload> | null>(null)
 
   // M90.3 Stage E — ExplorationPolicy live state (wired from projection)
   const [policyAction, setPolicyAction] = useState<ExplorationAction | null>(null)
@@ -452,9 +449,6 @@ function App() {
   const [relView, setRelView] = useState<'list' | 'spatial'>('list')
   const [timeView, setTimeView] = useState<'single' | 'multi'>('single')
 
-  // M65 Phase 3A: controlled timeline strip index (click a dot → parent state flows back)
-  const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0)
-
   // Load persisted recent explorations once on mount.
   useEffect(() => {
     setRecent(loadRecent())
@@ -514,6 +508,13 @@ function App() {
   const current: NavNode | null =
     cursor >= 0 && cursor < history.length ? history[cursor] : null
 
+  // M60 type-debt fix: NavNode is a union; derive topic/id strings narrowly so
+  // the projection useEffect can read them without `current?.topic`/`current?.id`
+  // (which only exist on the topic / entity variants). Preserves prior runtime
+  // behaviour (undefined → '' fallback).
+  const currentTopic = current?.type === 'topic' ? current.topic : ''
+  const currentRef = current?.type === 'entity' ? current.id : ''
+
   // =========================================================================
   // M90.3 Stage E — Projection → ExplorationState → ExplorationPolicy
   // Re-compute when anchorChain or relationChain changes. Moved after
@@ -556,7 +557,7 @@ function App() {
     const template: UnderstandingTemplate = {
       templateId: 'auto-generated-from-topic-data',
       version: '1.0',
-      topic: runtimeContext.userQuestion ?? current?.topic ?? '',
+      topic: runtimeContext.userQuestion ?? currentTopic ?? '',
       goal: runtimeContext.understandingGoal ?? '',
       requiredDimensions: entityTypes,
       dimensionMapping,
@@ -591,8 +592,8 @@ function App() {
     // Build ExplorationState → run ExplorationPolicy
     const eState = buildExplorationState({
       explorationId: runtimeContext.explorationId || '',
-      currentTopic: current?.topic || '',
-      currentAnchorRef: current?.id || '',
+      currentTopic: currentTopic,
+      currentAnchorRef: currentRef,
       understandingProjection: {
         stage: newProjection.stage,
         coverageState: {
@@ -609,8 +610,8 @@ function App() {
         activeBranches: [],
       },
       sessionHistory: {
-        exploredAnchors: runtimeContext.anchorChain || [],
-        exploredRelations: runtimeContext.relationChain || [],
+        exploredAnchors: runtimeContext.anchorChain.map((a) => a.entityId),
+        exploredRelations: runtimeContext.relationChain.map((r) => r.relationId),
         activeQuestions: runtimeContext.userQuestion ? [runtimeContext.userQuestion] : [],
       },
     })
@@ -643,7 +644,7 @@ function App() {
     })
     setPolicyAction(decision.output)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, current?.id, current?.topic])
+  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef])
 
   // Fetch a node's data and update view state. Pure I/O; history navigation
   // decides *which* node, this decides *how* to load it.
@@ -720,18 +721,6 @@ function App() {
     nav.navigateTo(node)
   }
 
-  // M35 Feature D: re-open a journey entry from the JourneyPanel.
-  function handleJourneyClick(entry: JourneyEntry) {
-    if (entry.kind === 'topic') {
-      navigateTo({ type: 'topic', topic: entry.globalId, title: entry.label })
-    } else if (entry.kind === 'causal_object') {
-      // M85.8 — CausalObject journey entry
-      navigateTo({ type: 'causal_object', objectId: entry.globalId })
-    } else {
-      navigateTo({ type: 'entity', id: entry.globalId, name: entry.label })
-    }
-  }
-
   // M85.8 — Open a CausalObject by id
   function openCausalObject(objectId: string) {
     // M85.9.3 — Record visit on current exploration path
@@ -771,21 +760,6 @@ function App() {
   function guessEntityType(_id: string, _name: string): string {
     // Batch 2 简化版：后续可从 Entity 数据中获取准确类型
     return 'concept'
-  }
-
-  // M65 Phase 3D-2: timeline dot → entity navigation. Reuses the exact resolve
-  // chain that TimelinePanel's onEventClick uses (event name → local id →
-  // openEntity), so the bottom strip and the TimelinePanel stay semantically
-  // aligned. Dots whose event name does not match an entity stay inert — no
-  // error, no navigation.
-  function handleTimelineSelect(index: number) {
-    setSelectedTimelineIndex(index)
-    const item = result?.timeline?.[index]
-    if (!item) return
-    const localId = exploreNameToId[item.event]
-    if (localId) {
-      openEntity(localId, exploreNameById[localId] ?? item.event)
-    }
   }
 
   function goTo(newCursor: number) {

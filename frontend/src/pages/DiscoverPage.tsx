@@ -12,12 +12,10 @@ import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
 import { listResearch } from '../data/ResearchHistory'
-import { generateUserInterestProfile } from '../data/ResearchInsights'
 import type { SavedResearch } from '../data/ResearchHistory'
+import { generateUserInterestProfile } from '../data/ResearchInsights'
 import { recordEvent } from '../data/UserBehaviorEvent'
-import { Card } from '../components/ui/Card'
 import { Icon } from '../components/ui/Icon'
-import type { IconName } from '../components/ui/Icon'
 import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
 import { getPackages } from '../data/explorationPackages'
@@ -40,67 +38,6 @@ const CATEGORY_META: Record<string, { label: string; desc: string }> = {
   Religion:     { label: '宗教发展', desc: '佛教、基督教、伊斯兰教的传播' },
   Technology:   { label: '技术演进', desc: '冶铁、造纸、航海技术' },
   Location:     { label: '地理探索', desc: '丝绸之路、地中海、恒河流域' },
-}
-
-function RecentResearches({ researches }: { researches: SavedResearch[] }) {
-  if (researches.length === 0) {
-    return (
-      <div className="discover-recent discover-recent--empty">
-        <h3 className="discover-section-heading">最近研究</h3>
-        <p className="discover-empty-text">你还没有开始探索。</p>
-        <div className="discover-empty-actions">
-          <p>试试：</p>
-          <ul>
-            <li>搜索一个历史主题（如"罗马""丝绸之路"）</li>
-            <li>点击下方精选探索开始</li>
-            <li>从文明、事件、人物分类进入</li>
-          </ul>
-        </div>
-      </div>
-    )
-  }
-  const recent = [...researches]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 3)
-  return (
-    <div className="discover-recent">
-      <h3 className="discover-section-heading">最近研究</h3>
-      <p className="discover-section-sub">继续未完成的探索，或从收藏中快速进入。</p>
-      <div className="discover-recent-list">
-        {recent.map((r) => (
-          <div key={r.id} className="discover-recent-card">
-            <span className="discover-recent-type">{r.entityType}</span>
-            <span className="discover-recent-name">{r.entityName}</span>
-            {r.bookmarked && <Icon name="star" size={16} className="discover-recent-star" filled />}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// M44 Phase 6 — ResearchLibrary entry on DiscoverPage
-function ResearchLibraryEntry() {
-  const researches = useMemo(() => listResearch().filter((r) => r.bookmarked), [])
-  if (researches.length === 0) return null
-  return (
-    <div className="discover-library">
-      <h3 className="discover-section-heading">我的研究收藏</h3>
-      <p className="discover-section-sub">
-        已保存 {researches.length} 项研究结果。点击可跳转到对应实体继续查看。
-      </p>
-      <ul className="discover-library-list">
-        {researches.slice(0, 5).map((r) => (
-          <li key={r.id}>
-            <span className="discover-library-link">
-              <span className="discover-library-type">{r.entityType}</span>
-              {r.entityName}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
 }
 
 function InterestProfile() {
@@ -149,7 +86,7 @@ type DiscoverPageProps = {
   /** All available topics from the backend (with category). Used to build category cards dynamically. */
   topics?: { topic: string; title: string; summary: string; category?: string }[]
   onTopicClick: (topic: string) => void
-  onStarterClick: (target: NavNode) => void
+  onStarterClick?: (target: NavNode) => void
   onPackageClick?: (slug: string) => void
   onCausalObjectClick?: (objectId: string) => void
 }
@@ -159,7 +96,7 @@ function StarterChips({
   onStarterClick,
 }: {
   starters: StarterItem[]
-  onStarterClick: (target: NavNode) => void
+  onStarterClick?: (target: NavNode) => void
 }) {
   if (starters.length === 0) return null
   return (
@@ -171,13 +108,77 @@ function StarterChips({
             className="discover-starter"
             data-starter={s.id}
             aria-label={`Explore ${s.label}`}
-            onClick={() => onStarterClick(s.target)}
+            onClick={() => onStarterClick?.(s.target)}
           >
             {s.label}
           </button>
         </li>
       ))}
     </ul>
+  )
+}
+
+// M44 — Recent researches（最近探索的实体；空态引导）。M60 恢复：该组件
+// 的渲染调用曾在重构中丢失（DiscoverPage 未挂载它），但 DiscoverPage.test
+// 的 M44 Empty States 用例与 UIAudit 注册表均要求它存在，故补回渲染而非删除。
+function RecentResearches({ researches }: { researches: SavedResearch[] }) {
+  if (researches.length === 0) {
+    return (
+      <div className="discover-recent discover-recent--empty">
+        <h3 className="discover-section-heading">最近研究</h3>
+        <p className="discover-empty-text">你还没有开始探索。</p>
+        <div className="discover-empty-actions">
+          <p>试试：</p>
+          <ul>
+            <li>搜索一个历史主题（如“罗马”“丝绸之路”）</li>
+            <li>点击下方精选探索开始</li>
+            <li>从文明、事件、人物分类进入</li>
+          </ul>
+        </div>
+      </div>
+    )
+  }
+  const recent = [...researches]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 3)
+  return (
+    <div className="discover-recent">
+      <h3 className="discover-section-heading">最近研究</h3>
+      <p className="discover-section-sub">继续未完成的探索，或从收藏中快速进入。</p>
+      <div className="discover-recent-list">
+        {recent.map((r) => (
+          <div key={r.id} className="discover-recent-card">
+            <span className="discover-recent-type">{r.entityType}</span>
+            <span className="discover-recent-name">{r.entityName}</span>
+            {r.bookmarked && <Icon name="star" size={16} className="discover-recent-star" filled />}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// M44 Phase 6 — ResearchLibrary entry on DiscoverPage（与 RecentResearches 同因恢复）
+function ResearchLibraryEntry() {
+  const researches = useMemo(() => listResearch().filter((r) => r.bookmarked), [])
+  if (researches.length === 0) return null
+  return (
+    <div className="discover-library">
+      <h3 className="discover-section-heading">我的研究收藏</h3>
+      <p className="discover-section-sub">
+        已保存 {researches.length} 项研究结果。点击可跳转到对应实体继续查看。
+      </p>
+      <ul className="discover-library-list">
+        {researches.slice(0, 5).map((r) => (
+          <li key={r.id}>
+            <span className="discover-library-link">
+              <span className="discover-library-type">{r.entityType}</span>
+              {r.entityName}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
@@ -241,6 +242,8 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
   const popularSlugs = Object.keys(TOPIC_STARTERS).filter(
     (slug) => slug !== FEATURED_TOPIC,
   )
+  // M60: RecentResearches 的数据源（listResearch 读取本地 ResearchHistory）。
+  const recentResearches = useMemo(() => listResearch(), [])
 
   // Build category cards dynamically from backend topics that have a category.
   // One card per category — picks the first topic in that category as the target.
@@ -276,6 +279,10 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
 
       {/* M62-A: surface the warm personalization copy + interest profile. */}
       <InterestProfile />
+
+      {/* M44 — Recent researches + research library（M60 恢复渲染） */}
+      <RecentResearches researches={recentResearches} />
+      <ResearchLibraryEntry />
 
       {/* M85.8 — Civilization Understanding Seeds — 文明理解入口 */}
       <UnderstandingSeeds onCausalObjectClick={onCausalObjectClick} />
