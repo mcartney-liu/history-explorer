@@ -756,6 +756,19 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/NextStepPanel.test.tsx",
   "frontend/src/components/ai/CompanionShell.tsx",
   "frontend/src/components/ai/CompanionRouter.tsx",
+
+  // M60 type-debt cleanup — Frontend Freeze Revision Gate (PO-approved 2026-08-07).
+  // Pure TypeScript type fixes + dead-code removal (tsc --noEmit 55 -> 0; no
+  // behavioural change). No backend / schema / enum / dependency / runtime
+  // change; runtime 0.13.0. Least Privilege: exact file paths ONLY (deliberately
+  // NO broad prefix for data/ next/ routing/ primitives/).
+  "frontend/src/components/primitives/EvidenceBlock.tsx",
+  "frontend/src/data/causalStatement.ts",
+  "frontend/src/next/companion/ExplanationReplay.ts",
+  "frontend/src/next/memory/MemoryPolicy.ts",
+  "frontend/src/next/memory/MemoryProjection.ts",
+  "frontend/src/routing/legacyRedirect.ts",
+  "frontend/src/routing/parseRoute.ts",
 ];
 
 function _scopeAllowed(file) {
