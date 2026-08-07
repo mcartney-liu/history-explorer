@@ -427,11 +427,11 @@ class KnowledgeService:
         )
 
     # --- M9-001: Deterministic Next-Node Recommendation (ADDITIVE) -------
-    # Pure delegation to the Exploration Engine's deterministic `recommend_next`.
+    # Pure delegation to the Exploration Engine's deterministic `generate_candidates` (A3 / ADR-0015 D1).
     # This method is ADDITIVE: it adds a new capability without changing any
     # existing method's behavior or the frozen public API contract. Ranking is
     # fixed-formula (no AI / ML), reusing the engine's frozen scoring primitives.
-    def recommend_next(
+    def generate_candidates(
         self,
         gid: str,
         seen_global_ids: Optional[set] = None,
@@ -443,7 +443,7 @@ class KnowledgeService:
         to call `.to_dict()` for JSON serialization. `seen_global_ids` is the set
         of already-visited global_ids used for the diversity penalty.
         """
-        return self._exploration_engine.recommend_next(gid, seen_global_ids, max_results)
+        return self._exploration_engine.generate_candidates(gid, seen_global_ids, max_results)
 
     # --- Timeline (delegates to timeline index) --------------------------
     def get_timeline_index(self, topic: str) -> list[dict]:

@@ -22,8 +22,6 @@ import EventImpactPanel from './EventImpactPanel'
 import EventNarrativeCard from './EventNarrativeCard'
 import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
-import JourneyCard from './JourneyCard'
-import ResearchDiscoveryPanel from './ResearchDiscoveryPanel'
 import ResearchPanel from './ResearchPanel'
 import ResearchLibrary from './ResearchLibrary'
 import StorySection from './exploration/StorySection'
@@ -249,30 +247,10 @@ function EntityPage({
                     </div>
                   )}
 
-                  {/* M60-001: AI conversation + exploration recommendations — from old 'explore' tab */}
+                  {/* M60-001: AI conversation — from old 'explore' tab */}
                   <p className="explore-hint">
                     {t('entity.exploreHint')}
                   </p>
-                  {entityGlobalId ? (
-                    <ResearchDiscoveryPanel
-                      currentEntity={{
-                        globalId: entityGlobalId,
-                        name: entity.name,
-                        type: entity.type,
-                      }}
-                      relationships={(entity.relationships ?? []).map((r) => ({
-                        type: r.type,
-                        other: { globalId: r.other.global_id ?? '', name: r.other.name ?? '', type: r.other.type ?? '' },
-                      }))}
-                      onExplore={(gid) => window.location.hash = `#/entity/${encodeURIComponent(gid)}`}
-                    />
-                  ) : null}
-                  <JourneyCard
-                    relationships={entity.relationships}
-                    centerEntityName={entity.name}
-                    nameById={nameById}
-                    onEntityClick={onEntityClick}
-                  />
                   {entityGlobalId ? (
                     <HistorianChat
                       entityGlobalId={entityGlobalId}

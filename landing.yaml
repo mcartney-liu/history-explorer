@@ -1,0 +1,330 @@
+- generic [ref=e3]:
+  - banner "全局导航" [ref=e4]:
+    - generic [ref=e6]: History Explorer
+  - generic "探索问题" [ref=e7]:
+    - generic [ref=e9]: 你想理解什么？
+  - navigation "理解模式" [ref=e10]:
+    - generic [ref=e11]:
+      - button "探索" [disabled] [ref=e12]
+      - button "解释" [disabled] [ref=e13]
+      - button "关系" [disabled] [ref=e14]
+      - button "理解" [disabled] [ref=e15]
+  - generic [ref=e16]:
+    - complementary "探索上下文" [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]: 🔍
+            - generic [ref=e23]: 事实收集
+          - paragraph [ref=e24]: 正在了解基本事实
+        - complementary "探索工作台" [ref=e25]:
+          - generic [ref=e26]: 探索工作台
+          - generic [ref=e27]:
+            - heading "当前探索" [level=4] [ref=e29]
+            - generic [ref=e31]:
+              - generic [ref=e32]: +
+              - generic [ref=e33]: 点击任意实体开始探索
+          - generic [ref=e34]:
+            - heading "探索足迹" [level=4] [ref=e36]
+            - generic [ref=e38]:
+              - generic [ref=e39]: +
+              - generic [ref=e40]: 你探索过的实体会出现在这里
+          - generic [ref=e41]:
+            - heading "已置顶" [level=4] [ref=e43]
+            - generic [ref=e45]:
+              - generic [ref=e46]: +
+              - generic [ref=e47]: 点击实体旁的星标即可置顶，方便快速返回
+          - generic [ref=e48]:
+            - heading "研究笔记" [level=4] [ref=e50]
+            - generic [ref=e52]:
+              - generic [ref=e53]: +
+              - generic [ref=e54]: 在研究面板中记录你的历史发现
+          - generic [ref=e55]:
+            - heading "对比队列" [level=4] [ref=e57]
+            - generic [ref=e59]:
+              - generic [ref=e60]: +
+              - generic [ref=e61]: 添加多个实体，横向对比时间线或关系
+          - generic [ref=e62]:
+            - heading "AI 助手" [level=4] [ref=e64]
+            - generic [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - generic [ref=e69]: 与历史学家对话
+    - button "收起探索上下文" [ref=e70] [cursor=pointer]:
+      - img [ref=e71]
+    - main [ref=e74]:
+      - generic [ref=e75]:
+        - textbox "搜索人物、事件、文明…" [ref=e76]
+        - button "搜索" [ref=e77]
+      - generic [ref=e78]:
+        - textbox "搜索实体（如 Augustus、Rome、papyrus）" [ref=e79]
+        - button "搜索" [ref=e80]
+      - region "Discover history explorations" [ref=e81]:
+        - generic [ref=e82]:
+          - heading "原来历史还能这样探索。" [level=2] [ref=e83]
+          - paragraph [ref=e84]: 从一个人、一条路、一个念头出发，看它如何穿过帝国、宗教与技术，把整个古代世界连成一张网。
+        - tablist "探索分类" [ref=e85]:
+          - tab "了解" [selected] [ref=e86] [cursor=pointer]
+          - tab "研究" [ref=e87] [cursor=pointer]
+          - tab "扩展" [ref=e88] [cursor=pointer]
+        - tabpanel "了解" [ref=e89]:
+          - generic [ref=e90]:
+            - heading "我的探索足迹" [level=3] [ref=e91]
+            - paragraph [ref=e92]: 保存研究后，这里会汇总你的探索足迹与关注主题。
+            - paragraph [ref=e93]: 它反映你浏览与保存过的话题，便于回顾你的探索路径。
+          - generic [ref=e94]:
+            - heading "开始一次文明理解" [level=3] [ref=e95]
+            - paragraph [ref=e96]: 选择一个你感兴趣的文明问题，开始理解之旅。
+            - generic [ref=e97]:
+              - button "一个庞大的国家，如何解决治理千万人的问题？ 制度演化 秦制 → 科举 → 三省六部 开始理解 →" [ref=e98] [cursor=pointer]:
+                - generic [ref=e99]: 一个庞大的国家，如何解决治理千万人的问题？
+                - generic [ref=e100]: 制度演化
+                - generic [ref=e101]: 秦制 → 科举 → 三省六部
+                - generic [ref=e102]: 开始理解 →
+              - button "为什么有些文明选择法律治理，而另一些选择官僚治理？ 文明对比 罗马法 → 秦制 开始理解 →" [ref=e103] [cursor=pointer]:
+                - generic [ref=e104]: 为什么有些文明选择法律治理，而另一些选择官僚治理？
+                - generic [ref=e105]: 文明对比
+                - generic [ref=e106]: 罗马法 → 秦制
+                - generic [ref=e107]: 开始理解 →
+              - button "人类如何保存和传播知识，让文明延续千年？ 技术链 造纸术 → 印刷术 → 知识传播 开始理解 →" [ref=e108] [cursor=pointer]:
+                - generic [ref=e109]: 人类如何保存和传播知识，让文明延续千年？
+                - generic [ref=e110]: 技术链
+                - generic [ref=e111]: 造纸术 → 印刷术 → 知识传播
+                - generic [ref=e112]: 开始理解 →
+          - generic [ref=e113]:
+            - heading "History Explorer 能做什么" [level=3] [ref=e114]
+            - generic [ref=e115]:
+              - generic [ref=e116]:
+                - img [ref=e118]
+                - heading "历史叙事" [level=4] [ref=e121]
+                - paragraph [ref=e122]: 从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。
+              - generic [ref=e123]:
+                - img [ref=e125]
+                - heading "关系探索" [level=4] [ref=e129]
+                - paragraph [ref=e130]: 穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。
+              - generic [ref=e131]:
+                - img [ref=e133]
+                - heading "深度研究" [level=4] [ref=e135]
+                - paragraph [ref=e136]: 4 维度 AI 分析：政治、军事、经济、文化。支持多实体对比研究，结果可保存回顾。
+              - generic [ref=e137]:
+                - img [ref=e139]
+                - heading "AI 历史对话" [level=4] [ref=e141]
+                - paragraph [ref=e142]: 向 AI 历史学家提问。每个回答都有事实溯源，没有经过验证的内容不会呈现。
+          - generic [ref=e143]:
+            - heading "开始探索" [level=3] [ref=e144]
+            - paragraph [ref=e145]: 选择一个历史主题或类型，进入交互式探索。
+            - generic [ref=e146]:
+              - heading "探索主题" [level=3] [ref=e147]
+              - paragraph [ref=e148]: 按历史类型浏览，发现你的兴趣方向。
+              - generic [ref=e149]:
+                - button "探索 古代文明" [ref=e150] [cursor=pointer]:
+                  - generic [ref=e151]: 古代文明
+                  - generic [ref=e152]: 罗马、汉朝、波斯…帝国兴衰的背后
+                - button "探索 历史事件" [ref=e153] [cursor=pointer]:
+                  - generic [ref=e154]: 历史事件
+                  - generic [ref=e155]: 关键转折点：战争、革命、变革
+                - button "探索 历史人物" [ref=e156] [cursor=pointer]:
+                  - generic [ref=e157]: 历史人物
+                  - generic [ref=e158]: 恺撒、亚里士多德、释迦牟尼
+                - button "探索 宗教发展" [ref=e159] [cursor=pointer]:
+                  - generic [ref=e160]: 宗教发展
+                  - generic [ref=e161]: 佛教、基督教、伊斯兰教的传播
+                - button "探索 技术演进" [ref=e162] [cursor=pointer]:
+                  - generic [ref=e163]: 技术演进
+                  - generic [ref=e164]: 冶铁、造纸、航海技术
+                - button "探索 地理探索" [ref=e165] [cursor=pointer]:
+                  - generic [ref=e166]: 地理探索
+                  - generic [ref=e167]: 丝绸之路、地中海、恒河流域
+            - generic [ref=e168]:
+              - heading "官方探索包 · Exploration Packages" [level=3] [ref=e169]
+              - paragraph [ref=e170]: 由编辑策展的历史探索旅程：可溯源、沿时间与关系展开。
+              - generic [ref=e171]:
+                - article [ref=e172]:
+                  - generic [ref=e173]: 官方探索包
+                  - heading "中国文明演化探索包 V1" [level=3] [ref=e174]
+                  - paragraph [ref=e175]: 聚焦唐→宋→元→明→清五个朝代的文化演化、制度演化与技术扩散三条探索链，验证『可探索、可追溯、时间空间锚定的历史知识网络』。
+                  - button "开始探索 中国文明演化探索包 V1" [ref=e176] [cursor=pointer]: 开始探索 →
+                - article [ref=e177]:
+                  - generic [ref=e178]: 官方探索包
+                  - heading "丝绸之路探索包 V1" [level=3] [ref=e179]
+                  - paragraph [ref=e180]: 从张骞凿空西域到汉朝与罗马的间接贸易：一条路如何连起汉、贵霜、波斯与罗马，运送丝绸、造纸术与佛教信仰。
+                  - button "开始探索 丝绸之路探索包 V1" [ref=e181] [cursor=pointer]: 开始探索 →
+                - article [ref=e182]:
+                  - generic [ref=e183]: 官方探索包
+                  - heading "罗马帝国探索包 V1" [level=3] [ref=e184]
+                  - paragraph [ref=e185]: 从共和国终结到帝国建立、罗马和平、帝国衰亡与拜占庭继承：理解罗马如何塑造地中海世界，并接纳基督教与东方式丝绸贸易。
+                  - button "开始探索 罗马帝国探索包 V1" [ref=e186] [cursor=pointer]: 开始探索 →
+                - article [ref=e187]:
+                  - generic [ref=e188]: 官方探索包
+                  - heading "印度文明探索包 V1" [level=3] [ref=e189]
+                  - paragraph [ref=e190]: 从孔雀王朝到笈多黄金时代：佛教如何从印度出发沿丝绸之路传向世界，零与十进制如何被体系化，印度又如何与波斯、希腊、罗马同时代对话。
+                  - button "开始探索 印度文明探索包 V1" [ref=e191] [cursor=pointer]: 开始探索 →
+            - generic [ref=e192]:
+              - heading "我的探索空间 · My Exploration" [level=3] [ref=e193]
+              - paragraph [ref=e194]: 未来你将能创建自己的探索路径、保存视角与学习轨迹。（规划中）
+              - generic [ref=e195]:
+                - generic [ref=e196]: 即将推出
+                - paragraph [ref=e197]: 用户探索包、社区精选探索功能正在规划中。
+            - generic [ref=e198]:
+              - heading "精选探索 · Featured" [level=3] [ref=e199]
+              - button "Explore Silk Road" [ref=e200] [cursor=pointer]:
+                - generic [ref=e201]: Silk Road
+                - generic [ref=e202]: 一条路，连起罗马、波斯、印度与汉朝。从丝绸之路出发，看货物、信仰与技术如何跨越大陆。
+              - list [ref=e203]:
+                - listitem [ref=e204]:
+                  - button "Explore Zhang Qian" [ref=e205]: Zhang Qian
+                - listitem [ref=e206]:
+                  - button "Explore Han Dynasty" [ref=e207]: Han Dynasty
+                - listitem [ref=e208]:
+                  - button "Explore Papermaking" [ref=e209]: Papermaking
+            - generic [ref=e210]:
+              - heading "热门探索 · Popular" [level=3] [ref=e211]
+              - list [ref=e212]:
+                - listitem [ref=e213]:
+                  - button "Explore Roman Empire" [ref=e214] [cursor=pointer]: Roman Empire
+                - listitem [ref=e215]:
+                  - button "Explore Greek Philosophy" [ref=e216] [cursor=pointer]: Greek Philosophy
+                - listitem [ref=e217]:
+                  - button "Explore Persian Empire" [ref=e218] [cursor=pointer]: Persian Empire
+                - listitem [ref=e219]:
+                  - button "Explore Ancient India" [ref=e220] [cursor=pointer]: Ancient India
+                - listitem [ref=e221]:
+                  - button "Explore Hellenistic World" [ref=e222] [cursor=pointer]: Hellenistic World
+                - listitem [ref=e223]:
+                  - button "Explore Egypt Technology Religion" [ref=e224] [cursor=pointer]: Egypt Technology Religion
+                - listitem [ref=e225]:
+                  - button "Explore Early Christianity" [ref=e226] [cursor=pointer]: Early Christianity
+      - region "探索历史" [ref=e227]:
+        - generic [ref=e228]:
+          - heading "用 AI 探索历史文明" [level=1] [ref=e229]
+          - paragraph [ref=e230]: 探索人物、国家、战争、文明之间的联系，理解历史为什么会这样发生。
+        - generic [ref=e231] [cursor=pointer]:
+          - generic [ref=e232]: 新 · 理解模式
+          - generic [ref=e233]: 法国大革命为什么发生？
+          - generic [ref=e234]: 不只是回答，而是带你一步步理解历史为什么会这样发生
+        - generic [ref=e235]:
+          - generic [ref=e236]: 试试：
+          - button "凯撒为什么重要？" [ref=e237] [cursor=pointer]
+          - button "秦始皇统一六国以后发生了什么？" [ref=e238] [cursor=pointer]
+          - button "罗马为什么灭亡？" [ref=e239] [cursor=pointer]
+          - button "丝绸之路改变了什么？" [ref=e240] [cursor=pointer]
+        - region "从这里开始" [ref=e241]:
+          - heading "从这里开始" [level=3] [ref=e242]
+          - list [ref=e243]:
+            - listitem [ref=e244]:
+              - button "探索 Roman Empire" [ref=e245]: Roman EmpireA historical civilization whose empire dominated the Mediterranean world for centuries.
+            - listitem [ref=e246]:
+              - button "探索 Greek Philosophy — Socrates to Aristotle" [ref=e247]: Greek Philosophy — Socrates to AristotleThe Athenian lineage of reason whose ideas spread to Rome and shaped Hellenistic thought.
+            - listitem [ref=e248]:
+              - button "探索 Persian Empire — Cyrus to Alexander" [ref=e249]: Persian Empire — Cyrus to AlexanderThe Achaemenid superpower that linked the Near East to Greece, Egypt, and the Silk Road.
+            - listitem [ref=e250]:
+              - button "探索 Ancient India — Maurya and the Spread of Buddhism" [ref=e251]: Ancient India — Maurya and the Spread of BuddhismThe first Indian empire and the Buddhist idea that traveled the Silk Road to Han China.
+        - generic [ref=e252]:
+          - button "探索 Ancient India — Maurya and the Spread of Buddhism" [ref=e253] [cursor=pointer]:
+            - generic [ref=e254]: Ancient India — Maurya and the Spread of Buddhism
+            - generic [ref=e255]: The first Indian empire and the Buddhist idea that traveled the Silk Road to Han China.
+            - generic [ref=e256]: 开始探索 →
+          - button "探索 中国文明演化探索包 V1 — 唐至清的文化、制度与技术演化" [ref=e257] [cursor=pointer]:
+            - generic [ref=e258]: 中国文明演化探索包 V1 — 唐至清的文化、制度与技术演化
+            - generic [ref=e259]: 聚焦唐→宋→元→明→清五个朝代的文化演化、制度演化与技术扩散三条探索链，验证『可探索、可追溯、时间空间锚定的历史知识网络』。所有实体均服务至少一条探索路径；关系经历史语义审核；来源人工策划可溯源。
+            - generic [ref=e260]: 开始探索 →
+          - button "探索 Early Christianity — Jesus to Paul" [ref=e261] [cursor=pointer]:
+            - generic [ref=e262]: Early Christianity — Jesus to Paul
+            - generic [ref=e263]: How a Jewish messianic movement became a world faith carried across the Roman world.
+            - generic [ref=e264]: 开始探索 →
+          - button "探索 Ancient Egypt — Technology & Religion" [ref=e265] [cursor=pointer]:
+            - generic [ref=e266]: Ancient Egypt — Technology & Religion
+            - generic [ref=e267]: A Nile-valley civilization whose writing materials, monuments, and polytheistic religion developed alongside contemporary Mesopotamia.
+            - generic [ref=e268]: 开始探索 →
+          - button "探索 Greek Philosophy — Socrates to Aristotle" [ref=e269] [cursor=pointer]:
+            - generic [ref=e270]: Greek Philosophy — Socrates to Aristotle
+            - generic [ref=e271]: The Athenian lineage of reason whose ideas spread to Rome and shaped Hellenistic thought.
+            - generic [ref=e272]: 开始探索 →
+          - button "探索 Hellenistic World — Greece, Alexander & the Ptolemaic Bridge" [ref=e273] [cursor=pointer]:
+            - generic [ref=e274]: Hellenistic World — Greece, Alexander & the Ptolemaic Bridge
+            - generic [ref=e275]: The Greek-speaking world forged by Alexander's conquests, the bridge that linked Pharaonic Egypt to Rome.
+            - generic [ref=e276]: 开始探索 →
+          - button "探索 Persian Empire — Cyrus to Alexander" [ref=e277] [cursor=pointer]:
+            - generic [ref=e278]: Persian Empire — Cyrus to Alexander
+            - generic [ref=e279]: The Achaemenid superpower that linked the Near East to Greece, Egypt, and the Silk Road.
+            - generic [ref=e280]: 开始探索 →
+          - button "探索 Roman Empire" [ref=e281] [cursor=pointer]:
+            - generic [ref=e282]: Roman Empire
+            - generic [ref=e283]: A historical civilization whose empire dominated the Mediterranean world for centuries.
+            - generic [ref=e284]: 开始探索 →
+      - region "Your exploration journey" [ref=e285]:
+        - heading "探索足迹 · Journey" [level=3] [ref=e286]
+        - paragraph [ref=e287]: 还没有记录。开始一次探索，这里会留下你的足迹。
+      - region "Feedback" [ref=e288]:
+        - text: 这个探索有用吗？
+        - generic [ref=e289]:
+          - button "有用" [ref=e290]:
+            - img [ref=e291]
+            - text: 有用
+          - button "没用" [ref=e294]:
+            - img [ref=e295]
+            - text: 没用
+        - textbox "想说点什么？（可选）" [ref=e298]
+    - button "收起 AI 历史学家" [ref=e299] [cursor=pointer]:
+      - img [ref=e300]
+    - complementary "AI 历史学家" [ref=e303]:
+      - generic [ref=e304]:
+        - heading "AI 历史学家" [level=3] [ref=e305]
+        - tablist "AI 模式" [ref=e306]:
+          - tab "解释" [selected] [ref=e307] [cursor=pointer]
+          - tab "对话" [ref=e308] [cursor=pointer]
+          - tab "研究" [ref=e309] [cursor=pointer]
+          - tab "发现" [ref=e310] [cursor=pointer]
+        - region "探索空间连接状态" [ref=e311]:
+          - generic [ref=e338]:
+            - heading "探索空间连接状态" [level=4] [ref=e339]
+            - generic [ref=e340]: 本地探索分析 · 非 AI
+          - generic [ref=e341]:
+            - generic [ref=e342]:
+              - term [ref=e343]: 探索深度
+              - definition [ref=e344]: 第 1 层
+            - generic [ref=e345]:
+              - term [ref=e346]: 探索模式
+              - definition [ref=e347]: 尚未形成模式
+            - generic [ref=e348]:
+              - term [ref=e349]: 知识覆盖
+              - definition [ref=e350]: 0%
+            - generic [ref=e351]:
+              - term [ref=e352]: 关系数据可用
+              - definition [ref=e353]: 暂未连接
+            - generic [ref=e354]:
+              - term [ref=e355]: 探索活动量
+              - definition [ref=e356]: 2 次本地事件
+            - generic [ref=e357]:
+              - term [ref=e358]: 数据充分度
+              - definition [ref=e359]: 62%
+            - generic [ref=e360]:
+              - term [ref=e361]: 证据质量
+              - definition [ref=e362]: 46%
+          - generic [ref=e363]:
+            - paragraph [ref=e364]: 探索信号
+            - list [ref=e365]:
+              - listitem [ref=e366]: System running, awaiting more user data
+          - paragraph [ref=e367]: 以上为你的探索空间客观连接状态，基于本地浏览行为统计，仅作事实呈现。
+        - region "AI 事实溯源解读" [ref=e314]:
+          - generic [ref=e315]:
+            - heading "AI 事实溯源解读" [level=3] [ref=e316]
+            - generic [ref=e318]: 未溯源
+          - paragraph [ref=e319]: 基于当前探索上下文（0 个实体）提供可被知识图谱验证的解读。
+          - group "解读模式" [ref=e320]:
+            - button "为何重要" [ref=e321]
+            - button "为何发生" [ref=e322]
+            - button "历史影响" [ref=e323]
+            - button "多文明视角" [ref=e324]
+            - button "时间线解读" [ref=e325]
+          - generic [ref=e326]:
+            - textbox "向 AI 提问" [ref=e327]:
+              - /placeholder: 向 AI 提问，例如：这个文明为何衰落？
+            - button "问 AI" [disabled] [ref=e328]
+          - paragraph [ref=e329]: AI 解读由知识图谱中的事实事实驱动，可溯源验证。答案可能有限或存在偏差，建议结合历史资料交叉参考。
+          - paragraph [ref=e330]: 输入问题后点击「问 AI」，获取带事实引用与溯源验证的解读。
+  - contentinfo "导航契约" [ref=e331]:
+    - generic [ref=e332]:
+      - generic [ref=e334]: 选择一个探索路径开始你的理解旅程
+      - generic [ref=e335]:
+        - generic [ref=e336]: 事实收集
+        - button "继续探索" [ref=e337] [cursor=pointer]

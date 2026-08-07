@@ -70,7 +70,11 @@ function Section({ label, purpose, children }: { label: string; purpose: string;
   )
 }
 
-export default function DevCatalog() {
+export default function DevCatalog({
+  onCausalObjectClick,
+}: {
+  onCausalObjectClick?: (objectId: string) => void
+}) {
   const [viewMode, setViewMode] = useState<'graph' | 'timeline' | 'map'>('graph')
 
   return (
@@ -159,6 +163,42 @@ export default function DevCatalog() {
       <Section label="WorkspacePanel" purpose="Right sidebar workspace with exploration assets.">
         <p style={{ fontSize: 13, color: 'var(--low)' }}>WorkspacePanel rendered in main app layout. See AppShell → workspace slot.</p>
       </Section>
+
+      {/* M85.8 — Explorer Experience Alpha entry */}
+      {onCausalObjectClick && (
+        <Section label="Explorer Experience Alpha" purpose="M85.8 — First Understanding Journey: 秦制 → 科举 → 罗马法">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <p style={{ fontSize: 13, color: 'var(--mid)', margin: 0 }}>
+              点击开始第一条探索旅程。体验三幕叙事弧：理解 → 关联 → 继续探索。
+            </p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {[
+                { id: 'co-004', label: '秦制 → 三省六部' },
+                { id: 'co-001', label: '科举 → 文官体系' },
+                { id: 'co-009', label: '罗马法 → 法律体系' },
+              ].map((entry) => (
+                <button
+                  key={entry.id}
+                  type="button"
+                  onClick={() => onCausalObjectClick(entry.id)}
+                  style={{
+                    padding: '10px 18px',
+                    background: 'var(--navy-card)',
+                    border: '1px solid var(--gold-500)',
+                    borderRadius: 8,
+                    color: 'var(--gold-hi)',
+                    cursor: 'pointer',
+                    font: 'inherit',
+                    fontSize: 14,
+                  }}
+                >
+                  {entry.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Section>
+      )}
     </div>
   )
 }

@@ -40,6 +40,18 @@ export type BehaviorAction =
   | 'delete_research'
   // Meta
   | 'reset'
+  // M83.1 — CausalStatement validation events
+  | 'cs_card_view'
+  | 'cs_card_expand'
+  | 'cs_follow_entity'
+  | 'cs_guide_next'
+  | 'cs_evidence_open'
+  // M84 — CausalObject validation events
+  | 'co_detail_open'
+  | 'co_entity_follow'
+  // M85 — Semantic Relationship events
+  | 'co_relationship_view'
+  | 'co_related_object_click'
 
 export interface UserBehaviorEvent {
   /** What the user did. */
@@ -54,6 +66,8 @@ export interface UserBehaviorEvent {
   packageSlug?: string
   /** Source record id (for view_source events). */
   sourceId?: string
+  /** M83.1 — CausalStatement identifier (from CausalStatement.id, not generated). */
+  causalId?: string
   /** ISO 8601 timestamp of the event. */
   timestamp: string
 }

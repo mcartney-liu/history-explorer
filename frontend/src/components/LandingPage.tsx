@@ -16,6 +16,7 @@ export type TopicSummary = {
   topic: string
   title: string
   summary: string
+  category?: string
 }
 
 type LandingPageProps = {
@@ -60,6 +61,15 @@ function LandingPage({
         <h1 className="he-hero-title">{LANDING_HERO}</h1>
         <p className="he-hero-sub">{LANDING_SUB}</p>
       </div>
+
+      {/* M89 — Understanding Mode 入口 */}
+      {onQuickStart && (
+        <div className="he-understanding-entry" onClick={() => onQuickStart('法国大革命为什么发生？')}>
+          <div className="he-understanding-entry-badge">新 · 理解模式</div>
+          <div className="he-understanding-entry-question">法国大革命为什么发生？</div>
+          <div className="he-understanding-entry-desc">不只是回答，而是带你一步步理解历史为什么会这样发生</div>
+        </div>
+      )}
 
       {/* Quick starts */}
       {onQuickStart && (

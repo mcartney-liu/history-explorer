@@ -18,6 +18,9 @@
 import type { NavNode } from './navigation'
 import type { RelationPathStep } from './RecommendationPanel'
 import { useLocale } from '../data/locale'
+import { getRelationshipLabel } from '../data/entity/entityLabels'
+import { getEntityDisplayName } from '../data/explorationPackages'
+import { getCausalObjectName } from '../data/causalObjectNames'
 
 // --- Types ---
 
@@ -49,13 +52,15 @@ export type JourneyEntry = {
 // --- Pure helpers ---
 
 function nodeKey(node: NavNode): string {
-  return node.type === 'entity' ? node.id : node.topic
+  if (node.type === 'entity') return node.id
+  if (node.type === 'causal_object') return node.objectId
+  return node.topic
 }
 
-function localName(globalId: string): string {
-  if (!globalId || !globalId.includes(':')) return globalId
-  return globalId.split(':').slice(1).join(':') || globalId
-}
+// M73-A P0-1: use display-name resolver (labels[locale] → name → fallback)
+// instead of raw local-id slicing which exposed internal DSL like "loc-samarkand".
+const resolveName = (gid: string, locale: string): string =>
+  getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')
 
 // Build the journey entries from App's navigation history + the why-annotation
 // map. Pure & deterministic: same inputs -> same output, no side effects, no
@@ -67,10 +72,10 @@ export function buildJourney(
 ): JourneyEntry[] {
   return history.map((node, i) => {
     const id = nodeKey(node)
-    const label = node.type === 'entity' ? node.name : node.title
+    const label = node.type === 'entity' ? node.name : node.type === 'causal_object' ? getCausalObjectName(node.objectId) : node.title
     return {
       key: `${node.type}:${id}:${i}`,
-      type: node.type,
+      type: node.type as JourneyEntry['type'],
       id,
       label,
       index: i,
@@ -91,7 +96,7 @@ type ExplorationJourneyViewProps = {
 }
 
 export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJourneyViewProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   // A journey is only meaningful once there is more than one stop — matches
   // ExplorationTrail's "don't render a single node" rule. This is also the
   // empty / no-journey state: render nothing.
@@ -137,15 +142,15 @@ export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJour
                   <div className="he-journey-path">
                     {e.incomingWhy.relationPath.map((step, i) => (
                       <span key={i} className="he-journey-path-step">
-                        <span className="he-journey-path-from">{localName(step.from)}</span>
+                        <span className="he-journey-path-from">{resolveName(step.from, locale)}</span>
                         <span className="he-journey-path-arrow" aria-hidden="true">
                           →
                         </span>
-                        <span className="he-journey-path-rel">{step.relationship}</span>
+                        <span className="he-journey-path-rel">{getRelationshipLabel(step.relationship, locale)}</span>
                         <span className="he-journey-path-arrow" aria-hidden="true">
                           →
                         </span>
-                        <span className="he-journey-path-to">{localName(step.to)}</span>
+                        <span className="he-journey-path-to">{resolveName(step.to, locale)}</span>
                       </span>
                     ))}
                   </div>

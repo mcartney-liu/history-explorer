@@ -57,6 +57,7 @@ export interface ExplorationPackage {
   type: PackageType;
   visibility: PackageVisibility;
   status: PackageStatus;
+  category?: string;
   title: LocalizedText;
   summary: LocalizedText;
   seed_topic: string;

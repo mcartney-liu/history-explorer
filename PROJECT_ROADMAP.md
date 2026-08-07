@@ -38,14 +38,88 @@ Development philosophy:
 # 3. Near-Term (within Current Architecture Freeze Baseline)
 
 Constraints: deterministic, in-memory, no Neo4j / LLM / GIS / new dependencies.
+Freeze red line: ENTITY=8 / RELATIONSHIP=18 frozen; AI locked in Trust Boundary (M74) — KG=fact layer, AI=explanation layer, never in ontology.
 
-Examples (scoped per milestone):
+> **Strategy shift (M80.5 onward):** History Explorer moves from "capability → freeze → implement"
+> to "user-value definition → exploration-behavior design → experience validation → capability implementation".
+> M80.5 is the dividing line between the engineering phase and the product phase.
 
-- Richer deterministic exploration flow and Next-Node-style recommendations (within the explainable engine).
-- Enhanced relationship / timeline / theme presentation in the Five-Zone UI.
-- Data depth & quality; documentation-system maturity (this M8.8 Documentation Architecture work).
-- Expanded cross-topic connections.
+## M80 — Governance Closure (Engineering)
+- Gate B four Decisions: DB-B01 contract red-light / DB-B04 vocabulary source / DB-B05 ADR drift / PRD spatial gap.
+- Tag M78/M79 official releases.
+- Wire `domain/causal/acquisition` consumption OR resolve "parallel wing" debt (DB-B02).
+- M80-B2 `mapping.py` three-state mapping + provenance.
+- Red line: no 8/18 expansion; AI never in Ontology.
 
+## M80.5 — Exploration Experience Definition (Product Gate, NO code)
+> Output: `docs/product/M80.5_EXPLORATION_EXPERIENCE_DEFINITION.md` — the product mother document for M81/M82/M83.
+> Not a coding milestone; not in `freeze-check`; does not modify `domain/` or `backend/`.
+- **① First 5 Minutes** — product North Star (not a KPI). Defines "user's first success".
+- **② Exploration Loop** — why the user continues; includes return/retention closure.
+- **③ Exploration Object Model** — semantic presentation layer, NOT knowledge ontology. Sub-sections:
+  - 3.1 Cognitive Mapping (DB world → user world)
+  - 3.2 Presentation Semantics
+  - 3.3 Interaction Contract (locks frontend behavior; prevents "graph browser" drift)
+- **④ Exploration Shell** — how space carries exploration (result, not input).
+- **⑤ AI Role Discovery** — records Loop nodes needing AI (Interpreter/Guide/Analyst/Navigator); **does NOT decide Companion vs Toolbox** (decision deferred to pre-M83).
+- Prerequisite: M63-B = **Personal Exploration Trail** (Workspace) already decided.
+
+## M81a — Exploration Prototype (Experience Validation) ✅ GATE PASS (2026-08-05)
+- Validate First 5 Minutes + Exploration Loop via React prototype. N=4 (revised from 5, see Session Plan v1.1 Revision Record).
+- Result: 4/4 PASS, 三信号 100%, 回访 75%. Gate PASS.
+- Gate Report: `docs/product/M81a_GATE_REPORT.md`
+
+## M81b — Experience Repair (Engineering) ✅ Phase 1 Closed (2026-08-04)
+- Absorb M71 six findings: wizard cause localization > gid trace > breadcrumb semantics > 4th package real pointers > data localization > copy.
+- These hold regardless of Loop final form.
+
+## M80.5 Revision — Exploration Experience Definition Revision (Product, NO code) ✅ COMPLETE (2026-08-05)
+> **Trigger**: M81a Gate PASS. Revision absorbs 4-session validation feedback.
+> **Result**: PO ACCEPTED — 9 Proposals (5 Themes), 8 Design Principles. Acceptance Record: `docs/product/M80.5_REVISION_ACCEPTANCE_RECORD.md`
+> **Naming**: "Revision" (not "v2") — this is a feedback-absorption revision of the existing M80.5 definition, not a new milestone or a second version of M80.5 development. Aligns with existing governance term `FREEZE_REVISION_REQUEST`.
+> Output: `docs/product/M80.5_EXPLORATION_EXPERIENCE_DEFINITION.md` (pending formal merge).
+> Key revision areas: First 5 Minutes entry visibility, Loop §Interpreter AI fallback, Loop §Guide narrative upgrade, Object Model Signal/CausalStatement UI distinction, Shell Trail completeness.
+> Does not modify `domain/` or `backend/`.
+
+## M82 — Causal Semantics Visible (Engineering) ← IMPLEMENTATION READY
+- Surface `CausalStatement` (mechanism/consequence/confidence/evidence) into relationship/source-chain UI.
+- Define "which Loop step tells the causal story"; explanation layer only, never Graph vocabulary; via Freeze Gate.
+- Entry Gate: `docs/product/M82_ENTRY_ACCEPTANCE_RECORD.md` (2026-08-05, PO APPROVED)
+- Constraint Lock: `docs/product/M82_IMPLEMENTATION_CONSTRAINT_RECORD.md` (8 constraints, ALL ACCEPTED)
+- Implementation Plan: `docs/product/M82_IMPLEMENTATION_PLAN_v3.md` (3 Phase, 16 tasks)
+- Depends on: M80.5 Revision §3.2 Presentation Semantics revision (P03/P04/P06/P07).
+
+## M83 — Trail & Shell Landing (Engineering)
+- Land **Personal Exploration Trail** (M63-B): persists path / context / unresolved questions / next directions — NOT a bookmark.
+  - Two-level clarification: (L1) personal asset — revisitable / exportable within M83; (L2) platform-reusable resource — shareable / forkable / official "featured exploration" pickup, deferred to post-Gate community layer.
+- Land Exploration Shell from M80.5.
+- Pre-M83 gate: formally decide M63-A (Companion vs Toolbox) using M80.5 AI Role Discovery inputs.
+
+## M83.5 — AI Intervention Implementation (Engineering, post M83 gate)
+- Implement AI insertion into Loop per M80.5 AI Role Discovery + M83 Companion/Toolbox decision:
+  - Interpreter (why this relation holds), Guide (what to explore next), Analyst (cross-civ comparison), Navigator (path to target node).
+- Strictly within M74 Trust Boundary: KG = fact layer, AI = explanation layer, never in ontology; no LLM runtime in frozen baseline (explainability required).
+- This is the first milestone where AI actively participates in exploration, not just static explanation.
+
+## M84 — Exploration Package Library Expansion
+- 4th–6th official packages; fill M81b-D cross-package pointers; more civilizations/themes.
+- Note: packages here are official-authored; user-generated packages handled post-Gate (see M86.5).
+
+## M85 — Exploration Trust Enhancement
+- `view_source` provenance access + completion telemetry; answers "exploration logic trust" demand.
+
+## M86 — Pilot Preparation
+- M71 POC acceptance: 20–50 testers, 2–4 weeks, school / museum / culture-tourism scenarios. Still no accounts / cloud.
+- Pilot doubles as **UGC data-shape warm-up**: validate that Personal Exploration Trail (M83) naturally precipitates into structured paths, preparing data morphology for M86.5 user-generated exploration packages.
+
+## M86.5 — UGC Exploration Package Gate (Freeze Revision Gate, pre-community)
+- Unlocks the chat-record core ask: "users form their own exploration packages through exploration; outstanding ones get official pin."
+- Mandatory prerequisites (all require Freeze Revision Gate + PO approval):
+  - User accounts / persistent identity.
+  - Content moderation & governance flow (UGC cannot ship bare).
+  - Platform-grade storage (current Trail lives in localStorage, not cloud).
+- Defines: package-generation-from-Trail mechanism + official pin / featured curation logic.
+- Only after this Gate does History Explorer become a resource-generating platform, not just a personal exploration tool.
 
 # 4. Future (post Freeze Revision Gate)
 

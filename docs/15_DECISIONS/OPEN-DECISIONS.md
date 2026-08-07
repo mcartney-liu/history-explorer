@@ -1,0 +1,30 @@
+# OPEN-DECISIONS（悬而未决登记册）
+
+> 铁律：只追加 + 就地关闭（OPEN → RESOLVED，补 Resolution 字段）。
+> 每次 Phase 开始时，把未决项自动复现到工作上下文最前面，逐条判断能否关闭。
+> 已关闭的项可升格为 ADR（架构决策记录）。
+> 三类固定 slug：`waiting-on-external-condition` / `design-decision-to-evaluate` / `existing-design-boundary`。
+
+## 当前汇总（2026-08-07 更新，Round 1+2 裁决完成）
+
+- **已决（Phase 1 裁决，PO 拍板）**：OD-02、Q-01、Q-03、R5、Q-04、Q-05、OD-06、OD-07 —— 共 8 项 RESOLVED（详见 ADR-0015）。
+- **仍 OPEN**：OD-01、OD-03、OD-04、OD-05，及 Phase 0 残留 R2/R3/R4/R7/R8。
+- **Phase 2 入口条件**：所有 Phase 1 阻塞项已全部裁决，可进入 Phase 2（Experience Architecture）。
+
+## 登记册
+
+| Date | Source | Open Item | Related Constraints | Current Leaning | Blocked By | Resolves When | Status | Resolution |
+|------|--------|-----------|---------------------|-----------------|------------|---------------|--------|------------|
+| 2026-08-07 | Phase 1 / C-07 | OD-02 Cognitive Mirror 层归属 | ADR-0013 D3「终点不是中间层」；五层模型未分配层 | L4.5 只读投影出口 | 无 | PO 裁决 | **RESOLVED** | 落 L4.5（Runtime 之上、Experience 之下）只读投影出口；读 Trail/Memory 投影，不向上游供数；遵守 D3。Phase 2 只做出口，不碰上游。 |
+| 2026-08-07 | Phase 1 / C-01,C-02 | Q-01 Next Node 决定权 | M88.0 §6/§8；Constitution:120；PRD:28；Product_DNA | 丙·分层共存（M88.0 优先但保留实现） | 无 | PO 裁决 | **RESOLVED** | 取丙：`recommend_next` 降级为内部候选生成器（不对外、不叫 recommendation），上层加 ExplorationPolicy 做认知缺口(coverage/missing)筛选，对外只暴露 `ExplorationAction`。不修订上位文档、不动 15 测试。 |
+| 2026-08-07 | Phase 1 / C-01 | Q-03 `/entity/{id}/recommendations` 端点处置 | 随 Q-01 决议；15 测试冻结 | 内部化+下线公开 | 无 | PO 裁决 | **RESOLVED** | 随 Q-01 丙：下线公开 REST 端点，内部化为候选生成器（去 recommendation 命名），保留算法但仅服务 ExplorationPolicy。 |
+| 2026-08-07 | Phase 1 / P1-07,R5 | R5 跨文明对比提级 | C14 最强需求零供给（供需倒挂） | 提为 P0 | 无 | PO 裁决 | **RESOLVED** | Cross-civilization Comparison 提为 P0，作为 Phase 2 首批真实能力建设项，直接服务 Article 0 第三句「逼近真相」。 |
+| 2026-08-07 | Phase 0 / Article 0 | OD-01 北极星是否增补兴趣/方法/真相度量 | understandingGrowthScore 公式 | 待 Phase 2 度量设计 | Phase 2 度量设计 | Phase 2 度量方案确定 | OPEN | — |
+| 2026-08-07 | Phase 0 / P09 | OD-03 P09 前台形态 | Article 0 真值层 | 待 Phase 2 设计 | Phase 2 设计 | Phase 2 体验架构定稿 | OPEN | — |
+| 2026-08-07 | Phase 0 | OD-04 PROJECT_CONTEXT/Product_DNA/PRD 旧定位同步 | 与 Article 0 / ADR-0013 对齐 | 同步修订旧文档 | 起草人窗口 | 文档同步 PR 合并 | OPEN | — |
+| 2026-08-07 | Phase 0 / ADR-0013 D5 | OD-05 跨学科学原子化粒度与贯通关系模型 | 未来愿景，不阻塞本期 | 独立架构研究 | 无（未来） | 未来里程碑立项 | OPEN | — |
+| 2026-08-07 | Phase 1 / C-04 | Q-04 Explanation 权威来源 | 三源并存无仲裁（模板短语/AI Gateway/Causal） | 分层仲裁+优先级 | 无 | PO 裁决 | **RESOLVED** | 分层仲裁：L1 事实语言化（connections_explained）作轻量预览；L2 权威解释走 Causal/AI Gateway；优先级 AI>Causal>模板，定义每源可见范围。短期对外实际仅模板可用，但明确其「事实语言化」身份、不配「解释」标签。 |
+| 2026-08-07 | Phase 1 / C-11 | Q-05 Package 归属 | package_context 死参数；data 进前端 bundle | 承认纯前端能力 | 无 | PO 裁决 | **RESOLVED** | 承认 Package 为纯前端能力（data 进 bundle，后端无消费）；Phase 2 按纯前端实现，清理 package_context 死参数与后端空管道；未来个性化需求再评估后端化。 |
+| 2026-08-07 | Phase 1 / C18 | OD-06 持久化策略（Memory 无持久化） | C18 无持久化；continuityScore 不可达 | Phase 2 暂不做，列 v2 | 无 | PO 裁决 | **RESOLVED** | Phase 2 不做持久化，Memory/Trail 作前端会话态；持久化列 v2 里程碑，与 OD-02 Mirror 出口解耦。 |
+| 2026-08-07 | Phase 1 / P09 | OD-07 异议叙述范围 | Evidence/Source 无用户出口；P09 承诺异议叙述 | 补用户出口+异议叙述 | 无 | PO 裁决 | **RESOLVED** | Phase 2 给 Evidence/Source 补用户出口：证据强度分级 + 来源分级 + 异议叙述，服务 P09 与 Article 0 第三句。 |
+| 2026-08-07 | Phase 0 | R2/R3/R4/R7/R8 残留未决项 | Phase 0 推荐项 R2–R8 中除 R1/R6 外未关闭者 | 待单独复核 | 主持复核 | 单独复核完成 | OPEN | 详见 `docs/FRW-Phase0-ProductDiscovery-v2-2026-08-07.md` 第十节，需后续单独排期裁决。 |

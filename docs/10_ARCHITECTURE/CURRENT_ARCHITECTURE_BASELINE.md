@@ -141,3 +141,12 @@ in-memory storage model, the API contract, or any freeze boundary (§3).
   `TopicRepository` — no new persistence, no mutation.
 - **Freeze-safe**: additive only; lives under the M24 allowlist (`backend/app/core/dataset.py`);
   no further Freeze Revision Gate required beyond the one already granted for M24.
+
+## 8. Frontend Process Governance（引用）
+
+前端 / UI / 交互重构流程不属本架构冻结边界（无 schema / runtime / 依赖变更），但其治理权威与 ADR 同级，供未来团队统一发现：
+
+- **ADR-0012**（Accepted / Frozen）：Frontend Reconstruction Workflow 冻结为强制治理流程。
+- **`docs/FRONTEND_RECONSTRUCTION_WORKFLOW.md`（Frozen v1）**：History Explorer 前端重构的**唯一权威流程**（Phase 0 Product Discovery → Phase 5 Frontend Implementation，含六条全流程铁律与动工 Gate）。
+- **强制适用范围**：任何前端重构、UI 重构、交互重构、新团队接手，全部必须按此流程执行；新增能力须从 Phase 0 重新评估接入，而非直接改前端打补丁。
+- 本流程演进经 Freeze Revision Gate（ADR + 架构评审 + PO 批准），禁止重新发明替代流程。

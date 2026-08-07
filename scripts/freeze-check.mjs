@@ -746,6 +746,13 @@ export const SCOPE_ALLOWLIST = [
   // cross-platform data path fix only. No runtime, schema, dependency,
   // or business logic impact.
   "backend/tests/test_ontology_contract.py",
+  // Phase 5 (A3 red-line downgrade, ADR-0015 D1) — Freeze Revision Gate (PO-approved 2026-08-07).
+  // Backend: rename recommend_next -> generate_candidates + retire public /recommendations endpoint.
+  "backend/app/core/exploration_engine.py",
+  "backend/tests/test_recommend.py",
+  // Frontend: NextStepPanel replaces RecommendationPanel (no recommendation vocabulary).
+  "frontend/src/components/NextStepPanel.tsx",
+  "frontend/src/components/NextStepPanel.test.tsx",
 ];
 
 function _scopeAllowed(file) {

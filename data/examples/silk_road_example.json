@@ -1,12 +1,13 @@
 {
-  "title": "Silk Road — The Rome–China Connection",
-  "summary": "The overland and maritime trade networks that, two millennia ago, already linked the Roman Empire and Han China.",
+  "title": "丝绸之路 — 罗马与中国的连接",
+  "summary": "两千年前，陆上和海上贸易网络已将罗马帝国与汉朝连接起来。",
+  "category": "Location",
   "entities": [
     {
       "id": "silk_road",
       "type": "Location",
       "name": "Silk Road",
-      "description": "The network of Central Asian trade routes carrying silk, paper, and ideas between the Roman Mediterranean and Han China.",
+      "description": "连接中国与西方的中亚贸易路线网络，运送丝绸、纸张与思想。n the Roman Mediterranean and Han China.",
       "global_id": "silk_road:silk_road",
       "aliases": [
         "Silk Route",
@@ -123,7 +124,7 @@
       "id": "loc-chang-an",
       "type": "Location",
       "name": "Chang'an",
-      "description": "The Han capital at the eastern end of the Silk Road, terminus of the overland routes into China.",
+      "description": "汉朝都城，位于丝绸之路东端，陆路路线的终点。utes into China.",
       "global_id": "silk_road:loc-chang-an",
       "aliases": [
         "Xi'an"
@@ -155,7 +156,7 @@
       "id": "tech-paper",
       "type": "Technology",
       "name": "Papermaking",
-      "description": "The Han-era technique for making paper from mulberry bark and rags, which spread west along the Silk Road.",
+      "description": "汉代用桑树皮和破布造纸的技术，沿丝路传播。 west along the Silk Road.",
       "global_id": "silk_road:tech-paper",
       "aliases": [
         "Paper"
@@ -187,7 +188,7 @@
       "id": "event-silk-road-opened",
       "type": "Event",
       "name": "Silk Road Opened",
-      "description": "Zhang Qian's return in c. 126 BC established the first documented overland link between Han China and the Hellenistic west.",
+      "description": "张骞约公元前126年返回，建立了首个有记载的陆路联系。 between Han China and the Hellenistic west.",
       "global_id": "silk_road:event-silk-road-opened",
       "aliases": [],
       "labels": {
@@ -215,7 +216,7 @@
       "id": "tech-silk",
       "type": "Technology",
       "name": "Silk Production",
-      "description": "The Han Chinese technique of rearing silkworms and weaving silk, a luxury that spread west along the Silk Road to Rome.",
+      "description": "汉人养蚕织丝的技术，一种沿丝路传播的奢侈品。pread west along the Silk Road to Rome.",
       "global_id": "silk_road:tech-silk",
       "aliases": [
         "Sericulture"
@@ -247,7 +248,7 @@
       "id": "loc-samarkand",
       "type": "Location",
       "name": "Samarkand",
-      "description": "Oasis city in Transoxiana, a major Silk Road caravan hub.",
+      "description": "河中地区的绿洲城市，丝路重要商队枢纽。",
       "global_id": "silk_road:loc-samarkand",
       "aliases": [],
       "labels": {
@@ -259,7 +260,7 @@
       "id": "loc-kashgar",
       "type": "Location",
       "name": "Kashgar",
-      "description": "Oasis town at the foot of the Pamirs where northern and southern Silk Roads met.",
+      "description": "帕米尔山麓的绿洲城镇，丝路南北线交汇处。",
       "global_id": "silk_road:loc-kashgar",
       "aliases": [],
       "labels": {
@@ -271,7 +272,7 @@
       "id": "person-ban-chao",
       "type": "Person",
       "name": "Ban Chao",
-      "description": "Han general who re-opened and secured the Western Regions for the Silk Road.",
+      "description": "汉朝将领，重新打通并巩固了西域丝绸之路。",
       "global_id": "silk_road:person-ban-chao",
       "aliases": [],
       "labels": {
@@ -283,7 +284,7 @@
       "id": "tech-glass",
       "type": "Technology",
       "name": "Glassmaking",
-      "description": "Glass production traded west-to-east along the Silk Road routes.",
+      "description": "沿丝路从西向东传播的玻璃制造技术。",
       "global_id": "silk_road:tech-glass",
       "aliases": [],
       "labels": {
@@ -295,7 +296,7 @@
       "id": "idea-chinese-language",
       "type": "Idea",
       "name": "Chinese Language (Hanyu)",
-      "description": "The Sinitic language family spoken across Han China, linking travelers and texts.",
+      "description": "汉地通行的汉语族语言，连接旅行者与文献。.",
       "global_id": "silk_road:idea-chinese-language",
       "aliases": [
         "Hanyu"

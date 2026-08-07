@@ -1,4 +1,5 @@
 import type { ExplorationPackage, Locale } from '../../data/explorationPackages'
+import type { CausalStatementData } from '../../data/causalStatement'
 import TimelineChain from './TimelineChain'
 import RelationshipChain from './RelationshipChain'
 import SourceChain from './SourceChain'
@@ -11,6 +12,8 @@ interface PackageJourneyProps {
   onOpenPackage?: (slug: string) => void
   /** M72 Line2 — view_source passthrough to SourceChain (telemetry wiring in page). */
   onSourceClick?: (sourceId: string) => void
+  /** M82 P2 — CausalStatements for RelationshipChain embedding. */
+  causalStatements?: readonly CausalStatementData[]
 }
 
 // The second layer of ExplorationPackagePage: the actual Exploration Journey.
@@ -22,6 +25,7 @@ export default function PackageJourney({
   onEntityClick,
   onOpenPackage,
   onSourceClick,
+  causalStatements,
 }: PackageJourneyProps) {
   return (
     <div className="package-journey" id="package-journey">
@@ -38,7 +42,7 @@ export default function PackageJourney({
         <p className="journey-section-sub">
           理解制度如何被继承与塑造：一个观念如何演化出下一个观念。
         </p>
-        <RelationshipChain pkg={pkg} locale={locale} onEntityClick={onEntityClick} />
+        <RelationshipChain pkg={pkg} locale={locale} onEntityClick={onEntityClick} causalStatements={causalStatements} />
       </section>
 
       <section className="journey-section">

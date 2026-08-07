@@ -42,10 +42,12 @@
 
 /* ---- M65 Phase 1: Exploration Space Grid ---- */
 
-/* Full-bleed exploration shell — left rail | content | companion */
+/* Full-bleed exploration shell — left rail | content | companion.
+   Both side panels are hidden by default (0 width in grid). The toggle
+   buttons are fixed-position, always visible on the left/right edges. */
 .exploration-space {
   display: grid;
-  grid-template-columns: 48px 1fr 360px;
+  grid-template-columns: 0 1fr 0;
   grid-template-rows: 1fr 48px;
   grid-template-areas:
     "rail  content companion"
@@ -54,31 +56,31 @@
   max-width: 100%;
 }
 
-/* Left workspace rail — 48px collapsed, icon-only.
-   NOTE: overflow MUST stay `visible`. The expanded panel (.ws) is an absolutely
-   positioned overlay that extends beyond this 48px column; any non-visible
-   overflow value on either axis makes the other axis compute to `auto`,
-   turning this rail into a clipping container and hiding the overlay.
-   Scrolling is delegated to the inner .ws-rail-collapsed / .ws elements. */
+/* Left workspace rail — only rendered when workspace is expanded.
+   Acts as a positioning anchor for the fixed-position .ws panel. */
 .ws-rail {
   grid-area: rail;
-  background: var(--bg-base);
-  border-right: 1px solid var(--border-subtle);
+  background: transparent;
+  border-right: none;
   overflow: visible;
   position: relative;
 }
 
-/* Expanded workspace panel overlays from left rail */
+/* Expanded workspace panel — drawer style:
+   - Absolutely positioned overlay
+   - Vertical center of viewport (top: 50%, transform: translateY(-50%))
+   - Height follows content naturally, no scrollbar */
 .ws-rail .ws {
-  position: absolute;
-  top: 0;
-  left: 48px;
+  position: fixed;
+  top: 50%;
+  left: 56px;
+  transform: translateY(-50%);
   width: 280px;
-  min-height: 100%;
-  max-height: 100%;
+  max-height: calc(100vh - 48px);
   overflow-y: auto;
   background: var(--bg-surface);
-  border-right: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
   z-index: 10;
   padding: var(--space-4);
   box-shadow: var(--shadow-card);
@@ -92,13 +94,73 @@
   padding: var(--space-6) var(--space-8);
 }
 
-/* Right companion panel */
+/* Right companion panel — drawer style:
+   - Absolutely positioned overlay
+   - Vertical center of viewport
+   - Height follows content naturally, no scrollbar */
 .companion-panel {
-  grid-area: companion;
-  background: var(--bg-surface);
-  border-left: 1px solid var(--border-subtle);
+  position: fixed;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 340px;
+  max-height: calc(100vh - 48px);
   overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  z-index: 10;
   padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+/* When workspace is expanded, push the workspace toggle button to overlap the panel edge */
+.exploration-space:not(.exploration-space--ws-collapsed) .workspace-toggle-btn--inside {
+  left: 296px;
+}
+
+/* ---- Workspace toggle button — sits on the left edge, vertically centered ---- */
+.workspace-toggle-btn {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  color: var(--mid);
+  padding: 12px 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.workspace-toggle-btn:hover {
+  color: var(--gold-500);
+}
+
+/* ---- Companion toggle button — sits on the right edge, vertically centered ---- */
+.companion-toggle-btn {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  color: var(--mid);
+  padding: 12px 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.companion-toggle-btn:hover {
+  color: var(--gold-500);
+}
+/* When companion is open, button overlaps the panel left edge */
+.companion-toggle-btn--inside {
+  right: 360px;
 }
 
 /* ---- M65-A02: Companion shell visual baseline (DS-aligned, tokens only) ---- */
@@ -228,47 +290,6 @@
 
 /* ---- M65: Workspace rail states ---- */
 
-/* Collapsed rail — icon column only.
-   Owns the vertical scroll so the parent .ws-rail can stay overflow:visible. */
-.ws-rail-collapsed {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) 0;
-  max-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.ws-rail-expand,
-.ws-rail-collapse {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--mid);
-  cursor: pointer;
-  padding: var(--space-1);
-  transition:
-    color var(--animation-fast),
-    background var(--animation-fast),
-    border-color var(--animation-fast);
-}
-.ws-rail-expand:hover,
-.ws-rail-collapse:hover {
-  color: var(--hi);
-  background: var(--bg-surface);
-  border-color: var(--border-default);
-}
-.ws-rail-expand:focus-visible,
-.ws-rail-collapse:focus-visible {
-  outline: 2px solid var(--gold-500);
-  outline-offset: 2px;
-}
-
 .ws-rail-current {
   background: none;
   border: none;
@@ -352,11 +373,381 @@
       "strip strip"
       "companion companion";
   }
+  /* Mobile: restore rail background as anchor for the collapsed icon column */
+  .ws-rail {
+    background: var(--bg-base);
+    border-right: 1px solid var(--border-subtle);
+  }
+  /* Mobile: panels return to grid flow, no fixed positioning */
   .companion-panel {
+    position: static;
+    transform: none;
+    width: auto;
+    max-height: 60vh;
     border-left: 0;
     border-top: 1px solid var(--border-subtle);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .ws-rail .ws {
+    position: absolute;
+    top: 0;
+    left: 48px;
+    transform: none;
+    border-radius: 0;
+    max-height: calc(100vh - 48px);
+  }
+  .workspace-toggle-btn,
+  .companion-toggle-btn {
+    display: none;
   }
   .explore-canvas {
     padding: var(--space-4);
+  }
+}
+
+/* ============================================================
+   M90.3 Stage B-1 — Explorer Shell (6-region layout)
+   Replaces the M65 4-region .exploration-space grid.
+   ============================================================ */
+
+.explorer-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Hide scrollbars — glass-like transparent feel */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.explorer-shell::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+/* Hide scrollbars on all scrollable children inside the shell */
+.explorer-shell * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.explorer-shell *::-webkit-scrollbar {
+  display: none;
+}
+  /* Transparent — the Earth globe from index.html shows through.
+     Individual regions (GlobalBar, ModeBar, etc.) set their own
+     semi-transparent backgrounds so content is readable. */
+  background: transparent;
+  color: var(--hi);
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- 1. Global Bar ---- */
+.explorer-global-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.explorer-global-placeholder {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.explorer-global-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-hi);
+}
+
+.explorer-global-topic {
+  font-size: 0.85rem;
+  color: var(--mid);
+}
+
+/* ---- 2. Question Header ---- */
+.explorer-question-header {
+  padding: 16px 24px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  flex-shrink: 0;
+}
+
+.explorer-question-placeholder {
+  display: flex;
+  align-items: center;
+}
+
+.explorer-question-text {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--low);
+  font-style: italic;
+}
+
+/* ---- 3. Mode Bar ---- */
+.explorer-mode-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.explorer-mode-placeholder {
+  display: flex;
+  gap: 4px;
+}
+
+.explorer-mode-tab {
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--low);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+}
+
+.explorer-mode-tab:first-child {
+  color: var(--gold-hi);
+  border-color: var(--gold-line);
+  background: var(--gold-glow);
+}
+
+/* ---- 4. Content Row: Rail | Canvas | Dock ---- */
+.explorer-content-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* ---- 4a. Context Rail ---- */
+.explorer-context-rail {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-subtle);
+  background: rgba(10,12,20,0.35); /* match Canvas — transparent glass */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow-y: auto;
+  padding: var(--space-4);
+  padding-bottom: 360px; /* extra bottom space for smooth scroll feel */
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  max-height: 100vh;
+}
+
+.explorer-context-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.explorer-context-label {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mid);
+}
+
+.explorer-context-hint {
+  font-size: 0.8rem;
+  color: var(--low);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---- Context Rail toggle ---- */
+.explorer-rail-toggle {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  color: var(--mid);
+  padding: 12px 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.explorer-rail-toggle:hover {
+  color: var(--gold-500);
+}
+.explorer-rail-toggle--inside {
+  left: 260px;
+}
+
+/* ---- 4b. Canvas ---- */
+.explorer-canvas {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--space-6) var(--space-8);
+  max-width: 720px;
+  background: transparent;
+  margin: 0 auto;
+}
+
+/* ---- 4c. Companion Dock ---- */
+.explorer-companion-dock {
+  width: 340px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border-subtle);
+  background: rgba(10,12,20,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow-y: auto;
+  padding: var(--space-5);
+  padding-bottom: 360px; /* extra bottom space for smooth scroll feel */
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  max-height: 100vh;
+}
+
+.explorer-companion-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.explorer-companion-label {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mid);
+}
+
+.explorer-companion-hint {
+  font-size: 0.8rem;
+  color: var(--low);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---- Companion Dock toggle ---- */
+.explorer-companion-toggle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  color: var(--mid);
+  padding: 12px 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.explorer-companion-toggle:hover {
+  color: var(--gold-500);
+}
+.explorer-companion-toggle--inside {
+  right: 340px;
+}
+
+/* ---- 5. Navigation Contract Bar ---- */
+.explorer-navigation-bar {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.explorer-navigation-placeholder {
+  display: flex;
+  align-items: center;
+}
+
+.explorer-navigation-hint {
+  font-size: 0.85rem;
+  color: var(--low);
+  font-style: italic;
+}
+
+/* ---- 6. Landing Tabs (了解 / 研究 / 扩展) ---- */
+.landing-tabs-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.landing-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--low);
+  padding: 12px 24px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.landing-tab:hover {
+  color: var(--mid);
+}
+
+.landing-tab--active {
+  color: var(--gold-hi);
+  border-bottom-color: var(--gold-hi);
+  font-weight: 600;
+}
+
+.landing-tabs-content {
+  min-height: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .explorer-content-row {
+    flex-direction: column;
+  }
+  .explorer-context-rail {
+    width: 100%;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .explorer-companion-dock {
+    width: 100%;
+    max-height: 40vh;
+    border-left: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .explorer-canvas {
+    max-width: none;
+    padding: var(--space-4);
+  }
+  .explorer-rail-toggle,
+  .explorer-companion-toggle {
+    display: none;
+  }
+  .explorer-global-bar {
+    padding: 8px 16px;
+  }
+  .explorer-question-header,
+  .explorer-mode-bar {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

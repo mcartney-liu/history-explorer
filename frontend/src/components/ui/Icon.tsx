@@ -1,12 +1,14 @@
 // ============================================================
-// M62 — Canonical Icon System
+// M62 — Canonical Icon System (locked unified SVG icon library)
 // Semantic, implementation-agnostic icon registry. Every icon is
 // referenced by a semantic NAME (e.g. "book", "globe", "person"),
 // never by a raw emoji or a hard-bound third-party library. The
-// visual style is locked to DS V1.0 FINAL §2.6: 1.5px stroke,
+// visual style is locked to VS-01 §5 (FRW Phase 4): 2px stroke,
 // linear, currentColor, three fixed sizes (16 / 20 / 24). No new
 // dependency is introduced (inline SVG keeps the freeze baseline
-// intact).
+// intact). ADR-0016: this registry IS the locked unified SVG icon
+// library — supersedes the literal lucide-react reading of VS-01 §5.1
+// to respect the freeze baseline "no new dependency" hard red line.
 //
 // WHY: emoji are banned as functional icons (project P0 rule);
 // binding to a specific icon library would violate the "no new
@@ -48,6 +50,7 @@ export type IconName =
   | 'warning'
   | 'circle'
   | 'cross'
+  | 'scholar'
 
 const PATHS: Record<IconName, JSX.Element> = {
   // 📖 open book
@@ -234,6 +237,14 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M9 9l6 6M15 9l-6 6" />
     </>
   ),
+  // 🎓 scholar (graduation cap + person)
+  scholar: (
+    <>
+      <path d="M12 3L3 8l9 5 7-3.9V14" />
+      <path d="M3 8v4c0 3 4 5.5 9 5.5s9-2.5 9-5.5V8" />
+      <path d="M12 16.5V22" />
+    </>
+  ),
 }
 
 const SIZES = { 16: 16, 20: 20, 24: 24 } as const
@@ -262,7 +273,7 @@ export function Icon({ name, size = 20, className, style, title, filled }: IconP
       viewBox="0 0 24 24"
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       role="img"

@@ -1,12 +1,13 @@
 {
-  "title": "Greek Philosophy — Socrates to Aristotle",
-  "summary": "The Athenian lineage of reason whose ideas spread to Rome and shaped Hellenistic thought.",
+  "title": "希腊哲学 — 从苏格拉底到亚里士多德",
+  "summary": "雅典理性思想的传承，其理念传播至罗马并塑造了希腊化思想。",
+  "category": "Person",
   "entities": [
     {
       "id": "person-socrates",
       "type": "Person",
       "name": "Socrates",
-      "description": "Athenian philosopher who pioneered the elenchus and mentored Plato.",
+      "description": "雅典哲学家，开创了反诘法并教导柏拉图。",
       "global_id": "greek_philosophy:person-socrates",
       "aliases": [],
       "labels": {
@@ -49,7 +50,7 @@
       "id": "person-plato",
       "type": "Person",
       "name": "Plato",
-      "description": "Student of Socrates and author of the Theory of Forms; founded the Academy.",
+      "description": "苏格拉底的学生，理型论的作者，创立了学园。",
       "global_id": "greek_philosophy:person-plato",
       "aliases": [],
       "labels": {
@@ -91,7 +92,7 @@
       "id": "person-aristotle",
       "type": "Person",
       "name": "Aristotle",
-      "description": "Student of Plato who systematized logic and tutored Alexander the Great.",
+      "description": "柏拉图的学生，系统化了逻辑学并教导亚历山大大帝。",
       "global_id": "greek_philosophy:person-aristotle",
       "aliases": [],
       "labels": {
@@ -134,7 +135,7 @@
       "id": "person-pythagoras",
       "type": "Person",
       "name": "Pythagoras",
-      "description": "Samian thinker whose school fused mathematics, music, and mysticism.",
+      "description": "萨摩斯的思想家，其学派融合了数学、音乐与神秘主义。",
       "global_id": "greek_philosophy:person-pythagoras",
       "aliases": [],
       "labels": {
@@ -176,7 +177,7 @@
       "id": "loc-athens",
       "type": "Location",
       "name": "Athens",
-      "description": "The city where Socrates, Plato, and Aristotle taught and democracy was born.",
+      "description": "苏格拉底、柏拉图和亚里士多德教学的城市，民主制度的诞生地。",
       "global_id": "greek_philosophy:loc-athens",
       "aliases": [],
       "labels": {
@@ -198,7 +199,7 @@
       "id": "event-academy-founded",
       "type": "Event",
       "name": "Plato's Academy Founded",
-      "description": "Plato established the Academy, a school that shaped Western thought for centuries.",
+      "description": "柏拉图建立了学园，一所塑造了西方思想数百年的学校。s.",
       "global_id": "greek_philosophy:event-academy-founded",
       "aliases": [],
       "labels": {
@@ -220,7 +221,7 @@
       "id": "idea-theory-forms",
       "type": "Idea",
       "name": "Theory of Forms",
-      "description": "Plato's doctrine that perfect abstract Forms underlie the sensible world.",
+      "description": "柏拉图的学说，认为完美的抽象理型是感官世界的基础。",
       "global_id": "greek_philosophy:idea-theory-forms",
       "aliases": [
         "Forms",
@@ -239,7 +240,7 @@
       "id": "idea-logic",
       "type": "Idea",
       "name": "Logic and Syllogism",
-      "description": "Aristotle's formal system of valid inference, the root of Western logic.",
+      "description": "亚里士多德的有效推理形式系统，西方逻辑学的根源。",
       "global_id": "greek_philosophy:idea-logic",
       "aliases": [
         "Syllogism"
@@ -257,7 +258,7 @@
       "id": "loc-lyceum",
       "type": "Location",
       "name": "Lyceum",
-      "description": "Aristotle's Peripatetic school in Athens, rival to the Academy.",
+      "description": "亚里士多德在雅典的漫步学派，学园的竞争对手。",
       "global_id": "greek_philosophy:loc-lyceum",
       "aliases": [],
       "labels": {
@@ -278,7 +279,7 @@
       "id": "person-archimedes",
       "type": "Person",
       "name": "Archimedes",
-      "description": "Syracusan mathematician, physicist, and engineer of the Hellenistic age.",
+      "description": "叙拉古的数学家、物理学家和工程师，希腊化时代的巨匠。",
       "global_id": "greek_philosophy:person-archimedes",
       "aliases": [],
       "labels": {
@@ -289,7 +290,7 @@
       "id": "tech-archimedes-screw",
       "type": "Technology",
       "name": "Archimedes' Screw",
-      "description": "A helical device for raising water, attributed to Archimedes.",
+      "description": "一种螺旋式提水装置，归功于阿基米德。",
       "global_id": "greek_philosophy:tech-archimedes-screw",
       "aliases": [],
       "labels": {
@@ -300,7 +301,7 @@
       "id": "idea-atomism",
       "type": "Idea",
       "name": "Atomism",
-      "description": "The doctrine that matter is composed of indivisible atoms, advanced by Leucippus and Democritus.",
+      "description": "物质由不可分割的原子组成的学说，由留基伯提出。 and Democritus.",
       "global_id": "greek_philosophy:idea-atomism",
       "aliases": [],
       "labels": {

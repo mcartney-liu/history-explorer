@@ -73,8 +73,8 @@ export const DISCOVER_PAGE_AUDIT: PageAudit = {
       successMetric: '点击率达到 30%',
     },
     {
-      name: 'InterestProfile',
-      purpose: '展示用户的探索兴趣画像',
+      name: 'ExplorationTrail',
+      purpose: '展示用户的探索足迹',
       primaryAction: '点击主题标签',
       hasGuidance: false,
       hasEmptyState: true,

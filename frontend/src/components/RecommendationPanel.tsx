@@ -19,7 +19,9 @@ import LoadingSkeleton from './LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './ErrorCard'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
+import { getEntityDisplayName } from '../data/explorationPackages'
+import LayerBadge from './common/LayerBadge'
 
 // Same externalized base URL contract as App.tsx (L54) — inlined to avoid
 // widening App's export surface and to keep this file self-contained.
@@ -118,10 +120,10 @@ export async function fetchRecommendations(
 
 // --- Pure helpers ---
 
-function localName(globalId: string): string {
-  if (!globalId || !globalId.includes(':')) return globalId
-  return globalId.split(':').slice(1).join(':') || globalId
-}
+// M73-A P0-1: use display-name resolver (labels[locale] → name → fallback)
+// instead of raw local-id slicing which exposed internal DSL like "loc-samarkand".
+const resolveName = (gid: string, locale: string): string =>
+  getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')
 
 // Build the click context from a recommendation item. Pure: same rec -> same
 // context, no side effects. The consumer (App) maps this into a JourneyWhyPayload
@@ -154,11 +156,14 @@ export function RecommendationPanelView({
   const [prefs] = usePreferences()
   return (
     <div className="result-section he-recommend">
-      <h3>{t('discover.recommendHeading')}</h3>
+      <h3>
+        {t('discover.recommendHeading')}
+        <LayerBadge layer="inference" />
+      </h3>
       <ul className="he-recommend-list">
         {recommendations.map((rec, idx) => {
           const gid = rec.target_entity.global_id
-          const name = rec.target_entity.name || localName(gid)
+          const name = rec.target_entity.name || resolveName(gid, locale)
           const displayName = getDisplayName(name, locale, prefs.properNameMode)
           const type = rec.target_entity.type
           const seen = seenGlobalIds?.has(gid) ?? false
@@ -198,15 +203,15 @@ export function RecommendationPanelView({
                         weight: String(step.weight),
                       })}
                     >
-                      <span className="he-recommend-path-from">{localName(step.from)}</span>
+                      <span className="he-recommend-path-from">{resolveName(step.from, locale)}</span>
                       <span className="he-recommend-path-arrow" aria-hidden="true">
                         →
                       </span>
-                      <span className="he-recommend-path-rel">{step.relationship}</span>
+                      <span className="he-recommend-path-rel">{getRelationshipLabel(step.relationship, locale)}</span>
                       <span className="he-recommend-path-arrow" aria-hidden="true">
                         →
                       </span>
-                      <span className="he-recommend-path-to">{localName(step.to)}</span>
+                      <span className="he-recommend-path-to">{resolveName(step.to, locale)}</span>
                     </span>
                   ))}
                 </div>

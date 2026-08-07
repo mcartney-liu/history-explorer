@@ -95,7 +95,11 @@ def build_exploration_response(topic: str, data: dict) -> dict:
     # the M1 string `period` shape and surface the full object as `date`.
     timeline = normalize_timeline(data.get("timeline", []))
 
-    entity_name = {e.get("id"): e.get("name", "") for e in entities}
+    # Prefer Chinese label when available (M90.3 i18n)
+    entity_name = {
+        e.get("id"): (e.get("labels") or {}).get("zh") or e.get("name", "")
+        for e in entities
+    }
 
     connections: list[dict] = []
     for rel in relationships:
@@ -108,6 +112,12 @@ def build_exploration_response(topic: str, data: dict) -> dict:
         )
 
     exploration = build_exploration_view(entities, relationships)
+
+    # Resolve Chinese display names for entities in-place
+    for e in entities:
+        zh_name = (e.get("labels") or {}).get("zh")
+        if zh_name:
+            e["name"] = zh_name
 
     return {
         "topic": topic,

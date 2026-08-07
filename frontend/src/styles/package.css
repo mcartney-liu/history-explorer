@@ -559,3 +559,83 @@
   color: var(--verified);
   font-size: 13px;
 }
+
+/* ---- M82 P1.6 CausalStatementCard ---- */
+.causal-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-top: var(--space-4);
+}
+.causal-card-header {
+  margin-bottom: var(--space-3);
+}
+.causal-section {
+  margin-bottom: var(--space-4);
+}
+.causal-label {
+  font-size: 12px;
+  color: var(--gold-hi);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--space-2);
+}
+.causal-text {
+  color: var(--text-high);
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
+}
+.causal-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+.causal-confidence {
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.causal-confidence--high {
+  color: var(--verified);
+  border: 1px solid var(--verified);
+}
+.causal-confidence--medium {
+  color: var(--gold-hi);
+  border: 1px solid var(--gold-line);
+}
+.causal-confidence--low {
+  color: var(--warn);
+  border: 1px solid var(--warn);
+}
+.causal-confidence--unknown {
+  color: var(--text-low);
+  border: 1px solid var(--border-default);
+}
+.causal-evidence {
+  font-size: 12px;
+  color: var(--text-mid);
+}
+.causal-evidence-label {
+  margin-right: var(--space-2);
+}
+.causal-evidence-ref {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  color: var(--info);
+  font-size: 11px;
+  padding: 1px 6px;
+  margin-right: 4px;
+  cursor: default;
+}
+.causal-evidence-ref:not(:disabled) {
+  cursor: pointer;
+}
+.causal-evidence-ref:not(:disabled):hover {
+  border-color: var(--gold-500);
+}

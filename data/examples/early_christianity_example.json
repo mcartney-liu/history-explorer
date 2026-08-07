@@ -1,12 +1,13 @@
 {
-  "title": "Early Christianity — Jesus to Paul",
-  "summary": "How a Jewish messianic movement became a world faith carried across the Roman world.",
+  "title": "早期基督教 — 从耶稣到保罗",
+  "summary": "一个犹太弥赛亚运动如何成为传遍罗马世界的普世信仰。",
+  "category": "Religion",
   "entities": [
     {
       "id": "person-jesus",
       "type": "Person",
       "name": "Jesus of Nazareth",
-      "description": "A Jewish teacher whose followers proclaimed him the Christ; central to Christianity.",
+      "description": "犹太教师，其追随者宣称他为基督；基督教信仰的核心。ity.",
       "global_id": "early_christianity:person-jesus",
       "aliases": [
         "Jesus Christ"
@@ -53,7 +54,7 @@
       "id": "person-paul",
       "type": "Person",
       "name": "Paul the Apostle",
-      "description": "Former persecutor who became the chief missionary carrying the faith to the Gentiles.",
+      "description": "前迫害者，成为将信仰传播到外邦人的首席传教士。iles.",
       "global_id": "early_christianity:person-paul",
       "aliases": [
         "Saul of Tarsus"
@@ -100,7 +101,7 @@
       "id": "loc-jerusalem",
       "type": "Location",
       "name": "Jerusalem",
-      "description": "The city of Jesus's ministry, death, and the early church's birth at Pentecost.",
+      "description": "耶稣传道、受难和五旬节早期教会诞生的城市。",
       "global_id": "early_christianity:loc-jerusalem",
       "aliases": [],
       "labels": {
@@ -121,7 +122,7 @@
       "id": "event-crucifixion",
       "type": "Event",
       "name": "Crucifixion of Jesus",
-      "description": "The execution of Jesus under Pontius Pilate, the pivotal event of the faith.",
+      "description": "耶稣在本丢·彼拉多治下被处决，信仰的关键事件。",
       "global_id": "early_christianity:event-crucifixion",
       "aliases": [],
       "labels": {
@@ -143,7 +144,7 @@
       "id": "event-paul-mission",
       "type": "Event",
       "name": "Paul's Missionary Journeys",
-      "description": "Paul's travels founding congregations across Asia Minor and Greece.",
+      "description": "保罗在小亚细亚和希腊建立教会的旅程。",
       "global_id": "early_christianity:event-paul-mission",
       "aliases": [],
       "labels": {
@@ -165,7 +166,7 @@
       "id": "religion-early-church",
       "type": "Religion",
       "name": "Early Christian Church",
-      "description": "The first communities of Jesus's followers, from Jerusalem to the Gentile world.",
+      "description": "耶稣追随者的最初群体，从耶路撒冷到外邦世界。",
       "global_id": "early_christianity:religion-early-church",
       "aliases": [
         "Primitive Church"
@@ -188,7 +189,7 @@
       "id": "idea-resurrection",
       "type": "Idea",
       "name": "Resurrection",
-      "description": "The belief in bodily rising from the dead, central to Christian hope.",
+      "description": "相信肉身从死里复活，基督教希望的核心。",
       "global_id": "early_christianity:idea-resurrection",
       "aliases": [
         "Rising from the dead"
@@ -206,7 +207,7 @@
       "id": "loc-antioch",
       "type": "Location",
       "name": "Antioch",
-      "description": "A major hub where the followers of Jesus were first called 'Christians'.",
+      "description": "耶稣追随者首次被称为「基督徒」的重要中心。",
       "global_id": "early_christianity:loc-antioch",
       "aliases": [],
       "labels": {
@@ -227,7 +228,7 @@
       "id": "person-peter",
       "type": "Person",
       "name": "Saint Peter",
-      "description": "Leading apostle regarded as the first bishop of Rome.",
+      "description": "被视为罗马首任主教的首席使徒。",
       "global_id": "early_christianity:person-peter",
       "aliases": [
         "Simon Peter"
@@ -240,7 +241,7 @@
       "id": "idea-koine-greek",
       "type": "Idea",
       "name": "Koine Greek (Lingua Franca)",
-      "description": "The common Hellenistic Greek spoken across the eastern Mediterranean and used in the New Testament.",
+      "description": "东地中海通用的希腊化希腊语，用于 the New Testament.",
       "global_id": "early_christianity:idea-koine-greek",
       "aliases": [
         "Common Greek"
@@ -253,7 +254,7 @@
       "id": "event-pentecost",
       "type": "Event",
       "name": "Pentecost",
-      "description": "The descent of the Holy Spirit on the apostles, birth of the public church.",
+      "description": "圣灵降临在使徒身上，公开教会的诞生。",
       "global_id": "early_christianity:event-pentecost",
       "aliases": [],
       "labels": {

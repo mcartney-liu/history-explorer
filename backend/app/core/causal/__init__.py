@@ -1,9 +1,21 @@
 """M79 Causal Layer — interpretive semantic layer for causal assertions.
 
-This package is intentionally minimal: it defines the reference model
-(`CausalStatement`) only. Loaders, services, API endpoints and knowledge
-integration are explicitly out of scope for M79 (see ADR-M79 Non Goals).
+M82 P1.2: JSON Loader
+M82 P1.3: Read-only Query Adapter
+M84: CausalObject (Semantic Object Expansion)
+M85: RelatedCausalObjectRef (Semantic Relationship)
 """
+from .adapter import CausalStatementAdapter
+from .causal_object import CausalObject, ExplorationPathRef, RelatedCausalObjectRef
+from .loader import CausalIndex, CausalLoader
 from .model import CausalStatement
 
-__all__ = ["CausalStatement"]
+__all__ = [
+    "CausalStatement",
+    "CausalObject",
+    "ExplorationPathRef",
+    "RelatedCausalObjectRef",
+    "CausalIndex",
+    "CausalLoader",
+    "CausalStatementAdapter",
+]

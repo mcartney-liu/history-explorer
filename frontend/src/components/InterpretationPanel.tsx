@@ -5,21 +5,20 @@
 // anything, and it does NOT import navigation. All data arrives pre-mapped via
 // `interpretations` (see interpretationFormatter.ts, which preserves the
 // backend's deterministic `explanation` verbatim — no AI, no invented text).
+//
+// M90.3 Stage D-1 — migrated to UnderstandingCard Explorer Primitive for the
+// "understandings" section. The interpretations list retains its existing
+// rendering (scores + clickable nodes) because UnderstandingCard is designed
+// for Before→Evidence→After transitions, not scored entity lists.
 import { useLocale } from '../data/locale'
 import { InterpretationViewModel } from '../data/interpretationFormatter'
 import type { UnderstandingViewModel } from '../data/understandingRules'
+import { UnderstandingCard } from './primitives/UnderstandingCard'
 
 type InterpretationPanelProps = {
   interpretations?: InterpretationViewModel[]
-  // M5-D (additive): rule-based "historical meaning" layer. When provided and
-  // non-empty, a "Historical Meaning" block is appended AFTER the existing
-  // interpretation list. Absent/empty -> behavior is unchanged (the panel still
-  // collapses to nothing when there is nothing to show).
   understandings?: UnderstandingViewModel[]
   title?: string
-  // When provided, each node becomes clickable and calls back with the raw
-  // global_id. The panel never imports navigation.ts; the caller wires this to
-  // the app's single navigation entry.
   onNodeClick?: (globalId: string) => void
 }
 
@@ -32,7 +31,6 @@ function InterpretationPanel({
   const { t } = useLocale()
   const hasInterpretations = !!interpretations && interpretations.length > 0
   const hasUnderstandings = !!understandings && understandings.length > 0
-  // Strictly additive: nothing to interpret -> render nothing (no empty shell).
   if (!hasInterpretations && !hasUnderstandings) return null
 
   const resolvedTitle = title ?? t('discover.interpretationTitle')
@@ -70,26 +68,29 @@ function InterpretationPanel({
         </div>
       )}
       {hasUnderstandings && (
-        <div className="he-meaning-block">
-          <h4 className="he-meaning-title">{t('discover.historicalMeaning')}</h4>
-          <div className="he-interpret-list">
-            {understandings!.map((u, idx) => (
-              <div className="he-interpret-item he-meaning-item" key={idx}>
-                <div className="he-interpret-head">
-                  <span className="he-interpret-name">
-                    {u.actor} &rarr; {u.target}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
+          <h4 style={{ fontSize: '0.9rem', color: 'var(--mid, #9CA3AF)', fontWeight: 600 }}>
+            {t('discover.historicalMeaning')}
+          </h4>
+          {understandings!.map((u, idx) => (
+            <UnderstandingCard
+              key={idx}
+              before={`${u.actor} 与 ${u.target}`}
+              evidence={
+                <>
+                  <span style={{ color: 'var(--gold-hi, #CBA135)', fontWeight: 600 }}>
+                    {u.perspective}
                   </span>
-                  <span className="he-interpret-tag">{u.perspective}</span>
-                </div>
-                <p className="he-interpret-why">{u.meaning}</p>
-                {u.timeContext && (
-                  <p className="he-meaning-time">
-                    <span className="he-meaning-time-label">{t('discover.timeLabel')}</span> {u.timeContext}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+                  {u.timeContext && (
+                    <span style={{ marginLeft: 8, fontSize: '0.75rem', color: 'var(--low, #6B7280)' }}>
+                      · {u.timeContext}
+                    </span>
+                  )}
+                </>
+              }
+              after={u.meaning}
+            />
+          ))}
         </div>
       )}
     </div>

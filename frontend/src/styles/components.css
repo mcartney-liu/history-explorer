@@ -80,3 +80,24 @@
   border-top: 1px solid var(--line);
   margin: var(--space-4) 0;
 }
+
+/* ---- M82 P3 LayerBadge ---- */
+.layer-badge {
+  display: inline-block;
+  font-size: 11px;
+  border-radius: 999px;
+  padding: 1px 8px;
+  line-height: 1.6;
+}
+.layer-badge--causal {
+  color: var(--verified);
+  border: 1px solid var(--verified);
+}
+.layer-badge--inference {
+  color: var(--info);
+  border: 1px solid var(--info);
+}
+.layer-badge--evidence {
+  color: var(--text-low);
+  border: 1px solid var(--border-default);
+}

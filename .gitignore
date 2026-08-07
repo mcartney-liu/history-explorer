@@ -42,3 +42,12 @@ vite.config.ts.timestamp-*.mjs
 Product_homepage_hero_mockup_*.png
 *_mockup_*.png
 *.tmp
+
+# === Phase 5 baseline snapshot: tooling artifacts / boot logs (not project source) ===
+.codebuddy/
+.playwright-cli/
+frontend/.ux-probe/
+*.err
+*.out
+tsc_out.txt
+uvicorn_boot.*

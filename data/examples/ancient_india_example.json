@@ -1,12 +1,13 @@
 {
-  "title": "Ancient India — Maurya and the Spread of Buddhism",
-  "summary": "The first Indian empire and the Buddhist idea that traveled the Silk Road to Han China.",
+  "title": "古印度 — 孔雀王朝与佛教传播",
+  "summary": "第一个印度帝国以及沿丝绸之路传播至汉朝的佛教思想。",
+  "category": "Civilization",
   "entities": [
     {
       "id": "civ-maurya",
       "type": "Civilization",
       "name": "Maurya Empire",
-      "description": "The first empire to unify most of the Indian subcontinent (c. 322-185 BC).",
+      "description": "第一个统一大部分印度次大陆的帝国（约公元前322-185年）。",
       "global_id": "ancient_india:civ-maurya",
       "aliases": [
         "Mauryan Empire"
@@ -61,7 +62,7 @@
       "id": "person-chandragupta",
       "type": "Person",
       "name": "Chandragupta Maurya",
-      "description": "Founder of the Maurya dynasty who overthrew the Nandas with Chanakya's aid.",
+      "description": "孔雀王朝的创建者，在考底利耶的帮助下推翻难陀王朝。",
       "global_id": "ancient_india:person-chandragupta",
       "aliases": [],
       "labels": {
@@ -123,7 +124,7 @@
       "id": "person-ashoka",
       "type": "Person",
       "name": "Ashoka the Great",
-      "description": "Mauryan emperor who, after the Kalinga War, embraced Buddhism and spread dhamma.",
+      "description": "孔雀王朝皇帝，羯陵伽战争后皈依佛教并传播正法。",
       "global_id": "ancient_india:person-ashoka",
       "aliases": [
         "Aśoka"
@@ -187,7 +188,7 @@
       "id": "loc-pataliputra",
       "type": "Location",
       "name": "Pataliputra",
-      "description": "The Mauryan capital at the confluence of the Ganges and Son rivers.",
+      "description": "孔雀王朝的都城，位于恒河与宋河交汇处。",
       "global_id": "ancient_india:loc-pataliputra",
       "aliases": [
         "Patna"
@@ -232,7 +233,7 @@
       "id": "religion-buddhism",
       "type": "Religion",
       "name": "Buddhism",
-      "description": "The teaching of Siddhartha Gautama on the cessation of suffering, spread across Asia.",
+      "description": "悉达多·乔达摩关于止息苦难的教义，传播于 Asia.",
       "global_id": "ancient_india:religion-buddhism",
       "aliases": [
         "Buddha Dharma"
@@ -277,7 +278,7 @@
       "id": "person-siddhartha",
       "type": "Person",
       "name": "Siddhartha Gautama",
-      "description": "The historical Buddha who attained enlightenment under the Bodhi tree.",
+      "description": "在菩提树下觉悟的历史佛陀。",
       "global_id": "ancient_india:person-siddhartha",
       "aliases": [
         "The Buddha",
@@ -342,7 +343,7 @@
       "id": "loc-indus-valley",
       "type": "Location",
       "name": "Indus Valley",
-      "description": "The riverine heartland of early Indian civilization in modern Pakistan.",
+      "description": "早期印度文明的河流腹地，位于今巴基斯坦。",
       "global_id": "ancient_india:loc-indus-valley",
       "aliases": [
         "Sindhu"
@@ -383,7 +384,7 @@
       "id": "event-kalinga-war",
       "type": "Event",
       "name": "Kalinga War",
-      "description": "Ashoka's brutal conquest of Kalinga that turned him to non-violence.",
+      "description": "阿育王对羯陵伽的残酷征服，使他转向非暴力。",
       "global_id": "ancient_india:event-kalinga-war",
       "aliases": [],
       "labels": {
@@ -426,7 +427,7 @@
       "id": "idea-dharma",
       "type": "Idea",
       "name": "Dharma",
-      "description": "The cosmic law and duty at the heart of Indian religious and ethical thought.",
+      "description": "印度宗教和伦理思想核心的宇宙法则与义务。",
       "global_id": "ancient_india:idea-dharma",
       "aliases": [
         "Dhamma"
@@ -466,7 +467,7 @@
       "id": "tp-maurya",
       "type": "Time Period",
       "name": "Maurya Era",
-      "description": "The age of the first Indian empire and its Buddhist flowering.",
+      "description": "第一个印度帝国及其佛教繁荣的时代。",
       "global_id": "ancient_india:tp-maurya",
       "aliases": [],
       "labels": {
@@ -514,7 +515,7 @@
       "id": "tp-guupta",
       "type": "Time Period",
       "name": "Gupta Period",
-      "description": "The classical age of India (c. 320-550 AD) under the Gupta dynasty.",
+      "description": "笈多王朝治下的印度古典时代（约公元320-550年）。",
       "global_id": "ancient_india:tp-guupta",
       "aliases": [
         "Gupta Empire"
@@ -562,7 +563,7 @@
       "id": "person-kalidasa",
       "type": "Person",
       "name": "Kalidasa",
-      "description": "Classical Sanskrit poet and playwright of the Gupta court.",
+      "description": "笈多宫廷的古典梵语诗人和剧作家。",
       "global_id": "ancient_india:person-kalidasa",
       "aliases": [],
       "labels": {
@@ -608,7 +609,7 @@
       "id": "tech-zero",
       "type": "Technology",
       "name": "Zero and Decimal System",
-      "description": "The place-value numeral system with zero, formalized in Gupta-era India.",
+      "description": "包含零的位值数字系统，在笈多时代印度正式形成。",
       "global_id": "ancient_india:tech-zero",
       "aliases": [
         "Shunya"
@@ -647,7 +648,7 @@
       "id": "person-aryabhata",
       "type": "Person",
       "name": "Aryabhata",
-      "description": "Gupta-era mathematician-astronomer who authored the Aryabhatiya.",
+      "description": "笈多时代的数学家-天文学家，著有《阿利耶毗陀论》。",
       "global_id": "ancient_india:person-aryabhata",
       "aliases": [],
       "labels": {

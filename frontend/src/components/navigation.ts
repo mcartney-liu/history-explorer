@@ -5,9 +5,13 @@
 // established searchNav.ts pattern, no new test dependency). The UI layer
 // (App) owns the state and calls these; storage lives in recentStore.ts.
 
+import { getCausalObjectName } from '../data/causalObjectNames'
+// (App) owns the state and calls these; storage lives in recentStore.ts.
+
 export type NavNode =
   | { type: 'topic'; topic: string; title: string }
   | { type: 'entity'; id: string; name: string }
+  | { type: 'causal_object'; objectId: string }
 
 export type HistoryState = {
   history: NavNode[]
@@ -20,12 +24,15 @@ export const RECENT_MAX = 10
 // Stable identity for a node, used for deduplication in both history and
 // recent lists. Topic and entity namespaces never collide (different types).
 export function nodeKey(node: NavNode): string {
-  return node.type === 'topic' ? `topic:${node.topic}` : `entity:${node.id}`
+  if (node.type === 'topic') return `topic:${node.topic}`
+  if (node.type === 'causal_object') return `causal_object:${node.objectId}`
+  return `entity:${node.id}`
 }
 
 export function eqNode(a: NavNode, b: NavNode): boolean {
   if (a.type === 'topic' && b.type === 'topic') return a.topic === b.topic
   if (a.type === 'entity' && b.type === 'entity') return a.id === b.id
+  if (a.type === 'causal_object' && b.type === 'causal_object') return a.objectId === b.objectId
   return false
 }
 
@@ -86,7 +93,7 @@ export function buildBreadcrumb(
     const n = history[i]
     crumbs.push({
       key: nodeKey(n),
-      label: n.type === 'topic' ? n.title : n.name,
+      label: n.type === 'topic' ? n.title : n.type === 'causal_object' ? getCausalObjectName(n.objectId) : n.name,
       index: i + 1,
     })
   }
