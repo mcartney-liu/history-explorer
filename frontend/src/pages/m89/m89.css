@@ -202,7 +202,7 @@
 
 .m89-tag-relation {
   background: rgba(203, 161, 53, 0.1);
-  color: var(--gold-400);
+  color: var(--color-accent);
   border: 1px solid rgba(203, 161, 53, 0.15);
 }
 
@@ -345,7 +345,7 @@
 }
 
 .m89-btn-primary:hover {
-  background: var(--gold-400);
+  background: var(--color-accent);
   box-shadow: var(--shadow-gold);
 }
 
