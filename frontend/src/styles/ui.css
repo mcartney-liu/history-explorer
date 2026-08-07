@@ -58,14 +58,16 @@
 }
 
 /* --- TrustDisplay (M74-003 C3-1): evidence-bound exploration output --- */
+/* P5-S2 TP-06/07 真相刻度: tokens migrated to VS-01 layer — fixes undefined
+   var(--surface/--accent/--bg) that resolved to invalid (invisible) colors. */
 .trust-display {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--color-paper-300);
   border-radius: 12px;
-  background: var(--surface);
+  background: var(--color-paper-100);
 }
 .trust-display-header {
   display: flex;
@@ -77,7 +79,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--hi);
+  color: var(--color-ink-900);
 }
 .trust-display-section {
   display: flex;
@@ -88,7 +90,7 @@
   margin: 0;
   font-size: 12px;
   font-weight: 600;
-  color: var(--mid);
+  color: var(--color-ink-500);
 }
 .trust-display-next,
 .trust-display-evidence {
@@ -109,24 +111,24 @@
 }
 .trust-display-next-name,
 .trust-display-evidence-name {
-  color: var(--hi);
+  color: var(--color-ink-900);
   font-weight: 500;
 }
 .trust-display-next-rel {
-  color: var(--accent);
+  color: var(--color-accent);
   font-size: 12px;
 }
 .trust-display-source {
   font-size: 11px;
-  color: var(--mid);
-  background: var(--bg);
+  color: var(--color-ink-500);
+  background: var(--color-paper-200);
   padding: 1px 6px;
   border-radius: 6px;
 }
 .trust-display-empty {
   margin: 0;
   font-size: 13px;
-  color: var(--mid);
+  color: var(--color-ink-500);
 }
 
 /* --- JourneyTrail (M74-004-002 2A): exploration path visualization --- */

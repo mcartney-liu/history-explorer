@@ -43,12 +43,17 @@ export interface EvidenceBlockProps {
 // Type → color mapping (from Design System V1)
 // ============================================================
 
+// P5-S2 TP-08/真值层: type colors converge to the VS-01 semantic palette
+// (VS-04 rule 4 — tokenized, no bare hex; VS-01 强调色克制 — single accent,
+// no purple/blue side palette). Mapping: fact=truth-strong · source=ink-500
+// (neutral) · curator=accent (product-curated) · timeline=truth-moderate ·
+// interpretation=status-info (information, not objection).
 const EVIDENCE_STYLES: Record<EvidenceType, { badge: string; border: string; bg: string }> = {
-  fact: { badge: '#4FA784', border: 'rgba(79,167,132,0.2)', bg: 'rgba(79,167,132,0.04)' },
-  source: { badge: '#9CA3AF', border: 'rgba(156,163,175,0.2)', bg: 'rgba(156,163,175,0.04)' },
-  curator: { badge: '#CBA135', border: 'rgba(203,161,53,0.2)', bg: 'rgba(203,161,53,0.04)' },
-  timeline: { badge: '#6D28D9', border: 'rgba(109,40,217,0.2)', bg: 'rgba(109,40,217,0.04)' },
-  interpretation: { badge: '#3B82F6', border: 'rgba(59,130,246,0.2)', bg: 'rgba(59,130,246,0.04)' },
+  fact: { badge: 'var(--color-truth-strong)', border: 'var(--color-truth-strong-line)', bg: 'var(--color-truth-strong-soft)' },
+  source: { badge: 'var(--color-ink-500)', border: 'var(--color-paper-300)', bg: 'var(--color-paper-100)' },
+  curator: { badge: 'var(--color-accent)', border: 'var(--color-accent-soft)', bg: 'var(--color-accent-soft)' },
+  timeline: { badge: 'var(--color-truth-moderate)', border: 'var(--color-truth-moderate-soft)', bg: 'var(--color-truth-moderate-soft)' },
+  interpretation: { badge: 'var(--color-status-info)', border: 'var(--color-status-info-soft)', bg: 'var(--color-status-info-soft)' },
 }
 
 const TYPE_LABELS: Record<EvidenceType, string> = {
@@ -83,7 +88,7 @@ export function EvidenceBlock({
         borderRadius: 'var(--radius-md, 8px)',
         border: `1px solid ${style.border}`,
         background: style.bg,
-        transition: 'border-color 0.2s ease',
+        transition: `border-color var(--motion-duration-fast) var(--motion-ease-standard)`,
         ...(active ? { borderColor: style.badge } : {}),
       }}
     >
@@ -106,7 +111,7 @@ export function EvidenceBlock({
           fontFamily: 'var(--serif, "Spectral", serif)',
           fontSize: '0.95rem',
           fontWeight: 600,
-          color: 'var(--hi, #F3F4F6)',
+          color: 'var(--color-ink-900)',
           margin: '0 0 8px 0',
         }}>
           {title}
@@ -116,7 +121,7 @@ export function EvidenceBlock({
       {/* Body */}
       <div style={{
         fontSize: '0.85rem',
-        color: 'var(--mid, #9CA3AF)',
+        color: 'var(--color-ink-500)',
         lineHeight: 1.6,
       }}>
         {children}
@@ -132,7 +137,7 @@ export function EvidenceBlock({
           paddingTop: 10,
           borderTop: `1px solid ${style.border}`,
           fontSize: '0.75rem',
-          color: 'var(--low, #6B7280)',
+          color: 'var(--color-ink-500)',
         }}>
           {source && (
             <span>来源：{source}</span>
