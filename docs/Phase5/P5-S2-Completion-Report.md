@@ -61,7 +61,10 @@
 | `npx tsc --noEmit` | **0 errors** |
 | emoji 扫描（全 src 非测试源码） | **0 命中** |
 | 硬编码色扫描（迁移区块） | 0 裸 hex / rgba / 渐变残留 |
+| 关键测试回归（M2_003 + NextStepPanel + DiscoverPage） | **35 passed / 4 failed**（4 失败 = OD-08 挂账的 ProductIntro 陈旧测试，与基线一致，零新增回归） |
 | 工作区 | clean |
+
+> Review 快照（2026-08-07 终验）：17 提交全在 `phase5/reconstruction`，master 冻结 @ `54ef060` 纹丝不动（merge-base 证实分叉点 = master HEAD）。
 
 ## 6. 下一步建议
 
