@@ -42,12 +42,14 @@ export type NextStepContext = {
 }
 
 // Short Chinese labels for the cognitive-action types (policy-internal).
+// P5-S2 TP-16 (VS-03 §5): button copy aligned to the visual contract —
+// action semantics, not recommendation vocabulary (ADR-0015 D1 / X-R1).
 const ACTION_LABELS: Record<ExplorationActionType, string> = {
-  open_dimension: '打开维度',
-  follow_cause: '追踪因果',
-  deep_continue: '深化主题',
-  compare_context: '横向对比',
-  reflect: '理解收束',
+  open_dimension: '展开维度',
+  follow_cause: '追因',
+  deep_continue: '深入延续',
+  compare_context: '比较语境',
+  reflect: '反思',
 }
 
 // M73-A P0-1: use display-name resolver (labels[locale] → name → fallback).

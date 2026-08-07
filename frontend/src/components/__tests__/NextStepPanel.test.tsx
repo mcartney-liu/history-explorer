@@ -36,7 +36,7 @@ describe('NextStepPanelView (Phase 5 A3 presentational)', () => {
     ]
     const html = render(<NextStepPanelView actions={actions} />)
     expect(html).toContain('下一站探索') // discover.nextStepHeading (zh default)
-    expect(html).toContain('追踪因果') // ACTION_LABELS.follow_cause
+    expect(html).toContain('追因') // ACTION_LABELS.follow_cause (VS-03 TP-16)
     expect(html).toContain('Same dynasty successor.') // reason
     expect(html).toContain('How did Augustus shape Octavian?') // narrativeHook
     expect(html).toContain('he-nextstep')
@@ -62,11 +62,11 @@ describe('NextStepPanelView (Phase 5 A3 presentational)', () => {
     ]
     const actions = all.map((t, i) => action(t, `t:${i}`, `reason-${i}`, `hook-${i}`))
     const html = render(<NextStepPanelView actions={actions} />)
-    expect(html).toContain('打开维度')
-    expect(html).toContain('追踪因果')
-    expect(html).toContain('深化主题')
-    expect(html).toContain('横向对比')
-    expect(html).toContain('理解收束')
+    expect(html).toContain('展开维度')
+    expect(html).toContain('追因')
+    expect(html).toContain('深入延续')
+    expect(html).toContain('比较语境')
+    expect(html).toContain('反思')
   })
 
   it('preserves the policy action order and does NOT re-rank', () => {
@@ -114,7 +114,7 @@ describe('NextStepPanel container (Phase 5 A3)', () => {
 
   it('renders the panel when at least one action exists', () => {
     const html = render(<NextStepPanel actions={[action('reflect', 'x:y', 'summarize now', 'wrap it up?')]} />)
-    expect(html).toContain('理解收束') // ACTION_LABELS.reflect
+    expect(html).toContain('反思') // ACTION_LABELS.reflect (VS-03 TP-16)
     expect(html).toContain('summarize now')
   })
 })
