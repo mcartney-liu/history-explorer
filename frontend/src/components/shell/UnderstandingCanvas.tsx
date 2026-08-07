@@ -21,7 +21,7 @@ interface UnderstandingCanvasProps {
   /** Current exploration state */
   explorationState: ExplorationState | null
   /** All topic root panels (the original JSX from App.tsx) */
-  children: ReactNode
+  children?: ReactNode
   /** Narrative section panels */
   narrativeSection: ReactNode
   /** Interpretation section panels */
@@ -70,30 +70,12 @@ function SectionHeader({ title, subtitle, active }: {
   )
 }
 
-// Card wrapper for individual panels
-function PanelCard({ children, accent }: { children: ReactNode; accent?: boolean }) {
-  return (
-    <div style={{
-      marginBottom: 16,
-      padding: 0,
-      borderRadius: 'var(--radius-sm, 8px)',
-      border: accent
-        ? '1px solid var(--gold-line, rgba(203,161,53,0.15))'
-        : '1px solid transparent',
-      background: 'transparent',
-    }}>
-      {children}
-    </div>
-  )
-}
-
 export function UnderstandingCanvas({
   cognitiveStage,
   explorationState,
   narrativeSection,
   interpretationSection,
   supportingSection,
-  children,
 }: UnderstandingCanvasProps) {
   const stage = cognitiveStage || 'FACT'
   const coveragePct = explorationState

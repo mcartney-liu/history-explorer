@@ -211,7 +211,7 @@ export function UnderstandingStatus({
           background: 'rgba(203,161,53,0.06)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <Icon name="graph" size={14} />
+            <Icon name="spark" size={16} />
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
@@ -249,7 +249,7 @@ export function UnderstandingStatus({
           background: 'rgba(125,140,196,0.04)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-            <Icon name="graph" size={14} />
+            <Icon name="timeline" size={16} />
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
@@ -294,7 +294,7 @@ export function UnderstandingStatus({
           background: 'rgba(196,160,125,0.04)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-            <Icon name="book" size={14} />
+            <Icon name="book" size={16} />
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
@@ -328,7 +328,7 @@ export function UnderstandingStatus({
           background: 'rgba(79,167,132,0.04)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <Icon name="search" size={16} />
+            <Icon name="research" size={16} />
             <span style={{
               fontFamily: 'var(--serif, "Spectral", serif)',
               fontSize: '0.8rem',

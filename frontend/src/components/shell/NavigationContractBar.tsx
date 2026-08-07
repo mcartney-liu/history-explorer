@@ -135,7 +135,7 @@ export function NavigationContractBar({
             transition: 'background 0.15s',
           }}
         >
-          <Icon name="search" size={16} />
+          <Icon name="research" size={16} />
           继续探索
         </button>
       </div>
