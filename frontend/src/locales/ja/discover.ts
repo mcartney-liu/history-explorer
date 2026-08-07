@@ -1,5 +1,6 @@
 export default {
   'discover.title': '歴史を探索',
+  'discover.nextStepHeading': '次のステップ',
   'discover.subtitle': 'ここから歴史の旅を始めよう',
   'discover.startHereAria': 'ここから始める',
   'discover.startHere': 'ここから始める',

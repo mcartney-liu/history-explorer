@@ -15,7 +15,7 @@ import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import MultiEntityTimeline from './components/MultiEntityTimeline'
 import CrossTopicView from './components/CrossTopicView'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
-import RecommendationPanel from './components/RecommendationPanel'
+import NextStepPanel from './components/NextStepPanel'
 import AIExplanationPanel from './components/AIExplanationPanel'
 import MultiEntityContextPanel from './components/MultiEntityContextPanel'
 import EntityPickerPanel from './components/EntityPickerPanel'
@@ -1266,7 +1266,7 @@ function App() {
           />
         </div>
       }
-      companionDock={<CompanionShell workspaceContext={workspaceContext} onNavigateEntity={openNode} />}
+      companionDock={<CompanionShell workspaceContext={workspaceContext} onNavigateEntity={openNode} actions={policyAction ? [policyAction] : []} />}
       navigationBar={null}
     >
       <ModeCanvas
@@ -1333,7 +1333,7 @@ function App() {
           <>
             <EntityPage entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} />
             <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
-            <RecommendationPanel entityId={current.id} seenGlobalIds={seenGlobalIds} max={5} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, relationPath: ctx.relation_path, reasons: ctx.reasons, score: ctx.score, candidateSource: ctx.candidateSource, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
+            <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
             <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
           </>
         ) : null}

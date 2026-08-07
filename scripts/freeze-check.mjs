@@ -751,8 +751,11 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/core/exploration_engine.py",
   "backend/tests/test_recommend.py",
   // Frontend: NextStepPanel replaces RecommendationPanel (no recommendation vocabulary).
+  // CompanionShell/CompanionRouter thread ExplorationAction[] into NextStepPanel (discover mode).
   "frontend/src/components/NextStepPanel.tsx",
   "frontend/src/components/NextStepPanel.test.tsx",
+  "frontend/src/components/ai/CompanionShell.tsx",
+  "frontend/src/components/ai/CompanionRouter.tsx",
 ];
 
 function _scopeAllowed(file) {

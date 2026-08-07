@@ -16,10 +16,8 @@
 //   ExplorationJourney        -> container: thin wrapper, no local nav state
 
 import type { NavNode } from './navigation'
-import type { RelationPathStep } from './RecommendationPanel'
 import { useLocale } from '../data/locale'
-import { getRelationshipLabel } from '../data/entity/entityLabels'
-import { getEntityDisplayName } from '../data/explorationPackages'
+import type { ExplorationActionType } from '../next/exploration/ExplorationPolicy'
 import { getCausalObjectName } from '../data/causalObjectNames'
 
 // --- Types ---
@@ -30,10 +28,10 @@ import { getCausalObjectName } from '../data/causalObjectNames'
 export type JourneyWhyPayload = {
   fromGlobalId: string
   fromName: string
-  relationPath: RelationPathStep[]
   reasons: string[]
-  score: number
-  candidateSource: string
+  actionType: ExplorationActionType
+  narrativeHook: string
+  confidence: number
   capturedAt: string
 }
 
@@ -56,11 +54,6 @@ function nodeKey(node: NavNode): string {
   if (node.type === 'causal_object') return node.objectId
   return node.topic
 }
-
-// M73-A P0-1: use display-name resolver (labels[locale] → name → fallback)
-// instead of raw local-id slicing which exposed internal DSL like "loc-samarkand".
-const resolveName = (gid: string, locale: string): string =>
-  getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')
 
 // Build the journey entries from App's navigation history + the why-annotation
 // map. Pure & deterministic: same inputs -> same output, no side effects, no
@@ -96,7 +89,7 @@ type ExplorationJourneyViewProps = {
 }
 
 export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJourneyViewProps) {
-  const { t, locale } = useLocale()
+  const { t } = useLocale()
   // A journey is only meaningful once there is more than one stop — matches
   // ExplorationTrail's "don't render a single node" rule. This is also the
   // empty / no-journey state: render nothing.
@@ -138,22 +131,8 @@ export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJour
                     ))}
                   </ul>
                 ) : null}
-                {e.incomingWhy.relationPath.length > 0 ? (
-                  <div className="he-journey-path">
-                    {e.incomingWhy.relationPath.map((step, i) => (
-                      <span key={i} className="he-journey-path-step">
-                        <span className="he-journey-path-from">{resolveName(step.from, locale)}</span>
-                        <span className="he-journey-path-arrow" aria-hidden="true">
-                          →
-                        </span>
-                        <span className="he-journey-path-rel">{getRelationshipLabel(step.relationship, locale)}</span>
-                        <span className="he-journey-path-arrow" aria-hidden="true">
-                          →
-                        </span>
-                        <span className="he-journey-path-to">{resolveName(step.to, locale)}</span>
-                      </span>
-                    ))}
-                  </div>
+                {e.incomingWhy.narrativeHook ? (
+                  <p className="he-journey-hook">{e.incomingWhy.narrativeHook}</p>
                 ) : null}
               </div>
             ) : null}
