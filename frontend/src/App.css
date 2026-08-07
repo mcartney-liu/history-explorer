@@ -271,18 +271,18 @@ input:focus,textarea:focus{border-color:var(--gold-line)}
 .discover-expand{margin:40px 0;padding:var(--space-6);border:1px solid var(--line);border-radius:16px;background:var(--navy-card)}
 .discover-expand-soon{color:var(--gold);font-weight:600;margin-top:8px}
 
-/* recent */
+/* recent (TP-01 起点锚定 · 最近研究) — P5-S2 VS-01 tokens */
 .discover-recent{margin:40px 0}
 .discover-recent-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .discover-recent-card{
   display:flex;flex-direction:column;gap:8px;padding:20px;
-  background:var(--navy-card);border:1px solid var(--line);
-  border-radius:14px;cursor:pointer;transition:.2s;
+  background:var(--color-paper-100);border:1px solid var(--color-paper-300);
+  border-radius:14px;cursor:pointer;transition:border-color var(--motion-duration-fast) var(--motion-ease-standard);
 }
-.discover-recent-card:hover{border-color:var(--gold-line)}
-.discover-recent-title{font-family:var(--serif);font-size:16px;color:var(--hi)}
-.discover-recent-meta{font-size:12px;color:var(--low)}
-.discover-empty-text{color:var(--low);margin-bottom:12px}
+.discover-recent-card:hover{border-color:var(--color-accent)}
+.discover-recent-title{font-family:var(--serif);font-size:16px;color:var(--color-ink-900)}
+.discover-recent-meta{font-size:12px;color:var(--color-ink-500)}
+.discover-empty-text{color:var(--color-ink-500);margin-bottom:12px}
 
 /* ========== SECTION ========== */
 .section{padding:32px 0}
