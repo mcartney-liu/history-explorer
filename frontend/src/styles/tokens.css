@@ -80,3 +80,62 @@
   --border-default: #3A3324;
   --border-strong:  #4A412E;
 }
+
+/* ============================================================
+   P5-S2 Step 0 — VS-01 Token layer (light-first design-system names)
+   Aligned to docs/Phase4/VS-01_visual_design_system.md.
+   Migration strategy: semantic names reference DARK-compatible values
+   first (keep visual continuity on the current dark product); the
+   values flip to VS-01 light paper values at the dedicated theme-flip
+   slice. Old tokens are retained — additive only, never removed.
+   Article-0 three layers: Obj → ink/paper · Sub → accent · Truth → truth-*.
+   ============================================================ */
+:root {
+  /* ---- Ink (text/structure) — dark-compatible: light text on dark ---- */
+  --color-ink-900: var(--hi, #f7f5f0);             /* 主文字、标题、关键数值 */
+  --color-ink-700: var(--text-high, #F2EBDD);      /* 次级文字、正文 */
+  --color-ink-500: var(--text-mid, #C9BFA8);       /* 辅助、说明、元信息 */
+  --color-ink-300: var(--text-low, #8C8270);       /* 占位标签、禁用态文字 */
+  --color-ink-100: var(--text-faint, #5E5648);     /* 极弱提示、分割线文字 */
+
+  /* ---- Paper (surfaces) — dark-compatible ---- */
+  --color-paper-50:   var(--bg-base, #16130E);     /* 根背景 */
+  --color-paper-100:  var(--bg-surface, #1F1B14);  /* 次级表面、凹陷区 */
+  --color-paper-200:  var(--bg-elevated, #2A241A); /* 卡片边框、分隔、hover 底 */
+  --color-paper-300:  var(--border-strong, #4A412E); /* 强分割、轨道 */
+
+  /* ---- Accent (single emphasis color; VS-01 = Indigo/Slate, pure) ---- */
+  --color-accent:        #A5A0F5;                  /* 深底可见靛蓝（VS-01 #4F46E5 深色适配） */
+  --color-accent-hover:  #B4AFF7;
+  --color-accent-soft:   rgba(165, 160, 245, 0.16);
+  --color-accent-ink:    #16130E;                  /* accent 上的反白文字 */
+
+  /* ---- Truth (truth scale, green→ochre→terracotta; NEVER pink) ---- */
+  --color-truth-strong:        var(--verified, #4FA784);
+  --color-truth-strong-soft:   rgba(79, 167, 132, 0.12);
+  --color-truth-strong-line:   rgba(79, 167, 132, 0.25);
+  --color-truth-moderate:      #C08A3E;
+  --color-truth-moderate-soft: rgba(192, 138, 62, 0.14);
+  --color-truth-weak:          #C07A5A;            /* 弱证据（不隐藏） */
+  --color-truth-weak-soft:     rgba(192, 122, 90, 0.14);
+  --color-truth-objection:     #C08A6A;            /* 溯源异议（叙述型，非报错红） */
+  --color-truth-line:          var(--border-subtle, #2E281D);
+
+  /* ---- Status ---- */
+  --color-status-info:         #7FA8D9;
+  --color-status-info-soft:    rgba(127, 168, 217, 0.14);
+  --color-status-success:      var(--verified, #4FA784);
+  --color-status-danger:       #D97A5A;
+  --color-status-danger-soft:  rgba(217, 122, 90, 0.14);
+
+  /* ---- Scrim / Focus ---- */
+  --color-scrim:       rgba(0, 0, 0, 0.4);         /* 模态遮罩（实色半透明，非毛玻璃） */
+  --color-border-focus: var(--color-accent);       /* 焦点环描边 */
+
+  /* ---- Motion (VS-04 规则③: linear / ease-in-out ONLY) ---- */
+  --motion-duration-fast:   0.12s;
+  --motion-duration-normal: 0.2s;
+  --motion-duration-slow:   0.35s;
+  --motion-ease-standard:   ease-in-out;
+  --motion-ease-linear:     linear;
+}

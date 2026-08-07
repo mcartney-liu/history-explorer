@@ -11,7 +11,7 @@
 // ============================================================
 
 import { useMemo } from 'react'
-import { Icon } from '../ui/Icon'
+import { Icon, type IconName } from '../ui/Icon'
 import type { ExplorationState } from '../../next/exploration/ExplorationState'
 import type { ExplorationAction } from '../../next/exploration/ExplorationPolicy'
 import type { ExplorationMetrics } from '../../next/exploration/ExplorationMetrics'
@@ -32,14 +32,17 @@ interface UnderstandingStatusProps {
   graphStore?: GrowthGraphStore | null
 }
 
-function stageEmoji(stage: string | null): string {
+// P5-S2 Step 0: replace emoji stage glyphs with the locked M62 icon registry
+// (P0-1 red line — no emoji as functional icons). Sub-layer semantic: the
+// cognitive stage is the user's own trajectory → accent-* tokens (VS-01 §2.2).
+function stageIcon(stage: string | null): IconName {
   switch (stage) {
-    case 'FACT': return '🔍'
-    case 'EXPLANATION': return '💡'
-    case 'CONNECTION': return '🔗'
-    case 'UNDERSTANDING': return '🧠'
-    case 'NEW_QUESTION': return '❓'
-    default: return '📍'
+    case 'FACT': return 'research'
+    case 'EXPLANATION': return 'spark'
+    case 'CONNECTION': return 'link'
+    case 'UNDERSTANDING': return 'book'
+    case 'NEW_QUESTION': return 'chat'
+    default: return 'globe'
   }
 }
 
@@ -87,7 +90,7 @@ function Row({ label, value, hint }: { label: string; value: string; hint: strin
         {label}
         <span style={{ fontSize: '0.65rem', marginLeft: 4, opacity: 0.6 }}>{hint}</span>
       </span>
-      <span style={{ fontWeight: 600, color: 'var(--mid, #9CA3AF)' }}>{value}</span>
+      <span style={{ fontWeight: 600, color: 'var(--color-ink-500)' }}>{value}</span>
     </div>
   )
 }
@@ -122,23 +125,23 @@ export function UnderstandingStatus({
       <div style={{
         padding: 12,
         borderRadius: 'var(--radius-sm, 6px)',
-        border: '1px solid var(--gold-line, rgba(203,161,53,0.2))',
-        background: 'var(--gold-glow, rgba(203,161,53,0.04))',
+        border: '1px solid var(--color-accent-soft)',
+        background: 'var(--color-accent-soft)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: '1rem' }}>{stageEmoji(cognitiveStage)}</span>
+          <Icon name={stageIcon(cognitiveStage)} size={16} />
           <span style={{
             fontFamily: 'var(--serif, "Spectral", serif)',
             fontSize: '0.85rem',
             fontWeight: 600,
-            color: 'var(--gold-hi, #CBA135)',
+            color: 'var(--color-accent)',
           }}>
             {stageLabel(cognitiveStage)}
           </span>
         </div>
         <p style={{
           fontSize: '0.75rem',
-          color: 'var(--low, #6B7280)',
+          color: 'var(--color-ink-500)',
           margin: 0,
           lineHeight: 1.4,
         }}>
@@ -151,21 +154,21 @@ export function UnderstandingStatus({
         <div style={{
           padding: 12,
           borderRadius: 'var(--radius-sm, 6px)',
-          border: '1px solid rgba(79,167,132,0.2)',
-          background: 'rgba(79,167,132,0.04)',
+          border: '1px solid var(--color-truth-strong-line)',
+          background: 'var(--color-truth-strong-soft)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
-              color: '#4FA784',
+              color: 'var(--color-truth-strong)',
             }}>
               理解覆盖度
             </span>
             <span style={{
               fontSize: '0.8rem',
               fontWeight: 700,
-              color: '#4FA784',
+              color: 'var(--color-truth-strong)',
             }}>
               {coveragePct}%
             </span>
@@ -173,15 +176,15 @@ export function UnderstandingStatus({
           <div style={{
             height: 4,
             borderRadius: 2,
-            background: 'rgba(79,167,132,0.15)',
+            background: 'var(--color-paper-300)',
             overflow: 'hidden',
           }}>
             <div style={{
               height: '100%',
               width: `${coveragePct}%`,
               borderRadius: 2,
-              background: 'linear-gradient(90deg, #4FA784, #6BCB9B)',
-              transition: 'width 0.5s ease',
+              background: 'var(--color-truth-strong)',
+              transition: `width var(--motion-duration-slow) var(--motion-ease-standard)`,
             }} />
           </div>
           {explorationState.missingDimensions.length > 0 && (
@@ -191,8 +194,8 @@ export function UnderstandingStatus({
                   fontSize: '0.65rem',
                   padding: '2px 6px',
                   borderRadius: 4,
-                  background: 'rgba(79,167,132,0.1)',
-                  color: 'rgba(79,167,132,0.8)',
+                  background: 'var(--color-truth-strong-soft)',
+                  color: 'var(--color-truth-strong)',
                 }}>
                   缺: {dim}
                 </span>
@@ -207,22 +210,22 @@ export function UnderstandingStatus({
         <div style={{
           padding: 12,
           borderRadius: 'var(--radius-sm, 6px)',
-          border: '1px solid rgba(203,161,53,0.25)',
-          background: 'rgba(203,161,53,0.06)',
+          border: '1px solid var(--color-accent-soft)',
+          background: 'var(--color-accent-soft)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
             <Icon name="spark" size={16} />
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
-              color: 'var(--gold-hi, #CBA135)',
+              color: 'var(--color-accent)',
             }}>
               系统建议
             </span>
           </div>
           <p style={{
             fontSize: '0.78rem',
-            color: 'var(--gold-hi, #CBA135)',
+            color: 'var(--color-accent)',
             margin: '0 0 4px 0',
             fontWeight: 500,
             lineHeight: 1.3,
@@ -231,7 +234,7 @@ export function UnderstandingStatus({
           </p>
           <p style={{
             fontSize: '0.7rem',
-            color: 'var(--low, #6B7280)',
+            color: 'var(--color-ink-500)',
             margin: 0,
             lineHeight: 1.3,
           }}>
@@ -245,20 +248,20 @@ export function UnderstandingStatus({
         <div style={{
           padding: 12,
           borderRadius: 'var(--radius-sm, 6px)',
-          border: '1px solid rgba(125,140,196,0.2)',
-          background: 'rgba(125,140,196,0.04)',
+          border: '1px solid var(--color-accent-soft)',
+          background: 'var(--color-accent-soft)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <Icon name="timeline" size={16} />
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
-              color: '#7D8CC4',
+              color: 'var(--color-accent)',
             }}>
               认知增长
             </span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: '0.72rem', color: 'var(--low, #6B7280)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: '0.72rem', color: 'var(--color-ink-500)' }}>
             <Row label="深度" value={`+${explorationMetrics.depthDelta}`} hint="新探索的实体" />
             <Row label="广度" value={`+${explorationMetrics.dimensionDelta}`} hint="新覆盖的维度" />
             <Row label="关系" value={`+${explorationMetrics.connectionDelta}`} hint="新发现的关联" />
@@ -266,16 +269,16 @@ export function UnderstandingStatus({
             <div style={{
               marginTop: 6,
               paddingTop: 6,
-              borderTop: '1px solid rgba(125,140,196,0.15)',
+              borderTop: '1px solid var(--color-accent-soft)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-              <span style={{ fontWeight: 600, color: '#7D8CC4' }}>综合增长</span>
+              <span style={{ fontWeight: 600, color: 'var(--color-accent)' }}>综合增长</span>
               <span style={{
                 fontWeight: 700,
                 fontSize: '0.85rem',
-                color: explorationMetrics.understandingGrowthScore > 0 ? '#4FA784' : '#7D8CC4',
+                color: explorationMetrics.understandingGrowthScore > 0 ? 'var(--color-truth-strong)' : 'var(--color-accent)',
               }}>
                 {explorationMetrics.understandingGrowthScore > 0 ? '+' : ''}
                 {Math.round(explorationMetrics.understandingGrowthScore * 10) / 10}
@@ -290,24 +293,24 @@ export function UnderstandingStatus({
         <div style={{
           padding: 12,
           borderRadius: 'var(--radius-sm, 6px)',
-          border: '1px solid rgba(196,160,125,0.2)',
-          background: 'rgba(196,160,125,0.04)',
+          border: '1px solid var(--color-paper-300)',
+          background: 'var(--color-paper-100)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <Icon name="book" size={16} />
             <span style={{
               fontSize: '0.75rem',
               fontWeight: 600,
-              color: '#C4A07D',
+              color: 'var(--color-ink-700)',
             }}>
               记忆图
             </span>
           </div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--low, #6B7280)', lineHeight: 1.6 }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--color-ink-500)', lineHeight: 1.6 }}>
             <p style={{ margin: '0 0 4px 0' }}>
-              已记录 <strong style={{ color: '#C4A07D' }}>{graphSummary.totalNodes}</strong> 个认知节点
+              已记录 <strong style={{ color: 'var(--color-ink-700)' }}>{graphSummary.totalNodes}</strong> 个认知节点
               {graphSummary.milestones > 0 && (
-                <span>（含 <strong style={{ color: '#CBA135' }}>{graphSummary.milestones}</strong> 个里程碑）</span>
+                <span>（含 <strong style={{ color: 'var(--color-accent)' }}>{graphSummary.milestones}</strong> 个里程碑）</span>
               )}
             </p>
             {graphSummary.latestMilestone && (
@@ -324,8 +327,8 @@ export function UnderstandingStatus({
         <div style={{
           padding: 12,
           borderRadius: 'var(--radius-sm, 6px)',
-          border: '1px solid rgba(79,167,132,0.2)',
-          background: 'rgba(79,167,132,0.04)',
+          border: '1px solid var(--color-truth-moderate-soft)',
+          background: 'var(--color-truth-moderate-soft)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
             <Icon name="research" size={16} />
@@ -333,14 +336,14 @@ export function UnderstandingStatus({
               fontFamily: 'var(--serif, "Spectral", serif)',
               fontSize: '0.8rem',
               fontWeight: 600,
-              color: '#4FA784',
+              color: 'var(--color-truth-moderate)',
             }}>
               理解缺口
             </span>
           </div>
           <p style={{
             fontSize: '0.75rem',
-            color: 'var(--mid, #9CA3AF)',
+            color: 'var(--color-ink-500)',
             margin: 0,
             lineHeight: 1.4,
           }}>

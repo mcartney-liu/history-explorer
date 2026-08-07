@@ -769,6 +769,11 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/next/memory/MemoryProjection.ts",
   "frontend/src/routing/legacyRedirect.ts",
   "frontend/src/routing/parseRoute.ts",
+
+  // P5-S2 Step 0 — VS-01 Token layer (PO-approved 2026-08-07). Additive CSS
+  // variables only (VS-01 semantic names, dark-compatible values); old tokens
+  // retained. No backend / schema / enum / dependency / runtime change.
+  "frontend/src/styles/tokens.css",
 ];
 
 function _scopeAllowed(file) {
