@@ -8,7 +8,7 @@
 ## 当前汇总（2026-08-07 更新，Round 1+2 裁决完成）
 
 - **已决（Phase 1 裁决，PO 拍板）**：OD-02、Q-01、Q-03、R5、Q-04、Q-05、OD-06、OD-07 —— 共 8 项 RESOLVED（详见 ADR-0015）。
-- **仍 OPEN**：OD-01、OD-03、OD-04、OD-05、OD-08，及 Phase 0 残留 R2/R3/R4/R7/R8。
+- **仍 OPEN**：OD-01、OD-03、OD-04、OD-05、OD-08、OD-09，及 Phase 0 残留 R2/R3/R4/R7/R8。
 - **Phase 2 入口条件**：所有 Phase 1 阻塞项已全部裁决，可进入 Phase 2（Experience Architecture）。
 
 ## 登记册
@@ -29,3 +29,4 @@
 | 2026-08-07 | Phase 1 / P09 | OD-07 异议叙述范围 | Evidence/Source 无用户出口；P09 承诺异议叙述 | 补用户出口+异议叙述 | 无 | PO 裁决 | **RESOLVED** | Phase 2 给 Evidence/Source 补用户出口：证据强度分级 + 来源分级 + 异议叙述，服务 P09 与 Article 0 第三句。 |
 | 2026-08-07 | Phase 0 | R2/R3/R4/R7/R8 残留未决项 | Phase 0 推荐项 R2–R8 中除 R1/R6 外未关闭者 | 待单独复核 | 主持复核 | 单独复核完成 | OPEN | 详见 `docs/FRW-Phase0-ProductDiscovery-v2-2026-08-07.md` 第十节，需后续单独排期裁决。 |
 | 2026-08-07 | Phase 5 / M60 | OD-08 DiscoverPage 4 个陈旧测试（ProductIntro 已迁出） | ProductIntro 现由 App.tsx L1340 渲染（`productIntro={!current ? <ProductIntro /> : null}`）；DiscoverPage.test 仍断言 'History Explorer'/'历史叙事'/'关系探索'/'深度研究' 出现在 `<DiscoverPage>` 内 | 维持现状，测试列陈旧待清理（PO 选 A） | 无（不阻塞） | PO 拍板：恢复 DiscoverPage 内 ProductIntro 渲染（B）或同步删改测试 | OPEN | 4 项：renders entity type exploration cards / renders product introduction section / showcases all four capabilities / records open_discover event。M60 期间确认系与类型债无关的存量失败（基线 159b652 同败）。 |
+| 2026-08-07 | Phase 5 / P5-S2 Batch4 | OD-09 Mirror 主干无独立面板组件（TP-19/22） | FRW 四主干之一 Mirror（C19 成长刻度 / C22 L4.5 只读投影）需专门面板：lock+accent-soft 浅底、**无出边**（X-R5，与 TP-16 绝对视觉隔离）；当前无专门 UI 组件，MemoryProjection 纯逻辑 | 挂账，属**功能缺口**（非视觉合规，新建组件超出 P5-S2 范围） | 无（不阻塞） | 独立能力建设立项（FRW P0 重评） | OPEN | VS-03 TP-19/22 视觉契约已定义（lock 图标+只读角标+paper-100 底+无 Dock 操作）；UnderstandingStatus「记忆图」块是部分落点；新建 Mirror 面板组件须走能力建设流程。 |
