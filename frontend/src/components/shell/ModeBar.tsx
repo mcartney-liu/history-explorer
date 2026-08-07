@@ -58,10 +58,10 @@ export function ModeBar({ currentMode, currentTopic, currentFocus, onModeChange 
               borderRadius: 'var(--radius-sm, 6px)',
               fontSize: '0.8rem',
               fontWeight: isActive ? 600 : 400,
-              color: isActive ? 'var(--gold-hi, #CBA135)' : 'var(--low, #9CA3AF)',
-              background: isActive ? 'var(--gold-glow, rgba(203,161,53,0.08))' : 'transparent',
+              color: isActive ? 'var(--color-accent)' : 'var(--color-ink-500)',
+              background: isActive ? 'var(--color-accent-soft)' : 'transparent',
               border: isActive
-                ? '1px solid var(--gold-line, rgba(203,161,53,0.3))'
+                ? '1px solid var(--color-accent-soft)'
                 : '1px solid transparent',
               cursor: currentTopic ? 'pointer' : 'default',
               opacity: currentTopic ? 1 : 0.5,

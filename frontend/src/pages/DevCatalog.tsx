@@ -60,10 +60,10 @@ const mockInsight: EntityInsight = {
 // ---- Section helper ----
 function Section({ label, purpose, children }: { label: string; purpose: string; children: React.ReactNode }) {
   return (
-    <section style={{ marginBottom: 'var(--space-8)', borderBottom: '1px solid var(--line)', paddingBottom: 'var(--space-6)' }}>
-      <h2 style={{ fontFamily: 'var(--serif)', fontSize: '1.3rem', color: 'var(--hi)', marginBottom: 4 }}>{label}</h2>
-      <p style={{ fontSize: '0.8rem', color: 'var(--low)', marginBottom: 16 }}>Purpose: {purpose}</p>
-      <div style={{ padding: 16, background: 'var(--navy-card)', border: '1px solid var(--line)', borderRadius: 12 }}>
+    <section style={{ marginBottom: 'var(--space-8)', borderBottom: '1px solid var(--color-paper-300)', paddingBottom: 'var(--space-6)' }}>
+      <h2 style={{ fontFamily: 'var(--serif)', fontSize: '1.3rem', color: 'var(--color-ink-900)', marginBottom: 4 }}>{label}</h2>
+      <p style={{ fontSize: '0.8rem', color: 'var(--color-ink-500)', marginBottom: 16 }}>Purpose: {purpose}</p>
+      <div style={{ padding: 16, background: 'var(--color-paper-100)', border: '1px solid var(--color-paper-300)', borderRadius: 12 }}>
         {children}
       </div>
     </section>
@@ -79,8 +79,8 @@ export default function DevCatalog({
 
   return (
     <div className="page-container" style={{ paddingTop: 80, paddingBottom: 120 }}>
-      <h1 style={{ fontFamily: 'var(--serif)', fontSize: '2rem', color: 'var(--hi)', marginBottom: 8 }}>Component Catalog</h1>
-      <p style={{ color: 'var(--low)', marginBottom: 32 }}>Development reference — not visible to end users.</p>
+      <h1 style={{ fontFamily: 'var(--serif)', fontSize: '2rem', color: 'var(--color-ink-900)', marginBottom: 8 }}>Component Catalog</h1>
+      <p style={{ color: 'var(--color-ink-500)', marginBottom: 32 }}>Development reference — not visible to end users.</p>
 
       {/* Entity Components */}
       <Section label="EntityHero" purpose="Layer 1: Entity identity with type badge, meta, and quick actions.">
@@ -141,7 +141,7 @@ export default function DevCatalog({
 
       <Section label="ViewSwitcher" purpose="Three-mode tab: Graph | Timeline | Map. Parent-controlled active state.">
         <ViewSwitcher current={viewMode} onChange={setViewMode} />
-        <p style={{ marginTop: 8, fontSize: 13, color: 'var(--mid)' }}>Active: {viewMode}</p>
+        <p style={{ marginTop: 8, fontSize: 13, color: 'var(--color-ink-500)' }}>Active: {viewMode}</p>
       </Section>
 
       <Section label="ConnectionExplorer" purpose="Graph/Timeline/Map views from viewModel.connections.">
@@ -161,14 +161,14 @@ export default function DevCatalog({
 
       {/* Workspace components */}
       <Section label="WorkspacePanel" purpose="Right sidebar workspace with exploration assets.">
-        <p style={{ fontSize: 13, color: 'var(--low)' }}>WorkspacePanel rendered in main app layout. See AppShell → workspace slot.</p>
+        <p style={{ fontSize: 13, color: 'var(--color-ink-500)' }}>WorkspacePanel rendered in main app layout. See AppShell → workspace slot.</p>
       </Section>
 
       {/* M85.8 — Explorer Experience Alpha entry */}
       {onCausalObjectClick && (
         <Section label="Explorer Experience Alpha" purpose="M85.8 — First Understanding Journey: 秦制 → 科举 → 罗马法">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <p style={{ fontSize: 13, color: 'var(--mid)', margin: 0 }}>
+            <p style={{ fontSize: 13, color: 'var(--color-ink-500)', margin: 0 }}>
               点击开始第一条探索旅程。体验三幕叙事弧：理解 → 关联 → 继续探索。
             </p>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -183,10 +183,10 @@ export default function DevCatalog({
                   onClick={() => onCausalObjectClick(entry.id)}
                   style={{
                     padding: '10px 18px',
-                    background: 'var(--navy-card)',
-                    border: '1px solid var(--gold-500)',
+                    background: 'var(--color-paper-100)',
+                    border: '1px solid var(--color-accent)',
                     borderRadius: 8,
-                    color: 'var(--gold-hi)',
+                    color: 'var(--color-accent)',
                     cursor: 'pointer',
                     font: 'inherit',
                     fontSize: 14,

@@ -782,6 +782,11 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/pages/m89/m89.css",
   "frontend/src/App.css",
   "frontend/src/components/primitives/UnderstandingCard.tsx",
+  "frontend/src/pages/DevCatalog.tsx",
+  "frontend/src/components/GraphViewPanel.tsx",
+  "frontend/src/components/RelationshipPathGraph.tsx",
+  "frontend/src/components/RelationshipInsightPanel.tsx",
+  "frontend/src/components/InterpretationPanel.tsx",
 ];
 
 function _scopeAllowed(file) {

@@ -69,7 +69,7 @@ function InterpretationPanel({
       )}
       {hasUnderstandings && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
-          <h4 style={{ fontSize: '0.9rem', color: 'var(--mid, #9CA3AF)', fontWeight: 600 }}>
+          <h4 style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)', fontWeight: 600 }}>
             {t('discover.historicalMeaning')}
           </h4>
           {understandings!.map((u, idx) => (
@@ -78,11 +78,11 @@ function InterpretationPanel({
               before={`${u.actor} 与 ${u.target}`}
               evidence={
                 <>
-                  <span style={{ color: 'var(--gold-hi, #CBA135)', fontWeight: 600 }}>
+                  <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>
                     {u.perspective}
                   </span>
                   {u.timeContext && (
-                    <span style={{ marginLeft: 8, fontSize: '0.75rem', color: 'var(--low, #6B7280)' }}>
+                    <span style={{ marginLeft: 8, fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>
                       · {u.timeContext}
                     </span>
                   )}

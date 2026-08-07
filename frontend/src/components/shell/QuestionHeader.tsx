@@ -35,7 +35,7 @@ export function QuestionHeader({ question, goal }: QuestionHeaderProps) {
       <span style={{
         fontFamily: 'var(--serif, "Spectral", serif)',
         fontSize: '1.25rem',
-        color: 'var(--hi, #F3F4F6)',
+        color: 'var(--color-ink-900)',
         lineHeight: 1.4,
       }}>
         {displayQuestion}
@@ -43,7 +43,7 @@ export function QuestionHeader({ question, goal }: QuestionHeaderProps) {
       {goal && (
         <span style={{
           fontSize: '0.8rem',
-          color: 'var(--low, #6B7280)',
+          color: 'var(--color-ink-500)',
           fontStyle: 'italic',
         }}>
           · 目标：{goal}

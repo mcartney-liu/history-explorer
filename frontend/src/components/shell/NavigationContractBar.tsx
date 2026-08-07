@@ -83,23 +83,23 @@ export function NavigationContractBar({
         {hasContext ? (
           <>
             {fromLabel && (
-              <span style={{ fontSize: '0.8rem', color: 'var(--low, #6B7280)' }}>
-                ← 来自 <span style={{ color: 'var(--mid, #9CA3AF)' }}>{fromLabel}</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--color-ink-500)' }}>
+                ← 来自 <span style={{ color: 'var(--color-ink-500)' }}>{fromLabel}</span>
               </span>
             )}
             {whyLabel && (
-              <span style={{ fontSize: '0.8rem', color: 'var(--low, #6B7280)' }}>
-                因为 <span style={{ color: 'var(--gold-mid, #CBA135)', fontStyle: 'italic' }}>{whyLabel}</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--color-ink-500)' }}>
+                因为 <span style={{ color: 'var(--color-accent)', fontStyle: 'italic' }}>{whyLabel}</span>
               </span>
             )}
             {valueLabel && (
-              <span style={{ fontSize: '0.85rem', color: 'var(--hi, #F3F4F6)', fontWeight: 500 }}>
+              <span style={{ fontSize: '0.85rem', color: 'var(--color-ink-900)', fontWeight: 500 }}>
                 {valueLabel}
               </span>
             )}
           </>
         ) : (
-          <span style={{ fontSize: '0.8rem', color: 'var(--low, #6B7280)', fontStyle: 'italic' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--color-ink-500)', fontStyle: 'italic' }}>
             选择一个探索路径开始你的理解旅程
           </span>
         )}
@@ -110,8 +110,8 @@ export function NavigationContractBar({
         {cognitiveStage && (
           <span style={{
             fontSize: '0.75rem',
-            color: 'var(--gold-mid, #CBA135)',
-            background: 'var(--gold-glow, rgba(203,161,53,0.08))',
+            color: 'var(--color-accent)',
+            background: 'var(--color-accent-soft)',
             padding: '2px 10px',
             borderRadius: 'var(--radius-sm, 4px)',
           }}>
@@ -128,9 +128,9 @@ export function NavigationContractBar({
             padding: '6px 16px',
             borderRadius: 'var(--radius-sm, 6px)',
             fontSize: '0.85rem',
-            color: 'var(--gold-hi, #CBA135)',
+            color: 'var(--color-accent)',
             background: 'transparent',
-            border: '1px solid var(--gold-line, rgba(203,161,53,0.3))',
+            border: '1px solid var(--color-accent-soft)',
             cursor: 'pointer',
             transition: 'background 0.15s',
           }}

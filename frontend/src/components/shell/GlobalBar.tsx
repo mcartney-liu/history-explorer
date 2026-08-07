@@ -31,14 +31,14 @@ export function GlobalBar({ topic, topicTitles }: GlobalBarProps) {
         fontFamily: 'var(--serif, "Spectral", serif)',
         fontSize: '1rem',
         fontWeight: 700,
-        color: 'var(--gold-hi, #CBA135)',
+        color: 'var(--color-accent)',
       }}>
         History Explorer
       </span>
       {title && (
         <>
-          <span style={{ color: 'var(--gold-line, rgba(203,161,53,0.3))', fontSize: '0.9rem' }}>›</span>
-          <span style={{ fontSize: '0.9rem', color: 'var(--mid, #9CA3AF)' }}>{title}</span>
+          <span style={{ color: 'var(--color-accent-soft)', fontSize: '0.9rem' }}>›</span>
+          <span style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)' }}>{title}</span>
         </>
       )}
     </div>
