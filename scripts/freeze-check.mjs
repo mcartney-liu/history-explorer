@@ -775,6 +775,8 @@ export const SCOPE_ALLOWLIST = [
   // retained. No backend / schema / enum / dependency / runtime change.
   "frontend/src/styles/tokens.css",
   "frontend/src/styles/ui.css",
+  "frontend/src/styles/layout-grid.css",
+  "frontend/src/App.css",
 ];
 
 function _scopeAllowed(file) {

@@ -138,4 +138,10 @@
   --motion-duration-slow:   0.35s;
   --motion-ease-standard:   ease-in-out;
   --motion-ease-linear:     linear;
+
+  /* ---- Layout / Responsive (VS-01 §7/§8) ---- */
+  --layout-companion-w: 360px;                 /* 右侧 Companion 宽度 */
+  --resp-bp-sm: 640px;                         /* 手机 */
+  --resp-bp-md: 1024px;                        /* 平板 / 紧凑桌面 */
+  --resp-bp-lg: 1440px;                        /* 桌面 */
 }

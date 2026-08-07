@@ -259,3 +259,47 @@
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }
+
+/* --- Breadcrumb (TP-23 定位 · 常驻层) — P5-S2 VS-01 tokens ---
+   "Home › Topic › Entity" orientation trail (M2-003). Clicking a crumb
+   returns to that level; current crumb is ink-900 semibold. */
+.he-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1, 4px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.he-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 4px);
+}
+.he-breadcrumb-link {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm, 6px);
+  color: var(--color-ink-500);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+.he-breadcrumb-link:hover {
+  color: var(--color-accent);
+}
+.he-breadcrumb-link:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+.he-breadcrumb-current {
+  color: var(--color-ink-900);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+.he-breadcrumb-sep {
+  color: var(--color-ink-300);
+  font-size: 0.78rem;
+}

@@ -164,10 +164,15 @@
 }
 
 /* ---- M65-A02: Companion shell visual baseline (DS-aligned, tokens only) ---- */
+/* P5-S2 TP-18: width via VS-01 layout-companion-w token (360px). Narrow-screen
+   drawer (resp-companion) is a shell-level layout behaviour — registered, not
+   implemented in this visual-compliance slice. */
 .companion-shell {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  width: var(--layout-companion-w, 360px);
+  max-width: 100%;
 }
 .companion-title {
   font-family: var(--serif);
