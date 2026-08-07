@@ -184,61 +184,60 @@ input:focus,textarea:focus{border-color:var(--gold-line)}
 /* ========== HOME PAGE ========== */
 .discover-page{padding:50px 56px 40px;position:relative;z-index:1}
 .discover-hero{margin-bottom:40px}
+/* TP-26 首屏承担者 — P5-S2 VS-01 tokens: ink-900 主标题/ink-500 副标题 */
 .discover-hero-title{
   font-family:var(--serif);font-weight:900;font-size:56px;line-height:1.12;
-  letter-spacing:2px;color:var(--hi);
+  letter-spacing:2px;color:var(--color-ink-900);
   text-shadow:0 2px 20px rgba(0,0,0,0.5);
 }
 .discover-hero-sub{
-  font-size:15px;line-height:1.9;color:var(--mid);
+  font-size:15px;line-height:1.9;color:var(--color-ink-500);
   margin-top:18px;max-width:520px;font-weight:300;
   margin-left:auto;margin-right:auto;
   text-align:center;
 }
-.discover-section-heading{font-family:var(--serif);font-size:1.4rem;color:var(--hi);margin-bottom:4px}
-.discover-section-sub{color:var(--low);font-size:.85rem;margin-bottom:20px}
+.discover-section-heading{font-family:var(--serif);font-size:1.4rem;color:var(--color-ink-900);margin-bottom:4px}
+.discover-section-sub{color:var(--color-ink-500);font-size:.85rem;margin-bottom:20px}
 
-/* theme cards */
+/* theme cards (TP-01 起点锚定) — 去渐变/毛玻璃（VS-04 规则②），纯色 paper 表面 */
 .discover-themes{margin:40px 0}
 .discover-theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .discover-theme-card{
   display:flex;flex-direction:column;gap:8px;padding:24px;
-  background:linear-gradient(158deg,rgba(17,25,48,0.94),rgba(9,14,28,0.97));
-  border:1px solid var(--line);border-radius:14px;
-  text-align:left;cursor:pointer;transition:.2s;font-family:var(--sans);
-  backdrop-filter:blur(12px);
+  background:var(--color-paper-100);
+  border:1px solid var(--color-paper-300);border-radius:14px;
+  text-align:left;cursor:pointer;transition:transform var(--motion-duration-fast) var(--motion-ease-standard);font-family:var(--sans);
 }
 .discover-theme-card:hover{
-  border-color:var(--gold-line);
-  background:linear-gradient(158deg,rgba(28,40,72,0.96),rgba(15,22,42,0.98));
-  box-shadow:0 12px 38px var(--gold-glow);
+  border-color:var(--color-accent);
+  box-shadow:0 8px 24px var(--color-accent-soft);
   transform:translateY(-4px);
 }
-.discover-theme-label{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--hi)}
-.discover-theme-desc{font-size:13px;color:var(--mid)}
+.discover-theme-label{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--color-ink-900)}
+.discover-theme-desc{font-size:13px;color:var(--color-ink-500)}
 
-/* featured */
+/* featured (TP-26 主 CTA) — accent 仅用于主 CTA 描边（VS-03 §1 TP-26），无渐变大图 */
 .discover-featured{margin:40px 0}
 .discover-featured-card{
   display:flex;flex-direction:column;gap:10px;padding:28px;width:100%;
-  background:linear-gradient(135deg,rgba(17,25,48,0.96),rgba(9,14,28,0.98));
-  border:1px solid var(--gold-line);border-radius:16px;
-  text-align:left;cursor:pointer;transition:.2s;font-family:var(--sans);
+  background:var(--color-paper-100);
+  border:1px solid var(--color-accent);border-radius:16px;
+  text-align:left;cursor:pointer;transition:transform var(--motion-duration-fast) var(--motion-ease-standard);font-family:var(--sans);
   margin-bottom:16px;
 }
-.discover-featured-card:hover{box-shadow:0 14px 46px var(--gold-glow);transform:translateY(-4px)}
-.discover-featured-title{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--gold-hi)}
-.discover-featured-desc{font-size:14px;color:var(--mid)}
+.discover-featured-card:hover{box-shadow:0 10px 32px var(--color-accent-soft);transform:translateY(-4px)}
+.discover-featured-title{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--color-ink-900)}
+.discover-featured-desc{font-size:14px;color:var(--color-ink-500)}
 
-/* popular */
+/* popular (TP-01) — paper 表面 + accent hover */
 .discover-popular{margin:40px 0}
 .discover-topic-list{list-style:none;display:flex;flex-wrap:wrap;gap:10px}
 .discover-topic-card{
   padding:10px 20px;border-radius:30px;font-size:14px;
-  background:rgba(14,20,38,0.6);border:1px solid var(--line);
-  color:var(--mid);cursor:pointer;transition:.18s;
+  background:var(--color-paper-100);border:1px solid var(--color-paper-300);
+  color:var(--color-ink-500);cursor:pointer;transition:color var(--motion-duration-fast) var(--motion-ease-standard);
 }
-.discover-topic-card:hover{color:var(--gold-hi);border-color:var(--gold-line);background:var(--gold-glow);transform:translateY(-3px)}
+.discover-topic-card:hover{color:var(--color-accent);border-color:var(--color-accent);background:var(--color-accent-soft);transform:translateY(-3px)}
 
 /* product intro */
 .discover-intro{margin:40px 0}
