@@ -39,7 +39,6 @@ export function ExplorationShell({
   const [workspaceCollapsed, setWorkspaceCollapsed] = useState(true)
   const [companionCollapsed, setCompanionCollapsed] = useState(true)
 
-  const bothCollapsed = workspaceCollapsed && companionCollapsed
   const shellClass = [
     'exploration-space',
     workspaceCollapsed ? 'exploration-space--ws-collapsed' : '',

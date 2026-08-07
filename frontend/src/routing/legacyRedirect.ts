@@ -33,13 +33,6 @@
 // Fallback: `_` for any prefix not in this map (redirect still
 // works — the Shell can handle unknown topics gracefully).
 // ------------------------------------------------------------------
-const CAUSAL_PREFIX_TO_TOPIC: Record<string, string> = {
-  china_v1: 'china_civilization_v1',
-  roman_empire: 'roman_empire',
-  silk_road: 'silk_road',
-  ancient_india: 'ancient_india',
-  greek_philosophy: 'greek_philosophy',
-}
 
 // ------------------------------------------------------------------
 // Legacy redirect functions — each returns the new URL or null

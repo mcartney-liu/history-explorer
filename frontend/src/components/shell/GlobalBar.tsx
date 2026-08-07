@@ -7,8 +7,7 @@
 // Stage E will add: global search, topic switcher dropdown.
 // ============================================================
 
-import { useMemo, type ReactNode } from 'react'
-import { Icon } from '../ui/Icon'
+import { useMemo } from 'react'
 
 interface GlobalBarProps {
   /** Current topic slug from the Router. */

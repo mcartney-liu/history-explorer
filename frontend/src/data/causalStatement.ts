@@ -3,6 +3,10 @@
  */
 
 export interface CausalStatementData {
+  /** Optional causal-statement id. Present on CausalObjectData (which extends
+   * this); absent on bare statements. Made optional here so consumers that
+   * receive either shape can read `.id` without a type error. */
+  id?: string
   cause_id: string
   effect_id: string
   mechanism: string | null

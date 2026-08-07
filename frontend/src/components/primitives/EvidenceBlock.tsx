@@ -13,7 +13,6 @@
 // ============================================================
 
 import { type ReactNode } from 'react'
-import { GroundingBadge } from '../ui/GroundingBadge'
 
 // ============================================================
 // Types

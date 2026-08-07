@@ -18,7 +18,6 @@
 import {
   type ExperienceMode,
   type RouteState,
-  EXPLORE_PREFIX,
   isExperienceMode,
 } from './routeSchema'
 

@@ -71,7 +71,7 @@ export interface MemoryPersistencePayload {
  */
 export function evaluateMemory(
   delta: ProjectionDelta,
-  existingState: ExistingMemoryState,
+  _existingState: ExistingMemoryState,
   context: PolicyContext,
 ): Decision<MemoryPersistencePayload> {
   const trace: RuleTrace[] = []

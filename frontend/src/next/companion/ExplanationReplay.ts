@@ -72,7 +72,7 @@ export interface ExplanationReplayResult {
  */
 export function replayExplanation(
   decisionPackage: DecisionPackage<CompanionResponsePayload>,
-  renderer: ExplanationRenderer,
+  _renderer: ExplanationRenderer,
   rendererConfig: RendererConfig,
   originalArtifact?: ExplanationArtifact | null,
 ): ExplanationReplayResult {

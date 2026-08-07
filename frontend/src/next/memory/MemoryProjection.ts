@@ -177,7 +177,6 @@ function generateLabel(node: GrowthNode): string {
 function stageLabel(stage: UnderstandingStage): string {
   switch (stage) {
     case 'FACT': return '确认事实'
-    case 'EXPLANATION': return '理解原因'
     case 'CONNECTION': return '建立关联'
     case 'UNDERSTANDING': return '形成理解'
     case 'NEW_QUESTION': return '产生新问题'
