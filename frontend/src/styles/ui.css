@@ -344,3 +344,41 @@
   font-size: 0.78rem;
   line-height: 1.5;
 }
+
+/* --- Skeleton loading (TP-29 隐性底层) — P5-S2 VS-01 ---
+   Previously className-only (he-skeleton* zero CSS). Blocks color-paper-200,
+   pulse non-bounce (opacity, motion-ease-standard), static under
+   prefers-reduced-motion (VS-03 TP-29 / VS-04 rule 3). */
+.he-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+.he-skeleton-label {
+  font-size: 0.75rem;
+  color: var(--color-ink-500);
+  margin-bottom: var(--space-2);
+}
+.he-skeleton-line {
+  height: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-200);
+  animation: he-skeleton-pulse var(--motion-duration-slow) var(--motion-ease-standard) infinite;
+}
+.he-skeleton-line--title {
+  width: 40%;
+  height: 18px;
+}
+.he-skeleton-line--short {
+  width: 60%;
+}
+@keyframes he-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .he-skeleton-line {
+    animation: none;
+  }
+}
