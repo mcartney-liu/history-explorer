@@ -30,7 +30,8 @@ interface UnderstandingCanvasProps {
   supportingSection: ReactNode
 }
 
-// Section header component
+// Section header component. P5-S2 TP-10: active state via VS-01 accent
+// tokens (no gold), no emoji markers (P0-1), motion ease-in-out.
 function SectionHeader({ title, subtitle, active }: {
   title: string
   subtitle?: string
@@ -42,17 +43,17 @@ function SectionHeader({ title, subtitle, active }: {
       marginBottom: 12,
       borderRadius: 'var(--radius-sm, 8px)',
       border: active
-        ? '1px solid var(--gold-line, rgba(203,161,53,0.3))'
-        : '1px solid var(--border-subtle, rgba(255,255,255,0.06))',
+        ? '1px solid var(--color-accent)'
+        : '1px solid var(--color-paper-300)',
       background: active
-        ? 'var(--gold-glow, rgba(203,161,53,0.04))'
-        : 'rgba(255,255,255,0.02)',
+        ? 'var(--color-accent-soft)'
+        : 'var(--color-paper-100)',
     }}>
       <div style={{
         fontFamily: 'var(--serif, "Spectral", serif)',
         fontSize: '1rem',
         fontWeight: 700,
-        color: active ? 'var(--gold-hi, #CBA135)' : 'var(--mid, #9CA3AF)',
+        color: active ? 'var(--color-accent)' : 'var(--color-ink-700)',
         marginBottom: subtitle ? 4 : 0,
       }}>
         {title}
@@ -60,7 +61,7 @@ function SectionHeader({ title, subtitle, active }: {
       {subtitle && (
         <div style={{
           fontSize: '0.78rem',
-          color: 'var(--low, #6B7280)',
+          color: 'var(--color-ink-500)',
           lineHeight: 1.4,
         }}>
           {subtitle}
@@ -95,8 +96,8 @@ export function UnderstandingCanvas({
       <div style={{
         padding: '16px 20px',
         borderRadius: 'var(--radius-sm, 8px)',
-        border: '1px solid var(--gold-line, rgba(203,161,53,0.2))',
-        background: 'var(--gold-glow, rgba(203,161,53,0.03))',
+        border: '1px solid var(--color-accent-soft)',
+        background: 'var(--color-accent-soft)',
       }}>
         <div style={{
           display: 'flex',
@@ -109,13 +110,13 @@ export function UnderstandingCanvas({
             <span style={{
               fontSize: '0.85rem',
               fontWeight: 600,
-              color: 'var(--gold-hi, #CBA135)',
+              color: 'var(--color-accent)',
             }}>
-              {stage === 'FACT' && '🔍 当前阶段：了解基本事实'}
-              {stage === 'EXPLANATION' && '💡 当前阶段：理解因果关系'}
-              {stage === 'CONNECTION' && '🔗 当前阶段：发现关联'}
-              {stage === 'UNDERSTANDING' && '🧠 当前阶段：形成理解'}
-              {stage === 'NEW_QUESTION' && '❓ 当前阶段：新问题浮现'}
+              {stage === 'FACT' && '当前阶段：了解基本事实'}
+              {stage === 'EXPLANATION' && '当前阶段：理解因果关系'}
+              {stage === 'CONNECTION' && '当前阶段：发现关联'}
+              {stage === 'UNDERSTANDING' && '当前阶段：形成理解'}
+              {stage === 'NEW_QUESTION' && '当前阶段：新问题浮现'}
             </span>
           </div>
           {coveragePct > 0 && (
@@ -128,21 +129,21 @@ export function UnderstandingCanvas({
                 width: 100,
                 height: 4,
                 borderRadius: 2,
-                background: 'rgba(79,167,132,0.15)',
+                background: 'var(--color-paper-300)',
                 overflow: 'hidden',
               }}>
                 <div style={{
                   height: '100%',
                   width: `${coveragePct}%`,
                   borderRadius: 2,
-                  background: 'linear-gradient(90deg, #4FA784, #6BCB9B)',
-                  transition: 'width 0.5s ease',
+                  background: 'var(--color-truth-strong)',
+                  transition: `width var(--motion-duration-slow) var(--motion-ease-standard)`,
                 }} />
               </div>
               <span style={{
                 fontSize: '0.75rem',
                 fontWeight: 600,
-                color: '#4FA784',
+                color: 'var(--color-truth-strong)',
               }}>
                 {coveragePct}%
               </span>
@@ -157,31 +158,31 @@ export function UnderstandingCanvas({
 
       {/* Narrative section — what this topic IS */}
       <SectionHeader
-        title={narrativeActive ? '👆 你正在了解这个主题的基本事实' : '这个主题是什么'}
+        title={narrativeActive ? '你正在了解这个主题的基本事实' : '这个主题是什么'}
         subtitle="历史叙事、核心实体与背景"
         active={narrativeActive}
       />
-      <div style={{ opacity: narrativeActive ? 1 : 0.7, transition: 'opacity 0.3s' }}>
+      <div style={{ opacity: narrativeActive ? 1 : 0.7, transition: `opacity var(--motion-duration-normal) var(--motion-ease-standard)` }}>
         {narrativeSection}
       </div>
 
       {/* Interpretation section — WHY things happened */}
       <SectionHeader
-        title={interpretationActive ? '👆 你正在探索它们之间的关系' : '它们之间有什么关系'}
+        title={interpretationActive ? '你正在探索它们之间的关系' : '它们之间有什么关系'}
         subtitle="因果关系、实体关联与时间线"
         active={interpretationActive}
       />
-      <div style={{ opacity: interpretationActive ? 1 : 0.65, transition: 'opacity 0.3s' }}>
+      <div style={{ opacity: interpretationActive ? 1 : 0.65, transition: `opacity var(--motion-duration-normal) var(--motion-ease-standard)` }}>
         {interpretationSection}
       </div>
 
       {/* Supporting section — WHAT ELSE to explore */}
       <SectionHeader
-        title={supportingActive ? '👆 你正在深入理解这个主题' : '还有什么可以探索'}
+        title={supportingActive ? '你正在深入理解这个主题' : '还有什么可以探索'}
         subtitle="跨主题连接、AI解读与继续探索"
         active={supportingActive}
       />
-      <div style={{ opacity: supportingActive ? 1 : 0.55, transition: 'opacity 0.3s' }}>
+      <div style={{ opacity: supportingActive ? 1 : 0.55, transition: `opacity var(--motion-duration-normal) var(--motion-ease-standard)` }}>
         {supportingSection}
       </div>
     </div>
