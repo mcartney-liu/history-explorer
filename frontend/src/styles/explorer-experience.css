@@ -10,7 +10,7 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
-  color: var(--text-mid, #C9BFA8);
+  color: var(--color-ink-500);
   line-height: 1.75;
 }
 
@@ -24,8 +24,8 @@
 
 .co-experience-back {
   background: none;
-  border: 1px solid var(--border-default, rgba(203, 161, 53, 0.15));
-  color: var(--text-low, #8A8068);
+  border: 1px solid var(--color-paper-300));
+  color: var(--color-ink-500);
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -33,19 +33,14 @@
   transition: color 0.2s, border-color 0.2s;
 }
 .co-experience-back:hover {
-  color: var(--text-mid, #C9BFA8);
-  border-color: var(--gold-500, #CBA135);
+  color: var(--color-ink-500);
+  border-color: var(--color-accent);
 }
 
 /* === Act Dividers === */
 .co-act-divider {
   height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--gold-500, #CBA135),
-    transparent
-  );
+  background: var(--color-accent);
   opacity: 0.25;
   margin: 2.5rem 0;
 }
@@ -60,7 +55,7 @@
 .co-narrative-question {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text-high, #F2EBDD);
+  color: var(--color-ink-900);
   margin: 0 0 0.75rem 0;
   letter-spacing: 0.01em;
 }
@@ -68,7 +63,7 @@
 .co-narrative-text {
   font-size: 0.95rem;
   line-height: 1.85;
-  color: var(--text-mid, #C9BFA8);
+  color: var(--color-ink-500);
   margin: 0;
 }
 
@@ -82,13 +77,13 @@
 .co-connections-heading {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text-high, #F2EBDD);
+  color: var(--color-ink-900);
   margin: 0 0 0.35rem 0;
 }
 
 .co-connections-intro {
   font-size: 0.85rem;
-  color: var(--text-low, #8A8068);
+  color: var(--color-ink-500);
   margin: 0 0 1.25rem 0;
 }
 
@@ -103,8 +98,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background: var(--bg-elevated, #2A241A);
-  border: 1px solid var(--border-default, rgba(203, 161, 53, 0.1));
+  background: var(--color-paper-200);
+  border: 1px solid var(--color-paper-300));
   border-radius: 10px;
   padding: 1rem 1.15rem;
   cursor: pointer;
@@ -114,8 +109,8 @@
   font: inherit;
 }
 .co-connection-card:hover {
-  border-color: var(--gold-500, #CBA135);
-  background: var(--bg-elevated-hover, #322B1F);
+  border-color: var(--color-accent);
+  background: var(--color-paper-200);
 }
 
 .co-connection-card-top {
@@ -153,19 +148,19 @@
 .co-connection-target-name {
   font-size: 0.92rem;
   font-weight: 600;
-  color: var(--text-high, #F2EBDD);
+  color: var(--color-ink-900);
 }
 
 .co-connection-explanation {
   font-size: 0.85rem;
   line-height: 1.65;
-  color: var(--text-mid, #C9BFA8);
+  color: var(--color-ink-500);
   margin: 0;
 }
 
 .co-connection-cta {
   font-size: 0.8rem;
-  color: var(--gold-500, #CBA135);
+  color: var(--color-accent);
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -183,13 +178,13 @@
 .co-explore-heading {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text-high, #F2EBDD);
+  color: var(--color-ink-900);
   margin: 0 0 0.35rem 0;
 }
 
 .co-explore-intro {
   font-size: 0.85rem;
-  color: var(--text-low, #8A8068);
+  color: var(--color-ink-500);
   margin: 0 0 1.25rem 0;
 }
 
@@ -202,19 +197,19 @@
 }
 
 .co-explore-entity-card {
-  background: var(--bg-surface, #1F1B14);
-  border: 1px solid var(--border-default, rgba(203, 161, 53, 0.1));
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300));
   border-radius: 8px;
   padding: 0.55rem 0.9rem;
   font-size: 0.85rem;
-  color: var(--text-mid, #C9BFA8);
+  color: var(--color-ink-500);
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
   font: inherit;
 }
 .co-explore-entity-card:hover {
-  border-color: var(--gold-500, #CBA135);
-  color: var(--text-high, #F2EBDD);
+  border-color: var(--color-accent);
+  color: var(--color-ink-900);
 }
 
 .co-explore-entity-name {
@@ -235,7 +230,7 @@
   background: none;
   border: none;
   padding: 0.45rem 0;
-  color: var(--text-mid, #C9BFA8);
+  color: var(--color-ink-500);
   cursor: pointer;
   font: inherit;
   font-size: 0.85rem;
@@ -243,11 +238,11 @@
   transition: color 0.2s;
 }
 .co-explore-path-item:hover {
-  color: var(--gold-500, #CBA135);
+  color: var(--color-accent);
 }
 
 .co-explore-path-arrow {
-  color: var(--gold-500, #CBA135);
+  color: var(--color-accent);
   opacity: 0.5;
   font-size: 0.8rem;
   flex-shrink: 0;
@@ -291,8 +286,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  background: var(--bg-elevated, #2A241A);
-  border: 1px solid var(--border-default, rgba(203, 161, 53, 0.1));
+  background: var(--color-paper-200);
+  border: 1px solid var(--color-paper-300));
   border-radius: 12px;
   padding: 1.25rem 1.35rem;
   cursor: pointer;
@@ -302,15 +297,15 @@
   font: inherit;
 }
 .discover-seed-card:hover {
-  border-color: var(--gold-500, #CBA135);
-  background: var(--bg-elevated-hover, #322B1F);
+  border-color: var(--color-accent);
+  background: var(--color-paper-200);
   transform: translateY(-1px);
 }
 
 .discover-seed-question {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-high, #F2EBDD);
+  color: var(--color-ink-900);
   line-height: 1.4;
 }
 
@@ -319,19 +314,19 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--gold-500, #CBA135);
+  color: var(--color-accent);
   opacity: 0.7;
 }
 
 .discover-seed-path {
   font-size: 0.8rem;
-  color: var(--text-low, #8A8068);
+  color: var(--color-ink-500);
 }
 
 .discover-seed-cta {
   margin-top: 0.35rem;
   font-size: 0.82rem;
-  color: var(--gold-500, #CBA135);
+  color: var(--color-accent);
   opacity: 0;
   transition: opacity 0.2s;
 }

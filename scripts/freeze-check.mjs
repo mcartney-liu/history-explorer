@@ -777,6 +777,9 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/styles/ui.css",
   "frontend/src/styles/layout-grid.css",
   "frontend/src/styles/package.css",
+  "frontend/src/styles/explorer-experience.css",
+  "frontend/src/styles/components.css",
+  "frontend/src/pages/m89/m89.css",
   "frontend/src/App.css",
   "frontend/src/components/primitives/UnderstandingCard.tsx",
 ];

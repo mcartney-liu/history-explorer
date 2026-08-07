@@ -78,8 +78,8 @@
   width: 280px;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: 12px;
   z-index: 10;
   padding: var(--space-4);
@@ -106,8 +106,8 @@
   width: 340px;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: 12px;
   z-index: 10;
   padding: var(--space-5);
@@ -126,17 +126,17 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-left: none;
   border-radius: 0 8px 8px 0;
-  color: var(--mid);
+  color: var(--color-ink-500);
   padding: 12px 6px;
   cursor: pointer;
   transition: color 0.2s;
 }
 .workspace-toggle-btn:hover {
-  color: var(--gold-500);
+  color: var(--color-accent);
 }
 
 /* ---- Companion toggle button — sits on the right edge, vertically centered ---- */
@@ -146,17 +146,17 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-right: none;
   border-radius: 8px 0 0 8px;
-  color: var(--mid);
+  color: var(--color-ink-500);
   padding: 12px 6px;
   cursor: pointer;
   transition: color 0.2s;
 }
 .companion-toggle-btn:hover {
-  color: var(--gold-500);
+  color: var(--color-accent);
 }
 /* When companion is open, button overlaps the panel left edge */
 .companion-toggle-btn--inside {
@@ -177,10 +177,10 @@
 .companion-title {
   font-family: var(--serif);
   font-size: 1.25rem;
-  color: var(--hi);
+  color: var(--color-ink-900);
   margin: 0;
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--color-paper-300);
 }
 .companion-modes {
   display: inline-flex;
@@ -189,9 +189,9 @@
 }
 .companion-mode-btn {
   appearance: none;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--color-paper-300);
   background: transparent;
-  color: var(--mid);
+  color: var(--color-ink-500);
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
@@ -201,23 +201,23 @@
   transition: var(--animation-fast);
 }
 .companion-mode-btn:hover {
-  color: var(--hi);
-  border-color: var(--border-strong);
+  color: var(--color-ink-900);
+  border-color: var(--color-paper-300);
 }
 .companion-mode-btn.active {
-  background: var(--gold-glow);
-  color: var(--gold-hi);
-  border-color: var(--gold-line);
-  box-shadow: inset 0 0 0 1px var(--gold-line);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 1px var(--color-accent-soft);
 }
 .companion-section {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-200);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius);
   padding: var(--space-4);
 }
 .companion-hint {
-  color: var(--low);
+  color: var(--color-ink-500);
   font-size: 0.85rem;
   line-height: 1.5;
   margin: 0;
@@ -234,13 +234,13 @@
   font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--hi);
+  color: var(--color-ink-900);
   margin: 0;
 }
 .exploration-insight-badge {
   font-size: 0.7rem;
-  color: var(--low);
-  border: 1px solid var(--border-subtle);
+  color: var(--color-ink-500);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius-sm);
   padding: 2px 8px;
   white-space: nowrap;
@@ -259,11 +259,11 @@
   font-size: 0.875rem;
 }
 .exploration-insight-row dt {
-  color: var(--mid);
+  color: var(--color-ink-500);
   margin: 0;
 }
 .exploration-insight-row dd {
-  color: var(--hi);
+  color: var(--color-ink-900);
   margin: 0;
   font-weight: 500;
 }
@@ -272,13 +272,13 @@
 }
 .exploration-insight-signals-label {
   font-size: 0.8rem;
-  color: var(--mid);
+  color: var(--color-ink-500);
   margin: 0 0 var(--space-1);
 }
 .exploration-insight-signals ul {
   margin: 0;
   padding-left: var(--space-4);
-  color: var(--low);
+  color: var(--color-ink-500);
   font-size: 0.8rem;
   line-height: 1.5;
 }
@@ -286,8 +286,8 @@
 /* Bottom timeline strip */
 .timeline-strip {
   grid-area: strip;
-  background: var(--bg-base);
-  border-top: 1px solid var(--border-subtle);
+  background: var(--color-paper-50);
+  border-top: 1px solid var(--color-paper-300);
   display: flex;
   align-items: center;
   padding: 0 var(--space-4);
@@ -307,7 +307,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--gold-500);
+  background: var(--color-accent);
 }
 
 .ws-rail-dot-sm {
@@ -315,7 +315,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--low);
+  background: var(--color-ink-500);
 }
 
 .ws-rail-history {
@@ -345,9 +345,9 @@
 
 .ws-pin-btn {
   background: none;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius-sm);
-  color: var(--low);
+  color: var(--color-ink-500);
   cursor: pointer;
   padding: var(--space-1);
   display: flex;
@@ -357,8 +357,8 @@
 }
 
 .ws-pin-btn:hover {
-  color: var(--gold-500);
-  border-color: var(--gold-500);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 /* -----------------------------------------------------------
@@ -380,8 +380,8 @@
   }
   /* Mobile: restore rail background as anchor for the collapsed icon column */
   .ws-rail {
-    background: var(--bg-base);
-    border-right: 1px solid var(--border-subtle);
+    background: var(--color-paper-50);
+    border-right: 1px solid var(--color-paper-300);
   }
   /* Mobile: panels return to grid flow, no fixed positioning */
   .companion-panel {
@@ -390,7 +390,7 @@
     width: auto;
     max-height: 60vh;
     border-left: 0;
-    border-top: 1px solid var(--border-subtle);
+    border-top: 1px solid var(--color-paper-300);
     border-radius: 0;
     box-shadow: none;
   }
@@ -439,7 +439,7 @@
      Individual regions (GlobalBar, ModeBar, etc.) set their own
      semi-transparent backgrounds so content is readable. */
   background: transparent;
-  color: var(--hi);
+  color: var(--color-ink-900);
   position: relative;
   z-index: 1;
 }
@@ -450,8 +450,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--color-paper-300);
+  background: var(--color-paper-200);
   flex-shrink: 0;
 }
 
@@ -465,19 +465,19 @@
   font-family: var(--serif);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--gold-hi);
+  color: var(--color-accent);
 }
 
 .explorer-global-topic {
   font-size: 0.85rem;
-  color: var(--mid);
+  color: var(--color-ink-500);
 }
 
 /* ---- 2. Question Header ---- */
 .explorer-question-header {
   padding: 16px 24px 12px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-base);
+  border-bottom: 1px solid var(--color-paper-300);
+  background: var(--color-paper-50);
   flex-shrink: 0;
 }
 
@@ -489,7 +489,7 @@
 .explorer-question-text {
   font-family: var(--serif);
   font-size: 1.15rem;
-  color: var(--low);
+  color: var(--color-ink-500);
   font-style: italic;
 }
 
@@ -499,8 +499,8 @@
   align-items: center;
   gap: 4px;
   padding: 8px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-base);
+  border-bottom: 1px solid var(--color-paper-300);
+  background: var(--color-paper-50);
   flex-shrink: 0;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -515,15 +515,15 @@
   padding: 6px 16px;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
-  color: var(--low);
+  color: var(--color-ink-500);
   background: transparent;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--color-paper-300);
 }
 
 .explorer-mode-tab:first-child {
-  color: var(--gold-hi);
-  border-color: var(--gold-line);
-  background: var(--gold-glow);
+  color: var(--color-accent);
+  border-color: var(--color-accent-soft);
+  background: var(--color-accent-soft);
 }
 
 /* ---- 4. Content Row: Rail | Canvas | Dock ---- */
@@ -538,10 +538,8 @@
 .explorer-context-rail {
   width: 260px;
   flex-shrink: 0;
-  border-right: 1px solid var(--border-subtle);
-  background: rgba(10,12,20,0.35); /* match Canvas — transparent glass */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-right: 1px solid var(--color-paper-300);
+  background: var(--color-paper-100);
   overflow-y: auto;
   padding: var(--space-4);
   padding-bottom: 360px; /* extra bottom space for smooth scroll feel */
@@ -561,12 +559,12 @@
   font-family: var(--serif);
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--mid);
+  color: var(--color-ink-500);
 }
 
 .explorer-context-hint {
   font-size: 0.8rem;
-  color: var(--low);
+  color: var(--color-ink-500);
   line-height: 1.5;
   margin: 0;
 }
@@ -578,17 +576,17 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-left: none;
   border-radius: 0 8px 8px 0;
-  color: var(--mid);
+  color: var(--color-ink-500);
   padding: 12px 6px;
   cursor: pointer;
   transition: color 0.2s;
 }
 .explorer-rail-toggle:hover {
-  color: var(--gold-500);
+  color: var(--color-accent);
 }
 .explorer-rail-toggle--inside {
   left: 260px;
@@ -609,10 +607,8 @@
 .explorer-companion-dock {
   width: 340px;
   flex-shrink: 0;
-  border-left: 1px solid var(--border-subtle);
-  background: rgba(10,12,20,0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-left: 1px solid var(--color-paper-300);
+  background: var(--color-paper-100);
   overflow-y: auto;
   padding: var(--space-5);
   padding-bottom: 360px; /* extra bottom space for smooth scroll feel */
@@ -632,12 +628,12 @@
   font-family: var(--serif);
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--mid);
+  color: var(--color-ink-500);
 }
 
 .explorer-companion-hint {
   font-size: 0.8rem;
-  color: var(--low);
+  color: var(--color-ink-500);
   line-height: 1.5;
   margin: 0;
 }
@@ -649,17 +645,17 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-right: none;
   border-radius: 8px 0 0 8px;
-  color: var(--mid);
+  color: var(--color-ink-500);
   padding: 12px 6px;
   cursor: pointer;
   transition: color 0.2s;
 }
 .explorer-companion-toggle:hover {
-  color: var(--gold-500);
+  color: var(--color-accent);
 }
 .explorer-companion-toggle--inside {
   right: 340px;
@@ -670,8 +666,8 @@
   display: flex;
   align-items: center;
   padding: 12px 24px;
-  border-top: 1px solid var(--border-subtle);
-  background: var(--bg-elevated);
+  border-top: 1px solid var(--color-paper-300);
+  background: var(--color-paper-200);
   flex-shrink: 0;
 }
 
@@ -682,7 +678,7 @@
 
 .explorer-navigation-hint {
   font-size: 0.85rem;
-  color: var(--low);
+  color: var(--color-ink-500);
   font-style: italic;
 }
 
@@ -690,7 +686,7 @@
 .landing-tabs-bar {
   display: flex;
   gap: 0;
-  border-bottom: 2px solid var(--border-subtle);
+  border-bottom: 2px solid var(--color-paper-300);
 }
 
 .landing-tab {
@@ -700,7 +696,7 @@
   font-family: var(--serif);
   font-size: 1.05rem;
   font-weight: 500;
-  color: var(--low);
+  color: var(--color-ink-500);
   padding: 12px 24px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -709,12 +705,12 @@
 }
 
 .landing-tab:hover {
-  color: var(--mid);
+  color: var(--color-ink-500);
 }
 
 .landing-tab--active {
-  color: var(--gold-hi);
-  border-bottom-color: var(--gold-hi);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
   font-weight: 600;
 }
 
@@ -731,13 +727,13 @@
     width: 100%;
     max-height: 40vh;
     border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--color-paper-300);
   }
   .explorer-companion-dock {
     width: 100%;
     max-height: 40vh;
     border-left: none;
-    border-top: 1px solid var(--border-subtle);
+    border-top: 1px solid var(--color-paper-300);
   }
   .explorer-canvas {
     max-width: none;

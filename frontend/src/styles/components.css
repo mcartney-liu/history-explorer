@@ -5,20 +5,20 @@
 
 /* ---- Common card surface ---- */
 .surf-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--line);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius-lg);
 }
 
 .surf-card-high {
-  background: linear-gradient(158deg, rgba(22,19,14,0.9), rgba(22,19,14,0.95));
-  border: 1px solid var(--gold-line);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-accent-soft);
   border-radius: var(--radius-lg);
 }
 
 .surf-card-gold {
-  background: linear-gradient(158deg, rgba(22,19,14,0.7), rgba(22,19,14,0.8));
-  border: 1px solid var(--line);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius-lg);
 }
 
@@ -34,20 +34,20 @@
   cursor: pointer;
   transition: var(--animation-fast);
   font-family: var(--sans);
-  border: 1px solid var(--line);
-  background: var(--bg-surface);
-  color: var(--mid);
+  border: 1px solid var(--color-paper-300);
+  background: var(--color-paper-100);
+  color: var(--color-ink-500);
 }
 
 .btn:hover {
-  color: var(--hi);
-  border-color: var(--gold-line);
+  color: var(--color-ink-900);
+  border-color: var(--color-accent-soft);
 }
 
 .btn-gold {
-  border-color: var(--gold-line);
-  color: var(--gold-hi);
-  background: var(--gold-glow);
+  border-color: var(--color-accent-soft);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
 }
 
 .btn-gold:hover {
@@ -57,19 +57,19 @@
 .btn-ghost {
   background: transparent;
   border-color: transparent;
-  color: var(--low);
+  color: var(--color-ink-500);
   font-size: var(--text-caption);
 }
 
 .btn-ghost:hover {
-  color: var(--hi);
-  background: var(--gold-glow);
+  color: var(--color-ink-900);
+  background: var(--color-accent-soft);
 }
 
 /* ---- Section label ---- */
 .sec-label {
   font-size: var(--text-label);
-  color: var(--low);
+  color: var(--color-ink-500);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -77,7 +77,7 @@
 /* ---- Separator ---- */
 .hr {
   border: none;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--color-paper-300);
   margin: var(--space-4) 0;
 }
 
@@ -90,14 +90,14 @@
   line-height: 1.6;
 }
 .layer-badge--causal {
-  color: var(--verified);
-  border: 1px solid var(--verified);
+  color: var(--color-truth-strong);
+  border: 1px solid var(--color-truth-strong);
 }
 .layer-badge--inference {
-  color: var(--info);
-  border: 1px solid var(--info);
+  color: var(--color-status-info);
+  border: 1px solid var(--color-status-info);
 }
 .layer-badge--evidence {
-  color: var(--text-low);
-  border: 1px solid var(--border-default);
+  color: var(--color-ink-500);
+  border: 1px solid var(--color-paper-300);
 }
