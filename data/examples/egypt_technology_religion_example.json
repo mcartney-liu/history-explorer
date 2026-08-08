@@ -13,7 +13,8 @@
         "Pyramid of Khufu"
       ],
       "labels": {
-        "en": "Great Pyramid of Giza Built"
+        "en": "Great Pyramid of Giza Built",
+        "zh": "吉萨大金字塔建成"
       },
       "start_date": {
         "value": -2560,
@@ -42,7 +43,8 @@
         "Kemet"
       ],
       "labels": {
-        "en": "Ancient Egyptian Civilization"
+        "en": "Ancient Egyptian Civilization",
+        "zh": "古埃及文明"
       },
       "start_date": {
         "value": -3100,
@@ -75,7 +77,8 @@
         "The Two Lands"
       ],
       "labels": {
-        "en": "Ancient Egypt"
+        "en": "Ancient Egypt",
+        "zh": "古埃及"
       },
       "start_date": null,
       "end_date": null,
@@ -99,7 +102,8 @@
       "global_id": "egypt_technology_religion:tech-papyrus",
       "aliases": [],
       "labels": {
-        "en": "Papyrus Papermaking"
+        "en": "Papyrus Papermaking",
+        "zh": "莎草纸制造"
       },
       "start_date": null,
       "end_date": null,
@@ -125,7 +129,8 @@
         "Kemetic religion"
       ],
       "labels": {
-        "en": "Ancient Egyptian Religion"
+        "en": "Ancient Egyptian Religion",
+        "zh": "古埃及宗教"
       },
       "start_date": null,
       "end_date": null,
@@ -149,7 +154,8 @@
         "Sumer"
       ],
       "labels": {
-        "en": "Mesopotamian Civilization"
+        "en": "Mesopotamian Civilization",
+        "zh": "美索不达米亚文明"
       },
       "start_date": {
         "value": -3500,
@@ -180,7 +186,8 @@
         "Belief in one god"
       ],
       "labels": {
-        "en": "Monotheism"
+        "en": "Monotheism",
+        "zh": "一神论"
       },
       "start_date": {
         "value": -1350,
@@ -201,7 +208,8 @@
       "global_id": "egypt_technology_religion:tp-old-kingdom",
       "aliases": [],
       "labels": {
-        "en": "Egyptian Old Kingdom"
+        "en": "Egyptian Old Kingdom",
+        "zh": "古王国时期"
       }
     },
     {
@@ -212,7 +220,8 @@
       "global_id": "egypt_technology_religion:tp-new-kingdom",
       "aliases": [],
       "labels": {
-        "en": "Egyptian New Kingdom"
+        "en": "Egyptian New Kingdom",
+        "zh": "新王国时期"
       }
     },
     {
@@ -225,7 +234,8 @@
         "Cult of Osiris"
       ],
       "labels": {
-        "en": "Osiris Cult"
+        "en": "Osiris Cult",
+        "zh": "奥西里斯崇拜"
       }
     },
     {
@@ -238,7 +248,8 @@
         "Hieroglyphs"
       ],
       "labels": {
-        "en": "Hieroglyphic Writing"
+        "en": "Hieroglyphic Writing",
+        "zh": "象形文字"
       }
     },
     {
@@ -249,7 +260,8 @@
       "global_id": "egypt_technology_religion:tech-mummification",
       "aliases": [],
       "labels": {
-        "en": "Mummification"
+        "en": "Mummification",
+        "zh": "木乃伊制作术"
       }
     },
     {
@@ -260,7 +272,8 @@
       "global_id": "egypt_technology_religion:person-imhotep",
       "aliases": [],
       "labels": {
-        "en": "Imhotep"
+        "en": "Imhotep",
+        "zh": "伊姆霍特普"
       }
     }
   ],

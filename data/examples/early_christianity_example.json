@@ -13,7 +13,8 @@
         "Jesus Christ"
       ],
       "labels": {
-        "en": "Jesus of Nazareth"
+        "en": "Jesus of Nazareth",
+        "zh": "拿撒勒人耶稣"
       },
       "start_date": {
         "value": 4,
@@ -60,7 +61,8 @@
         "Saul of Tarsus"
       ],
       "labels": {
-        "en": "Paul the Apostle"
+        "en": "Paul the Apostle",
+        "zh": "使徒保罗"
       },
       "start_date": {
         "value": 5,
@@ -105,7 +107,8 @@
       "global_id": "early_christianity:loc-jerusalem",
       "aliases": [],
       "labels": {
-        "en": "Jerusalem"
+        "en": "Jerusalem",
+        "zh": "耶路撒冷"
       },
       "start_date": null,
       "end_date": null,
@@ -126,7 +129,8 @@
       "global_id": "early_christianity:event-crucifixion",
       "aliases": [],
       "labels": {
-        "en": "Crucifixion of Jesus"
+        "en": "Crucifixion of Jesus",
+        "zh": "耶稣受难"
       },
       "start_date": null,
       "end_date": null,
@@ -148,7 +152,8 @@
       "global_id": "early_christianity:event-paul-mission",
       "aliases": [],
       "labels": {
-        "en": "Paul's Missionary Journeys"
+        "en": "Paul's Missionary Journeys",
+        "zh": "保罗的宣教之旅"
       },
       "start_date": null,
       "end_date": null,
@@ -172,7 +177,8 @@
         "Primitive Church"
       ],
       "labels": {
-        "en": "Early Christian Church"
+        "en": "Early Christian Church",
+        "zh": "早期基督教会"
       },
       "start_date": null,
       "end_date": null,
@@ -195,7 +201,8 @@
         "Rising from the dead"
       ],
       "labels": {
-        "en": "Resurrection"
+        "en": "Resurrection",
+        "zh": "复活"
       },
       "start_date": null,
       "end_date": null,
@@ -211,7 +218,8 @@
       "global_id": "early_christianity:loc-antioch",
       "aliases": [],
       "labels": {
-        "en": "Antioch"
+        "en": "Antioch",
+        "zh": "安提阿"
       },
       "start_date": null,
       "end_date": null,
@@ -234,7 +242,8 @@
         "Simon Peter"
       ],
       "labels": {
-        "en": "Saint Peter"
+        "en": "Saint Peter",
+        "zh": "圣彼得"
       }
     },
     {
@@ -247,7 +256,8 @@
         "Common Greek"
       ],
       "labels": {
-        "en": "Koine Greek"
+        "en": "Koine Greek",
+        "zh": "通用希腊语"
       }
     },
     {
@@ -258,7 +268,8 @@
       "global_id": "early_christianity:event-pentecost",
       "aliases": [],
       "labels": {
-        "en": "Pentecost"
+        "en": "Pentecost",
+        "zh": "五旬节"
       }
     }
   ],

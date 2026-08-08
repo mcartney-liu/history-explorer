@@ -15,7 +15,8 @@
       ],
       "labels": {
         "en": "Achaemenid Persian Empire",
-        "fa": "Shāhanshāhī-ye Hakhāmaneshi"
+        "fa": "Shāhanshāhī-ye Hakhāmaneshi",
+        "zh": "阿契美尼德波斯帝国"
       },
       "start_date": {
         "value": -550,
@@ -49,7 +50,8 @@
       ],
       "labels": {
         "en": "Cyrus the Great",
-        "fa": "Kūrosh-e Bozorg"
+        "fa": "Kūrosh-e Bozorg",
+        "zh": "居鲁士大帝"
       },
       "start_date": {
         "value": -600,
@@ -96,7 +98,8 @@
         "Darius the Great"
       ],
       "labels": {
-        "en": "Darius I"
+        "en": "Darius I",
+        "zh": "大流士一世"
       },
       "start_date": {
         "value": -550,
@@ -139,7 +142,8 @@
         "Xerxes the Great"
       ],
       "labels": {
-        "en": "Xerxes I"
+        "en": "Xerxes I",
+        "zh": "薛西斯一世"
       },
       "start_date": {
         "value": -519,
@@ -182,7 +186,8 @@
         "Takht-e Jamshid"
       ],
       "labels": {
-        "en": "Persepolis"
+        "en": "Persepolis",
+        "zh": "波斯波利斯"
       },
       "start_date": null,
       "end_date": null,
@@ -205,7 +210,8 @@
         "Mazdayasna"
       ],
       "labels": {
-        "en": "Zoroastrianism"
+        "en": "Zoroastrianism",
+        "zh": "琐罗亚斯德教"
       },
       "start_date": null,
       "end_date": null,
@@ -228,7 +234,8 @@
         "Zoroaster"
       ],
       "labels": {
-        "en": "Zarathustra"
+        "en": "Zarathustra",
+        "zh": "琐罗亚斯德"
       },
       "start_date": {
         "value": -1000,
@@ -253,7 +260,8 @@
       "global_id": "persian_empire:tech-royal-road",
       "aliases": [],
       "labels": {
-        "en": "Royal Road"
+        "en": "Royal Road",
+        "zh": "王室大道"
       },
       "start_date": null,
       "end_date": null,
@@ -277,7 +285,8 @@
       "global_id": "persian_empire:event-cyrus-conquests",
       "aliases": [],
       "labels": {
-        "en": "Cyrus's Conquests"
+        "en": "Cyrus's Conquests",
+        "zh": "居鲁士的征服"
       },
       "start_date": null,
       "end_date": null,
@@ -299,7 +308,8 @@
       "global_id": "persian_empire:tp-achaemenid",
       "aliases": [],
       "labels": {
-        "en": "Achaemenid Era"
+        "en": "Achaemenid Era",
+        "zh": "阿契美尼德时代"
       },
       "start_date": {
         "value": -550,
@@ -327,7 +337,8 @@
         "Shushan"
       ],
       "labels": {
-        "en": "Susa"
+        "en": "Susa",
+        "zh": "苏萨"
       }
     },
     {
@@ -340,7 +351,8 @@
         "Cult of Mithras"
       ],
       "labels": {
-        "en": "Mithraism"
+        "en": "Mithraism",
+        "zh": "密特拉信仰"
       }
     }
   ],

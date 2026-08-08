@@ -12,7 +12,8 @@
       "aliases": [],
       "labels": {
         "en": "Socrates",
-        "el": "Sōkratēs"
+        "el": "Sōkratēs",
+        "zh": "苏格拉底"
       },
       "start_date": {
         "value": -470,
@@ -55,7 +56,8 @@
       "aliases": [],
       "labels": {
         "en": "Plato",
-        "el": "Platōn"
+        "el": "Platōn",
+        "zh": "柏拉图"
       },
       "start_date": {
         "value": -428,
@@ -97,7 +99,8 @@
       "aliases": [],
       "labels": {
         "en": "Aristotle",
-        "el": "Aristotelēs"
+        "el": "Aristotelēs",
+        "zh": "亚里士多德"
       },
       "start_date": {
         "value": -384,
@@ -140,7 +143,8 @@
       "aliases": [],
       "labels": {
         "en": "Pythagoras",
-        "el": "Pythagoras"
+        "el": "Pythagoras",
+        "zh": "毕达哥拉斯"
       },
       "start_date": {
         "value": -570,
@@ -182,7 +186,8 @@
       "aliases": [],
       "labels": {
         "en": "Athens",
-        "el": "Athēnai"
+        "el": "Athēnai",
+        "zh": "雅典"
       },
       "start_date": null,
       "end_date": null,
@@ -203,7 +208,8 @@
       "global_id": "greek_philosophy:event-academy-founded",
       "aliases": [],
       "labels": {
-        "en": "Plato's Academy Founded"
+        "en": "Plato's Academy Founded",
+        "zh": "柏拉图学园创立"
       },
       "start_date": null,
       "end_date": null,
@@ -228,7 +234,8 @@
         "Ideai"
       ],
       "labels": {
-        "en": "Theory of Forms"
+        "en": "Theory of Forms",
+        "zh": "理念论"
       },
       "start_date": null,
       "end_date": null,
@@ -246,7 +253,8 @@
         "Syllogism"
       ],
       "labels": {
-        "en": "Logic and Syllogism"
+        "en": "Logic and Syllogism",
+        "zh": "逻辑学与三段论"
       },
       "start_date": null,
       "end_date": null,
@@ -262,7 +270,8 @@
       "global_id": "greek_philosophy:loc-lyceum",
       "aliases": [],
       "labels": {
-        "en": "Lyceum"
+        "en": "Lyceum",
+        "zh": "吕克昂学园"
       },
       "start_date": null,
       "end_date": null,
@@ -283,7 +292,8 @@
       "global_id": "greek_philosophy:person-archimedes",
       "aliases": [],
       "labels": {
-        "en": "Archimedes"
+        "en": "Archimedes",
+        "zh": "阿基米德"
       }
     },
     {
@@ -294,7 +304,8 @@
       "global_id": "greek_philosophy:tech-archimedes-screw",
       "aliases": [],
       "labels": {
-        "en": "Archimedes' Screw"
+        "en": "Archimedes' Screw",
+        "zh": "阿基米德螺旋泵"
       }
     },
     {
@@ -305,7 +316,8 @@
       "global_id": "greek_philosophy:idea-atomism",
       "aliases": [],
       "labels": {
-        "en": "Atomism"
+        "en": "Atomism",
+        "zh": "原子论"
       }
     }
   ],
