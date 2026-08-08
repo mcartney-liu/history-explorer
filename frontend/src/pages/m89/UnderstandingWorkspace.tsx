@@ -13,6 +13,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react'
+import { Icon } from '../../components/ui/Icon'
 import type { UnderstandingWorkspaceState } from '../../next/exploration/UnderstandingWorkspaceState'
 import { buildTopicUnderstandingState } from '../../next/exploration/topicUnderstandingState'
 

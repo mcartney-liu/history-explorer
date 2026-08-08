@@ -36,6 +36,7 @@ export type IconName =
   | 'timeline'
   | 'arrow-right'
   | 'check'
+  | 'chevron-down'
   // --- entity-type icons (replaces the old emoji set) ---
   | 'person'
   | 'civilization'
@@ -149,6 +150,10 @@ const PATHS: Record<IconName, JSX.Element> = {
   // check (grounding verified)
   check: (
     <path d="M5 12.5l4 4 10-10" />
+  ),
+  // chevron-down (collapsible section drawer)
+  'chevron-down': (
+    <path d="M6 9l6 6 6-6" />
   ),
   // 👤 person
   person: (
