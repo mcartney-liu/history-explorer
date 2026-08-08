@@ -534,6 +534,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "persian_empire:person-darius",
+      "target": "persian_empire:civ-persian",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "贝希斯敦铭文；希罗多德《历史》第三卷",
+      "evidence": [
+        "ec-pe-013"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "大流士即位性质的对立叙述：官方铭文自称神授平叛，希罗多德记载为合谋夺位，构成波斯帝国正统起源的解释分歧。",
+      "reviewed": true
     }
   ],
   "timeline": [

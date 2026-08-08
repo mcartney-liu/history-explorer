@@ -442,6 +442,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "early_christianity:idea-resurrection",
+      "target": "early_christianity:person-jesus",
+      "type": "reinterprets",
+      "confidence": "low",
+      "citation": "福音书（《马可》《马太》等）；历史批判研究",
+      "evidence": [
+        "ec-ch-012"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "复活事件在神学（信仰事件）与历史学（门徒信仰经验）之间被给出两套重释，是早期基督教研究最核心的解释分歧。",
+      "reviewed": true
     }
   ],
   "timeline": [

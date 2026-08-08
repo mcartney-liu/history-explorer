@@ -3328,5 +3328,75 @@
       "controversy_level": "medium",
       "interpretation_note": "朱王之争是宋明理学史的经典公案，双方都有完整著作体系支撑，属立场对立的 disputes，非对错之分。"
     }
+  },
+  {
+    "id": "ec-pe-013",
+    "subject_type": "entity",
+    "subject_id": "person-darius",
+    "source_id": "src-behistun",
+    "claim": "大流士一世的即位合法性存在对立叙述：贝希斯敦铭文自称奉阿胡拉·马兹达之命平乱继位；希罗多德《历史》则记载大流士与同谋者合谋杀斯梅尔迪斯（伪巴尔迪亚）后以马嘶占得王位。铭文自我辩护与外部史料的夺位叙述构成经典争议。",
+    "notes": "争议焦点：大流士即位是神授平叛还是宫廷政变。",
+    "truth": {
+      "confidence": 0.6,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "官方铭文（贝希斯敦）与外部史料（希罗多德）对同一事件给出对立叙述，属立场对立的 disputes，非对错之分。"
+    }
+  },
+  {
+    "id": "ec-gp-013",
+    "subject_type": "entity",
+    "subject_id": "person-socrates",
+    "source_id": "src-plato-dialogues",
+    "claim": "苏格拉底形象存在\"历史苏格拉底\"与\"柏拉图笔下苏格拉底\"的重释分歧：色诺芬与阿里斯托芬呈现的苏格拉底各有侧重，柏拉图对话中的苏格拉底常被视为柏拉图自己哲学的传声筒；后世对\"真实苏格拉底\"的追寻由此成为希腊哲学史公案。",
+    "notes": "争议焦点：对话录中的苏格拉底是历史人物还是柏拉图的思想载体。",
+    "truth": {
+      "confidence": 0.65,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "苏格拉底无著作传世，形象全赖他人转写；柏拉图对老师的理想化书写构成对历史人物的系统性重释，属 reinterprets。"
+    }
+  },
+  {
+    "id": "ec-he-015",
+    "subject_type": "entity",
+    "subject_id": "person-alexander",
+    "source_id": "src-arrian-anabasis",
+    "claim": "亚历山大大帝之死因存在对立解释：阿利安等主流史家记为疾病（高热/疟疾）；普鲁塔克与后世宫廷流言则流传被毒杀之说（以毒酒谋害）。死因之争直接影响对继业者战争合法性的评价。",
+    "notes": "争议焦点：亚历山大死于疾病还是谋杀。",
+    "truth": {
+      "confidence": 0.7,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "一手史家倾向疾病说，宫廷阴谋叙事长期流传，双方证据均间接，属解释层面的 disputes。"
+    }
+  },
+  {
+    "id": "ec-eg-014",
+    "subject_type": "entity",
+    "subject_id": "event-great-pyramid-built",
+    "source_id": "src-oxford-egypt",
+    "claim": "吉萨大金字塔建造者的身份存在重释：希罗多德记载的\"强迫劳役/奴隶建造\"说统治两千年；20世纪以来的考古证据（工人村、面包啤酒配给、职业铭文）指向由受酬自由劳工与季节性征召民夫构成的专业队伍，彻底改写建造者叙事。",
+    "notes": "争议焦点：金字塔由奴隶还是自由劳工建造。",
+    "truth": {
+      "confidence": 0.75,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "现代考古学对古典记载的系统性重释，将\"奴隶苦役\"叙事修正为\"专业化自由劳工\"，属 reinterprets 的典型。"
+    }
+  },
+  {
+    "id": "ec-ch-012",
+    "subject_type": "entity",
+    "subject_id": "idea-resurrection",
+    "source_id": "src-nt-gospels",
+    "claim": "耶稣复活的历史解释存在分歧：信徒文本（福音书）记载为超自然事件；历史批判学者多将其解释为门徒的信仰经验/异象的产物；介于两者之间的\"空坟墓但非超自然\"等中间立场亦存在。对复活的历史性判断是早期基督教研究的核心争论。",
+    "notes": "争议焦点：复活是历史事件还是信仰经验的产物。",
+    "truth": {
+      "confidence": 0.5,
+      "scholar_consensus": "disputed",
+      "controversy_level": "high",
+      "interpretation_note": "福音书为信仰文本、成书晚于事件；历史学无法以超自然为解释变量，学界对同一文本给出神学与史学两套重释，属 reinterprets。"
+    }
   }
 ]

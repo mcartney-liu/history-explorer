@@ -444,6 +444,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "egypt_technology_religion:event-great-pyramid-built",
+      "target": "egypt_technology_religion:civ-egypt",
+      "type": "reinterprets",
+      "confidence": "medium",
+      "citation": "希罗多德《历史》；牛津埃及考古（工人村发掘）",
+      "evidence": [
+        "ec-eg-014"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "考古学将\"奴隶苦役建造金字塔\"的古典叙事重释为专业化自由劳工的工程组织，改写了两千年的建造者想象。",
+      "reviewed": true
     }
   ],
   "timeline": [

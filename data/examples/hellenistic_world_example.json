@@ -715,6 +715,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "hellenistic_world:person-alexander",
+      "target": "hellenistic_world:event-diadochi-wars",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "阿利安《亚历山大远征记》；普鲁塔克《亚历山大传》",
+      "evidence": [
+        "ec-he-015"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "亚历山大死因（疾病 vs 毒杀）的对立解释，直接影响对继业者战争正当性的评价。",
+      "reviewed": true
     }
   ],
   "timeline": [

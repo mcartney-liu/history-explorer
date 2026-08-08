@@ -509,6 +509,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "greek_philosophy:person-plato",
+      "target": "greek_philosophy:person-socrates",
+      "type": "reinterprets",
+      "confidence": "medium",
+      "citation": "柏拉图《申辩篇》《斐多篇》；色诺芬《回忆录》",
+      "evidence": [
+        "ec-gp-013"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "柏拉图对话中的苏格拉底是理想化、承载柏拉图哲学的形象，与色诺芬等呈现的历史苏格拉底构成重释关系；\"真实苏格拉底\"由此成为公案。",
+      "reviewed": true
     }
   ],
   "timeline": [
