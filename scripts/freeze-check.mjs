@@ -786,8 +786,6 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/styles/components.css",
   "frontend/src/pages/m89/m89.css",
   "frontend/src/App.css",
-  "frontend/src/styles/legacy-theme.css",
-  "frontend/src/main.tsx",
   "frontend/src/components/shell/ExplorerShell.tsx",
   "frontend/src/components/primitives/UnderstandingCard.tsx",
   "frontend/src/pages/DevCatalog.tsx",
@@ -884,7 +882,14 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/pages/m89/UnderstandingWorkspace.tsx",
   "frontend/src/pages/m89/m89.css",
   "frontend/src/__tests__/App.smoke.test.tsx",
-  "frontend/src/components/shell/ExplorationShell.tsx",
+  // Wave2-#141(3) — shell cleanup (PO-approved 2026-08-08): ExplorationShell
+  // was an orphan (production App renders ExplorerShell since M90.3, yet the
+  // smoke test kept covering the dead shell). App.smoke realigned to
+  // ExplorerShell; ExplorationShell + CompanionPlaceholder + the legacy
+  // frosted-glass ThemeToggle (ExplorerShell.tsx) and its stylesheet
+  // (legacy-theme.css) are deleted — one product, one face, one shell.
+  // App.smoke.test.tsx stays allowlisted; shell/ dir prefix still covers
+  // ExplorerShell.tsx. No backend / dependency / API-contract change.
 ];
 
 function _scopeAllowed(file) {

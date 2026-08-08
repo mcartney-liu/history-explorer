@@ -14,52 +14,23 @@
 // Slot architecture: no business logic, no state management.
 // All slots accept ReactNode; the parent (App.tsx) decides what
 // to render in each region.
+//
+// Wave2-#141(3): ThemeToggle removed — one product, one face. The
+// v1 theme is fixed at first paint (legacy frosted-glass skin and
+// its localStorage toggle are gone; legacy CSS rules become inert).
 // ============================================================
 
 import { useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 
 // ============================================================
-// P5-S2 Theme Switch — apply persisted theme before first paint
-// (module-level side effect runs on import, before React renders,
-// so there is no flash when the user reloads a non-default theme).
-// Default is "v1" (clean); "legacy" restores the frosted-glass look.
+// Fixed theme: v1 (clean). The legacy frosted-glass theme was
+// previously selectable via a ThemeToggle; keeping the dataset
+// marker set to "v1" at module load ensures VS-04 rules resolve
+// against the shipped theme on first paint.
 // ============================================================
-const THEME_KEY = 'he-theme'
-type AppTheme = 'v1' | 'legacy'
-const _persistedTheme: AppTheme =
-  (typeof window !== 'undefined' &&
-    (window.localStorage.getItem(THEME_KEY) as AppTheme | null)) ||
-  'v1'
-document.documentElement.dataset.theme = _persistedTheme
-
-function ThemeToggle() {
-  const [theme, setTheme] = useState<AppTheme>(
-    (document.documentElement.dataset.theme as AppTheme) || 'v1',
-  )
-  const toggle = () => {
-    const next: AppTheme = theme === 'v1' ? 'legacy' : 'v1'
-    document.documentElement.dataset.theme = next
-    try {
-      window.localStorage.setItem(THEME_KEY, next)
-    } catch {
-      /* storage unavailable — non-fatal */
-    }
-    setTheme(next)
-  }
-  const isV1 = theme === 'v1'
-  return (
-    <button
-      type="button"
-      className="theme-toggle"
-      onClick={toggle}
-      aria-label={isV1 ? '切换到原始毛玻璃风格' : '切换到干净改版风格'}
-      title={isV1 ? '当前：干净改版 · 点击看原始毛玻璃' : '当前：原始毛玻璃 · 点击看干净改版'}
-    >
-      <Icon name="compare" size={20} />
-      <span className="theme-toggle-label">{isV1 ? '改版' : '原版'}</span>
-    </button>
-  )
+if (typeof document !== 'undefined') {
+  document.documentElement.dataset.theme = 'v1'
 }
 
 interface ExplorerShellProps {
@@ -108,7 +79,6 @@ export function ExplorerShell({
             <span className="explorer-global-topic">—</span>
           </div>
         )}
-        <ThemeToggle />
       </header>
 
       {/* ============================================================
