@@ -84,6 +84,9 @@ export const RELATIONSHIP_TYPE_LABELS: Record<string, string> = {
   inherited: '继承为',
   conquered: '征服',
   spread: '传播',
+  // ADR-0019 (Wave2-#138): Truth-layer dissent navigation
+  disputes: '存在争议',
+  reinterprets: '重新解释',
 }
 
 const RELATIONSHIP_TYPE_LABELS_EN: Record<string, string> = {
@@ -105,6 +108,9 @@ const RELATIONSHIP_TYPE_LABELS_EN: Record<string, string> = {
   inherited: 'Inherited',
   conquered: 'Conquered',
   spread: 'Spread',
+  // ADR-0019
+  disputes: 'Disputed',
+  reinterprets: 'Reinterprets',
 }
 
 const RELATIONSHIP_TYPE_LABELS_JA: Record<string, string> = {
@@ -126,6 +132,9 @@ const RELATIONSHIP_TYPE_LABELS_JA: Record<string, string> = {
   inherited: '継承',
   conquered: '征服',
   spread: '普及',
+  // ADR-0019
+  disputes: '論争',
+  reinterprets: '再解釈',
 }
 
 export function getRelationshipLabel(

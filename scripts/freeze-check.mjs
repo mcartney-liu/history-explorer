@@ -892,6 +892,16 @@ export const SCOPE_ALLOWLIST = [
   // (legacy-theme.css) are deleted — one product, one face, one shell.
   // App.smoke.test.tsx stays allowlisted; shell/ dir prefix still covers
   // ExplorerShell.tsx. No backend / dependency / API-contract change.
+
+  // Wave2-#138 (ADR-0019, PO-approved 2026-08-08): disputes/reinterprets
+  // relationship types — enum 18 -> 20, additive. These files were changed in
+  // the #138 commit; allowlisted to keep freeze green against master diff.
+  "backend/app/validation.py",
+  "backend/tests/test_data_breadth.py",
+  "backend/tests/test_m81_governance.py",
+  "frontend/src/data/relationshipUtils.ts",
+  "frontend/src/data/relationshipUtils.test.ts",
+  "frontend/src/data/entity/entityLabels.ts",
 ];
 
 function _scopeAllowed(file) {
