@@ -282,6 +282,11 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/ai_gateway/prompt_service.py",
   "backend/app/ai_gateway/answer_service.py",
   "backend/app/ai_gateway/config.py",
+  // ADR-0017 (PO-approved 2026-08-08): domestic OpenAI-compatible provider support.
+  // provider.py gains base_url + model passthrough (redirects the whitelisted
+  // openai SDK to DeepSeek/通义/智谱). Zero new dependency; grounding + fallback
+  // unchanged; default behaviour byte-identical when AI_BASE_URL/AI_MODEL unset.
+  "backend/app/ai_gateway/provider.py",
   "frontend/src/data/aiClient.ts",
   "frontend/src/data/aiClient.test.ts",  // M65-A04 (PO-approved) — AI client contract tests (H9 real-AI link)
   // M74-003 (C3-2, PO-approved): AI exploration suggestions build-time flag.
@@ -781,12 +786,30 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/styles/components.css",
   "frontend/src/pages/m89/m89.css",
   "frontend/src/App.css",
+  "frontend/src/styles/legacy-theme.css",
+  "frontend/src/main.tsx",
+  "frontend/src/components/shell/ExplorerShell.tsx",
   "frontend/src/components/primitives/UnderstandingCard.tsx",
   "frontend/src/pages/DevCatalog.tsx",
   "frontend/src/components/GraphViewPanel.tsx",
   "frontend/src/components/RelationshipPathGraph.tsx",
   "frontend/src/components/RelationshipInsightPanel.tsx",
   "frontend/src/components/InterpretationPanel.tsx",
+
+  // ADR-0018 (PO-approved 2026-08-08) — Truth layer + Research persistence.
+  // The PO lifted red line C6 ("no persistence") SOLELY to serve COMPASS
+  // Article 0 ①: a research package is the visible form of the user's
+  // cognitive structure, and a structure that dies on page reload never
+  // accumulates. Storage is stdlib `sqlite3` ONLY — ZERO new dependency, no
+  // ORM, no external DB process; the .db file is gitignored runtime state.
+  // The 3 hard red lines (no vector DB / RAG, no Neo4j / Redis / GraphQL,
+  // no ungrounded AI output) remain fully in force.
+  //   - research_store.py   (sqlite3 storage, payload-opaque)
+  //   - research_router.py  (POST/GET/DELETE /api/v1/research, X-Session-Id)
+  // `backend/app/main.py` is already allowlisted above (M29.1-B / M74) and
+  // only gains the router mount — no storage logic leaks into it.
+  "backend/app/ai_gateway/research_store.py",
+  "backend/app/ai_gateway/research_router.py",
 ];
 
 function _scopeAllowed(file) {

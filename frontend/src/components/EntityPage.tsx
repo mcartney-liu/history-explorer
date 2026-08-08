@@ -22,8 +22,9 @@ import EventImpactPanel from './EventImpactPanel'
 import EventNarrativeCard from './EventNarrativeCard'
 import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
-import ResearchPanel from './ResearchPanel'
+import ResearchPanel, { type RestoreRequest } from './ResearchPanel'
 import ResearchLibrary from './ResearchLibrary'
+import EmptyState from './EmptyState'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
 import { entityContext } from '../data/aiContext'
@@ -71,6 +72,8 @@ type EntityPageProps = {
   entityName?: string
   entityStarters?: StarterItem[]
   onStarterClick?: (target: NavNode) => void
+  /** T1: land directly on a tab (e.g. 'research' from a Discover bookmark). */
+  initialTab?: EntityTab
 }
 
 // M2-002 entity page: renders the four sections the backend returns for
@@ -80,7 +83,7 @@ type EntityPageProps = {
 // M59-005: EntityViewModel integration.
 // Build once per entity change. Panels still consume raw entity
 // for backward compat. Future panels will use viewModel directly.
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { buildEntityViewModel } from '../data/entity/EntityViewModel'
 import { EntityHero } from './entity/EntityHero'
 import { ExplorationCard } from './entity/ExplorationCard'
@@ -100,8 +103,15 @@ function EntityPage({
   entityName,
   entityStarters,
   onStarterClick,
+  initialTab,
 }: EntityPageProps) {
   const { t } = useLocale()
+  // P5-S3 ③: 提升 tab 状态，使「了解→研究」可显式互跳（受控 EntityPageShell）。
+  const [activeTab, setActiveTab] = useState<EntityTab>(initialTab ?? 'info')
+  // T1: research restore/refresh state is LIFTED here so ResearchLibrary's
+  // "打开" can drive ResearchPanel, and a save can refresh the library.
+  const [restoreRequest, setRestoreRequest] = useState<RestoreRequest | null>(null)
+  const [libraryRefreshKey, setLibraryRefreshKey] = useState(0)
   // M59-005: build ViewModel once per entity change.
   // Available for future EntityHero / AISidebar migration.
   const viewModel = useMemo(
@@ -187,6 +197,8 @@ function EntityPage({
 
       <EntityPageShell
         entityGlobalId={entityGlobalId}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         renderTab={(activeTab: EntityTab) => {
           switch (activeTab) {
             // ---- INFO TAB ----
@@ -258,7 +270,9 @@ function EntityPage({
                       entityType={entity.type}
                       relationships={entity.relationships}
                     />
-                  ) : null}
+                  ) : (
+                    <EmptyState message="该实体缺少全局 ID，AI 对话暂不可用。" />
+                  )}
 
                   {/* M59-016: RelationshipView/TimelinePanel/GraphViewPanel removed from info tab.
                       Covered by ConnectionExplorer (Graph | Timeline | Map views).
@@ -266,6 +280,20 @@ function EntityPage({
 
                   {/* Layer 4: Data provenance */}
                   <ProvenancePanel entityId={entity.id} />
+
+                  {/* P5-S3 ③: 了解→研究 显式入口：就当前事实实体提出研究问题。 */}
+                  <div className="entity-research-bridge">
+                    <button
+                      type="button"
+                      className="entity-research-bridge-btn"
+                      onClick={() => setActiveTab('research')}
+                    >
+                      就「{entity.name}」提出研究问题 →
+                    </button>
+                    <span className="entity-research-bridge-hint">
+                      从客观事实，进入开放探索：追问它「为什么」。
+                    </span>
+                  </div>
                 </>
               )
 
@@ -273,15 +301,34 @@ function EntityPage({
             case 'research':
               return (
                 <>
+                  {/* P5-S3 ③: 研究→了解 返回入口。 */}
+                  <div className="entity-research-bridge entity-research-bridge--back">
+                    <button
+                      type="button"
+                      className="entity-research-bridge-btn entity-research-bridge-btn--ghost"
+                      onClick={() => setActiveTab('info')}
+                    >
+                      ← 回到事实
+                    </button>
+                  </div>
                   {entityGlobalId ? (
                     <ResearchPanel
                       entityGlobalId={entityGlobalId}
                       entityName={entity.name}
                       entityType={entity.type}
                       relationships={entity.relationships}
+                      restoreRequest={restoreRequest}
+                      onSaved={() => setLibraryRefreshKey((n) => n + 1)}
                     />
-                  ) : null}
-                  <ResearchLibrary />
+                  ) : (
+                    <EmptyState message="该实体缺少全局 ID，暂时无法启动研究模式。请从主题页或关系图重新进入。" />
+                  )}
+                  <ResearchLibrary
+                    refreshKey={libraryRefreshKey}
+                    onSelect={(r) =>
+                      setRestoreRequest({ research: r, requestId: Date.now() })
+                    }
+                  />
                   {/* M60-001: analyze tab merged into research */}
                   {entity.type === 'Event' && (
                     <>
@@ -326,7 +373,9 @@ function EntityPage({
                       contextGlobalIds={entityContext(entityGlobalId)}
                       onCitationClick={onNodeClick}
                     />
-                  ) : null}
+                  ) : (
+                    <EmptyState message="该实体缺少全局 ID，AI 解释暂不可用。" />
+                  )}
                 </>
               )
 

@@ -13,7 +13,8 @@
 // Migration table:
 //   #/m89           → #/explore/french-revolution/understanding
 //   #/causal/:id    → #/explore/:topic/explanation/:id
-//   #/package/:slug → #/explore/:slug/exploration
+//
+// #/package/:slug is NOT migrated (T3) — it is a live route.
 //
 // #/entity/:gid is NOT migrated (dead link per K-3).
 // #/dev/catalog is preserved as-is.
@@ -63,15 +64,11 @@ function redirectCausal(hash: string): string | null {
   return `#/explore/${topic}/explanation/${objectId}`
 }
 
-function redirectPackage(hash: string): string | null {
-  const prefix = '#/package/'
-  if (!hash.startsWith(prefix)) return null
-
-  const slug = hash.slice(prefix.length)
-  if (!slug) return null
-
-  return `#/explore/${slug}/exploration`
-}
+// T3: redirectPackage() was REMOVED. It rewrote #/package/:slug into
+// #/explore/:slug/exploration, which made the package slug unrecoverable —
+// App.tsx's packageSlug was always null and every package deep-link opened a
+// blank exploration route instead of the package page. #/package/:slug is now
+// a first-class route handled directly by usePackageContext.
 
 // ------------------------------------------------------------------
 // Static causal object id → topic slug lookup.
@@ -120,11 +117,15 @@ export function runLegacyRedirect(): string | null {
     return null
   }
 
+  // T3: #/package/:slug is NOT migrated — it is a live route.
+  if (hash.startsWith('#/package/')) {
+    return null
+  }
+
   // Try each legacy pattern.
   const newUrl =
     redirectM89(hash) ??
     redirectCausal(hash) ??
-    redirectPackage(hash) ??
     null
 
   if (newUrl) {

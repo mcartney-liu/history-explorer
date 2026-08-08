@@ -108,9 +108,9 @@ def test_no_forbidden_infra_tokens_in_source():
 from app.ai_gateway.answer_service import (  # noqa: E402
     _build_evidence,
     _compute_confidence,
-    _extract_perspectives,
+    _perspectives_from_claims,
 )
-from app.ai_gateway.citation_model import Citation  # noqa: E402
+from app.ai_gateway.citation_model import Citation, ClaimEntry  # noqa: E402
 
 
 class TestComputeConfidence:
@@ -135,23 +135,39 @@ class TestComputeConfidence:
         assert _compute_confidence(True, 1, 1) == "high"
 
 
-class TestExtractPerspectives:
-    def test_empty_list(self):
-        assert _extract_perspectives({"perspectives": []}) == []
+def _claim(claim_id, note=None, controversy=None):
+    truth = None
+    if note is not None or controversy is not None:
+        truth = {"interpretation_note": note, "controversy_level": controversy}
+    return ClaimEntry(claim_id, "s", "text", "src-a", "gid", None, None, True, truth)
 
-    def test_missing_key(self):
-        assert _extract_perspectives({}) == []
 
-    def test_string_items(self):
-        parsed = {"perspectives": ["view A", "view B"]}
-        assert _extract_perspectives(parsed) == ["view A", "view B"]
+class TestPerspectivesFromClaims:
+    """ADR-0018: dissent comes from curated interpretation_note, not the LLM."""
 
-    def test_filters_non_strings(self):
-        parsed = {"perspectives": ["ok", None, 42, "  fine  ", []]}
-        assert _extract_perspectives(parsed) == ["ok", "42", "fine"]
+    def test_no_claims(self):
+        assert _perspectives_from_claims([]) == []
 
-    def test_not_a_list(self):
-        assert _extract_perspectives({"perspectives": "not-a-list"}) == []
+    def test_claim_without_truth(self):
+        assert _perspectives_from_claims([_claim("ec-1")]) == []
+
+    def test_uses_interpretation_note(self):
+        assert _perspectives_from_claims([_claim("ec-1", "note A")]) == ["note A"]
+
+    def test_deduplicates(self):
+        claims = [_claim("ec-1", "same"), _claim("ec-2", "same")]
+        assert _perspectives_from_claims(claims) == ["same"]
+
+    def test_contested_claims_lead(self):
+        claims = [
+            _claim("ec-1", "settled", "none"),
+            _claim("ec-2", "contested", "medium"),
+        ]
+        assert _perspectives_from_claims(claims) == ["contested", "settled"]
+
+    def test_bounded(self):
+        claims = [_claim("ec-%d" % i, "note %d" % i) for i in range(6)]
+        assert len(_perspectives_from_claims(claims)) == 3
 
 
 class TestBuildEvidence:

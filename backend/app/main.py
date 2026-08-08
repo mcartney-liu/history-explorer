@@ -31,6 +31,11 @@ from pydantic import BaseModel, Field
 
 from .ai_gateway import grounded_answer
 
+# ADR-0018 (PO-approved lift of red line C6): research persistence. The router
+# and its sqlite3 store live entirely inside the approved ai_gateway module;
+# this file only mounts it (no storage logic here — freeze boundary §5).
+from .ai_gateway.research_router import router as research_router
+
 # --- Configuration (env-driven, M3-002) -----------------------------------
 settings = get_settings()
 logger = configure_logging(settings.log_level)
@@ -439,6 +444,9 @@ legacy_router.add_api_route(
 
 app.include_router(v1_router, prefix=settings.api_v1_prefix)
 app.include_router(legacy_router)
+# ADR-0018: research persistence is v1-only (no legacy compat surface needed —
+# the endpoint did not exist before this gate).
+app.include_router(research_router, prefix=settings.api_v1_prefix)
 
 
 # --- Startup: build the in-memory Knowledge Core once ---------------------

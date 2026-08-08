@@ -92,6 +92,13 @@ class KnowledgeService:
         # local id -> claims whose subject_id mentions it (entity subject OR
         # either side of an "A->B" pair). Both sources share ONE index — the
         # ClaimGraph model is unified (Step 3 requirement 5).
+        # ADR-0018 (Truth layer): claim id -> raw curated claim record, so the
+        # AI path can read the curated truth grading (confidence /
+        # scholar_consensus / controversy_level / interpretation_note) that was
+        # previously dropped at the ClaimEntry boundary.
+        self._claims_by_id: dict[str, dict] = {
+            c.get("id"): c for c in self._claims if c.get("id")
+        }
         self._claims_by_local: dict[str, list[dict]] = {}
         for claim in self._claims:
             sid = claim.get("subject_id")
@@ -177,6 +184,17 @@ class KnowledgeService:
         if ref is None:
             return []
         return list(self._claims_by_local.get(ref.local_id, []))
+
+    def get_evidence_claim(self, claim_id: str) -> Optional[dict]:
+        """Raw curated Evidence Claim record by its claim id (read-only).
+
+        ADR-0018: exposes the curated truth-grading fields (confidence /
+        scholar_consensus / controversy_level / interpretation_note) so
+        `ClaimEntry` can carry them. Returns None for unknown ids; never raises.
+        """
+        if not isinstance(claim_id, str):
+            return None
+        return self._claims_by_id.get(claim_id)
 
     def get_source(self, source_id: str) -> Optional[dict]:
         """Look up a curated Source record by id (read-only)."""

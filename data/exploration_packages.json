@@ -300,6 +300,62 @@
           "label": { "zh": "汉朝（佛教传入之地）", "en": "Han Dynasty (where Buddhism arrived)" }
         }
       ]
+    },
+    {
+      "slug": "textbook-cn-history-v1",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Textbook",
+      "title": {
+        "zh": "人教版《中国历史》抽样包 V1（史前—夏商周）",
+        "en": "PEP Chinese History Textbook Sample Package V1 (Prehistory–Zhou)"
+      },
+      "summary": {
+        "zh": "抽取人教社《中国历史》七年级上册第一、二单元（史前时期、夏商周时期）的核心事实，构建从早期人类、农耕起源到王朝更替、制度初创的可探索知识网络。",
+        "en": "Extracts the core facts of Units 1–2 (Prehistory; Xia–Shang–Zhou) from the PEP junior-high history textbook into an explorable knowledge network."
+      },
+      "seed_topic": "textbook_cn_history_v1",
+      "exploration_goals": {
+        "zh": "了解中国早期文明的演进：从史前人类与农耕起源，到夏商周王朝更替与制度初创（禅让、分封、百家争鸣）。",
+        "en": "Understand the evolution of early Chinese civilization: from prehistoric humans and agricultural origins to dynastic succession and institutional beginnings (abdication, fengjian, hundred schools)."
+      },
+      "entity_references": [
+        "tb_cn_v1:tp-xia",
+        "tb_cn_v1:tp-shang",
+        "tb_cn_v1:tp-zhou-west",
+        "tb_cn_v1:civ-huaxia",
+        "tb_cn_v1:person-yu",
+        "tb_cn_v1:person-kongzi",
+        "tb_cn_v1:tech-jiaguwen",
+        "tb_cn_v1:idea-fengjian",
+        "tb_cn_v1:idea-rujia"
+      ],
+      "relationship_paths": [
+        { "from": "tb_cn_v1:tp-prehistory", "to": "tb_cn_v1:tp-xia", "type": "before" },
+        { "from": "tb_cn_v1:tp-xia", "to": "tb_cn_v1:tp-shang", "type": "before" },
+        { "from": "tb_cn_v1:tp-shang", "to": "tb_cn_v1:tp-zhou-west", "type": "before" },
+        { "from": "tb_cn_v1:tp-zhou-west", "to": "tb_cn_v1:tp-spring-autumn", "type": "before" },
+        { "from": "tb_cn_v1:tp-spring-autumn", "to": "tb_cn_v1:tp-warring-states", "type": "before" },
+        { "from": "tb_cn_v1:person-kongzi", "to": "tb_cn_v1:idea-rujia", "type": "influenced" },
+        { "from": "tb_cn_v1:tp-zhou-west", "to": "tb_cn_v1:idea-fengjian", "type": "practiced" }
+      ],
+      "timeline_slices": [
+        { "entity": "tb_cn_v1:tp-xia" },
+        { "entity": "tb_cn_v1:tp-shang" },
+        { "entity": "tb_cn_v1:tp-zhou-west" },
+        { "entity": "tb_cn_v1:tp-warring-states" }
+      ],
+      "source_references": [
+        "src-cn-textbook"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "package",
+          "ref": "china-civilization-v1",
+          "label": { "zh": "中国文明演化探索包 V1（唐—清，接续本包时段）", "en": "China Civilization Evolution Package V1 (Tang–Qing, continues this timeline)" }
+        }
+      ]
     }
   ]
 }

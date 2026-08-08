@@ -32,6 +32,9 @@ export type BehaviorAction =
   | 'complete_package'
   // Research funnel
   | 'start_research'
+  /** All dimensions finished — the research produced a result. */
+  | 'complete_research'
+  /** T1: fired ONLY when the user actually saves (never auto-fired). */
   | 'save_research'
   | 'restore_research'
   | 'start_comparison'

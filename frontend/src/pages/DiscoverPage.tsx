@@ -13,8 +13,10 @@ import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
 import { listResearch } from '../data/ResearchHistory'
 import type { SavedResearch } from '../data/ResearchHistory'
-import { generateUserInterestProfile } from '../data/ResearchInsights'
+import { generateBehavioralInterestProfile } from '../data/ResearchInsights'
+import type { BehavioralSignals } from '../data/ResearchInsights'
 import { recordEvent } from '../data/UserBehaviorEvent'
+import ResearchDiscoveryPanel from '../components/ResearchDiscoveryPanel'
 import { Icon } from '../components/ui/Icon'
 import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
@@ -40,26 +42,62 @@ const CATEGORY_META: Record<string, { label: string; desc: string }> = {
   Location:     { label: '地理探索', desc: '丝绸之路、地中海、恒河流域' },
 }
 
-function InterestProfile() {
-  const researches = useMemo(() => listResearch(), [])
-  if (researches.length < 2) {
+// T2 — Cognitive Mirror. Reads REAL behavioral signals (events / navigation /
+// recent / growth graph), not ResearchHistory (which stays empty until the
+// user saves). It reflects the user's own trajectory back at them and is
+// never used to rank or recommend anything.
+function InterestProfile({ signals }: { signals?: BehavioralSignals }) {
+  const profile = useMemo(
+    () => generateBehavioralInterestProfile(signals ?? {}),
+    [signals],
+  )
+
+  // A brand-new user with zero signals: keep the onboarding copy.
+  if (profile.interactionCount < 1) {
     return (
       <div className="discover-interest discover-interest--empty">
         <h3 className="discover-section-heading">我的探索足迹</h3>
         <p className="discover-empty-text">
-          保存研究后，这里会汇总你的探索足迹与关注主题。
+          开始探索后，这里会映照出你自己的追问轨迹。
         </p>
         <p className="discover-empty-sub">
-          它反映你浏览与保存过的话题，便于回顾你的探索路径。
+          它只反映你走过的路径，不替你决定下一步。
         </p>
       </div>
     )
   }
-  const profile = useMemo(() => generateUserInterestProfile(researches), [researches])
+
+  const thin = profile.topSubjects.length < 2
 
   return (
     <div className="discover-interest">
       <h3 className="discover-section-heading">我的探索足迹</h3>
+
+      {profile.reflection && (
+        <p className="discover-interest-reflection">{profile.reflection}</p>
+      )}
+
+      {/* Graceful degradation: too thin for a pattern — still reflect the
+          recent trajectory instead of hiding the whole shelf. */}
+      {thin ? (
+        <>
+          <p className="discover-interest-dims">你最近的探索</p>
+          {profile.recentlyExplored.length > 0 && (
+            <div className="discover-interest-themes">
+              {profile.recentlyExplored.slice(0, 4).map((s) => (
+                <span key={s} className="discover-interest-tag">{s}</span>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="discover-interest-themes">
+          {profile.topSubjects.slice(0, 4).map((s) => (
+            <span key={s.subject} className="discover-interest-tag">{s.subject}</span>
+          ))}
+        </div>
+      )}
+
       {profile.topThemes.length > 0 && (
         <div className="discover-interest-themes">
           {profile.topThemes.slice(0, 4).map((theme) => (
@@ -67,9 +105,10 @@ function InterestProfile() {
           ))}
         </div>
       )}
+
       {profile.topDimensions.length > 0 && (
         <p className="discover-interest-dims">
-          常研究维度：{profile.topDimensions.slice(0, 4).map((d) => d.dimension).join('、')}
+          你的追问方式：{profile.topDimensions.slice(0, 4).map((d) => d.dimension).join('、')}
         </p>
       )}
     </div>
@@ -89,6 +128,12 @@ type DiscoverPageProps = {
   onStarterClick?: (target: NavNode) => void
   onPackageClick?: (slug: string) => void
   onCausalObjectClick?: (objectId: string) => void
+  /** P5-S3 ②: 兴趣前置——点击「我想研究…」跳到研究 tab（由 App 接管切换）。 */
+  onResearchStart?: () => void
+  /** T1: open a bookmarked research on its entity's research tab. */
+  onOpenResearch?: (entityGlobalId: string, entityName: string) => void
+  /** T2: real behavioral signals owned by App (navigation / recent / growth). */
+  behavioralSignals?: BehavioralSignals
 }
 
 function StarterChips({
@@ -159,7 +204,13 @@ function RecentResearches({ researches }: { researches: SavedResearch[] }) {
 }
 
 // M44 Phase 6 — ResearchLibrary entry on DiscoverPage（与 RecentResearches 同因恢复）
-function ResearchLibraryEntry() {
+// T1: the items were dead <span>s that claimed "点击可跳转". They are now real
+// buttons that open the entity straight on its research tab.
+function ResearchLibraryEntry({
+  onOpenResearch,
+}: {
+  onOpenResearch?: (entityGlobalId: string, entityName: string) => void
+}) {
   const researches = useMemo(() => listResearch().filter((r) => r.bookmarked), [])
   if (researches.length === 0) return null
   return (
@@ -171,10 +222,20 @@ function ResearchLibraryEntry() {
       <ul className="discover-library-list">
         {researches.slice(0, 5).map((r) => (
           <li key={r.id}>
-            <span className="discover-library-link">
+            <button
+              type="button"
+              className="discover-library-link"
+              disabled={!r.entityGlobalId}
+              aria-label={`打开 ${r.entityName} 的研究`}
+              onClick={() => {
+                if (!r.entityGlobalId) return
+                recordEvent({ action: 'restore_research', entityGlobalId: r.entityGlobalId })
+                onOpenResearch?.(r.entityGlobalId, r.entityName)
+              }}
+            >
               <span className="discover-library-type">{r.entityType}</span>
               {r.entityName}
-            </span>
+            </button>
           </li>
         ))}
       </ul>
@@ -237,7 +298,7 @@ function UnderstandingSeeds({
   )
 }
 
-function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClick = () => {}, onCausalObjectClick = () => {} }: DiscoverPageProps) {
+function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClick = () => {}, onCausalObjectClick = () => {}, onResearchStart, onOpenResearch, behavioralSignals }: DiscoverPageProps) {
   const featuredStarters = TOPIC_STARTERS[FEATURED_TOPIC] ?? []
   const popularSlugs = Object.keys(TOPIC_STARTERS).filter(
     (slug) => slug !== FEATURED_TOPIC,
@@ -270,6 +331,32 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
     onTopicClick(slug)
   }, [onTopicClick])
 
+  // T2/T3: merge App-owned signals with the saved researches so the mirror
+  // sees everything the user has actually done.
+  const mirrorSignals = useMemo<BehavioralSignals>(
+    () => ({ ...(behavioralSignals ?? {}), researches: recentResearches }),
+    [behavioralSignals, recentResearches],
+  )
+  const mirror = useMemo(
+    () => generateBehavioralInterestProfile(mirrorSignals),
+    [mirrorSignals],
+  )
+
+  // T3 first-mile: a brand-new user (no signals, no researches, no bookmarks)
+  // should see ONE primary CTA — the hero + a seed question. The personal
+  // shelves are still rendered, but folded away instead of shouting "empty".
+  const bookmarkedCount = recentResearches.filter((r) => r.bookmarked).length
+  const isFirstMile =
+    mirror.interactionCount < 1 && recentResearches.length === 0 && bookmarkedCount === 0
+
+  const personalShelves = (
+    <>
+      <InterestProfile signals={mirrorSignals} />
+      <RecentResearches researches={recentResearches} />
+      <ResearchLibraryEntry onOpenResearch={onOpenResearch} />
+    </>
+  )
+
   return (
     <section className="discover-page" aria-label="Discover history explorations">
       <div className="discover-hero">
@@ -277,12 +364,47 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
         <p className="discover-hero-sub">{DISCOVER_HERO_SUB}</p>
       </div>
 
-      {/* M62-A: surface the warm personalization copy + interest profile. */}
-      <InterestProfile />
+      {/* P5-S3 ②: 兴趣前置——进场第一屏先问「你想研究什么」，预设主题降为次级。 */}
+      <div className="discover-research-cta">
+        <div className="discover-research-cta-text">
+          <h3 className="discover-research-cta-title">我想研究…</h3>
+          <p className="discover-research-cta-sub">
+            先说你想钻的问题，再去翻事实。点这里进入研究模式，就任何历史主题追问「为什么」。
+          </p>
+        </div>
+        <button
+          type="button"
+          className="discover-research-cta-btn"
+          onClick={() => onResearchStart?.()}
+        >
+          开始研究 →
+        </button>
+      </div>
 
-      {/* M44 — Recent researches + research library（M60 恢复渲染） */}
-      <RecentResearches researches={recentResearches} />
-      <ResearchLibraryEntry />
+      {/* M62-A / T2 — Cognitive Mirror + M44 recent/library shelves.
+          T3 first-mile: folded for a brand-new user so the hero stays the
+          single primary CTA; expanded as soon as there is any real signal. */}
+      {isFirstMile ? (
+        <details className="discover-first-mile-fold">
+          <summary className="discover-first-mile-summary">我的探索足迹（还没有记录）</summary>
+          {personalShelves}
+        </details>
+      ) : (
+        personalShelves
+      )}
+
+      {/* T2 — interest discovery, previously built but never mounted. */}
+      {!isFirstMile && (
+        <ResearchDiscoveryPanel
+          currentEntity={{
+            globalId: mirror.topSubjects[0]?.subject ?? '',
+            name: mirror.topSubjects[0]?.subject ?? '',
+            type: 'Civilization',
+          }}
+          relationships={[]}
+          onExplore={(gid) => onOpenResearch?.(gid, gid)}
+        />
+      )}
 
       {/* M85.8 — Civilization Understanding Seeds — 文明理解入口 */}
       <UnderstandingSeeds onCausalObjectClick={onCausalObjectClick} />
@@ -325,7 +447,7 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
         </div>
 
         <div className="discover-featured" data-topic={FEATURED_TOPIC}>
-          <h3 className="discover-section-heading">精选探索 · Featured</h3>
+          <h3 className="discover-section-heading">系统精选 · 编辑策展</h3>
           <button
             type="button"
             className="discover-featured-card"
@@ -341,7 +463,7 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
         </div>
 
         <div className="discover-popular">
-          <h3 className="discover-section-heading">热门探索 · Popular</h3>
+          <h3 className="discover-section-heading">大家都在探索</h3>
           <ul className="discover-topic-list">
             {popularSlugs.map((slug) => (
               <li key={slug}>

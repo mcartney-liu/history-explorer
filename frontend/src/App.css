@@ -38,10 +38,10 @@
   --space-6: 24px;
   --space-8: 32px;
   --space-12: 48px;
-  /* shadow scale — museum depth, not SaaS pop */
-  --shadow-card: 0 20px 55px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
-  --shadow-deep: 0 24px 60px rgba(0,0,0,0.55);
-  --shadow-glow: 0 0 30px rgba(212,168,75,0.06);
+  /* shadow scale — light paper: warm soft elevation, no heavy black */
+  --shadow-card: 0 1px 3px rgba(31, 28, 22, 0.08), 0 6px 20px rgba(31, 28, 22, 0.07);
+  --shadow-deep: 0 8px 28px rgba(31, 28, 22, 0.10);
+  --shadow-glow: 0 0 24px rgba(79, 70, 229, 0.08);
   /* animation scale — restrained, academic */
   --animation-fast: .16s ease;
   --animation-normal: .25s cubic-bezier(.2,.7,.3,1);
@@ -198,6 +198,50 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 }
 .discover-section-heading{font-family:var(--serif);font-size:1.4rem;color:var(--color-ink-900);margin-bottom:4px}
 .discover-section-sub{color:var(--color-ink-500);font-size:.85rem;margin-bottom:20px}
+
+/* P5-S3 ② 兴趣前置 CTA — 进场第一屏先问「你想研究什么」 */
+.discover-research-cta{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  margin:28px 0 8px;padding:22px 28px;
+  background:var(--color-paper-100);
+  border:1px solid var(--color-paper-300);
+  border-radius:14px;
+}
+.discover-research-cta-title{font-family:var(--serif);font-size:1.5rem;color:var(--color-ink-900);margin:0}
+.discover-research-cta-sub{font-size:.9rem;color:var(--color-ink-500);margin:6px 0 0;max-width:560px;line-height:1.6}
+.discover-research-cta-btn{
+  flex:0 0 auto;appearance:none;cursor:pointer;
+  font-family:var(--sans);font-size:1rem;font-weight:500;
+  color:var(--color-accent-ink);background:var(--color-accent);
+  border:none;border-radius:10px;padding:14px 22px;
+  transition:background .2s,transform .2s;
+}
+.discover-research-cta-btn:hover{background:var(--color-accent-hover);transform:translateY(-1px)}
+
+/* P5-S3 ③ 了解↔研究 桥接入口 */
+.entity-research-bridge{
+  margin-top:28px;padding:18px 22px;
+  background:var(--color-paper-100);
+  border:1px solid var(--color-paper-300);
+  border-left:3px solid var(--color-accent);
+  border-radius:10px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.entity-research-bridge--back{margin-top:0;margin-bottom:18px;border-left:none;border-top:3px solid var(--color-paper-300)}
+.entity-research-bridge-btn{
+  align-self:flex-start;appearance:none;cursor:pointer;
+  font-family:var(--sans);font-size:.95rem;font-weight:500;
+  color:var(--color-accent-ink);background:var(--color-accent);
+  border:none;border-radius:8px;padding:10px 16px;
+  transition:background .2s;
+}
+.entity-research-bridge-btn:hover{background:var(--color-accent-hover)}
+.entity-research-bridge-btn--ghost{
+  color:var(--color-accent);background:transparent;
+  border:1px solid var(--color-accent);
+}
+.entity-research-bridge-btn--ghost:hover{background:var(--color-accent-soft)}
+.entity-research-bridge-hint{font-size:.82rem;color:var(--color-ink-500);line-height:1.5}
 
 /* theme cards (TP-01 起点锚定) — 去渐变/毛玻璃（VS-04 规则②），纯色 paper 表面 */
 .discover-themes{margin:40px 0}

@@ -8,6 +8,7 @@ import egyptTechRaw from "../../../data/examples/egypt_technology_religion_examp
 import greekPhilosophyRaw from "../../../data/examples/greek_philosophy_example.json";
 import hellenisticRaw from "../../../data/examples/hellenistic_world_example.json";
 import persianEmpireRaw from "../../../data/examples/persian_empire_example.json";
+import textbookRaw from "../../../data/examples/textbook_cn_history_v1_example.json";
 import evidenceClaimsRaw from "../../../data/evidence_claims.json";
 import sourcesRaw from "../../../data/sources.json";
 
@@ -102,6 +103,7 @@ const DATASETS = [
   { id: "greek_philosophy", data: greekPhilosophyRaw },
   { id: "hellenistic_world", data: hellenisticRaw },
   { id: "persian_empire", data: persianEmpireRaw },
+  { id: "textbook_cn_history_v1", data: textbookRaw },
 ] as const;
 
 const GLOBAL_INDEX = new Map<string, { dataset: string; localId: string }>();

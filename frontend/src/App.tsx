@@ -355,6 +355,11 @@ function App() {
   const [result, setResult] = useState<ExplorationResult | null>(null)
   const [error, setError] = useState('') // topic-input validation only
   const [loading, setLoading] = useState(false)
+  // P5-S3 ②: 首屏 LandingTabs 激活态（受控），供 DiscoverPage 的「我想研究…」跳到研究 tab。
+  const [landingTab, setLandingTab] = useState<'understand' | 'research' | 'expand'>('understand')
+  // T1: which EntityPage tab to land on. Set when navigation originates from a
+  // research bookmark so the user arrives directly in the research tab.
+  const [entityInitialTab, setEntityInitialTab] = useState<'info' | 'research' | 'extensions'>('info')
 
   // M2-002: cross-dataset entity search.
   const [searchQuery, setSearchQuery] = useState('')
@@ -733,8 +738,14 @@ function App() {
   // EP-007: Anchor 存的是理解锚点（用户概念），不是 Entity 数据副本。
   // activeRelation 来源 = Causal Layer 已有关系数据（EP-009）。
   // cognitive_stage 不由 Navigation 写入——由 Understanding Layer 判定（M86.1.2）。
-  function openEntity(id: string, name?: string) {
+  function openEntity(
+    id: string,
+    name?: string,
+    // T1: which EntityPage tab to land on (research bookmarks open 'research').
+    tab: 'info' | 'research' | 'extensions' = 'info',
+  ) {
     const displayName = name || id
+    setEntityInitialTab(tab)
     // 只有当 Context 已创建时才更新锚点（用户在一条 Exploration 内）
     if (runtimeContext.explorationId) {
       // Batch 2: 构造 Anchor 对象（entityProvenance + selectionContext 分离）
@@ -791,13 +802,27 @@ function App() {
       setError('Please enter a historical topic.')
       return
     }
-    // Backend TOPIC_PATTERN = ^[a-z0-9_-]+$ — reject non-ASCII early
-    // so the user gets a clear message instead of a misleading 400 / "无法连通后端服务器".
+    setError('')
+
+    // T3: Chinese (and any non-slug) input is NO LONGER rejected.
+    // Backend TOPIC_PATTERN = ^[a-z0-9_-]+$, so a non-slug query cannot be a
+    // topic id — but it can still be resolved. Route it through the
+    // deterministic resolver first (package / entity), then fall back to
+    // full-text search. Only a truly unresolvable query surfaces a message.
     if (!/^[a-z0-9_-]+$/.test(trimmed)) {
-      setError('请输入英文主题名（如 roman_empire、ancient_civilizations）。当前不支持中文搜索。')
+      const resolved = resolveTopic(trimmed)
+      if (resolved?.kind === 'package') {
+        openPackage(resolved.slug)
+        return
+      }
+      if (resolved?.kind === 'entity') {
+        openEntity(resolved.globalId)
+        return
+      }
+      handleSearch(trimmed)
       return
     }
-    setError('')
+
     navigateTo({ type: 'topic', topic: trimmed, title: prettifyTopic(trimmed) })
   }
 
@@ -806,6 +831,15 @@ function App() {
   // there is exactly one navigation path (navigateTo) — no duplicated logic,
   // no second navigation mechanism.
   function handleTopicClick(t: string) {
+    // T3: a normal topic click must also open an Explorer Runtime Context.
+    // Previously only openPackage() called createContext(), so anchorChain
+    // never grew for topic navigation and UnderstandingStatus (Projection)
+    // progress stayed permanently hidden.
+    createContext({
+      explorationId: `exp-${t}-${Date.now()}`,
+      userQuestion: prettifyTopic(t),
+      understandingGoal: '',
+    })
     navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
   }
 
@@ -1180,6 +1214,20 @@ function App() {
     }
   }, [history.length, intelTick])
 
+  // T2 — real behavioral signals for the Discover Cognitive Mirror.
+  // Read-only projection of state App already owns. It is a MIRROR, never an
+  // input to any recommendation engine.
+  const discoverSignals = useMemo(() => {
+    const titleOf = (n: NavNode): string =>
+      n.type === 'topic' ? n.title : n.type === 'entity' ? n.name : n.objectId
+    return {
+      navTitles: history.map(titleOf),
+      recentTitles: recent.map(titleOf),
+      journeyReasons: [...journeyReasons.values()].flatMap((j) => j.reasons ?? []),
+      growthLabels: graphStore.getGraph().nodes.map((n) => n.cause).filter(Boolean),
+    }
+  }, [history, recent, journeyReasons, graphStore])
+
   // M65 Phase 3B: read-only workspace context for AI Companion
   // M65 Phase 3C-2: extended with entityType + multi-entity contextGlobalIds
   const workspaceContext = useMemo(() => ({
@@ -1249,7 +1297,7 @@ function App() {
         navSlot={navSlot}
         loadingSlot={loading ? <LoadingSkeleton label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'} /> : null}
         errorSlot={!loading && errorKind ? <ErrorCard kind={errorKind} onRetry={current ? () => fetchNode(current, cursor) : undefined} /> : null}
-        topicRoot={!loading && !errorKind && current?.type === 'topic' && result ? (
+        topicRoot={!loading && !errorKind && current?.type === 'topic' && result && !packageSlug ? (
           <UnderstandingCanvas
             cognitiveStage={runtimeContext.cognitiveStage}
             explorationState={explorationState}
@@ -1303,25 +1351,27 @@ function App() {
             }
           />
         ) : null}
-        entityDetail={!loading && !errorKind && current?.type === 'entity' && entityData ? (
+        entityDetail={!loading && !errorKind && current?.type === 'entity' && entityData && !packageSlug ? (
           <>
-            <EntityPage entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+            <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} />
             <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
             <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
             <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
           </>
         ) : null}
-        causalDetail={!loading && !errorKind && current?.type === 'causal_object' && causalObjectData ? (
+        causalDetail={!loading && !errorKind && current?.type === 'causal_object' && causalObjectData && !packageSlug ? (
           <CausalObjectDetailPage object={causalObjectData} objectTitleMap={causalObjectTitleMap} onEntityClick={(gid) => openEntity(gid)} onCausalObjectClick={(objectId) => openCausalObject(objectId)} onBack={goBack} />
         ) : null}
-        packageDetail={!current && packageSlug ? (
+        packageDetail={packageSlug ? (
           <ExplorationPackagePage slug={packageSlug} onEntityClick={(gid) => openEntity(gid)} onOpenPackage={(s) => openPackage(s)} onBack={closePackage} />
         ) : null}
         landing={!current && !packageSlug ? (
           <LandingTabs
+            activeTab={landingTab}
+            onTabChange={setLandingTab}
             understand={
               <>
-                <DiscoverPage topics={topics} onTopicClick={handleTopicClick} onPackageClick={openPackage} onCausalObjectClick={(objectId) => openCausalObject(objectId)} />
+                <DiscoverPage topics={topics} onTopicClick={handleTopicClick} onPackageClick={openPackage} onCausalObjectClick={(objectId) => openCausalObject(objectId)} onResearchStart={() => setLandingTab('research')} onOpenResearch={(gid, name) => openEntity(gid, name, 'research')} behavioralSignals={discoverSignals} />
                 <FeedbackWidget page="discover" />
               </>
             }
@@ -1337,13 +1387,14 @@ function App() {
             }
           />
         ) : null}
-        productIntro={!current ? <ProductIntro /> : null}
+        productIntro={!current && !packageSlug ? <ProductIntro /> : null}
         understandingMode={
-          router.route?.mode === 'understanding' ? <UnderstandingWorkspace topic={router.route?.topic ?? null} /> : null
+          router.route?.mode === 'understanding' && !packageSlug ? <UnderstandingWorkspace topic={router.route?.topic ?? null} /> : null
         }
         devCatalog={null}
         isDevCatalog={false}
         isUnderstandingRoute={router.route?.mode === 'understanding'}
+        hasPackage={!!packageSlug}
       />
     </ExplorerShell>
     </ExplorerRuntimeContext.Provider>

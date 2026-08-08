@@ -383,26 +383,45 @@ class GroundingBuilder:
         ]
         return ClaimGraph(focus_global_id, neighbors, claims, sources)
 
+    def _claim_truth(self, claim: dict, claim_id: str):
+        """Curated truth grading for a claim (ADR-0018).
+
+        Reads the canonical record through `KnowledgeService.get_evidence_claim`
+        when available, falling back to the raw claim dict already in hand (so
+        stub knowledge services without the helper keep working). Read-only.
+        """
+        from ..core.evidence_claim import build_truth
+
+        raw = claim
+        getter = getattr(self._ks, "get_evidence_claim", None)
+        if callable(getter):
+            raw = getter(claim_id) or claim
+        return build_truth(raw)
+
     def _claim_to_entry(self, claim: dict, subject_id, resolver) -> "ClaimEntry":
         """Map a curated claim into the unified ClaimEntry model.
 
         Grounding Gate semantics: a claim that cannot bind (unresolvable
         subject / pair side) is carried with resolved=False — it is never
         used as evidence. Never guessed, never auto-completed.
+
+        ADR-0018: the curated truth grading travels with the entry instead of
+        being dropped here.
         """
         from .citation_model import ClaimEntry
 
         cid = claim.get("id") or ""
         text = claim.get("claim") or ""
         source_id = claim.get("source_id") or ""
+        truth = self._claim_truth(claim, cid)
         if not isinstance(subject_id, str) or not subject_id.strip():
-            return ClaimEntry(cid, "", text, source_id, None, None, None, False)
+            return ClaimEntry(cid, "", text, source_id, None, None, None, False, truth)
 
         if "->" in subject_id:
             pair = resolver.parse(subject_id)
             if pair is None or not pair.resolved:
                 return ClaimEntry(
-                    cid, subject_id, text, source_id, None, None, None, False
+                    cid, subject_id, text, source_id, None, None, None, False, truth
                 )
             return ClaimEntry(
                 cid,
@@ -413,15 +432,18 @@ class GroundingBuilder:
                 pair.object_global_id,
                 pair.relationship,
                 True,
+                truth,
             )
 
         # Entity-subject claim (unified model: object side is None).
         gid = self._ks.find_global_id(subject_id.strip())
         if not gid:
             return ClaimEntry(
-                cid, subject_id, text, source_id, None, None, None, False
+                cid, subject_id, text, source_id, None, None, None, False, truth
             )
-        return ClaimEntry(cid, subject_id.strip(), text, source_id, gid, None, None, True)
+        return ClaimEntry(
+            cid, subject_id.strip(), text, source_id, gid, None, None, True, truth
+        )
 
 
 # ---------------------------------------------------------------------------

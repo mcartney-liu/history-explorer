@@ -82,6 +82,12 @@ export interface ModeCanvasProps {
   isDevCatalog: boolean
   /** Whether the current route is an understanding mode route. */
   isUnderstandingRoute: boolean
+  /**
+   * T3: whether a package is currently open. A package deep-link can land on
+   * an understanding route; without this the understanding early-return
+   * swallowed `packageDetail` and the package page never rendered.
+   */
+  hasPackage?: boolean
 }
 
 // ============================================================
@@ -104,14 +110,17 @@ export function ModeCanvas({
   devCatalog,
   isDevCatalog,
   isUnderstandingRoute,
+  hasPackage = false,
 }: ModeCanvasProps) {
   // Dev catalog — bypass Shell Canvas (it's a dev tool, not exploration).
   if (isDevCatalog) {
     return <>{devCatalog}</>
   }
 
-  // Understanding Mode — when the route explicitly targets understanding.
-  if (isUnderstandingRoute && mode === 'understanding') {
+  // Understanding Mode — when the route explicitly targets understanding AND
+  // no package is open (T3: a package page must win over the understanding
+  // early-return, otherwise package deep-links render nothing).
+  if (isUnderstandingRoute && mode === 'understanding' && !hasPackage) {
     return (
       <>
         {searchSlot}

@@ -51,3 +51,10 @@ frontend/.ux-probe/
 *.out
 tsc_out.txt
 uvicorn_boot.*
+
+# === ADR-0018 (lift of red line C6): research persistence runtime artifact ===
+# The SQLite file is user runtime state, never project source.
+backend/data/research.db
+backend/data/research.db-journal
+backend/data/research.db-wal
+backend/data/research.db-shm
