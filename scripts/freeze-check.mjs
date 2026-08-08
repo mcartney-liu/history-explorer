@@ -902,6 +902,7 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/relationshipUtils.ts",
   "frontend/src/data/relationshipUtils.test.ts",
   "frontend/src/data/entity/entityLabels.ts",
+  "frontend/src/components/DisputesPanel.tsx",
 ];
 
 function _scopeAllowed(file) {

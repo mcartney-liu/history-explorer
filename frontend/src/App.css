@@ -781,3 +781,92 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   Wave2-#138 (ADR-0019) — DisputesPanel: truth-layer dissent.
+   Deep-navy frosted card matching the theme; semantic tokens only.
+   ============================================================ */
+.disputes-panel {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--glass-navy-rail, var(--color-paper-100));
+  -webkit-backdrop-filter: var(--surface-glass, none);
+  backdrop-filter: var(--surface-glass, none);
+}
+.disputes-panel-heading {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+.disputes-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.disputes-edge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-sm);
+  background: var(--glass-navy-panel, var(--color-paper-100));
+}
+.disputes-edge-types {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.disputes-edge-endpoint {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-900);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.disputes-edge-endpoint:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+.disputes-edge-endpoint:not(:disabled):hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.disputes-edge-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+.disputes-edge-type--disputes {
+  color: var(--color-truth-weak);
+  background: var(--color-truth-weak-soft);
+}
+.disputes-edge-type--reinterprets {
+  color: var(--color-truth-moderate);
+  background: var(--color-truth-moderate-soft);
+}
+.disputes-edge-narrative {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+.disputes-edge-citation {
+  font-size: 0.7rem;
+  color: var(--color-ink-300);
+  font-style: italic;
+}

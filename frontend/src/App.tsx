@@ -10,6 +10,7 @@ import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import type { ConnectionItem } from './components/ConnectionsPanel'
 import ThemesPanel from './components/ThemesPanel'
+import DisputesPanel from './components/DisputesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import MultiEntityTimeline from './components/MultiEntityTimeline'
@@ -1341,6 +1342,12 @@ function App() {
                 )}
                 <RelationshipContext connections={result.connections} connectionsExplained={result.connections_explained} onNodeClick={openNodeNamed} candidates={pickedCandidates} relationships={exploreThemesRelationships} timeMap={exploreEntityTimeByName} mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]} mainEntityName={result.exploration.main_entity.name} nameByGlobalId={exploreNameByGlobalId} />
                 <InterpretationPanel interpretations={toInterpretationViewModels(result.connections_explained)} understandings={buildUnderstandingsFromConnectionsExplained(result.connections_explained, result.exploration.main_entity.name, Object.fromEntries((result.entities ?? []).map((e) => [e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`, e.name])), exploreEntityTimeByName)} onNodeClick={openNodeNamed} />
+                <DisputesPanel
+                  relationships={result.relationships ?? []}
+                  nameById={exploreNameById}
+                  globalIdById={exploreEntityGlobalById}
+                  onNodeClick={openNodeNamed}
+                />
                 <ThemesPanel relationships={exploreThemesRelationships} onNodeClick={openNodeNamed} />
                 <ContinueExploringPanel connections={result.connections_explained} crossTopicRelated={result.exploration.cross_topic_related} relatedTopics={result.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNodeNamed} onTopicClick={handleTopicClick} />
                 <TopicComparisonPanel key={result?.topic ?? current.topic} crossTopicRelated={result.exploration.cross_topic_related} onNodeClick={openNode} onTopicClick={handleTopicClick} />
