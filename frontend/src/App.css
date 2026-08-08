@@ -181,42 +181,62 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 }
 .tag:hover{color:var(--color-accent);border-color:var(--color-accent-soft);background:var(--color-accent-soft)}
 
-/* ========== HOME PAGE ========== */
-.discover-page{padding:50px 56px 40px;position:relative;z-index:1}
-.discover-hero{margin-bottom:40px}
-/* TP-26 首屏承担者 — P5-S2 VS-01 tokens: ink-900 主标题/ink-500 副标题 */
+/* ========== HOME PAGE (Design v2 — 深空蓝黑 + 金色强调) ========== */
+.discover-page{
+  padding:0;position:relative;z-index:1;
+  background:#0a0e17;color:#e0e0e0;
+  min-height:100vh;
+}
+/* ---- Hero: 地球背景 + 暗色渐变融合 ---- */
+.discover-hero{
+  margin:0;padding:120px 56px 80px;text-align:center;
+  position:relative;overflow:hidden;
+  background:
+    linear-gradient(180deg, rgba(10,14,23,0) 0%, rgba(10,14,23,0.7) 50%, #0a0e17 100%),
+    url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=1920&q=80') center/cover no-repeat;
+}
+.discover-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 30%, rgba(59,130,246,0.15) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* TP-26 首屏承担者 — Design v2: 浅色文字适配深色背景 */
 .discover-hero-title{
-  font-family:var(--serif);font-weight:900;font-size:56px;line-height:1.12;
-  letter-spacing:2px;color:var(--color-ink-900);
-  text-shadow:0 2px 20px rgba(0,0,0,0.5);
+  position:relative;z-index:1;
+  font-family:var(--serif);font-weight:900;font-size:52px;line-height:1.15;
+  letter-spacing:2px;color:#f0f0f0;
+  text-shadow:0 2px 30px rgba(0,0,0,0.8);
 }
 .discover-hero-sub{
-  font-size:15px;line-height:1.9;color:var(--color-ink-500);
-  margin-top:18px;max-width:520px;font-weight:300;
+  position:relative;z-index:1;
+  font-size:16px;line-height:1.9;color:#b0b8c8;
+  margin-top:20px;max-width:560px;font-weight:300;
   margin-left:auto;margin-right:auto;
   text-align:center;
 }
-.discover-section-heading{font-family:var(--serif);font-size:1.4rem;color:var(--color-ink-900);margin-bottom:4px}
-.discover-section-sub{color:var(--color-ink-500);font-size:.85rem;margin-bottom:20px}
+.discover-section-heading{font-family:var(--serif);font-size:1.35rem;color:#e8e8e8;margin-bottom:4px}
+.discover-section-sub{color:#9098a8;font-size:.85rem;margin-bottom:20px}
 
-/* P5-S3 ② 兴趣前置 CTA — 进场第一屏先问「你想研究什么」 */
+/* P5-S3 ② 兴趣前置 CTA — Design v2: 深色玻璃卡片 */
 .discover-research-cta{
   display:flex;align-items:center;justify-content:space-between;gap:24px;
-  margin:28px 0 8px;padding:22px 28px;
-  background:var(--color-paper-100);
-  border:1px solid var(--color-paper-300);
-  border-radius:14px;
+  margin:32px 56px 8px;padding:26px 32px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  backdrop-filter:blur(8px);
 }
-.discover-research-cta-title{font-family:var(--serif);font-size:1.5rem;color:var(--color-ink-900);margin:0}
-.discover-research-cta-sub{font-size:.9rem;color:var(--color-ink-500);margin:6px 0 0;max-width:560px;line-height:1.6}
+.discover-research-cta-title{font-family:var(--serif);font-size:1.5rem;color:#e8e8e8;margin:0}
+.discover-research-cta-sub{font-size:.9rem;color:#9098a8;margin:6px 0 0;max-width:560px;line-height:1.6}
 .discover-research-cta-btn{
   flex:0 0 auto;appearance:none;cursor:pointer;
-  font-family:var(--sans);font-size:1rem;font-weight:500;
-  color:var(--color-accent-ink);background:var(--color-accent);
-  border:none;border-radius:10px;padding:14px 22px;
-  transition:background .2s,transform .2s;
+  font-family:var(--sans);font-size:1rem;font-weight:600;
+  color:#1a1408;background:linear-gradient(135deg,#D4A853 0%,#c49a3f 100%);
+  border:none;border-radius:10px;padding:14px 28px;
+  transition:background .2s,transform .2s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(212,168,83,0.25);
 }
-.discover-research-cta-btn:hover{background:var(--color-accent-hover);transform:translateY(-1px)}
+.discover-research-cta-btn:hover{background:linear-gradient(135deg,#e0b863 0%,#D4A853 100%);transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,83,0.35)}
 
 /* P5-S3 ③ 了解↔研究 桥接入口 */
 .entity-research-bridge{
@@ -243,90 +263,156 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 .entity-research-bridge-btn--ghost:hover{background:var(--color-accent-soft)}
 .entity-research-bridge-hint{font-size:.82rem;color:var(--color-ink-500);line-height:1.5}
 
-/* theme cards (TP-01 起点锚定) — 去渐变/毛玻璃（VS-04 规则②），纯色 paper 表面 */
-.discover-themes{margin:40px 0}
-.discover-theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* theme cards — Design v2: 深色玻璃卡片 + 金色 hover */
+.discover-themes{margin:40px 56px}
+.discover-theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .discover-theme-card{
-  display:flex;flex-direction:column;gap:8px;padding:24px;
-  background:var(--color-paper-100);
-  border:1px solid var(--color-paper-300);border-radius:14px;
-  text-align:left;cursor:pointer;transition:transform var(--motion-duration-fast) var(--motion-ease-standard);font-family:var(--sans);
+  display:flex;flex-direction:column;gap:10px;padding:28px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+  text-align:left;cursor:pointer;
+  transition:transform .25s,border-color .25s,box-shadow .25s,background .25s;
+  font-family:var(--sans);
 }
 .discover-theme-card:hover{
-  border-color:var(--color-accent);
-  box-shadow:0 8px 24px var(--color-accent-soft);
-  transform:translateY(-4px);
+  border-color:rgba(212,168,83,0.35);
+  background:rgba(255,255,255,0.07);
+  box-shadow:0 12px 32px rgba(0,0,0,0.3);
+  transform:translateY(-5px);
 }
-.discover-theme-label{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--color-ink-900)}
-.discover-theme-desc{font-size:13px;color:var(--color-ink-500)}
+.discover-theme-label{font-family:var(--serif);font-size:18px;font-weight:700;color:#e8e8e8}
+.discover-theme-desc{font-size:13px;color:#9098a8;line-height:1.6}
 
-/* featured (TP-26 主 CTA) — accent 仅用于主 CTA 描边（VS-03 §1 TP-26），无渐变大图 */
-.discover-featured{margin:40px 0}
+/* featured — Design v2: 金色边框主 CTA */
+.discover-featured{margin:40px 56px}
 .discover-featured-card{
-  display:flex;flex-direction:column;gap:10px;padding:28px;width:100%;
-  background:var(--color-paper-100);
-  border:1px solid var(--color-accent);border-radius:16px;
-  text-align:left;cursor:pointer;transition:transform var(--motion-duration-fast) var(--motion-ease-standard);font-family:var(--sans);
+  display:flex;flex-direction:column;gap:12px;padding:32px;width:100%;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(212,168,83,0.3);border-radius:16px;
+  text-align:left;cursor:pointer;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  font-family:var(--sans);
   margin-bottom:16px;
 }
-.discover-featured-card:hover{box-shadow:0 10px 32px var(--color-accent-soft);transform:translateY(-4px)}
-.discover-featured-title{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--color-ink-900)}
-.discover-featured-desc{font-size:14px;color:var(--color-ink-500)}
+.discover-featured-card:hover{
+  box-shadow:0 12px 40px rgba(212,168,83,0.15),0 0 0 1px rgba(212,168,83,0.2);
+  transform:translateY(-5px);
+  border-color:rgba(212,168,83,0.5);
+}
+.discover-featured-title{font-family:var(--serif);font-size:24px;font-weight:700;color:#f0f0f0}
+.discover-featured-desc{font-size:14px;color:#b0b8c8;line-height:1.6}
 
-/* popular (TP-01) — paper 表面 + accent hover */
-.discover-popular{margin:40px 0}
+/* popular topic chips — Design v2: 深色玻璃 chip */
+.discover-popular{margin:40px 56px}
 .discover-topic-list{list-style:none;display:flex;flex-wrap:wrap;gap:10px}
 .discover-topic-card{
-  padding:10px 20px;border-radius:30px;font-size:14px;
-  background:var(--color-paper-100);border:1px solid var(--color-paper-300);
-  color:var(--color-ink-500);cursor:pointer;transition:color var(--motion-duration-fast) var(--motion-ease-standard);
+  padding:10px 22px;border-radius:30px;font-size:14px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  color:#c0c8d8;cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s,transform .2s;
 }
-.discover-topic-card:hover{color:var(--color-accent);border-color:var(--color-accent);background:var(--color-accent-soft);transform:translateY(-3px)}
+.discover-topic-card:hover{
+  color:#D4A853;border-color:rgba(212,168,83,0.4);
+  background:rgba(212,168,83,0.08);
+  transform:translateY(-2px);
+}
 
-/* product intro */
-.discover-intro{margin:40px 0}
-.discover-intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* product intro — Design v2: 深色玻璃卡片 + 金色强调 */
+.discover-intro{margin:48px 56px}
+.discover-intro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .discover-intro-card{
-  padding:24px;background:var(--color-paper-100);border:1px solid var(--color-paper-300);
-  border-radius:14px;text-align:center;transition:border-color var(--animation-fast),transform var(--animation-fast),box-shadow var(--animation-fast);
+  padding:28px 24px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;text-align:center;
+  transition:border-color .25s,transform .25s,box-shadow .25s,background .25s;
+  backdrop-filter:blur(8px);
 }
-.discover-intro-card:hover{border-color:var(--color-accent-soft);transform:translateY(-4px);box-shadow:0 16px 40px var(--color-accent-soft)}
+.discover-intro-card:hover{
+  border-color:rgba(212,168,83,0.4);
+  background:rgba(255,255,255,0.07);
+  transform:translateY(-6px);
+  box-shadow:0 16px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(212,168,83,0.15);
+}
 .discover-intro-icon{
   display:inline-flex;align-items:center;justify-content:center;
-  width:52px;height:52px;border-radius:50%;
-  background:var(--color-paper-100);color:var(--color-accent);margin-bottom:14px;
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(212,168,83,0.12);color:#D4A853;margin-bottom:16px;
 }
-.discover-intro-title{font-family:var(--serif);font-size:16px;color:var(--color-ink-900);margin-bottom:6px}
-.discover-intro-desc{font-size:13px;color:var(--color-ink-500)}
+.discover-intro-title{font-family:var(--serif);font-size:16px;color:#e8e8e8;margin-bottom:8px;font-weight:600}
+.discover-intro-desc{font-size:13px;color:#9098a8;line-height:1.65}
 
-/* M62-A: tabbed landing */
-.discover-tabs{display:inline-flex;gap:6px;margin:24px 0;padding:0}
+/* M62-A: tabbed landing — Design v2: 深色 tab bar */
+.discover-tabs{display:inline-flex;gap:6px;margin:24px 56px;padding:0}
 .discover-tab{
-  appearance:none;border:0;background:transparent;color:var(--color-ink-500);
-  font-family:var(--sans);font-size:14px;font-weight:600;padding:8px 18px;
-  border-radius:9px;cursor:pointer;transition:var(--animation-fast);
+  appearance:none;border:0;background:transparent;color:#9098a8;
+  font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 20px;
+  border-radius:10px;cursor:pointer;transition:.2s;
 }
-.discover-tab:hover{color:var(--color-ink-900);background:var(--color-paper-100)}
-.discover-tab.active{background:var(--color-accent-soft);color:var(--color-accent)}
+.discover-tab:hover{color:#e0e0e0;background:rgba(255,255,255,0.06)}
+.discover-tab.active{background:rgba(212,168,83,0.15);color:#D4A853;border:1px solid rgba(212,168,83,0.25)}
 .discover-tab-panel{margin:8px 0}
-.discover-interest{margin:40px 0}
+/* Cognitive Mirror — Design v2: 深色玻璃卡片 + 右侧金色环形图（只读投影） */
+.discover-interest{
+  margin:40px 56px;padding:28px 32px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  backdrop-filter:blur(8px);
+}
+.discover-interest-body{display:flex;gap:36px;align-items:center}
+.discover-interest-text{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+.discover-interest-reflection{font-family:var(--serif);font-size:18px;color:#e8e8e8;line-height:1.6;margin:0}
+.discover-interest-dims{font-size:13px;color:#9098a8;margin:0}
+.discover-interest-themes{display:flex;flex-wrap:wrap;gap:8px}
+.discover-interest-tag{
+  font-size:13px;color:#cdd3df;
+  background:rgba(212,168,83,0.08);
+  border:1px solid rgba(212,168,83,0.2);
+  border-radius:999px;padding:4px 14px;
+}
+.discover-interest-chart{flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.discover-interest-chart-num{fill:#f0f0f0;font-size:26px;font-weight:700;font-family:var(--serif)}
+.discover-interest-chart-cap{fill:#9098a8;font-size:11px;letter-spacing:1px}
 
-/* M62-A: expand (roadmap) tab */
-.discover-expand{margin:40px 0;padding:var(--space-6);border:1px solid var(--color-paper-300);border-radius:16px;background:var(--color-paper-100)}
-.discover-expand-soon{color:var(--color-accent);font-weight:600;margin-top:8px}
+/* M62-A: expand (roadmap) tab — Design v2 */
+.discover-expand{margin:40px 56px;padding:var(--space-6);border:1px solid rgba(255,255,255,0.08);border-radius:16px;background:rgba(255,255,255,0.03)}
+.discover-expand-soon{color:#D4A853;font-weight:600;margin-top:8px}
 
-/* recent (TP-01 起点锚定 · 最近研究) — P5-S2 VS-01 tokens */
-.discover-recent{margin:40px 0}
+/* recent research — Design v2: 深色玻璃卡片 */
+.discover-recent{margin:40px 56px}
 .discover-recent-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .discover-recent-card{
-  display:flex;flex-direction:column;gap:8px;padding:20px;
-  background:var(--color-paper-100);border:1px solid var(--color-paper-300);
-  border-radius:14px;cursor:pointer;transition:border-color var(--motion-duration-fast) var(--motion-ease-standard);
+  display:flex;flex-direction:column;gap:8px;padding:22px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;cursor:pointer;
+  transition:border-color .25s,background .25s;
 }
-.discover-recent-card:hover{border-color:var(--color-accent)}
-.discover-recent-title{font-family:var(--serif);font-size:16px;color:var(--color-ink-900)}
-.discover-recent-meta{font-size:12px;color:var(--color-ink-500)}
-.discover-empty-text{color:var(--color-ink-500);margin-bottom:12px}
+.discover-recent-card:hover{border-color:rgba(212,168,83,0.3);background:rgba(255,255,255,0.06)}
+.discover-recent-title{font-family:var(--serif);font-size:16px;color:#e8e8e8}
+.discover-recent-meta{font-size:12px;color:#808898}
+.discover-empty-text{color:#9098a8;margin-bottom:12px}
+
+/* Design v2: 古地图装饰横幅 — 羊皮纸/古地图纹理 */
+.discover-map-banner{
+  margin:0;padding:48px 56px;
+  background:
+    linear-gradient(135deg, rgba(212,168,83,0.06) 0%, rgba(180,140,60,0.03) 100%),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="120" height="120" filter="url(%23n)" opacity="0.08"/></svg>');
+  border-top:1px solid rgba(212,168,83,0.15);
+  border-bottom:1px solid rgba(212,168,83,0.15);
+  text-align:center;
+}
+.discover-map-banner-inner{
+  max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:8px;
+}
+.discover-map-banner-text{
+  font-family:var(--serif);font-size:32px;font-weight:700;color:#D4A853;
+  letter-spacing:3px;text-shadow:0 2px 16px rgba(0,0,0,0.5);
+}
+.discover-map-banner-sub{
+  font-size:14px;color:#9098a8;line-height:1.7;font-style:italic;
+}
 
 /* ========== SECTION ========== */
 .section{padding:32px 0}
@@ -776,10 +862,20 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
    unchanged; below 640px these stacks to a single column.
    CSS-only additive — no template change. */
 @media (max-width: 640px) {
+  .discover-hero{padding:80px 24px 56px}
+  .discover-hero-title{font-size:36px}
+  .discover-themes,
+  .discover-featured,
+  .discover-recent,
+  .discover-interest,
+  .discover-research-cta,
+  .discover-expand{margin-left:24px;margin-right:24px}
   .discover-theme-grid,
   .discover-intro-grid {
     grid-template-columns: 1fr;
   }
+  .discover-research-cta{flex-direction:column;align-items:flex-start;gap:16px}
+  .discover-interest-body{flex-direction:column;align-items:flex-start;gap:20px}
 }
 
 /* ============================================================

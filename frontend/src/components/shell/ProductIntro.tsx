@@ -16,25 +16,25 @@ const PRODUCT_CAPABILITIES = [
   {
     id: 'story',
     icon: 'book' as const,
-    title: '历史叙事',
+    title: '历史探索',
     desc: '从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。',
   },
   {
     id: 'explore',
     icon: 'link' as const,
-    title: '关系探索',
-    desc: '穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。',
+    title: '文明探索',
+    desc: '穿越文明之间的关联——帝国兴衰、宗教传播、技术演进。每一步都有据可查。',
   },
   {
     id: 'research',
     icon: 'research' as const,
-    title: '深度研究',
+    title: '教育指南',
     desc: '4 维度 AI 分析：政治、军事、经济、文化。支持多实体对比研究，结果可保存回顾。',
   },
   {
     id: 'chat',
     icon: 'scholar' as const,
-    title: 'AI 历史学家',
+    title: 'AI 智能家',
     desc: '随时向 AI 历史学家提问。回答基于知识图谱，不凭空捏造。',
   },
 ]
