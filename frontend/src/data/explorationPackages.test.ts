@@ -151,7 +151,9 @@ describe("M70 cross-dataset packages (silk-road / roman-empire)", () => {
 describe("M72 india-classical-civilization (cross-civilization focus)", () => {
   it("registry exposes the India package (official, 4th package)", () => {
     expect(india().type).toBe("official");
-    expect(getPackages().length).toBe(4);
+    // Baseline was 4 when M72 shipped; Wave2-#143 added 5 more packages
+    // (persian/greek/hellenistic/egypt/early_christianity) -> 10 total.
+    expect(getPackages().length).toBe(10);
   });
 
   it("india package resolves cross-civilization edges (buddhism -> silk road/han, maurya <-> persia)", () => {
