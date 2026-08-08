@@ -847,6 +847,44 @@ export const SCOPE_ALLOWLIST = [
   // folded into the resolver. No schema / enum / dependency / runtime change.
   "frontend/src/data/topicResolver.ts",
   "frontend/src/data/topicResolver.test.ts",
+
+  // Wave2-#140 (DiscoverPage test-drift alignment + empty-shell fix) — Freeze
+  // Revision Gate (PO-approved 2026-08-08, "按你推荐的来"). Closes OD-08.
+  // 1) ProductIntro was extracted out of DiscoverPage in M90.3 but its tests
+  //    were orphaned in DiscoverPage.test.tsx (3 permanently-failing
+  //    assertions). Coverage is MOVED, not deleted, to a new
+  //    ProductIntro.test.tsx alongside the component that owns the markup.
+  // 2) The category-card test rendered DiscoverPage without the `topics` prop
+  //    the cards are derived from, so it asserted cards that can never appear;
+  //    it now supplies a categorised-topics fixture.
+  // 3) DiscoverPage.tsx: the 探索主题 block rendered as a titled EMPTY shell
+  //    whenever backend topics are loading / unreachable / uncategorised.
+  //    Now gated on categoryCards.length > 0 (render-guard only).
+  // Test-only + one conditional render guard. No schema / enum / dependency /
+  // API / runtime change.
+  "frontend/src/components/shell/ProductIntro.test.tsx",
+  "frontend/src/pages/DiscoverPage.test.tsx",
+  "frontend/src/pages/DiscoverPage.tsx",
+
+  // Wave2-#140b (red-guard cleanup surfaced by the #140 regression run) —
+  // Freeze Revision Gate (PO-approved 2026-08-08, "按你推荐的来").
+  // 4) P0-1 VIOLATION in shipped source: UnderstandingWorkspace drew the
+  //    understanding-path status with circle dingbat glyphs, which the M62.5
+  //    symbol guard bans as functional icons (guard was RED). Replaced with
+  //    the already-registered 2px-stroke SVG set (check / circle) + aria-label;
+  //    m89.css .m89-path-dot switched from text centring to inline-flex.
+  // 5) App.smoke.test.tsx contained its entire describe block TWICE (verbatim
+  //    copy-paste) and still asserted the pre-M85.11 always-on rails, so it
+  //    could never pass. Deduplicated and realigned to the shipped contract.
+  // 6) ExplorationShell gains optional defaultWorkspaceOpen /
+  //    defaultCompanionOpen INITIAL-state props so the expanded four-area
+  //    layout is testable again (repo has no DOM/interaction harness — frozen
+  //    deps). Defaults reproduce current behaviour exactly; callers unchanged.
+  // No schema / enum / dependency / API-contract / runtime change.
+  "frontend/src/pages/m89/UnderstandingWorkspace.tsx",
+  "frontend/src/pages/m89/m89.css",
+  "frontend/src/__tests__/App.smoke.test.tsx",
+  "frontend/src/components/shell/ExplorationShell.tsx",
 ];
 
 function _scopeAllowed(file) {

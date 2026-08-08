@@ -229,8 +229,22 @@ const PathArea: React.FC<{ state: UnderstandingWorkspaceState }> = ({
                 i === currentNodeIndex && !node.completed ? 'current' : ''
               }`}
             >
-              <span className="m89-path-dot">
-                {node.completed ? '●' : i === currentNodeIndex ? '◉' : '○'}
+              {/* Wave2-#140 / P0-1: status used to be drawn with filled /
+                  ringed / hollow circle dingbat glyphs, which the M62.5
+                  symbol guard bans as functional icons. Now uses the
+                  registered 2px-stroke SVG set; state is carried by the
+                  .completed / .current colour rules in m89.css. */}
+              <span
+                className="m89-path-dot"
+                aria-label={
+                  node.completed
+                    ? '已完成'
+                    : i === currentNodeIndex
+                      ? '进行中'
+                      : '未开始'
+                }
+              >
+                <Icon name={node.completed ? 'check' : 'circle'} size={16} />
               </span>
               <span className="m89-path-dimension">{node.dimension}</span>
             </div>

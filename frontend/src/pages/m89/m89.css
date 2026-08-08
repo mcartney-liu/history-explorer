@@ -251,11 +251,14 @@
   padding: 8px 0;
 }
 
+/* Wave2-#140 / P0-1: holds an SVG status icon (was a circle dingbat glyph). */
 .m89-path-dot {
-  font-size: var(--text-body);
   width: 24px;
-  text-align: center;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 
 .m89-path-node.completed .m89-path-dot {

@@ -26,6 +26,15 @@ beforeEach(() => {
   localStorage.clear()
 })
 
+// Wave2-#140: fixture for the category-card grid. `categoryCards` is derived
+// from the backend `topics` prop (one card per distinct category), so tests
+// that expect category cards must supply topics that carry a category.
+const CATEGORY_TOPICS = [
+  { topic: 'roman_empire', title: 'Roman Empire', summary: '', category: 'Civilization' },
+  { topic: 'punic_wars', title: 'Punic Wars', summary: '', category: 'Event' },
+  { topic: 'julius_caesar', title: 'Julius Caesar', summary: '', category: 'Person' },
+]
+
 // M35 Phase 2: DiscoverPage is purely presentational; rendered with
 // renderToStaticMarkup (environment:'node', no DOM) matching the repo style.
 const noop = () => {}
@@ -91,14 +100,29 @@ describe('DiscoverPage (M42 Activation)', () => {
     expect(html).toContain('原来历史还能这样探索。')
   })
 
-  it('renders entity type exploration cards', () => {
+  // Wave2-#140: category cards are built from the `topics` prop (backend
+  // data), not from a hardcoded list. The original test rendered without
+  // `topics` and therefore asserted against cards that can never appear.
+  it('renders entity type exploration cards from backend topics', () => {
     const html = renderToStaticMarkup(
-      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+      <DiscoverPage topics={CATEGORY_TOPICS} onTopicClick={noop} onStarterClick={noop} />,
     )
     expect(html).toContain('探索主题')
     expect(html).toContain('古代文明')
     expect(html).toContain('历史事件')
     expect(html).toContain('历史人物')
+  })
+
+  // Wave2-#140: with no backend topics (loading / offline / uncategorised),
+  // the section must not render as an empty titled shell.
+  it('hides the theme section entirely when no categorised topics exist', () => {
+    const html = renderToStaticMarkup(
+      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
+    )
+    expect(html).not.toContain('探索主题')
+    expect(html).not.toContain('按历史类型浏览')
+    // The rest of the page still renders.
+    expect(html).toContain('官方探索包')
   })
 
   it('shows recent researches when history exists', () => {
@@ -143,21 +167,17 @@ describe('DiscoverPage (M42 Activation)', () => {
 // ============================================================
 
 describe('DiscoverPage (M44 Guidance)', () => {
-  it('renders product introduction section', () => {
+  // Wave2-#140 / OD-08: the product-capability showcase ("History Explorer
+  // 能做什么" + the four capability cards) was extracted from DiscoverPage
+  // into components/shell/ProductIntro in M90.3 and is now mounted at App
+  // level. Its coverage moved with it — see
+  // src/components/shell/ProductIntro.test.tsx. It is intentionally NOT
+  // asserted here any more, because DiscoverPage no longer renders it.
+  it('no longer owns the product introduction block', () => {
     const html = renderToStaticMarkup(
       <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
     )
-    expect(html).toContain('History Explorer 能做什么')
-  })
-
-  it('showcases all four capabilities', () => {
-    const html = renderToStaticMarkup(
-      <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
-    )
-    expect(html).toContain('历史叙事')
-    expect(html).toContain('关系探索')
-    expect(html).toContain('深度研究')
-    expect(html).toContain('AI 历史对话')
+    expect(html).not.toContain('History Explorer 能做什么')
   })
 
   it('existing M35 featured section still renders', () => {
@@ -245,6 +265,9 @@ describe('DiscoverPage (M45 event wiring)', () => {
     const html = renderToStaticMarkup(
       <DiscoverPage onTopicClick={noop} onStarterClick={noop} />,
     )
-    expect(html).toContain('History Explorer')
+    // Wave2-#140: assert on markup DiscoverPage actually owns. The previous
+    // 'History Explorer' probe belonged to ProductIntro, which moved out.
+    expect(html).toContain('class="discover-page"')
+    expect(html).toContain(DISCOVER_HERO)
   })
 })

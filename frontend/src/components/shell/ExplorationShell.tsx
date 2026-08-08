@@ -23,6 +23,15 @@ interface ExplorationShellProps {
   timelineActiveIndex?: number
   /** Callback when user selects a timeline dot */
   onTimelineSelect?: (index: number) => void
+  /**
+   * Wave2-#140: initial rail state. Both rails default to collapsed (M85.11),
+   * which previously made the expanded four-area layout untestable — the state
+   * is internal and the repo has no DOM/interaction test harness (frozen deps).
+   * These are uncontrolled *initial* values only; runtime toggling is unchanged
+   * and existing callers keep the exact same behaviour.
+   */
+  defaultWorkspaceOpen?: boolean
+  defaultCompanionOpen?: boolean
   children: ReactNode
 }
 
@@ -34,10 +43,12 @@ export function ExplorationShell({
   timelineActiveLabel,
   timelineActiveIndex,
   onTimelineSelect,
+  defaultWorkspaceOpen = false,
+  defaultCompanionOpen = false,
   children,
 }: ExplorationShellProps) {
-  const [workspaceCollapsed, setWorkspaceCollapsed] = useState(true)
-  const [companionCollapsed, setCompanionCollapsed] = useState(true)
+  const [workspaceCollapsed, setWorkspaceCollapsed] = useState(!defaultWorkspaceOpen)
+  const [companionCollapsed, setCompanionCollapsed] = useState(!defaultCompanionOpen)
 
   const shellClass = [
     'exploration-space',

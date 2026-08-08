@@ -413,17 +413,22 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
         <h3 className="discover-section-heading">开始探索</h3>
         <p className="discover-section-sub">选择一个历史主题或类型，进入交互式探索。</p>
 
-        {/* M42 / M65 Phase 2A: Entity type exploration */}
-        <div className="discover-themes">
-          <h3 className="discover-section-heading">探索主题</h3>
-          <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
-          <TopicCardGrid
-            variant="entity"
-            cards={categoryCards.map((c): TopicCardData => ({ slug: c.slug, label: c.label, desc: c.desc }))}
-            onCardClick={handleTopicClick}
-            maxCards={6}
-          />
-        </div>
+        {/* M42 / M65 Phase 2A: Entity type exploration.
+            Wave2-#140: categoryCards is derived from backend topics. When the
+            backend is loading / unreachable / returns uncategorised topics the
+            grid is empty — render nothing rather than a titled empty shell. */}
+        {categoryCards.length > 0 && (
+          <div className="discover-themes">
+            <h3 className="discover-section-heading">探索主题</h3>
+            <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
+            <TopicCardGrid
+              variant="entity"
+              cards={categoryCards.map((c): TopicCardData => ({ slug: c.slug, label: c.label, desc: c.desc }))}
+              onCardClick={handleTopicClick}
+              maxCards={6}
+            />
+          </div>
+        )}
 
         {/* M69 — 官方探索包（核心产品对象），与 6 固定主题并列，不替代 */}
         <div className="discover-packages">
