@@ -834,6 +834,19 @@ export const SCOPE_ALLOWLIST = [
   // (43 sources), which must track the registry size; no business-logic /
   // schema / enum / dependency / runtime change.
   "backend/tests/test_ontology_contract.py",
+
+  // Wave2-#137 (Semantic entry retrieval) — Freeze Revision Gate (PO-approved
+  // 2026-08-08, "按你推荐的来"). topicResolver.ts is upgraded from a
+  // title/name-only matcher (M74) to a deterministic lexical/semantic entry
+  // resolver: enriched index (package title/summary/category/seed + referenced
+  // entity names; entity name/alias/label/description/type), CJK bigram +
+  // latin tokenization, curated synonym expansion, weighted token-score
+  // ranking (searchTopics) and question-intent detection (understanding mode).
+  // ZERO AI/LLM/network, read-only, deterministic. App.tsx (already allowlisted
+  // at L240) is rewired to resolveEntryQuery; french-revolution special-case
+  // folded into the resolver. No schema / enum / dependency / runtime change.
+  "frontend/src/data/topicResolver.ts",
+  "frontend/src/data/topicResolver.test.ts",
 ];
 
 function _scopeAllowed(file) {

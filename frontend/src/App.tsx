@@ -54,7 +54,7 @@ import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
-import { resolveTopic } from './data/topicResolver'
+import { resolveEntryQuery, resolveTopic } from './data/topicResolver'
 import { ExplorerShell } from './components/shell/ExplorerShell'
 import { GlobalBar } from './components/shell/GlobalBar'
 import { QuestionHeader } from './components/shell/QuestionHeader'
@@ -1376,7 +1376,7 @@ function App() {
               </>
             }
             research={
-              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onQuickStart={(q) => { if (q === '法国大革命为什么发生？') { router.navigate({ topic: 'french-revolution', mode: 'understanding', focus: null }); return } setTopic(q); const resolved = resolveTopic(q); if (resolved?.kind === 'package') { openPackage(resolved.slug) } else if (resolved?.kind === 'entity') { openEntity(resolved.globalId) } else { handleSearch(q) } }} />
+              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onQuickStart={(q) => { const { resolution, intent } = resolveEntryQuery(q); if (resolution?.kind === 'topic') { router.navigate({ topic: resolution.slug, mode: 'understanding', focus: null }); return } setTopic(q); if (resolution?.kind === 'package') { if (intent === 'understanding') { router.navigate({ topic: resolution.slug, mode: 'understanding', focus: null }) } else { openPackage(resolution.slug) } } else if (resolution?.kind === 'entity') { openEntity(resolution.globalId) } else { handleSearch(q) } }} />
             }
             expand={
               <div className="discover-expand">
