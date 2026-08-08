@@ -161,6 +161,27 @@
 
 ## 3. 由 B3 结构衍生的关键交互契约锚点
 
+### 3.0 ModeBar 现状模式 ↔ FRW 四主干映射（2026-08-08 PO 裁决：文档对齐，不改 ModeBar）
+
+> 现状 ModeBar（M90.3，`components/shell/ModeBar.tsx`）提供 4 个运行时模式：
+> `exploration / explanation / relationship / understanding`，是实际生效的模式切换 UI。
+> FRW 四主干（Explore / Understand / Compare / Mirror）是产品架构层的提问角度定义。
+> 经 PO 裁决（2026-08-08），两者**不互相替换**，以本文档作为对齐锚点：
+
+| ModeBar 运行时模式 | 归属 FRW 主干 | 说明 |
+|-------------------|--------------|------|
+| `exploration`（探索） | **Explore** | 直接对应 Explore 主干的默认提问角度 |
+| `explanation`（解释） | **Explore** | Explore 主干下的解释深化角度（TP-10 机制） |
+| `relationship`（关系） | **Explore** | Explore 主干下的关系展开角度（TP-03/25） |
+| `understanding`（理解） | **Understand** | 对应 Understand 主干（UnderstandingWorkspace 唯一独立渲染分支） |
+| — | **Compare** | 不走 ModeBar：独立 CrossTopic 直入入口（TP-14，P0 独立入口，不退化下级） |
+| — | **Mirror** | 不走 ModeBar：MirrorPanel 只读投影（TP-19/22，无出边） |
+
+**对齐规则**：
+1. ModeBar 的三个 Explore 系模式（exploration/explanation/relationship）语义上都是 Explore 主干的提问角度，ModeBar 保留它们作为精细切换。
+2. Compare / Mirror 有各自独立入口（CrossTopic 直入 / 面板），**不强行并入 ModeBar**，避免空壳模式。
+3. 未来若 ModeBar 演化，新增模式必须先映射到四主干或常驻层，不得凭空新增第五种主干（R-2 规则不变）。
+
 ### 3.1 TP-16 下一步的五 actionType 标准映射（唯一契约来源 A2）
 | actionType | 用户读到的意思 | 导航去向 | 交互动作 |
 |-----------|--------------|---------|---------|
