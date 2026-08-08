@@ -51,12 +51,12 @@ def test_v1_topics_matches_legacy():
 
 
 def test_topics_contract_shape():
-    # M5-A-1: every entry carries exactly {topic, title, summary} and no extra
-    # fields, so the frozen client contract is not widened.
+    # M5-A-1: every entry carries {topic, title, summary, category}. `category`
+    # was added in P5 (landing-page filtering) and is part of the frozen contract.
     body = client.get(f"{V1}/topics").json()
     assert set(body.keys()) == {"topics"}
     for item in body["topics"]:
-        assert set(item.keys()) == {"topic", "title", "summary"}
+        assert set(item.keys()) == {"topic", "title", "summary", "category"}
         assert isinstance(item["topic"], str) and item["topic"]
         assert isinstance(item["title"], str)
         assert isinstance(item["summary"], str)

@@ -810,6 +810,20 @@ export const SCOPE_ALLOWLIST = [
   // only gains the router mount — no storage logic leaks into it.
   "backend/app/ai_gateway/research_store.py",
   "backend/app/ai_gateway/research_router.py",
+
+  // Wave2-#135 (Test-drift alignment) — Freeze Revision Gate (PO-approved
+  // 2026-08-08, "按你推荐的来"). Backend test suite had drifted 13 failures
+  // behind the shipped data/feature reality. These two test files carry STALE
+  // ASSERTIONS ONLY (no backend/app business logic, schema, enum, dependency
+  // or runtime change):
+  //   - test_api_v1.py  : topics contract gained the real `category` field
+  //                       shipped with the P5 landing page.
+  //   - test_explore.py : roman_empire dataset titles are localized to Chinese
+  //                       (consistent with greek / egypt), so "Roman Empire"
+  //                       was a stale English expectation.
+  // Same mechanism/precedent as the M35 `test_search_index.py` entry above.
+  "backend/tests/test_api_v1.py",
+  "backend/tests/test_explore.py",
 ];
 
 function _scopeAllowed(file) {

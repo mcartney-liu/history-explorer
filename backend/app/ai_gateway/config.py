@@ -74,8 +74,13 @@ class AIConfig:
 
 
 def get_config():
-    """Build an AIConfig from environment variables (+ backend/.env)."""
-    _load_dotenv()
+    """Build an AIConfig from environment variables only.
+
+    `.env` loading is performed once at application startup (see app.main),
+    guarded so pytest never auto-loads it — this keeps the "AI disabled by
+    default when no env is set" contract verifiable and stops tests from
+    accidentally constructing a real provider / hitting the network.
+    """
     enabled = _as_bool(os.environ.get("AI_GATEWAY_ENABLED"))
     provider = (os.environ.get("AI_PROVIDER") or "openai").strip().lower()
     api_key = (os.environ.get("AI_API_KEY") or "").strip()

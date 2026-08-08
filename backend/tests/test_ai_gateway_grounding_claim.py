@@ -8,8 +8,10 @@ Covers the Phase2 Gate approved scope:
   Step 5: ResponseValidator claim/source double binding
 
 Uses the REAL knowledge_service singleton (built from the frozen dataset —
-43 sources / 76 claims / 145 entities). No LLM, no network: AI provider calls
-are never exercised here (AI_GATEWAY_ENABLED stays false).
+43 sources / 76 claims / 186 entities after the textbook package was added).
+No LLM, no network: the AI-off precondition is established explicitly per
+test (via _clear_ai_env) so the deterministic path is always used, even when
+AI_* env vars are exported in the local shell.
 """
 
 import sys
@@ -21,6 +23,13 @@ if str(BACKEND_DIR) not in sys.path:
 
 from app.main import knowledge_service  # noqa: E402  (real singleton)
 from app.ai_gateway.grounding_builder import RelationshipResolver  # noqa: E402
+
+
+def _clear_ai_env(monkeypatch):
+    """Ensure no AI gateway env is visible so the deterministic path is used."""
+    for k in ("AI_GATEWAY_ENABLED", "AI_PROVIDER", "AI_API_KEY",
+              "AI_BASE_URL", "AI_MODEL"):
+        monkeypatch.delenv(k, raising=False)
 
 
 # ---------------------------------------------------------------------------
@@ -46,8 +55,8 @@ def test_local_to_global_covers_all_entity_local_ids():
             total += 1
             if knowledge_service.find_global_id(lid):
                 resolved += 1
-    assert total == 145
-    assert resolved == 145
+    assert total == 186
+    assert resolved == 186
 
 
 def test_local_to_global_unknown_returns_none():
@@ -447,10 +456,16 @@ def test_pipeline_handles_relationship_pair_focus():
     assert res.passed and len(res.valid_claims) == len(sel.claims)
 
 
-def test_runtime_off_fallback_behavior():
+def test_runtime_off_fallback_behavior(monkeypatch):
     """AI_GATEWAY_ENABLED unset/False + EMPTY context -> the AI endpoints keep
     the deterministic unavailable fallback (engine=deterministic, HTTP 200),
-    never 500 — the existing fallback path is preserved."""
+    never 500 — the existing fallback path is preserved.
+
+    The AI-off precondition is established explicitly (not assumed from the
+    ambient env) so the test is deterministic even when AI_GATEWAY_ENABLED is
+    exported in the local shell environment.
+    """
+    _clear_ai_env(monkeypatch)
     from app.ai_gateway import config as ai_config
 
     assert ai_config.get_config().is_enabled is False   # default OFF
@@ -471,9 +486,14 @@ def test_runtime_off_fallback_behavior():
 # M74-003 (C2) — OFF branch upgraded: Phase2 pipeline deterministic grounded
 # ---------------------------------------------------------------------------
 
-def test_off_branch_valid_context_returns_grounded_deterministic():
+def test_off_branch_valid_context_returns_grounded_deterministic(monkeypatch):
     """Runtime OFF + valid context -> engine=deterministic, grounded=True,
-    evidence non-empty, next_exploration non-empty (upgraded semantics)."""
+    evidence non-empty, next_exploration non-empty (upgraded semantics).
+
+    AI-off is established explicitly so the test never reaches the real
+    provider (no network call) even when AI_* env vars are exported locally.
+    """
+    _clear_ai_env(monkeypatch)
     from app.ai_gateway.answer_service import grounded_answer
 
     resp = grounded_answer(

@@ -568,7 +568,7 @@
     {
       "id": "idea-baijia",
       "type": "Idea",
-      "name": "百家争鸣",
+      "name": "诸子百家",
       "description": "战国思想自由竞放的局面，儒墨道法等并立，奠定中国哲学根基。",
       "global_id": "tb_cn_v1:idea-baijia",
       "aliases": ["诸子之学"],
@@ -604,7 +604,18 @@
     { "source": "person-pangeng", "target": "loc-yin", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "盘庚迁都于殷。", "reviewed": true },
     { "source": "tp-xia", "target": "loc-erlitou", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "夏都或即二里头。", "reviewed": true },
     { "source": "person-yandi", "target": "civ-huaxia", "type": "influenced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "炎黄被尊华夏人文初祖。", "reviewed": true },
-    { "source": "person-huangdi", "target": "civ-huaxia", "type": "influenced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "炎黄被尊华夏人文初祖。", "reviewed": true }
+    { "source": "person-huangdi", "target": "civ-huaxia", "type": "influenced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "炎黄被尊华夏人文初祖。", "reviewed": true },
+    { "source": "person-yao", "target": "idea-shanrang", "type": "practiced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "尧行禅让。", "reviewed": true },
+    { "source": "person-shun", "target": "idea-shanrang", "type": "practiced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "舜行禅让。", "reviewed": true },
+    { "source": "person-youwang", "target": "tp-zhou-west", "type": "ruled", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "幽王为西周末王。", "reviewed": true },
+    { "source": "person-wuwang", "target": "event-wuwang-fazhou", "type": "participated_in", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "武王主导伐纣。", "reviewed": true },
+    { "source": "event-pangeng-qian-yin", "target": "loc-yin", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "迁都于殷。", "reviewed": true },
+    { "source": "person-yu", "target": "event-dayu-zhishui", "type": "participated_in", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "禹治水。", "reviewed": true },
+    { "source": "loc-zhoukoudian", "target": "civ-huaxia", "type": "part_of", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "华夏早期人类活动地。", "reviewed": true },
+    { "source": "tech-daogeng", "target": "loc-changjiang", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "稻作起于长江流域。", "reviewed": true },
+    { "source": "tech-su", "target": "loc-huanghe", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "粟作起于黄河流域。", "reviewed": true },
+    { "source": "tech-ganlan", "target": "loc-changjiang", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "干栏建筑见于长江流域。", "reviewed": true },
+    { "source": "idea-baijia", "target": "tp-warring-states", "type": "caused", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "战国催生诸子百家。", "reviewed": true }
   ],
   "timeline": [
     { "period": { "value": -1700000, "precision": "year", "certainty": "approximate", "label": "c. 1.7M BCE" }, "event": "中国境内早期人类活动（元谋人、北京人）" },

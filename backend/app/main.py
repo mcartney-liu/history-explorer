@@ -40,6 +40,14 @@ from .ai_gateway.research_router import router as research_router
 settings = get_settings()
 logger = configure_logging(settings.log_level)
 
+# ADR-0017: load backend/.env (AI key / base_url / model / enable flag) for
+# deployment. Guarded so pytest never auto-loads .env — that keeps the AI-off
+# contract verifiable and prevents tests from constructing a real provider.
+if "PYTEST_CURRENT_TEST" not in os.environ:
+    from .ai_gateway.config import _load_dotenv
+
+    _load_dotenv()
+
 app = FastAPI(
     title=settings.app_name,
     description="Backend API service foundation for History Explorer.",
