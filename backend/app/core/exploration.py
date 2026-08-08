@@ -63,6 +63,13 @@ def build_exploration_view(
 
     resolved_id = main_entity.get("id")
 
+    # Prefer the Chinese display name (labels.zh) when available, matching the
+    # in-place zh resolution in build_exploration_response. Without this the
+    # frontend's starter cards fall back to the raw English `name` field
+    # (Wave2-#149 follow-up: "分不清组件名还是真实内容").
+    def _display_name(e: dict) -> str:
+        return (e.get("labels") or {}).get("zh") or e.get("name", "") or e.get("id", "")
+
     related_entities: list[dict] = []
     for rel in relationships:
         source = rel.get("source")
@@ -71,12 +78,22 @@ def build_exploration_view(
         if source == resolved_id and target in entity_by_id:
             other = entity_by_id[target]
             related_entities.append(
-                {"id": other.get("id"), "type": other.get("type"), "relationship": rel_type}
+                {
+                    "id": other.get("id"),
+                    "type": other.get("type"),
+                    "relationship": rel_type,
+                    "name": _display_name(other),
+                }
             )
         elif target == resolved_id and source in entity_by_id:
             other = entity_by_id[source]
             related_entities.append(
-                {"id": other.get("id"), "type": other.get("type"), "relationship": rel_type}
+                {
+                    "id": other.get("id"),
+                    "type": other.get("type"),
+                    "relationship": rel_type,
+                    "name": _display_name(other),
+                }
             )
 
     return {"main_entity": main_entity, "related_entities": related_entities}
