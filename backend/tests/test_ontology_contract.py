@@ -40,9 +40,14 @@ def test_tg3_registry_regression():
 
 
 def test_tg4_pipeline_regression():
-    """AcquisitionPipeline('history', data_dir).run() still returns 43 sources (pipeline.py unchanged)."""
+    """AcquisitionPipeline('history', data_dir).run() returns the curated source registry (pipeline.py unchanged).
+
+    Baseline: 43 sources at M76; grew to 105 after Wave2-#136 curated-source
+    expansion (M26.1 truth-layer evidence coverage). The pipeline code is
+    frozen — only the data it reads changed.
+    """
     result = AcquisitionPipeline("history", _DATA_DIR).run()
-    assert len(result.sources) == 43
+    assert len(result.sources) == 105
 
 
 def test_tg5_mutation_protection():

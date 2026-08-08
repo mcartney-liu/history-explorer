@@ -824,6 +824,16 @@ export const SCOPE_ALLOWLIST = [
   // Same mechanism/precedent as the M35 `test_search_index.py` entry above.
   "backend/tests/test_api_v1.py",
   "backend/tests/test_explore.py",
+
+  // Wave2-#136 (Evidence-layer source expansion) — Freeze Revision Gate
+  // (PO-approved 2026-08-08, "按你推荐的来"). M26.1 curated source registry
+  // (data/sources.json) grew from 43 → 105 well-curated sources as part of the
+  // truth-layer evidence coverage expansion. The pipeline (acquisition/
+  // pipeline.py) is UNCHANGED — it merely reads the now-larger curated
+  // registry. This test file carries a STALE HARDCODED COUNT ASSERTION ONLY
+  // (43 sources), which must track the registry size; no business-logic /
+  // schema / enum / dependency / runtime change.
+  "backend/tests/test_ontology_contract.py",
 ];
 
 function _scopeAllowed(file) {
