@@ -887,12 +887,25 @@ function App() {
     try {
       const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`)
       if (!response.ok) {
-        throw new Error(`Search failed (${response.status})`)
+        throw new Error(`status:${response.status}`)
       }
       const data = await response.json()
       setSearchResults(data.results as SearchResultItem[])
     } catch (err) {
-      setSearchError('Unable to search. Is the backend running?')
+      // M74 C3 alignment (same classification as navigateTo): a 4xx means the
+      // backend is ONLINE and rejected the input — surfacing that as
+      // "Unable to search. Is the backend running?" misled users into
+      // checking connectivity. 400 = invalid input, 404 = endpoint missing,
+      // anything else (network / 5xx) = backend unreachable.
+      const msg = err instanceof Error ? err.message : String(err)
+      const status = msg.startsWith('status:') ? msg.slice('status:'.length) : ''
+      if (status === '400') {
+        setSearchError('搜索请求未通过校验（400），请换个说法试试')
+      } else if (status === '404') {
+        setSearchError('搜索接口不存在（404），请检查后端版本')
+      } else {
+        setSearchError('Unable to search. Is the backend running?')
+      }
       setSearchResults([])
     } finally {
       setSearchLoading(false)
@@ -1383,7 +1396,7 @@ function App() {
               </>
             }
             research={
-              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onQuickStart={(q) => { const { resolution, intent } = resolveEntryQuery(q); if (resolution?.kind === 'topic') { router.navigate({ topic: resolution.slug, mode: 'understanding', focus: null }); return } setTopic(q); if (resolution?.kind === 'package') { if (intent === 'understanding') { router.navigate({ topic: resolution.slug, mode: 'understanding', focus: null }) } else { openPackage(resolution.slug) } } else if (resolution?.kind === 'entity') { openEntity(resolution.globalId) } else { handleSearch(q) } }} />
+              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onQuickStart={(q) => { const { resolution, intent } = resolveEntryQuery(q); if (resolution?.kind === 'topic') { router.navigate({ topic: resolution.slug, mode: 'understanding', focus: null }); return } if (resolution?.kind === 'package') { if (intent === 'understanding') { router.navigate({ topic: resolution.slug, mode: 'understanding', focus: null }) } else { openPackage(resolution.slug) } } else if (resolution?.kind === 'entity') { openEntity(resolution.globalId) } else { setTopic(q); handleSearch(q) } }} />
             }
             expand={
               <div className="discover-expand">
