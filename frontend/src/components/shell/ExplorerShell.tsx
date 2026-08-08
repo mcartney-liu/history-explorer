@@ -24,13 +24,17 @@ import { useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 
 // ============================================================
-// Fixed theme: v1 (clean). The legacy frosted-glass theme was
-// previously selectable via a ThemeToggle; keeping the dataset
-// marker set to "v1" at module load ensures VS-04 rules resolve
-// against the shipped theme on first paint.
+// Fixed theme: legacy (deep-navy frosted glass + Earth backdrop).
+// Wave2-#141(4): PO feedback — "白色框太耀眼，和整体风格不搭；左右抽屉
+// 要毛边玻璃，透明度同 5173"。The clean v1 (light) theme made every
+// card a bright solid slab against the dark Earth; switching the
+// default to legacy re-maps all paper/ink/accent tokens to the deep
+// navy scheme, so cards become dark glass and text turns light.
+// dataset marker set at module load so VS-04 rules resolve against
+// the shipped theme on first paint.
 // ============================================================
 if (typeof document !== 'undefined') {
-  document.documentElement.dataset.theme = 'v1'
+  document.documentElement.dataset.theme = 'legacy'
 }
 
 interface ExplorerShellProps {

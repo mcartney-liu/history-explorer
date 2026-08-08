@@ -101,3 +101,25 @@
   color: var(--color-ink-500);
   border: 1px solid var(--color-paper-300);
 }
+
+/* ============================================================
+   Wave2-#141(4): de-bright controls — kill the browser-default
+   light-grey button/chip backgrounds that glared against the
+   deep-navy frosted theme. Semantic fallbacks, not hardcoded
+   colours (P0-3): translucent navy glass in legacy, paper-200
+   in v1.
+   ============================================================ */
+.explore-button,
+.discover-starter,
+.feedback-btn,
+.ae-mode-chip {
+  background: var(--glass-navy-rail, var(--color-paper-200));
+  color: var(--color-ink-700, inherit);
+  border-color: var(--color-paper-300, currentColor);
+}
+.explore-button:hover,
+.discover-starter:hover,
+.feedback-btn:hover,
+.ae-mode-chip:hover {
+  background: var(--glass-navy-panel, var(--color-paper-200));
+}
