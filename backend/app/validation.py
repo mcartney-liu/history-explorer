@@ -37,8 +37,9 @@ ENTITY_TYPES: frozenset[str] = frozenset(
     }
 )
 
-# Canonical relationship types per the M3.5-000 Schema Freeze: 18 total (the
-# 15 inherited M1/M2 types + additive `inherited` / `conquered` / `spread`).
+# Canonical relationship types per the M3.5-000 Schema Freeze: 20 total (the
+# 15 inherited M1/M2 types + additive `inherited` / `conquered` / `spread` +
+# ADR-0019 disputes / reinterprets for the Truth layer P09 dissent navigation).
 RELATIONSHIP_TYPES: frozenset[str] = frozenset(
     {
         "caused",
@@ -59,6 +60,8 @@ RELATIONSHIP_TYPES: frozenset[str] = frozenset(
         "inherited",
         "conquered",
         "spread",
+        "disputes",
+        "reinterprets",
     }
 )
 

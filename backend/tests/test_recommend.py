@@ -188,7 +188,7 @@ def test_explore_unchanged_by_recommendation_layer():
 # ---------------------------------------------------------------------------
 def test_freeze_enum_counts_unchanged():
     assert len(ENTITY_TYPES) == 8
-    assert len(RELATIONSHIP_TYPES) == 18
+    assert len(RELATIONSHIP_TYPES) == 20  # ADR-0019
 
 
 def test_frozen_exploration_weights_untouched():

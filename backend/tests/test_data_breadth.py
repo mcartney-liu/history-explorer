@@ -5,10 +5,10 @@ production code, the schema, or the freeze enum values — they assert that
 the expanded dataset stays inside the frozen contract:
 
   * every entity type is one of the 8 frozen types
-  * every relationship type is one of the 18 frozen types
+  * every relationship type is one of the 20 frozen types
   * every relationship endpoint resolves to a real entity (no dangling)
   * the global validation report has 0 warnings / 0 errors
-  * the freeze enum sizes are unchanged (8 entities / 18 relationships)
+  * the freeze enum sizes are unchanged (8 entities / 20 relationships)
 
 Run with: pytest backend/tests/test_data_breadth.py
 """
@@ -30,7 +30,7 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BACKEND_DIR.parent / "data" / "examples"
 
 EXPECTED_ENTITY_TYPES = 8
-EXPECTED_RELATIONSHIP_TYPES = 18
+EXPECTED_RELATIONSHIP_TYPES = 20  # ADR-0019: +disputes/reinterprets
 
 
 @pytest.fixture(scope="module")
@@ -39,7 +39,7 @@ def ks():
 
 
 def test_freeze_enum_sizes_unchanged():
-    """The M3.5-000 Schema Freeze locks the vocabulary at 8 / 18."""
+    """The M3.5-000 Schema Freeze locks the vocabulary at 8 / 20."""
     assert len(ENTITY_TYPES) == EXPECTED_ENTITY_TYPES
     assert len(RELATIONSHIP_TYPES) == EXPECTED_RELATIONSHIP_TYPES
 

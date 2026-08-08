@@ -497,6 +497,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "loc-chang-an",
+      "target": "silk_road",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "Hansen, The Silk Road (2012)",
+      "evidence": [
+        "ec-sr-012"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "丝路东方起点存在长安/洛阳之争：传统以长安为汉代起点，近年研究主张东汉洛阳同为丝路东端枢纽，形成对起点认定的挑战。",
+      "reviewed": true
     }
   ],
   "timeline": [

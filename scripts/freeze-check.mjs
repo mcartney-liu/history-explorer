@@ -66,8 +66,10 @@ const AI_SDK_PATTERN = /(openai|anthropic|cohere|langchain|huggingface|gemini|cl
 // Always-forbidden infrastructure (never allowed, even outside the AI module).
 const FORBIDDEN_INFRA = /(neo4j|redis|graphql|tensorflow|torch|pytorch|spacy|nltk|scikit-learn|sklearn)/i;
 
+// ADR-0019 (2026-08-08): disputes / reinterprets added for Truth-layer P09
+// dissent navigation — enum 18 → 20 (additive, PO-approved).
 const EXPECTED_ENTITY_TYPES = 8;
-const EXPECTED_RELATIONSHIP_TYPES = 18;
+const EXPECTED_RELATIONSHIP_TYPES = 20;
 const SCAN_DIRS = ["frontend/src", "backend/app"];
 
 function log(msg) {

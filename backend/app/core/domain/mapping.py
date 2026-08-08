@@ -6,7 +6,7 @@ Layer (NOT a specific Domain Layer). See ADR-M80-MAP.
 
 Hard red lines (enforced by design, never bypassed):
 - Does NOT modify ENTITY_TYPES / RELATIONSHIP_TYPES freeze baseline.
-- Does NOT expand the 18 relationship white-list.
+- Does NOT expand the 20 relationship white-list (18 baseline + ADR-0019).
 - Does NOT bind RELATIONSHIP_MEANING (runtime weighting, DB-B04 out of scope).
 - Does NOT wire into Acquisition pipeline / Graph runtime / Causal / Engine.
 - No AI / LLM inference.
@@ -61,7 +61,7 @@ class MappingResult:
     resolved_relation_type: str | None = None
 
 
-# Frozen global relationship vocabulary (M3.5 Schema Freeze, 18 entries).
+# Frozen global relationship vocabulary (M3.5 Schema Freeze, 20 entries — ADR-0019).
 # This is the ONLY set a MAPPED contract may resolve into to be admissible to
 # GlobalGraph. READ-ONLY: imported from validation, never reassigned here.
 _GLOBAL_RELATION_WHITELIST: frozenset[str] = _FREEZE_RELATIONSHIP_TYPES

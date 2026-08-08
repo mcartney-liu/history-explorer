@@ -3244,5 +3244,89 @@
       "src-tacitus"
     ],
     "interpretation_note": "「某年某日灭亡」是后世简化，帝国在东半部延续为拜占庭；衰亡是过程而非单一事件。"
+  },
+  {
+    "id": "ec-cn-013",
+    "subject_type": "entity",
+    "subject_id": "civ-zhonghua",
+    "source_id": "src-cn-shiji",
+    "claim": "秦始皇焚书坑儒的范围历来有争议：司马迁《史记》记载坑杀的是诽谤朝政的术士（方士），而非全部儒生；后世则将事件扩大为对儒家学说的系统性毁灭。",
+    "notes": "争议焦点：坑杀对象是方士还是儒生，以及焚书是否针对儒家经典。",
+    "truth": {
+      "confidence": 0.6,
+      "scholar_consensus": "disputed",
+      "controversy_level": "high",
+      "interpretation_note": "主流观点（据《史记·秦始皇本纪》）认为坑杀对象是方士；扩大为坑儒的叙述始于后世儒生书写，属史学重释。"
+    }
+  },
+  {
+    "id": "ec-cn-014",
+    "subject_type": "entity",
+    "subject_id": "idea-keju",
+    "source_id": "src-cn-qianmu",
+    "claim": "科举制度的起始时间存在两种主流解释：传统说法认为隋炀帝大业年间设进士科为起点；钱穆等学者则认为科举真正成为制度始于唐代，隋代只是萌芽。",
+    "notes": "争议焦点：科举作为制度化的起始标志（隋 vs 唐）。",
+    "truth": {
+      "confidence": 0.65,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "传统教科书取隋代说；制度史研究（钱穆《中国历代政治得失》）强调唐代才形成完整考试-录用制度，属解释层面的分歧。"
+    }
+  },
+  {
+    "id": "ec-cn-016",
+    "subject_type": "entity",
+    "subject_id": "loc-changan",
+    "source_id": "src-hansen-silk-road",
+    "claim": "丝绸之路的东方起点存在长安与洛阳之争：长安在汉代为都城，历来被视为起点；但近年研究指出洛阳在东汉时期作为都城与丝路东端，同样承担枢纽功能。",
+    "notes": "争议焦点：丝路东方起点的认定（长安 vs 洛阳）。",
+    "truth": {
+      "confidence": 0.6,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "考古与文献研究对东汉时期洛阳的丝路枢纽地位提出新证据，形成对传统长安起点说的补充性挑战。"
+    }
+  },
+  {
+    "id": "ec-rom-041",
+    "subject_type": "entity",
+    "subject_id": "event-empire-fall",
+    "source_id": "src-gibbon-decline",
+    "claim": "罗马帝国衰亡的原因存在经典争议：吉本《罗马帝国衰亡史》强调道德衰败与基督教兴起；现代史学（如剑桥罗马史）则强调财政危机、边疆压力与制度僵化的复合因素。",
+    "notes": "争议焦点：道德-宗教解释 vs 经济-制度解释。",
+    "truth": {
+      "confidence": 0.65,
+      "scholar_consensus": "disputed",
+      "controversy_level": "high",
+      "interpretation_note": "吉本的道德论是18世纪经典；20世纪以降学界转向多因素分析，将宗教因素降为之一，是对吉本叙事的系统性重释。"
+    }
+  },
+  {
+    "id": "ec-rom-042",
+    "subject_type": "entity",
+    "subject_id": "person-julius-caesar",
+    "source_id": "src-caesar-commentarii",
+    "claim": "凯撒遇刺的性质存在对立解读：传统共和派叙事视其为捍卫共和国传统；现代分析则强调凯撒个人权力野心与元老院既得利益的结构性冲突。",
+    "notes": "争议焦点：凯撒是共和国的威胁还是其危机的结果。",
+    "truth": {
+      "confidence": 0.7,
+      "scholar_consensus": "disputed",
+      "controversy_level": "high",
+      "interpretation_note": "布鲁图斯自称解放者的共和叙事 vs 现代政治史对个人野心与体制危机的结构性分析，属立场对立的典型 disputes。"
+    }
+  },
+  {
+    "id": "ec-cn-015",
+    "subject_type": "entity",
+    "subject_id": "idea-lixue",
+    "source_id": "src-cn-lunyu",
+    "claim": "宋明理学内部存在格物致知与致良知的方法论对立：朱熹主张即物穷理、由外而内；王阳明主张心即理、由内而外。两者对如何成圣的路径存在根本分歧。",
+    "notes": "争议焦点：修养工夫论——向外格物 vs 向内致良知。",
+    "truth": {
+      "confidence": 0.75,
+      "scholar_consensus": "disputed",
+      "controversy_level": "medium",
+      "interpretation_note": "朱王之争是宋明理学史的经典公案，双方都有完整著作体系支撑，属立场对立的 disputes，非对错之分。"
+    }
   }
 ]

@@ -9,10 +9,26 @@
       "name": "唐 (618–907)",
       "description": "中国帝制中期王朝，科举制确立、诗歌文化鼎盛、佛教完成本土化融合。",
       "global_id": "china_v1:tp-tang",
-      "aliases": ["Tang", "李唐"],
-      "labels": { "en": "Tang Dynasty", "zh": "唐朝" },
-      "start_date": { "value": 618, "precision": "year", "certainty": "exact", "label": "618 CE" },
-      "end_date": { "value": 907, "precision": "year", "certainty": "exact", "label": "907 CE" },
+      "aliases": [
+        "Tang",
+        "李唐"
+      ],
+      "labels": {
+        "en": "Tang Dynasty",
+        "zh": "唐朝"
+      },
+      "start_date": {
+        "value": 618,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "618 CE"
+      },
+      "end_date": {
+        "value": 907,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "907 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": ""
@@ -23,10 +39,26 @@
       "name": "宋 (960–1279)",
       "description": "重文抑武，文官政治成熟、理学兴起、商业城市与印刷传播繁荣。",
       "global_id": "china_v1:tp-song",
-      "aliases": ["Song", "赵宋"],
-      "labels": { "en": "Song Dynasty", "zh": "宋朝" },
-      "start_date": { "value": 960, "precision": "year", "certainty": "exact", "label": "960 CE" },
-      "end_date": { "value": 1279, "precision": "year", "certainty": "exact", "label": "1279 CE" },
+      "aliases": [
+        "Song",
+        "赵宋"
+      ],
+      "labels": {
+        "en": "Song Dynasty",
+        "zh": "宋朝"
+      },
+      "start_date": {
+        "value": 960,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "960 CE"
+      },
+      "end_date": {
+        "value": 1279,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1279 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": ""
@@ -37,10 +69,26 @@
       "name": "元 (1271–1368)",
       "description": "蒙古建立的大一统王朝，多民族交流空前，海陆交通网络扩展。",
       "global_id": "china_v1:tp-yuan",
-      "aliases": ["Yuan", "大元"],
-      "labels": { "en": "Yuan Dynasty", "zh": "元朝" },
-      "start_date": { "value": 1271, "precision": "year", "certainty": "exact", "label": "1271 CE" },
-      "end_date": { "value": 1368, "precision": "year", "certainty": "exact", "label": "1368 CE" },
+      "aliases": [
+        "Yuan",
+        "大元"
+      ],
+      "labels": {
+        "en": "Yuan Dynasty",
+        "zh": "元朝"
+      },
+      "start_date": {
+        "value": 1271,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1271 CE"
+      },
+      "end_date": {
+        "value": 1368,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1368 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": ""
@@ -51,10 +99,26 @@
       "name": "明 (1368–1644)",
       "description": "汉族重建大一统，内阁制度成型、心学流行、郑和航海远播。",
       "global_id": "china_v1:tp-ming",
-      "aliases": ["Ming", "朱明"],
-      "labels": { "en": "Ming Dynasty", "zh": "明朝" },
-      "start_date": { "value": 1368, "precision": "year", "certainty": "exact", "label": "1368 CE" },
-      "end_date": { "value": 1644, "precision": "year", "certainty": "exact", "label": "1644 CE" },
+      "aliases": [
+        "Ming",
+        "朱明"
+      ],
+      "labels": {
+        "en": "Ming Dynasty",
+        "zh": "明朝"
+      },
+      "start_date": {
+        "value": 1368,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1368 CE"
+      },
+      "end_date": {
+        "value": 1644,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1644 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": ""
@@ -65,10 +129,26 @@
       "name": "清 (1636–1912)",
       "description": "最后一个帝制王朝，制度延续明制并调整，传统文明体系步入近代转折。",
       "global_id": "china_v1:tp-qing",
-      "aliases": ["Qing", "大清"],
-      "labels": { "en": "Qing Dynasty", "zh": "清朝" },
-      "start_date": { "value": 1636, "precision": "year", "certainty": "exact", "label": "1636 CE" },
-      "end_date": { "value": 1912, "precision": "year", "certainty": "exact", "label": "1912 CE" },
+      "aliases": [
+        "Qing",
+        "大清"
+      ],
+      "labels": {
+        "en": "Qing Dynasty",
+        "zh": "清朝"
+      },
+      "start_date": {
+        "value": 1636,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1636 CE"
+      },
+      "end_date": {
+        "value": 1912,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1912 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": ""
@@ -79,9 +159,20 @@
       "name": "中华文明",
       "description": "以中原为核心、多民族融合的连续文明体系，承载制度、思想、技术与文化的长期演化。",
       "global_id": "china_v1:civ-zhonghua",
-      "aliases": ["Chinese civilization", "华夏"],
-      "labels": { "en": "Chinese Civilization", "zh": "中华文明" },
-      "start_date": { "value": -2000, "precision": "year", "certainty": "approximate", "label": "c. 2000 BC" },
+      "aliases": [
+        "Chinese civilization",
+        "华夏"
+      ],
+      "labels": {
+        "en": "Chinese Civilization",
+        "zh": "中华文明"
+      },
+      "start_date": {
+        "value": -2000,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 2000 BC"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
@@ -95,12 +186,30 @@
       "name": "科举制度",
       "description": "以考试选官的制度，隋唐确立、后世延续，将人才选拔与文官体系脱胎于门第。",
       "global_id": "china_v1:idea-keju",
-      "aliases": ["Imperial examination", "科举"],
-      "labels": { "en": "Imperial Examination System", "zh": "科举制度" },
-      "start_date": { "value": 605, "precision": "year", "certainty": "approximate", "label": "c. 605 CE" },
-      "end_date": { "value": 1905, "precision": "year", "certainty": "exact", "label": "1905 CE" },
+      "aliases": [
+        "Imperial examination",
+        "科举"
+      ],
+      "labels": {
+        "en": "Imperial Examination System",
+        "zh": "科举制度"
+      },
+      "start_date": {
+        "value": 605,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 605 CE"
+      },
+      "end_date": {
+        "value": 1905,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1905 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-001"],
+      "evidence": [
+        "ec-cn-001"
+      ],
       "reliability": ""
     },
     {
@@ -109,9 +218,19 @@
       "name": "三省六部",
       "description": "隋唐中枢政制，中书、门下、尚书三省与六部分工，奠定后世官制骨架。",
       "global_id": "china_v1:idea-sanxing-liubu",
-      "aliases": ["Three Departments and Six Ministries"],
-      "labels": { "en": "Three Departments and Six Ministries", "zh": "三省六部" },
-      "start_date": { "value": 581, "precision": "year", "certainty": "approximate", "label": "c. 581 CE" },
+      "aliases": [
+        "Three Departments and Six Ministries"
+      ],
+      "labels": {
+        "en": "Three Departments and Six Ministries",
+        "zh": "三省六部"
+      },
+      "start_date": {
+        "value": 581,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 581 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
@@ -123,12 +242,26 @@
       "name": "文官体系",
       "description": "以科举出身文人主导政务的官僚体系，宋代理学化、制度化，取代前代门第政治。",
       "global_id": "china_v1:idea-wenguan",
-      "aliases": ["Civil service system", "文官政治"],
-      "labels": { "en": "Civil Official System", "zh": "文官体系" },
-      "start_date": { "value": 960, "precision": "year", "certainty": "approximate", "label": "c. 960 CE" },
+      "aliases": [
+        "Civil service system",
+        "文官政治"
+      ],
+      "labels": {
+        "en": "Civil Official System",
+        "zh": "文官体系"
+      },
+      "start_date": {
+        "value": 960,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 960 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-001", "ec-cn-002"],
+      "evidence": [
+        "ec-cn-001",
+        "ec-cn-002"
+      ],
       "reliability": ""
     },
     {
@@ -137,12 +270,31 @@
       "name": "内阁制度",
       "description": "明朝形成的内阁辅政体制，由顾问机构演变为实际行政中枢，承接宋明文官传统。",
       "global_id": "china_v1:idea-neige",
-      "aliases": ["Grand Secretariat", "内阁"],
-      "labels": { "en": "Grand Secretariat", "zh": "内阁制度" },
-      "start_date": { "value": 1402, "precision": "year", "certainty": "approximate", "label": "c. 1402 CE" },
-      "end_date": { "value": 1644, "precision": "year", "certainty": "exact", "label": "1644 CE" },
+      "aliases": [
+        "Grand Secretariat",
+        "内阁"
+      ],
+      "labels": {
+        "en": "Grand Secretariat",
+        "zh": "内阁制度"
+      },
+      "start_date": {
+        "value": 1402,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1402 CE"
+      },
+      "end_date": {
+        "value": 1644,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1644 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-002", "ec-cn-012"],
+      "evidence": [
+        "ec-cn-002",
+        "ec-cn-012"
+      ],
       "reliability": ""
     },
     {
@@ -151,9 +303,20 @@
       "name": "土地制度",
       "description": "历代田制与赋役安排（均田、租庸调、两税法、一条鞭法等）的统称，关乎国家财政与社会结构。",
       "global_id": "china_v1:idea-tudi",
-      "aliases": ["Land system", "田制"],
-      "labels": { "en": "Land Tenure System", "zh": "土地制度" },
-      "start_date": { "value": 485, "precision": "year", "certainty": "approximate", "label": "c. 485 CE" },
+      "aliases": [
+        "Land system",
+        "田制"
+      ],
+      "labels": {
+        "en": "Land Tenure System",
+        "zh": "土地制度"
+      },
+      "start_date": {
+        "value": 485,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 485 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
@@ -165,12 +328,29 @@
       "name": "唐诗",
       "description": "唐代诗歌的巅峰形态，题材广阔、格律成熟，与李白、杜甫等诗人共同塑造时代文化。",
       "global_id": "china_v1:idea-tangshi",
-      "aliases": ["Tang poetry"],
-      "labels": { "en": "Tang Poetry", "zh": "唐诗" },
-      "start_date": { "value": 618, "precision": "year", "certainty": "approximate", "label": "618 CE" },
-      "end_date": { "value": 907, "precision": "year", "certainty": "approximate", "label": "907 CE" },
+      "aliases": [
+        "Tang poetry"
+      ],
+      "labels": {
+        "en": "Tang Poetry",
+        "zh": "唐诗"
+      },
+      "start_date": {
+        "value": 618,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "618 CE"
+      },
+      "end_date": {
+        "value": 907,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "907 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-003"],
+      "evidence": [
+        "ec-cn-003"
+      ],
       "reliability": ""
     },
     {
@@ -179,12 +359,30 @@
       "name": "宋词",
       "description": "宋代勃兴的配乐文学，承唐诗而变，苏轼、辛弃疾等拓展其题材与气象。",
       "global_id": "china_v1:idea-songci",
-      "aliases": ["Song ci", "宋词"],
-      "labels": { "en": "Song Lyric Poetry", "zh": "宋词" },
-      "start_date": { "value": 960, "precision": "year", "certainty": "approximate", "label": "960 CE" },
-      "end_date": { "value": 1279, "precision": "year", "certainty": "approximate", "label": "1279 CE" },
+      "aliases": [
+        "Song ci",
+        "宋词"
+      ],
+      "labels": {
+        "en": "Song Lyric Poetry",
+        "zh": "宋词"
+      },
+      "start_date": {
+        "value": 960,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "960 CE"
+      },
+      "end_date": {
+        "value": 1279,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "1279 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-003"],
+      "evidence": [
+        "ec-cn-003"
+      ],
       "reliability": ""
     },
     {
@@ -193,12 +391,26 @@
       "name": "理学",
       "description": "宋明儒学新形态，以程颐、朱熹为代表，融汇佛老而重建心性义理之学。",
       "global_id": "china_v1:idea-lixue",
-      "aliases": ["Neo-Confucianism", "道学"],
-      "labels": { "en": "Neo-Confucianism", "zh": "理学" },
-      "start_date": { "value": 1088, "precision": "year", "certainty": "approximate", "label": "c. 1088 CE" },
+      "aliases": [
+        "Neo-Confucianism",
+        "道学"
+      ],
+      "labels": {
+        "en": "Neo-Confucianism",
+        "zh": "理学"
+      },
+      "start_date": {
+        "value": 1088,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1088 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-004", "ec-cn-009"],
+      "evidence": [
+        "ec-cn-004",
+        "ec-cn-009"
+      ],
       "reliability": ""
     },
     {
@@ -207,12 +419,26 @@
       "name": "心学",
       "description": "明代理学分支，以王阳明『知行合一』为代表，强调心即理、内省致良知。",
       "global_id": "china_v1:idea-xinxue",
-      "aliases": ["School of Mind", "阳明学"],
-      "labels": { "en": "School of Mind", "zh": "心学" },
-      "start_date": { "value": 1472, "precision": "year", "certainty": "approximate", "label": "c. 1472 CE" },
+      "aliases": [
+        "School of Mind",
+        "阳明学"
+      ],
+      "labels": {
+        "en": "School of Mind",
+        "zh": "心学"
+      },
+      "start_date": {
+        "value": 1472,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1472 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-004", "ec-cn-010"],
+      "evidence": [
+        "ec-cn-004",
+        "ec-cn-010"
+      ],
       "reliability": ""
     },
     {
@@ -221,12 +447,24 @@
       "name": "宗教融合",
       "description": "儒释道三教在唐宋时期相互吸收、并存共生的文化现象。",
       "global_id": "china_v1:idea-zongjiao-ronghe",
-      "aliases": ["Religious syncretism"],
-      "labels": { "en": "Religious Syncretism", "zh": "宗教融合" },
-      "start_date": { "value": 618, "precision": "year", "certainty": "approximate", "label": "618 CE" },
+      "aliases": [
+        "Religious syncretism"
+      ],
+      "labels": {
+        "en": "Religious Syncretism",
+        "zh": "宗教融合"
+      },
+      "start_date": {
+        "value": 618,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "618 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-005"],
+      "evidence": [
+        "ec-cn-005"
+      ],
       "reliability": ""
     },
     {
@@ -235,12 +473,24 @@
       "name": "商业城市文化",
       "description": "宋元城市打破坊市隔绝、市民经济与印刷传播共同催生的都市文化形态。",
       "global_id": "china_v1:idea-shangye-chengshi",
-      "aliases": ["Commercial urban culture"],
-      "labels": { "en": "Commercial Urban Culture", "zh": "商业城市文化" },
-      "start_date": { "value": 960, "precision": "year", "certainty": "approximate", "label": "960 CE" },
+      "aliases": [
+        "Commercial urban culture"
+      ],
+      "labels": {
+        "en": "Commercial Urban Culture",
+        "zh": "商业城市文化"
+      },
+      "start_date": {
+        "value": 960,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "960 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-006"],
+      "evidence": [
+        "ec-cn-006"
+      ],
       "reliability": ""
     },
     {
@@ -249,16 +499,44 @@
       "name": "李白",
       "description": "盛唐浪漫主义诗人，代表作体现唐诗气象。",
       "global_id": "china_v1:person-li-bai",
-      "aliases": ["Li Bai", "太白"],
-      "labels": { "en": "Li Bai", "zh": "李白" },
-      "start_date": { "value": 701, "precision": "year", "certainty": "exact", "label": "701 CE" },
-      "end_date": { "value": 762, "precision": "year", "certainty": "exact", "label": "762 CE" },
+      "aliases": [
+        "Li Bai",
+        "太白"
+      ],
+      "labels": {
+        "en": "Li Bai",
+        "zh": "李白"
+      },
+      "start_date": {
+        "value": 701,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "701 CE"
+      },
+      "end_date": {
+        "value": 762,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "762 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 701, "precision": "year", "certainty": "exact", "label": "701 CE" },
-      "death": { "value": 762, "precision": "year", "certainty": "exact", "label": "762 CE" },
-      "roles": ["诗人"],
+      "birth": {
+        "value": 701,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "701 CE"
+      },
+      "death": {
+        "value": 762,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "762 CE"
+      },
+      "roles": [
+        "诗人"
+      ],
       "related_events": []
     },
     {
@@ -267,16 +545,43 @@
       "name": "杜甫",
       "description": "唐代现实主义诗人，诗史之称，与李白并称李杜。",
       "global_id": "china_v1:person-du-fu",
-      "aliases": ["Du Fu"],
-      "labels": { "en": "Du Fu", "zh": "杜甫" },
-      "start_date": { "value": 712, "precision": "year", "certainty": "exact", "label": "712 CE" },
-      "end_date": { "value": 770, "precision": "year", "certainty": "exact", "label": "770 CE" },
+      "aliases": [
+        "Du Fu"
+      ],
+      "labels": {
+        "en": "Du Fu",
+        "zh": "杜甫"
+      },
+      "start_date": {
+        "value": 712,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "712 CE"
+      },
+      "end_date": {
+        "value": 770,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "770 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 712, "precision": "year", "certainty": "exact", "label": "712 CE" },
-      "death": { "value": 770, "precision": "year", "certainty": "exact", "label": "770 CE" },
-      "roles": ["诗人"],
+      "birth": {
+        "value": 712,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "712 CE"
+      },
+      "death": {
+        "value": 770,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "770 CE"
+      },
+      "roles": [
+        "诗人"
+      ],
       "related_events": []
     },
     {
@@ -285,16 +590,44 @@
       "name": "苏轼",
       "description": "北宋文学家、书画家，宋词与文人文化的代表。",
       "global_id": "china_v1:person-su-shi",
-      "aliases": ["Su Shi", "苏东坡"],
-      "labels": { "en": "Su Shi", "zh": "苏轼" },
-      "start_date": { "value": 1037, "precision": "year", "certainty": "exact", "label": "1037 CE" },
-      "end_date": { "value": 1101, "precision": "year", "certainty": "exact", "label": "1101 CE" },
+      "aliases": [
+        "Su Shi",
+        "苏东坡"
+      ],
+      "labels": {
+        "en": "Su Shi",
+        "zh": "苏轼"
+      },
+      "start_date": {
+        "value": 1037,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1037 CE"
+      },
+      "end_date": {
+        "value": 1101,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1101 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 1037, "precision": "year", "certainty": "exact", "label": "1037 CE" },
-      "death": { "value": 1101, "precision": "year", "certainty": "exact", "label": "1101 CE" },
-      "roles": ["文学家"],
+      "birth": {
+        "value": 1037,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1037 CE"
+      },
+      "death": {
+        "value": 1101,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1101 CE"
+      },
+      "roles": [
+        "文学家"
+      ],
       "related_events": []
     },
     {
@@ -303,16 +636,43 @@
       "name": "辛弃疾",
       "description": "南宋豪放派词人，词风雄健，承唐诗余绪而拓宋词境界。",
       "global_id": "china_v1:person-xin-qiji",
-      "aliases": ["Xin Qiji"],
-      "labels": { "en": "Xin Qiji", "zh": "辛弃疾" },
-      "start_date": { "value": 1140, "precision": "year", "certainty": "exact", "label": "1140 CE" },
-      "end_date": { "value": 1207, "precision": "year", "certainty": "exact", "label": "1207 CE" },
+      "aliases": [
+        "Xin Qiji"
+      ],
+      "labels": {
+        "en": "Xin Qiji",
+        "zh": "辛弃疾"
+      },
+      "start_date": {
+        "value": 1140,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1140 CE"
+      },
+      "end_date": {
+        "value": 1207,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1207 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 1140, "precision": "year", "certainty": "exact", "label": "1140 CE" },
-      "death": { "value": 1207, "precision": "year", "certainty": "exact", "label": "1207 CE" },
-      "roles": ["词人"],
+      "birth": {
+        "value": 1140,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1140 CE"
+      },
+      "death": {
+        "value": 1207,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1207 CE"
+      },
+      "roles": [
+        "词人"
+      ],
       "related_events": []
     },
     {
@@ -321,16 +681,45 @@
       "name": "朱熹",
       "description": "南宋理学家，集理学之大成，确立四书体系。",
       "global_id": "china_v1:person-zhu-xi",
-      "aliases": ["Zhu Xi"],
-      "labels": { "en": "Zhu Xi", "zh": "朱熹" },
-      "start_date": { "value": 1130, "precision": "year", "certainty": "exact", "label": "1130 CE" },
-      "end_date": { "value": 1200, "precision": "year", "certainty": "exact", "label": "1200 CE" },
+      "aliases": [
+        "Zhu Xi"
+      ],
+      "labels": {
+        "en": "Zhu Xi",
+        "zh": "朱熹"
+      },
+      "start_date": {
+        "value": 1130,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1130 CE"
+      },
+      "end_date": {
+        "value": 1200,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1200 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-009"],
+      "evidence": [
+        "ec-cn-009"
+      ],
       "reliability": "",
-      "birth": { "value": 1130, "precision": "year", "certainty": "exact", "label": "1130 CE" },
-      "death": { "value": 1200, "precision": "year", "certainty": "exact", "label": "1200 CE" },
-      "roles": ["理学家"],
+      "birth": {
+        "value": 1130,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1130 CE"
+      },
+      "death": {
+        "value": 1200,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1200 CE"
+      },
+      "roles": [
+        "理学家"
+      ],
       "related_events": []
     },
     {
@@ -339,16 +728,46 @@
       "name": "王阳明",
       "description": "明代思想家，心学集大成者，倡知行合一。",
       "global_id": "china_v1:person-wang-yangming",
-      "aliases": ["Wang Yangming", "王守仁"],
-      "labels": { "en": "Wang Yangming", "zh": "王阳明" },
-      "start_date": { "value": 1472, "precision": "year", "certainty": "exact", "label": "1472 CE" },
-      "end_date": { "value": 1529, "precision": "year", "certainty": "exact", "label": "1529 CE" },
+      "aliases": [
+        "Wang Yangming",
+        "王守仁"
+      ],
+      "labels": {
+        "en": "Wang Yangming",
+        "zh": "王阳明"
+      },
+      "start_date": {
+        "value": 1472,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1472 CE"
+      },
+      "end_date": {
+        "value": 1529,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1529 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-010"],
+      "evidence": [
+        "ec-cn-010"
+      ],
       "reliability": "",
-      "birth": { "value": 1472, "precision": "year", "certainty": "exact", "label": "1472 CE" },
-      "death": { "value": 1529, "precision": "year", "certainty": "exact", "label": "1529 CE" },
-      "roles": ["思想家"],
+      "birth": {
+        "value": 1472,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1472 CE"
+      },
+      "death": {
+        "value": 1529,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1529 CE"
+      },
+      "roles": [
+        "思想家"
+      ],
       "related_events": []
     },
     {
@@ -357,16 +776,43 @@
       "name": "程颐",
       "description": "北宋理学家，二程之一，与兄程颢共开理学先河。",
       "global_id": "china_v1:person-cheng-yi",
-      "aliases": ["Cheng Yi"],
-      "labels": { "en": "Cheng Yi", "zh": "程颐" },
-      "start_date": { "value": 1033, "precision": "year", "certainty": "exact", "label": "1033 CE" },
-      "end_date": { "value": 1107, "precision": "year", "certainty": "exact", "label": "1107 CE" },
+      "aliases": [
+        "Cheng Yi"
+      ],
+      "labels": {
+        "en": "Cheng Yi",
+        "zh": "程颐"
+      },
+      "start_date": {
+        "value": 1033,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1033 CE"
+      },
+      "end_date": {
+        "value": 1107,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1107 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 1033, "precision": "year", "certainty": "exact", "label": "1033 CE" },
-      "death": { "value": 1107, "precision": "year", "certainty": "exact", "label": "1107 CE" },
-      "roles": ["理学家"],
+      "birth": {
+        "value": 1033,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1033 CE"
+      },
+      "death": {
+        "value": 1107,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1107 CE"
+      },
+      "roles": [
+        "理学家"
+      ],
       "related_events": []
     },
     {
@@ -375,17 +821,47 @@
       "name": "唐太宗",
       "description": "唐朝皇帝李世民，贞观之治，完善三省六部与科举。",
       "global_id": "china_v1:person-tang-taizong",
-      "aliases": ["Tang Taizong", "李世民"],
-      "labels": { "en": "Emperor Taizong of Tang", "zh": "唐太宗" },
-      "start_date": { "value": 598, "precision": "year", "certainty": "exact", "label": "598 CE" },
-      "end_date": { "value": 649, "precision": "year", "certainty": "exact", "label": "649 CE" },
+      "aliases": [
+        "Tang Taizong",
+        "李世民"
+      ],
+      "labels": {
+        "en": "Emperor Taizong of Tang",
+        "zh": "唐太宗"
+      },
+      "start_date": {
+        "value": 598,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "598 CE"
+      },
+      "end_date": {
+        "value": 649,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "649 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 598, "precision": "year", "certainty": "exact", "label": "598 CE" },
-      "death": { "value": 649, "precision": "year", "certainty": "exact", "label": "649 CE" },
-      "roles": ["皇帝"],
-      "related_events": ["event-keju-established"]
+      "birth": {
+        "value": 598,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "598 CE"
+      },
+      "death": {
+        "value": 649,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "649 CE"
+      },
+      "roles": [
+        "皇帝"
+      ],
+      "related_events": [
+        "event-keju-established"
+      ]
     },
     {
       "id": "person-song-taizu",
@@ -393,16 +869,44 @@
       "name": "宋太祖",
       "description": "北宋开国皇帝赵匡胤，重文抑武，奠定文官政治基调。",
       "global_id": "china_v1:person-song-taizu",
-      "aliases": ["Song Taizu", "赵匡胤"],
-      "labels": { "en": "Emperor Taizu of Song", "zh": "宋太祖" },
-      "start_date": { "value": 927, "precision": "year", "certainty": "exact", "label": "927 CE" },
-      "end_date": { "value": 976, "precision": "year", "certainty": "exact", "label": "976 CE" },
+      "aliases": [
+        "Song Taizu",
+        "赵匡胤"
+      ],
+      "labels": {
+        "en": "Emperor Taizu of Song",
+        "zh": "宋太祖"
+      },
+      "start_date": {
+        "value": 927,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "927 CE"
+      },
+      "end_date": {
+        "value": 976,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "976 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 927, "precision": "year", "certainty": "exact", "label": "927 CE" },
-      "death": { "value": 976, "precision": "year", "certainty": "exact", "label": "976 CE" },
-      "roles": ["皇帝"],
+      "birth": {
+        "value": 927,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "927 CE"
+      },
+      "death": {
+        "value": 976,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "976 CE"
+      },
+      "roles": [
+        "皇帝"
+      ],
       "related_events": []
     },
     {
@@ -411,17 +915,46 @@
       "name": "郑和",
       "description": "明代航海家，七下西洋，远播航海技术与中国影响。",
       "global_id": "china_v1:person-zheng-he",
-      "aliases": ["Zheng He"],
-      "labels": { "en": "Zheng He", "zh": "郑和" },
-      "start_date": { "value": 1371, "precision": "year", "certainty": "exact", "label": "1371 CE" },
-      "end_date": { "value": 1433, "precision": "year", "certainty": "exact", "label": "1433 CE" },
+      "aliases": [
+        "Zheng He"
+      ],
+      "labels": {
+        "en": "Zheng He",
+        "zh": "郑和"
+      },
+      "start_date": {
+        "value": 1371,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1371 CE"
+      },
+      "end_date": {
+        "value": 1433,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1433 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "birth": { "value": 1371, "precision": "year", "certainty": "exact", "label": "1371 CE" },
-      "death": { "value": 1433, "precision": "year", "certainty": "exact", "label": "1433 CE" },
-      "roles": ["航海家"],
-      "related_events": ["event-zheng-he"]
+      "birth": {
+        "value": 1371,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1371 CE"
+      },
+      "death": {
+        "value": 1433,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1433 CE"
+      },
+      "roles": [
+        "航海家"
+      ],
+      "related_events": [
+        "event-zheng-he"
+      ]
     },
     {
       "id": "tech-zaopi",
@@ -429,15 +962,30 @@
       "name": "造纸术",
       "description": "东汉改进的植物纤维造纸技术，唐以后经丝路与海路向西传播。",
       "global_id": "china_v1:tech-zaopi",
-      "aliases": ["Papermaking"],
-      "labels": { "en": "Papermaking", "zh": "造纸术" },
-      "start_date": { "value": -105, "precision": "year", "certainty": "approximate", "label": "c. 105 BC" },
+      "aliases": [
+        "Papermaking"
+      ],
+      "labels": {
+        "en": "Papermaking",
+        "zh": "造纸术"
+      },
+      "start_date": {
+        "value": -105,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 105 BC"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "invented_by": "civ-zhonghua",
-      "invented_in": { "value": -105, "precision": "year", "certainty": "approximate", "label": "c. 105 BC" },
+      "invented_in": {
+        "value": -105,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 105 BC"
+      },
       "category": "writing-materials"
     },
     {
@@ -446,15 +994,34 @@
       "name": "印刷术",
       "description": "雕版始于唐、活字起于宋毕昇，极大加速知识传播，助推商业城市文化。",
       "global_id": "china_v1:tech-yinshua",
-      "aliases": ["Printing", "活字印刷"],
-      "labels": { "en": "Printing", "zh": "印刷术" },
-      "start_date": { "value": 700, "precision": "year", "certainty": "approximate", "label": "c. 700 CE" },
+      "aliases": [
+        "Printing",
+        "活字印刷"
+      ],
+      "labels": {
+        "en": "Printing",
+        "zh": "印刷术"
+      },
+      "start_date": {
+        "value": 700,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 700 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-006", "ec-cn-007"],
+      "evidence": [
+        "ec-cn-006",
+        "ec-cn-007"
+      ],
       "reliability": "",
       "invented_by": "civ-zhonghua",
-      "invented_in": { "value": 700, "precision": "year", "certainty": "approximate", "label": "c. 700 CE" },
+      "invented_in": {
+        "value": 700,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 700 CE"
+      },
       "category": "communication"
     },
     {
@@ -463,15 +1030,30 @@
       "name": "火药",
       "description": "唐末炼丹术中问世、宋代用于军事，后经海路外传。",
       "global_id": "china_v1:tech-huoyao",
-      "aliases": ["Gunpowder"],
-      "labels": { "en": "Gunpowder", "zh": "火药" },
-      "start_date": { "value": 850, "precision": "year", "certainty": "approximate", "label": "c. 850 CE" },
+      "aliases": [
+        "Gunpowder"
+      ],
+      "labels": {
+        "en": "Gunpowder",
+        "zh": "火药"
+      },
+      "start_date": {
+        "value": 850,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 850 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "invented_by": "civ-zhonghua",
-      "invented_in": { "value": 850, "precision": "year", "certainty": "approximate", "label": "c. 850 CE" },
+      "invented_in": {
+        "value": 850,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 850 CE"
+      },
       "category": "military"
     },
     {
@@ -480,15 +1062,32 @@
       "name": "航海技术",
       "description": "明代宝船与航海术的成熟，郑和下西洋达到木帆航海高峰。",
       "global_id": "china_v1:tech-hanghai",
-      "aliases": ["Navigation technology"],
-      "labels": { "en": "Maritime Navigation Technology", "zh": "航海技术" },
-      "start_date": { "value": 1405, "precision": "year", "certainty": "approximate", "label": "c. 1405 CE" },
+      "aliases": [
+        "Navigation technology"
+      ],
+      "labels": {
+        "en": "Maritime Navigation Technology",
+        "zh": "航海技术"
+      },
+      "start_date": {
+        "value": 1405,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1405 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-008"],
+      "evidence": [
+        "ec-cn-008"
+      ],
       "reliability": "",
       "invented_by": "civ-zhonghua",
-      "invented_in": { "value": 1405, "precision": "year", "certainty": "approximate", "label": "c. 1405 CE" },
+      "invented_in": {
+        "value": 1405,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1405 CE"
+      },
       "category": "maritime"
     },
     {
@@ -497,17 +1096,33 @@
       "name": "科举确立",
       "description": "隋唐设科取士，以考试选官逐步制度化，开启文官选任新径。",
       "global_id": "china_v1:event-keju-established",
-      "aliases": ["Establishment of imperial examination"],
-      "labels": { "en": "Establishment of Imperial Examination", "zh": "科举确立" },
-      "start_date": { "value": 605, "precision": "year", "certainty": "approximate", "label": "c. 605 CE" },
+      "aliases": [
+        "Establishment of imperial examination"
+      ],
+      "labels": {
+        "en": "Establishment of Imperial Examination",
+        "zh": "科举确立"
+      },
+      "start_date": {
+        "value": 605,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 605 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-001"],
+      "evidence": [
+        "ec-cn-001"
+      ],
       "reliability": "",
       "location": "loc-changan",
-      "participants": ["person-tang-taizong"],
+      "participants": [
+        "person-tang-taizong"
+      ],
       "causes": [],
-      "consequences": ["idea-keju"]
+      "consequences": [
+        "idea-keju"
+      ]
     },
     {
       "id": "event-jingnan",
@@ -515,17 +1130,36 @@
       "name": "靖难之役",
       "description": "明初内乱，燕王朱棣夺位后迁都、巩固内阁辅政格局。",
       "global_id": "china_v1:event-jingnan",
-      "aliases": ["Jingnan Campaign"],
-      "labels": { "en": "Jingnan Campaign", "zh": "靖难之役" },
-      "start_date": { "value": 1399, "precision": "year", "certainty": "exact", "label": "1399 CE" },
-      "end_date": { "value": 1402, "precision": "year", "certainty": "exact", "label": "1402 CE" },
+      "aliases": [
+        "Jingnan Campaign"
+      ],
+      "labels": {
+        "en": "Jingnan Campaign",
+        "zh": "靖难之役"
+      },
+      "start_date": {
+        "value": 1399,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1399 CE"
+      },
+      "end_date": {
+        "value": 1402,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1402 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-012"],
+      "evidence": [
+        "ec-cn-012"
+      ],
       "reliability": "",
       "location": "loc-dadu",
       "participants": [],
       "causes": [],
-      "consequences": ["idea-neige"]
+      "consequences": [
+        "idea-neige"
+      ]
     },
     {
       "id": "event-yitiaobian",
@@ -533,9 +1167,19 @@
       "name": "一条鞭法",
       "description": "明中后期张居正推行的赋役折银改革，整合土地与赋税制度。",
       "global_id": "china_v1:event-yitiaobian",
-      "aliases": ["Single Whip Law"],
-      "labels": { "en": "Single Whip Law", "zh": "一条鞭法" },
-      "start_date": { "value": 1581, "precision": "year", "certainty": "approximate", "label": "c. 1581 CE" },
+      "aliases": [
+        "Single Whip Law"
+      ],
+      "labels": {
+        "en": "Single Whip Law",
+        "zh": "一条鞭法"
+      },
+      "start_date": {
+        "value": 1581,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1581 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
@@ -543,7 +1187,9 @@
       "location": "loc-dadu",
       "participants": [],
       "causes": [],
-      "consequences": ["idea-tudi"]
+      "consequences": [
+        "idea-tudi"
+      ]
     },
     {
       "id": "event-zheng-he",
@@ -551,17 +1197,38 @@
       "name": "郑和下西洋",
       "description": "明初七次远航，展示航海技术并拓展海陆交流网络。",
       "global_id": "china_v1:event-zheng-he",
-      "aliases": ["Zheng He's voyages"],
-      "labels": { "en": "Zheng He's Voyages", "zh": "郑和下西洋" },
-      "start_date": { "value": 1405, "precision": "year", "certainty": "exact", "label": "1405 CE" },
-      "end_date": { "value": 1433, "precision": "year", "certainty": "exact", "label": "1433 CE" },
+      "aliases": [
+        "Zheng He's voyages"
+      ],
+      "labels": {
+        "en": "Zheng He's Voyages",
+        "zh": "郑和下西洋"
+      },
+      "start_date": {
+        "value": 1405,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1405 CE"
+      },
+      "end_date": {
+        "value": 1433,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1433 CE"
+      },
       "source": "",
-      "evidence": ["ec-cn-008"],
+      "evidence": [
+        "ec-cn-008"
+      ],
       "reliability": "",
       "location": "loc-quanzhou",
-      "participants": ["person-zheng-he"],
+      "participants": [
+        "person-zheng-he"
+      ],
       "causes": [],
-      "consequences": ["tech-hanghai"]
+      "consequences": [
+        "tech-hanghai"
+      ]
     },
     {
       "id": "loc-changan",
@@ -569,16 +1236,32 @@
       "name": "长安",
       "description": "唐都，丝路东端枢纽，国际都会与科举中心。",
       "global_id": "china_v1:loc-changan",
-      "aliases": ["Chang'an", "西安"],
-      "labels": { "en": "Chang'an", "zh": "长安" },
-      "start_date": { "value": 618, "precision": "year", "certainty": "approximate", "label": "618 CE" },
+      "aliases": [
+        "Chang'an",
+        "西安"
+      ],
+      "labels": {
+        "en": "Chang'an",
+        "zh": "长安"
+      },
+      "start_date": {
+        "value": 618,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "618 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
-      "coordinates": { "lat": 34.3416, "lng": 108.9398 },
+      "coordinates": {
+        "lat": 34.3416,
+        "lng": 108.9398
+      },
       "region": "Guanzhong",
-      "related_events": ["event-keju-established"]
+      "related_events": [
+        "event-keju-established"
+      ]
     },
     {
       "id": "loc-linan",
@@ -586,14 +1269,33 @@
       "name": "临安",
       "description": "南宋行在（今杭州），商业城市文化鼎盛之都。",
       "global_id": "china_v1:loc-linan",
-      "aliases": ["Lin'an", "杭州"],
-      "labels": { "en": "Lin'an", "zh": "临安" },
-      "start_date": { "value": 1129, "precision": "year", "certainty": "approximate", "label": "1129 CE" },
-      "end_date": { "value": 1276, "precision": "year", "certainty": "exact", "label": "1276 CE" },
+      "aliases": [
+        "Lin'an",
+        "杭州"
+      ],
+      "labels": {
+        "en": "Lin'an",
+        "zh": "临安"
+      },
+      "start_date": {
+        "value": 1129,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "1129 CE"
+      },
+      "end_date": {
+        "value": 1276,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1276 CE"
+      },
       "source": "",
       "evidence": [],
       "reliability": "",
-      "coordinates": { "lat": 30.2741, "lng": 120.1551 },
+      "coordinates": {
+        "lat": 30.2741,
+        "lng": 120.1551
+      },
       "region": "Jiangnan",
       "related_events": []
     },
@@ -603,16 +1305,33 @@
       "name": "大都",
       "description": "元大都（今北京），海陆交通与政治中枢。",
       "global_id": "china_v1:loc-dadu",
-      "aliases": ["Dadu", "北京"],
-      "labels": { "en": "Dadu", "zh": "大都" },
-      "start_date": { "value": 1272, "precision": "year", "certainty": "approximate", "label": "1272 CE" },
+      "aliases": [
+        "Dadu",
+        "北京"
+      ],
+      "labels": {
+        "en": "Dadu",
+        "zh": "大都"
+      },
+      "start_date": {
+        "value": 1272,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "1272 CE"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
-      "coordinates": { "lat": 39.9042, "lng": 116.4074 },
+      "coordinates": {
+        "lat": 39.9042,
+        "lng": 116.4074
+      },
       "region": "North China",
-      "related_events": ["event-jingnan", "event-yitiaobian"]
+      "related_events": [
+        "event-jingnan",
+        "event-yitiaobian"
+      ]
     },
     {
       "id": "loc-quanzhou",
@@ -620,16 +1339,35 @@
       "name": "泉州",
       "description": "宋元明海上贸易港，航海技术与对外交流的关键节点。",
       "global_id": "china_v1:loc-quanzhou",
-      "aliases": ["Quanzhou", "刺桐"],
-      "labels": { "en": "Quanzhou", "zh": "泉州" },
-      "start_date": { "value": 1000, "precision": "year", "certainty": "approximate", "label": "c. 1000 CE" },
+      "aliases": [
+        "Quanzhou",
+        "刺桐"
+      ],
+      "labels": {
+        "en": "Quanzhou",
+        "zh": "泉州"
+      },
+      "start_date": {
+        "value": 1000,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1000 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-007", "ec-cn-008"],
+      "evidence": [
+        "ec-cn-007",
+        "ec-cn-008"
+      ],
       "reliability": "",
-      "coordinates": { "lat": 24.8741, "lng": 118.6757 },
+      "coordinates": {
+        "lat": 24.8741,
+        "lng": 118.6757
+      },
       "region": "Fujian",
-      "related_events": ["event-zheng-he"]
+      "related_events": [
+        "event-zheng-he"
+      ]
     },
     {
       "id": "rel-fojiao",
@@ -637,16 +1375,35 @@
       "name": "佛教",
       "description": "东汉传入、唐宋完成本土化，深刻影响思想与艺术。",
       "global_id": "china_v1:rel-fojiao",
-      "aliases": ["Buddhism"],
-      "labels": { "en": "Buddhism", "zh": "佛教" },
-      "start_date": { "value": 68, "precision": "year", "certainty": "approximate", "label": "c. 68 CE" },
+      "aliases": [
+        "Buddhism"
+      ],
+      "labels": {
+        "en": "Buddhism",
+        "zh": "佛教"
+      },
+      "start_date": {
+        "value": 68,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 68 CE"
+      },
       "end_date": null,
       "source": "",
-      "evidence": ["ec-cn-005"],
+      "evidence": [
+        "ec-cn-005"
+      ],
       "reliability": "",
       "practiced_by": "civ-zhonghua",
-      "practiced_in": { "value": 618, "precision": "year", "certainty": "approximate", "label": "618 CE" },
-      "texts": ["经藏"]
+      "practiced_in": {
+        "value": 618,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "618 CE"
+      },
+      "texts": [
+        "经藏"
+      ]
     },
     {
       "id": "rel-rujia",
@@ -654,77 +1411,749 @@
       "name": "儒家",
       "description": "以孔孟为源、宋明理学重塑的伦理政治传统，构成官方正统。",
       "global_id": "china_v1:rel-rujia",
-      "aliases": ["Confucianism", "儒教"],
-      "labels": { "en": "Confucianism", "zh": "儒家" },
-      "start_date": { "value": -551, "precision": "year", "certainty": "approximate", "label": "c. 551 BC" },
+      "aliases": [
+        "Confucianism",
+        "儒教"
+      ],
+      "labels": {
+        "en": "Confucianism",
+        "zh": "儒家"
+      },
+      "start_date": {
+        "value": -551,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 551 BC"
+      },
       "end_date": null,
       "source": "",
       "evidence": [],
       "reliability": "",
       "practiced_by": "civ-zhonghua",
-      "practiced_in": { "value": 618, "precision": "year", "certainty": "approximate", "label": "618 CE" },
-      "texts": ["四书五经"]
+      "practiced_in": {
+        "value": 618,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "618 CE"
+      },
+      "texts": [
+        "四书五经"
+      ]
     }
   ],
   "relationships": [
-    { "source": "tp-tang", "target": "tp-song", "type": "before", "confidence": null, "citation": "", "evidence": ["ec-cn-011"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tp-song", "target": "tp-yuan", "type": "before", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tp-yuan", "target": "tp-ming", "type": "before", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tp-ming", "target": "tp-qing", "type": "before", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-
-    { "source": "idea-keju", "target": "civ-zhonghua", "type": "part_of", "confidence": null, "citation": "", "evidence": ["ec-cn-001"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "idea-sanxing-liubu", "target": "civ-zhonghua", "type": "part_of", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "idea-wenguan", "target": "civ-zhonghua", "type": "part_of", "confidence": null, "citation": "", "evidence": ["ec-cn-002"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "idea-neige", "target": "civ-zhonghua", "type": "part_of", "confidence": null, "citation": "", "evidence": ["ec-cn-012"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "idea-tudi", "target": "civ-zhonghua", "type": "part_of", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "idea-keju", "target": "idea-wenguan", "type": "inherited", "confidence": null, "citation": "", "evidence": ["ec-cn-001"], "valid_time": null, "weight": null, "narrative": "唐代科举为宋代文官体系提供选任基础，体现制度跨政权延续。", "reviewed": true },
-    { "source": "idea-wenguan", "target": "idea-neige", "type": "inherited", "confidence": null, "citation": "", "evidence": ["ec-cn-002"], "valid_time": null, "weight": null, "narrative": "宋代文官传统经明代内阁承续，内阁由顾问演变为行政中枢。", "reviewed": true },
-    { "source": "event-keju-established", "target": "idea-keju", "type": "caused", "confidence": null, "citation": "", "evidence": ["ec-cn-001"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "event-jingnan", "target": "idea-neige", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-012"], "valid_time": null, "weight": null, "narrative": "靖难后迁都并强化内阁辅政格局。", "reviewed": true },
-    { "source": "event-yitiaobian", "target": "idea-tudi", "type": "influenced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-
-    { "source": "idea-tangshi", "target": "idea-songci", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-003"], "valid_time": null, "weight": null, "narrative": "唐诗格律与气象为宋词奠基，词承诗而变。", "reviewed": true },
-    { "source": "person-li-bai", "target": "idea-tangshi", "type": "practiced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-du-fu", "target": "idea-tangshi", "type": "practiced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-su-shi", "target": "idea-songci", "type": "practiced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-xin-qiji", "target": "idea-songci", "type": "practiced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-cheng-yi", "target": "idea-lixue", "type": "influenced", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-zhu-xi", "target": "idea-lixue", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-009"], "valid_time": null, "weight": null, "narrative": "朱熹集理学之大成。", "reviewed": true },
-    { "source": "idea-lixue", "target": "idea-xinxue", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-004"], "valid_time": null, "weight": null, "narrative": "宋代理学为明心学提供思想前驱，心学进而转向内省。", "reviewed": true },
-    { "source": "person-wang-yangming", "target": "idea-xinxue", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-010"], "valid_time": null, "weight": null, "narrative": "王阳明阐发心学、倡知行合一。", "reviewed": true },
-    { "source": "rel-fojiao", "target": "idea-zongjiao-ronghe", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-005"], "valid_time": null, "weight": null, "narrative": "佛教本土化推动三教融合。", "reviewed": true },
-    { "source": "rel-rujia", "target": "idea-zongjiao-ronghe", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-005"], "valid_time": null, "weight": null, "narrative": "儒家正统与佛老并存共生。", "reviewed": true },
-    { "source": "tp-song", "target": "idea-shangye-chengshi", "type": "related_to", "confidence": null, "citation": "", "evidence": ["ec-cn-006"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "loc-linan", "target": "idea-shangye-chengshi", "type": "part_of", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-
-    { "source": "tech-zaopi", "target": "civ-zhonghua", "type": "invented", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tech-yinshua", "target": "civ-zhonghua", "type": "invented", "confidence": null, "citation": "", "evidence": ["ec-cn-006"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tech-huoyao", "target": "civ-zhonghua", "type": "invented", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tech-hanghai", "target": "civ-zhonghua", "type": "invented", "confidence": null, "citation": "", "evidence": ["ec-cn-008"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tech-yinshua", "target": "idea-shangye-chengshi", "type": "spread", "confidence": null, "citation": "", "evidence": ["ec-cn-006"], "valid_time": null, "weight": null, "narrative": "印刷术降低知识成本，助长商业城市文化。", "reviewed": true },
-    { "source": "tech-yinshua", "target": "loc-quanzhou", "type": "spread", "confidence": null, "citation": "", "evidence": ["ec-cn-007"], "valid_time": null, "weight": null, "narrative": "印刷品经泉州等港流通。", "reviewed": true },
-    { "source": "tech-huoyao", "target": "loc-quanzhou", "type": "spread", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "tech-hanghai", "target": "loc-quanzhou", "type": "located_at", "confidence": null, "citation": "", "evidence": ["ec-cn-008"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-zheng-he", "target": "tech-hanghai", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-008"], "valid_time": null, "weight": null, "narrative": "郑和远航实践并展示航海技术。", "reviewed": true },
-    { "source": "event-zheng-he", "target": "tech-hanghai", "type": "caused", "confidence": null, "citation": "", "evidence": ["ec-cn-008"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "loc-quanzhou", "target": "tp-ming", "type": "related_to", "confidence": null, "citation": "", "evidence": ["ec-cn-007"], "valid_time": null, "weight": null, "narrative": "泉州为明代海路贸易枢纽（Semantic Review：traded_with 语义要求贸易双方为实体，地点与时期改用 related_to）。", "reviewed": true },
-    { "source": "tp-yuan", "target": "tp-ming", "type": "contemporary_with", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-
-    { "source": "person-tang-taizong", "target": "event-keju-established", "type": "participated_in", "confidence": null, "citation": "", "evidence": ["ec-cn-001"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "loc-changan", "target": "event-keju-established", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "rel-fojiao", "target": "civ-zhonghua", "type": "spread", "confidence": null, "citation": "", "evidence": ["ec-cn-005"], "valid_time": null, "weight": null, "narrative": "佛教自外传入并融入中华文明。", "reviewed": true },
-    { "source": "idea-zongjiao-ronghe", "target": "civ-zhonghua", "type": "part_of", "confidence": null, "citation": "", "evidence": ["ec-cn-005"], "valid_time": null, "weight": null, "narrative": "", "reviewed": true },
-    { "source": "person-song-taizu", "target": "idea-wenguan", "type": "influenced", "confidence": null, "citation": "", "evidence": ["ec-cn-002"], "valid_time": null, "weight": null, "narrative": "宋太祖重文抑武，奠定宋代文官政治基调。", "reviewed": true },
-    { "source": "loc-dadu", "target": "tp-yuan", "type": "part_of", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "大都（元大都）为元代政治中枢。", "reviewed": true }
+    {
+      "source": "tp-tang",
+      "target": "tp-song",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-011"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tp-song",
+      "target": "tp-yuan",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tp-yuan",
+      "target": "tp-ming",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tp-ming",
+      "target": "tp-qing",
+      "type": "before",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-keju",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-001"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-sanxing-liubu",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-wenguan",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-002"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-neige",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-012"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-tudi",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-keju",
+      "target": "idea-wenguan",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-001"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "唐代科举为宋代文官体系提供选任基础，体现制度跨政权延续。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-wenguan",
+      "target": "idea-neige",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-002"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "宋代文官传统经明代内阁承续，内阁由顾问演变为行政中枢。",
+      "reviewed": true
+    },
+    {
+      "source": "event-keju-established",
+      "target": "idea-keju",
+      "type": "caused",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-001"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "event-jingnan",
+      "target": "idea-neige",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-012"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "靖难后迁都并强化内阁辅政格局。",
+      "reviewed": true
+    },
+    {
+      "source": "event-yitiaobian",
+      "target": "idea-tudi",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "idea-tangshi",
+      "target": "idea-songci",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-003"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "唐诗格律与气象为宋词奠基，词承诗而变。",
+      "reviewed": true
+    },
+    {
+      "source": "person-li-bai",
+      "target": "idea-tangshi",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-du-fu",
+      "target": "idea-tangshi",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-su-shi",
+      "target": "idea-songci",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-xin-qiji",
+      "target": "idea-songci",
+      "type": "practiced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-cheng-yi",
+      "target": "idea-lixue",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-zhu-xi",
+      "target": "idea-lixue",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-009"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "朱熹集理学之大成。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-lixue",
+      "target": "idea-xinxue",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-004"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "宋代理学为明心学提供思想前驱，心学进而转向内省。",
+      "reviewed": true
+    },
+    {
+      "source": "person-wang-yangming",
+      "target": "idea-xinxue",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-010"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "王阳明阐发心学、倡知行合一。",
+      "reviewed": true
+    },
+    {
+      "source": "rel-fojiao",
+      "target": "idea-zongjiao-ronghe",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-005"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "佛教本土化推动三教融合。",
+      "reviewed": true
+    },
+    {
+      "source": "rel-rujia",
+      "target": "idea-zongjiao-ronghe",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-005"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "儒家正统与佛老并存共生。",
+      "reviewed": true
+    },
+    {
+      "source": "tp-song",
+      "target": "idea-shangye-chengshi",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-006"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "loc-linan",
+      "target": "idea-shangye-chengshi",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tech-zaopi",
+      "target": "civ-zhonghua",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tech-yinshua",
+      "target": "civ-zhonghua",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-006"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tech-huoyao",
+      "target": "civ-zhonghua",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tech-hanghai",
+      "target": "civ-zhonghua",
+      "type": "invented",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-008"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tech-yinshua",
+      "target": "idea-shangye-chengshi",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-006"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "印刷术降低知识成本，助长商业城市文化。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-yinshua",
+      "target": "loc-quanzhou",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-007"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "印刷品经泉州等港流通。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-huoyao",
+      "target": "loc-quanzhou",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "tech-hanghai",
+      "target": "loc-quanzhou",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-008"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-zheng-he",
+      "target": "tech-hanghai",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-008"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "郑和远航实践并展示航海技术。",
+      "reviewed": true
+    },
+    {
+      "source": "event-zheng-he",
+      "target": "tech-hanghai",
+      "type": "caused",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-008"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "loc-quanzhou",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-007"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "泉州为明代海路贸易枢纽（Semantic Review：traded_with 语义要求贸易双方为实体，地点与时期改用 related_to）。",
+      "reviewed": true
+    },
+    {
+      "source": "tp-yuan",
+      "target": "tp-ming",
+      "type": "contemporary_with",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-tang-taizong",
+      "target": "event-keju-established",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-001"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "loc-changan",
+      "target": "event-keju-established",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "rel-fojiao",
+      "target": "civ-zhonghua",
+      "type": "spread",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-005"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "佛教自外传入并融入中华文明。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-zongjiao-ronghe",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-005"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "",
+      "reviewed": true
+    },
+    {
+      "source": "person-song-taizu",
+      "target": "idea-wenguan",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "",
+      "evidence": [
+        "ec-cn-002"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "宋太祖重文抑武，奠定宋代文官政治基调。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-dadu",
+      "target": "tp-yuan",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "",
+      "evidence": [],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "大都（元大都）为元代政治中枢。",
+      "reviewed": true
+    },
+    {
+      "source": "rel-rujia",
+      "target": "civ-zhonghua",
+      "type": "reinterprets",
+      "confidence": "medium",
+      "citation": "《史记·秦始皇本纪》",
+      "evidence": [
+        "ec-cn-013"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "后世儒生书写将《史记》所记'坑方士'重释为'坑儒'，把秦政塑造为对儒家学说的系统性毁灭——这是解释层的演化，而非事件本身的扩大。",
+      "reviewed": true
+    },
+    {
+      "source": "event-keju-established",
+      "target": "idea-keju",
+      "type": "reinterprets",
+      "confidence": "medium",
+      "citation": "钱穆《中国历代政治得失》",
+      "evidence": [
+        "ec-cn-014"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "关于科举起点存在隋/唐两说：传统取隋代进士科，钱穆等制度史学者主张唐代才完成'考试—录用'的制度闭环，属对同一制度的解释重释。",
+      "reviewed": true
+    },
+    {
+      "source": "person-zhu-xi",
+      "target": "person-wang-yangming",
+      "type": "disputes",
+      "confidence": "high",
+      "citation": "朱熹《大学章句》；王阳明《传习录》",
+      "evidence": [
+        "ec-cn-015"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "朱熹格物致知与王阳明致良知的路径之争：前者向外即物穷理，后者向内发明本心，是宋明理学内部最经典的学派对立。",
+      "reviewed": true
+    }
   ],
   "timeline": [
-    { "period": { "value": 605, "precision": "year", "certainty": "approximate", "label": "c. 605 CE" }, "event": "科举确立，以考试选官制度化" },
-    { "period": { "value": 700, "precision": "year", "certainty": "approximate", "label": "c. 700 CE" }, "event": "雕版印刷出现，知识传播提速" },
-    { "period": { "value": 960, "precision": "year", "certainty": "exact", "label": "960 CE" }, "event": "宋太祖重文抑武，文官政治奠基" },
-    { "period": { "value": 1088, "precision": "year", "certainty": "approximate", "label": "c. 1088 CE" }, "event": "程颐、朱熹一脉理学兴起" },
-    { "period": { "value": 1271, "precision": "year", "certainty": "exact", "label": "1271 CE" }, "event": "元大一统，多民族交流扩展" },
-    { "period": { "value": 1402, "precision": "year", "certainty": "exact", "label": "1402 CE" }, "event": "靖难后内阁辅政格局巩固" },
-    { "period": { "value": 1405, "precision": "year", "certainty": "exact", "label": "1405 CE" }, "event": "郑和下西洋，航海技术远播" },
-    { "period": { "value": 1581, "precision": "year", "certainty": "approximate", "label": "c. 1581 CE" }, "event": "一条鞭法整合土地与赋税" }
+    {
+      "period": {
+        "value": 605,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 605 CE"
+      },
+      "event": "科举确立，以考试选官制度化"
+    },
+    {
+      "period": {
+        "value": 700,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 700 CE"
+      },
+      "event": "雕版印刷出现，知识传播提速"
+    },
+    {
+      "period": {
+        "value": 960,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "960 CE"
+      },
+      "event": "宋太祖重文抑武，文官政治奠基"
+    },
+    {
+      "period": {
+        "value": 1088,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1088 CE"
+      },
+      "event": "程颐、朱熹一脉理学兴起"
+    },
+    {
+      "period": {
+        "value": 1271,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1271 CE"
+      },
+      "event": "元大一统，多民族交流扩展"
+    },
+    {
+      "period": {
+        "value": 1402,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1402 CE"
+      },
+      "event": "靖难后内阁辅政格局巩固"
+    },
+    {
+      "period": {
+        "value": 1405,
+        "precision": "year",
+        "certainty": "exact",
+        "label": "1405 CE"
+      },
+      "event": "郑和下西洋，航海技术远播"
+    },
+    {
+      "period": {
+        "value": 1581,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "c. 1581 CE"
+      },
+      "event": "一条鞭法整合土地与赋税"
+    }
   ]
 }

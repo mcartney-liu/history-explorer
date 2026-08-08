@@ -1333,6 +1333,36 @@
       "mechanism": "political",
       "geographic_scope": "Roman Italy",
       "temporal_relation": null
+    },
+    {
+      "source": "event-empire-fall",
+      "target": "civ-roman",
+      "type": "reinterprets",
+      "confidence": "medium",
+      "citation": "Gibbon, Decline and Fall; Cambridge Ancient History",
+      "evidence": [
+        "ec-rom-041"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "罗马衰亡的解释历经重释：吉本18世纪'道德衰败+基督教'论，被20世纪剑桥史学的财政—边疆—制度复合论系统性重写，宗教因素降为多因之一。",
+      "reviewed": true
+    },
+    {
+      "source": "person-julius-caesar",
+      "target": "tp-republic",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "Caesar, Commentarii; Suetonius, Twelve Caesars",
+      "evidence": [
+        "ec-rom-042"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "凯撒遇刺性质存在立场对立：共和派视布鲁图斯为'解放者'、凯撒为共和国的威胁；现代政治史强调元老院既得利益与个人野心的结构性冲突。",
+      "reviewed": true
     }
   ],
   "timeline": [

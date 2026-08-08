@@ -165,4 +165,4 @@ def test_T10_freeze_guard_no_mutation():
     after = set(white_list())
     assert before == after
     # 18-entry freeze baseline integrity.
-    assert len(before) == 18
+    assert len(before) == 20  # ADR-0019 baseline

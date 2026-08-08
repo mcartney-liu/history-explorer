@@ -316,7 +316,8 @@ class TestM361FreezeInvariants:
 
     def test_relationship_types_unchanged(self):
         from app.validation import RELATIONSHIP_TYPES
-        assert len(RELATIONSHIP_TYPES) == 18, \
+        # ADR-0019: 18 -> 20 (disputes/reinterprets, PO-approved)
+        assert len(RELATIONSHIP_TYPES) == 20, \
             f"RELATIONSHIP_TYPES count changed: {len(RELATIONSHIP_TYPES)}"
 
     def test_all_event_types_valid(self):
