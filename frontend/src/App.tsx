@@ -1252,7 +1252,7 @@ function App() {
   return (
     <ExplorerRuntimeContext.Provider value={contextApi}>
     <ExplorerShell
-      globalBar={<GlobalBar topic={router.route?.topic ?? null} />}
+      globalBar={<GlobalBar topic={router.route?.topic ?? null} mode={router.route?.mode ?? null} />}
       questionHeader={
         router.route?.topic ? (
           <QuestionHeader

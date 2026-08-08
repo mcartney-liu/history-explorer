@@ -1,10 +1,11 @@
 // ============================================================
 // M90.3 — LandingTabs
 //
-// Three-tab landing page switcher:
-//   [了解] — "原来历史还能这样探索" (DiscoverPage)
-//   [研究] — "用 AI 来探索历史" (LandingPage)
-//   [扩展] — 扩展功能（roadmap）
+// Two-tab landing page switcher (Wave2-#141: the placeholder
+// [扩展] tab was removed — a "敬请期待" empty shell breaks the
+// entry promise: what I click should be what I get):
+//   [了解] — 浏览主题库：客观事实（唐朝、科举制、造纸术…）
+//   [研究] — 提问式探索：就事实追问「为什么……」
 //
 // The tabs + ProductIntro + search boxes are the shared
 // landing surface. Each tab renders completely different content.
@@ -23,11 +24,12 @@ interface LandingTabsProps {
   onTabChange?: (tab: TabKey) => void
 }
 
-// P5-S3 ①: 每个模式一句话语义说明，让用户一眼看懂「了解=事实 / 研究=为什么」。
+// P5-S3 ①: 每个模式一句话语义说明，让用户一眼看懂「了解=浏览事实 / 研究=追问为什么」。
+// Wave2-#141: expand removed from the bar; TabKey + expand prop kept for
+// API compatibility (App still passes a node, it is simply not rendered).
 const TABS: { key: TabKey; label: string; desc: string }[] = [
-  { key: 'understand', label: '了解', desc: '客观事实：唐朝、科举制、造纸术…' },
-  { key: 'research', label: '研究', desc: '开放探索：就事实追问「为什么……」' },
-  { key: 'expand', label: '扩展', desc: '更多功能（规划中）' },
+  { key: 'understand', label: '了解', desc: '浏览主题库：唐朝、科举制、造纸术…' },
+  { key: 'research', label: '研究', desc: '提问式探索：就事实追问「为什么……」' },
 ]
 
 export function LandingTabs({ understand, research, expand, activeTab, onTabChange }: LandingTabsProps) {

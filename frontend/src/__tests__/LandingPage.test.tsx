@@ -30,7 +30,7 @@ describe('LandingPage — topic catalog', () => {
       <LandingPage topics={SAMPLE} loading={false} error="" onTopicClick={() => {}} />,
     )
     expect(html).toContain(LANDING_HERO)
-    expect(html).toContain('探索人物')
+    expect(html).toContain('从人物、国家、战争')
   })
 })
 

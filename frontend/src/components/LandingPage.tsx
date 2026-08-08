@@ -39,9 +39,9 @@ const QUICK_STARTS = [
   '丝绸之路改变了什么？',
 ]
 
-export const LANDING_HERO = '用 AI 探索历史文明'
+export const LANDING_HERO = '探索历史文明，形成你自己的理解'
 export const LANDING_SUB =
-  '探索人物、国家、战争、文明之间的联系，理解历史为什么会这样发生。'
+  '从人物、国家、战争、文明之间的联系出发，看见历史为什么会这样发生。'
 
 function LandingPage({
   topics,
