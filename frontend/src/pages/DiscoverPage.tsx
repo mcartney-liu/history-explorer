@@ -69,81 +69,48 @@ function InterestProfile({ signals }: { signals?: BehavioralSignals }) {
 
   const thin = profile.topSubjects.length < 2
 
-  // Mirror donut — reflects REAL interaction depth (no recommendation, no
-  // outbound edge). Capped at 30 interactions = full ring.
-  const RING_R = 52
-  const RING_C = 2 * Math.PI * RING_R
-  const depth = Math.max(0.04, Math.min(1, profile.interactionCount / 30))
-  const ringDash = `${(RING_C * depth).toFixed(1)} ${RING_C.toFixed(1)}`
-
   return (
     <div className="discover-interest">
       <h3 className="discover-section-heading">我的探索足迹</h3>
 
-      <div className="discover-interest-body">
-        <div className="discover-interest-text">
-          {profile.reflection && (
-            <p className="discover-interest-reflection">{profile.reflection}</p>
-          )}
+      {profile.reflection && (
+        <p className="discover-interest-reflection">{profile.reflection}</p>
+      )}
 
-          {/* Graceful degradation: too thin for a pattern — still reflect the
-              recent trajectory instead of hiding the whole shelf. */}
-          {thin ? (
-            <>
-              <p className="discover-interest-dims">你最近的探索</p>
-              {profile.recentlyExplored.length > 0 && (
-                <div className="discover-interest-themes">
-                  {profile.recentlyExplored.slice(0, 4).map((s) => (
-                    <span key={s} className="discover-interest-tag">{s}</span>
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
+      {/* Graceful degradation: too thin for a pattern — still reflect the
+          recent trajectory instead of hiding the whole shelf. */}
+      {thin ? (
+        <>
+          <p className="discover-interest-dims">你最近的探索</p>
+          {profile.recentlyExplored.length > 0 && (
             <div className="discover-interest-themes">
-              {profile.topSubjects.slice(0, 4).map((s) => (
-                <span key={s.subject} className="discover-interest-tag">{s.subject}</span>
+              {profile.recentlyExplored.slice(0, 4).map((s) => (
+                <span key={s} className="discover-interest-tag">{s}</span>
               ))}
             </div>
           )}
-
-          {profile.topThemes.length > 0 && (
-            <div className="discover-interest-themes">
-              {profile.topThemes.slice(0, 4).map((theme) => (
-                <span key={theme} className="discover-interest-tag">{theme}</span>
-              ))}
-            </div>
-          )}
-
-          {profile.topDimensions.length > 0 && (
-            <p className="discover-interest-dims">
-              你的追问方式：{profile.topDimensions.slice(0, 4).map((d) => d.dimension).join('、')}
-            </p>
-          )}
+        </>
+      ) : (
+        <div className="discover-interest-themes">
+          {profile.topSubjects.slice(0, 4).map((s) => (
+            <span key={s.subject} className="discover-interest-tag">{s.subject}</span>
+          ))}
         </div>
+      )}
 
-        {/* Read-only visualisation of the user's own trajectory. */}
-        <div className="discover-interest-chart" aria-label={`已探索 ${profile.interactionCount} 次`}>
-          <svg viewBox="0 0 120 120" width="120" height="120" role="img">
-            <circle
-              cx="60" cy="60" r={RING_R}
-              fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="10"
-            />
-            <circle
-              cx="60" cy="60" r={RING_R}
-              fill="none" stroke="#D4A853" strokeWidth="10" strokeLinecap="round"
-              strokeDasharray={ringDash}
-              transform="rotate(-90 60 60)"
-            />
-            <text x="60" y="56" textAnchor="middle" className="discover-interest-chart-num">
-              {profile.interactionCount}
-            </text>
-            <text x="60" y="76" textAnchor="middle" className="discover-interest-chart-cap">
-              次探索
-            </text>
-          </svg>
+      {profile.topThemes.length > 0 && (
+        <div className="discover-interest-themes">
+          {profile.topThemes.slice(0, 4).map((theme) => (
+            <span key={theme} className="discover-interest-tag">{theme}</span>
+          ))}
         </div>
-      </div>
+      )}
+
+      {profile.topDimensions.length > 0 && (
+        <p className="discover-interest-dims">
+          你的追问方式：{profile.topDimensions.slice(0, 4).map((d) => d.dimension).join('、')}
+        </p>
+      )}
     </div>
   )
 }
@@ -395,14 +362,6 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
       <div className="discover-hero">
         <h2 className="discover-hero-title">{DISCOVER_HERO}</h2>
         <p className="discover-hero-sub">{DISCOVER_HERO_SUB}</p>
-      </div>
-
-      {/* Design v2: 古地图装饰横幅 — "原来历史还能这样探索" 视觉分隔 */}
-      <div className="discover-map-banner" aria-hidden="true">
-        <div className="discover-map-banner-inner">
-          <span className="discover-map-banner-text">原来历史还能这样探索</span>
-          <span className="discover-map-banner-sub">从一个人、一条路、一个念头出发，看它如何穿过帝国、宗教与技术</span>
-        </div>
       </div>
 
       {/* P5-S3 ②: 兴趣前置——进场第一屏先问「你想研究什么」，预设主题降为次级。 */}
