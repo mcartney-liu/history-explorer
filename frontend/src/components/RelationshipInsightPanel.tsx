@@ -446,7 +446,7 @@ export default function RelationshipInsightPanel({
               <label className="rip-control">
                 {t('rip.filterType')}
                 <select
-                  className="rip-control-select"
+                  className={`rip-control-select${matrixFilter !== RELATIONSHIP_FILTER_ALL ? ' rip-control-select--active' : ''}`}
                   value={matrixFilter}
                   onChange={(e) =>
                     setMatrixFilter(normalizeRelationshipFilter(e.target.value))
@@ -474,6 +474,9 @@ export default function RelationshipInsightPanel({
                   <option value="asc">{t('rip.sortAsc')}</option>
                 </select>
               </label>
+              <span className="rip-count" aria-live="polite">
+                {visibleRows.length} / {matrixRows.length} 条关系
+              </span>
             </div>
             {visibleRows.length === 0 ? (
               <p className="rip-muted">{t('rip.filterNoMatch')}</p>

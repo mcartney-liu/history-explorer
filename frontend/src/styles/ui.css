@@ -382,3 +382,152 @@
     animation: none;
   }
 }
+
+/* ============================================================
+   Wave2-#146 (OD-10, VS-03 TP-17) — relationship type legend.
+   ink-500 text + truth-line swatch per the contract; semantic
+   tokens only (P0-3), no hardcoded colours. Read-only, no links.
+   ============================================================ */
+.rel-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.rel-heading-row h3 {
+  margin: 0;
+}
+.rel-legend {
+  font-size: 0.75rem;
+}
+.rel-legend-toggle {
+  cursor: pointer;
+  color: var(--color-ink-500);
+  font-weight: 600;
+  user-select: none;
+  list-style: none;
+}
+.rel-legend-toggle::-webkit-details-marker {
+  display: none;
+}
+.rel-legend-toggle::before {
+  content: '▸ ';
+  color: var(--color-ink-400);
+}
+.rel-legend[open] .rel-legend-toggle::before {
+  content: '▾ ';
+}
+.rel-legend-list {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--color-paper-100);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 4px 14px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.rel-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.rel-legend-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color-truth-line, var(--color-paper-300));
+  flex-shrink: 0;
+}
+.rel-legend-type {
+  font-family: var(--sans, system-ui);
+  font-size: 0.68rem;
+  color: var(--color-ink-500);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.rel-legend-label {
+  font-size: 0.66rem;
+  color: var(--color-ink-400);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Wave2-#146 (OD-10, VS-03 TP-21) — filter feedback.
+   Active filter = accent-soft + accent-ink; result count as a
+   caption. Semantic tokens only (P0-3).
+   ============================================================ */
+.rip-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-2);
+}
+.rip-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--color-ink-500);
+}
+.rip-control-select {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--color-ink-700);
+  background: var(--color-paper-100);
+}
+.rip-control-select:focus {
+  outline: 2px solid var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+/* active filter: accent-soft surface + accent-ink text (VS-03 TP-21) */
+.rip-control-select--active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink, var(--color-accent));
+  border-color: var(--color-accent);
+  font-weight: 600;
+}
+.rip-count {
+  font-size: 0.68rem;
+  color: var(--color-ink-500);
+  margin-left: auto;
+}
+
+/* ============================================================
+   Wave2-#146 (OD-10, VS-03 TP-09) — explanation authority badge.
+   Authority order per ADR-0015 D4: AI Gateway > Causal > template
+   fallback, distinguished with truth-* badge colours. Semantic
+   tokens only (P0-3).
+   ============================================================ */
+.ga-engine-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+.ga-engine-ai {
+  color: var(--color-truth-strong);
+  background: var(--color-truth-strong-soft);
+}
+.ga-engine-ai_unverified {
+  color: var(--color-truth-moderate);
+  background: var(--color-truth-moderate-soft);
+}
+.ga-engine-deterministic {
+  color: var(--color-truth-weak);
+  background: var(--color-truth-weak-soft);
+}
