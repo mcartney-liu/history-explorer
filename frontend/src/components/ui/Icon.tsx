@@ -52,8 +52,16 @@ export type IconName =
   | 'circle'
   | 'cross'
   | 'scholar'
+  | 'lock'
 
 const PATHS: Record<IconName, JSX.Element> = {
+  // 🔒 lock (read-only projection marker, VS-03 TP-19/22)
+  lock: (
+    <>
+      <rect x="5.5" y="10.5" width="13" height="9" rx="1.8" />
+      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+    </>
+  ),
   // 📖 open book
   book: (
     <>

@@ -903,6 +903,9 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/relationshipUtils.test.ts",
   "frontend/src/data/entity/entityLabels.ts",
   "frontend/src/components/DisputesPanel.tsx",
+  "frontend/src/components/shell/MirrorPanel.tsx",
+  "frontend/src/components/shell/__tests__/MirrorPanel.test.tsx",
+  "frontend/src/components/ui/Icon.tsx",
 ];
 
 function _scopeAllowed(file) {

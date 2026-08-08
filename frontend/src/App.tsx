@@ -63,6 +63,7 @@ import { ModeBar } from './components/shell/ModeBar'
 import { LandingTabs } from './components/shell/LandingTabs'
 import { ProductIntro } from './components/shell/ProductIntro'
 import { UnderstandingStatus } from './components/shell/UnderstandingStatus'
+import { MirrorPanel } from './components/shell/MirrorPanel'
 import { ModeCanvas } from './components/shell/ModeCanvas'
 import { UnderstandingCanvas } from './components/shell/UnderstandingCanvas'
 import { UnderstandingWorkspace } from './pages/m89/UnderstandingWorkspace'
@@ -1295,6 +1296,7 @@ function App() {
             explorationMetrics={explorationMetrics}
             graphStore={graphStore}
           />
+          <MirrorPanel graphStore={graphStore} cognitiveStage={runtimeContext.cognitiveStage} />
           <WorkspacePanel
             current={workspaceItems[0] ?? null}
             history={workspaceHistory}
