@@ -553,6 +553,9 @@ def _enrich_evidence_with_source(rec: dict) -> dict:
                 ev2.setdefault("source_publisher", src.get("publisher_or_archive", "") or "")
                 ev2.setdefault("source_type", src.get("type", "") or "")
                 ev2.setdefault("source_tier", src.get("tier", "") or "")
+                # 2026-08-11 (PO)：出版年份 + ISBN（图书类来源补 isbn 后显示）
+                ev2.setdefault("source_year", src.get("year") if src.get("year") is not None else "")
+                ev2.setdefault("source_isbn", src.get("isbn", "") or "")
         enriched.append(ev2)
     rec["evidence"] = enriched
     return rec

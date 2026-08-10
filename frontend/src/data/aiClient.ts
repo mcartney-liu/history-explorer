@@ -32,6 +32,9 @@ export type AIEvidence = {
   source_creator?: string
   source_publisher?: string
   source_type?: string
+  /** 2026-08-11 (PO)：出版年份 + ISBN（图书类来源补 isbn 后显示） */
+  source_year?: string | number
+  source_isbn?: string
   truth?: {
     confidence?: string
     scholar_consensus?: string

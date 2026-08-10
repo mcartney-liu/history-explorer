@@ -223,6 +223,8 @@ export function EvidenceList({ items }: { items: AIEvidence[] }) {
             </div>
             {ev.label && (
               <p className="trust-display-next-claim">
+                {/* 2026-08-11 (PO)：证据原文加"原文/摘要"标签，与引用格式对齐 */}
+                <span className="trust-display-detail-label">{t('ai.evidence_summary')}：</span>
                 {translateEvidenceText(ev.label)}
               </p>
             )}
@@ -242,9 +244,15 @@ export function EvidenceList({ items }: { items: AIEvidence[] }) {
                   ) : (
                     <span className="trust-display-source-title">{ev.source_title}</span>
                   ))}
-                {/* 2026-08-11 (PO)：来源书目信息（作者·出版社），增强可信度 */}
-                {ev.source_creator && <span className="trust-display-source-meta"> · {ev.source_creator}</span>}
-                {ev.source_publisher && <span className="trust-display-source-meta"> · {ev.source_publisher}</span>}
+                {/* 2026-08-11 (PO)：引用格式——编者；出版社，年；ISBN（有值才显示） */}
+                {ev.source_creator && <span className="trust-display-source-meta">；编者：{ev.source_creator}</span>}
+                {ev.source_publisher && (
+                  <span className="trust-display-source-meta">
+                    ；出版社：{ev.source_publisher}
+                    {ev.source_year ? `，${ev.source_year}` : ''}
+                  </span>
+                )}
+                {ev.source_isbn && <span className="trust-display-source-meta">；ISBN：{ev.source_isbn}</span>}
                 {ev.source_tier && (
                   <Badge tone={tierTone(ev.source_tier)}>{tierLabel(ev.source_tier, t)}</Badge>
                 )}

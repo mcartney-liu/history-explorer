@@ -14,6 +14,8 @@ export default {
   'ai.trust_no_evidence': 'このテーマには利用可能な知識ベースの根拠がありません。',
   'ai.evidence_reason': '推奨理由',
   'ai.evidence_claim': '根拠の原文',
+  // 2026-08-11 (PO): 歴史見解の裏付け根拠の原文ラベル
+  'ai.evidence_summary': '原文/要約',
   'ai.evidence_source': '出典',
   'ai.evidence_confidence': '信頼度',
   'ai.confidence_high': '高',

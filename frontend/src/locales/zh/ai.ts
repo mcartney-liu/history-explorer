@@ -20,6 +20,8 @@ export default {
   // M74-004-002 (Commit 2B): Evidence Card — per-recommendation trust detail.
   'ai.evidence_reason': '推荐原因',
   'ai.evidence_claim': '证据原文',
+  // 2026-08-11 (PO)：历史见解支撑证据的原文标签（引用格式对齐）
+  'ai.evidence_summary': '原文/摘要',
   'ai.evidence_source': '来源',
   'ai.evidence_confidence': '可信度',
   // M74-004-003 (G3): confidence localisation (zh never shows English).

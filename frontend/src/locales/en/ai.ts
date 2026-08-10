@@ -20,6 +20,8 @@ export default {
   // M74-004-002 (Commit 2B): Evidence Card — per-recommendation trust detail.
   'ai.evidence_reason': 'Why',
   'ai.evidence_claim': 'Evidence',
+  // 2026-08-11 (PO): insight supporting-evidence original text label
+  'ai.evidence_summary': 'Text/Summary',
   'ai.evidence_source': 'Source',
   'ai.evidence_confidence': 'Confidence',
   // M74-004-003 (G3): confidence localisation (frontend presentation only).
