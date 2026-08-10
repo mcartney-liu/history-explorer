@@ -67,6 +67,26 @@ class ExplorationPlanner:
         focus = claim_graph.focus_global_id
 
         candidates = derive_next_exploration(claim_graph, limit=limit * 3)
+        # 2026-08-11 (PO)：图谱邻居兜底——无证据关系对（pair claim）时，用
+        # 知识库图谱的真实关联实体作为推荐（确定性算法，不碰 AI）。理由如实
+        # 标注"图谱关联"，不冒充证据支撑；fallback 标记使其不套用证据模板。
+        if not candidates and (claim_graph.neighbors or []):
+            seen_gid: set = set()
+            for nb in claim_graph.neighbors or []:
+                gid = nb.get("global_id") if isinstance(nb, dict) else getattr(nb, "global_id", None)
+                if not gid or gid in seen_gid:
+                    continue  # 同一邻居多条边时保留首个
+                seen_gid.add(gid)
+                rel = nb.get("relationship") if isinstance(nb, dict) else getattr(nb, "relationship", None)
+                candidates.append(
+                    {
+                        "global_id": gid,
+                        "relationship": rel or "related",
+                        "reason": f"知识库图谱关联（{rel or 'related'}）。",
+                        "fallback": True,
+                    }
+                )
+
         kept: list = []
         for rec in candidates:
             if rec["global_id"] == focus:
@@ -76,6 +96,8 @@ class ExplorationPlanner:
             kept.append(rec)
 
         for rec in kept:
+            if rec.get("fallback"):
+                continue  # 兜底 reason 已如实标注图谱关联，不套证据模板
             rec["reason"] = _deterministic_reason(
                 rec.get("claim_text") or "", rec.get("relationship") or ""
             )
