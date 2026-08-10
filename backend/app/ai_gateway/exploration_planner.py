@@ -91,8 +91,10 @@ class ExplorationPlanner:
         for rec in candidates:
             if rec["global_id"] == focus:
                 continue  # P7: never recommend the focus itself
-            if rec["global_id"] in visited_set:
-                continue  # P2: already explored — no value in re-suggesting
+            # 2026-08-11 (PO) 移除 P2 visited 过滤：用户反复访问同一实体时，
+            # 完整推荐列表应稳定保留（基于焦点实体 + 数据驱动），不再因
+            # 已访问历史被逐步筛空导致退化到图邻居兜底。visited 信息改由
+            # UI 另行标注，不在推荐层删除候选。
             kept.append(rec)
 
         for rec in kept:

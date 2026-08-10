@@ -674,14 +674,19 @@ def test_planner_excludes_self_recommendation_p7():
     assert "t:event-y" in gids and "t:person-z" in gids
 
 
-def test_planner_excludes_visited_p2():
-    """P2: already-explored targets are dropped."""
+def test_planner_keeps_visited_p2_removed():
+    """2026-08-11 (PO)：P2 visited 过滤已移除——推荐完整保留。
+
+    用户反复访问同一实体时，完整推荐列表应稳定保留（基于焦点实体 +
+    数据驱动），不再因已访问历史被逐步筛空导致退化到图邻居兜底。
+    visited 信息改由 UI 另行标注，不在推荐层删除候选。
+    """
     from app.ai_gateway.exploration_planner import ExplorationPlanner
 
     recs = ExplorationPlanner().plan(_planner_graph(), visited=["t:event-y"])
     gids = [r["global_id"] for r in recs]
-    assert "t:event-y" not in gids
-    assert "t:person-z" in gids
+    assert "t:event-y" in gids  # visited 不再剔除
+    assert "t:person-z" in gids  # 其他仍保留
 
 
 def test_planner_reason_from_claim_text():
