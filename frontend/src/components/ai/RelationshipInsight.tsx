@@ -22,9 +22,12 @@ import { TrustDisplay } from './TrustDisplay'
 interface RelationshipInsightProps {
   /** Current entity global id (EntityPage.entityId). */
   entityGlobalId: string
+  /** 2026-08-11 (PO): 推荐项点击导航——由消费方接到既有 openEntity 路径。
+   *  参数为 next_exploration 的 global_id（如 hellenistic_world:civ-greek）。 */
+  onNextClick?: (globalId: string) => void
 }
 
-export function RelationshipInsight({ entityGlobalId }: RelationshipInsightProps) {
+export function RelationshipInsight({ entityGlobalId, onNextClick }: RelationshipInsightProps) {
   const { t } = useLocale()
   const [response, setResponse] = useState<AIResponse | null>(null)
   const [failed, setFailed] = useState(false)
@@ -83,10 +86,13 @@ export function RelationshipInsight({ entityGlobalId }: RelationshipInsightProps
 
   return (
     <section className="relationship-insight" data-testid="relationship-insight">
+      {/* 2026-08-11 (PO)：推荐列表为确定性 Planner 产物（图谱+证据模板），
+          非 AI 生成——引擎徽标显式覆盖为"知识库推荐"，不再错绑 AI answer 的
+          engine/confidence（"AI 生成"+"可信度低"是 answer 的属性，此处不渲染）。 */}
       <TrustDisplay
         nextExploration={nextList}
-        engine={response.engine}
-        confidence={response.confidence}
+        onNextClick={onNextClick}
+        engineBadgeLabel={t('ai.trust_engine_knowledge')}
       />
     </section>
   )

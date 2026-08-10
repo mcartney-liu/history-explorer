@@ -8,6 +8,8 @@ export default {
   'ai.trust_next_label': 'おすすめの探索',
   'ai.trust_engine_deterministic': '決定論的出力',
   'ai.trust_engine_ai': 'AI 生成',
+  // 2026-08-11 (PO): 推薦リストは決定的なPlanner出力（グラフ+根拠テンプレート）
+  'ai.trust_engine_knowledge': 'ナレッジベース推薦',
   'ai.trust_verified': '検証済み',
   'ai.trust_no_evidence': 'このテーマには利用可能な知識ベースの根拠がありません。',
   'ai.evidence_reason': '推奨理由',

@@ -262,7 +262,10 @@ function EntityPage({
                       exploration touchpoint. Flag-gated at the parent so OFF =
                       zero render + zero requests. Input = entity GLOBAL id. */}
                   {AI_SUGGESTIONS_ENABLED && entityId && entitySectionVisible('relationship_insight') && (
-                    <RelationshipInsight entityGlobalId={entityId} />
+                    <RelationshipInsight
+                      entityGlobalId={entityId}
+                      onNextClick={(gid) => onEntityClick(gid)}
+                    />
                   )}
 
                   {/* Layer 3: Connect — three exploration views */}

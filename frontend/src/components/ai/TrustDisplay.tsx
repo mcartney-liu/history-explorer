@@ -27,6 +27,10 @@ interface TrustDisplayProps {
    *  global_id when a next-exploration item is clicked. The consumer wires
    *  this to the EXISTING onEntityClick path; no new navigation logic here. */
   onNextClick?: (globalId: string) => void
+  /** 2026-08-11 (PO): 覆盖引擎徽标——推荐列表为确定性产物时，调用方传入
+   *  "知识库推荐"等准确文案，避免把 AI answer 的 engine 徽标错绑到
+   *  确定性推荐内容上。undefined = 按 engine 推断；null = 不显示。 */
+  engineBadgeLabel?: string | null
 }
 
 function engineBadge(engine: AIEngine | undefined, t: (k: string) => string): {
@@ -93,11 +97,19 @@ export function TrustDisplay({
   engine,
   confidence,
   onNextClick,
+  engineBadgeLabel,
 }: TrustDisplayProps) {
   const { t, locale } = useLocale()
   const evidenceList = evidence ?? []
   const nextList = nextExploration ?? []
-  const badge = engineBadge(engine, t)
+  // 引擎徽标：调用方显式覆盖时以覆盖为准（推荐列表确定性产物标"知识库推荐"），
+  // 否则按 engine 推断（AI 回答场景保持"AI 生成"）。
+  const badge =
+    engineBadgeLabel !== undefined
+      ? engineBadgeLabel
+        ? { tone: 'primary' as const, label: engineBadgeLabel }
+        : null
+      : engineBadge(engine, t)
   const conf = confidenceLabel(confidence, t)
 
   if (evidenceList.length === 0 && nextList.length === 0) {

@@ -12,6 +12,9 @@ export default {
   'ai.trust_next_label': 'Recommended',
   'ai.trust_engine_deterministic': 'Deterministic output',
   'ai.trust_engine_ai': 'AI-generated',
+  // 2026-08-11 (PO): next-exploration list is deterministic Planner output
+  // (graph + evidence templates) — badge says "Knowledge-base" not "AI-generated".
+  'ai.trust_engine_knowledge': 'Knowledge-base',
   'ai.trust_verified': 'Verified',
   'ai.trust_no_evidence': 'No knowledge-base evidence available for this topic yet.',
   // M74-004-002 (Commit 2B): Evidence Card — per-recommendation trust detail.

@@ -12,6 +12,9 @@ export default {
   'ai.trust_next_label': '推荐探索',
   'ai.trust_engine_deterministic': '确定性输出',
   'ai.trust_engine_ai': 'AI 生成',
+  // 2026-08-11 (PO): 推荐列表为确定性 Planner 产物（图谱+证据模板），
+  // 徽标显式标"知识库推荐"而非"AI 生成"（AI 仅生成 answer，前端不渲染）。
+  'ai.trust_engine_knowledge': '知识库推荐',
   'ai.trust_verified': '已校验',
   'ai.trust_no_evidence': '该主题暂无可用知识库证据。',
   // M74-004-002 (Commit 2B): Evidence Card — per-recommendation trust detail.
