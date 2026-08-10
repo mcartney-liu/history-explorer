@@ -323,6 +323,18 @@ def grounded_answer(
 
     builder = GroundingBuilder(knowledge_service)
 
+    # 2026-08-11 (PO)：探索建议（explain + 固定 question "探索建议"）前端只
+    # 消费确定性 next_exploration / evidence（RelationshipInsight /
+    # ExplorationSuggestions 均不渲染 AI answer）——直接走确定性流水线并
+    # 跳过 AI 调用：页面秒开、不烧 token、推荐内容稳定。
+    # 该分支在 provider 判断之前，AI 开启时同样跳过（answer 无人消费）。
+    if mode == "explain" and question == "探索建议":
+        deterministic = _deterministic_grounded_response(
+            builder, question, context, mode, visited, package_context
+        )
+        if deterministic is not None:
+            return deterministic
+
     # M74-003 (C2): Runtime OFF branch — Phase2 pipeline deterministic grounded.
     provider = get_provider()
     if provider is None:
