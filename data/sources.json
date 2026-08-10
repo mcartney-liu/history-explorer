@@ -130,7 +130,8 @@
     "reference": "Thapar, R. (2002). The Penguin History of Early India. Penguin Books.",
     "license": "Proprietary",
     "publisher_or_archive": "Penguin Books",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780143029892"
   },
   {
     "id": "src-res-gestae",
@@ -240,7 +241,8 @@
     "reference": "Bowman, A. et al. (eds.). The Cambridge Ancient History. Cambridge.",
     "license": "Proprietary",
     "publisher_or_archive": "Cambridge University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780521264303"
   },
   {
     "id": "src-oxford-roman",
@@ -251,7 +253,8 @@
     "reference": "Barchiesi, A. & Scheidel, W. (eds.). The Oxford Handbook of Roman Studies. Oxford.",
     "license": "Proprietary",
     "publisher_or_archive": "Oxford University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780199211524"
   },
   {
     "id": "src-jstor-roman",
@@ -284,7 +287,8 @@
     "reference": "Jeffreys, E. et al. (eds.). The Oxford Handbook of Byzantine Studies. Oxford.",
     "license": "Proprietary",
     "publisher_or_archive": "Oxford University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780199252466"
   },
   {
     "id": "src-cambridge-byzantine",
@@ -295,7 +299,8 @@
     "reference": "Munitiz, J. & Herrin, J. (eds.). The Cambridge History of the Byzantine Empire. Cambridge.",
     "license": "Proprietary",
     "publisher_or_archive": "Cambridge University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780521832311"
   },
   {
     "id": "src-oxford-christianity",
@@ -306,7 +311,8 @@
     "reference": "McManners, J. (ed.). The Oxford History of Christianity. Oxford.",
     "license": "Proprietary",
     "publisher_or_archive": "Oxford University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780198229285"
   },
   {
     "id": "src-early-church",
@@ -439,7 +445,8 @@
     "license": "Proprietary",
     "publisher_or_archive": "人民教育出版社",
     "tier": "primary",
-    "verification_status": "verified"
+    "verification_status": "verified",
+    "isbn": "9787107382420"
   },
   {
     "id": "src-cn-qianmu",
@@ -451,7 +458,8 @@
     "license": "Proprietary",
     "publisher_or_archive": "商务印书馆",
     "tier": "academic",
-    "verification_status": "verified"
+    "verification_status": "verified",
+    "isbn": "9787100074667"
   },
   {
     "id": "src-cn-cambridge",
@@ -463,7 +471,8 @@
     "license": "Proprietary",
     "publisher_or_archive": "Cambridge University Press",
     "tier": "academic",
-    "verification_status": "verified"
+    "verification_status": "verified",
+    "isbn": "9780521214476"
   },
   {
     "id": "src-cn-museum",
@@ -706,7 +715,8 @@
     "reference": "《夏商周断代工程1996—2000年阶段成果报告·简本》，世界图书出版公司。",
     "license": "Proprietary",
     "publisher_or_archive": "世界图书出版公司",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9787506241380"
   },
   {
     "id": "src-cn-subingqi",
@@ -728,7 +738,8 @@
     "reference": "Loewe, M. & Shaughnessy, E. L. (eds.) The Cambridge History of Ancient China. Cambridge University Press.",
     "license": "Proprietary",
     "publisher_or_archive": "Cambridge University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780521470308"
   },
   {
     "id": "src-richthofen-1877",
@@ -750,7 +761,8 @@
     "reference": "Hansen, V. The Silk Road: A New History. Oxford University Press.",
     "license": "Proprietary",
     "publisher_or_archive": "Oxford University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780190218423"
   },
   {
     "id": "src-behistun",
@@ -816,7 +828,8 @@
     "reference": "Gershevitch, I. (ed.) The Cambridge History of Iran, Vol. 2. Cambridge University Press.",
     "license": "Proprietary",
     "publisher_or_archive": "Cambridge University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780521200912"
   },
   {
     "id": "src-arrian-anabasis",
@@ -871,7 +884,8 @@
     "reference": "Bugh, G. R. (ed.) The Cambridge Companion to the Hellenistic World. Cambridge University Press.",
     "license": "Proprietary",
     "publisher_or_archive": "Cambridge University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780521535700"
   },
   {
     "id": "src-pyramid-texts",
@@ -948,7 +962,8 @@
     "reference": "Shaw, I. (ed.) The Oxford History of Ancient Egypt. Oxford University Press.",
     "license": "Proprietary",
     "publisher_or_archive": "Oxford University Press",
-    "tier": "academic"
+    "tier": "academic",
+    "isbn": "9780192804587"
   },
   {
     "id": "src-cuneiform-tablets",
@@ -1147,7 +1162,8 @@
     "reference": "《清史稿》，中华书局点校本。",
     "license": "Public Domain",
     "publisher_or_archive": "中华书局",
-    "tier": "primary"
+    "tier": "primary",
+    "isbn": "9787101007503"
   },
   {
     "id": "src-cn-yingya-shenglan",
