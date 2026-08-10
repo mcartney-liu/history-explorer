@@ -28,6 +28,10 @@ export type AIEvidence = {
   source_tier?: string
   /** M90.x: 来源外链（sources.json 补 url 后可用；无 url 时不渲染链接） */
   source_url?: string
+  /** 2026-08-11 (PO)：来源完整书目信息（作者/出版社/类型），增强可信度展示 */
+  source_creator?: string
+  source_publisher?: string
+  source_type?: string
   truth?: {
     confidence?: string
     scholar_consensus?: string
@@ -54,6 +58,10 @@ export type AINextExploration = {
   claim_text?: string
   source_title?: string
   source_tier?: string
+  /** 2026-08-11 (PO)：来源完整书目信息（作者/出版社/类型），增强可信度展示 */
+  source_creator?: string
+  source_publisher?: string
+  source_type?: string
 }
 
 export type AIConfidence = 'high' | 'medium' | 'low'

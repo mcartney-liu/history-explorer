@@ -625,6 +625,11 @@ def derive_next_exploration(claim_graph, limit: int = 3) -> list:
                 "claim_text": (claim_entry.claim_text if claim_entry else "") or "",
                 "source_title": (source.get("title") or "") or "",
                 "source_tier": (source.get("tier") or "") or "",
+                # 2026-08-11 (PO)：来源完整书目信息（作者/出版社/类型），
+                # 供前端推荐卡来源区展示；additive，向后兼容。
+                "source_creator": (source.get("creator") or "") or "",
+                "source_publisher": (source.get("publisher_or_archive") or "") or "",
+                "source_type": (source.get("type") or "") or "",
             }
         )
     return result

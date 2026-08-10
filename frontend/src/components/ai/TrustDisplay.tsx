@@ -171,6 +171,9 @@ export function TrustDisplay({
                   <p className="trust-display-next-source">
                     <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
                     {item.source_title && <span className="trust-display-source-title">{item.source_title}</span>}
+                    {/* 2026-08-11 (PO)：来源书目信息（作者·出版社），增强可信度 */}
+                    {item.source_creator && <span className="trust-display-source-meta"> · {item.source_creator}</span>}
+                    {item.source_publisher && <span className="trust-display-source-meta"> · {item.source_publisher}</span>}
                     {item.source_tier && (
                       <Badge tone={tierTone(item.source_tier)}>{tierLabel(item.source_tier, t)}</Badge>
                     )}
@@ -239,6 +242,9 @@ export function EvidenceList({ items }: { items: AIEvidence[] }) {
                   ) : (
                     <span className="trust-display-source-title">{ev.source_title}</span>
                   ))}
+                {/* 2026-08-11 (PO)：来源书目信息（作者·出版社），增强可信度 */}
+                {ev.source_creator && <span className="trust-display-source-meta"> · {ev.source_creator}</span>}
+                {ev.source_publisher && <span className="trust-display-source-meta"> · {ev.source_publisher}</span>}
                 {ev.source_tier && (
                   <Badge tone={tierTone(ev.source_tier)}>{tierLabel(ev.source_tier, t)}</Badge>
                 )}

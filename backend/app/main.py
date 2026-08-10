@@ -473,11 +473,17 @@ def _generate_entity_insight(global_id: str) -> dict:
         if not text:
             continue
         source_title = ""
+        source_creator = ""
+        source_publisher = ""
+        source_type = ""
         sid = c.source_id or None
         if sid:
             src = knowledge_service.get_source(sid)
             if src:
                 source_title = src.get("title", "") or ""
+                source_creator = src.get("creator", "") or ""
+                source_publisher = src.get("publisher_or_archive", "") or ""
+                source_type = src.get("type", "") or ""
         evidence_lines.append(f"- {text}" + (f"（来源：{source_title}）" if source_title else ""))
         evidence_out.append(
             {
@@ -487,6 +493,11 @@ def _generate_entity_insight(global_id: str) -> dict:
                 "status": "verified",
                 "source_id": sid,
                 "source_title": source_title,
+                # 2026-08-11 (PO)：来源完整书目信息（作者/出版社/类型），
+                # 供前端证据区展示增强可信度；additive，向后兼容。
+                "source_creator": source_creator,
+                "source_publisher": source_publisher,
+                "source_type": source_type,
                 # 证据来源实体（自身或扩展的邻居实体），additive。
                 "subject": c.subject or "",
             }

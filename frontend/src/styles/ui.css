@@ -125,6 +125,11 @@
   padding: 1px 6px;
   border-radius: 6px;
 }
+/* 2026-08-11 (PO)：来源书目信息（作者/出版社）——次级弱化显示 */
+.trust-display-source-meta {
+  font-size: 11px;
+  color: var(--color-ink-500);
+}
 /* M90.x: 来源外链（source_url 存在时 source_title 变为可点击链接） */
 .trust-display-source-link {
   color: var(--color-accent);
@@ -213,6 +218,25 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+/* 2026-08-11 (PO)：推荐项可点击后标题从 span 变 button——
+   button 需显式去浏览器默认白底/边框，视觉与 span 一致。 */
+.trust-display-next-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+.trust-display-next-btn:hover .trust-display-next-name {
+  color: var(--color-accent);
 }
 .trust-display-next-reason,
 .trust-display-next-claim,
