@@ -29,4 +29,5 @@ export default {
   'ai.tier_unknown': 'Unknown tier',
   // M74-004-002 (Commit 2A): Journey Trail — exploration path visualization.
   'ai.journey_trail_title': 'Exploration trail',
+  'ai.trust_no_next': 'No recommended next steps — continue from the evidence above, or open a related entity.',
 }

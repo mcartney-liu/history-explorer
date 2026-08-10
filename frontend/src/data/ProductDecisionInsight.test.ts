@@ -151,7 +151,7 @@ describe('ProductDecisionInsight (M56 Trust Layer)', () => {
     const input = buildInput(events)
     const di = generateProductDecisionInsight(input)
     expect(di.counterSignals.length).toBeGreaterThan(0)
-    expect(di.counterSignals.some((s) => s.includes('research'))).toBe(true)
+    expect(di.counterSignals.some((s) => s.includes('研究'))).toBe(true)
   })
 
   it('empty events: evidenceQuality is low, explanationChain valid', () => {

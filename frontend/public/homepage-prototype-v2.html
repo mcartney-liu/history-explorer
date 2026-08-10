@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History Explorer — 首页原型 v3（对齐设计稿 + 5条修改意见）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ====== RESET & BASE ====== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* 意见1：统一的深色宇宙渐变背景（拒绝平铺低清地球图） */
+body {
+  font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* 深空宇宙渐变：顶部偏冷蓝、向下沉入近黑 */
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -5%, #16263d 0%, #0c1320 45%, #070b12 100%) fixed;
+  color: #cdd2dc;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ====== CSS VARIABLES — 设计稿 Token + 文明辅色编码 ====== */
+:root {
+  --bg-deep: #070b12;
+  --bg-card: rgba(255, 255, 255, 0.035);
+  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-light: rgba(255, 255, 255, 0.14);
+
+  /* 意见2：主色 — 优雅古典金/古铜色 */
+  --gold: #D4AF37;
+  --gold-bright: #ecd06a;
+  --gold-dark: #a8842a;
+  --gold-glow: rgba(212, 175, 55, 0.30);
+
+  /* 文明视觉编码辅色（用于卡片边框 / 标签）*/
+  --civ-greek:  #B5854A;  /* 希腊 — 古铜金 */
+  --civ-silk:   #C19A6B;  /* 丝路 — 沙铜 */
+  --civ-rome:   #1E4F7D;  /* 罗马 — 深蓝/石青 */
+  --civ-egypt:  #A67C52;  /* 埃及 — 古铜 */
+  --civ-empire: #9C6B3F;  /* 史古帝国 — 暗铜 */
+  --civ-world:  #8C7B4A;  /* 世界帝国 — 橄榄铜 */
+  --civ-persia: #7A5A52;  /* 波斯 — 赤铜 */
+  --civ-roman:  #1E4F7D;  /* 罗马帝国 — 深蓝/石青 */
+  --civ-mystery:#5A6B8C;  /* 谜团 — 蓝灰铜 */
+
+  --text-primary: #ece8e0;
+  --text-secondary: #a8b0c0;
+  --text-muted: #69707e;
+
+  /* 意见4：字体 — 古典衬线标题 + 现代无衬线正文 */
+  --serif: 'Cinzel', 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
+  --sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+}
+
+/* ====== NAVBAR（毛玻璃顶栏） ====== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 60px;
+  background: rgba(8, 11, 18, 0.82);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.navbar-logo {
+  font-family: var(--serif); font-size: 18px; font-weight: 700;
+  color: var(--text-primary); letter-spacing: 1px;
+  display: flex; align-items: center; gap: 10px;
+}
+.navbar-logo .logo-mark {
+  width: 22px; height: 22px; color: var(--gold);
+}
+.navbar-logo span { color: var(--gold); }
+.navbar-searches { display: flex; gap: 12px; flex: 1; justify-content: center; max-width: 600px; margin: 0 32px; }
+.navbar-search {
+  flex: 1; max-width: 280px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm); color: var(--text-muted);
+  font-size: 13px; transition: border-color .2s, box-shadow .2s;
+}
+.navbar-search:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); outline: none; }
+.navbar-search svg { flex-shrink: 0; opacity: 0.5; }
+.navbar-search input {
+  flex: 1; background: none; border: none; color: var(--text-secondary);
+  font-size: 13px; outline: none; min-width: 0; font-family: var(--sans);
+}
+
+/* ====== HERO（意见1：顶部 glowing 概念地球 + 向下柔和淡出） ====== */
+.hero {
+  position: relative; padding: 140px 48px 60px; text-align: center;
+  overflow: hidden; min-height: 440px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+/* 概念地球：精致 glowing 球体，居中于顶部 */
+.hero-earth {
+  position: absolute; top: -34px; left: 50%; transform: translateX(-50%);
+  width: 210px; height: 210px; z-index: 0; border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, #4a7a9c 0%, #1e445f 32%, #0a1c2c 68%),
+    repeating-linear-gradient(0deg, transparent 0 16px, rgba(255,255,255,0.045) 16px 17px),
+    repeating-linear-gradient(90deg, transparent 0 16px, rgba(255,255,255,0.045) 16px 17px);
+  box-shadow:
+    0 0 55px 10px rgba(74,122,156,0.35),
+    inset -26px -26px 52px rgba(0,0,0,0.72),
+    inset 14px 14px 32px rgba(120,165,205,0.16);
+}
+.hero-earth::after {
+  content: ''; position: absolute; inset: -34px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,122,156,0.20) 0%, transparent 68%);
+}
+/* 向下柔和淡出遮罩 */
+.hero::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 250px; z-index: 1;
+  background: linear-gradient(180deg, transparent 0%, var(--bg-deep) 100%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-title {
+  font-family: var(--serif); font-size: 44px; font-weight: 900;
+  color: var(--gold); letter-spacing: 2px; line-height: 1.2;
+  text-shadow: 0 2px 30px rgba(212,175,55,0.22);
+}
+.hero-sub {
+  margin-top: 14px; font-size: 15px; color: var(--text-secondary);
+  max-width: 540px; line-height: 1.8; font-weight: 400;
+}
+
+/* ====== TAB BAR ====== */
+.tab-bar {
+  display: flex; gap: 4px; padding: 0 48px; margin-top: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.tab-btn {
+  appearance: none; background: none; border: none; cursor: pointer;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  color: var(--text-muted); padding: 10px 18px;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ====== FEATURE CARDS（研究 tab） ====== */
+.feature-section { padding: 32px 48px 0; }
+.feature-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+/* 意见3：功能卡 — 古籍/古建筑蚀刻纹理背景 */
+.feature-card {
+  position: relative; overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(212,175,55,0.04), rgba(255,255,255,0.02)),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><filter id="e"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23e)" opacity="0.05"/></svg>'),
+    var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md); padding: 24px; text-align: center;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.4);
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.feature-card:hover {
+  transform: translateY(-3px); border-color: var(--gold);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4), 0 0 22px var(--gold-glow);
+}
+.feature-card-wide {
+  grid-column: span 3;
+  display: flex; align-items: center; gap: 28px;
+  text-align: left; padding: 28px 32px;
+  background:
+    linear-gradient(135deg, rgba(212,175,55,0.07), rgba(255,255,255,0.025)),
+    var(--bg-card);
+  border-color: rgba(212,175,55,0.18);
+}
+.feature-icon {
+  width: 46px; height: 46px; margin: 0 auto 14px;
+  color: var(--gold); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.feature-icon-wide { width: 70px; height: 70px; margin: 0; flex-shrink: 0; }
+.feature-title {
+  font-family: var(--serif); font-size: 17px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.feature-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+/* ====== ANCIENT MAP BANNER ====== */
+.map-banner {
+  margin: 48px 48px; padding: 52px 32px; text-align: center;
+  position: relative; border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(212,175,55,0.07), rgba(139,109,60,0.05)),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.13"/></svg>');
+  border: 1px solid rgba(212,175,55,0.18);
+  box-shadow: inset 0 0 60px rgba(139,109,60,0.08);
+}
+.map-banner::before, .map-banner::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 40px;
+  background: linear-gradient(90deg, rgba(212,175,55,0.12), transparent);
+}
+.map-banner::before { left: 0; }
+.map-banner::after { right: 0; transform: scaleX(-1); }
+.map-banner-text {
+  font-family: var(--serif); font-size: 30px; font-weight: 900;
+  color: var(--gold); letter-spacing: 4px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  position: relative; z-index: 1;
+}
+
+/* ====== QUESTION CARD ====== */
+.question-section { padding: 0 48px; }
+.question-card {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md); padding: 28px 32px; text-align: center;
+}
+.question-badge {
+  display: inline-block; font-size: 11px; letter-spacing: 0.1em;
+  color: var(--gold); border: 1px solid rgba(212,175,55,0.25);
+  border-radius: var(--radius-pill); padding: 3px 12px; margin-bottom: 14px;
+}
+.question-title {
+  font-family: var(--serif); font-size: 20px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 8px;
+}
+.question-desc { font-size: 13px; color: var(--text-muted); }
+
+/* ====== TAG FILTER BAR ====== */
+.tag-filter {
+  display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 48px;
+  justify-content: center;
+}
+.tag {
+  font-size: 12.5px; padding: 6px 16px; border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+  color: var(--text-secondary); cursor: pointer; transition: all .2s;
+  white-space: nowrap; font-family: var(--sans);
+}
+.tag:hover, .tag.active {
+  background: var(--gold-glow); border-color: rgba(212,175,55,0.4);
+  color: var(--gold);
+}
+
+/* ====== SECTION HEADING ====== */
+.section-heading {
+  font-family: var(--serif); font-size: 22px; font-weight: 700;
+  color: var(--text-primary); padding: 40px 48px 8px; letter-spacing: 0.5px;
+}
+.section-desc { font-size: 14px; color: var(--text-secondary); padding: 4px 48px 20px; line-height: 1.8; }
+
+/* 意见1&2：「这里开始」主标题 — 艺术衬线 + 古典金 + 开阔字距 + 大下边距 */
+.here-start {
+  font-family: var(--serif);
+  font-size: 30px; font-weight: 700;
+  color: var(--gold);                 /* #D4AF37 柔和金 */
+  letter-spacing: 0.03em;             /* 约 3% 开阔感 */
+  margin: 8px 0 48px;                 /* 下边距 48px */
+  padding: 0 48px;
+  text-align: center;
+  text-shadow: 0 2px 18px rgba(212,175,55,0.18);
+}
+
+/* ====== PACKAGE CARDS GRID（意见3：古籍封面/文物盒样式 + 文明辅色边框） ====== */
+.package-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  padding: 0 48px;
+}
+.pkg-card {
+  position: relative; overflow: hidden;
+  /* 默认文明色（被各 modifier 覆盖）*/
+  --civ: var(--gold);
+  background: var(--bg-card);
+  border: 2px solid var(--civ);
+  border-radius: var(--radius-md);
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.4), 0px 0px 15px color-mix(in srgb, var(--civ) 30%, transparent);
+  transition: transform .28s, border-color .28s, box-shadow .28s;
+  display: flex; flex-direction: column;
+}
+/* 文物盒质感：微弱投影 + 该文明色 glow */
+.pkg-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--civ);
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.4), 0px 0px 26px color-mix(in srgb, var(--civ) 45%, transparent);
+}
+/* 封面区 — 该文明辅色渐变 + 蚀刻纹理（等翔哥提供插画后替换为 <img>）*/
+.pkg-cover {
+  height: 150px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--civ) 55%, #0a0e17) 0%, color-mix(in srgb, var(--civ) 20%, #0a0e17) 100%),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><filter id="t"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23t)" opacity="0.10"/></svg>');
+  border-bottom: 1px solid var(--civ);
+}
+.pkg-cover img { width: 100%; height: 100%; object-fit: cover; }
+/* 封面占位图案：该文明的极简线条图标（等翔哥提供插画后整块替换为 <img>） */
+.pkg-cover-hint {
+  width: 66px; height: 66px; color: rgba(255,255,255,0.34); opacity: 0.92; user-select: none;
+}
+.pkg-cover-hint svg { width: 100%; height: 100%; display: block; }
+/* 文明辅色编码（意见2）— 同时驱动边框 / glow / 封面 */
+.pkg-card--greek  { --civ: var(--civ-greek); }
+.pkg-card--silk   { --civ: var(--civ-silk); }
+.pkg-card--rome   { --civ: var(--civ-rome); }
+.pkg-card--egypt  { --civ: var(--civ-egypt); }
+.pkg-card--empire { --civ: var(--civ-empire); }
+.pkg-card--world  { --civ: var(--civ-world); }
+.pkg-card--persia { --civ: var(--civ-persia); }
+.pkg-card--roman  { --civ: var(--civ-roman); }
+.pkg-card--mystery{ --civ: var(--civ-mystery); }
+
+.pkg-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+.pkg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
+.pkg-badge {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--civ); border: 1px solid color-mix(in srgb, var(--civ) 40%, transparent);
+  border-radius: var(--radius-pill); padding: 2px 10px; white-space: nowrap;
+}
+.pkg-title {
+  font-family: var(--serif); font-size: 16px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.pkg-desc {
+  font-size: 12.5px; color: var(--text-secondary); line-height: 1.7;
+  flex: 1; margin-bottom: 14px;
+}
+/* 意见5：CTA 按钮 — 古典金，hover 金色发光 + 位移 */
+.pkg-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 20px; border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
+  color: #1a1408; font-size: 13px; font-weight: 700; font-family: var(--sans);
+  border: none; cursor: pointer;
+  transition: box-shadow .25s, transform .2s, filter .2s;
+  align-self: flex-start;
+}
+.pkg-cta:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 0 22px var(--gold-glow), 0 4px 14px rgba(0,0,0,0.4);
+  transform: translateX(3px);
+}
+.pkg-cta svg { width: 15px; height: 15px; }
+
+/* ====== RECENT SECTION（意见5：时间轴图标整洁列表） ====== */
+.recent-section { padding: 0 48px; margin-top: 36px; }
+.recent-list { display: flex; flex-direction: column; gap: 2px; }
+.recent-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 16px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.025); border: 1px solid var(--border-subtle);
+  transition: border-color .2s, background .2s, transform .2s;
+}
+.recent-item:hover {
+  border-color: var(--gold); background: var(--bg-card-hover);
+  transform: translateX(2px);
+}
+.recent-icon {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(212,175,55,0.08); color: var(--gold);
+  border: 1px solid rgba(212,175,55,0.22);
+}
+.recent-icon svg { width: 17px; height: 17px; stroke-width: 2; }
+.recent-text { flex: 1; min-width: 0; }
+.recent-title { font-family: var(--sans); font-size: 14px; color: var(--text-primary); font-weight: 500; }
+.recent-meta { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.recent-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); opacity: 0.6; flex-shrink: 0; }
+
+/* ====== MY EXPLORATION / FOOTER ====== */
+.exploration-section { padding: 32px 48px; }
+.exploration-card {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md); padding: 28px;
+}
+.exploration-title { font-family: var(--serif); font-size: 18px; color: var(--gold); margin-bottom: 12px; }
+.exploration-list { list-style: none; }
+.exploration-list li {
+  padding: 6px 0; font-size: 13.5px; color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.footer {
+  text-align: center; padding: 32px 48px 48px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 48px; font-size: 12px; color: var(--text-muted);
+}
+
+/* ====== TAB CONTENT SWITCHING ====== */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 900px) {
+  .package-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-card-wide { grid-column: span 2; }
+}
+@media (max-width: 640px) {
+  .navbar { padding: 0 20px; }
+  .hero { padding: 110px 24px 48px; }
+  .hero-title { font-size: 30px; }
+  .package-grid { grid-template-columns: 1fr; padding: 0 24px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .feature-card-wide { grid-column: span 1; flex-direction: column; text-align: center; }
+  .tab-bar { padding: 0 24px; overflow-x: auto; }
+  .section-heading, .map-banner, .question-card, .tag-filter { padding-left: 24px; padding-right: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar">
+  <div class="navbar-logo">
+    <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>
+    </svg>
+    History <span>Explorer</span>
+  </div>
+  <div class="navbar-searches">
+    <div class="navbar-search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search History/Events（如：奥古斯都、罗马）">
+    </div>
+    <div class="navbar-search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search Entity（搜索实体如奥古斯都）">
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<section class="hero" id="hero">
+  <div class="hero-earth"></div>
+  <div class="hero-content">
+    <h1 class="hero-title" id="heroTitle">History Explorer 能做什么</h1>
+    <p class="hero-sub" id="heroSub">穿越时空的知识图谱探索系统。从一个人、一条路、一个事件出发，看它如何在历史中展开。</p>
+  </div>
+</section>
+
+<!-- ====== TAB BAR ====== -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="research">了解</button>
+  <button class="tab-btn" data-tab="focus">聚焦</button>
+  <button class="tab-btn" data-tab="explore">收藏探索</button>
+  <button class="tab-btn" data-tab="timeline">我的时间轴</button>
+  <button class="tab-btn" data-tab="notes">笔记</button>
+</div>
+
+<!-- ====== TAB 1: 研究/了解（首页主视图） ====== -->
+<div class="tab-panel active" id="panel-research">
+
+  <!-- 4 Feature Cards -->
+  <div class="feature-section">
+    <div class="feature-grid">
+      <!-- Card 1: 历史叙事 -->
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="9" y1="7" x2="17" y2="7"/><line x1="9" y1="11" x2="17" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/>
+        </svg>
+        <h3 class="feature-title">历史叙事</h3>
+        <p class="feature-desc">从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。</p>
+      </div>
+      <!-- Card 2: 关系探索 -->
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/>
+          <line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/><line x1="7.5" y1="8.5" x2="7.5" y2="15.5"/>
+          <line x1="16.5" y1="8.5" x2="16.5" y2="15.5"/><line x1="8.5" y1="16.5" x2="15.5" y2="16.5"/>
+        </svg>
+        <h3 class="feature-title">关系探索</h3>
+        <p class="feature-desc">穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。</p>
+      </div>
+      <!-- Card 3: 深度学习 -->
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/>
+          <circle cx="18" cy="5" r="1.8"/><circle cx="5" cy="16" r="1.8"/>
+        </svg>
+        <h3 class="feature-title">深度学习</h3>
+        <p class="feature-desc">4 维度 AI 分析：政治、军事、经济、文化。支持多实体对比研究，结果可保存回顾。</p>
+      </div>
+      <!-- Card 4: AI 历史学家（宽卡） -->
+      <div class="feature-card feature-card-wide">
+        <svg class="feature-icon feature-icon-wide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.5"/><path d="M5 20v-2a5 5 0 0 1 10 0v2"/>
+          <path d="M15 4l2 2 4-4" opacity="0.55"/><circle cx="20" cy="3" r="1.6" opacity="0.45"/>
+          <path d="M2 12h3l2-3 2 6 2-9 2 6 2-3h3" opacity="0.35"/>
+        </svg>
+        <div>
+          <h3 class="feature-title">AI 历史学家</h3>
+          <p class="feature-desc">随时向 AI 历史学家提问。回答基于知识图谱，不凭空捏造。支持追问、反问、多角度分析。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ancient Map Banner -->
+  <div class="map-banner">
+    <div class="map-banner-text">探索历史文明，形成你自己的理解</div>
+  </div>
+
+  <!-- Question Card -->
+  <div class="question-section">
+    <div class="question-card">
+      <span class="question-badge">谜团 · 谜团视角</span>
+      <h3 class="question-title">谜团大帝国为何会生？</h3>
+      <p class="question-desc">不只是回答「是什么」，而是带你一步步拆解它为何发生、如何发展、留下了什么遗产。</p>
+    </div>
+  </div>
+
+  <!-- Tag Filter Bar -->
+  <div class="tag-filter">
+    <span class="tag active">选项</span>
+    <span class="tag">谜团大事件</span>
+    <span class="tag">中国周朝文化</span>
+    <span class="tag">亚历山大</span>
+    <span class="tag">古罗马帝国</span>
+    <span class="tag">史前及远古教育</span>
+  </div>
+
+  <!-- 这里开始 -->
+  <h2 class="here-start">这里开始</h2>
+  <p class="section-desc">宇宙里有一个守恒的生灭文法。几条路径里藏着中世纪西欧的钥匙——<br>内容即是一切以探索的形式来呈现，上至帝国兴衰下到市井民生，每条路径都是一次独立观察。<br>所有数据来自经过验证的历史资料库，不是 AI 编造的故事。</p>
+
+  <!-- Package Cards Grid（9张 — 古籍封面 / 文物盒样式 + 文明辅色边框） -->
+  <div class="package-grid">
+
+    <!-- 1. 古希神宠 Pack V1 -->
+    <article class="pkg-card pkg-card--greek">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21v-9M9 21v-9M15 21v-9M19 21v-9"/><path d="M3 12h18"/><path d="M4 12V7h16v5"/><path d="M8 7V4h8v3"/><path d="M10 4V2h4v2"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">古希神宠</h3>
+          <span class="pkg-badge">Pack V1</span>
+        </div>
+        <p class="pkg-desc">一个关于希腊众神和英雄传说的探索包，涵盖奥林匹斯十二主神、特洛伊战争、英雄旅程等核心主题。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 2. 丝绸之路 Pack V1 -->
+    <article class="pkg-card pkg-card--silk">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 19c1.5 0 2.5-1 3.5-1s1.5 1 2.5 1 1.5-1 2.5-1 1.5 1 2.5 1 2-1 3.5-1"/><path d="M7 18l1-6 2 1 1-4 2 1v8"/><path d="M16 18v-4l3 1"/><path d="M8 21v-2M14 21v-2"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">丝绸之路</h3>
+          <span class="pkg-badge">Pack V1</span>
+        </div>
+        <p class="pkg-desc">连接东西方的伟大贸易之路。追踪骆驼队、驿站城市、宗教传播和文化交融的千年轨迹。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 3. 罗马揽胜包 Pack V1 -->
+    <article class="pkg-card pkg-card--rome">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17a7 7 0 0 1 14 0z"/><path d="M5 17h14"/><path d="M12 10V7"/><path d="M9 17v2M15 17v2"/><path d="M2 17h3M19 17h3"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">罗马揽胜包</h3>
+          <span class="pkg-badge">Pack V1</span>
+        </div>
+        <p class="pkg-desc">一个关于罗马帝国全盛时期的探索包，从军团征途到公共建筑，从法律制度到角斗文化。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 4. 埃及与帝传 Pack V2 -->
+    <article class="pkg-card pkg-card--egypt">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 22 20H2z"/><path d="M12 3v17"/><path d="M7 20l5-9 5 9"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">埃及与帝传</h3>
+          <span class="pkg-badge">Pack V2</span>
+        </div>
+        <p class="pkg-desc">尼罗河畔的法老文明。金字塔建造、象形文字、木乃伊制作、王朝更迭与宗教信仰体系。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 5. 史古帝国 Pack V2 -->
+    <article class="pkg-card pkg-card--empire">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4 5-6 5 6 4-4-2 11H5z"/><path d="M5 19h14"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">史古帝国</h3>
+          <span class="pkg-badge">Pack V2</span>
+        </div>
+        <p class="pkg-desc">一个关于古代帝国兴衰规律的深度研究包。聚焦权力结构、军事扩张、经济基础与文化认同。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 6. 世界帝国 Pack V2 -->
+    <article class="pkg-card pkg-card--world">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/><path d="M5 7c4 3 10 3 14 0M5 17c4-3 10-3 14 0"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">世界帝国</h3>
+          <span class="pkg-badge">Pack V2</span>
+        </div>
+        <p class="pkg-desc">从波斯到亚历山大，跨越欧亚非三大洲的帝国比较研究。征服方式、治理模式与文明融合。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 7. 波斯帝国 Pack V3 -->
+    <article class="pkg-card pkg-card--persia">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20v-8M18 20v-8"/><path d="M4 12h16"/><path d="M3 12l3-3 3 3M15 9l3-3 3 3"/><path d="M9 12V7h6v5"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">波斯帝国</h3>
+          <span class="pkg-badge">Pack V3</span>
+        </div>
+        <p class="pkg-desc">阿契美尼德王朝的辉煌与陨落。波斯波利斯宫、皇家大道、琐罗亚斯德教与希波战争。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 8. 罗马帝国 Pack V3 -->
+    <article class="pkg-card pkg-card--roman">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l2.5 5-2.5 2-2.5-2z"/><path d="M12 11c-3 0-6 2-7 5 3-1 5-1 7 0 2-1 4-1 7 0-1-3-4-5-7-5z"/><path d="M12 11v7"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">罗马帝国</h3>
+          <span class="pkg-badge">Pack V3</span>
+        </div>
+        <p class="pkg-desc">一个跨越千年的帝国全景。从王政到共和再到帝制，军团、法律、工程与基督教兴起。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <!-- 9. 谜团探索 Pack V3 -->
+    <article class="pkg-card pkg-card--mystery">
+      <div class="pkg-cover">
+        <span class="pkg-cover-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-header">
+          <h3 class="pkg-title">谜团探索</h3>
+          <span class="pkg-badge">Pack V3</span>
+        </div>
+        <p class="pkg-desc">历史中的未解之谜。消失的文明、无法破译的文字、突然灭亡的王朝——用证据链逼近真相。</p>
+        <button class="pkg-cta">开始探索 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+  </div><!-- /.package-grid -->
+
+  <!-- 最近浏览（意见5：时间轴图标整洁列表） -->
+  <h2 class="section-heading">最近浏览</h2>
+  <div class="recent-section">
+    <div class="recent-list">
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">主题: 罗马</div><div class="recent-meta">刚刚访问</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">文献: 罗马帝王正史</div><div class="recent-meta">2 小时前</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Skeptic ai Philosophy</div><div class="recent-meta">昨天</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Stoares</div><div class="recent-meta">昨天</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Greek Philosophy</div><div class="recent-meta">3 天前</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Posianus.mimpryreoe-cynius</div><div class="recent-meta">3 天前</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Ancient Info</div><div class="recent-meta">上周</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Ancient Greek Philosophy</div><div class="recent-meta">上周</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Persian empire-nig-indnglm</div><div class="recent-meta">上周</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Ancient Stoerate</div><div class="recent-meta">上周</div></div>
+        <span class="recent-dot"></span>
+      </div>
+      <div class="recent-item">
+        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="recent-text"><div class="recent-title">Egyptian light</div><div class="recent-meta">更早</div></div>
+        <span class="recent-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 我的探索空间 -->
+  <div class="exploration-section">
+    <div class="exploration-card">
+      <h3 class="exploration-title">我的探索空间 — My Exploration</h3>
+      <ul class="exploration-list">
+        <li>罗马</li>
+        <li>地产产品，这是你的探索轨迹和认知成长的空间。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div style="margin-bottom:8px">
+      <strong>系统信息</strong> &nbsp;|&nbsp; <strong>创建重置</strong>
+    </div>
+    <p>Silk Road — 连接东西方文明的伟大贸易之路。从长安到地中海，骆驼队、驿站、宗教与文化的千年交汇。</p>
+    <div style="margin-top:12px;display:flex;gap:16px;justify-content:center;font-size:11px;color:#555;">
+      <span>Poly Haven</span><span>My Setting</span>
+    </div>
+  </footer>
+
+</div><!-- /#panel-research -->
+
+<!-- ====== TAB 2: 聚焦（预留） ====== -->
+<div class="tab-panel" id="panel-focus">
+  <div style="padding:60px 48px;text-align:center;color:var(--text-muted);">
+    <p>「聚焦」视图 — 开发中</p>
+  </div>
+</div>
+
+<!-- ====== TAB 3-5（预留） ====== -->
+<div class="tab-panel" id="panel-explore">
+  <div style="padding:60px 48px;text-align:center;color:var(--text-muted);">
+    <p>「收藏探索」视图 — 开发中</p>
+  </div>
+</div>
+<div class="tab-panel" id="panel-timeline">
+  <div style="padding:60px 48px;text-align:center;color:var(--text-muted);">
+    <p>「我的时间轴」视图 — 开发中</p>
+  </div>
+</div>
+<div class="tab-panel" id="panel-notes">
+  <div style="padding:60px 48px;text-align:center;color:var(--text-muted);">
+    <p>「笔记」视图 — 开发中</p>
+  </div>
+</div>
+
+<!-- ====== TAB SWITCHING LOGIC ====== -->
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('panel-' + btn.dataset.tab);
+    if (panel) panel.classList.add('active');
+
+    const heroTitle = document.getElementById('heroTitle');
+    const heroSub = document.getElementById('heroSub');
+    if (btn.dataset.tab === 'research') {
+      heroTitle.textContent = 'History Explorer 能做什么';
+      heroSub.textContent = '穿越时空的知识图谱探索系统。从一个人、一条路、一个事件出发，看它如何在历史中展开。';
+    } else if (btn.dataset.tab === 'focus') {
+      heroTitle.textContent = 'History Explorer 是什么';
+      heroSub.textContent = '一个帮助你逐渐形成文明理解和认知结构的探索系统。';
+    }
+  });
+});
+</script>
+
+</body>
+</html>

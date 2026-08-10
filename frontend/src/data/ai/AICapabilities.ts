@@ -2,7 +2,20 @@
 // M59-012 — AI Capability Definitions
 // Complete catalog of what the AI Historian can do.
 // Not tied to any component or API. Pure capability registry.
+//
+// ADR-0021 R2 — the user-facing half of each capability (name,
+// description, suggested prompts) is editable at runtime through the
+// Content Configuration Layer (#/admin, module `ai_capabilities`).
+// The BEHAVIOURAL half (id, trigger, requiredContext, requiresModel)
+// is not: those drive dispatch, and letting copy edits reach them
+// would turn a wording change into a logic change.
+//
+// `ALL_CAPABILITIES` stays the shipped default — read it for the
+// static catalog; call `allCapabilities()` when you want configured
+// copy applied.
 // ============================================================
+
+import { slotDesc, slotItems, slotTitle } from '../contentRuntime'
 
 export type AICapabilityId =
   | 'explain_entity'
@@ -137,3 +150,27 @@ export const ALL_CAPABILITIES: AICapability[] = [
     requiresModel: true,
   },
 ]
+
+/** Registry slot backing a capability, e.g. `ai_capabilities.explain_entity`. */
+export function capabilitySlotId(id: AICapabilityId): string {
+  return `ai_capabilities.${id}`
+}
+
+/**
+ * The catalog with configured copy applied.
+ *
+ * Synchronous and allocation-cheap: the overlay is an in-memory map, so this
+ * is safe to call during render. With nothing configured it returns copies of
+ * the shipped definitions.
+ */
+export function allCapabilities(): AICapability[] {
+  return ALL_CAPABILITIES.map((cap) => {
+    const slot = capabilitySlotId(cap.id)
+    return {
+      ...cap,
+      name: slotTitle(slot, cap.name),
+      description: slotDesc(slot, cap.description),
+      suggestedPromptTemplates: [...slotItems(slot, cap.suggestedPromptTemplates)],
+    }
+  })
+}

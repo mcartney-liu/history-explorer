@@ -1,0 +1,371 @@
+/* M89.2.10 — Understanding Workspace Styles */
+/* Aligned with History Explorer Design System V1.0 */
+
+.m89-workspace {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  color: var(--color-ink-900);
+  min-height: 100vh;
+}
+
+.m89-section {
+  margin-bottom: 32px;
+}
+
+/* ── Navigation Card ── */
+
+.m89-nav-card {
+  background: var(--color-paper-200);
+  border-radius: var(--r-lg);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.m89-nav-label {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--color-ink-500);
+  margin-bottom: 8px;
+}
+
+.m89-nav-question {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0 0 12px;
+  color: var(--color-ink-900);
+}
+
+.m89-nav-dimensions {
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  color: var(--color-ink-500);
+  margin: 0;
+}
+
+.m89-nav-reason {
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: var(--color-ink-500);
+  margin: 0;
+}
+
+.m89-nav-closure {
+  border-left: 3px solid var(--color-truth-strong);
+}
+
+.m89-nav-summary {
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  line-height: 1.7;
+  color: var(--color-ink-900);
+  margin: 8px 0 0;
+}
+
+/* ── Transition Card ── */
+
+.m89-transition-card {
+  background: rgba(203, 161, 53, 0.06);
+  border-radius: var(--r-md);
+  padding: 20px 24px;
+  border: 1px solid rgba(203, 161, 53, 0.15);
+}
+
+.m89-transition-label {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-500);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.m89-transition-before p,
+.m89-transition-after p {
+  font-family: var(--serif);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  margin: 0 0 4px;
+}
+
+.m89-transition-before p {
+  color: var(--color-ink-300);
+}
+
+.m89-transition-after p {
+  color: var(--color-ink-500);
+}
+
+.m89-transition-arrow {
+  text-align: center;
+  font-size: 20px;
+  color: var(--color-accent);
+  margin: 8px 0;
+}
+
+/* ── Evidence Card ── */
+
+.m89-evidence-card {
+  background: var(--color-paper-200);
+  border-radius: var(--r-lg);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.m89-evidence-question {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-ink-900);
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+.m89-evidence-text {
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  line-height: 1.8;
+  color: var(--color-ink-500);
+  margin: 0 0 16px;
+  max-width: 680px;
+}
+
+.m89-evidence-facts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.m89-evidence-facts li {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  line-height: 1.6;
+  color: var(--color-ink-500);
+  padding: 6px 0 6px 20px;
+  position: relative;
+}
+
+.m89-evidence-facts li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+/* ── Provenance ── */
+
+.m89-evidence-provenance {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-paper-300);
+}
+
+.m89-provenance-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-300);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.m89-provenance-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.m89-provenance-tag {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  padding: 3px 10px;
+  border-radius: var(--r-sm);
+  font-weight: 500;
+}
+
+.m89-tag-entity {
+  background: rgba(79, 167, 132, 0.12);
+  color: var(--color-truth-strong);
+  border: 1px solid rgba(79, 167, 132, 0.2);
+}
+
+.m89-tag-relation {
+  background: rgba(203, 161, 53, 0.1);
+  color: var(--color-accent);
+  border: 1px solid rgba(203, 161, 53, 0.15);
+}
+
+/* ── Path Card ── */
+
+.m89-path-card {
+  background: var(--color-paper-200);
+  border-radius: var(--r-lg);
+  padding: 24px 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.m89-path-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.m89-path-label {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-500);
+}
+
+.m89-path-progress {
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.m89-path-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.m89-path-node {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+/* Wave2-#140 / P0-1: holds an SVG status icon (was a circle dingbat glyph). */
+.m89-path-dot {
+  width: 24px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.m89-path-node.completed .m89-path-dot {
+  color: var(--color-truth-strong);
+}
+
+.m89-path-node.current .m89-path-dot {
+  color: var(--color-accent);
+}
+
+.m89-path-node .m89-path-dot {
+  color: var(--color-ink-300);
+}
+
+.m89-path-dimension {
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  font-weight: 500;
+  color: var(--color-ink-500);
+}
+
+.m89-path-node.completed .m89-path-dimension {
+  color: var(--color-truth-strong);
+}
+
+.m89-path-node.current .m89-path-dimension {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.m89-path-connector {
+  padding: 4px 0 4px 36px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.m89-path-connector.active {
+  border-left: 2px solid var(--color-accent);
+}
+
+.m89-path-connector:not(.active) {
+  border-left: 2px solid var(--color-paper-300);
+}
+
+.m89-path-connector-reason {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  color: var(--color-ink-500);
+  line-height: 1.5;
+  padding-left: 12px;
+}
+
+/* ── Action Card ── */
+
+.m89-action-card {
+  background: var(--color-paper-200);
+  border-radius: var(--r-lg);
+  padding: 24px 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.m89-action-hook {
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: var(--color-ink-500);
+  margin: 0 0 16px;
+}
+
+.m89-action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.m89-btn-primary {
+  font-family: var(--sans);
+  background: var(--color-accent);
+  color: var(--color-paper-50);
+  border: none;
+  border-radius: var(--r-md);
+  padding: 10px 24px;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.m89-btn-primary:hover {
+  background: var(--color-accent);
+  box-shadow: var(--shadow-gold);
+}
+
+.m89-btn-secondary {
+  font-family: var(--sans);
+  background: transparent;
+  color: var(--color-ink-500);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--r-md);
+  padding: 10px 24px;
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.m89-btn-secondary:hover {
+  background: var(--color-paper-200);
+  border-color: var(--color-paper-300);
+}

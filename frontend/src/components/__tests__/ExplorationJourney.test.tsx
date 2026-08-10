@@ -7,11 +7,6 @@ import ExplorationJourney, {
   buildJourney,
   type JourneyWhyPayload,
 } from '../ExplorationJourney'
-import {
-  RecommendationPanelView,
-  buildRecommendationContext,
-  type RecommendationItem,
-} from '../RecommendationPanel'
 import type { NavNode } from '../navigation'
 
 const render = (el: ReactElement) => r2s(<LocaleProvider>{el}</LocaleProvider>)
@@ -26,37 +21,18 @@ function entityNode(): NavNode {
   return { type: 'entity', id: 'roman_empire:augustus', name: 'Augustus' }
 }
 
+// A3 red-line: the "why" annotation is now shaped after ExplorationAction
+// (Knowledge Progression), NOT a RecommendationResult. No relation_path, no
+// score, no candidate_source — only the cognitive-action fields.
 function whyPayload(): JourneyWhyPayload {
   return {
     fromGlobalId: 'roman_empire:augustus',
     fromName: 'Augustus',
-    relationPath: [
-      {
-        from: 'roman_empire:augustus',
-        to: 'roman_empire:octavian',
-        relationship: 'influenced',
-        direction: 'outgoing',
-        weight: 0.9,
-      },
-    ],
     reasons: ['Same dynasty successor.', 'Linked by influence.'],
-    score: 0.82,
-    candidateSource: 'direct',
+    actionType: 'follow_cause',
+    narrativeHook: 'You understood Augustus — but do you know how he shaped Octavian?',
+    confidence: 0.85,
     capturedAt: '2026-07-22T00:00:00.000Z',
-  }
-}
-
-// Sample recommendation item (mirrors backend RecommendationResult.to_dict).
-function rec(global_id: string, name: string, type: string, reasons: string[]): RecommendationItem {
-  return {
-    target_entity: { global_id, name, type },
-    score: 0.82,
-    score_breakdown: { relationship: 0.4, temporal: 0.25 },
-    reasons,
-    relation_path: [
-      { from: 'roman_empire:augustus', to: global_id, relationship: 'influenced', direction: 'outgoing', weight: 0.9 },
-    ],
-    metadata: { depth: 1, candidate_source: 'direct', entity_type: type },
   }
 }
 
@@ -92,6 +68,7 @@ describe('buildJourney (M9-003 pure derivation)', () => {
     expect(out[0].incomingWhy).toBeNull() // topic never annotated
     expect(out[1].incomingWhy).not.toBeNull()
     expect(out[1].incomingWhy?.reasons).toEqual(['Same dynasty successor.', 'Linked by influence.'])
+    expect(out[1].incomingWhy?.actionType).toBe('follow_cause')
   })
 
   it('is pure: does not mutate the input history or the reasons map', () => {
@@ -125,7 +102,7 @@ describe('ExplorationJourneyView (M9-003 presentational)', () => {
     expect(html).not.toContain('he-journey-why')
   })
 
-  it('injects the recommendation payload (reasons + relation path) into the journey', () => {
+  it('injects the why payload (reasons + narrative hook) into the journey', () => {
     const reasons = new Map<string, JourneyWhyPayload>([['roman_empire:augustus', whyPayload()]])
     const html = render(
       <ExplorationJourneyView entries={buildJourney([topicNode(), entityNode()], 1, reasons)} />,
@@ -133,8 +110,10 @@ describe('ExplorationJourneyView (M9-003 presentational)', () => {
     expect(html).toContain('he-journey-why')
     expect(html).toContain('Same dynasty successor.')
     expect(html).toContain('Linked by influence.')
-    expect(html).toContain('influenced') // relation_path relationship
-    expect(html).toContain('经由 Augustus') // fromName
+    // A3 red-line: the narrative hook (not a relation_path) carries the "why".
+    expect(html).toContain('he-journey-hook')
+    expect(html).toContain('shaped Octavian') // narrativeHook fragment
+    expect(html).toContain('经由 Augustus') // fromName via
   })
 
   it('degrades gracefully when a node has no payload (label still shows)', () => {
@@ -167,30 +146,5 @@ describe('ExplorationJourney container (M9-003 navigation ownership)', () => {
     const html = render(<ExplorationJourney history={history} cursor={1} journeyReasons={new Map()} onStepClick={() => {}} />)
     expect(html).toContain('返回 Roman Empire')
     expect(html).toContain('当前：Augustus')
-  })
-})
-
-// --- Producer contract (RecommendationPanel -> context -> Journey) ---
-
-describe('buildRecommendationContext (M9-003 producer contract)', () => {
-  it('extracts the why fields from a recommendation item', () => {
-    const item = rec('roman_empire:octavian', 'Octavian', 'person', ['Same dynasty successor.'])
-    const ctx = buildRecommendationContext(item)
-    expect(ctx.source).toBe('recommendation')
-    expect(ctx.reasons).toEqual(item.reasons)
-    expect(ctx.relation_path).toEqual(item.relation_path)
-    expect(ctx.score).toBe(item.score)
-    expect(ctx.candidateSource).toBe(item.metadata.candidate_source)
-  })
-
-  it('keeps RecommendationPanelView backward compatible (1-arg onNodeClick still works)', () => {
-    const items = [rec('roman_empire:octavian', 'Octavian', 'person', ['Same dynasty successor.'])]
-    const html = render(<RecommendationPanelView recommendations={items} onNodeClick={() => {}} />)
-    // Route-compatibility contract preserved: each card still binds the engine
-    // target via aria-label. The new 2nd context arg is passed internally but
-    // must not alter the rendered markup.
-    expect(html).toContain('aria-label="探索 Octavian"')
-    expect(html).toContain('Octavian')
-    expect(html).toContain('influenced')
   })
 })

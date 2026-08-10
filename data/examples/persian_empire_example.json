@@ -1,12 +1,13 @@
 {
-  "title": "Persian Empire — Cyrus to Alexander",
-  "summary": "The Achaemenid superpower that linked the Near East to Greece, Egypt, and the Silk Road.",
+  "title": "波斯帝国 — 从居鲁士到亚历山大",
+  "summary": "连接近东与希腊、埃及和丝绸之路的阿契美尼德超级大国。",
+  "category": "Civilization",
   "entities": [
     {
       "id": "civ-persian",
       "type": "Civilization",
       "name": "Achaemenid Persian Empire",
-      "description": "The first Persian Empire (c. 550-330 BC), founded by Cyrus and the largest of the ancient Near East.",
+      "description": "第一个波斯帝国（约公元前550-330年），由居鲁士创建，当时世界上最大的帝国。e ancient Near East.",
       "global_id": "persian_empire:civ-persian",
       "aliases": [
         "Persia",
@@ -14,7 +15,8 @@
       ],
       "labels": {
         "en": "Achaemenid Persian Empire",
-        "fa": "Shāhanshāhī-ye Hakhāmaneshi"
+        "fa": "Shāhanshāhī-ye Hakhāmaneshi",
+        "zh": "阿契美尼德波斯帝国"
       },
       "start_date": {
         "value": -550,
@@ -41,14 +43,15 @@
       "id": "person-cyrus",
       "type": "Person",
       "name": "Cyrus the Great",
-      "description": "Founder of the Achaemenid Empire, who conquered Media, Lydia, and Babylon.",
+      "description": "阿契美尼德帝国的创建者，征服了米底、吕底亚和巴比伦。",
       "global_id": "persian_empire:person-cyrus",
       "aliases": [
         "Cyrus II"
       ],
       "labels": {
         "en": "Cyrus the Great",
-        "fa": "Kūrosh-e Bozorg"
+        "fa": "Kūrosh-e Bozorg",
+        "zh": "居鲁士大帝"
       },
       "start_date": {
         "value": -600,
@@ -89,13 +92,14 @@
       "id": "person-darius",
       "type": "Person",
       "name": "Darius I",
-      "description": "Third Achaemenid king who reorganized the empire and fought the Greeks at Marathon.",
+      "description": "第三位阿契美尼德国王，重组了帝国并在马拉松与希腊人作战。on.",
       "global_id": "persian_empire:person-darius",
       "aliases": [
         "Darius the Great"
       ],
       "labels": {
-        "en": "Darius I"
+        "en": "Darius I",
+        "zh": "大流士一世"
       },
       "start_date": {
         "value": -550,
@@ -132,13 +136,14 @@
       "id": "person-xerxes",
       "type": "Person",
       "name": "Xerxes I",
-      "description": "Son of Darius who invaded Greece and was checked at Salamis and Plataea.",
+      "description": "大流士之子，入侵希腊并在萨拉米斯和普拉提亚受阻。",
       "global_id": "persian_empire:person-xerxes",
       "aliases": [
         "Xerxes the Great"
       ],
       "labels": {
-        "en": "Xerxes I"
+        "en": "Xerxes I",
+        "zh": "薛西斯一世"
       },
       "start_date": {
         "value": -519,
@@ -175,13 +180,14 @@
       "id": "loc-persepolis",
       "type": "Location",
       "name": "Persepolis",
-      "description": "Ceremonial capital of the Achaemenid Empire in Fars, burned by Alexander in 330 BC.",
+      "description": "阿契美尼德帝国在法尔斯的礼仪首都，于公元前330年被亚历山大焚毁。 BC.",
       "global_id": "persian_empire:loc-persepolis",
       "aliases": [
         "Takht-e Jamshid"
       ],
       "labels": {
-        "en": "Persepolis"
+        "en": "Persepolis",
+        "zh": "波斯波利斯"
       },
       "start_date": null,
       "end_date": null,
@@ -198,13 +204,14 @@
       "id": "religion-zoroastrianism",
       "type": "Religion",
       "name": "Zoroastrianism",
-      "description": "The dualistic monotheistic faith of ancient Persia, founded by Zarathustra.",
+      "description": "古波斯的二元一神信仰，由琐罗亚斯德创立。",
       "global_id": "persian_empire:religion-zoroastrianism",
       "aliases": [
         "Mazdayasna"
       ],
       "labels": {
-        "en": "Zoroastrianism"
+        "en": "Zoroastrianism",
+        "zh": "琐罗亚斯德教"
       },
       "start_date": null,
       "end_date": null,
@@ -221,13 +228,14 @@
       "id": "person-zarathustra",
       "type": "Person",
       "name": "Zarathustra (Zoroaster)",
-      "description": "The prophet who revealed the Gathas and the worship of Ahura Mazda.",
+      "description": "启示《伽萨》并宣扬阿胡拉·马兹达崇拜的先知。",
       "global_id": "persian_empire:person-zarathustra",
       "aliases": [
         "Zoroaster"
       ],
       "labels": {
-        "en": "Zarathustra"
+        "en": "Zarathustra",
+        "zh": "琐罗亚斯德"
       },
       "start_date": {
         "value": -1000,
@@ -248,11 +256,12 @@
       "id": "tech-royal-road",
       "type": "Technology",
       "name": "Royal Road",
-      "description": "The Persian courier highway from Susa to Sardis enabling rapid communication.",
+      "description": "从苏萨到萨迪斯的波斯驿道，实现了快速通信。",
       "global_id": "persian_empire:tech-royal-road",
       "aliases": [],
       "labels": {
-        "en": "Royal Road"
+        "en": "Royal Road",
+        "zh": "王室大道"
       },
       "start_date": null,
       "end_date": null,
@@ -272,11 +281,12 @@
       "id": "event-cyrus-conquests",
       "type": "Event",
       "name": "Cyrus's Conquests",
-      "description": "Cyrus's campaigns that built the empire spanning Anatolia to Central Asia.",
+      "description": "居鲁士的征战，建立了横跨安纳托利亚至中亚的帝国。",
       "global_id": "persian_empire:event-cyrus-conquests",
       "aliases": [],
       "labels": {
-        "en": "Cyrus's Conquests"
+        "en": "Cyrus's Conquests",
+        "zh": "居鲁士的征服"
       },
       "start_date": null,
       "end_date": null,
@@ -294,11 +304,12 @@
       "id": "tp-achaemenid",
       "type": "Time Period",
       "name": "Achaemenid Era",
-      "description": "The period of Persian imperial dominance between Cyrus and Alexander.",
+      "description": "居鲁士与亚历山大之间的波斯帝国主导时期。",
       "global_id": "persian_empire:tp-achaemenid",
       "aliases": [],
       "labels": {
-        "en": "Achaemenid Era"
+        "en": "Achaemenid Era",
+        "zh": "阿契美尼德时代"
       },
       "start_date": {
         "value": -550,
@@ -320,26 +331,28 @@
       "id": "loc-susa",
       "type": "Location",
       "name": "Susa",
-      "description": "Ancient capital of Elam and a seasonal residence of the Achaemenid kings.",
+      "description": "埃兰古都，阿契美尼德国王的季节性居所。",
       "global_id": "persian_empire:loc-susa",
       "aliases": [
         "Shushan"
       ],
       "labels": {
-        "en": "Susa"
+        "en": "Susa",
+        "zh": "苏萨"
       }
     },
     {
       "id": "religion-mithra",
       "type": "Religion",
       "name": "Mithraism",
-      "description": "The Roman mystery cult of the god Mithra, with Persian-rooted imagery.",
+      "description": "罗马的密特拉神秘密崇拜，具有波斯根源的意象。",
       "global_id": "persian_empire:religion-mithra",
       "aliases": [
         "Cult of Mithras"
       ],
       "labels": {
-        "en": "Mithraism"
+        "en": "Mithraism",
+        "zh": "密特拉信仰"
       }
     }
   ],
@@ -533,6 +546,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "persian_empire:person-darius",
+      "target": "persian_empire:civ-persian",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "贝希斯敦铭文；希罗多德《历史》第三卷",
+      "evidence": [
+        "ec-pe-013"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "大流士即位性质的对立叙述：官方铭文自称神授平叛，希罗多德记载为合谋夺位，构成波斯帝国正统起源的解释分歧。",
+      "reviewed": true
     }
   ],
   "timeline": [

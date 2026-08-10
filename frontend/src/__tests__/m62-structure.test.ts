@@ -2,8 +2,10 @@
 // App.tsx must wrap the result view in narrative → interpretation →
 // supporting tiers in DOM order, and expose view toggles.
 //
-// M65 Phase 1: internal JSX of the three rendering branches is UNCHANGED,
-// so source-code string check remains valid and lightweight.
+// Wave2-#140: M85 replaced the data-tier="*" attributes with ExplorerShell
+// slots (narrativeSection / interpretationSection / supportingSection).
+// The three-tier contract is unchanged — assertions now anchor on the
+// slot names in DOM order.
 
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
@@ -15,12 +17,12 @@ const src = readFileSync(APP, 'utf8')
 
 describe('M62 — three-tier narrative structure in App.tsx', () => {
   it('wraps the result view in narrative/interpretation/supporting tiers in DOM order', () => {
-    expect(src).toContain('data-tier="narrative"')
-    expect(src).toContain('data-tier="interpretation"')
-    expect(src).toContain('data-tier="supporting"')
-    const ni = src.indexOf('data-tier="narrative"')
-    const ii = src.indexOf('data-tier="interpretation"')
-    const si = src.indexOf('data-tier="supporting"')
+    expect(src).toContain('narrativeSection={')
+    expect(src).toContain('interpretationSection={')
+    expect(src).toContain('supportingSection={')
+    const ni = src.indexOf('narrativeSection={')
+    const ii = src.indexOf('interpretationSection={')
+    const si = src.indexOf('supportingSection={')
     expect(ni).toBeLessThan(ii)
     expect(ii).toBeLessThan(si)
   })
@@ -31,9 +33,11 @@ describe('M62 — three-tier narrative structure in App.tsx', () => {
     expect(src).toContain('setTimeView')
   })
 
-  // M65 Phase 1: invariant — ExplorationShell must exist
-  it('uses slot-based ExplorationShell layout', () => {
-    expect(src).toContain('ExplorationShell')
-    expect(src).toContain('companion={<CompanionShell')
+  // M65 Phase 1: invariant — ExplorerShell must exist
+  // Wave2-#140: M85.11 renamed the shell to ExplorerShell and the companion
+  // slot to companionDock; assertions aligned to the shipped structure.
+  it('uses slot-based ExplorerShell layout', () => {
+    expect(src).toContain('ExplorerShell')
+    expect(src).toContain('companionDock={<CompanionShell')
   })
 })

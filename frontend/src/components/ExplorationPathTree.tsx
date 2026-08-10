@@ -23,6 +23,7 @@
 import type { NavNode } from './navigation'
 import type { JourneyWhyPayload } from './ExplorationJourney'
 import { useLocale } from '../data/locale'
+import { getCausalObjectName } from '../data/causalObjectNames'
 
 // The "why this stop was reached" annotation, captured when the user follows a
 // recommendation. It is an enrichment layer over navigation — never a source
@@ -46,7 +47,9 @@ export type PathTreeEntry = {
 // are keyed by their global_id (`node.id`); topics never carry a why
 // (recommendations are entity-only) and resolve to null.
 function reasonKey(node: NavNode): string {
-  return node.type === 'entity' ? node.id : node.topic
+  if (node.type === 'entity') return node.id
+  if (node.type === 'causal_object') return node.objectId
+  return node.topic
 }
 
 // Build the path-tree entries from App's navigation history + the why-annotation
@@ -59,10 +62,10 @@ export function buildPathTree(
 ): PathTreeEntry[] {
   return history.map((node, i) => {
     const id = reasonKey(node)
-    const label = node.type === 'entity' ? node.name : node.title
+    const label = node.type === 'entity' ? node.name : node.type === 'causal_object' ? getCausalObjectName(node.objectId) : node.title
     return {
       key: `${node.type}:${id}:${i}`,
-      type: node.type,
+      type: node.type as PathTreeEntry['type'],
       id,
       label,
       index: i,

@@ -5,6 +5,7 @@
       "type": "official",
       "visibility": "public",
       "status": "featured",
+      "category": "Civilization",
       "title": {
         "zh": "中国文明演化探索包 V1",
         "en": "China Civilization Evolution Package V1"
@@ -33,22 +34,86 @@
         "china_v1:event-keju-established"
       ],
       "relationship_paths": [
-        { "from": "china_v1:tp-tang", "to": "china_v1:tp-song", "type": "before", "evidence": ["ec-cn-011"] },
-        { "from": "china_v1:tp-song", "to": "china_v1:tp-yuan", "type": "before" },
-        { "from": "china_v1:tp-yuan", "to": "china_v1:tp-ming", "type": "before" },
-        { "from": "china_v1:tp-ming", "to": "china_v1:tp-qing", "type": "before" },
-        { "from": "china_v1:idea-keju", "to": "china_v1:idea-wenguan", "type": "inherited", "evidence": ["ec-cn-001"] },
-        { "from": "china_v1:idea-wenguan", "to": "china_v1:idea-neige", "type": "inherited", "evidence": ["ec-cn-002"] },
-        { "from": "china_v1:event-jingnan", "to": "china_v1:idea-neige", "type": "influenced", "evidence": ["ec-cn-012"] },
-        { "from": "china_v1:person-song-taizu", "to": "china_v1:idea-wenguan", "type": "influenced", "evidence": ["ec-cn-002"] },
-        { "from": "china_v1:event-keju-established", "to": "china_v1:idea-keju", "type": "caused", "evidence": ["ec-cn-001"] }
+        {
+          "from": "china_v1:tp-tang",
+          "to": "china_v1:tp-song",
+          "type": "before",
+          "evidence": [
+            "ec-cn-011"
+          ]
+        },
+        {
+          "from": "china_v1:tp-song",
+          "to": "china_v1:tp-yuan",
+          "type": "before"
+        },
+        {
+          "from": "china_v1:tp-yuan",
+          "to": "china_v1:tp-ming",
+          "type": "before"
+        },
+        {
+          "from": "china_v1:tp-ming",
+          "to": "china_v1:tp-qing",
+          "type": "before"
+        },
+        {
+          "from": "china_v1:idea-keju",
+          "to": "china_v1:idea-wenguan",
+          "type": "inherited",
+          "evidence": [
+            "ec-cn-001"
+          ]
+        },
+        {
+          "from": "china_v1:idea-wenguan",
+          "to": "china_v1:idea-neige",
+          "type": "inherited",
+          "evidence": [
+            "ec-cn-002"
+          ]
+        },
+        {
+          "from": "china_v1:event-jingnan",
+          "to": "china_v1:idea-neige",
+          "type": "influenced",
+          "evidence": [
+            "ec-cn-012"
+          ]
+        },
+        {
+          "from": "china_v1:person-song-taizu",
+          "to": "china_v1:idea-wenguan",
+          "type": "influenced",
+          "evidence": [
+            "ec-cn-002"
+          ]
+        },
+        {
+          "from": "china_v1:event-keju-established",
+          "to": "china_v1:idea-keju",
+          "type": "caused",
+          "evidence": [
+            "ec-cn-001"
+          ]
+        }
       ],
       "timeline_slices": [
-        { "entity": "china_v1:tp-tang" },
-        { "entity": "china_v1:tp-song" },
-        { "entity": "china_v1:tp-yuan" },
-        { "entity": "china_v1:tp-ming" },
-        { "entity": "china_v1:tp-qing" }
+        {
+          "entity": "china_v1:tp-tang"
+        },
+        {
+          "entity": "china_v1:tp-song"
+        },
+        {
+          "entity": "china_v1:tp-yuan"
+        },
+        {
+          "entity": "china_v1:tp-ming"
+        },
+        {
+          "entity": "china_v1:tp-qing"
+        }
       ],
       "source_references": [
         "src-cn-textbook",
@@ -60,19 +125,29 @@
         {
           "kind": "entity",
           "ref": "china_v1:idea-lixue",
-          "label": { "zh": "宋代理学", "en": "Song Neo-Confucianism" }
+          "label": {
+            "zh": "宋代理学",
+            "en": "Song Neo-Confucianism"
+          }
         },
         {
           "kind": "entity",
           "ref": "china_v1:tech-hanghai",
-          "label": { "zh": "明代航海技术", "en": "Ming Maritime Technology" }
+          "label": {
+            "zh": "明代航海技术",
+            "en": "Ming Maritime Technology"
+          }
         },
         {
           "kind": "package",
           "ref": "india-classical-civilization",
-          "label": { "zh": "印度文明探索包 V1（佛教的印度起源）", "en": "India Classical Civilization Package V1 (Buddhism's Indian origins)" }
+          "label": {
+            "zh": "印度文明探索包 V1（佛教的印度起源）",
+            "en": "India Classical Civilization Package V1 (Buddhism's Indian origins)"
+          }
         }
-      ]
+      ],
+      "placement": "understand"
     },
     {
       "slug": "silk-road-exploration",
@@ -107,19 +182,60 @@
         "silk_road:idea-chinese-language"
       ],
       "relationship_paths": [
-        { "from": "silk_road:person-zhang-qian", "to": "silk_road:event-silk-road-opened", "type": "participated_in" },
-        { "from": "silk_road:event-silk-road-opened", "to": "silk_road:loc-chang-an", "type": "located_at" },
-        { "from": "silk_road:han_dynasty", "to": "silk_road:tech-paper", "type": "invented" },
-        { "from": "silk_road:tech-paper", "to": "roman_empire:civ-roman", "type": "spread" },
-        { "from": "silk_road:tech-silk", "to": "roman_empire:civ-roman", "type": "spread" },
-        { "from": "silk_road:silk_road", "to": "roman_empire:civ-roman", "type": "traded_with" },
-        { "from": "silk_road:silk_road", "to": "silk_road:han_dynasty", "type": "traded_with" },
-        { "from": "ancient_india:religion-buddhism", "to": "silk_road:silk_road", "type": "spread", "evidence": ["ec-023"] }
+        {
+          "from": "silk_road:person-zhang-qian",
+          "to": "silk_road:event-silk-road-opened",
+          "type": "participated_in"
+        },
+        {
+          "from": "silk_road:event-silk-road-opened",
+          "to": "silk_road:loc-chang-an",
+          "type": "located_at"
+        },
+        {
+          "from": "silk_road:han_dynasty",
+          "to": "silk_road:tech-paper",
+          "type": "invented"
+        },
+        {
+          "from": "silk_road:tech-paper",
+          "to": "roman_empire:civ-roman",
+          "type": "spread"
+        },
+        {
+          "from": "silk_road:tech-silk",
+          "to": "roman_empire:civ-roman",
+          "type": "spread"
+        },
+        {
+          "from": "silk_road:silk_road",
+          "to": "roman_empire:civ-roman",
+          "type": "traded_with"
+        },
+        {
+          "from": "silk_road:silk_road",
+          "to": "silk_road:han_dynasty",
+          "type": "traded_with"
+        },
+        {
+          "from": "ancient_india:religion-buddhism",
+          "to": "silk_road:silk_road",
+          "type": "spread",
+          "evidence": [
+            "ec-023"
+          ]
+        }
       ],
       "timeline_slices": [
-        { "entity": "silk_road:person-zhang-qian" },
-        { "entity": "silk_road:event-silk-road-opened" },
-        { "entity": "silk_road:tech-paper" }
+        {
+          "entity": "silk_road:person-zhang-qian"
+        },
+        {
+          "entity": "silk_road:event-silk-road-opened"
+        },
+        {
+          "entity": "silk_road:tech-paper"
+        }
       ],
       "source_references": [
         "src-silk-road-archives",
@@ -130,19 +246,29 @@
         {
           "kind": "entity",
           "ref": "roman_empire:civ-roman",
-          "label": { "zh": "罗马帝国（丝路西端）", "en": "Roman Empire (western terminus)" }
+          "label": {
+            "zh": "罗马帝国（丝路西端）",
+            "en": "Roman Empire (western terminus)"
+          }
         },
         {
           "kind": "entity",
           "ref": "ancient_india:religion-buddhism",
-          "label": { "zh": "佛教的印度起源", "en": "Buddhism's Indian origins" }
+          "label": {
+            "zh": "佛教的印度起源",
+            "en": "Buddhism's Indian origins"
+          }
         },
         {
           "kind": "package",
           "ref": "china-civilization-v1",
-          "label": { "zh": "中国文明演化探索包 V1", "en": "China Civilization Evolution Package V1" }
+          "label": {
+            "zh": "中国文明演化探索包 V1",
+            "en": "China Civilization Evolution Package V1"
+          }
         }
-      ]
+      ],
+      "placement": "understand"
     },
     {
       "slug": "roman-empire-exploration",
@@ -178,25 +304,112 @@
         "roman_empire:religion-christianity"
       ],
       "relationship_paths": [
-        { "from": "roman_empire:tp-republic", "to": "roman_empire:tp-27bc", "type": "before", "evidence": ["ec-rom-032"] },
-        { "from": "roman_empire:event-republic-end", "to": "roman_empire:event-roman-empire-established", "type": "caused" },
-        { "from": "roman_empire:person-augustus", "to": "roman_empire:event-roman-empire-established", "type": "participated_in", "evidence": ["ec-rom-021"] },
-        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:civ-roman", "type": "related_to", "evidence": ["ec-rom-022"] },
-        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:tp-27bc", "type": "related_to", "evidence": ["ec-rom-024"] },
-        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:event-pax-romana", "type": "caused" },
-        { "from": "roman_empire:event-roman-empire-established", "to": "roman_empire:event-empire-fall", "type": "before" },
-        { "from": "roman_empire:civ-roman", "to": "roman_empire:religion-christianity", "type": "practiced", "evidence": ["ec-rom-030"] },
-        { "from": "roman_empire:person-constantine", "to": "roman_empire:event-edict-milan", "type": "participated_in", "evidence": ["ec-rom-036"] },
-        { "from": "roman_empire:event-edict-milan", "to": "roman_empire:religion-christianity", "type": "related_to", "evidence": ["ec-rom-037"] },
-        { "from": "roman_empire:event-empire-fall", "to": "roman_empire:civ-byzantine", "type": "influenced" },
-        { "from": "roman_empire:civ-byzantine", "to": "roman_empire:civ-roman", "type": "inherited", "evidence": ["ec-rom-029"] },
-        { "from": "roman_empire:civ-roman", "to": "silk_road:silk_road", "type": "traded_with", "evidence": ["ec-rom-027"] }
+        {
+          "from": "roman_empire:tp-republic",
+          "to": "roman_empire:tp-27bc",
+          "type": "before",
+          "evidence": [
+            "ec-rom-032"
+          ]
+        },
+        {
+          "from": "roman_empire:event-republic-end",
+          "to": "roman_empire:event-roman-empire-established",
+          "type": "caused"
+        },
+        {
+          "from": "roman_empire:person-augustus",
+          "to": "roman_empire:event-roman-empire-established",
+          "type": "participated_in",
+          "evidence": [
+            "ec-rom-021"
+          ]
+        },
+        {
+          "from": "roman_empire:event-roman-empire-established",
+          "to": "roman_empire:civ-roman",
+          "type": "related_to",
+          "evidence": [
+            "ec-rom-022"
+          ]
+        },
+        {
+          "from": "roman_empire:event-roman-empire-established",
+          "to": "roman_empire:tp-27bc",
+          "type": "related_to",
+          "evidence": [
+            "ec-rom-024"
+          ]
+        },
+        {
+          "from": "roman_empire:event-roman-empire-established",
+          "to": "roman_empire:event-pax-romana",
+          "type": "caused"
+        },
+        {
+          "from": "roman_empire:event-roman-empire-established",
+          "to": "roman_empire:event-empire-fall",
+          "type": "before"
+        },
+        {
+          "from": "roman_empire:civ-roman",
+          "to": "roman_empire:religion-christianity",
+          "type": "practiced",
+          "evidence": [
+            "ec-rom-030"
+          ]
+        },
+        {
+          "from": "roman_empire:person-constantine",
+          "to": "roman_empire:event-edict-milan",
+          "type": "participated_in",
+          "evidence": [
+            "ec-rom-036"
+          ]
+        },
+        {
+          "from": "roman_empire:event-edict-milan",
+          "to": "roman_empire:religion-christianity",
+          "type": "related_to",
+          "evidence": [
+            "ec-rom-037"
+          ]
+        },
+        {
+          "from": "roman_empire:event-empire-fall",
+          "to": "roman_empire:civ-byzantine",
+          "type": "influenced"
+        },
+        {
+          "from": "roman_empire:civ-byzantine",
+          "to": "roman_empire:civ-roman",
+          "type": "inherited",
+          "evidence": [
+            "ec-rom-029"
+          ]
+        },
+        {
+          "from": "roman_empire:civ-roman",
+          "to": "silk_road:silk_road",
+          "type": "traded_with",
+          "evidence": [
+            "ec-rom-027"
+          ]
+        }
       ],
       "timeline_slices": [
-        { "entity": "roman_empire:tp-republic" },
-        { "entity": "roman_empire:tp-27bc" },
-        { "entity": "roman_empire:event-roman-empire-established" },
-        { "entity": "roman_empire:event-empire-fall" }
+        {
+          "entity": "roman_empire:tp-republic"
+        },
+        {
+          "entity": "roman_empire:tp-27bc"
+        },
+        {
+          "entity": "roman_empire:event-roman-empire-established"
+        },
+        {
+          "entity": "roman_empire:event-empire-fall"
+        }
       ],
       "source_references": [
         "src-cah",
@@ -208,19 +421,29 @@
         {
           "kind": "entity",
           "ref": "silk_road:silk_road",
-          "label": { "zh": "丝绸之路（罗马的东方贸易）", "en": "Silk Road (Rome's eastern trade)" }
+          "label": {
+            "zh": "丝绸之路（罗马的东方贸易）",
+            "en": "Silk Road (Rome's eastern trade)"
+          }
         },
         {
           "kind": "entity",
           "ref": "hellenistic_world:civ-greek",
-          "label": { "zh": "希腊化世界（罗马的文化源头）", "en": "Hellenistic world (Roman cultural root)" }
+          "label": {
+            "zh": "希腊化世界（罗马的文化源头）",
+            "en": "Hellenistic world (Roman cultural root)"
+          }
         },
         {
           "kind": "package",
           "ref": "silk-road-exploration",
-          "label": { "zh": "丝绸之路探索包 V1", "en": "Silk Road Exploration Package V1" }
+          "label": {
+            "zh": "丝绸之路探索包 V1",
+            "en": "Silk Road Exploration Package V1"
+          }
         }
-      ]
+      ],
+      "placement": "understand"
     },
     {
       "slug": "india-classical-civilization",
@@ -257,25 +480,88 @@
         "ancient_india:person-aryabhata"
       ],
       "relationship_paths": [
-        { "from": "ancient_india:tp-maurya", "to": "ancient_india:tp-guupta", "type": "before" },
-        { "from": "ancient_india:person-chandragupta", "to": "ancient_india:civ-maurya", "type": "ruled" },
-        { "from": "ancient_india:person-ashoka", "to": "ancient_india:civ-maurya", "type": "ruled" },
-        { "from": "ancient_india:civ-maurya", "to": "ancient_india:religion-buddhism", "type": "practiced" },
-        { "from": "ancient_india:person-siddhartha", "to": "ancient_india:religion-buddhism", "type": "influenced" },
-        { "from": "ancient_india:person-siddhartha", "to": "ancient_india:idea-dharma", "type": "influenced" },
-        { "from": "ancient_india:person-ashoka", "to": "ancient_india:idea-dharma", "type": "influenced" },
-        { "from": "ancient_india:idea-dharma", "to": "ancient_india:religion-buddhism", "type": "influenced" },
-        { "from": "ancient_india:religion-buddhism", "to": "silk_road:silk_road", "type": "spread", "evidence": ["ec-023"] },
-        { "from": "ancient_india:religion-buddhism", "to": "silk_road:han_dynasty", "type": "spread" },
-        { "from": "ancient_india:civ-maurya", "to": "persian_empire:civ-persian", "type": "contemporary_with" },
-        { "from": "ancient_india:tech-zero", "to": "ancient_india:person-aryabhata", "type": "invented" },
-        { "from": "ancient_india:person-kalidasa", "to": "ancient_india:person-aryabhata", "type": "related_to" }
+        {
+          "from": "ancient_india:tp-maurya",
+          "to": "ancient_india:tp-guupta",
+          "type": "before"
+        },
+        {
+          "from": "ancient_india:person-chandragupta",
+          "to": "ancient_india:civ-maurya",
+          "type": "ruled"
+        },
+        {
+          "from": "ancient_india:person-ashoka",
+          "to": "ancient_india:civ-maurya",
+          "type": "ruled"
+        },
+        {
+          "from": "ancient_india:civ-maurya",
+          "to": "ancient_india:religion-buddhism",
+          "type": "practiced"
+        },
+        {
+          "from": "ancient_india:person-siddhartha",
+          "to": "ancient_india:religion-buddhism",
+          "type": "influenced"
+        },
+        {
+          "from": "ancient_india:person-siddhartha",
+          "to": "ancient_india:idea-dharma",
+          "type": "influenced"
+        },
+        {
+          "from": "ancient_india:person-ashoka",
+          "to": "ancient_india:idea-dharma",
+          "type": "influenced"
+        },
+        {
+          "from": "ancient_india:idea-dharma",
+          "to": "ancient_india:religion-buddhism",
+          "type": "influenced"
+        },
+        {
+          "from": "ancient_india:religion-buddhism",
+          "to": "silk_road:silk_road",
+          "type": "spread",
+          "evidence": [
+            "ec-023"
+          ]
+        },
+        {
+          "from": "ancient_india:religion-buddhism",
+          "to": "silk_road:han_dynasty",
+          "type": "spread"
+        },
+        {
+          "from": "ancient_india:civ-maurya",
+          "to": "persian_empire:civ-persian",
+          "type": "contemporary_with"
+        },
+        {
+          "from": "ancient_india:tech-zero",
+          "to": "ancient_india:person-aryabhata",
+          "type": "invented"
+        },
+        {
+          "from": "ancient_india:person-kalidasa",
+          "to": "ancient_india:person-aryabhata",
+          "type": "related_to"
+        }
       ],
       "timeline_slices": [
-        { "entity": "ancient_india:tp-maurya" },
-        { "entity": "ancient_india:event-kalinga-war" },
-        { "entity": "ancient_india:tp-guupta" },
-        { "entity": "ancient_india:person-aryabhata" }
+        {
+          "entity": "ancient_india:tp-maurya"
+        },
+        {
+          "entity": "ancient_india:event-kalinga-war"
+        },
+        {
+          "entity": "ancient_india:tp-guupta"
+        },
+        {
+          "entity": "ancient_india:person-aryabhata"
+        }
       ],
       "source_references": [
         "src-thapar-early-india",
@@ -286,19 +572,960 @@
         {
           "kind": "package",
           "ref": "silk-road-exploration",
-          "label": { "zh": "丝绸之路探索包 V1（佛教东传之路）", "en": "Silk Road Exploration Package V1 (Buddhism's eastern route)" }
+          "label": {
+            "zh": "丝绸之路探索包 V1（佛教东传之路）",
+            "en": "Silk Road Exploration Package V1 (Buddhism's eastern route)"
+          }
         },
         {
           "kind": "package",
           "ref": "roman-empire-exploration",
-          "label": { "zh": "罗马帝国探索包 V1（同时代的西方帝国）", "en": "Roman Empire Exploration Package V1 (the contemporary western empire)" }
+          "label": {
+            "zh": "罗马帝国探索包 V1（同时代的西方帝国）",
+            "en": "Roman Empire Exploration Package V1 (the contemporary western empire)"
+          }
         },
         {
           "kind": "entity",
           "ref": "silk_road:han_dynasty",
-          "label": { "zh": "汉朝（佛教传入之地）", "en": "Han Dynasty (where Buddhism arrived)" }
+          "label": {
+            "zh": "汉朝（佛教传入之地）",
+            "en": "Han Dynasty (where Buddhism arrived)"
+          }
         }
-      ]
+      ],
+      "placement": "understand"
+    },
+    {
+      "slug": "textbook-cn-history-v1",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Textbook",
+      "title": {
+        "zh": "人教版《中国历史》抽样包 V1（史前—夏商周）",
+        "en": "PEP Chinese History Textbook Sample Package V1 (Prehistory–Zhou)"
+      },
+      "summary": {
+        "zh": "抽取人教社《中国历史》七年级上册第一、二单元（史前时期、夏商周时期）的核心事实，构建从早期人类、农耕起源到王朝更替、制度初创的可探索知识网络。",
+        "en": "Extracts the core facts of Units 1–2 (Prehistory; Xia–Shang–Zhou) from the PEP junior-high history textbook into an explorable knowledge network."
+      },
+      "seed_topic": "textbook_cn_history_v1",
+      "exploration_goals": {
+        "zh": "了解中国早期文明的演进：从史前人类与农耕起源，到夏商周王朝更替与制度初创（禅让、分封、百家争鸣）。",
+        "en": "Understand the evolution of early Chinese civilization: from prehistoric humans and agricultural origins to dynastic succession and institutional beginnings (abdication, fengjian, hundred schools)."
+      },
+      "entity_references": [
+        "tb_cn_v1:tp-xia",
+        "tb_cn_v1:tp-shang",
+        "tb_cn_v1:tp-zhou-west",
+        "tb_cn_v1:civ-huaxia",
+        "tb_cn_v1:person-yu",
+        "tb_cn_v1:person-kongzi",
+        "tb_cn_v1:tech-jiaguwen",
+        "tb_cn_v1:idea-fengjian",
+        "tb_cn_v1:idea-rujia"
+      ],
+      "relationship_paths": [
+        {
+          "from": "tb_cn_v1:tp-prehistory",
+          "to": "tb_cn_v1:tp-xia",
+          "type": "before"
+        },
+        {
+          "from": "tb_cn_v1:tp-xia",
+          "to": "tb_cn_v1:tp-shang",
+          "type": "before"
+        },
+        {
+          "from": "tb_cn_v1:tp-shang",
+          "to": "tb_cn_v1:tp-zhou-west",
+          "type": "before"
+        },
+        {
+          "from": "tb_cn_v1:tp-zhou-west",
+          "to": "tb_cn_v1:tp-spring-autumn",
+          "type": "before"
+        },
+        {
+          "from": "tb_cn_v1:tp-spring-autumn",
+          "to": "tb_cn_v1:tp-warring-states",
+          "type": "before"
+        },
+        {
+          "from": "tb_cn_v1:person-kongzi",
+          "to": "tb_cn_v1:idea-rujia",
+          "type": "influenced"
+        },
+        {
+          "from": "tb_cn_v1:tp-zhou-west",
+          "to": "tb_cn_v1:idea-fengjian",
+          "type": "practiced"
+        }
+      ],
+      "timeline_slices": [
+        {
+          "entity": "tb_cn_v1:tp-xia"
+        },
+        {
+          "entity": "tb_cn_v1:tp-shang"
+        },
+        {
+          "entity": "tb_cn_v1:tp-zhou-west"
+        },
+        {
+          "entity": "tb_cn_v1:tp-warring-states"
+        }
+      ],
+      "source_references": [
+        "src-cn-textbook"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "package",
+          "ref": "china-civilization-v1",
+          "label": {
+            "zh": "中国文明演化探索包 V1（唐—清，接续本包时段）",
+            "en": "China Civilization Evolution Package V1 (Tang–Qing, continues this timeline)"
+          }
+        }
+      ],
+      "placement": "understand"
+    },
+    {
+      "slug": "persian-empire-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Civilization",
+      "title": {
+        "zh": "波斯帝国探索包 V1",
+        "en": "Persian Empire Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从居鲁士建国到大流士改革、薛西斯远征，沿着王室大道与琐罗亚斯德教的传播，理解第一个横跨亚非欧的世界性帝国如何运转、又为何在亚历山大大帝面前崩溃。",
+        "en": "From Cyrus founding the empire to Darius reforms and Xerxes expedition, follow the Royal Road and the spread of Zoroastrianism to understand how the first world-empire spanning Asia, Africa and Europe operated and why it fell to Alexander."
+      },
+      "seed_topic": "persian_empire",
+      "exploration_goals": {
+        "zh": "搞懂阿契美尼德帝国的统治术：行省与驿道如何支撑庞大疆域、琐罗亚斯德教如何成为帝国宗教、以及波斯为何在希波战争与亚历山大征服中走向终结。",
+        "en": "Understand Achaemenid statecraft: how satrapies and the Royal Road sustained a vast realm, how Zoroastrianism became the imperial religion, and why Persia ended in the Greco-Persian wars and Alexander conquest."
+      },
+      "entity_references": [
+        "persian_empire:civ-persian",
+        "persian_empire:person-cyrus",
+        "persian_empire:person-darius",
+        "persian_empire:person-xerxes",
+        "persian_empire:loc-persepolis",
+        "persian_empire:religion-zoroastrianism",
+        "persian_empire:person-zarathustra",
+        "persian_empire:tech-royal-road",
+        "persian_empire:event-cyrus-conquests",
+        "persian_empire:tp-achaemenid"
+      ],
+      "relationship_paths": [
+        {
+          "from": "persian_empire:person-cyrus",
+          "to": "persian_empire:event-cyrus-conquests",
+          "type": "participated_in",
+          "evidence": [
+            "ec-pe-002"
+          ]
+        },
+        {
+          "from": "persian_empire:event-cyrus-conquests",
+          "to": "persian_empire:civ-persian",
+          "type": "caused",
+          "evidence": [
+            "ec-pe-001"
+          ]
+        },
+        {
+          "from": "persian_empire:person-cyrus",
+          "to": "persian_empire:civ-persian",
+          "type": "ruled",
+          "evidence": [
+            "ec-pe-002"
+          ]
+        },
+        {
+          "from": "persian_empire:person-darius",
+          "to": "persian_empire:civ-persian",
+          "type": "ruled",
+          "evidence": [
+            "ec-pe-003"
+          ]
+        },
+        {
+          "from": "persian_empire:person-zarathustra",
+          "to": "persian_empire:religion-zoroastrianism",
+          "type": "influenced",
+          "evidence": [
+            "ec-pe-007"
+          ]
+        },
+        {
+          "from": "persian_empire:civ-persian",
+          "to": "persian_empire:religion-zoroastrianism",
+          "type": "practiced",
+          "evidence": [
+            "ec-pe-006"
+          ]
+        },
+        {
+          "from": "persian_empire:civ-persian",
+          "to": "persian_empire:tech-royal-road",
+          "type": "invented",
+          "evidence": [
+            "ec-pe-008"
+          ]
+        },
+        {
+          "from": "persian_empire:civ-persian",
+          "to": "persian_empire:loc-persepolis",
+          "type": "located_at",
+          "evidence": [
+            "ec-pe-005"
+          ]
+        },
+        {
+          "from": "persian_empire:civ-persian",
+          "to": "hellenistic_world:person-alexander",
+          "type": "conquered",
+          "evidence": [
+            "ec-pe-001"
+          ]
+        }
+      ],
+      "timeline_slices": [
+        {
+          "entity": "persian_empire:event-cyrus-conquests"
+        },
+        {
+          "entity": "persian_empire:person-darius"
+        },
+        {
+          "entity": "persian_empire:person-xerxes"
+        }
+      ],
+      "source_references": [
+        "src-behistun",
+        "src-cyrus-cylinder",
+        "src-persepolis-tablets",
+        "src-avesta",
+        "src-cambridge-iran"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "hellenistic_world:person-alexander",
+          "label": {
+            "zh": "亚历山大大帝（征服者）",
+            "en": "Alexander the Great (the conqueror)"
+          }
+        },
+        {
+          "kind": "entity",
+          "ref": "egypt_technology_religion:civ-egypt",
+          "label": {
+            "zh": "古埃及（波斯行省）",
+            "en": "Ancient Egypt (Persian satrapy)"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "hellenistic-world-exploration",
+          "label": {
+            "zh": "希腊化世界探索包 V1",
+            "en": "Hellenistic World Exploration Package V1"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "roman-empire-exploration",
+          "label": {
+            "zh": "罗马帝国探索包 V1",
+            "en": "Roman Empire Exploration Package V1"
+          }
+        }
+      ],
+      "placement": "understand"
+    },
+    {
+      "slug": "greek-philosophy-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Civilization",
+      "title": {
+        "zh": "古希腊哲学探索包 V1",
+        "en": "Ancient Greek Philosophy Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从苏格拉底之问到柏拉图学园、亚里士多德学园与逻辑学奠基，沿着一条影响西方两千年的思想链，看哲学如何在雅典城邦中诞生并制度化。",
+        "en": "From the Socratic question to Plato’s Academy and Aristotle’s Lyceum and the foundations of logic, follow an intellectual chain that shaped the West for two millennia and see how philosophy was born and institutionalised in the polis of Athens."
+      },
+      "seed_topic": "greek_philosophy",
+      "exploration_goals": {
+        "zh": "理解希腊哲学家的师承与分歧：苏格拉底如何开启对话传统、柏拉图如何建立理念论与学园、亚里士多德如何以逻辑学转身面向经验世界。",
+        "en": "Understand the lineage and disputes of Greek philosophers: how Socrates opened the dialogic tradition, Plato founded the theory of Forms and the Academy, and Aristotle turned toward the empirical world with logic."
+      },
+      "entity_references": [
+        "greek_philosophy:person-socrates",
+        "greek_philosophy:person-plato",
+        "greek_philosophy:person-aristotle",
+        "greek_philosophy:person-pythagoras",
+        "greek_philosophy:loc-athens",
+        "greek_philosophy:event-academy-founded",
+        "greek_philosophy:idea-theory-forms",
+        "greek_philosophy:idea-logic",
+        "greek_philosophy:loc-lyceum",
+        "greek_philosophy:person-archimedes",
+        "greek_philosophy:tech-archimedes-screw",
+        "greek_philosophy:idea-atomism"
+      ],
+      "relationship_paths": [
+        {
+          "from": "greek_philosophy:person-socrates",
+          "to": "greek_philosophy:person-plato",
+          "type": "influenced",
+          "evidence": [
+            "ec-010"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-plato",
+          "to": "greek_philosophy:person-aristotle",
+          "type": "influenced",
+          "evidence": [
+            "ec-009"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-plato",
+          "to": "greek_philosophy:event-academy-founded",
+          "type": "participated_in",
+          "evidence": [
+            "ec-009"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-plato",
+          "to": "greek_philosophy:idea-theory-forms",
+          "type": "influenced",
+          "evidence": [
+            "ec-gp-007"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-aristotle",
+          "to": "greek_philosophy:idea-logic",
+          "type": "influenced",
+          "evidence": [
+            "ec-gp-008"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-pythagoras",
+          "to": "greek_philosophy:idea-theory-forms",
+          "type": "influenced",
+          "evidence": [
+            "ec-gp-004"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-socrates",
+          "to": "greek_philosophy:loc-athens",
+          "type": "located_at",
+          "evidence": [
+            "ec-gp-005"
+          ]
+        },
+        {
+          "from": "greek_philosophy:person-aristotle",
+          "to": "greek_philosophy:loc-lyceum",
+          "type": "located_at",
+          "evidence": [
+            "ec-gp-005"
+          ]
+        },
+        {
+          "from": "greek_philosophy:idea-logic",
+          "to": "roman_empire:civ-roman",
+          "type": "spread"
+        },
+        {
+          "from": "greek_philosophy:person-archimedes",
+          "to": "greek_philosophy:tech-archimedes-screw",
+          "type": "discovered",
+          "evidence": [
+            "ec-gp-010"
+          ]
+        }
+      ],
+      "timeline_slices": [
+        {
+          "entity": "greek_philosophy:person-socrates"
+        },
+        {
+          "entity": "greek_philosophy:event-academy-founded"
+        },
+        {
+          "entity": "greek_philosophy:person-aristotle"
+        }
+      ],
+      "source_references": [
+        "src-plato-dialogues",
+        "src-aristotle-corpus",
+        "src-diogenes-laertius",
+        "src-archimedes-works"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "hellenistic_world:person-alexander",
+          "label": {
+            "zh": "亚历山大大帝（亚里士多德的学生）",
+            "en": "Alexander the Great (Aristotle’s pupil)"
+          }
+        },
+        {
+          "kind": "entity",
+          "ref": "hellenistic_world:idea-stoicism",
+          "label": {
+            "zh": "斯多葛主义（希腊化哲学）",
+            "en": "Stoicism (Hellenistic philosophy)"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "hellenistic-world-exploration",
+          "label": {
+            "zh": "希腊化世界探索包 V1",
+            "en": "Hellenistic World Exploration Package V1"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "roman-empire-exploration",
+          "label": {
+            "zh": "罗马帝国探索包 V1",
+            "en": "Roman Empire Exploration Package V1"
+          }
+        }
+      ],
+      "placement": "understand"
+    },
+    {
+      "slug": "hellenistic-world-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Civilization",
+      "title": {
+        "zh": "希腊化世界探索包 V1",
+        "en": "Hellenistic World Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从高加米拉之战到亚历山大帝国、继业者战争与托勒密埃及，看希腊文化如何扩散至地中海东岸，又如何在亚历山大城与羊皮纸中留下文明的痕迹。",
+        "en": "From Gaugamela to the Alexandrine empire, the Wars of the Diadochi and Ptolemaic Egypt, see how Greek culture spread across the eastern Mediterranean and left its traces in Alexandria and parchment."
+      },
+      "seed_topic": "hellenistic_world",
+      "exploration_goals": {
+        "zh": "理解亚历山大征服如何打破波斯秩序、继业者如何瓜分帝国并建立希腊化王国、希腊思想（斯多葛主义、民主）如何经希腊化世界传入罗马。",
+        "en": "Understand how Alexander’s conquest shattered the Persian order, how the Diadochi carved up the empire into Hellenistic kingdoms, and how Greek thought (Stoicism, democracy) reached Rome through the Hellenistic world."
+      },
+      "entity_references": [
+        "hellenistic_world:civ-greek",
+        "hellenistic_world:person-alexander",
+        "hellenistic_world:emp-hellenistic",
+        "hellenistic_world:civ-ptolemaic-egypt",
+        "hellenistic_world:person-cleopatra",
+        "hellenistic_world:loc-alexandria",
+        "hellenistic_world:event-gaugamela",
+        "hellenistic_world:event-alexandria-founded",
+        "hellenistic_world:idea-stoicism",
+        "hellenistic_world:idea-democracy",
+        "hellenistic_world:loc-pergamum",
+        "hellenistic_world:tech-parchment",
+        "hellenistic_world:event-alexander-conquest",
+        "hellenistic_world:event-diadochi-wars"
+      ],
+      "relationship_paths": [
+        {
+          "from": "hellenistic_world:person-alexander",
+          "to": "hellenistic_world:event-gaugamela",
+          "type": "participated_in",
+          "evidence": [
+            "ec-he-002"
+          ]
+        },
+        {
+          "from": "hellenistic_world:event-alexander-conquest",
+          "to": "hellenistic_world:event-gaugamela",
+          "type": "caused",
+          "evidence": [
+            "ec-he-007"
+          ]
+        },
+        {
+          "from": "hellenistic_world:event-alexander-conquest",
+          "to": "hellenistic_world:emp-hellenistic",
+          "type": "caused",
+          "evidence": [
+            "ec-he-003"
+          ]
+        },
+        {
+          "from": "hellenistic_world:event-alexander-conquest",
+          "to": "hellenistic_world:event-diadochi-wars",
+          "type": "caused",
+          "evidence": [
+            "ec-he-014"
+          ]
+        },
+        {
+          "from": "hellenistic_world:event-diadochi-wars",
+          "to": "hellenistic_world:civ-ptolemaic-egypt",
+          "type": "influenced",
+          "evidence": [
+            "ec-he-004"
+          ]
+        },
+        {
+          "from": "hellenistic_world:person-alexander",
+          "to": "hellenistic_world:emp-hellenistic",
+          "type": "ruled",
+          "evidence": [
+            "ec-he-003"
+          ]
+        },
+        {
+          "from": "hellenistic_world:civ-ptolemaic-egypt",
+          "to": "hellenistic_world:person-cleopatra",
+          "type": "ruled",
+          "evidence": [
+            "ec-he-005"
+          ]
+        },
+        {
+          "from": "hellenistic_world:civ-greek",
+          "to": "hellenistic_world:idea-stoicism",
+          "type": "influenced",
+          "evidence": [
+            "ec-he-009"
+          ]
+        },
+        {
+          "from": "hellenistic_world:civ-greek",
+          "to": "hellenistic_world:idea-democracy",
+          "type": "influenced",
+          "evidence": [
+            "ec-he-010"
+          ]
+        },
+        {
+          "from": "hellenistic_world:idea-stoicism",
+          "to": "roman_empire:civ-roman",
+          "type": "spread"
+        },
+        {
+          "from": "hellenistic_world:civ-greek",
+          "to": "hellenistic_world:tech-parchment",
+          "type": "invented",
+          "evidence": [
+            "ec-he-012"
+          ]
+        },
+        {
+          "from": "hellenistic_world:event-alexandria-founded",
+          "to": "hellenistic_world:loc-alexandria",
+          "type": "located_at",
+          "evidence": [
+            "ec-he-006"
+          ]
+        }
+      ],
+      "timeline_slices": [
+        {
+          "entity": "hellenistic_world:event-gaugamela"
+        },
+        {
+          "entity": "hellenistic_world:event-alexandria-founded"
+        },
+        {
+          "entity": "hellenistic_world:event-diadochi-wars"
+        }
+      ],
+      "source_references": [
+        "src-arrian-anabasis",
+        "src-plutarch-lives",
+        "src-diodorus",
+        "src-cambridge-hellenistic",
+        "src-polybius"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "egypt_technology_religion:civ-egypt",
+          "label": {
+            "zh": "古埃及（托勒密王朝之根）",
+            "en": "Ancient Egypt (root of the Ptolemaic kingdom)"
+          }
+        },
+        {
+          "kind": "entity",
+          "ref": "roman_empire:civ-roman",
+          "label": {
+            "zh": "罗马帝国（希腊思想西传）",
+            "en": "Roman Empire (Greek thought travels west)"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "roman-empire-exploration",
+          "label": {
+            "zh": "罗马帝国探索包 V1",
+            "en": "Roman Empire Exploration Package V1"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "egypt-technology-religion-exploration",
+          "label": {
+            "zh": "埃及技术与宗教探索包 V1",
+            "en": "Egypt Technology and Religion Exploration Package V1"
+          }
+        }
+      ],
+      "placement": "understand"
+    },
+    {
+      "slug": "egypt-technology-religion-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Civilization",
+      "title": {
+        "zh": "埃及技术与宗教探索包 V1",
+        "en": "Egyptian Technology and Religion Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从吉萨大金字塔的建造、莎草纸与象形文字的技术奇迹，到奥西里斯信仰与一神论思想的酝酿，理解古埃及文明如何以技术与信仰支撑三千年的连续性。",
+        "en": "From the building of the Great Pyramid and the technical marvels of papyrus and hieroglyphs to the Osiris cult and the incubation of monotheism, understand how Egyptian civilisation sustained three millennia of continuity through technology and belief."
+      },
+      "seed_topic": "egypt_technology_religion",
+      "exploration_goals": {
+        "zh": "理解埃及的技术发明（莎草纸、象形文字、木乃伊术、金字塔工程）如何支撑其文明，以及埃及宗教（奥西里斯崇拜、一神论萌芽）如何向地中海世界传播。",
+        "en": "Understand how Egyptian inventions (papyrus, hieroglyphs, mummification, pyramid engineering) sustained the civilisation, and how Egyptian religion (Osiris cult, monotheist seeds) spread across the Mediterranean."
+      },
+      "entity_references": [
+        "egypt_technology_religion:event-great-pyramid-built",
+        "egypt_technology_religion:civ-egypt",
+        "egypt_technology_religion:loc-ancient-egypt",
+        "egypt_technology_religion:tech-papyrus",
+        "egypt_technology_religion:religion-ancient-egyptian",
+        "egypt_technology_religion:civ-mesopotamia",
+        "egypt_technology_religion:idea-monotheism",
+        "egypt_technology_religion:tp-old-kingdom",
+        "egypt_technology_religion:tp-new-kingdom",
+        "egypt_technology_religion:religion-osiris",
+        "egypt_technology_religion:tech-hieroglyph",
+        "egypt_technology_religion:tech-mummification",
+        "egypt_technology_religion:person-imhotep"
+      ],
+      "relationship_paths": [
+        {
+          "from": "egypt_technology_religion:civ-egypt",
+          "to": "egypt_technology_religion:tech-papyrus",
+          "type": "invented",
+          "evidence": [
+            "ec-eg-004"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:civ-egypt",
+          "to": "egypt_technology_religion:religion-ancient-egyptian",
+          "type": "practiced",
+          "evidence": [
+            "ec-eg-005"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:civ-egypt",
+          "to": "egypt_technology_religion:tech-hieroglyph",
+          "type": "invented",
+          "evidence": [
+            "ec-eg-011"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:civ-egypt",
+          "to": "egypt_technology_religion:tech-mummification",
+          "type": "invented",
+          "evidence": [
+            "ec-eg-012"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:person-imhotep",
+          "to": "egypt_technology_religion:event-great-pyramid-built",
+          "type": "participated_in",
+          "evidence": [
+            "ec-eg-013"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:event-great-pyramid-built",
+          "to": "egypt_technology_religion:loc-ancient-egypt",
+          "type": "located_at",
+          "evidence": [
+            "ec-eg-003"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:religion-osiris",
+          "to": "egypt_technology_religion:religion-ancient-egyptian",
+          "type": "related_to",
+          "evidence": [
+            "ec-eg-010"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:religion-ancient-egyptian",
+          "to": "egypt_technology_religion:idea-monotheism",
+          "type": "influenced",
+          "evidence": [
+            "ec-eg-007"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:civ-egypt",
+          "to": "egypt_technology_religion:civ-mesopotamia",
+          "type": "contemporary_with",
+          "evidence": [
+            "ec-eg-006"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:tp-old-kingdom",
+          "to": "egypt_technology_religion:tp-new-kingdom",
+          "type": "before",
+          "evidence": [
+            "ec-eg-008"
+          ]
+        },
+        {
+          "from": "egypt_technology_religion:tech-papyrus",
+          "to": "roman_empire:civ-roman",
+          "type": "spread"
+        },
+        {
+          "from": "egypt_technology_religion:idea-monotheism",
+          "to": "hellenistic_world:civ-ptolemaic-egypt",
+          "type": "spread"
+        }
+      ],
+      "timeline_slices": [
+        {
+          "entity": "egypt_technology_religion:event-great-pyramid-built"
+        },
+        {
+          "entity": "egypt_technology_religion:tp-old-kingdom"
+        },
+        {
+          "entity": "egypt_technology_religion:tp-new-kingdom"
+        }
+      ],
+      "source_references": [
+        "src-merer-papyri",
+        "src-oxford-egypt",
+        "src-book-of-dead",
+        "src-pyramid-texts",
+        "src-rosetta"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "persian_empire:tp-achaemenid",
+          "label": {
+            "zh": "阿契美尼德时代（后继文明）",
+            "en": "Achaemenid era (successor civilisations)"
+          }
+        },
+        {
+          "kind": "entity",
+          "ref": "hellenistic_world:civ-ptolemaic-egypt",
+          "label": {
+            "zh": "托勒密埃及（希腊化埃及）",
+            "en": "Ptolemaic Egypt (Hellenised Egypt)"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "hellenistic-world-exploration",
+          "label": {
+            "zh": "希腊化世界探索包 V1",
+            "en": "Hellenistic World Exploration Package V1"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "persian-empire-exploration",
+          "label": {
+            "zh": "波斯帝国探索包 V1",
+            "en": "Persian Empire Exploration Package V1"
+          }
+        }
+      ],
+      "placement": "understand"
+    },
+    {
+      "slug": "early-christianity-exploration",
+      "type": "official",
+      "visibility": "public",
+      "status": "featured",
+      "category": "Civilization",
+      "title": {
+        "zh": "早期基督教探索包 V1",
+        "en": "Early Christianity Exploration Package V1"
+      },
+      "summary": {
+        "zh": "从耶稣的传道与受难、五旬节到保罗的外邦人宣教，沿着耶路撒冷—安提阿—罗马的路线，看一个犹太教派如何在一代人间成长为地中海的普世宗教。",
+        "en": "From the ministry and crucifixion of Jesus, Pentecost to Paul’s Gentile mission, follow the Jerusalem–Antioch–Rome route and see how a Jewish sect became a universal Mediterranean religion within one generation."
+      },
+      "seed_topic": "early_christianity",
+      "exploration_goals": {
+        "zh": "理解早期基督教的关键节点：耶稣的教导与受难、五旬节如何点燃教会、保罗宣教如何打破族群界限、以及希腊共通语如何成为传播媒介。",
+        "en": "Understand the key nodes of early Christianity: the teaching and crucifixion of Jesus, how Pentecost ignited the church, how Paul’s mission broke ethnic boundaries, and how Koine Greek became the medium of transmission."
+      },
+      "entity_references": [
+        "early_christianity:person-jesus",
+        "early_christianity:person-paul",
+        "early_christianity:loc-jerusalem",
+        "early_christianity:event-crucifixion",
+        "early_christianity:event-paul-mission",
+        "early_christianity:religion-early-church",
+        "early_christianity:idea-resurrection",
+        "early_christianity:loc-antioch",
+        "early_christianity:person-peter",
+        "early_christianity:idea-koine-greek",
+        "early_christianity:event-pentecost"
+      ],
+      "relationship_paths": [
+        {
+          "from": "early_christianity:person-jesus",
+          "to": "early_christianity:event-crucifixion",
+          "type": "participated_in",
+          "evidence": [
+            "ec-006"
+          ]
+        },
+        {
+          "from": "early_christianity:event-crucifixion",
+          "to": "early_christianity:loc-jerusalem",
+          "type": "located_at",
+          "evidence": [
+            "ec-ch-003"
+          ]
+        },
+        {
+          "from": "early_christianity:event-pentecost",
+          "to": "early_christianity:religion-early-church",
+          "type": "caused",
+          "evidence": [
+            "ec-ch-011"
+          ]
+        },
+        {
+          "from": "early_christianity:person-paul",
+          "to": "early_christianity:event-paul-mission",
+          "type": "participated_in",
+          "evidence": [
+            "ec-ch-002"
+          ]
+        },
+        {
+          "from": "early_christianity:event-paul-mission",
+          "to": "early_christianity:loc-antioch",
+          "type": "located_at",
+          "evidence": [
+            "ec-ch-008"
+          ]
+        },
+        {
+          "from": "early_christianity:person-jesus",
+          "to": "early_christianity:idea-resurrection",
+          "type": "influenced",
+          "evidence": [
+            "ec-ch-007"
+          ]
+        },
+        {
+          "from": "early_christianity:person-paul",
+          "to": "early_christianity:idea-koine-greek",
+          "type": "spoke",
+          "evidence": [
+            "ec-ch-010"
+          ]
+        },
+        {
+          "from": "early_christianity:religion-early-church",
+          "to": "roman_empire:civ-roman",
+          "type": "spread"
+        },
+        {
+          "from": "early_christianity:person-peter",
+          "to": "early_christianity:event-crucifixion",
+          "type": "participated_in",
+          "evidence": [
+            "ec-ch-009"
+          ]
+        },
+        {
+          "from": "early_christianity:religion-early-church",
+          "to": "early_christianity:loc-antioch",
+          "type": "located_at",
+          "evidence": [
+            "ec-ch-008"
+          ]
+        }
+      ],
+      "timeline_slices": [
+        {
+          "entity": "early_christianity:event-crucifixion"
+        },
+        {
+          "entity": "early_christianity:event-pentecost"
+        },
+        {
+          "entity": "early_christianity:event-paul-mission"
+        }
+      ],
+      "source_references": [
+        "src-nt-gospels",
+        "src-josephus-antiquities",
+        "src-eusebius-he"
+      ],
+      "recommended_next_exploration": [
+        {
+          "kind": "entity",
+          "ref": "roman_empire:civ-roman",
+          "label": {
+            "zh": "罗马帝国（基督教西传之地）",
+            "en": "Roman Empire (where Christianity travelled west)"
+          }
+        },
+        {
+          "kind": "package",
+          "ref": "roman-empire-exploration",
+          "label": {
+            "zh": "罗马帝国探索包 V1",
+            "en": "Roman Empire Exploration Package V1"
+          }
+        }
+      ],
+      "placement": "understand"
     }
   ]
 }

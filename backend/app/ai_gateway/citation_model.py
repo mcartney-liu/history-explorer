@@ -103,6 +103,12 @@ class ClaimEntry:
     object_global_id: Optional[str]
     relationship: Optional[str]
     resolved: bool
+    # ADR-0018 (Truth layer): curated grading carried through from
+    # `data/evidence_claims.json` —
+    # {confidence, scholar_consensus, controversy_level, interpretation_note}.
+    # Optional with a default so every existing positional construction (and
+    # its tests) stays valid. None when the claim carries no grading.
+    truth: Optional[dict] = None
 
     def to_dict(self) -> dict:
         return {
@@ -114,6 +120,7 @@ class ClaimEntry:
             "object_global_id": self.object_global_id,
             "relationship": self.relationship,
             "resolved": self.resolved,
+            "truth": dict(self.truth) if self.truth else None,
         }
 
 

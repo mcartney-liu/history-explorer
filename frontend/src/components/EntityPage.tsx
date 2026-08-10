@@ -22,16 +22,18 @@ import EventImpactPanel from './EventImpactPanel'
 import EventNarrativeCard from './EventNarrativeCard'
 import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
-import JourneyCard from './JourneyCard'
-import ResearchDiscoveryPanel from './ResearchDiscoveryPanel'
-import ResearchPanel from './ResearchPanel'
+import ResearchPanel, { type RestoreRequest } from './ResearchPanel'
 import ResearchLibrary from './ResearchLibrary'
+import EntityRelatedList from './EntityRelatedList'
+import EmptyState from './EmptyState'
 import StorySection from './exploration/StorySection'
 import WhyImportantPanel from './exploration/WhyImportantPanel'
+import { getNarrative } from '../data/narrative'
 import { entityContext } from '../data/aiContext'
 import EntityPageShell from './EntityPageShell'
 import type { EntityTab } from './EntityPageShell'
 import { useLocale } from '../data/locale'
+import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
 
 export type EntityRelationship = {
   type: string
@@ -73,6 +75,8 @@ type EntityPageProps = {
   entityName?: string
   entityStarters?: StarterItem[]
   onStarterClick?: (target: NavNode) => void
+  /** T1: land directly on a tab (e.g. 'research' from a Discover bookmark). */
+  initialTab?: EntityTab
 }
 
 // M2-002 entity page: renders the four sections the backend returns for
@@ -82,7 +86,7 @@ type EntityPageProps = {
 // M59-005: EntityViewModel integration.
 // Build once per entity change. Panels still consume raw entity
 // for backward compat. Future panels will use viewModel directly.
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { buildEntityViewModel } from '../data/entity/EntityViewModel'
 import { EntityHero } from './entity/EntityHero'
 import { ExplorationCard } from './entity/ExplorationCard'
@@ -102,8 +106,19 @@ function EntityPage({
   entityName,
   entityStarters,
   onStarterClick,
+  initialTab,
 }: EntityPageProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  // Subscribe to runtime site-config so feature-flag gates re-render when the
+  // operator flips a switch in the admin console (defaults keep first paint
+  // identical to before this layer existed).
+  useSiteConfigRevision()
+  // P5-S3 ③: 提升 tab 状态，使「了解→研究」可显式互跳（受控 EntityPageShell）。
+  const [activeTab, setActiveTab] = useState<EntityTab>(initialTab ?? 'info')
+  // T1: research restore/refresh state is LIFTED here so ResearchLibrary's
+  // "打开" can drive ResearchPanel, and a save can refresh the library.
+  const [restoreRequest, setRestoreRequest] = useState<RestoreRequest | null>(null)
+  const [libraryRefreshKey, setLibraryRefreshKey] = useState(0)
   // M59-005: build ViewModel once per entity change.
   // Available for future EntityHero / AISidebar migration.
   const viewModel = useMemo(
@@ -117,8 +132,10 @@ function EntityPage({
         viewModel.connections.graphEdges,
         getEntityLabel,
         getEntityIcon,
+        locale,
+        t,
       ),
-    [viewModel, entity.id],
+    [viewModel, entity.id, locale, t],
   )
 
   const summaryObj = entity.summary ?? {}
@@ -145,6 +162,11 @@ function EntityPage({
   // fallback. Target-side dates remain a documented Future Scope item.
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
+  // M35 curated narrative: 板块始终可见（PO 判定），无叙事数据时渲染空态占位。
+  const narrativeKey = entityId ?? entity.exploration.main_entity.global_id ?? ''
+  const narrativeBlock = getNarrative(narrativeKey)
+  const hasNarrative = !!(narrativeBlock && (narrativeBlock.story || narrativeBlock.whyImportant))
+
   const centerTimeMap: Record<string, string> = buildEntityTimeMap([
     {
       name: entity.name,
@@ -159,7 +181,9 @@ function EntityPage({
 
       <SummaryPanel title={entity.name} summary={description} />
 
-      {onStarterClick && entityStarters && entityStarters.length > 0 ? (
+      {/* M5-A-5: 实体级探索引导——始终渲染（有数据列起点，无数据显空态），
+          避免"没数据显示→整块消失"造成"功能不存在"的误解（PO 判定）。 */}
+      {onStarterClick && entityStarters ? (
         <EntityExplorationGuide
           entityId={entityId ?? entity.id}
           entityName={entityName ?? entity.name}
@@ -168,27 +192,20 @@ function EntityPage({
         />
       ) : null}
 
-      {/* M35 Feature C: curated narrative (StorySection / WhyImportantPanel).
-          narrativeKey carries the GLOBAL id so narrative.ts lookup matches
-          its global_id keys (OI-1 fix: Design Freeze used entity.id local id,
-          but narrative keys are global_ids). No AI — copy is hand-authored. */}
-      <StorySection narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
-      <WhyImportantPanel narrativeKey={entityId ?? entity.exploration.main_entity.global_id ?? ''} />
+      {/* M74-004-002 (2A) — Journey Trail: 全局公有探索足迹（跨实体历史轨迹），
+          渲染于 tab 容器之外（所有 tab 可见），不属于任何单一 tab 视角。
+          Consumes ONLY the existing UserBehaviorEvent stream. */}
+      {AI_SUGGESTIONS_ENABLED && flagEnabled('journey_trail') && entitySectionVisible('journey_trail') && (
+        <JourneyTrail onEntityClick={onEntityClick} />
+      )}
 
-      {/* M74-003 (C3-2) — Relationship Insight (T2): evidence-bound AI
-          exploration touchpoint, an ENHANCEMENT LAYER beside (never replacing)
-          the curated narrative. Flag-gated at the parent so OFF = zero render
-          + zero requests (M73 byte-identical). Input = the entity GLOBAL id
-          (entityId prop); every fact comes from the backend response. */}
-      {AI_SUGGESTIONS_ENABLED && entityId && <RelationshipInsight entityGlobalId={entityId} />}
-
-      {/* M74-004-002 (2A) — Journey Trail: exploration path visualization.
-          Consumes ONLY the existing UserBehaviorEvent stream (no new
-          collection, no profiling). Same flag so OFF = M73 byte-identical. */}
-      {AI_SUGGESTIONS_ENABLED && <JourneyTrail onEntityClick={onEntityClick} />}
+      {/* M35 / M74 / M90.x: curated narrative + AI insights 已移入"了解"tab 内容区
+          （renderTab case 'info'），不再渲染于 tab 容器之外。 */}
 
       <EntityPageShell
         entityGlobalId={entityGlobalId}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         renderTab={(activeTab: EntityTab) => {
           switch (activeTab) {
             // ---- INFO TAB ----
@@ -201,6 +218,7 @@ function EntityPage({
                     hero={
                       <EntityHero
                         identity={viewModel.identity}
+                        globalId={entityGlobalId}
                         onResearch={() => {
                           console.log('[Research] Start research:', viewModel.identity.name)
                         }}
@@ -224,6 +242,28 @@ function EntityPage({
                       </>
                     }
                   />
+
+                  {/* M35 Feature C: curated narrative (StorySection / WhyImportantPanel).
+                      narrativeKey carries the GLOBAL id so narrative.ts lookup matches
+                      its global_id keys. No AI — copy is hand-authored.
+                      无叙事数据时渲染空态占位（板块始终可见，PO 判定）。 */}
+                  {entitySectionVisible('why_important') && (
+                    hasNarrative ? (
+                      <>
+                        <StorySection narrativeKey={narrativeKey} />
+                        <WhyImportantPanel narrativeKey={narrativeKey} />
+                      </>
+                    ) : (
+                      <EmptyState message={t('entity.narrativeEmpty')} />
+                    )
+                  )}
+
+                  {/* M74-003 (C3-2) — Relationship Insight (T2): evidence-bound AI
+                      exploration touchpoint. Flag-gated at the parent so OFF =
+                      zero render + zero requests. Input = entity GLOBAL id. */}
+                  {AI_SUGGESTIONS_ENABLED && entityId && entitySectionVisible('relationship_insight') && (
+                    <RelationshipInsight entityGlobalId={entityId} />
+                  )}
 
                   {/* Layer 3: Connect — three exploration views */}
                   <ConnectionExplorer
@@ -249,30 +289,10 @@ function EntityPage({
                     </div>
                   )}
 
-                  {/* M60-001: AI conversation + exploration recommendations — from old 'explore' tab */}
+                  {/* M60-001: AI conversation — from old 'explore' tab */}
                   <p className="explore-hint">
                     {t('entity.exploreHint')}
                   </p>
-                  {entityGlobalId ? (
-                    <ResearchDiscoveryPanel
-                      currentEntity={{
-                        globalId: entityGlobalId,
-                        name: entity.name,
-                        type: entity.type,
-                      }}
-                      relationships={(entity.relationships ?? []).map((r) => ({
-                        type: r.type,
-                        other: { globalId: r.other.global_id ?? '', name: r.other.name ?? '', type: r.other.type ?? '' },
-                      }))}
-                      onExplore={(gid) => window.location.hash = `#/entity/${encodeURIComponent(gid)}`}
-                    />
-                  ) : null}
-                  <JourneyCard
-                    relationships={entity.relationships}
-                    centerEntityName={entity.name}
-                    nameById={nameById}
-                    onEntityClick={onEntityClick}
-                  />
                   {entityGlobalId ? (
                     <HistorianChat
                       entityGlobalId={entityGlobalId}
@@ -280,7 +300,9 @@ function EntityPage({
                       entityType={entity.type}
                       relationships={entity.relationships}
                     />
-                  ) : null}
+                  ) : (
+                    <EmptyState message="该实体缺少全局 ID，AI 对话暂不可用。" />
+                  )}
 
                   {/* M59-016: RelationshipView/TimelinePanel/GraphViewPanel removed from info tab.
                       Covered by ConnectionExplorer (Graph | Timeline | Map views).
@@ -295,18 +317,54 @@ function EntityPage({
             case 'research':
               return (
                 <>
-                  {entityGlobalId ? (
-                    <ResearchPanel
-                      entityGlobalId={entityGlobalId}
-                      entityName={entity.name}
-                      entityType={entity.type}
-                      relationships={entity.relationships}
-                    />
-                  ) : null}
-                  <ResearchLibrary />
-                  {/* M60-001: analyze tab merged into research */}
+                  {/* P5-S3 ③: 研究→了解 返回入口。 */}
+                  <div className="entity-research-bridge entity-research-bridge--back">
+                    <button
+                      type="button"
+                      className="entity-research-bridge-btn entity-research-bridge-btn--ghost"
+                      onClick={() => setActiveTab('info')}
+                    >
+                      ← 回到事实
+                    </button>
+                  </div>
+
+                  {/* 研究主区：研究与当前实体直接相关的基础模块 */}
+                  <section className="entity-research-group">
+                    <h3 className="entity-research-group__title">研究主区</h3>
+                    {entityGlobalId ? (
+                      <ResearchPanel
+                        entityGlobalId={entityGlobalId}
+                        entityName={entity.name}
+                        entityType={entity.type}
+                        relationships={entity.relationships}
+                        restoreRequest={restoreRequest}
+                        onSaved={() => setLibraryRefreshKey((n) => n + 1)}
+                      />
+                    ) : (
+                      <EmptyState message="该实体缺少全局 ID，暂时无法启动研究模式。请从主题页或关系图重新进入。" />
+                    )}
+                    {entitySectionVisible('research_library') && (
+                      <ResearchLibrary
+                        refreshKey={libraryRefreshKey}
+                        onSelect={(r) =>
+                          setRestoreRequest({ research: r, requestId: Date.now() })
+                        }
+                      />
+                    )}
+                    {/* C1: 研究 tab 提供真实相关实体列表（图谱引擎驱动，纯图不碰AI）。
+                        点列表项进入该实体，研究链路有逻辑、有东西可点。 */}
+                    {entityGlobalId && flagEnabled('related_entities') && entitySectionVisible('related_entities') ? (
+                      <EntityRelatedList gid={entityGlobalId} onEntityClick={onEntityClick} />
+                    ) : null}
+                  </section>
+
+                  {/* 事件专属区：仅 Event 类型实体展示，带"仅事件"标识 */}
                   {entity.type === 'Event' && (
-                    <>
+                    <section className="entity-research-group entity-research-group--event">
+                      <h3 className="entity-research-group__title">
+                        事件专属
+                        <span className="entity-research-group__badge">仅事件</span>
+                      </h3>
                       <EventCausalChain
                         relationships={entity.relationships}
                         centerEntityName={entity.name}
@@ -332,23 +390,30 @@ function EntityPage({
                         onEntityClick={onEntityClick}
                         currentTopic={entityGlobalId?.split(':')[0]}
                       />
-                    </>
+                    </section>
                   )}
-                  <InterpretationPanel
-                    interpretations={toInterpretationViewModels(entity.connections_explained)}
-                    understandings={buildUnderstandingsFromRelationships(
-                      entity.relationships,
-                      entity.name,
-                      centerTimeMap,
-                    )}
-                    onNodeClick={onNodeClick}
-                  />
-                  {entityGlobalId ? (
-                    <AIExplanationPanel
-                      contextGlobalIds={entityContext(entityGlobalId)}
-                      onCitationClick={onNodeClick}
+
+                  {/* 解读与 AI 区：基于关系的理解 + AI 溯源解释 */}
+                  <section className="entity-research-group">
+                    <h3 className="entity-research-group__title">解读与 AI</h3>
+                    <InterpretationPanel
+                      interpretations={toInterpretationViewModels(entity.connections_explained)}
+                      understandings={buildUnderstandingsFromRelationships(
+                        entity.relationships,
+                        entity.name,
+                        centerTimeMap,
+                      )}
+                      onNodeClick={onNodeClick}
                     />
-                  ) : null}
+                    {entityGlobalId ? (
+                      <AIExplanationPanel
+                        contextGlobalIds={entityContext(entityGlobalId)}
+                        onCitationClick={onNodeClick}
+                      />
+                    ) : (
+                      <EmptyState message="该实体缺少全局 ID，AI 解释暂不可用。" />
+                    )}
+                  </section>
                 </>
               )
 

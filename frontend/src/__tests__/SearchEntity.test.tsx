@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { LocaleProvider } from '../data/locale'
 import EntitySearchBox from '../components/EntitySearchBox'
-import SearchBox from '../components/SearchBox'
 import SearchResults, { SearchResultItem } from '../components/SearchResults'
 import { nextSelectionIndex } from '../components/searchNav'
 
@@ -13,14 +12,7 @@ describe('M2-002 search & entity UI', () => {
         <EntitySearchBox onSearch={() => {}} />
       </LocaleProvider>,
     )
-    expect(html).toContain('搜索实体')
-  })
-
-  it('SearchBox renders topic input with placeholder', () => {
-    const html = renderToStaticMarkup(
-      <SearchBox topic="" loading={false} error="" onTopicChange={() => {}} onExplore={() => {}} />
-    )
-    expect(html).toContain('placeholder="')
+    expect(html).toContain('搜索文明')
   })
 
   it('SearchResults renders ranked entities', () => {

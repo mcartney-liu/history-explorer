@@ -16,8 +16,9 @@
 //   ExplorationJourney        -> container: thin wrapper, no local nav state
 
 import type { NavNode } from './navigation'
-import type { RelationPathStep } from './RecommendationPanel'
 import { useLocale } from '../data/locale'
+import type { ExplorationActionType } from '../next/exploration/ExplorationPolicy'
+import { getCausalObjectName } from '../data/causalObjectNames'
 
 // --- Types ---
 
@@ -27,10 +28,10 @@ import { useLocale } from '../data/locale'
 export type JourneyWhyPayload = {
   fromGlobalId: string
   fromName: string
-  relationPath: RelationPathStep[]
   reasons: string[]
-  score: number
-  candidateSource: string
+  actionType: ExplorationActionType
+  narrativeHook: string
+  confidence: number
   capturedAt: string
 }
 
@@ -49,12 +50,9 @@ export type JourneyEntry = {
 // --- Pure helpers ---
 
 function nodeKey(node: NavNode): string {
-  return node.type === 'entity' ? node.id : node.topic
-}
-
-function localName(globalId: string): string {
-  if (!globalId || !globalId.includes(':')) return globalId
-  return globalId.split(':').slice(1).join(':') || globalId
+  if (node.type === 'entity') return node.id
+  if (node.type === 'causal_object') return node.objectId
+  return node.topic
 }
 
 // Build the journey entries from App's navigation history + the why-annotation
@@ -67,10 +65,10 @@ export function buildJourney(
 ): JourneyEntry[] {
   return history.map((node, i) => {
     const id = nodeKey(node)
-    const label = node.type === 'entity' ? node.name : node.title
+    const label = node.type === 'entity' ? node.name : node.type === 'causal_object' ? getCausalObjectName(node.objectId) : node.title
     return {
       key: `${node.type}:${id}:${i}`,
-      type: node.type,
+      type: node.type as JourneyEntry['type'],
       id,
       label,
       index: i,
@@ -133,22 +131,8 @@ export function ExplorationJourneyView({ entries, onStepClick }: ExplorationJour
                     ))}
                   </ul>
                 ) : null}
-                {e.incomingWhy.relationPath.length > 0 ? (
-                  <div className="he-journey-path">
-                    {e.incomingWhy.relationPath.map((step, i) => (
-                      <span key={i} className="he-journey-path-step">
-                        <span className="he-journey-path-from">{localName(step.from)}</span>
-                        <span className="he-journey-path-arrow" aria-hidden="true">
-                          →
-                        </span>
-                        <span className="he-journey-path-rel">{step.relationship}</span>
-                        <span className="he-journey-path-arrow" aria-hidden="true">
-                          →
-                        </span>
-                        <span className="he-journey-path-to">{localName(step.to)}</span>
-                      </span>
-                    ))}
-                  </div>
+                {e.incomingWhy.narrativeHook ? (
+                  <p className="he-journey-hook">{e.incomingWhy.narrativeHook}</p>
                 ) : null}
               </div>
             ) : null}

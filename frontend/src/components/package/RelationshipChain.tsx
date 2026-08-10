@@ -5,11 +5,17 @@ import {
   type RelationshipPathRef,
 } from '../../data/explorationPackages'
 import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import { resolveCausalForEdge } from '../../data/explorationGuide'
+import { recordEvent } from '../../data/UserBehaviorEvent'
+import CausalStatementCard from '../causal/CausalStatementCard'
+import type { CausalStatementData } from '../../data/causalStatement'
 
 interface RelationshipChainProps {
   pkg: ExplorationPackage
   locale?: Locale
   onEntityClick?: (gid: string) => void
+  /** M82 P2 — CausalStatements for embedding CausalStatementCard on edges. */
+  causalStatements?: readonly CausalStatementData[]
 }
 
 // Walk an edge list into an ordered node chain (works for simple linear
@@ -48,6 +54,7 @@ export default function RelationshipChain({
   pkg,
   locale = 'zh',
   onEntityClick,
+  causalStatements,
 }: RelationshipChainProps) {
   const inherited = pkg.relationship_paths.filter((p) => p.type === 'inherited')
   const spine = buildSpine(inherited)
@@ -62,21 +69,39 @@ export default function RelationshipChain({
           const name = getEntityDisplayName(gid, locale)
           const isLast = i === spine.nodes.length - 1
           const edge = spine.edges[i]
+          // M83.1 — check if this edge has a CausalStatement for cs_follow_entity
+          const edgeCS = edge && causalStatements
+            ? resolveCausalForEdge(edge, causalStatements)
+            : null
           return (
             <div className="journey-step" key={gid}>
               <button
                 type="button"
                 className="journey-node"
                 data-gid={gid}
-                {...(onEntityClick ? { onClick: () => onEntityClick(gid) } : {})}
+                {...(onEntityClick
+                  ? {
+                      onClick: () => {
+                        // M83.1 — cs_follow_entity when entity is connected via a CS edge
+                        if (edgeCS?.id) {
+                          recordEvent({ action: 'cs_follow_entity', causalId: edgeCS.id })
+                        }
+                        onEntityClick(gid)
+                      },
+                    }
+                  : {})}
               >
                 <span className="journey-node-name">{name}</span>
               </button>
               {!isLast && edge && (
-                <span className="journey-arrow" aria-hidden="true">
-                  <span className="journey-arrow-label">{getRelationshipLabel(edge.type, locale)}</span>
-                  <span className="journey-arrow-glyph">→</span>
-                </span>
+                <>
+                  <span className="journey-arrow" aria-hidden="true">
+                    <span className="journey-arrow-label">{getRelationshipLabel(edge.type, locale)}</span>
+                    <span className="journey-arrow-glyph">→</span>
+                  </span>
+                  {/* M82 P2 — CausalStatementCard on matched edges */}
+                  {edgeCS && <CausalStatementCard cs={edgeCS} />}
+                </>
               )}
             </div>
           )

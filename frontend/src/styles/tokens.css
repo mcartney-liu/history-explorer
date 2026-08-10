@@ -80,3 +80,162 @@
   --border-default: #3A3324;
   --border-strong:  #4A412E;
 }
+
+/* ============================================================
+   P5-S2 Step 0 — VS-01 Token layer (light-first design-system names)
+   Aligned to docs/Phase4/VS-01_visual_design_system.md.
+   Migration strategy: semantic names reference DARK-compatible values
+   first (keep visual continuity on the current dark product); the
+   values flip to VS-01 light paper values at the dedicated theme-flip
+   slice. Old tokens are retained — additive only, never removed.
+   Article-0 three layers: Obj → ink/paper · Sub → accent · Truth → truth-*.
+   ============================================================ */
+:root {
+  /* ---- Ink (text/structure) — VS-01 light paper: warm near-black on cream ---- */
+  --color-ink-900: #211C14;                    /* 主文字、标题、关键数值 */
+  --color-ink-700: #423A2C;                    /* 次级文字、正文 */
+  --color-ink-500: #6E6353;                    /* 辅助、说明、元信息 */
+  --color-ink-300: #968A75;                    /* 占位标签、禁用态文字 */
+  --color-ink-100: #B7AB94;                    /* 极弱提示、分割线文字 */
+
+  /* ---- Paper (surfaces) — VS-01 light-first: rice-paper warmth ---- */
+  --color-paper-50:   #FBF8F2;                 /* 根背景 */
+  --color-paper-100:  #F4EEE3;                 /* 次级表面、凹陷区 */
+  --color-paper-200:  #EBE3D4;                 /* 卡片背景、分隔、hover 底 */
+  --color-paper-300:  #DCD2BF;                 /* 强分割、轨道 */
+
+  /* ---- Accent (single emphasis color; VS-01 = Indigo #4F46E5, pure) ---- */
+  --color-accent:        #4F46E5;
+  --color-accent-hover:  #4338CA;
+  --color-accent-soft:   rgba(79, 70, 229, 0.10);
+  --color-accent-ink:    #FFFFFF;              /* accent 上的反白文字 */
+
+  /* ---- Truth (truth scale, green→ochre→terracotta; NEVER pink) ---- */
+  --color-truth-strong:        #2E8B5C;
+  --color-truth-strong-soft:   rgba(46, 139, 92, 0.12);
+  --color-truth-strong-line:   rgba(46, 139, 92, 0.30);
+  --color-truth-moderate:      #B7791F;
+  --color-truth-moderate-soft: rgba(183, 121, 31, 0.14);
+  --color-truth-weak:          #C2410C;        /* 弱证据（不隐藏） */
+  --color-truth-weak-soft:     rgba(194, 65, 12, 0.12);
+  --color-truth-objection:     #9A6A4F;        /* 溯源异议（叙述型，非报错红） */
+  --color-truth-line:          rgba(31, 28, 22, 0.10);
+
+  /* ---- Status ---- */
+  --color-status-info:         #2563EB;
+  --color-status-info-soft:    rgba(37, 99, 235, 0.10);
+  --color-status-success:      #2E8B5C;
+  --color-status-danger:       #D64545;
+  --color-status-danger-soft:  rgba(214, 69, 69, 0.12);
+
+  /* ---- Scrim / Focus ---- */
+  --color-scrim:       rgba(31, 28, 22, 0.32);  /* 模态遮罩（实色半透明，非毛玻璃） */
+  --color-border-focus: var(--color-accent);    /* 焦点环描边 */
+
+  /* ---- Motion (VS-04 规则③: linear / ease-in-out ONLY) ---- */
+  --motion-duration-fast:   0.12s;
+  --motion-duration-normal: 0.2s;
+  --motion-duration-slow:   0.35s;
+  --motion-ease-standard:   ease-in-out;
+  --motion-ease-linear:     linear;
+
+  /* ---- Layout / Responsive (VS-01 §7/§8) ---- */
+  --layout-companion-w: 360px;                 /* 右侧 Companion 宽度 */
+  --resp-bp-sm: 640px;                         /* 手机 */
+  --resp-bp-md: 1024px;                        /* 平板 / 紧凑桌面 */
+  --resp-bp-lg: 1440px;                        /* 桌面 */
+
+  /* ---- Elevation (light paper: warm soft, no heavy black) ---- */
+  --shadow-card: 0 1px 3px rgba(31, 28, 22, 0.08), 0 4px 16px rgba(31, 28, 22, 0.06);
+  --shadow-glow: 0 0 24px rgba(79, 70, 229, 0.08);
+
+  /* ---- M90.3 ProductIntro "能做什么" 四宫格主题纹理 (token 化, 组件零硬编码色) ---- */
+  /* 历史叙事 — 羊皮纸暖调 */
+  --intro-parchment-spot:      rgba(110, 80, 50, 0.10);
+  --intro-parchment-line:      rgba(110, 80, 50, 0.045);
+  --intro-parchment-border:    var(--color-paper-300);
+  --intro-parchment-icon-bg:   rgba(110, 80, 50, 0.12);
+  --intro-parchment-icon-fg:   var(--color-truth-moderate);
+
+  /* 关系探索 — 知识图谱青绿 */
+  --intro-network-spot:        rgba(46, 139, 92, 0.12);
+  --intro-network-line:        rgba(46, 139, 92, 0.06);
+  --intro-network-border:      var(--color-truth-strong-line);
+  --intro-network-icon-bg:     var(--color-truth-strong-soft);
+  --intro-network-icon-fg:     var(--color-truth-strong);
+
+  /* 深度研究 — 冷灰刻度板 */
+  --intro-ledger-spot:         rgba(33, 28, 20, 0.05);
+  --intro-ledger-line:         rgba(33, 28, 20, 0.07);
+  --intro-ledger-border:       var(--color-paper-300);
+  --intro-ledger-icon-bg:      rgba(33, 28, 20, 0.06);
+  --intro-ledger-icon-fg:      var(--color-ink-700);
+
+  /* AI 历史学家 — 靛蓝星空 (Indigo #4F46E5 纯色系, 非紫粉渐变) */
+  --intro-cosmos-spot:         rgba(79, 70, 229, 0.14);
+  --intro-cosmos-line:         rgba(79, 70, 229, 0.05);
+  --intro-cosmos-border:       rgba(79, 70, 229, 0.25);
+  --intro-cosmos-icon-bg:      var(--color-accent-soft);
+  --intro-cosmos-icon-fg:      var(--color-accent);
+}
+
+/* ============================================================
+   P5-S2 Theme Switch — "legacy" theme (original frosted-glass look)
+   One-click switch target. Default (:root above) stays the clean
+   v1 look. This block ONLY re-maps semantic tokens + declares glass
+   tokens; the actual frosted-glass surfaces live in legacy-theme.css
+   (gated behind [data-theme="legacy"] so the v1 default stays VS-04
+   compliant — no glass / gradient). PO-approved 2026-08-07:
+   additive theme, default v1 unchanged, no backend / schema / runtime
+   / dependency change.
+   ============================================================ */
+[data-theme="legacy"] {
+  /* Ink — light text on dark navy */
+  --color-ink-900: #f7f5f0;
+  --color-ink-700: #F2EBDD;
+  --color-ink-500: #C9BFA8;
+  --color-ink-300: #8C8270;
+  --color-ink-100: #5E5648;
+
+  /* Paper — deep navy surfaces */
+  --color-paper-50:  #0B0F1C;
+  --color-paper-100: #111A30;
+  --color-paper-200: #16213E;
+  --color-paper-300: #2A3556;
+
+  /* Accent — canonical gold (#CBA135) */
+  --color-accent:        #CBA135;
+  --color-accent-hover:  #DDB84A;
+  --color-accent-soft:   rgba(203, 161, 53, 0.16);
+  --color-accent-ink:    #1a1408;
+
+  /* Truth scale (evidence) — green / ochre / terracotta semantics kept */
+  --color-truth-strong:        #4FA784;
+  --color-truth-strong-soft:   rgba(79, 167, 132, 0.14);
+  --color-truth-strong-line:   rgba(79, 167, 132, 0.28);
+  --color-truth-moderate:      #C08A3E;
+  --color-truth-moderate-soft: rgba(192, 138, 62, 0.16);
+  --color-truth-weak:          #C07A5A;
+  --color-truth-weak-soft:     rgba(192, 122, 90, 0.16);
+  --color-truth-objection:     #C08A6A;
+  --color-truth-line:          rgba(203, 161, 53, 0.18);
+
+  /* Status */
+  --color-status-info:         #7FA8D9;
+  --color-status-info-soft:    rgba(127, 168, 217, 0.16);
+  --color-status-success:      #4FA784;
+  --color-status-danger:       #D97A5A;
+  --color-status-danger-soft:  rgba(217, 122, 90, 0.16);
+
+  --color-scrim:       rgba(8, 12, 24, 0.55);
+  --color-border-focus: var(--color-accent);
+
+  /* ---- Glass tokens (consumed by legacy-theme.css) ---- */
+  --surface-glass:      blur(16px) saturate(140%);
+  --surface-glass-soft: blur(10px) saturate(130%);
+  --glass-navy-bar:     linear-gradient(180deg, rgba(14, 20, 38, 0.96), rgba(8, 12, 24, 0.97));
+  --glass-navy-panel:   linear-gradient(158deg, rgba(17, 25, 48, 0.94), rgba(9, 14, 28, 0.97));
+  --glass-navy-rail:    linear-gradient(158deg, rgba(17, 25, 48, 0.82), rgba(9, 14, 28, 0.90));
+  --gold-line-legacy:   rgba(203, 161, 53, 0.28);
+  --gold-glow-legacy:   rgba(203, 161, 53, 0.14);
+}

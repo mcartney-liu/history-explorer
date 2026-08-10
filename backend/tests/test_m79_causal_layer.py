@@ -23,13 +23,16 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 CAUSAL_PKG = BACKEND_DIR / "app" / "core" / "causal"
 
 # Modules the Causal Layer must NEVER couple to (ADR-M79 Boundary Rules).
+# Fully-qualified so the Causal Layer's OWN `app.core.causal.adapter` module is
+# not mistaken for the forbidden `app.core.domain.adapter`.
 FORBIDDEN_IMPORTS = (
-    "ontology",
-    "validation",
-    "graph",
-    "pipeline",
-    "schemas",
-    "adapter",
+    "app.core.ontology",
+    "app.core.validation",
+    "app.core.knowledge_service",
+    "app.core.knowledge_graph",
+    "app.core.acquisition",
+    "app.core.schemas",
+    "app.core.domain.adapter",
 )
 
 
@@ -98,15 +101,27 @@ def test_model_contract_defaults():
 # ---------------------------------------------------------------------------
 def test_reference_semantics_no_entity_redefinition():
     """CausalStatement stores id *references*, never redefines Entity/Event."""
-    # Only CausalStatement may be defined in the causal package.
+    # The Causal Layer must NEVER redefine the Domain Model carrier classes
+    # (Entity / Event / Relationship / Timeline / Ontology / DomainSchema /
+    # GlobalConstraint). The package legitimately grew beyond CausalStatement
+    # (M82 CausalLoader/CausalIndex, M84 CausalObject, M85 RelatedCausalObjectRef)
+    # so we assert the guard's INTENT, not a rigid 1-class count.
+    FORBIDDEN_CAUSAL_CLASSES = {
+        "Entity", "Event", "Relationship", "Timeline",
+        "Ontology", "DomainSchema", "GlobalConstraint",
+    }
     defined_classes = []
     for f in CAUSAL_PKG.glob("*.py"):
         tree = ast.parse(f.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
             if isinstance(node, ast.ClassDef):
                 defined_classes.append(node.name)
-    assert defined_classes == ["CausalStatement"], (
-        f"Causal package must define only CausalStatement, got {defined_classes}"
+    assert "CausalStatement" in defined_classes, (
+        f"Causal package must define CausalStatement, got {defined_classes}"
+    )
+    leaked = FORBIDDEN_CAUSAL_CLASSES & set(defined_classes)
+    assert not leaked, (
+        f"Causal Layer redefines forbidden Domain Model classes: {sorted(leaked)}"
     )
     # No forbidden carrier imports (Entity/Event live in other layers).
     imports = _all_causal_imports()

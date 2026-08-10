@@ -9,6 +9,7 @@
 import { CompanionProvider, useCompanion, type CompanionMode, type WorkspaceContextData } from './CompanionContext'
 import { CompanionRouter } from './CompanionRouter'
 import { ExplorationInsightPanel } from './ExplorationInsightPanel'
+import type { ExplorationAction } from '../../next/exploration/ExplorationPolicy'
 
 const MODES: { id: CompanionMode; label: string }[] = [
   { id: 'explain', label: '解释' },
@@ -17,7 +18,7 @@ const MODES: { id: CompanionMode; label: string }[] = [
   { id: 'discover', label: '发现' },
 ]
 
-function CompanionInner({ onNavigateEntity }: { onNavigateEntity?: (globalId: string) => void }) {
+function CompanionInner({ onNavigateEntity, actions }: { onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[] }) {
   const { state, dispatch } = useCompanion()
 
   return (
@@ -43,15 +44,15 @@ function CompanionInner({ onNavigateEntity }: { onNavigateEntity?: (globalId: st
           router so it never enters AI runtime / explainAI channel. */}
       <ExplorationInsightPanel />
 
-      <CompanionRouter onNavigateEntity={onNavigateEntity} />
+      <CompanionRouter onNavigateEntity={onNavigateEntity} actions={actions} />
     </div>
   )
 }
 
-export function CompanionShell({ workspaceContext, onNavigateEntity }: { workspaceContext?: WorkspaceContextData; onNavigateEntity?: (globalId: string) => void }) {
+export function CompanionShell({ workspaceContext, onNavigateEntity, actions }: { workspaceContext?: WorkspaceContextData; onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[] }) {
   return (
     <CompanionProvider workspace={workspaceContext}>
-      <CompanionInner onNavigateEntity={onNavigateEntity} />
+      <CompanionInner onNavigateEntity={onNavigateEntity} actions={actions} />
     </CompanionProvider>
   )
 }

@@ -63,6 +63,13 @@ def build_exploration_view(
 
     resolved_id = main_entity.get("id")
 
+    # Prefer the Chinese display name (labels.zh) when available, matching the
+    # in-place zh resolution in build_exploration_response. Without this the
+    # frontend's starter cards fall back to the raw English `name` field
+    # (Wave2-#149 follow-up: "分不清组件名还是真实内容").
+    def _display_name(e: dict) -> str:
+        return (e.get("labels") or {}).get("zh") or e.get("name", "") or e.get("id", "")
+
     related_entities: list[dict] = []
     for rel in relationships:
         source = rel.get("source")
@@ -71,12 +78,22 @@ def build_exploration_view(
         if source == resolved_id and target in entity_by_id:
             other = entity_by_id[target]
             related_entities.append(
-                {"id": other.get("id"), "type": other.get("type"), "relationship": rel_type}
+                {
+                    "id": other.get("id"),
+                    "type": other.get("type"),
+                    "relationship": rel_type,
+                    "name": _display_name(other),
+                }
             )
         elif target == resolved_id and source in entity_by_id:
             other = entity_by_id[source]
             related_entities.append(
-                {"id": other.get("id"), "type": other.get("type"), "relationship": rel_type}
+                {
+                    "id": other.get("id"),
+                    "type": other.get("type"),
+                    "relationship": rel_type,
+                    "name": _display_name(other),
+                }
             )
 
     return {"main_entity": main_entity, "related_entities": related_entities}
@@ -95,7 +112,11 @@ def build_exploration_response(topic: str, data: dict) -> dict:
     # the M1 string `period` shape and surface the full object as `date`.
     timeline = normalize_timeline(data.get("timeline", []))
 
-    entity_name = {e.get("id"): e.get("name", "") for e in entities}
+    # Prefer Chinese label when available (M90.3 i18n)
+    entity_name = {
+        e.get("id"): (e.get("labels") or {}).get("zh") or e.get("name", "")
+        for e in entities
+    }
 
     connections: list[dict] = []
     for rel in relationships:
@@ -108,6 +129,12 @@ def build_exploration_response(topic: str, data: dict) -> dict:
         )
 
     exploration = build_exploration_view(entities, relationships)
+
+    # Resolve Chinese display names for entities in-place
+    for e in entities:
+        zh_name = (e.get("labels") or {}).get("zh")
+        if zh_name:
+            e["name"] = zh_name
 
     return {
         "topic": topic,

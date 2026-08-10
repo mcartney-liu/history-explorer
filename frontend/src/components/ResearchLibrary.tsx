@@ -1,13 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   listResearch,
-  deleteResearch,
+  listResearchMerged,
+  deleteResearchRemote,
   type SavedResearch,
 } from '../data/ResearchHistory'
 import Icon from './ui/Icon'
 
 export type ResearchLibraryProps = {
   onSelect?: (research: SavedResearch) => void
+  /** Bump to force a re-read (e.g. after a new research was saved). */
+  refreshKey?: number
 }
 
 function formatDate(iso: string): string {
@@ -87,11 +90,22 @@ export function ResearchLibraryView({
 }
 
 export default function ResearchLibrary(props: ResearchLibraryProps) {
+  // Local store renders synchronously (always available, works offline);
+  // the backend merge lands right after and replaces it.
   const [items, setItems] = useState<SavedResearch[]>(() => listResearch())
 
-  function handleDelete(id: string) {
-    deleteResearch(id)
+  useEffect(() => {
+    let cancelled = false
     setItems(listResearch())
+    listResearchMerged().then((merged) => {
+      if (!cancelled) setItems(merged)
+    })
+    return () => { cancelled = true }
+  }, [props.refreshKey])
+
+  async function handleDelete(id: string) {
+    await deleteResearchRemote(id)
+    setItems(await listResearchMerged())
   }
 
   return (

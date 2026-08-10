@@ -79,7 +79,9 @@ function EntityExplorationGuide({
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <p className="he-guide-empty">{t('discover.noEntityStarters')}</p>
+      )}
     </section>
   )
 }

@@ -1,19 +1,38 @@
 import { useState, useEffect } from 'react'
-import { explainAI } from '../data/aiClient'
+import { explainAI, type AICitation } from '../data/aiClient'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } from './ResearchDimensionCard'
 import ResearchReport from './ResearchReport'
 import ResearchSummary from './ResearchSummary'
+import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
-import { type SavedResearch } from '../data/ResearchHistory'
+import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
 import type { EntityRelationship } from './EntityPage'
+
+/** T1: an explicit restore request raised by the parent (ResearchLibrary). */
+export type RestoreRequest = {
+  research: SavedResearch
+  /** Monotonic token — a new value re-triggers the restore. */
+  requestId: number
+}
 
 export type ResearchPanelProps = {
   entityGlobalId: string
   entityName: string
   entityType: string
   relationships: EntityRelationship[]
+  /** T1: restore a saved research selected in the parent's ResearchLibrary. */
+  restoreRequest?: RestoreRequest | null
+  /** T1: fired after a successful save so the parent can refresh the library. */
+  onSaved?: (research: SavedResearch) => void
 }
+
+/** Save lifecycle for the "保存研究" primary action. */
+type SaveState =
+  | { status: 'idle' }
+  | { status: 'saving' }
+  | { status: 'saved'; research: SavedResearch; remote: boolean }
+  | { status: 'error'; message: string }
 
 type ResearchMode = 'idle' | 'planning' | 'running' | 'done' | 'error' | 'restored'
 
@@ -79,6 +98,9 @@ export function ResearchPanelView({
   selectedEntities = [] as SelectableEntity[],
   availableEntities = [] as SelectableEntity[],
   onSelectEntities = (_entities: SelectableEntity[]) => {},
+  saveState = { status: 'idle' } as SaveState,
+  onSave = () => {},
+  onBookmarkUpdate = () => {},
 }: ResearchPanelProps & {
   mode?: ResearchMode
   dimensions?: ResearchDimension[]
@@ -87,6 +109,9 @@ export function ResearchPanelView({
   selectedEntities?: SelectableEntity[]
   availableEntities?: SelectableEntity[]
   onSelectEntities?: (entities: SelectableEntity[]) => void
+  saveState?: SaveState
+  onSave?: () => void
+  onBookmarkUpdate?: () => void
 }) {
   const template = templateFor(entityType)
 
@@ -181,9 +206,51 @@ export function ResearchPanelView({
                 <p>研究完成。你可以保存这份研究结果到「研究收藏库」中，之后随时恢复查看或与其他实体进行对比。</p>
               </div>
 
-              <button type="button" className="rp-reset-btn" onClick={onReset}>
-                重新研究
-              </button>
+              {/* T1: the save loop actually closes here — primary action. */}
+              <div className="rp-save-actions">
+                {saveState.status === 'saved' ? (
+                  <div className="rp-save-done" role="status">
+                    <span className="rp-save-done-text">
+                      已保存到「研究收藏库」
+                      {saveState.remote ? '' : '（当前离线，已存在本机，联网后可再次保存同步）'}
+                    </span>
+                    <ResearchBookmarkView
+                      researchId={saveState.research.id}
+                      bookmarked={saveState.research.bookmarked}
+                      labels={saveState.research.labels}
+                      onUpdate={onBookmarkUpdate}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    className="rp-save-btn"
+                    disabled={saveState.status === 'saving'}
+                    onClick={onSave}
+                  >
+                    {saveState.status === 'saving' ? '保存中…' : '保存研究'}
+                  </button>
+                )}
+
+                {saveState.status === 'error' && (
+                  <p className="rp-save-error" role="alert">
+                    保存失败：{saveState.message}
+                  </p>
+                )}
+
+                <button
+                  type="button"
+                  className="rp-reset-btn rp-reset-btn--secondary"
+                  onClick={() => {
+                    const confirmed =
+                      typeof window === 'undefined' ||
+                      window.confirm('重新研究会清空当前结果。确定继续吗？')
+                    if (confirmed) onReset()
+                  }}
+                >
+                  重新研究
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -215,6 +282,7 @@ export default function ResearchPanel(props: ResearchPanelProps) {
   const [mode, setMode] = useState<ResearchMode>('idle')
   const [dimensions, setDimensions] = useState<ResearchDimension[]>([])
   const [selectedEntities, setSelectedEntities] = useState<SelectableEntity[]>([])
+  const [saveState, setSaveState] = useState<SaveState>({ status: 'idle' })
 
   // Build available entities from relationships
   const availableEntities: SelectableEntity[] = (props.relationships ?? [])
@@ -227,10 +295,12 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     ...selectedEntities.map((e) => e.globalId!).filter(Boolean),
   ]
 
-  // M45 Phase 3: record save event when research completes
+  // T1: `save_research` MUST NOT auto-fire on completion — it now fires only
+  // inside handleSave (a real user save). Reaching 'done' is a *completion*,
+  // which is its own event.
   useEffect(() => {
     if (mode === 'done') {
-      recordEvent({ action: 'save_research', entityGlobalId: props.entityGlobalId })
+      recordEvent({ action: 'complete_research', entityGlobalId: props.entityGlobalId })
     }
   }, [mode, props.entityGlobalId])
 
@@ -240,6 +310,58 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       recordEvent({ action: 'restore_research', entityGlobalId: props.entityGlobalId })
     }
   }, [mode, props.entityGlobalId])
+
+  // T1: parent-driven restore (ResearchLibrary "打开" in EntityPage).
+  const restoreId = props.restoreRequest?.requestId
+  const restoreResearchData = props.restoreRequest?.research
+  useEffect(() => {
+    if (restoreId === undefined || !restoreResearchData) return
+    setDimensions(restoreResearch(restoreResearchData))
+    setSaveState({ status: 'idle' })
+    setMode('restored')
+  }, [restoreId, restoreResearchData])
+
+  async function handleSave() {
+    if (saveState.status === 'saving') return
+    setSaveState({ status: 'saving' })
+
+    // Aggregate every citation the dimensions produced (same de-dup rule
+    // ResearchSummary uses) so the saved record keeps its provenance.
+    const seen = new Set<string>()
+    const citations: AICitation[] = []
+    for (const d of dimensions) {
+      for (const c of d.citations ?? []) {
+        if (!seen.has(c.global_id)) {
+          seen.add(c.global_id)
+          citations.push(c)
+        }
+      }
+    }
+
+    try {
+      const { research, remote } = await saveResearchRemote({
+        entityName: props.entityName,
+        entityType: props.entityType,
+        entityGlobalId: props.entityGlobalId,
+        comparedNames: selectedEntities.map((e) => e.name),
+        dimensions,
+        summaryCitations: citations,
+        question: `关于${props.entityName}的多维度分析`,
+        contextGlobalIds: contextGlobalIds,
+        visited: contextGlobalIds,
+        citations,
+      })
+      // T1: the ONLY place save_research is emitted.
+      recordEvent({ action: 'save_research', entityGlobalId: props.entityGlobalId })
+      setSaveState({ status: 'saved', research, remote })
+      props.onSaved?.(research)
+    } catch (err) {
+      setSaveState({
+        status: 'error',
+        message: err instanceof Error ? err.message : '未知错误',
+      })
+    }
+  }
 
   async function onStart(_q: string) {
     // M45: record research start
@@ -288,10 +410,27 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       mode={mode}
       dimensions={dimensions}
       onStart={onStart}
-      onReset={() => { setMode('idle'); setDimensions([]); setSelectedEntities([]) }}
+      onReset={() => {
+        setMode('idle')
+        setDimensions([])
+        setSelectedEntities([])
+        setSaveState({ status: 'idle' })
+      }}
       selectedEntities={selectedEntities}
       availableEntities={availableEntities}
       onSelectEntities={setSelectedEntities}
+      saveState={saveState}
+      onSave={handleSave}
+      onBookmarkUpdate={() => {
+        // ResearchBookmarkButton already persisted the flip; mirror it so the
+        // button reflects the new state without a remount.
+        setSaveState((prev) =>
+          prev.status === 'saved'
+            ? { ...prev, research: { ...prev.research, bookmarked: !prev.research.bookmarked } }
+            : prev,
+        )
+        if (saveState.status === 'saved') props.onSaved?.(saveState.research)
+      }}
     />
   )
 }

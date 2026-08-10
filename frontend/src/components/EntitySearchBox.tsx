@@ -28,6 +28,10 @@ function EntitySearchBox({
 }: EntitySearchBoxProps) {
   const [value, setValue] = useState('')
   const { t } = useLocale()
+  const chips = (t('search.chipExamples') || '')
+    .split('|')
+    .map((s) => s.trim())
+    .filter(Boolean)
 
   function submit() {
     const q = value.trim()
@@ -69,6 +73,25 @@ function EntitySearchBox({
           {loading ? t('common.searching') : t('search.button')}
         </button>
       </div>
+
+      <p className="search-hint">{t('search.boxHint')}</p>
+      {chips.length > 0 && (
+        <div className="search-chips">
+          {chips.map((c) => (
+            <button
+              key={c}
+              type="button"
+              className="search-chip"
+              onClick={() => {
+                setValue(c)
+                onSearch(c)
+              }}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      )}
 
       {error && <p className="explorer-error">{error}</p>}
     </>

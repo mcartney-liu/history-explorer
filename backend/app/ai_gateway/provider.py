@@ -25,18 +25,30 @@ class BaseProvider:
 
 
 class OpenAIProvider(BaseProvider):
-    """Approved adapter for the OpenAI Chat Completions API."""
+    """Approved adapter for the OpenAI Chat Completions API.
+
+    ADR-0017: accepts an optional `base_url` so an OpenAI-compatible domestic
+    provider (DeepSeek / 通义 / 智谱) can be wired in by redirecting the
+    whitelisted `openai` SDK -- ZERO new dependency. `model` is configurable so
+    the provider's model name (e.g. deepseek-chat) can be selected. When
+    base_url / model are None, behaviour is identical to the original OpenAI
+    default (gpt-4o-mini against api.openai.com).
+    """
 
     name = "openai"
 
-    def __init__(self, api_key, model="gpt-4o-mini"):
+    def __init__(self, api_key, model="gpt-4o-mini", base_url=None):
         self._api_key = api_key
         self._model = model
+        self._base_url = base_url
         try:
             import openai  # lazy import: SDK not required at import time
         except ImportError as exc:
             raise AIUnavailableError("openai SDK not installed: %s" % exc) from exc
-        self._client = openai.OpenAI(api_key=api_key)
+        client_kwargs = {"api_key": api_key}
+        if base_url:
+            client_kwargs["base_url"] = base_url
+        self._client = openai.OpenAI(**client_kwargs)
 
     def complete(self, system_prompt, user_prompt, max_tokens=512):
         resp = self._client.chat.completions.create(
@@ -69,6 +81,10 @@ def get_provider(config=None):
     if factory is None:
         return None
     try:
-        return factory(api_key=cfg.api_key)
+        return factory(
+            api_key=cfg.api_key,
+            model=cfg.model or "gpt-4o-mini",
+            base_url=cfg.base_url,
+        )
     except AIUnavailableError:
         return None

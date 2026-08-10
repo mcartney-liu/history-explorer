@@ -5,6 +5,8 @@
 // Zero business logic. Zero state.
 // ============================================================
 
+import { useLocale } from '../../data/locale'
+
 export interface TopicCardData {
   slug: string
   label: string
@@ -19,13 +21,15 @@ interface TopicCardProps {
 }
 
 export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps) {
+  const { t } = useLocale()
+
   if (variant === 'entity') {
     return (
       <button
         type="button"
         className="discover-theme-card"
         data-topic={card.slug}
-        aria-label={`探索 ${card.label}`}
+        aria-label={t('discover.topicAria', { label: card.label })}
         onClick={() => onClick(card.slug)}
       >
         <span className="discover-theme-label">{card.label}</span>
@@ -39,12 +43,12 @@ export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps
       type="button"
       className="he-card"
       data-topic={card.slug}
-      aria-label={`探索 ${card.label}`}
+      aria-label={t('discover.topicAria', { label: card.label })}
       onClick={() => onClick(card.slug)}
     >
       <span className="he-card-title">{card.label}</span>
       {card.desc && <span className="he-card-summary">{card.desc}</span>}
-      <span className="he-card-cta">开始探索 →</span>
+      <span className="he-card-cta">{t('discover.topicStart')}</span>
     </button>
   )
 }

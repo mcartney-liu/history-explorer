@@ -45,6 +45,7 @@ class KnowledgeRegistry:
                 "topic": topic,
                 "title": data.get("title", topic.replace("_", " ").replace("-", " ").title()),
                 "summary": (data.get("summary") or "")[:160],
+                "category": data.get("category", ""),
             }
             self._entities[topic] = {}
             for ent in data.get("entities") or []:

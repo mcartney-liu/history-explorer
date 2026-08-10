@@ -41,10 +41,13 @@ No AI / GIS / Neo4j / third-party graph library — pure stdlib, fully additive.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from .global_graph import GlobalGraph
 from .registry import KnowledgeRegistry
+
+if TYPE_CHECKING:
+    from .causal.adapter import CausalStatementAdapter
 
 
 # ---------------------------------------------------------------------------
@@ -92,6 +95,36 @@ RELATIONSHIP_MEANING: dict[str, float] = {
     "related_to": 0.40,
 }
 
+# M73-A P0-1 — presentation-layer phrasing for explanation text.
+# Maps a relationship to (outgoing phrase, incoming phrase) so path
+# explanations read as prose instead of leaking raw DSL such as
+# "—[participated_in outgoing]→".
+#
+# ARCHITECTURE NOTE: this table is display-only. It intentionally carries NO
+# structural dependency on `validation.RELATIONSHIP_TYPES` (no import, no
+# equality assertion) — the frozen 18 remain the platform safety boundary,
+# while this map is free to evolve or lag. Unknown keys degrade gracefully.
+_RELATION_PHRASES: dict[str, tuple[str, str]] = {
+    "caused": ("caused", "was caused by"),
+    "influenced": ("influenced", "was influenced by"),
+    "participated_in": ("participated in", "had as participant"),
+    "located_at": ("was located at", "was the location of"),
+    "related_to": ("is related to", "is related to"),
+    "before": ("came before", "came after"),
+    "after": ("came after", "came before"),
+    "contemporary_with": ("was contemporary with", "was contemporary with"),
+    "part_of": ("was part of", "included"),
+    "ruled": ("ruled", "was ruled by"),
+    "traded_with": ("traded with", "traded with"),
+    "invented": ("invented", "was invented by"),
+    "discovered": ("discovered", "was discovered by"),
+    "practiced": ("practiced", "was practiced by"),
+    "spoke": ("spoke", "was spoken by"),
+    "inherited": ("inherited", "was inherited by"),
+    "conquered": ("conquered", "was conquered by"),
+    "spread": ("spread", "was spread by"),
+}
+
 # Final blended-score weights (sum to 1.0). Relationship meaning leads;
 # simplicity is the smallest term so we never reward "shortest == best".
 W_RELATIONSHIP = 0.35
@@ -134,15 +167,19 @@ class PathCandidate:
     score: float
     score_breakdown: dict               # the four explainable components
     explanation: str                    # human-readable "why related" seam
+    causal_statements: list[dict] = field(default_factory=list)  # M82 P1.5
 
     def to_dict(self) -> dict:
-        return {
+        result: dict = {
             "nodes": list(self.nodes),
             "steps": [s.to_dict() for s in self.steps],
             "score": self.score,
             "score_breakdown": dict(self.score_breakdown),
             "explanation": self.explanation,
         }
+        if self.causal_statements:
+            result["causal_statements"] = self.causal_statements
+        return result
 
 
 @dataclass
@@ -155,9 +192,10 @@ class ExploredNode:
     score: float
     score_breakdown: dict
     explanation: str
+    causal_statements: list[dict] = field(default_factory=list)  # M83.0 DEBT-001A
 
     def to_dict(self) -> dict:
-        return {
+        result: dict = {
             "global_id": self.global_id,
             "depth": self.depth,
             "path": list(self.path),
@@ -166,6 +204,9 @@ class ExploredNode:
             "score_breakdown": dict(self.score_breakdown),
             "explanation": self.explanation,
         }
+        if self.causal_statements:
+            result["causal_statements"] = self.causal_statements
+        return result
 
 
 @dataclass
@@ -282,9 +323,11 @@ class ExplorationEngine:
         global_graph: GlobalGraph,
         registry: KnowledgeRegistry,
         topic_datasets: list[tuple[str, dict]],
+        causal_adapter: "CausalStatementAdapter | None" = None,
     ):
         self._gg = global_graph
         self._registry = registry
+        self._causal = causal_adapter  # M82 P1.4 — optional Semantic Layer
         # (src_gid, tgt_gid, type) -> raw relationship dict, for explicit weights.
         self._rel_lookup = self._build_rel_lookup(topic_datasets)
         # Per-entity importance, computed once from type + graph centrality.
@@ -454,13 +497,15 @@ class ExplorationEngine:
         candidates: list[PathCandidate] = []
         for p in paths:
             score, breakdown, steps = self._score_path(p)
+            explanation, cs_list = self._explain_path(steps)
             candidates.append(
                 PathCandidate(
                     nodes=p,
                     steps=steps,
                     score=score,
                     score_breakdown=breakdown,
-                    explanation=self._explain_path(steps),
+                    explanation=explanation,
+                    causal_statements=cs_list,
                 )
             )
         # Rank: higher score first; tie-break by fewer hops, then stable string.
@@ -492,6 +537,7 @@ class ExplorationEngine:
             if not path:
                 continue
             score, breakdown, steps = self._score_path(path)
+            explanation, cs_list = self._explain_path(steps)  # M83.0 DEBT-001A: unpack tuple
             results.append(
                 ExploredNode(
                     global_id=node.global_id,
@@ -500,7 +546,8 @@ class ExplorationEngine:
                     steps=steps,
                     score=score,
                     score_breakdown=breakdown,
-                    explanation=self._explain_path(steps),
+                    explanation=explanation,
+                    causal_statements=cs_list,  # M83.0 DEBT-001A
                 )
             )
         results.sort(
@@ -508,8 +555,8 @@ class ExplorationEngine:
         )
         return results[:limit]
 
-    # --- public: deterministic next-node recommendation (M9-001) ----------
-    def recommend_next(
+    # --- public: deterministic next-node candidate generation (A3 / ADR-0015 D1) ----------
+    def generate_candidates(
         self,
         gid: str,
         seen_global_ids: Optional[set] = None,
@@ -597,6 +644,87 @@ class ExplorationEngine:
                 "candidate_count": len(scored),
             },
         )
+
+    # --- Topic entry points (M9-001 family, deterministic & explainable) --
+    # Picks the best 2-3 STARTING entities for a TOPIC (not an entity) using
+    # graph centrality + type diversity. Reuses the frozen graph primitives
+    # (_gg.all_nodes / neighbors) — no AI, no DB, no new dependency. The
+    # explainable `reason` per entry point serves Article 0's truth-layer
+    # requirement ("any conclusion shows its evidence strength").
+    ENTITY_TYPE_LABELS_ZH = {
+        "person": "人物",
+        "event": "事件",
+        "location": "地点",
+        "loc": "地点",
+        "organization": "组织",
+        "org": "组织",
+        "concept": "概念",
+        "idea": "思想",
+        "artifact": "器物",
+        "tech": "技术",
+        "technology": "技术",
+        "civilization": "文明",
+        "civ": "文明",
+        "religion": "宗教",
+    }
+
+    def topic_entry_points(self, topic: str, max_results: int = 3) -> dict:
+        """Deterministic, explainable entry points for a topic.
+
+        Returns serializable dict:
+          {"topic": str, "entry_points": [
+             {"global_id", "name", "type", "reason", "score"}, ...]}
+        Empty entry_points when the topic has no nodes (frontend falls back
+        to its static starter table).
+        """
+        prefix = topic + ":"
+        nodes = [n for n in self._gg.all_nodes()
+                 if n.global_id.startswith(prefix)]
+        if not nodes:
+            return {"topic": topic, "entry_points": []}
+
+        scored: list[dict] = []
+        max_degree = 0
+        for n in nodes:
+            edges = self._gg.neighbors(n.global_id, "both")
+            degree = len(edges)
+            rel_types = {e.type for e in edges}  # Edge.type = relationship type
+            coverage = len(rel_types)
+            score = degree + 0.5 * coverage
+            if degree > max_degree:
+                max_degree = degree
+            scored.append({
+                "global_id": n.global_id,
+                "name": n.name,
+                "type": n.type,
+                "degree": degree,
+                "rel_type_count": coverage,
+                "score": score,
+            })
+        # Deterministic order: score desc, then global_id asc.
+        scored.sort(key=lambda c: (-c["score"], c["global_id"]))
+
+        selected: list[dict] = []
+        type_seen: set[str] = set()
+        for c in scored:
+            if len(selected) >= max_results:
+                break
+            if c["type"] in type_seen:
+                continue  # diversity: at most one entity per type
+            type_seen.add(c["type"])
+            if c["degree"] >= max_degree and max_degree > 0:
+                reason = f"连接 {c['degree']} 条关系，是这个主题最中心的节点"
+            else:
+                type_label = self.ENTITY_TYPE_LABELS_ZH.get(c["type"], c["type"])
+                reason = f"代表{type_label}维度，串起 {c['rel_type_count']} 类关系"
+            selected.append({
+                "global_id": c["global_id"],
+                "name": c["name"],
+                "type": c["type"],
+                "reason": reason,
+                "score": round(c["score"], 3),
+            })
+        return {"topic": topic, "entry_points": selected}
 
     # --- recommendation helpers (M9-001, all deterministic) ---------------
     def _theme_connection(self, a, b) -> float:
@@ -696,19 +824,91 @@ class ExplorationEngine:
         }
 
     # --- explanation text (the future API/UI seam) ------------------------
-    def _explain_path(self, steps: list[PathStep]) -> str:
+    @staticmethod
+    def _relation_phrase(relationship: str, direction: str) -> str:
+        """Render a relationship edge as a natural-language English phrase.
+
+        M73-A P0-1: the previous implementation emitted raw DSL
+        (``—[participated_in outgoing]→``), leaking internal enum names and
+        traversal direction tokens into user-facing text.
+
+        NOTE (architecture): this is a *presentation-layer* phrase table. It
+        deliberately does NOT assert equality with ``RELATIONSHIP_TYPES``
+        (validation.py remains the single source of truth for the frozen 18).
+        Unknown relationships degrade gracefully to a de-underscored form, so
+        the two layers stay decoupled and may diverge intentionally.
+        """
+        outgoing, incoming = _RELATION_PHRASES.get(
+            relationship,
+            (relationship.replace("_", " "), f"is {relationship.replace('_', ' ')} of"),
+        )
+        return incoming if direction == "incoming" else outgoing
+
+    def _explain_path(self, steps: list[PathStep]) -> tuple[str, list[dict]]:
+        """Return ``(explanation_text, causal_statements)``.
+
+        *explanation_text* is always a human-readable string (template
+        fallback + optional CausalStatement enrichment).
+
+        *causal_statements* is a list of serialisable dicts (M82 P1.5) —
+        empty when no CausalStatement matches or the adapter is absent.
+        Frontend should consume *causal_statements* for structured
+        rendering rather than parsing the explanation string.
+        """
         if not steps:
-            return "No connecting relationship."
-        parts: list[str] = []
-        first = self._gg.get_node(steps[0].from_global_id)
-        if first:
-            parts.append(f"{first.type} '{first.name}'")
+            return "No connecting relationship.", []
+
+        # 1. Build the structural path text (template fallback — always present)
+        #    M73-A P0-1: natural-language phrasing, no raw enum / direction tokens.
+        #    Multi-hop paths become separate clauses joined by "; " — chaining
+        #    them into one sentence produced unparseable runs such as
+        #    "A had as participant B spoke C".
+        def _label(node) -> str:
+            return f"{node.name} ({node.type})"
+
+        clauses: list[str] = []
+        prev = self._gg.get_node(steps[0].from_global_id)
         for s in steps:
-            parts.append(f"—[{s.relationship} {s.direction}]→")
-            n = self._gg.get_node(s.to_global_id)
-            if n:
-                parts.append(f"{n.type} '{n.name}'")
-        return " ".join(parts)
+            nxt = self._gg.get_node(s.to_global_id)
+            phrase = self._relation_phrase(s.relationship, s.direction)
+            if prev is not None and nxt is not None:
+                clauses.append(f"{_label(prev)} {phrase} {_label(nxt)}")
+            elif nxt is not None:
+                clauses.append(f"{phrase} {_label(nxt)}")
+            prev = nxt
+        structural = "; ".join(clauses)
+
+        # 2. M82 P1.4/1.5 — enrich with CausalStatements (if adapter available)
+        cs_dicts: list[dict] = []
+        if self._causal is not None:
+            causal_parts: list[str] = []
+            seen_ids = set()
+            for s in steps:
+                matches = self._causal.get_for_relationship(
+                    s.from_global_id, s.to_global_id
+                )
+                for cs in matches:
+                    if cs.mechanism:
+                        causal_parts.append(
+                            f"[{cs.confidence or '?'}] {cs.mechanism}"
+                        )
+                    # Deduplicate by (cause_id, effect_id) — a CS may appear
+                    # on multiple edges of the same path
+                    key = (cs.cause_id, cs.effect_id)
+                    if key not in seen_ids:
+                        seen_ids.add(key)
+                        cs_dicts.append({
+                            "cause_id": cs.cause_id,
+                            "effect_id": cs.effect_id,
+                            "mechanism": cs.mechanism,
+                            "consequence": cs.consequence,
+                            "confidence": cs.confidence,
+                            "evidence_refs": list(cs.evidence_refs),
+                        })
+            if causal_parts:
+                return structural + " | " + " | ".join(causal_parts), cs_dicts
+
+        return structural, cs_dicts
 
     def _overall_explanation(self, candidates: list[PathCandidate]) -> str:
         if not candidates:

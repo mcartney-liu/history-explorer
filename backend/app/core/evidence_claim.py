@@ -31,6 +31,31 @@ SUBJECT_TYPE_ENTITY = "entity"
 SUBJECT_TYPE_RELATIONSHIP = "relationship"
 SUBJECT_TYPES = frozenset({SUBJECT_TYPE_ENTITY, SUBJECT_TYPE_RELATIONSHIP})
 
+# ADR-0018 (Truth layer): the curated truth-grading fields already present in
+# `data/evidence_claims.json`. They were silently dropped at this boundary, so
+# dissent/uncertainty never reached the answer path. Still 100% human-curated —
+# NO AI-assigned confidence (M26.1 freeze constraint unchanged).
+TRUTH_FIELDS = (
+    "confidence",
+    "scholar_consensus",
+    "controversy_level",
+    "interpretation_note",
+)
+
+
+def build_truth(raw) -> Optional[dict]:
+    """Project the curated truth-grading fields out of a raw claim dict.
+
+    Returns None when the claim carries no truth grading at all (most of the
+    76 curated claims), so the field stays absent rather than fake-empty.
+    """
+    if not isinstance(raw, dict):
+        return None
+    truth = {k: raw.get(k) for k in TRUTH_FIELDS}
+    if all(v in (None, "") for v in truth.values()):
+        return None
+    return truth
+
 
 @dataclass(frozen=True)
 class EvidenceClaim:
@@ -40,6 +65,10 @@ class EvidenceClaim:
     Relationship). `source_id` references a curated `Source` (resolved by the
     `SourceRegistry`). `claim` is the human-curated assertion. `notes` is
     optional free text.
+
+    ADR-0018: `truth` carries the curated grading
+    {confidence, scholar_consensus, controversy_level, interpretation_note}
+    when the source record provides it (None otherwise).
     """
 
     id: str
@@ -48,6 +77,7 @@ class EvidenceClaim:
     source_id: str
     claim: str
     notes: Optional[str] = None
+    truth: Optional[dict] = None
 
 
 class FileEvidenceClaimLoader:
@@ -87,4 +117,5 @@ def _to_evidence_claim(item) -> Optional[EvidenceClaim]:
         source_id=str(item.get("source_id", "")),
         claim=str(item.get("claim", "")),
         notes=item.get("notes"),
+        truth=build_truth(item),
     )

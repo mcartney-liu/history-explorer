@@ -299,11 +299,12 @@ export function geoComparison(
 
 /**
  * Frozen frontend mirror of the backend enum `RELATIONSHIP_TYPES`
- * (backend/app/validation.py, Schema Freeze M3.5-000, 18 types). This is a
- * DISPLAY-ONLY constant: it does not change the backend enum, the schema, or
- * any relationship semantics. It exists so that relationship types emitted by
- * the API can be validated against the known vocabulary and any value outside
- * the frozen set is bucketed as `unknown` (honest, not silently accepted).
+ * (backend/app/validation.py, Schema Freeze M3.5-000, 20 types after
+ * ADR-0019 disputes/reinterprets). This is a DISPLAY-ONLY constant: it does
+ * not change the backend enum, the schema, or any relationship semantics.
+ * It exists so that relationship types emitted by the API can be validated
+ * against the known vocabulary and any value outside the frozen set is
+ * bucketed as `unknown` (honest, not silently accepted).
  */
 export const RELATIONSHIP_TYPES: ReadonlySet<string> = new Set<string>([
   'caused',
@@ -324,6 +325,8 @@ export const RELATIONSHIP_TYPES: ReadonlySet<string> = new Set<string>([
   'inherited',
   'conquered',
   'spread',
+  'disputes',
+  'reinterprets',
 ])
 
 /**

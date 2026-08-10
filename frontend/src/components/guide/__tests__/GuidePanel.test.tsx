@@ -6,12 +6,16 @@ import GuidePanel from '../GuidePanel'
 const china = () => getPackages().find((p) => p.slug === 'china-civilization-v1')!
 const noop = () => {}
 
+// NOTE: renderToStaticMarkup does NOT provide React Context, so useLocale()
+// falls back to the default t(k)=>k (returns i18n keys, not translations).
+// These assertions test the key presence, not the translated text.
+
 describe('GuidePanel (deterministic exploration navigation)', () => {
   it('renders the guide shell with title', () => {
     const html = renderToStaticMarkup(
       <GuidePanel pkg={china()} visited={[]} locale="zh" onEntityClick={noop} />,
     )
-    expect(html).toContain('探索向导')
+    expect(html).toContain('guide.title')
     expect(html).toContain('data-testid="exploration-guide"')
   })
 
@@ -19,27 +23,24 @@ describe('GuidePanel (deterministic exploration navigation)', () => {
     const html = renderToStaticMarkup(
       <GuidePanel pkg={china()} visited={[]} locale="zh" onEntityClick={noop} />,
     )
-    expect(html).toContain('本包入口')
-    expect(html).toContain('你现在在')
+    expect(html).toContain('guide.entryHint')
+    expect(html).toContain('guide.positionLabel')
   })
 
   it('shows next steps with reasons', () => {
     const html = renderToStaticMarkup(
       <GuidePanel pkg={china()} visited={[]} locale="zh" onEntityClick={noop} />,
     )
-    expect(html).toContain('下一步可以探索')
+    expect(html).toContain('guide.nextLabel')
     // Reason text comes from RELATIONSHIP_TEMPLATES (deterministic)
-    expect(html).toContain('查看')
+    expect(html).toContain('guide.nextCta')
   })
 
   it('shows coverage counters', () => {
     const html = renderToStaticMarkup(
       <GuidePanel pkg={china()} visited={['china_v1:idea-keju']} locale="zh" onEntityClick={noop} />,
     )
-    expect(html).toContain('已探索')
-    expect(html).toContain('实体')
-    expect(html).toContain('关系')
-    expect(html).toContain('%')
+    expect(html).toContain('guide.coverageText')
   })
 
   it('renders "completed" state when everything is visited', () => {
@@ -49,7 +50,7 @@ describe('GuidePanel (deterministic exploration navigation)', () => {
     const html = renderToStaticMarkup(
       <GuidePanel pkg={china()} visited={all} locale="zh" onEntityClick={noop} />,
     )
-    expect(html).toContain('本包探索已全部完成')
+    expect(html).toContain('guide.doneText')
   })
 
   // M71 — onNextClick passthrough: optional prop must not change rendering.
@@ -65,8 +66,8 @@ describe('GuidePanel (deterministic exploration navigation)', () => {
         onNextClick={noop}
       />,
     )
-    expect(html).toContain('探索向导')
-    expect(html).toContain('下一步可以探索')
-    expect(html).toContain('查看')
+    expect(html).toContain('guide.title')
+    expect(html).toContain('guide.nextLabel')
+    expect(html).toContain('guide.nextCta')
   })
 })

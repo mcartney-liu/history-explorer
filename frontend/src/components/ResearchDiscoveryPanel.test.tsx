@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as renderToStaticMarkupRaw } from 'react-dom/server'
 import { ResearchDiscoveryPanelView } from './ResearchDiscoveryPanel'
 import type { ResearchRecommendation } from '../data/ResearchPlanner'
+import { LocaleProvider } from '../data/locale'
 
 function mkRec(overrides: Partial<ResearchRecommendation> = {}): ResearchRecommendation {
   return {
@@ -12,6 +13,10 @@ function mkRec(overrides: Partial<ResearchRecommendation> = {}): ResearchRecomme
     suggestedDimensions: ['政治', '军事'],
     ...overrides,
   }
+}
+
+function renderToStaticMarkup(node: JSX.Element) {
+  return renderToStaticMarkupRaw(<LocaleProvider>{node}</LocaleProvider>)
 }
 
 describe('ResearchDiscoveryPanelView', () => {

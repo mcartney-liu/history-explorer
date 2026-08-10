@@ -53,7 +53,7 @@ export function JourneyPanel({ onNavigate, onClearComplete }: JourneyPanelProps)
               aria-label={`Revisit ${e.label}`}
               onClick={() => onNavigate?.(e)}
             >
-              <span className="journey-kind">{e.kind === 'topic' ? '主题' : '实体'}</span>
+              <span className="journey-kind">{e.kind === 'topic' ? '主题' : e.kind === 'causal_object' ? '理解' : '实体'}</span>
               <span className="journey-label">{e.label}</span>
               <span className="journey-time">{formatTs(e.ts)}</span>
             </button>

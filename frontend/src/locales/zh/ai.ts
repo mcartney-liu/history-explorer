@@ -1,6 +1,6 @@
 export default {
   'entity.ai_insight': '历史洞察',
-  'workspace.ai': 'AI Historian',
+  'workspace.ai': 'AI 历史学家',
   'workspace.ai_subtitle': '你的历史研究伙伴',
   // M74-003 (C3): Trust Display copy — evidence-based, never "AI-generated"
   // for deterministic output (PO Condition 2).
@@ -29,4 +29,5 @@ export default {
   'ai.tier_unknown': '来源等级未知',
   // M74-004-002 (Commit 2A): Journey Trail — exploration path visualization.
   'ai.journey_trail_title': '探索足迹',
+  'ai.trust_no_next': '暂无推荐探索路径——可基于上方证据继续探索，或打开相邻实体。',
 }

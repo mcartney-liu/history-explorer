@@ -1,7 +1,7 @@
 import EmptyState from './EmptyState'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
 
 export type RelatedEntity = {
   id: string
@@ -61,8 +61,8 @@ function RelatedEntityList({
               <span className="re-type">{getEntityLabel(item.type, locale)}</span>
               <span className="re-rel">
                 {mainEntityName
-                  ? t('relationship.connectedVia', { rel: item.relationship })
-                  : item.relationship}
+                  ? t('relationship.connectedVia', { rel: getRelationshipLabel(item.relationship, locale) })
+                  : getRelationshipLabel(item.relationship, locale)}
               </span>
             </li>
             )

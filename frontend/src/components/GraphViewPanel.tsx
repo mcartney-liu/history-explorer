@@ -104,7 +104,7 @@ function GraphViewPanel({
           width={layout.width}
           height={layout.height}
         rx={12}
-        style={{ fill: 'var(--bg-surface)', stroke: 'var(--border-subtle)' }}
+        style={{ fill: 'var(--color-paper-100)', stroke: 'var(--color-paper-300)' }}
       />
 
         {/* Edges first so nodes render on top. */}
@@ -116,7 +116,7 @@ function GraphViewPanel({
                 y1={e.y1}
                 x2={e.x2}
                 y2={e.y2}
-                style={{ stroke: 'var(--border-default)' }}
+                style={{ stroke: 'var(--color-paper-300)' }}
                 strokeWidth={1.5}
               />
               {showEdgeLabels ? (
@@ -125,7 +125,7 @@ function GraphViewPanel({
                   y={e.my - 3}
                   textAnchor="middle"
                   fontSize={9}
-                  style={{ fill: 'var(--mid)' }}
+                  style={{ fill: 'var(--color-ink-500)' }}
                 >
                   {getRelationshipLabel(e.type, locale)}
                 </text>
@@ -161,14 +161,14 @@ function GraphViewPanel({
                     : undefined
                 }
               >
-                <circle r={r} fill={fill} style={{ stroke: 'var(--hi)' }} strokeWidth={2} />
+                <circle r={r} fill={fill} style={{ stroke: 'var(--color-ink-900)' }} strokeWidth={2} />
                 <title>{`${n.name} (${getEntityLabel(n.type, locale)})`}</title>
                 <text
                   y={r + 13}
                   textAnchor="middle"
                   fontSize={11}
                   fontWeight={n.isMain ? 700 : 500}
-                  style={{ fill: 'var(--hi)' }}
+                  style={{ fill: 'var(--color-ink-900)' }}
                 >
                   {label}
                 </text>

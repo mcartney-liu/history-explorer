@@ -92,6 +92,13 @@ class KnowledgeService:
         # local id -> claims whose subject_id mentions it (entity subject OR
         # either side of an "A->B" pair). Both sources share ONE index — the
         # ClaimGraph model is unified (Step 3 requirement 5).
+        # ADR-0018 (Truth layer): claim id -> raw curated claim record, so the
+        # AI path can read the curated truth grading (confidence /
+        # scholar_consensus / controversy_level / interpretation_note) that was
+        # previously dropped at the ClaimEntry boundary.
+        self._claims_by_id: dict[str, dict] = {
+            c.get("id"): c for c in self._claims if c.get("id")
+        }
         self._claims_by_local: dict[str, list[dict]] = {}
         for claim in self._claims:
             sid = claim.get("subject_id")
@@ -177,6 +184,17 @@ class KnowledgeService:
         if ref is None:
             return []
         return list(self._claims_by_local.get(ref.local_id, []))
+
+    def get_evidence_claim(self, claim_id: str) -> Optional[dict]:
+        """Raw curated Evidence Claim record by its claim id (read-only).
+
+        ADR-0018: exposes the curated truth-grading fields (confidence /
+        scholar_consensus / controversy_level / interpretation_note) so
+        `ClaimEntry` can carry them. Returns None for unknown ids; never raises.
+        """
+        if not isinstance(claim_id, str):
+            return None
+        return self._claims_by_id.get(claim_id)
 
     def get_source(self, source_id: str) -> Optional[dict]:
         """Look up a curated Source record by id (read-only)."""
@@ -427,11 +445,11 @@ class KnowledgeService:
         )
 
     # --- M9-001: Deterministic Next-Node Recommendation (ADDITIVE) -------
-    # Pure delegation to the Exploration Engine's deterministic `recommend_next`.
+    # Pure delegation to the Exploration Engine's deterministic `generate_candidates` (A3 / ADR-0015 D1).
     # This method is ADDITIVE: it adds a new capability without changing any
     # existing method's behavior or the frozen public API contract. Ranking is
     # fixed-formula (no AI / ML), reusing the engine's frozen scoring primitives.
-    def recommend_next(
+    def generate_candidates(
         self,
         gid: str,
         seen_global_ids: Optional[set] = None,
@@ -443,7 +461,14 @@ class KnowledgeService:
         to call `.to_dict()` for JSON serialization. `seen_global_ids` is the set
         of already-visited global_ids used for the diversity penalty.
         """
-        return self._exploration_engine.recommend_next(gid, seen_global_ids, max_results)
+        return self._exploration_engine.generate_candidates(gid, seen_global_ids, max_results)
+
+    # --- M9-001 family: Topic entry points (ADDITIVE) --------------------
+    # Deterministic, explainable starting entities for a TOPIC. Pure
+    # delegation to the Exploration Engine; no AI / ML, no new dependency.
+    def topic_entry_points(self, topic: str, max_results: int = 3) -> dict:
+        """Deterministic, explainable entry points for `topic`."""
+        return self._exploration_engine.topic_entry_points(topic, max_results)
 
     # --- Timeline (delegates to timeline index) --------------------------
     def get_timeline_index(self, topic: str) -> list[dict]:

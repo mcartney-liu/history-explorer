@@ -89,17 +89,17 @@ describe('TrustDisplay', () => {
   it('renders next-exploration items with relationship and source binding', () => {
     const el = renderTrust({ nextExploration: NEXT, engine: 'deterministic' })
     const text = el.textContent ?? ''
-    expect(text).toContain('Roman Empire Established')
-    expect(text).toContain('participated_in')
-    expect(text).toContain('src-tacitus-ann')      // source id surfaced (Trust)
+    expect(text).toContain('罗马帝国建立')           // getEntityDisplayName mapped
+    expect(text).toContain('参与')                    // getRelationshipLabel mapped
+    expect(text).toContain('tacitus ann')             // formatSourceId cleaned
   })
 
   it('renders verified evidence entries with the verified badge', () => {
     const el = renderTrust({ evidence: EVIDENCE, engine: 'deterministic' })
     const text = el.textContent ?? ''
-    expect(text).toContain('person-augustus')
+    expect(text).toContain('person-augustus')          // formatSourceId stripped prefix
     expect(text).toContain('已校验')                // verified badge
-    expect(text).toContain('roman_empire:person-augustus')
+    expect(text).toContain('person-augustus')          // global_id also formatted
   })
 
   it('renders the empty state when nothing is available', () => {
@@ -129,7 +129,7 @@ describe('TrustDisplay', () => {
   it('keeps legacy next items (no detail fields) rendering source_id only', () => {
     const el = renderTrust({ nextExploration: NEXT, engine: 'deterministic' })
     const text = el.textContent ?? ''
-    expect(text).toContain('src-tacitus-ann')
+    expect(text).toContain('tacitus ann')             // formatSourceId cleaned
     expect(text).not.toContain('推荐原因')          // no reason -> no reason row
   })
 

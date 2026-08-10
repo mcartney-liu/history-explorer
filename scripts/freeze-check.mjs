@@ -66,8 +66,10 @@ const AI_SDK_PATTERN = /(openai|anthropic|cohere|langchain|huggingface|gemini|cl
 // Always-forbidden infrastructure (never allowed, even outside the AI module).
 const FORBIDDEN_INFRA = /(neo4j|redis|graphql|tensorflow|torch|pytorch|spacy|nltk|scikit-learn|sklearn)/i;
 
+// ADR-0019 (2026-08-08): disputes / reinterprets added for Truth-layer P09
+// dissent navigation — enum 18 → 20 (additive, PO-approved).
 const EXPECTED_ENTITY_TYPES = 8;
-const EXPECTED_RELATIONSHIP_TYPES = 18;
+const EXPECTED_RELATIONSHIP_TYPES = 20;
 const SCAN_DIRS = ["frontend/src", "backend/app"];
 
 function log(msg) {
@@ -180,6 +182,11 @@ export const SCOPE_ALLOWLIST = [
   "data/evidence_claims.json",
   // M29.1-A (ProvenanceIndex module) — Freeze Revision Gate
   "backend/app/core/provenance_index.py",
+  // Wave2-#149 follow-up — zh display-name resolution in build_exploration_view.
+  // Benign i18n fix (no AI / DB / new dependency); mirrors the zh resolution
+  // already present in build_exploration_response. Resolves the pre-existing
+  // D-class freeze flag on backend/app/core/exploration.py.
+  "backend/app/core/exploration.py",
   // M29.1-B (Runtime Projection Activation) — Freeze Revision Gate (ADR-005)
   "backend/app/main.py",
   // M29.1-C / M29.2 (Provenance API + tests) — Freeze Revision Gate (ADR-005)
@@ -254,6 +261,8 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/exploration/",
   "frontend/src/components/journey/",
   "frontend/src/components/FeedbackWidget.tsx",
+  // M62.5 / ADR-0020 — LandingPage UI 文案双语化（接 useLocale/t，文案迁 locales）
+  "frontend/src/components/LandingPage.tsx",
   "frontend/src/lib/journey.ts",
   "frontend/src/data/narrative.ts",
   // M35 co-located unit tests (same convention as M30-A/M34: every gated
@@ -282,6 +291,11 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/ai_gateway/prompt_service.py",
   "backend/app/ai_gateway/answer_service.py",
   "backend/app/ai_gateway/config.py",
+  // ADR-0017 (PO-approved 2026-08-08): domestic OpenAI-compatible provider support.
+  // provider.py gains base_url + model passthrough (redirects the whitelisted
+  // openai SDK to DeepSeek/通义/智谱). Zero new dependency; grounding + fallback
+  // unchanged; default behaviour byte-identical when AI_BASE_URL/AI_MODEL unset.
+  "backend/app/ai_gateway/provider.py",
   "frontend/src/data/aiClient.ts",
   "frontend/src/data/aiClient.test.ts",  // M65-A04 (PO-approved) — AI client contract tests (H9 real-AI link)
   // M74-003 (C3-2, PO-approved): AI exploration suggestions build-time flag.
@@ -446,6 +460,7 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/main.tsx",
   "frontend/src/pages/DevCatalog.tsx",
   "frontend/src/data/locale.tsx",
+  "frontend/src/data/interpretationFormatter.ts",  // P5-S4/S5 四视角重组时解释格式化器调整（i18n + 区归属）
   "frontend/src/__tests__/",
   // M61-bridge-build (TypeScript cleanup) — Frontend Freeze Revision Gate
   // (lightweight ADR-0004; PO-approved 2026-07-29 as part of the vM60 harvest
@@ -746,6 +761,205 @@ export const SCOPE_ALLOWLIST = [
   // cross-platform data path fix only. No runtime, schema, dependency,
   // or business logic impact.
   "backend/tests/test_ontology_contract.py",
+  // Phase 5 (A3 red-line downgrade, ADR-0015 D1) — Freeze Revision Gate (PO-approved 2026-08-07).
+  // Backend: rename recommend_next -> generate_candidates + retire public /recommendations endpoint.
+  "backend/app/core/exploration_engine.py",
+  "backend/tests/test_recommend.py",
+  // Frontend: NextStepPanel replaces RecommendationPanel (no recommendation vocabulary).
+  // CompanionShell/CompanionRouter thread ExplorationAction[] into NextStepPanel (discover mode).
+  "frontend/src/components/NextStepPanel.tsx",
+  "frontend/src/components/NextStepPanel.test.tsx",
+  "frontend/src/components/ai/CompanionShell.tsx",
+  "frontend/src/components/ai/CompanionRouter.tsx",
+  // M9-001 (explore-starters dynamic endpoint) — Frontend Freeze Revision Gate.
+  // TopicExploreStarters wraps FirstExplorationGuide, fetches from the new
+  // /api/v1/topics/{topic}/explore-starters endpoint and merges curated
+  // Chinese copy (from TOPIC_STARTERS) onto engine-picked entities.
+  "frontend/src/components/TopicExploreStarters.tsx",
+  // M9-001 family (C1) — EntityRelatedList: entity-page Research tab surfaces
+  // deterministic related entities from GET /api/v1/related-entities (graph
+  // engine generate_candidates). Pure presentation + fetch; no AI, no DB.
+  "frontend/src/components/EntityRelatedList.tsx",
+
+  // M60 type-debt cleanup — Frontend Freeze Revision Gate (PO-approved 2026-08-07).
+  // Pure TypeScript type fixes + dead-code removal (tsc --noEmit 55 -> 0; no
+  // behavioural change). No backend / schema / enum / dependency / runtime
+  // change; runtime 0.13.0. Least Privilege: exact file paths ONLY (deliberately
+  // NO broad prefix for data/ next/ routing/ primitives/).
+  "frontend/src/components/primitives/EvidenceBlock.tsx",
+  "frontend/src/data/causalStatement.ts",
+  "frontend/src/next/companion/ExplanationReplay.ts",
+  "frontend/src/next/memory/MemoryPolicy.ts",
+  "frontend/src/next/memory/MemoryProjection.ts",
+  "frontend/src/routing/legacyRedirect.ts",
+  "frontend/src/routing/parseRoute.ts",
+
+  // P5-S2 Step 0 — VS-01 Token layer (PO-approved 2026-08-07). Additive CSS
+  // variables only (VS-01 semantic names, dark-compatible values); old tokens
+  // retained. No backend / schema / enum / dependency / runtime change.
+  "frontend/src/styles/tokens.css",
+  "frontend/src/styles/ui.css",
+  "frontend/src/styles/layout-grid.css",
+  "frontend/src/styles/package.css",
+  "frontend/src/components/package/PackageCard.tsx",
+  // P5 — Official exploration pack cover images (drop-in real artwork). Static
+  // assets only; the card blends them into the civ-coded gradient. No code /
+  // schema / runtime change. Directory prefix so each <slug>.webp is allowed.
+  "frontend/public/assets/packs/",
+  // P5 — Home capability card artwork (ProductIntro four-grid: chat / story /
+  // explore / research). Drop-in real artwork; straight corners, no slate edge.
+  "frontend/public/assets/cards/",
+  "frontend/src/styles/explorer-experience.css",
+  "frontend/src/styles/components.css",
+  "frontend/src/pages/m89/m89.css",
+  "frontend/src/App.css",
+  "frontend/src/components/shell/ExplorerShell.tsx",
+  "frontend/src/components/primitives/UnderstandingCard.tsx",
+  "frontend/src/pages/DevCatalog.tsx",
+  "frontend/src/components/GraphViewPanel.tsx",
+  "frontend/src/components/RelationshipPathGraph.tsx",
+  "frontend/src/components/RelationshipInsightPanel.tsx",
+  "frontend/src/components/InterpretationPanel.tsx",
+
+  // ADR-0018 (PO-approved 2026-08-08) — Truth layer + Research persistence.
+  // The PO lifted red line C6 ("no persistence") SOLELY to serve COMPASS
+  // Article 0 ①: a research package is the visible form of the user's
+  // cognitive structure, and a structure that dies on page reload never
+  // accumulates. Storage is stdlib `sqlite3` ONLY — ZERO new dependency, no
+  // ORM, no external DB process; the .db file is gitignored runtime state.
+  // The 3 hard red lines (no vector DB / RAG, no Neo4j / Redis / GraphQL,
+  // no ungrounded AI output) remain fully in force.
+  //   - research_store.py   (sqlite3 storage, payload-opaque)
+  //   - research_router.py  (POST/GET/DELETE /api/v1/research, X-Session-Id)
+  // `backend/app/main.py` is already allowlisted above (M29.1-B / M74) and
+  // only gains the router mount — no storage logic leaks into it.
+  "backend/app/ai_gateway/research_store.py",
+  "backend/app/ai_gateway/research_router.py",
+  // M90.x (2026-08-10 PO 判定): 历史见解固化存储（entity_insights sqlite，
+  // 同 ADR-0018 research 范式——stdlib sqlite3、payload-opaque、.db gitignored）。
+  // insight_store.py 只做存储；生成逻辑在 main.py handler（已 allowlisted）。
+  "backend/app/ai_gateway/insight_store.py",
+
+  // Wave2-#135 (Test-drift alignment) — Freeze Revision Gate (PO-approved
+  // 2026-08-08, "按你推荐的来"). Backend test suite had drifted 13 failures
+  // behind the shipped data/feature reality. These two test files carry STALE
+  // ASSERTIONS ONLY (no backend/app business logic, schema, enum, dependency
+  // or runtime change):
+  //   - test_api_v1.py  : topics contract gained the real `category` field
+  //                       shipped with the P5 landing page.
+  //   - test_explore.py : roman_empire dataset titles are localized to Chinese
+  //                       (consistent with greek / egypt), so "Roman Empire"
+  //                       was a stale English expectation.
+  // Same mechanism/precedent as the M35 `test_search_index.py` entry above.
+  "backend/tests/test_api_v1.py",
+  "backend/tests/test_explore.py",
+
+  // Wave2-#136 (Evidence-layer source expansion) — Freeze Revision Gate
+  // (PO-approved 2026-08-08, "按你推荐的来"). M26.1 curated source registry
+  // (data/sources.json) grew from 43 → 105 well-curated sources as part of the
+  // truth-layer evidence coverage expansion. The pipeline (acquisition/
+  // pipeline.py) is UNCHANGED — it merely reads the now-larger curated
+  // registry. This test file carries a STALE HARDCODED COUNT ASSERTION ONLY
+  // (43 sources), which must track the registry size; no business-logic /
+  // schema / enum / dependency / runtime change.
+  "backend/tests/test_ontology_contract.py",
+
+  // Wave2-#137 (Semantic entry retrieval) — Freeze Revision Gate (PO-approved
+  // 2026-08-08, "按你推荐的来"). topicResolver.ts is upgraded from a
+  // title/name-only matcher (M74) to a deterministic lexical/semantic entry
+  // resolver: enriched index (package title/summary/category/seed + referenced
+  // entity names; entity name/alias/label/description/type), CJK bigram +
+  // latin tokenization, curated synonym expansion, weighted token-score
+  // ranking (searchTopics) and question-intent detection (understanding mode).
+  // ZERO AI/LLM/network, read-only, deterministic. App.tsx (already allowlisted
+  // at L240) is rewired to resolveEntryQuery; french-revolution special-case
+  // folded into the resolver. No schema / enum / dependency / runtime change.
+  "frontend/src/data/topicResolver.ts",
+  "frontend/src/data/topicResolver.test.ts",
+
+  // Wave2-#140 (DiscoverPage test-drift alignment + empty-shell fix) — Freeze
+  // Revision Gate (PO-approved 2026-08-08, "按你推荐的来"). Closes OD-08.
+  // 1) ProductIntro was extracted out of DiscoverPage in M90.3 but its tests
+  //    were orphaned in DiscoverPage.test.tsx (3 permanently-failing
+  //    assertions). Coverage is MOVED, not deleted, to a new
+  //    ProductIntro.test.tsx alongside the component that owns the markup.
+  // 2) The category-card test rendered DiscoverPage without the `topics` prop
+  //    the cards are derived from, so it asserted cards that can never appear;
+  //    it now supplies a categorised-topics fixture.
+  // 3) DiscoverPage.tsx: the 探索主题 block rendered as a titled EMPTY shell
+  //    whenever backend topics are loading / unreachable / uncategorised.
+  //    Now gated on categoryCards.length > 0 (render-guard only).
+  // Test-only + one conditional render guard. No schema / enum / dependency /
+  // API / runtime change.
+  "frontend/src/components/shell/ProductIntro.test.tsx",
+  "frontend/src/pages/DiscoverPage.test.tsx",
+  "frontend/src/pages/DiscoverPage.tsx",
+
+  // Wave2-#140b (red-guard cleanup surfaced by the #140 regression run) —
+  // Freeze Revision Gate (PO-approved 2026-08-08, "按你推荐的来").
+  // 4) P0-1 VIOLATION in shipped source: UnderstandingWorkspace drew the
+  //    understanding-path status with circle dingbat glyphs, which the M62.5
+  //    symbol guard bans as functional icons (guard was RED). Replaced with
+  //    the already-registered 2px-stroke SVG set (check / circle) + aria-label;
+  //    m89.css .m89-path-dot switched from text centring to inline-flex.
+  // 5) App.smoke.test.tsx contained its entire describe block TWICE (verbatim
+  //    copy-paste) and still asserted the pre-M85.11 always-on rails, so it
+  //    could never pass. Deduplicated and realigned to the shipped contract.
+  // 6) ExplorationShell gains optional defaultWorkspaceOpen /
+  //    defaultCompanionOpen INITIAL-state props so the expanded four-area
+  //    layout is testable again (repo has no DOM/interaction harness — frozen
+  //    deps). Defaults reproduce current behaviour exactly; callers unchanged.
+  // No schema / enum / dependency / API-contract / runtime change.
+  "frontend/src/pages/m89/UnderstandingWorkspace.tsx",
+  "frontend/src/pages/m89/m89.css",
+  "frontend/src/__tests__/App.smoke.test.tsx",
+  // Wave2-#141(3) — shell cleanup (PO-approved 2026-08-08): ExplorationShell
+  // was an orphan (production App renders ExplorerShell since M90.3, yet the
+  // smoke test kept covering the dead shell). App.smoke realigned to
+  // ExplorerShell; ExplorationShell + CompanionPlaceholder + the legacy
+  // frosted-glass ThemeToggle (ExplorerShell.tsx) and its stylesheet
+  // (legacy-theme.css) are deleted — one product, one face, one shell.
+  // App.smoke.test.tsx stays allowlisted; shell/ dir prefix still covers
+  // ExplorerShell.tsx. No backend / dependency / API-contract change.
+
+  // Wave2-#138 (ADR-0019, PO-approved 2026-08-08): disputes/reinterprets
+  // relationship types — enum 18 -> 20, additive. These files were changed in
+  // the #138 commit; allowlisted to keep freeze green against master diff.
+  "backend/app/validation.py",
+  "backend/tests/test_data_breadth.py",
+  "backend/tests/test_m81_governance.py",
+  "frontend/src/data/relationshipUtils.ts",
+  "frontend/src/data/relationshipUtils.test.ts",
+  "frontend/src/data/entity/entityLabels.ts",
+  "frontend/src/components/DisputesPanel.tsx",
+  "frontend/src/components/shell/MirrorPanel.tsx",
+  "frontend/src/components/shell/__tests__/MirrorPanel.test.tsx",
+  "frontend/src/components/ui/Icon.tsx",
+
+  // ADR-0021 (Content Configuration Layer, PO-approved 2026-08-10): display
+  // content (the four ProductIntro capability cards: title / desc / image) is
+  // externalised from source into runtime data so the PO can edit copy and swap
+  // artwork without a code change. Zero new dependency (stdlib json / base64 /
+  // hashlib only), no DB, no auth — writes are gated by ADMIN_ENABLED (default
+  // OFF). Knowledge data (entities / relationships / evidence / sources) is NOT
+  // in scope. ProductIntro keeps its compiled-in defaults, so with the backend
+  // down the landing page renders exactly as before (ADR-0021 D5).
+  // main.tsx (not App.tsx) hosts the #/admin split to minimise merge conflict
+  // surface against the parallel phase5/reconstruction work.
+  "backend/app/content/",
+  "backend/tests/test_content_config.py",
+  "frontend/src/data/contentApi.ts",
+  "frontend/src/data/siteConfigApi.ts",
+  "frontend/src/data/siteConfig.ts",
+  "frontend/src/pages/admin/",
+  "frontend/src/components/shell/ProductIntro.tsx",
+  "frontend/src/main.tsx",
+  "frontend/src/styles/admin.css",
+  // #162/#163 follow-up: runtime overlay + the consumption surfaces it wires
+  // (so existing content without a code change can be overridden at runtime).
+  "frontend/src/data/contentRuntime.ts",
+  "frontend/src/data/ai/AICapabilities.ts",
+  "frontend/src/data/ai/AIRegistry.ts",
 ];
 
 function _scopeAllowed(file) {

@@ -8,6 +8,7 @@ import egyptTechRaw from "../../../data/examples/egypt_technology_religion_examp
 import greekPhilosophyRaw from "../../../data/examples/greek_philosophy_example.json";
 import hellenisticRaw from "../../../data/examples/hellenistic_world_example.json";
 import persianEmpireRaw from "../../../data/examples/persian_empire_example.json";
+import textbookRaw from "../../../data/examples/textbook_cn_history_v1_example.json";
 import evidenceClaimsRaw from "../../../data/evidence_claims.json";
 import sourcesRaw from "../../../data/sources.json";
 
@@ -30,6 +31,12 @@ import sourcesRaw from "../../../data/sources.json";
 export type PackageType = "official" | "user" | "community";
 export type PackageVisibility = "private" | "public";
 export type PackageStatus = "draft" | "reviewed" | "featured";
+
+// P5-S4 — Placement: which home tab renders this package.
+//   "understand" → 了解 tab（浏览主题库）
+//   "research"   → 研究 tab（提问式探索）
+// Defaults to "understand" when absent so legacy data stays on the 了解 tab.
+export type PackagePlacement = "understand" | "research";
 
 export interface LocalizedText {
   zh: string;
@@ -57,6 +64,9 @@ export interface ExplorationPackage {
   type: PackageType;
   visibility: PackageVisibility;
   status: PackageStatus;
+  category?: string;
+  /** P5-S4: home tab placement. Optional — defaults to "understand". */
+  placement?: PackagePlacement;
   title: LocalizedText;
   summary: LocalizedText;
   seed_topic: string;
@@ -101,6 +111,7 @@ const DATASETS = [
   { id: "greek_philosophy", data: greekPhilosophyRaw },
   { id: "hellenistic_world", data: hellenisticRaw },
   { id: "persian_empire", data: persianEmpireRaw },
+  { id: "textbook_cn_history_v1", data: textbookRaw },
 ] as const;
 
 const GLOBAL_INDEX = new Map<string, { dataset: string; localId: string }>();
@@ -112,6 +123,13 @@ for (const ds of DATASETS) {
 
 export function getPackages(): ExplorationPackage[] {
   return registryData.packages;
+}
+
+// P5-S4 — placement-driven filtering. Every package carries a placement;
+// callers that render a specific home tab must use this instead of getPackages()
+// so new data with a placement lands in the right tab automatically.
+export function getPackagesByPlacement(placement: PackagePlacement): ExplorationPackage[] {
+  return registryData.packages.filter((p) => (p.placement ?? "understand") === placement);
 }
 
 export function getPackageBySlug(slug: string): ExplorationPackage | undefined {

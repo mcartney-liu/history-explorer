@@ -23,5 +23,6 @@ export default {
   'entity.tabExtensionsAria': '扩展功能',
   'entity.tabNavAria': '实体页面导航',
   'entity.guidanceSuffix': '说明',
+  'entity.narrativeEmpty': '该实体的编辑叙事整理中，将逐步补齐。',
   'insight.intro': '%{name} 是历史上重要的%{type}。',
 }

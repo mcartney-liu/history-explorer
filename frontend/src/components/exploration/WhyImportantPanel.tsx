@@ -1,4 +1,5 @@
 // M35 — WhyImportantPanel (presentational).
+// M90.3 Stage D-1 — migrated to EvidenceBlock Explorer Primitive.
 //
 // Renders the curated "why it matters" copy for a node. Copy comes ONLY from
 // data/narrative.ts (hand-authored, grounded in real data — NOT AI generated).
@@ -6,6 +7,7 @@
 // uncovered keys render nothing (null).
 
 import { getNarrative } from '../../data/narrative'
+import { EvidenceBlock } from '../primitives/EvidenceBlock'
 
 type WhyImportantPanelProps = {
   // Global id (entity) or topic slug — must match a key in NARRATIVE.
@@ -17,10 +19,9 @@ export function WhyImportantPanel({ narrativeKey }: WhyImportantPanelProps) {
   if (!block || !block.whyImportant) return null
 
   return (
-    <section className="why-important-panel" data-narrative-key={narrativeKey} aria-label="Why this matters">
-      <h3 className="why-important-heading">为什么重要 · Why It Matters</h3>
-      <p className="why-important-body">{block.whyImportant}</p>
-    </section>
+    <EvidenceBlock type="curator" title="为什么重要 · Why It Matters">
+      {block.whyImportant}
+    </EvidenceBlock>
   )
 }
 

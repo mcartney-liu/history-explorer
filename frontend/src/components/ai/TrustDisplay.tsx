@@ -14,6 +14,8 @@
 import { useLocale } from '../../data/locale'
 import type { AIConfidence, AIEngine, AIEvidence, AINextExploration } from '../../data/aiClient'
 import { Badge, type BadgeTone } from '../ui/Badge'
+import { getRelationshipLabel, formatSourceId, translateEvidenceText } from '../../data/entity/entityLabels'
+import { getEntityDisplayName } from '../../data/explorationPackages'
 
 interface TrustDisplayProps {
   evidence?: AIEvidence[]
@@ -92,7 +94,7 @@ export function TrustDisplay({
   confidence,
   onNextClick,
 }: TrustDisplayProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const evidenceList = evidence ?? []
   const nextList = nextExploration ?? []
   const badge = engineBadge(engine, t)
@@ -129,13 +131,13 @@ export function TrustDisplay({
                       className="trust-display-next-btn"
                       onClick={() => onNextClick(item.global_id)}
                     >
-                      <span className="trust-display-next-name">{item.label}</span>
-                      <span className="trust-display-next-rel">{item.relationship}</span>
+                      <span className="trust-display-next-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+                      <span className="trust-display-next-rel">{getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}</span>
                     </button>
                   ) : (
-                    <span className="trust-display-next-name">
-                      {item.label} <span className="trust-display-next-rel">{item.relationship}</span>
-                    </span>
+                  <span className="trust-display-next-name">
+                    {getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')} <span className="trust-display-next-rel">{getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}</span>
+                  </span>
                   )}
                 </div>
                 {/* M74-004-002 (2B): Evidence Card detail — ALL fields come from
@@ -144,13 +146,13 @@ export function TrustDisplay({
                 {item.reason && (
                   <p className="trust-display-next-reason">
                     <span className="trust-display-detail-label">{t('ai.evidence_reason')}：</span>
-                    {item.reason}
+                    {translateEvidenceText(item.reason)}
                   </p>
                 )}
                 {item.claim_text && (
                   <p className="trust-display-next-claim">
                     <span className="trust-display-detail-label">{t('ai.evidence_claim')}：</span>
-                    {item.claim_text}
+                    {translateEvidenceText(item.claim_text)}
                   </p>
                 )}
                 {(item.source_title || item.source_tier) && (
@@ -161,11 +163,11 @@ export function TrustDisplay({
                       <Badge tone={tierTone(item.source_tier)}>{tierLabel(item.source_tier, t)}</Badge>
                     )}
                     {/* source_id always surfaces — auditable reference id */}
-                    <code className="trust-display-source">{item.source_id}</code>
+                    <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
                   </p>
                 )}
                 {!item.reason && !item.claim_text && !item.source_title && !item.source_tier && (
-                  <code className="trust-display-source">{item.source_id}</code>
+                  <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
                 )}
               </li>
             ))}
@@ -174,22 +176,67 @@ export function TrustDisplay({
       )}
 
       {evidenceList.length > 0 && (
-        <div className="trust-display-section">
-          <p className="trust-display-label">{t('ai.trust_evidence_label')}</p>
-          <ul className="trust-display-evidence">
-            {evidenceList.map((ev, i) => (
-              <li key={`${ev.global_id}-${i}`} className="trust-display-evidence-item">
-                <span className="trust-display-evidence-name">{ev.label}</span>
-                <code className="trust-display-source">{ev.global_id}</code>
-                {ev.status === 'verified' && (
-                  <Badge tone="primary">{t('ai.trust_verified')}</Badge>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <EvidenceList items={evidenceList} />
+      )}
+
+      {/* M90.x: 有证据但无推荐时给明确提示（避免"探索建议"标题下静默空白） */}
+      {nextList.length === 0 && evidenceList.length > 0 && (
+        <p className="trust-display-empty">{t('ai.trust_no_next')}</p>
       )}
     </section>
+  )
+}
+
+/**
+ * M90.x: 可复用的证据列表（从 TrustDisplay 抽出，供身份卡历史见解等场景复用）。
+ * 保持原 TrustDisplay 证据样式（claim 原文 + 来源标题 + tier 徽标 + 来源编号）；
+ * source_url 存在时来源标题渲染为外链（<a target="_blank">）。
+ */
+export function EvidenceList({ items }: { items: AIEvidence[] }) {
+  const { t, locale } = useLocale()
+  return (
+    <div className="trust-display-section">
+      <p className="trust-display-label">{t('ai.trust_evidence_label')}</p>
+      <ul className="trust-display-evidence">
+        {items.map((ev, i) => (
+          <li key={`${ev.global_id}-${i}`} className="trust-display-evidence-item">
+            <div className="trust-display-next-head">
+              <span className="trust-display-evidence-name">{getEntityDisplayName(ev.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+              {ev.status === 'verified' && (
+                <Badge tone="primary">{t('ai.trust_verified')}</Badge>
+              )}
+            </div>
+            {ev.label && (
+              <p className="trust-display-next-claim">
+                {translateEvidenceText(ev.label)}
+              </p>
+            )}
+            {(ev.source_title || ev.source_tier) && (
+              <p className="trust-display-next-source">
+                <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
+                {ev.source_title &&
+                  (ev.source_url ? (
+                    <a
+                      className="trust-display-source-title trust-display-source-link"
+                      href={ev.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {ev.source_title}
+                    </a>
+                  ) : (
+                    <span className="trust-display-source-title">{ev.source_title}</span>
+                  ))}
+                {ev.source_tier && (
+                  <Badge tone={tierTone(ev.source_tier)}>{tierLabel(ev.source_tier, t)}</Badge>
+                )}
+                {ev.source_id && <code className="trust-display-source">{formatSourceId(ev.source_id)}</code>}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 

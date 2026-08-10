@@ -6,6 +6,7 @@ import {
   type RelationshipPathRef,
 } from './explorationPackages'
 import { getRelationshipTemplate } from './understandingRules'
+import type { CausalStatementData } from './causalStatement'
 import type { UserBehaviorEvent } from './UserBehaviorEvent'
 
 // ============================================================================
@@ -39,6 +40,8 @@ export interface GuideStep {
   toType: string
   reason: string
   perspective: string
+  /** M82 Phase 2 — matched CausalStatement (if any) for this edge. */
+  causal?: CausalStatementData
 }
 
 export interface GuideCoverage {
@@ -98,10 +101,28 @@ export function getCurrentPosition(
 // target is not yet visited AND either its source was visited OR the visitor
 // is at the package entry (nothing visited yet). Output keeps the Package's
 // curated declaration order — NO scoring / ranking / personalization.
+
+/** M82 P2.2 — Match a relationship edge to a CausalStatement.
+ *  Direct cause_id/effect_id matching ONLY. No fuzzy match, no AI, no KG query.
+ *  Returns null when no CS matches — caller falls back to template reason.
+ */
+export function resolveCausalForEdge(
+  edge: RelationshipPathRef,
+  causalStatements: readonly CausalStatementData[],
+): CausalStatementData | null {
+  for (const cs of causalStatements) {
+    if (cs.cause_id === edge.from && cs.effect_id === edge.to) {
+      return cs
+    }
+  }
+  return null
+}
+
 export function getNextSteps(
   pkg: ExplorationPackage,
   visited: string[],
   locale: Locale = 'zh',
+  causalStatements?: readonly CausalStatementData[],
 ): GuideStep[] {
   const v = visitedSet(visited)
   const nothingVisited = v.size === 0
@@ -121,13 +142,18 @@ export function getNextSteps(
           targetType: entityType(edge.to),
         })
       : { meaning: `Related to ${toName}.`, perspective: 'related' }
+    // M82 P2.2 — enrich reason with CausalStatement if available
+    const cs = causalStatements
+      ? resolveCausalForEdge(edge, causalStatements)
+      : undefined
     steps.push({
       edge,
       fromName,
       toName,
       toType: entityType(edge.to),
-      reason: explained.meaning,
+      reason: cs?.mechanism ?? explained.meaning,
       perspective: explained.perspective,
+      ...(cs ? { causal: cs } : {}),
     })
   }
   return steps
@@ -163,10 +189,11 @@ export function getGuideSnapshot(
   pkg: ExplorationPackage,
   visited: string[],
   locale: Locale = 'zh',
+  causalStatements?: readonly CausalStatementData[],
 ): GuideSnapshot {
   return {
     position: getCurrentPosition(pkg, visited, locale),
-    nextSteps: getNextSteps(pkg, visited, locale),
+    nextSteps: getNextSteps(pkg, visited, locale, causalStatements),
     coverage: getExplorationCoverage(pkg, visited),
   }
 }

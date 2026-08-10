@@ -229,7 +229,7 @@ describe('aggregateRelationshipTypes', () => {
     expect(counts).toEqual({ conquered: 2, inherited: 1, part_of: 1 })
   })
 
-  it('buckets types outside the frozen 18-type vocabulary as "unknown"', () => {
+  it('buckets types outside the frozen 20-type vocabulary as "unknown"', () => {
     const relationships: EntityRelationship[] = [
       rel('conquered_by', { id: 'alex', name: '亚历山大', global_id: 'greece:alex' }),
       rel('conquered', { id: 'persia', name: '波斯', global_id: 'persia:empire' }),
@@ -250,8 +250,8 @@ describe('aggregateRelationshipTypes', () => {
     expect(relationships).toEqual(snapshot)
   })
 
-  it('mirrors the backend 18-type vocabulary', () => {
-    expect(RELATIONSHIP_TYPES.size).toBe(18)
+  it('mirrors the backend 20-type vocabulary', () => {
+    expect(RELATIONSHIP_TYPES.size).toBe(20)
     expect(RELATIONSHIP_TYPES.has('contemporary_with')).toBe(true)
     expect(RELATIONSHIP_TYPES.has('conquered')).toBe(true)
   })

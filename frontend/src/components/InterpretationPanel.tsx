@@ -5,21 +5,64 @@
 // anything, and it does NOT import navigation. All data arrives pre-mapped via
 // `interpretations` (see interpretationFormatter.ts, which preserves the
 // backend's deterministic `explanation` verbatim — no AI, no invented text).
-import { useLocale } from '../data/locale'
+//
+// M90.3 Stage D-1 — migrated to UnderstandingCard Explorer Primitive for the
+// "understandings" section. The interpretations list retains its existing
+// rendering (scores + clickable nodes) because UnderstandingCard is designed
+// for Before→Evidence→After transitions, not scored entity lists.
+//
+// P5-S5: interpretation cards — entity-type badges, relevance strength bars,
+// and readable card layout. The backend `explanation` text is still rendered
+// verbatim; only presentation structure changes.
+import { useLocale, type Locale } from '../data/locale'
 import { InterpretationViewModel } from '../data/interpretationFormatter'
 import type { UnderstandingViewModel } from '../data/understandingRules'
+import { UnderstandingCard } from './primitives/UnderstandingCard'
+
+type EntityTypeKey =
+  | 'civilization'
+  | 'event'
+  | 'person'
+  | 'location'
+  | 'technology'
+  | 'religion'
+  | 'entity'
+
+const TYPE_LABELS: Record<EntityTypeKey, Record<Locale, string>> = {
+  civilization: { zh: '文明', en: 'Civilization', ja: '文明' },
+  event: { zh: '事件', en: 'Event', ja: '出来事' },
+  person: { zh: '人物', en: 'Person', ja: '人物' },
+  location: { zh: '地点', en: 'Location', ja: '場所' },
+  technology: { zh: '技术', en: 'Technology', ja: '技術' },
+  religion: { zh: '宗教', en: 'Religion', ja: '宗教' },
+  entity: { zh: '实体', en: 'Entity', ja: '実体' },
+}
+
+const PREFIX_TO_TYPE: Record<string, EntityTypeKey> = {
+  civ: 'civilization',
+  event: 'event',
+  person: 'person',
+  loc: 'location',
+  tech: 'technology',
+  religion: 'religion',
+}
+
+function inferEntityType(globalId: string): EntityTypeKey {
+  if (!globalId || !globalId.includes(':')) return 'entity'
+  const prefix = globalId.split(':')[0]?.split('_')[0]?.toLowerCase()
+  return PREFIX_TO_TYPE[prefix] ?? 'entity'
+}
+
+function strengthVariant(score: number): 'high' | 'medium' | 'low' {
+  if (score >= 0.9) return 'high'
+  if (score >= 0.75) return 'medium'
+  return 'low'
+}
 
 type InterpretationPanelProps = {
   interpretations?: InterpretationViewModel[]
-  // M5-D (additive): rule-based "historical meaning" layer. When provided and
-  // non-empty, a "Historical Meaning" block is appended AFTER the existing
-  // interpretation list. Absent/empty -> behavior is unchanged (the panel still
-  // collapses to nothing when there is nothing to show).
   understandings?: UnderstandingViewModel[]
   title?: string
-  // When provided, each node becomes clickable and calls back with the raw
-  // global_id. The panel never imports navigation.ts; the caller wires this to
-  // the app's single navigation entry.
   onNodeClick?: (globalId: string) => void
 }
 
@@ -29,10 +72,9 @@ function InterpretationPanel({
   title,
   onNodeClick,
 }: InterpretationPanelProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const hasInterpretations = !!interpretations && interpretations.length > 0
   const hasUnderstandings = !!understandings && understandings.length > 0
-  // Strictly additive: nothing to interpret -> render nothing (no empty shell).
   if (!hasInterpretations && !hasUnderstandings) return null
 
   const resolvedTitle = title ?? t('discover.interpretationTitle')
@@ -41,55 +83,77 @@ function InterpretationPanel({
     <div className="result-section interpretation-panel">
       <h3>{resolvedTitle}</h3>
       {hasInterpretations && (
-        <div className="he-interpret-list">
-          {interpretations!.map((item, idx) => (
-            <div className="he-interpret-item" key={idx}>
-              <div className="he-interpret-head">
-                {onNodeClick ? (
-                  <button
-                    type="button"
-                    className="he-interpret-node is-clickable"
-                    data-node={item.global_id}
-                    aria-label={t('discover.openAria', { name: item.localName })}
-                    onClick={() => onNodeClick(item.global_id)}
-                  >
-                    {item.localName}
-                  </button>
-                ) : (
-                  <span className="he-interpret-name">{item.localName}</span>
-                )}
-                {typeof item.score === 'number' && (
-                  <span className="he-interpret-score">{t('discover.score', { score: String(item.score) })}</span>
+        <div className="he-interpret-grid">
+          {interpretations!.map((item, idx) => {
+            const type = inferEntityType(item.global_id)
+            const typeLabel = TYPE_LABELS[type][locale] ?? TYPE_LABELS[type].zh
+            const pct = Math.round(item.score * 100)
+            const variant = strengthVariant(item.score)
+            return (
+              <div
+                className={`he-interpret-card he-interpret-card--${variant}`}
+                key={`${item.global_id}-${idx}`}
+              >
+                <div className="he-interpret-card-top">
+                  <span className={`he-interpret-type he-interpret-type--${type}`}>
+                    {typeLabel}
+                  </span>
+                  {onNodeClick ? (
+                    <button
+                      type="button"
+                      className="he-interpret-node is-clickable"
+                      data-node={item.global_id}
+                      aria-label={t('discover.openAria', { name: item.localName })}
+                      onClick={() => onNodeClick(item.global_id)}
+                    >
+                      {item.localName}
+                    </button>
+                  ) : (
+                    <span className="he-interpret-name">{item.localName}</span>
+                  )}
+                  <span className="he-interpret-strength" title={t('common.scoreLabel', { n: String(item.score) })}>
+                    <span className="he-strength-track">
+                      <span
+                        className={`he-strength-bar he-strength-bar--${variant}`}
+                        style={{ width: `${pct}%` }}
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <span className="he-interpret-score">{t('discover.score', { score: String(item.score) })}</span>
+                  </span>
+                </div>
+                {item.explanation && (
+                  <p className="he-interpret-why">{item.explanation}</p>
                 )}
               </div>
-              {item.explanation && (
-                <p className="he-interpret-why">{item.explanation}</p>
-              )}
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
       {hasUnderstandings && (
-        <div className="he-meaning-block">
-          <h4 className="he-meaning-title">{t('discover.historicalMeaning')}</h4>
-          <div className="he-interpret-list">
-            {understandings!.map((u, idx) => (
-              <div className="he-interpret-item he-meaning-item" key={idx}>
-                <div className="he-interpret-head">
-                  <span className="he-interpret-name">
-                    {u.actor} &rarr; {u.target}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
+          <h4 style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)', fontWeight: 600 }}>
+            {t('discover.historicalMeaning')}
+          </h4>
+          {understandings!.map((u, idx) => (
+            <UnderstandingCard
+              key={idx}
+              before={`${u.actor} 与 ${u.target}`}
+              evidence={
+                <>
+                  <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>
+                    {u.perspective}
                   </span>
-                  <span className="he-interpret-tag">{u.perspective}</span>
-                </div>
-                <p className="he-interpret-why">{u.meaning}</p>
-                {u.timeContext && (
-                  <p className="he-meaning-time">
-                    <span className="he-meaning-time-label">{t('discover.timeLabel')}</span> {u.timeContext}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+                  {u.timeContext && (
+                    <span className="he-meaning-time" style={{ marginLeft: 8, fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>
+                      · {t('discover.timeLabel')} {u.timeContext}
+                    </span>
+                  )}
+                </>
+              }
+              after={u.meaning}
+            />
+          ))}
         </div>
       )}
     </div>

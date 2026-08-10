@@ -87,8 +87,8 @@ export function ProvenancePanelView({
   onRetry,
 }: ProvenancePanelViewProps) {
   return (
-    <section className="provenance-panel" aria-label="Entity Evidence / Provenance">
-      <h3>Evidence / Provenance</h3>
+    <section className="provenance-panel" aria-label="实体证据与溯源">
+      <h3>证据与溯源</h3>
       {status === 'loading' && <LoadingSkeleton label="读取事实溯源…" />}
       {status === 'disabled' && (
         <EmptyState message="事实溯源投影未启用（PROVENANCE_PROJECTION=false）。" />
@@ -103,15 +103,15 @@ export function ProvenancePanelView({
         <div className="provenance-groups">
           {groupBySource(records).map(([sourceId, recs]) => (
             <section className="provenance-group" key={sourceId}>
-              <h4 className="provenance-group-head">Source: {sourceId}</h4>
+              <h4 className="provenance-group-head">来源：{sourceId}</h4>
               <ul className="provenance-list">
                 {recs.map((r) => (
                   <li className="provenance-item" key={r.claim_id}>
                     <div>
-                      <strong>Claim:</strong> {r.claim_id}
+                      <strong>论断：</strong>{r.claim_id}
                     </div>
                     <div>
-                      <strong>Reference:</strong> {r.reference}
+                      <strong>引用：</strong>{r.reference}
                     </div>
                   </li>
                 ))}

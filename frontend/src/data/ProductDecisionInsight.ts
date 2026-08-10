@@ -397,10 +397,10 @@ function buildExplanationChain(
 
 function buildCounterSignals(input: DecisionFusionInput, positives: string[]): string[] {
   const signals: string[] = []
-  if (input.depth.maxDepth >= 4) signals.push('User reached deep exploration level')
-  if (input.behaviors.dominantPattern === 'research_loop') signals.push('User demonstrated research behavior')
-  if (input.intelligence.researchSaveRate > 0) signals.push('Research completion signal detected')
-  if (input.intelligence.chatAdoptionRate > 0) signals.push('AI chat engagement detected')
+  if (input.depth.maxDepth >= 4) signals.push('已达到深度探索层级')
+  if (input.behaviors.dominantPattern === 'research_loop') signals.push('检测到研究循环行为')
+  if (input.intelligence.researchSaveRate > 0) signals.push('检测到研究完成信号')
+  if (input.intelligence.chatAdoptionRate > 0) signals.push('检测到 AI 对话参与')
   if (positives.length > 0 && signals.length === 0) signals.push(positives[0])
   return signals
 }
