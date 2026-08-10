@@ -476,6 +476,7 @@ def _generate_entity_insight(global_id: str) -> dict:
         source_creator = ""
         source_publisher = ""
         source_type = ""
+        source_tier = ""
         sid = c.source_id or None
         if sid:
             src = knowledge_service.get_source(sid)
@@ -484,6 +485,9 @@ def _generate_entity_insight(global_id: str) -> dict:
                 source_creator = src.get("creator", "") or ""
                 source_publisher = src.get("publisher_or_archive", "") or ""
                 source_type = src.get("type", "") or ""
+                # 2026-08-11 (PO)：补 source_tier（M90.x 漏带，导致前端等级徽标
+                # 一直不显示）；与 read-time enrich 保持一致。
+                source_tier = src.get("tier", "") or ""
         evidence_lines.append(f"- {text}" + (f"（来源：{source_title}）" if source_title else ""))
         evidence_out.append(
             {
@@ -493,11 +497,11 @@ def _generate_entity_insight(global_id: str) -> dict:
                 "status": "verified",
                 "source_id": sid,
                 "source_title": source_title,
-                # 2026-08-11 (PO)：来源完整书目信息（作者/出版社/类型），
-                # 供前端证据区展示增强可信度；additive，向后兼容。
+                # 来源完整书目信息 + 等级；additive，向后兼容。
                 "source_creator": source_creator,
                 "source_publisher": source_publisher,
                 "source_type": source_type,
+                "source_tier": source_tier,
                 # 证据来源实体（自身或扩展的邻居实体），additive。
                 "subject": c.subject or "",
             }
@@ -530,12 +534,36 @@ def _generate_entity_insight(global_id: str) -> dict:
     return insight_store.save_insight(global_id, insight_text, evidence_out, engine="ai")
 
 
+def _enrich_evidence_with_source(rec: dict) -> dict:
+    """2026-08-11 (PO)：读时补全来源字段——已固化记录（之前 evidence_out 漏
+    带 source_tier，且早期记录也没 source_creator/publisher）自动从
+    sources.json 查出来填上，不需重新生成即全局生效。新生成的记录也会
+    因 evidence_out 已带而走快速路径。"""
+    evidence = rec.get("evidence") or []
+    if not evidence:
+        return rec
+    enriched = []
+    for ev in evidence:
+        ev2 = dict(ev)
+        sid = ev.get("source_id")
+        if sid:
+            src = knowledge_service.get_source(sid)
+            if src:
+                ev2.setdefault("source_creator", src.get("creator", "") or "")
+                ev2.setdefault("source_publisher", src.get("publisher_or_archive", "") or "")
+                ev2.setdefault("source_type", src.get("type", "") or "")
+                ev2.setdefault("source_tier", src.get("tier", "") or "")
+        enriched.append(ev2)
+    rec["evidence"] = enriched
+    return rec
+
+
 def get_entity_insight(global_id: str):
     """GET — 前端读取固化历史见解（无则 404，前端显占位）。"""
     rec = insight_store.get_insight(global_id)
     if rec is None:
         raise HTTPException(status_code=404, detail="该实体暂无固化历史见解，请在后台生成。")
-    return rec
+    return _enrich_evidence_with_source(rec)
 
 
 def generate_entity_insight(global_id: str):
