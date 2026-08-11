@@ -171,3 +171,29 @@ describe('determinism & purity', () => {
     expect({ a: rome, b: han }).toEqual(snap)
   })
 })
+
+// 2026-08-12 (PO): zh sentences for temporal comparisons.
+describe('buildTemporalComparisonText locale (2026-08-12 PO)', () => {
+  const base: Parameters<typeof buildTemporalComparisonText>[0] = {
+    comparable: true,
+    relations: ['overlap'],
+    startGapYears: 2347,
+    overlapYears: 723,
+    durationA: 1229,
+    durationB: 422,
+    durationDiffYears: 807,
+  }
+
+  it('zh renders Chinese comparison sentences', () => {
+    const lines = buildTemporalComparisonText(base, 'Rome', 'Ancient Egypt', 'zh')
+    expect(lines[0]).toContain('重叠共存')
+    expect(lines.some((l) => l.includes('晚') && l.includes('开始'))).toBe(true)
+    expect(lines.some((l) => l.includes('存续长'))).toBe(true)
+  })
+
+  it('en keeps the original English sentences', () => {
+    const lines = buildTemporalComparisonText(base, 'Rome', 'Ancient Egypt', 'en')
+    expect(lines[0]).toContain('overlapped')
+    expect(lines.some((l) => l.includes('began'))).toBe(true)
+  })
+})

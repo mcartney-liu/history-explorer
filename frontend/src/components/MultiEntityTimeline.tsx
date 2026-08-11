@@ -73,7 +73,7 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
       { start: ea.start_date, end: ea.end_date },
       { start: eb.start_date, end: eb.end_date },
     )
-    return { key: `${o.a}|${o.b}`, sentences: buildTemporalComparisonText(cmp, o.a, o.b) }
+    return { key: `${o.a}|${o.b}`, sentences: buildTemporalComparisonText(cmp, o.a, o.b, locale) }
   })
 
   const rangeText = (b: TemporalBar) =>

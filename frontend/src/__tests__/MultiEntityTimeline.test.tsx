@@ -60,7 +60,7 @@ describe('MultiEntityTimeline', () => {
 
   it('renders reused mechanical overlap facts', () => {
     const html = render(<MultiEntityTimeline entities={entities} />)
-    expect(html).toContain('overlapped for 422 years')
+    expect(html).toContain('重叠共存了 422 年')
   })
 
   it('contains no forbidden interpretive vocabulary', () => {
