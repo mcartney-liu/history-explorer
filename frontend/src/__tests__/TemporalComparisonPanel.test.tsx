@@ -46,9 +46,9 @@ describe('TemporalComparisonPanel', () => {
     )
     expect(html).toContain('时间对比')
     // Deterministic engine output: overlap = 422, start gap = 551, duration diff = 807.
-    expect(html).toContain('Rome and Han Dynasty overlapped for 422 years.')
-    expect(html).toContain('Rome began 551 years before Han Dynasty.')
-    expect(html).toContain('Rome lasted 807 years longer than Han Dynasty.')
+    expect(html).toContain('Rome 与 Han Dynasty 重叠共存了 422 年。')
+    expect(html).toContain('Rome 比 Han Dynasty 早 551 年开始。')
+    expect(html).toContain('Rome 比 Han Dynasty 存续长 807 年。')
   })
 
   it('renders empty state when fewer than 2 entities are available', () => {
@@ -74,9 +74,9 @@ describe('TemporalComparisonPanel', () => {
     const html = render(
       <TemporalComparisonPanel entities={[rome, egypt, han]} />,
     )
-    expect(html).not.toContain('Rome began 551 years before Han Dynasty.')
-    expect(html).toContain('Rome began 2347 years after Ancient Egypt.')
-    expect(html).toContain('Rome and Ancient Egypt overlapped for 723 years.')
+    expect(html).not.toContain('Rome 比 Han Dynasty 早 551 年开始。')
+    expect(html).toContain('Rome 比 Ancient Egypt 晚 2347 年开始。')
+    expect(html).toContain('Rome 与 Ancient Egypt 重叠共存了 723 年。')
   })
 
   it('does not crash when a selected entity has no date data', () => {
