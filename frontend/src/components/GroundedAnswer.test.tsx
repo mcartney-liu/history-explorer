@@ -127,6 +127,23 @@ describe('GroundedAnswer', () => {
     )
     expect(html).toContain('ga-answer')
     expect(html).not.toContain('跨维度主题')
+    // 2026-08-11 (PO): unrecognized JSON must render readable text, never a raw dump.
+    expect(html).toContain('纯文本包装')
+    expect(html).not.toContain('"summary"')
+  })
+
+  it('recursively extracts readable text from nested unrecognized JSON', () => {
+    const nested = JSON.stringify({
+      meta: { code: 'ok' },
+      analysis: '罗马元老院在奥古斯都时代权力结构发生深刻变化。',
+      details: ['政治重组', '军事改革'],
+    })
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse({ answer: nested })} />,
+    )
+    expect(html).toContain('罗马元老院在奥古斯都时代权力结构发生深刻变化。')
+    expect(html).toContain('政治重组')
+    expect(html).not.toContain('"meta"')
   })
 
   it('renders Chinese-key synthesis answers (cross-dimensional analysis prompt)', () => {

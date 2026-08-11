@@ -17,6 +17,7 @@ M11-2 freeze boundary (§5 of the planning doc).
 from __future__ import annotations
 
 import json
+import re
 from typing import Any, Dict, List, Optional, Sequence
 
 from .citation_model import Citation
@@ -225,6 +226,25 @@ def _parse_ai_json(raw: str) -> Optional[Dict[str, Any]]:
     return data if isinstance(data, dict) else None
 
 
+def _clean_llm_text(raw: str) -> str:
+    """Normalize an unparsable LLM reply into readable plain text.
+
+    Strips markdown fences / code-block markers and collapses whitespace so
+    the frontend never has to render raw ```json ... ``` blocks or stray
+    markdown symbols (2026-08-11 PO, unstable-LLM-output guard).
+    """
+    if not raw:
+        return raw
+    text = raw.strip()
+    # Strip a single markdown fence (opening, optional language tag, closing).
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z0-9_-]*\s*", "", text)
+        text = re.sub(r"\s*```$", "", text)
+    # Collapse 3+ blank lines and trim trailing markers.
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
 def _deterministic_grounded_response(builder, question, context, mode, visited=None, package_context=None):
     """Runtime OFF: Phase2 pipeline-driven deterministic grounded response.
 
@@ -374,9 +394,12 @@ def grounded_answer(
 
     parsed = _parse_ai_json(raw)
     if parsed is None:
-        # Could not verify citations -> return the raw answer but flag ungrounded.
+        # Could not verify citations -> return the cleaned raw answer but flag
+        # ungrounded. 2026-08-11 (PO): strip markdown fences / excessive
+        # whitespace so an unstable LLM reply never surfaces as raw code blocks
+        # in the UI (previously raw was passed through verbatim).
         return {
-            "answer": raw,
+            "answer": _clean_llm_text(raw),
             "perspectives": _perspectives_from_claims(valid_claims),
             "evidence": _claim_evidence(valid_claims, claim_sources),
             "confidence": "low",
