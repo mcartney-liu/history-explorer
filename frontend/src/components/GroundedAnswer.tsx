@@ -137,6 +137,37 @@ function tryRenderSynthesis(raw: string): ReactNode | null {
   )
 }
 
+// 2026-08-11 (PO)：LLM 输出不稳定的最后防线——任何没被 tryRenderSynthesis
+// 识别的 JSON 对象，递归提取其中的字符串值拼接展示，绝不让用户看到
+// 原始 JSON dump（"像保存文件的内容"）。非 JSON 原样返回。
+function humanizeAnswer(raw: string): string {
+  const text = (raw ?? '').trim()
+  if (!text) return raw ?? ''
+  if (!text.startsWith('{') && !text.startsWith('[')) return raw
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(text)
+  } catch {
+    return raw
+  }
+  if (parsed === null || typeof parsed !== 'object') return raw
+
+  const parts: string[] = []
+  const walk = (v: unknown): void => {
+    if (typeof v === 'string') {
+      const s = v.trim()
+      if (s) parts.push(s)
+    } else if (Array.isArray(v)) {
+      v.forEach(walk)
+    } else if (v && typeof v === 'object') {
+      Object.values(v).forEach(walk)
+    }
+  }
+  walk(parsed)
+  return parts.length > 0 ? parts.join('\n\n') : raw
+}
+
 // Pure presentational component: given a fully-grounded backend response, show
 // the answer, the engine state, the verification verdict, and (M36.0) the
 // confidence, perspectives, and verified evidence. It never decides truthiness
@@ -177,7 +208,7 @@ export default function GroundedAnswer({ response }: GroundedAnswerProps) {
       <Perspectives items={response.perspectives ?? []} />
 
       {tryRenderSynthesis(response.answer) ?? (
-        <p className="ga-answer">{response.answer}</p>
+        <p className="ga-answer">{humanizeAnswer(response.answer)}</p>
       )}
 
       {/* M36.0: show server-verified evidence block */}

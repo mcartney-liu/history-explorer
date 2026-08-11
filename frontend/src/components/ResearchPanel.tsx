@@ -3,7 +3,7 @@ import { explainAI, type AICitation } from '../data/aiClient'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } from './ResearchDimensionCard'
 import ResearchReport from './ResearchReport'
-import ResearchSummary from './ResearchSummary'
+import ResearchSummary, { ResearchSummaryView } from './ResearchSummary'
 import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
 import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
@@ -328,6 +328,29 @@ export function ResearchPanelView({
               {dimensions.map((dim, i) => (
                 <ResearchDimensionCard key={dim.id} dimension={dim} dimKey={template[i]?.key} />
               ))}
+            </div>
+          )}
+          {/* 2026-08-11 (PO 问题二)：恢复的研究也要展示完整报告——
+              综合报告（用存档摘要，不重调 AI）+ 研究报告（纯展示），
+              与 done 模式对齐，让「打开」后能立即看到报告内容。 */}
+          {dimensions.length > 0 && (
+            <div className="rp-restored-reports">
+              <ResearchSummaryView
+                entityName={entityName}
+                entityType={entityType}
+                entityGlobalId={entityGlobalId}
+                dimensions={dimensions}
+                comparedNames={selectedEntities.map((e) => e.name)}
+                status="success"
+                answer={restoreData?.summaryAnswer ?? ''}
+                grounded={true}
+              />
+              <ResearchReport
+                entityName={entityName}
+                entityType={entityType}
+                dimensions={dimensions}
+                comparedNames={selectedEntities.map((e) => e.name)}
+              />
             </div>
           )}
         </div>
