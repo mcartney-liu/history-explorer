@@ -1,7 +1,0 @@
-﻿HEALTH OK after ~0s
-=== roman_empire (expect 2-3 entry points) ===
-{"topic":"roman_empire","entry_points":[{"global_id":"roman_empire:civ-roman","name":"Roman Civilization","type":"Civilization","reason":"è¿æ¥ 22 æ¡å³ç³»ï¼æ¯ãroman_empireãæä¸­å¿çèç¹","score":27.0},{"global_id":"roman_empire:event-roman-empire-established","name":"Roman Empire Established","type":"Event","reason":"ä»£è¡¨Eventç»´åº¦ï¼ä¸²èµ· 5 ç±»å³ç³»","score":11.5},{"global_id":"roman_empire:religion-christianity","name":"Christianity","type":"Religion","reason":"ä»£è¡¨Religionç»´åº¦ï¼ä¸²èµ· 5 ç±»å³ç³»","score":9.5}]}
-=== illegal topic invalid@topic (expect 400) ===
-status=400
-=== unknown topic (expect empty entry_points) ===
-{"topic":"nonexistent_xyz","entry_points":[]}
