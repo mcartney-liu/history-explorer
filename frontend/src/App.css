@@ -398,29 +398,6 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
   text-shadow:0 1px 4px rgba(0,0,0,0.5);
 }
 
-/* xiaomeng — 四宫格与探索包卡统一的呼吸感（纯 CSS, 零依赖）
-   复用 package.css 的 pkgRise / sheenSweep keyframes，不重复定义。 */
-.discover-intro-art-img{transition:transform var(--animation-fast)}
-@media (prefers-reduced-motion: no-preference) {
-  .discover-intro-card{
-    animation:pkgRise .6s cubic-bezier(.22,.61,.36,1) backwards;
-    animation-delay:calc(var(--ci,0)*90ms);
-  }
-  .discover-intro-grid .discover-intro-card:nth-child(1){--ci:0}
-  .discover-intro-grid .discover-intro-card:nth-child(2){--ci:1}
-  .discover-intro-grid .discover-intro-card:nth-child(3){--ci:2}
-  .discover-intro-grid .discover-intro-card:nth-child(4){--ci:3}
-  /* 做旧斜光扫过（::before 置于图片之上，z-index 高于 img） */
-  .discover-intro-art::before{
-    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:linear-gradient(115deg,transparent 35%,rgba(255,244,214,0.20) 50%,transparent 65%);
-    transform:translateX(-120%);
-    animation:sheenSweep 7.5s ease-in-out infinite;
-  }
-  /* hover 时图片轻微推近，增加"活"的呼吸感 */
-  .discover-intro-card:hover .discover-intro-art-img{transform:scale(1.06)}
-}
-
 /* M62-A: tabbed landing */
 .discover-tabs{display:inline-flex;gap:6px;margin:24px 0;padding:0}
 .discover-tab{
@@ -960,61 +937,6 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 .he-hero-title{font-family:var(--serif);font-size:var(--text-h1);color:var(--color-ink-900);margin-bottom:var(--space-3)}
 .he-hero-sub{font-size:var(--text-body);color:var(--color-ink-500);line-height:1.8;max-width:480px;margin:0 auto}
 
-/* xiaomeng — Hero: AI 历史学家向导主角 + 做旧金线（纯 CSS, 零依赖） */
-.he-hero{position:relative}
-.he-hero-guide{
-  width:132px;height:132px;margin:0 auto var(--space-4);
-  border-radius:50%;padding:5px;
-  background:radial-gradient(circle at 30% 24%,rgba(255,238,196,0.95),rgba(190,150,80,0.22) 72%);
-  box-shadow:0 0 0 1px rgba(212,175,95,0.55),0 12px 32px rgba(0,0,0,0.32);
-}
-.he-hero-guide-img{
-  width:100%;height:100%;display:block;border-radius:50%;
-  object-fit:cover;object-position:center 22%;
-}
-/* 做旧金线：中央渐隐金线 + 两端小菱形 */
-.he-hero-rule{
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  width:172px;height:14px;margin:0 auto var(--space-4);
-}
-.he-hero-rule::before,.he-hero-rule::after{
-  content:"";height:1px;width:58px;
-  background:linear-gradient(90deg,transparent,rgba(212,175,95,0.85));
-}
-.he-hero-rule::after{background:linear-gradient(90deg,rgba(212,175,95,0.85),transparent)}
-.he-hero-rule i{
-  width:6px;height:6px;transform:rotate(45deg);
-  background:rgba(212,175,95,0.92);box-shadow:0 0 6px rgba(212,175,95,0.5);
-}
-/* 卷轴横幅 — 产品信条分隔带 */
-.he-scroll-banner{
-  position:relative;max-width:680px;margin:var(--space-7) auto;
-  padding:18px 60px;text-align:center;
-  font-family:var(--serif);font-size:var(--text-h3);letter-spacing:.04em;
-  color:var(--color-ink-700);
-  background:linear-gradient(180deg,rgba(232,213,170,0.18),rgba(120,96,52,0.12));
-  border-top:1px solid rgba(212,175,95,0.35);
-  border-bottom:1px solid rgba(212,175,95,0.35);
-}
-.he-scroll-banner::before,.he-scroll-banner::after{
-  content:"";position:absolute;top:50%;transform:translateY(-50%);
-  width:18px;height:48px;border-radius:9px;
-  background:linear-gradient(90deg,#8a6a32,#dcba6a,#8a6a32);
-  box-shadow:0 2px 6px rgba(0,0,0,0.3);
-}
-.he-scroll-banner::before{left:-9px}
-.he-scroll-banner::after{right:-9px}
-
-@media (prefers-reduced-motion: no-preference) {
-  /* 向导头像：缓慢呼吸浮动 */
-  .he-hero-guide{animation:heroGuideFloat 6s ease-in-out infinite}
-  /* 标题/副标题/金线：依次浮入 */
-  .he-hero-title{animation:heroRise .7s cubic-bezier(.22,.61,.36,1) backwards;animation-delay:.05s}
-  .he-hero-sub{animation:heroRise .7s cubic-bezier(.22,.61,.36,1) backwards;animation-delay:.16s}
-  .he-hero-rule{animation:heroRise .7s cubic-bezier(.22,.61,.36,1) backwards;animation-delay:.1s}
-  @keyframes heroGuideFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-  @keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-}
 .he-quick{display:flex;flex-wrap:wrap;gap:var(--space-2);justify-content:center;margin-bottom:var(--space-6)}
 .he-quick-label{font-size:var(--text-caption);color:var(--color-ink-500);align-self:center}
 .he-quick-btn{font-size:var(--text-caption);color:var(--color-accent);background:transparent;border:1px solid var(--color-accent-soft);
