@@ -15,7 +15,7 @@
 // 在组件内计算，props 只需回调，不依赖 DiscoverPage。
 // ============================================================
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useLocale } from '../../data/locale'
 import type { NavNode } from '../navigation'
 import { TOPIC_STARTERS } from '../../data/explorationStarters'
@@ -62,6 +62,8 @@ const DEFAULT_DIMENSIONS = ['discover.dim.curator', 'discover.dim.causal', 'disc
 // ---------------------------------------------------------------------------
 function RecentResearches({ researches, onOpenResearch }: { researches: SavedResearch[]; onOpenResearch?: (entityGlobalId: string, entityName: string) => void }) {
   const { t } = useLocale()
+  // 2026-08-11 (PO): 「查看全部」展开——默认前 3 条，可展开看完整列表
+  const [showAll, setShowAll] = useState(false)
   if (researches.length === 0) {
     return (
       <div className="discover-recent discover-recent--empty">
@@ -78,9 +80,9 @@ function RecentResearches({ researches, onOpenResearch }: { researches: SavedRes
       </div>
     )
   }
-  const recent = [...researches]
+  const sorted = [...researches]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 3)
+  const recent = showAll ? sorted : sorted.slice(0, 3)
   return (
     <div className="discover-recent">
       <h3 className="discover-section-heading">{t('discover.recentHeading')}</h3>
@@ -106,6 +108,15 @@ function RecentResearches({ researches, onOpenResearch }: { researches: SavedRes
           </button>
         ))}
       </div>
+      {sorted.length > 3 && (
+        <button
+          type="button"
+          className="discover-recent-toggle"
+          onClick={() => setShowAll((v) => !v)}
+        >
+          {showAll ? `收起（显示前 3 条）` : `查看全部（${sorted.length} 条）`}
+        </button>
+      )}
     </div>
   )
 }
@@ -119,8 +130,20 @@ function ResearchLibraryEntry({
   onOpenResearch?: (entityGlobalId: string, entityName: string) => void
 }) {
   const { t } = useLocale()
+  // 2026-08-11 (PO): 零状态可见（不再隐藏区块）+ 「查看全部」展开
+  const [showAll, setShowAll] = useState(false)
   const researches = useMemo(() => listResearch().filter((r) => r.bookmarked), [])
-  if (researches.length === 0) return null
+  if (researches.length === 0) {
+    return (
+      <div className="discover-library discover-library--empty">
+        <h3 className="discover-section-heading">{t('discover.libraryHeading')}</h3>
+        <p className="discover-empty-text">
+          还没有收藏的研究。研究完成后点「收藏研究」，即可把结果保存到这里。
+        </p>
+      </div>
+    )
+  }
+  const shown = showAll ? researches : researches.slice(0, 5)
   return (
     <div className="discover-library">
       <h3 className="discover-section-heading">{t('discover.libraryHeading')}</h3>
@@ -128,7 +151,7 @@ function ResearchLibraryEntry({
         {t('discover.libraryCount', { n: String(researches.length) })}
       </p>
       <ul className="discover-library-list">
-        {researches.slice(0, 5).map((r) => (
+        {shown.map((r) => (
           <li key={r.id}>
             <button
               type="button"
@@ -149,6 +172,15 @@ function ResearchLibraryEntry({
           </li>
         ))}
       </ul>
+      {researches.length > 5 && (
+        <button
+          type="button"
+          className="discover-library-toggle"
+          onClick={() => setShowAll((v) => !v)}
+        >
+          {showAll ? '收起' : `查看全部（${researches.length} 条）`}
+        </button>
+      )}
     </div>
   )
 }

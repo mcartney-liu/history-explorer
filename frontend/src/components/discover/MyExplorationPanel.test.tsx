@@ -115,8 +115,10 @@ describe('MyExplorationPanel — M44 ResearchLibrary', () => {
     expect(html).toContain('Roman Empire')
   })
 
-  it('hides library entry when no bookmarks', () => {
+  // 2026-08-11 (PO): 零状态可见——无收藏时显示空态引导，区块不再隐藏
+  it('shows empty library guidance when no bookmarks', () => {
     const html = render()
-    expect(html).not.toContain('我的研究收藏')
+    expect(html).toContain('我的研究收藏')
+    expect(html).toContain('还没有收藏的研究')
   })
 })
