@@ -54,6 +54,7 @@ import { resolveEntityStarters } from './data/explorationStarters'
 import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
+import { useLocale } from './data/locale'
 import { buildEntityTimeMap } from './data/temporalUtils'
 import { resolveEntryQuery } from './data/topicResolver'
 import { ExplorerShell } from './components/shell/ExplorerShell'
@@ -219,6 +220,10 @@ function prettifyTopic(t: string): string {
 }
 
 function App() {
+  // M72 Line1 (2026-08-11 PO): UnderstandingCard sentences follow the UI
+  // language — zh UI renders Chinese templates, en/ja keep their own.
+  const { locale } = useLocale()
+
   // =========================================================================
   // M90.3 Stage A — legacy URL migration (one-shot, before any route read)
   // Must run before useRouter() initializes so the parsed route sees the
@@ -1326,7 +1331,7 @@ function App() {
                 ) : (
                 <MultiEntityTimeline entities={result.entities} />
                 )}
-                <InterpretationPanel interpretations={toInterpretationViewModels(result.connections_explained)} understandings={buildUnderstandingsFromConnectionsExplained(result.connections_explained, result.exploration.main_entity.name, Object.fromEntries((result.entities ?? []).map((e) => [e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`, e.name])), exploreEntityTimeByName)} onNodeClick={openNodeNamed} />
+                <InterpretationPanel interpretations={toInterpretationViewModels(result.connections_explained)} understandings={buildUnderstandingsFromConnectionsExplained(result.connections_explained, result.exploration.main_entity.name, Object.fromEntries((result.entities ?? []).map((e) => [e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`, e.name])), exploreEntityTimeByName, locale)} onNodeClick={openNodeNamed} />
                 <DisputesPanel
                   relationships={result.relationships ?? []}
                   nameById={exploreNameById}

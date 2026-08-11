@@ -443,21 +443,32 @@ export function getRelationshipTemplate(
 }
 
 // Deterministic fallback for any relation type not covered by a template.
-function fallbackUnderstanding(i: UnderstandingInput): { meaning: string; perspective: string } {
-  return {
-    meaning: `${i.actorName} is connected to ${i.targetName} through a ${i.relationType} relationship.`,
-    perspective: 'as connected',
-  }
+// 2026-08-11 (PO): zh UI renders a Chinese fallback too (was EN-only).
+function fallbackUnderstanding(i: UnderstandingInput, locale = 'en'): { meaning: string; perspective: string } {
+  return locale === 'zh'
+    ? {
+        meaning: `${i.actorName} 与 ${i.targetName} 之间存在「${i.relationType}」关联。`,
+        perspective: '相关联',
+      }
+    : {
+        meaning: `${i.actorName} is connected to ${i.targetName} through a ${i.relationType} relationship.`,
+        perspective: 'as connected',
+      }
 }
 
 // Build a single understanding view model from a normalized input.
-export function buildUnderstanding(input: UnderstandingInput): UnderstandingViewModel {
-  const tpl = RELATIONSHIP_TEMPLATES[input.relationType]
+// `locale` picks the template table (zh = Chinese, anything else = English),
+// mirroring the Exploration Guide's M72 Line1 selector.
+export function buildUnderstanding(
+  input: UnderstandingInput,
+  locale = 'en',
+): UnderstandingViewModel {
+  const tpl = getRelationshipTemplate(input.relationType, locale)
   const resolved = tpl
     ? isReverse(input.direction)
       ? tpl.reverse(input)
       : tpl.forward(input)
-    : fallbackUnderstanding(input)
+    : fallbackUnderstanding(input, locale)
   return {
     relationType: input.relationType,
     direction: input.direction,
@@ -477,6 +488,7 @@ export function buildUnderstandingsFromRelationships(
   rels: EntityRelationship[] | undefined,
   actorName: string,
   timeByTarget?: Record<string, string>,
+  locale = 'en',
 ): UnderstandingViewModel[] {
   if (!rels || rels.length === 0) return []
   return rels.map((r) => {
@@ -495,7 +507,7 @@ export function buildUnderstandingsFromRelationships(
       timeContext: timeByTarget
         ? timeByTarget[targetName] ?? timeByTarget[actorName]
         : undefined,
-    })
+    }, locale)
   })
 }
 
@@ -523,6 +535,7 @@ export function buildUnderstandingsFromConnectionsExplained(
   // when absent the Time line is omitted. Lookup mirrors the relationships
   // builder: prefer the resolved target name, fall back to the actor name.
   timeByTarget?: Record<string, string>,
+  locale = 'en',
 ): UnderstandingViewModel[] {
   if (!connections || connections.length === 0) return []
   const out: UnderstandingViewModel[] = []
@@ -542,7 +555,7 @@ export function buildUnderstandingsFromConnectionsExplained(
         timeContext: timeByTarget
           ? timeByTarget[targetName] ?? timeByTarget[actorName]
           : undefined,
-      }),
+      }, locale),
     )
   }
   return out
