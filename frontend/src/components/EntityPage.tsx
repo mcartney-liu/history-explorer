@@ -24,6 +24,8 @@ import EventNarrativeJourney from './EventNarrativeJourney'
 import HistorianChat from './HistorianChat'
 import ResearchPanel, { type RestoreRequest } from './ResearchPanel'
 import ResearchLibrary from './ResearchLibrary'
+// 2026-08-11 (PO 方案B): 「我的」tab 收藏/最近 → 跳转后自动恢复研究
+import { loadResearch, consumePendingRestore } from '../data/ResearchHistory'
 import EntityRelatedList from './EntityRelatedList'
 import EmptyState from './EmptyState'
 import StorySection from './exploration/StorySection'
@@ -86,7 +88,7 @@ type EntityPageProps = {
 // M59-005: EntityViewModel integration.
 // Build once per entity change. Panels still consume raw entity
 // for backward compat. Future panels will use viewModel directly.
-import { useMemo, useState } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { buildEntityViewModel } from '../data/entity/EntityViewModel'
 import { EntityHero } from './entity/EntityHero'
 import { ExplorationCard } from './entity/ExplorationCard'
@@ -162,6 +164,18 @@ function EntityPage({
   // fallback. Target-side dates remain a documented Future Scope item.
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
+  // 2026-08-11 (PO 方案B): 消费「我的」tab 写入的 pending restore ——
+  // 从收藏/最近点进来时，自动恢复对应研究（复用 ResearchLibrary 的打开链路）。
+  useEffect(() => {
+    const pendingId = consumePendingRestore()
+    if (!pendingId) return
+    const research = loadResearch(pendingId)
+    if (research && research.entityGlobalId === entityGlobalId) {
+      setRestoreRequest({ research, requestId: Date.now() })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps — only consume once per entity visit.
+  }, [entityGlobalId])
+
   // M35 curated narrative: 板块始终可见（PO 判定），无叙事数据时渲染空态占位。
   const narrativeKey = entityId ?? entity.exploration.main_entity.global_id ?? ''
   const narrativeBlock = getNarrative(narrativeKey)
@@ -231,6 +245,7 @@ function EntityPage({
                       <>
                         <EntityInsightCard
                           insight={buildInsight(entity)}
+                          entitySlug={entity.id}
                         />
                         <ExplorationGuide
                           entityName={viewModel.identity.name}

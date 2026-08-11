@@ -183,6 +183,33 @@ export function getStorageKey(): string {
 }
 
 // ============================================================
+// Pending restore (2026-08-11, PO 方案B): 首页「我的」tab 点收藏/最近 →
+// 跳转实体页后自动恢复该研究。sessionStorage 隔离会话、刷新不丢；
+// 消费后立即清除，避免下次进入实体页重复触发。
+// ============================================================
+
+const PENDING_RESTORE_KEY = 'history-explorer.pending-restore.v1'
+
+export function setPendingRestore(researchId: string): void {
+  try {
+    sessionStorage.setItem(PENDING_RESTORE_KEY, researchId)
+  } catch {
+    /* sessionStorage unavailable — restore simply won't auto-fire */
+  }
+}
+
+export function consumePendingRestore(): string | null {
+  try {
+    const id = sessionStorage.getItem(PENDING_RESTORE_KEY)
+    if (!id) return null
+    sessionStorage.removeItem(PENDING_RESTORE_KEY)
+    return id
+  } catch {
+    return null
+  }
+}
+
+// ============================================================
 // T1 — Remote persistence (POST/GET/DELETE /api/v1/research)
 //
 // The remote layer is ADDITIVE and NEVER destructive: every call

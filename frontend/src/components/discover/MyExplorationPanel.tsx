@@ -19,7 +19,7 @@ import { useMemo } from 'react'
 import { useLocale } from '../../data/locale'
 import type { NavNode } from '../navigation'
 import { TOPIC_STARTERS } from '../../data/explorationStarters'
-import { listResearch } from '../../data/ResearchHistory'
+import { listResearch, setPendingRestore } from '../../data/ResearchHistory'
 import type { SavedResearch } from '../../data/ResearchHistory'
 import { generateBehavioralInterestProfile } from '../../data/ResearchInsights'
 import type { BehavioralSignals } from '../../data/ResearchInsights'
@@ -95,6 +95,8 @@ function RecentResearches({ researches, onOpenResearch }: { researches: SavedRes
             onClick={() => {
               if (!r.entityGlobalId) return
               recordEvent({ action: 'restore_research', entityGlobalId: r.entityGlobalId })
+              // 2026-08-11 (PO 方案B): 记住要恢复的研究，跳实体页后自动打开
+              setPendingRestore(r.id)
               onOpenResearch?.(r.entityGlobalId, r.entityName)
             }}
           >
@@ -136,6 +138,8 @@ function ResearchLibraryEntry({
               onClick={() => {
                 if (!r.entityGlobalId) return
                 recordEvent({ action: 'restore_research', entityGlobalId: r.entityGlobalId })
+                // 2026-08-11 (PO 方案B): 记住要恢复的研究，跳实体页后自动打开
+                setPendingRestore(r.id)
                 onOpenResearch?.(r.entityGlobalId, r.entityName)
               }}
             >
