@@ -2374,3 +2374,11 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
   padding:2px 8px;border-radius:999px;
   background:var(--color-accent-soft);color:var(--color-accent)}
 .discover-library--empty .discover-empty-text{font-size:0.85rem;line-height:1.6}
+
+/* ============================================================
+   历史研究恢复：完整报告区（2026-08-11 PO 问题二）
+   restored 模式展示综合报告 + 研究报告，与 done 模式对齐。
+   ============================================================ */
+.rp-restored-reports{
+  display:flex;flex-direction:column;gap:18px;margin-top:4px;
+  padding-top:18px;border-top:1px solid var(--color-border-secondary)}

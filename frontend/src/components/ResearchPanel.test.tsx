@@ -217,6 +217,34 @@ describe('ResearchPanelView', () => {
     expect(html).toContain('Answer')
   })
 
+  // 2026-08-11 (PO 问题二)：恢复的研究必须展示完整报告（综合报告 + 研究报告），
+  // 而不是只给横幅/摘要/维度卡——「打开」后要能立即看到报告内容。
+  it('renders full reports (summary + report) in restored mode', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="restored"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'Answer', grounded: true, citations: [], rejected_citations: [] },
+        ]}
+        restoreData={{
+          id: 'r_1',
+          version: 1,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          entityName: 'Test',
+          entityType: 'Event',
+          entityGlobalId: 't:ev',
+          comparedNames: [],
+          summaryAnswer: '存档的综合报告摘要',
+          dimensions: [],
+        }}
+      />,
+    )
+    expect(html).toContain('历史研究报告')   // ResearchReport
+    expect(html).toContain('存档的综合报告摘要')  // ResearchSummaryView 展示存档摘要
+  })
+
   it('restoreResearch converts SavedResearch to ResearchDimension[]', () => {
     const dimensions = restoreResearch({
       id: 'r_1',
