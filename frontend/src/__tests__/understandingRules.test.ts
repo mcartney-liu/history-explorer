@@ -215,3 +215,60 @@ describe('understandingRules (M5-D)', () => {
     expect(tpl).toBeUndefined()
   })
 })
+
+// 2026-08-11 (PO): buildUnderstanding / builders follow the UI language —
+// zh UI renders Chinese meaning/perspective (was EN-only for these paths).
+describe('buildUnderstanding locale (2026-08-11 PO)', () => {
+  it('buildUnderstanding(zh) renders Chinese meaning + perspective', () => {
+    const vm = buildUnderstanding({
+      relationType: 'caused',
+      direction: 'forward',
+      actorName: '罗马帝国建立',
+      targetName: '罗马和平',
+    }, 'zh')
+    expect(vm.meaning).toContain('引发')
+    expect(vm.perspective).toBe('作为起因')
+  })
+
+  it('buildUnderstanding(zh, reverse) renders Chinese effect perspective', () => {
+    const vm = buildUnderstanding({
+      relationType: 'caused',
+      direction: 'reverse',
+      actorName: '罗马帝国建立',
+      targetName: '罗马共和国终结',
+    }, 'zh')
+    expect(vm.meaning).toContain('结果')
+    expect(vm.perspective).toBe('作为结果')
+  })
+
+  it('buildUnderstanding(en) keeps the original English templates', () => {
+    const vm = buildUnderstanding({
+      relationType: 'caused',
+      direction: 'forward',
+      actorName: 'Rome',
+      targetName: 'Pax Romana',
+    }, 'en')
+    expect(vm.meaning).toContain('caused conditions')
+    expect(vm.perspective).toBe('as cause')
+  })
+
+  it('buildUnderstandingsFromRelationships passes locale through', () => {
+    const vms = buildUnderstandingsFromRelationships(
+      [{ type: 'related_to', direction: 'forward', target: 'civ-roman', other: { name: '罗马文明', type: 'Civilization', id: 'civ-roman', globalId: 'roman_empire:civ-roman' } } as never],
+      '罗马帝国建立',
+      undefined,
+      'zh',
+    )
+    expect(vms[0].meaning).toContain('相关联')
+  })
+
+  it('fallback(zh) renders a Chinese sentence for unknown relation types', () => {
+    const vm = buildUnderstanding({
+      relationType: 'no_such_rel',
+      direction: 'forward',
+      actorName: '甲',
+      targetName: '乙',
+    }, 'zh')
+    expect(vm.meaning).toContain('关联')
+  })
+})

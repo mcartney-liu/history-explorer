@@ -420,6 +420,7 @@ function EntityPage({
                         entity.relationships,
                         entity.name,
                         centerTimeMap,
+                        locale,
                       )}
                       onNodeClick={onNodeClick}
                     />
