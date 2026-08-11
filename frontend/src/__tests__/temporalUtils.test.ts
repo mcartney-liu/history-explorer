@@ -101,3 +101,20 @@ describe('temporalUtils (M6-P1)', () => {
     })
   })
 })
+
+// 2026-08-12 (PO): locale-aware date formatting — zh renders 公元前/公元.
+describe('formatTimeValue locale (2026-08-12 PO)', () => {
+  it('zh renders 公元前 for BCE values', () => {
+    expect(formatTimeValue({ value: -27, label: '' }, 'zh')).toBe('公元前 27 年')
+  })
+  it('zh renders 公元 for CE values', () => {
+    expect(formatTimeValue({ value: 476, label: '' }, 'zh')).toBe('公元 476 年')
+  })
+  it('en keeps BC/CE suffix', () => {
+    expect(formatTimeValue({ value: -27, label: '' }, 'en')).toBe('27 BC')
+    expect(formatTimeValue({ value: 476, label: '' }, 'en')).toBe('476 CE')
+  })
+  it('formatDateRange(zh) uses Chinese ranges', () => {
+    expect(formatDateRange({ value: -27, label: '' }, { value: 476, label: '' }, 'zh')).toBe('公元前 27 年 - 公元 476 年')
+  })
+})

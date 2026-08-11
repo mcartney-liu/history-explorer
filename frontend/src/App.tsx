@@ -1035,7 +1035,7 @@ function App() {
   // objects at runtime (including start_date/end_date), which the relationships
   // builder consumes via the target-name key. Pure frontend; no new API field.
   const exploreEntityTimeByName: Record<string, string> = result
-    ? buildEntityTimeMap(result.entities)
+    ? buildEntityTimeMap(result.entities, locale)
     : {}
 
   // M12-1: grounded AI exploration context — built strictly from the existing

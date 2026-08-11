@@ -32,7 +32,7 @@ interface MultiEntityTimelineProps {
 }
 
 function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   // Keep named entities, dedupe by name, preserve input order (no sorting).
   const seen = new Set<string>()
   const bars: TemporalBar[] = []
@@ -77,7 +77,7 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
   })
 
   const rangeText = (b: TemporalBar) =>
-    formatDateRange(b.start_date, b.end_date) ?? t('timeline.noDateData')
+    formatDateRange(b.start_date, b.end_date, locale) ?? t('timeline.noDateData')
 
   return (
     <div className="result-section">
@@ -85,10 +85,10 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
       <div className="multi-entity-timeline">
         <div className="multi-entity-axis">
           <span className="multi-entity-axis-end">
-            {formatTimeValue({ value: bounds.min })}
+            {formatTimeValue({ value: bounds.min }, locale)}
           </span>
           <span className="multi-entity-axis-end">
-            {formatTimeValue({ value: bounds.max })}
+            {formatTimeValue({ value: bounds.max }, locale)}
           </span>
         </div>
 
@@ -136,7 +136,7 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
                 className="multi-entity-scale-tick"
                 style={{ left: `${tick.leftPct}%` }}
               >
-                {formatTimeValue({ value: tick.value })}
+                {formatTimeValue({ value: tick.value }, locale)}
               </span>
             ))}
           </div>

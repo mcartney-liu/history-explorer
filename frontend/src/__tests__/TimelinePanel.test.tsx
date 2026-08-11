@@ -12,8 +12,8 @@ describe('M6-P4 TimelinePanel — sorting & time buckets', () => {
     ]
     const html = renderToStaticMarkup(<TimelinePanel timeline={timeline} />)
     // Bucket headers present and in fixed chronological order.
-    expect(html).toContain('500 BCE – 1 CE')
-    expect(html).toContain('1 – 500 CE')
+    expect(html).toContain('公元前 500 – 公元 1 年')
+    expect(html).toContain('公元 1 – 500 年')
     // Events appear in ascending year order (document order).
     const born = html.indexOf('Augustus born')
     const founded = html.indexOf('Empire founded')
@@ -29,10 +29,10 @@ describe('M6-P4 TimelinePanel — sorting & time buckets', () => {
       { period: '600 BC', event: 'Ancient event', date: { value: -600, label: '600 BC' } },
     ]
     const html = renderToStaticMarkup(<TimelinePanel timeline={timeline} />)
-    expect(html).toContain('Before 500 BCE')
-    expect(html).toContain('After 1500 CE')
+    expect(html).toContain('公元前 500 年以前')
+    expect(html).toContain('公元 1500 年以后')
     // "Before 500 BCE" header must precede "After 1500 CE" in document order.
-    expect(html.indexOf('Before 500 BCE')).toBeLessThan(html.indexOf('After 1500 CE'))
+    expect(html.indexOf('公元前 500 年以前')).toBeLessThan(html.indexOf('公元 1500 年以后'))
   })
 
   it('keeps M2 behavior for items without a date (Undated bucket, period/event intact)', () => {
@@ -40,7 +40,7 @@ describe('M6-P4 TimelinePanel — sorting & time buckets', () => {
     const html = renderToStaticMarkup(<TimelinePanel timeline={timeline} />)
     expect(html).toContain('Roman Empire Established') // event preserved
     expect(html).toContain('27 BC') // period preserved
-    expect(html).toContain('Undated') // single group -> Undated bucket header
+    expect(html).toContain('无日期') // single group -> Undated bucket header (zh)
   })
 
   it('preserves clickable event navigation from M2-003', () => {

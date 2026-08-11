@@ -22,10 +22,15 @@ export interface TimeValue {
 // Prefers the backend-provided `label` verbatim; falls back to a deterministic
 // BCE/CE derivation from `value` (negative value = BCE). Returns null when no
 // usable date information is present.
-export function formatTimeValue(tv?: TimeValue | null): string | null {
+// 2026-08-12 (PO): locale-aware — zh renders 公元前/公元 (e.g. 公元前 27 年),
+// en keeps the original BC/CE suffix (27 BC). Default 'en' = backward compat.
+export function formatTimeValue(tv?: TimeValue | null, locale = 'en'): string | null {
   if (!tv) return null
   if (tv.label && tv.label.trim().length > 0) return tv.label.trim()
   if (typeof tv.value !== 'number' || Number.isNaN(tv.value)) return null
+  if (locale === 'zh') {
+    return tv.value < 0 ? `公元前 ${Math.abs(tv.value)} 年` : `公元 ${tv.value} 年`
+  }
   return tv.value < 0 ? `${Math.abs(tv.value)} BC` : `${tv.value} CE`
 }
 
@@ -37,9 +42,10 @@ export function formatTimeValue(tv?: TimeValue | null): string | null {
 export function formatDateRange(
   start?: TimeValue | null,
   end?: TimeValue | null,
+  locale = 'en',
 ): string | null {
-  const s = formatTimeValue(start)
-  const e = formatTimeValue(end)
+  const s = formatTimeValue(start, locale)
+  const e = formatTimeValue(end, locale)
   if (s && e) return `${s} - ${e}`
   return s ?? e ?? null
 }
@@ -56,11 +62,12 @@ export function buildEntityTimeMap(
     | undefined
     | null
   >,
+  locale = 'en',
 ): Record<string, string> {
   const map: Record<string, string> = {}
   for (const e of entities) {
     if (!e || !e.name) continue
-    const range = formatDateRange(e.start_date, e.end_date)
+    const range = formatDateRange(e.start_date, e.end_date, locale)
     if (range) map[e.name] = range
   }
   return map
