@@ -743,6 +743,9 @@ function App() {
 
   // M85.8 — Open a CausalObject by id
   function openCausalObject(objectId: string) {
+    // 2026-08-11 (PO): 从探索包点因果对象同样先退出包上下文
+    //（causalDetail 渲染条件也带 !packageSlug）。
+    if (pkg.packageSlug) closePackage()
     // M85.9.3 — Record visit on current exploration path
     recordVisit(objectId)
     navigateTo({ type: 'causal_object', objectId })
@@ -759,6 +762,9 @@ function App() {
     // T1: which EntityPage tab to land on (research bookmarks open 'research').
     tab: 'info' | 'research' | 'extensions' = 'info',
   ) {
+    // 2026-08-11 (PO): 从探索包/因果对象页点实体——先退出包上下文。
+    // entityDetail 渲染条件带 !packageSlug，不关则实体页被挡住跳不过去。
+    if (pkg.packageSlug) closePackage()
     const displayName = name || id
     setEntityInitialTab(tab)
     // 只有当 Context 已创建时才更新锚点（用户在一条 Exploration 内）
