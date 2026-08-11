@@ -391,7 +391,11 @@ def grounded_answer(
         }
 
     answer = parsed.get("answer", "")
-    if not isinstance(answer, str):
+    if isinstance(answer, (dict, list)):
+        # Structured synthesis (e.g. cross-dimensional analysis) — serialize as
+        # valid JSON so the frontend can render it instead of a str() dict dump.
+        answer = json.dumps(answer, ensure_ascii=False)
+    elif not isinstance(answer, str):
         answer = str(answer)
 
     ai_citations: List[Citation] = []

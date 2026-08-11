@@ -339,3 +339,61 @@ def test_dynamic_explore_modules_are_image_configurable(client):
     else:
         ordering = ["roman_empire", "greek_philosophy", "persian_empire", "ancient_india"]
     assert len(mods["explore_topics"]["card_ids"]) == len(ordering)
+
+
+def test_dynamic_research_dims_are_image_configurable(client):
+    """ADR-0021 dynamic module: research_dims exposes one image-configurable
+    slot per research-dimension key (mirrors the explore-pack artwork
+    treatment), so the admin console can drive per-dimension card covers."""
+    import app.content.content_store as store
+
+    body = client.get("/api/v1/content").json()
+    mods = {m["module"]: m for m in body["modules"]}
+    cards = {c["id"]: c for c in body["cards"]}
+
+    assert "research_dims" in mods
+    card_ids = mods["research_dims"]["card_ids"]
+    assert len(card_ids) == len(store._DEFAULT_RESEARCH_DIM_KEYS)
+    assert set(card_ids) == {f"research_dims.{k}" for k in store._DEFAULT_RESEARCH_DIM_KEYS}
+    for cid in card_ids:
+        assert cards[cid]["supports_image"] is True
+
+
+def test_dynamic_slot_exposes_i18n_fields(client):
+    """explore_packs / explore_topics expose trilingual text overrides."""
+    body = client.get("/api/v1/content").json()
+    mods = {m["module"]: m for m in body["modules"]}
+    cards = {c["id"]: c for c in body["cards"]}
+    for mod_id in ("explore_packs", "explore_topics"):
+        first = mods[mod_id]["card_ids"][0]
+        card = cards[first]
+        assert card["supports_text_i18n"] is True
+        # No override yet -> i18n payloads are null (front-end falls back to source).
+        assert card.get("title_i18n") is None
+        assert card.get("summary_i18n") is None
+
+
+def test_i18n_text_override_round_trips(client, admin_on):
+    body = client.get("/api/v1/content").json()
+    first_pack = next(c["id"] for c in body["cards"] if c["module"] == "explore_packs")
+    title_i18n = {"zh": "中华文明探源", "en": "Chinese Civilization", "ja": "中国文明"}
+    summary_i18n = {"zh": "从黄河到长江的文明脉络"}
+
+    put = client.put(
+        "/api/v1/content",
+        json={"cards": [{"id": first_pack, "title_i18n": title_i18n, "summary_i18n": summary_i18n}]},
+    )
+    assert put.status_code == 200
+    cards = {c["id"]: c for c in client.get("/api/v1/content").json()["cards"]}
+    assert cards[first_pack]["title_i18n"] == title_i18n
+    assert cards[first_pack]["summary_i18n"] == summary_i18n
+
+    # Blank overrides restore the null (factory) state — nothing persisted.
+    put2 = client.put(
+        "/api/v1/content",
+        json={"cards": [{"id": first_pack, "title_i18n": {}, "summary_i18n": {}}]},
+    )
+    assert put2.status_code == 200
+    cards2 = {c["id"]: c for c in client.get("/api/v1/content").json()["cards"]}
+    assert cards2[first_pack].get("title_i18n") is None
+    assert cards2[first_pack].get("summary_i18n") is None

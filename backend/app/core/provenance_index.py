@@ -16,7 +16,7 @@ Architecture position (M28 / M29.0 design, ADR-001 / ADR-006):
   hallucination_probability fields. Provenance is human-curated and auditable.
 
 Input:  `DatasetProvider` (provides `load_evidence_claims()` and `load_sources()`)
-Output: `ProvenanceRecord` = {subject_id, source_id, claim_id, reference}
+Output: `ProvenanceRecord` = {subject_id, source_id, claim_id, claim_text, reference}
 
 Determinism (required for `to_json`):
 - No random, no timestamp, no network request, no external API.
@@ -46,15 +46,18 @@ PROVENANCE_INDEX_SCHEMA_VERSION = "1.0"
 class ProvenanceRecord:
     """A single provenance edge linking a subject to a cited source (M29.1-A).
 
-    Exactly four fields — no confidence / score / trust / ranking / ai_generated
-    / hallucination_probability. `reference` is resolved from the referenced
-    `SourceRecord.reference`; when the source cannot be resolved `reference` is
-    the empty string (transparent gap, never fabricated).
+    Five fields — no confidence / score / trust / ranking / ai_generated
+    / hallucination_probability. `claim_text` is the human-curated assertion
+    (`EvidenceClaim.claim`), projected through so the UI can show *what* is
+    claimed instead of only the machine `claim_id`. `reference` is resolved from
+    the referenced `SourceRecord.reference`; when the source cannot be resolved
+    `reference` is the empty string (transparent gap, never fabricated).
     """
 
     subject_id: str
     source_id: str
     claim_id: str
+    claim_text: str
     reference: str
 
     def to_dict(self) -> dict:
@@ -62,6 +65,7 @@ class ProvenanceRecord:
             "subject_id": self.subject_id,
             "source_id": self.source_id,
             "claim_id": self.claim_id,
+            "claim_text": self.claim_text,
             "reference": self.reference,
         }
 
@@ -101,6 +105,7 @@ class ProvenanceIndex:
                 subject_id=claim.subject_id,
                 source_id=claim.source_id,
                 claim_id=claim.id,
+                claim_text=claim.claim,
                 reference=reference,
             )
             by_subject.setdefault(claim.subject_id, []).append(record)

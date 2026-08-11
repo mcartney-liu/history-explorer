@@ -79,6 +79,11 @@ class ContentSlot:
     desc: str
     supports_image: bool = False
     supports_items: bool = False
+    #: Exploration packs / topics carry trilingual title+summary in their data
+    #: source; the override layer stores only what the operator edits (ADR
+    #: extension for the gallery console). Front-end falls back to the source
+    #: when the override is absent.
+    supports_text_i18n: bool = False
     theme: str | None = None
     items: tuple[str, ...] = ()
     items_label: str = "要点"
@@ -93,6 +98,9 @@ class ContentSlot:
             payload["image"] = None
         if self.supports_items:
             payload["items"] = list(self.items)
+        if self.supports_text_i18n:
+            payload["title_i18n"] = None
+            payload["summary_i18n"] = None
         return payload
 
     def to_card(self) -> dict[str, Any]:
@@ -106,11 +114,13 @@ class ContentSlot:
             "theme": self.theme,
             "supports_image": self.supports_image,
             "supports_items": self.supports_items,
+            "supports_text_i18n": self.supports_text_i18n,
             "items_label": self.items_label,
             "image": None,
             "items": list(self.items),
             "title": self.title,
             "desc": self.desc,
+            **({"title_i18n": None, "summary_i18n": None} if self.supports_text_i18n else {}),
         }
 
 
@@ -120,6 +130,31 @@ _FLOW = "实体页 · 探索路径"
 _AI = "AI 历史学家 · 能力说明"
 _PACKS = "探索 · 探索包"
 _TOPICS = "首页 · 精选主题"
+_RESEARCH = "研究 · 维度配图"
+
+
+#: Research-dimension artwork slots, derived from the front-end's
+#: RESEARCH_TEMPLATES (see frontend/src/components/ResearchPanel.tsx). The
+#: per-dimension key is the only stable identifier — artwork is shared across
+#: every entity that uses that dimension — so one slot per key, no entity
+#: prefix. Mirrors the explore_packs pattern: compiled default first, no
+#: external data file to keep in sync. Must stay aligned with RESEARCH_TEMPLATES.
+_DEFAULT_RESEARCH_DIM_KEYS: tuple[str, ...] = (
+    # Civilization
+    "politics", "military", "economy", "culture",
+    # Event
+    "background", "process", "impact", "significance",
+    # Person
+    "life", "contribution", "influence", "evaluation",
+    # Religion
+    "origin", "doctrine", "spread", "civilization",
+    # Technology
+    "invention", "principle", "application", "tech-impact",
+    # Location
+    "geography", "strategy", "events", "connection",
+    # Idea
+    "idea-origin", "meaning", "idea-spread", "modern",
+)
 
 
 CONTENT_SLOTS: tuple[ContentSlot, ...] = (
@@ -442,7 +477,7 @@ def _topic_slugs() -> list[str]:
 
 
 def _dynamic_slots() -> list[ContentSlot]:
-    """Slots for explore_packs + explore_topics, derived from live data."""
+    """Slots for explore_packs + explore_topics + research_dims."""
     slots: list[ContentSlot] = []
     for slug in _pack_slugs():
         slots.append(
@@ -451,11 +486,12 @@ def _dynamic_slots() -> list[ContentSlot]:
                 module="explore_packs",
                 module_label=_PACKS,
                 label=f"探索包 · {slug}",
-                where=f"探索页「官方探索包」卡片封面（{slug}）",
-                supports_image=True,
-                title=slug,
-                desc="",
-            )
+            where=f"探索页「官方探索包」卡片封面（{slug}）",
+            supports_image=True,
+            supports_text_i18n=True,
+            title=slug,
+            desc="",
+        )
         )
     for slug in _topic_slugs():
         slots.append(
@@ -464,9 +500,23 @@ def _dynamic_slots() -> list[ContentSlot]:
                 module="explore_topics",
                 module_label=_TOPICS,
                 label=f"主题 · {slug}",
-                where=f"首页精选主题卡片封面（{slug}）",
+            where=f"首页精选主题卡片封面（{slug}）",
+            supports_image=True,
+            supports_text_i18n=True,
+            title=slug,
+            desc="",
+        )
+        )
+    for key in _DEFAULT_RESEARCH_DIM_KEYS:
+        slots.append(
+            ContentSlot(
+                id=f"research_dims.{key}",
+                module="research_dims",
+                module_label=_RESEARCH,
+                label=f"维度 · {key}",
+                where=f"实体研究维度卡片封面（{key}）",
                 supports_image=True,
-                title=slug,
+                title=key,
                 desc="",
             )
         )
@@ -540,6 +590,8 @@ class _Override:
     desc: str | None = None
     image: str | None = None
     items: list[str] | None = field(default=None)
+    title_i18n: dict[str, str] | None = None
+    summary_i18n: dict[str, str] | None = None
 
 
 # --------------------------------------------------------------------------
@@ -579,6 +631,24 @@ def _clean_items(value: Any) -> list[str] | None:
     return cleaned[:MAX_ITEMS]
 
 
+def _clean_i18n(value: Any, limit: int) -> dict[str, str] | None:
+    """Accept {lang: text} for zh/en/ja; drop blank or non-string entries.
+
+    Returns ``None`` when nothing usable remains so an empty override is not
+    persisted (keeps the stored document minimal, ADR-0021 OQ-2).
+    """
+    if not isinstance(value, dict):
+        return None
+    cleaned: dict[str, str] = {}
+    for lang in ("zh", "en", "ja"):
+        text = value.get(lang)
+        if isinstance(text, str):
+            text = text.strip()
+            if text:
+                cleaned[lang] = text[:limit]
+    return cleaned or None
+
+
 def _read_overrides(stored: Any) -> dict[str, _Override]:
     """Extract the per-slot overrides from a stored (possibly stale) document."""
     if not isinstance(stored, dict):
@@ -599,6 +669,9 @@ def _read_overrides(stored: Any) -> dict[str, _Override]:
             override.image = _clean_text(entry.get("image"), 255)
         if slot.supports_items:
             override.items = _clean_items(entry.get("items"))
+        if slot.supports_text_i18n:
+            override.title_i18n = _clean_i18n(entry.get("title_i18n"), TITLE_LIMIT)
+            override.summary_i18n = _clean_i18n(entry.get("summary_i18n"), DESC_LIMIT)
         overrides[slot_id] = override
     return overrides
 
@@ -625,6 +698,10 @@ def _merge_with_defaults(stored: Any) -> dict[str, Any]:
             card["image"] = override.image
         if override.items is not None:
             card["items"] = override.items
+        if override.title_i18n:
+            card["title_i18n"] = override.title_i18n
+        if override.summary_i18n:
+            card["summary_i18n"] = override.summary_i18n
 
     if isinstance(stored, dict):
         updated_at = stored.get("updated_at")
@@ -677,6 +754,13 @@ def save_content(cards: list[dict[str, Any]]) -> dict[str, Any]:
             items = _clean_items(card.get("items"))
             if items is not None:
                 entry["items"] = items
+        if slot.supports_text_i18n:
+            title_i18n = _clean_i18n(card.get("title_i18n"), TITLE_LIMIT)
+            if title_i18n:
+                entry["title_i18n"] = title_i18n
+            summary_i18n = _clean_i18n(card.get("summary_i18n"), DESC_LIMIT)
+            if summary_i18n:
+                entry["summary_i18n"] = summary_i18n
         cleaned.append(entry)
 
     document = {

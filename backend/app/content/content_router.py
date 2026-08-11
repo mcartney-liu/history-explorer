@@ -46,6 +46,7 @@ class ContentCard(BaseModel):
     theme: Optional[str] = None
     supports_image: bool = False
     supports_items: bool = False
+    supports_text_i18n: bool = False
     items_label: str = "要点"
     title: str
     desc: str
@@ -53,6 +54,12 @@ class ContentCard(BaseModel):
         None, description="Stored media filename, or null to use the built-in artwork"
     )
     items: list[str] = Field(default_factory=list)
+    title_i18n: Optional[dict[str, str]] = Field(
+        None, description="Trilingual title override (zh/en/ja); null = use data source"
+    )
+    summary_i18n: Optional[dict[str, str]] = Field(
+        None, description="Trilingual summary override (zh/en/ja); null = use data source"
+    )
 
 
 class ContentModule(BaseModel):
@@ -76,6 +83,8 @@ class CardUpdate(BaseModel):
     desc: Optional[str] = Field(None, max_length=store.DESC_LIMIT)
     image: Optional[str] = Field(None, max_length=255)
     items: Optional[list[str]] = None
+    title_i18n: Optional[dict[str, str]] = None
+    summary_i18n: Optional[dict[str, str]] = None
 
 
 class ContentUpdate(BaseModel):
