@@ -748,3 +748,72 @@
 .causal-evidence-ref:not(:disabled):hover {
   border-color: var(--color-accent);
 }
+
+/* ============================================================
+   xiaomeng — 让探索包卡片"活"起来 (纯 CSS, 零依赖)
+   进场错开上浮 + 图上沙尘/扫光氛围 + hover 推近。
+   全部尊重 prefers-reduced-motion；复用 --animation-fast token。
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .discover-package-grid .pkg-card {
+    animation: pkgRise 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+    animation-delay: calc(var(--ci, 0) * 80ms);
+  }
+  .discover-package-grid .pkg-card:nth-child(1)  { --ci: 0; }
+  .discover-package-grid .pkg-card:nth-child(2)  { --ci: 1; }
+  .discover-package-grid .pkg-card:nth-child(3)  { --ci: 2; }
+  .discover-package-grid .pkg-card:nth-child(4)  { --ci: 3; }
+  .discover-package-grid .pkg-card:nth-child(5)  { --ci: 4; }
+  .discover-package-grid .pkg-card:nth-child(6)  { --ci: 5; }
+  .discover-package-grid .pkg-card:nth-child(7)  { --ci: 6; }
+  .discover-package-grid .pkg-card:nth-child(8)  { --ci: 7; }
+  .discover-package-grid .pkg-card:nth-child(9)  { --ci: 8; }
+  .discover-package-grid .pkg-card:nth-child(10) { --ci: 9; }
+
+  @keyframes pkgRise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 沙尘：极淡暖光缓慢横移，像大漠风在吹 */
+  .pkg-card-art::before {
+    content: "";
+    position: absolute;
+    inset: -25%;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(55% 55% at 32% 42%, rgba(255, 226, 170, 0.18), transparent 70%);
+    mix-blend-mode: screen;
+    opacity: 0.55;
+    animation: dustDrift 16s ease-in-out infinite;
+  }
+  @keyframes dustDrift {
+    0%, 100% { transform: translate(-6%, 0); }
+    50%      { transform: translate(8%, -3%); }
+  }
+
+  /* 做旧扫光：一道斜光缓慢扫过卡片 */
+  .pkg-card-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 35%, rgba(255, 244, 214, 0.22) 50%, transparent 65%);
+    transform: translateX(-120%);
+    animation: sheenSweep 7.5s ease-in-out infinite;
+  }
+  @keyframes sheenSweep {
+    0%   { transform: translateX(-120%); }
+    60%  { transform: translateX(120%); }
+    100% { transform: translateX(120%); }
+  }
+
+  /* hover 时图片轻微推近，增加"活"的呼吸感 */
+  .pkg-card:hover .pkg-card-art-img {
+    transform: scale(1.05);
+  }
+}
+.pkg-card-art-img {
+  transition: transform var(--animation-fast);
+}
