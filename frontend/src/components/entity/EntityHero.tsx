@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react'
 import type { EntityViewModel } from '../../data/entity/entityTypes'
 import { getEntityLabel, getEntityIcon } from '../../data/entity/entityLabels'
 import { getEntityInsight, type AIEvidence } from '../../data/aiClient'
-import { AI_SUGGESTIONS_ENABLED } from '../../data/aiFeatureFlag'
 import { EvidenceList } from '../ai/TrustDisplay'
 import { Icon } from '../ui/Icon'
 import type { IconName } from '../ui/Icon'
@@ -41,7 +40,10 @@ export function EntityHero({ identity, globalId, onResearch, onCompare }: Entity
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    if (!AI_SUGGESTIONS_ENABLED || !globalId) return
+    // 2026-08-12 (PO 修复)：历史见解是后台固化内容（GET 只读，与 AI 运行时
+    // 无关），不再被 AI_SUGGESTIONS_ENABLED（探索建议开关，默认 OFF）误门控——
+    // 此前该开关关闭时整个"历史见解"区块消失。
+    if (!globalId) return
     let cancelled = false
     setLoading(true)
     setLoaded(false)
@@ -63,7 +65,7 @@ export function EntityHero({ identity, globalId, onResearch, onCompare }: Entity
     }
   }, [globalId])
 
-  const showInsight = AI_SUGGESTIONS_ENABLED && globalId && loaded
+  const showInsight = globalId && loaded
 
   return (
     <section className="eh surf-card" aria-label={`${name} — ${label}`}>
