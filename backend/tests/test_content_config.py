@@ -304,3 +304,38 @@ def test_legacy_bare_id_is_migrated_on_read(client, isolated_content_dir):
     cards = {c["id"]: c for c in client.get("/api/v1/content").json()["cards"]}
     assert "landing.story" in cards
     assert cards["landing.story"]["title"] == "legacy 标题"
+
+
+def test_dynamic_explore_modules_are_image_configurable(client):
+    """ADR-0021 dynamic modules: explore_packs / explore_topics are derived from
+    live data sources at import time, and every slot they expose must be
+    backend-image-configurable (supports_image=True) so the admin layer can
+    drive their artwork without code changes."""
+    body = client.get("/api/v1/content").json()
+    mods = {m["module"]: m for m in body["modules"]}
+
+    assert "explore_packs" in mods
+    assert "explore_topics" in mods
+
+    cards = {c["id"]: c for c in body["cards"]}
+    for mod_id in ("explore_packs", "explore_topics"):
+        card_ids = mods[mod_id]["card_ids"]
+        assert card_ids, f"{mod_id} must expose at least one card"
+        for cid in card_ids:
+            assert cards[cid]["supports_image"] is True
+
+    # explore_packs count must track the packages data source exactly.
+    packages_path = BACKEND_DIR.parent / "data" / "exploration_packages.json"
+    raw = json.loads(packages_path.read_text(encoding="utf-8"))
+    expected_packs = len(
+        [p for p in raw.get("packages", []) if isinstance(p, dict) and p.get("slug")]
+    )
+    assert len(mods["explore_packs"]["card_ids"]) == expected_packs
+
+    # explore_topics count tracks site-config topic_ordering, else the default 4.
+    site_cfg = BACKEND_DIR.parent / "data" / "content" / "site-config.json"
+    if site_cfg.is_file():
+        ordering = json.loads(site_cfg.read_text(encoding="utf-8")).get("topic_ordering", [])
+    else:
+        ordering = ["roman_empire", "greek_philosophy", "persian_empire", "ancient_india"]
+    assert len(mods["explore_topics"]["card_ids"]) == len(ordering)

@@ -139,9 +139,25 @@ export function cardTheme(slotId: string): 'parchment' | 'network' | 'ledger' | 
   return CARD_THEMES[slotKey(slotId)] ?? 'parchment'
 }
 
-/** Built-in artwork path — the drop-in convention that predates this layer. */
+/**
+ * Built-in artwork path — the drop-in convention that predates this layer.
+ *
+ * Most cards live at `assets/cards/card-<key>.jpg`, but the explore-pack and
+ * explore-topic slots keep their artwork in dedicated folders (`assets/packs`,
+ * `assets/topics`) that the registry layer was laid on top of. Route those two
+ * modules to their real location so the console preview shows the same artwork
+ * the front-end cards render (the preview then falls back png/jpg/jpeg just
+ * like the cards do).
+ */
 export function defaultImageSrc(slotId: string): string {
-  return `${import.meta.env.BASE_URL}assets/cards/card-${slotKey(slotId)}.jpg`
+  const key = slotKey(slotId)
+  if (slotId.startsWith('explore_packs.')) {
+    return `${import.meta.env.BASE_URL}assets/packs/${key}.webp`
+  }
+  if (slotId.startsWith('explore_topics.')) {
+    return `${import.meta.env.BASE_URL}assets/topics/${key}.webp`
+  }
+  return `${import.meta.env.BASE_URL}assets/cards/card-${key}.jpg`
 }
 
 /** URL for artwork uploaded through the admin console. */

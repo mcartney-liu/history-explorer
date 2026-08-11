@@ -2,6 +2,8 @@ import { useState, type ReactNode } from 'react'
 import type { ExplorationPackage } from '../../data/explorationPackages'
 import { Button } from '../ui/Button'
 import { useLocale } from '../../data/locale'
+import { slotImageName, useContentRevision } from '../../data/contentRuntime'
+import { mediaUrl } from '../../data/contentApi'
 
 // Per-pack decorative SVG illustration (line-art, currentColor) embedded in
 // the gradient art band. Thematic — not literal photos — to keep the museum
@@ -97,16 +99,20 @@ interface PackageCardProps {
 // Entrance to an Exploration Journey — not an encyclopedia detail page.
 export default function PackageCard({ pkg, onOpen }: PackageCardProps) {
   const { t, locale } = useLocale()
+  // Subscribe so a console upload swaps the cover in without a reload.
+  useContentRevision()
   const [imgLoaded, setImgLoaded] = useState(false)
   const title = pkg.title[locale] ?? pkg.title.zh
   const summary = pkg.summary[locale] ?? pkg.summary.zh
   const typeLabel = pkg.type === 'official' ? t('discover.pkgOfficial') : pkg.type
 
   const art = PACK_ART[pkg.slug]
-  // Drop-in real artwork: when `public/assets/packs/<slug>.<ext>` exists it
-  // owns the top band; until it loads the line-art SVG stands in, and it is
-  // removed from the DOM once the photo paints (no stray corner icon).
-  const artImg = `${import.meta.env.BASE_URL}assets/packs/${pkg.slug}.webp`
+  // Admin-configured cover (slot `explore_packs.<slug>`) wins when set;
+  // otherwise fall back to the drop-in folder convention (webp→png→jpg).
+  const configuredName = slotImageName(`explore_packs.${pkg.slug}`)
+  const artImg = configuredName
+    ? mediaUrl(configuredName)
+    : `${import.meta.env.BASE_URL}assets/packs/${pkg.slug}.webp`
 
   return (
     <article className="pkg-card" data-pack={pkg.slug} data-testid={`pkg-card-${pkg.slug}`}>

@@ -119,6 +119,21 @@ export function slotItems<T extends readonly string[]>(slotId: string, fallback:
   return configured ?? fallback
 }
 
+/**
+ * Configured artwork filename for a slot, or null when untouched.
+ *
+ * Returns the raw stored filename (e.g. `"a1b2c3.png"`) so the caller can
+ * build a URL with `mediaUrl`. When the slot has no override it returns null,
+ * letting the caller fall back to its own built-in artwork (the folder
+ * drop-in convention, a line-art SVG, …). Used by the exploration-pack and
+ * featured-topic cards so their covers are editable from the admin console
+ * without a component-specific code path.
+ */
+export function slotImageName(slotId: string): string | null {
+  const img = overrides[slotId]?.image
+  return typeof img === 'string' && img ? img : null
+}
+
 // --------------------------------------------------------------------------
 // React binding
 // --------------------------------------------------------------------------

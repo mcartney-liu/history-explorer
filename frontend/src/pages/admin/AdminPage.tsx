@@ -872,7 +872,23 @@ function CardEditor({
               src={cardImageSrc(card)}
               alt=""
               onError={(e) => {
-                e.currentTarget.style.visibility = 'hidden'
+                const el = e.currentTarget
+                // A console upload that fails to load: just hide the preview.
+                if (card.image) {
+                  el.style.visibility = 'hidden'
+                  return
+                }
+                // Built-in artwork: mirror the front-end fallback chain
+                // webp → png → jpg → jpeg so the operator sees the same cover
+                // the card renders (explore packs/topics ship as png/jpg).
+                const order = ['png', 'jpg', 'jpeg']
+                const step = parseInt(el.dataset.fallback ?? '0', 10)
+                if (step < order.length) {
+                  el.dataset.fallback = String(step + 1)
+                  el.src = el.src.replace(/\.[a-z]+$/i, `.${order[step]}`)
+                } else {
+                  el.style.visibility = 'hidden'
+                }
               }}
             />
             <div className="admin-drop-overlay">

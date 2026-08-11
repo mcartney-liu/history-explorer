@@ -118,6 +118,8 @@ _LANDING = "首页 · 能力卡"
 _TABS = "实体页 · 标签引导"
 _FLOW = "实体页 · 探索路径"
 _AI = "AI 历史学家 · 能力说明"
+_PACKS = "探索 · 探索包"
+_TOPICS = "首页 · 精选主题"
 
 
 CONTENT_SLOTS: tuple[ContentSlot, ...] = (
@@ -378,11 +380,103 @@ CONTENT_SLOTS: tuple[ContentSlot, ...] = (
     ),
 )
 
-SLOT_BY_ID: dict[str, ContentSlot] = {slot.id: slot for slot in CONTENT_SLOTS}
+# --------------------------------------------------------------------------
+# Dynamic modules — explore_packs & explore_topics
+# --------------------------------------------------------------------------
+# These two modules have a variable number of slots that track *other* data
+# in the product (the curated exploration packages and the featured landing
+# topics). Their slot set is derived at import time by reading those data
+# sources directly from disk — NOT by importing the modules that own them.
+#
+# Why file-read instead of import: `site_config_store` already imports this
+# module (`from .content_store import admin_enabled`). Having `content_store`
+# import `site_config_store` back would create a circular import and crash
+# the backend on startup. Reading the site-config JSON file (the persisted
+# `topic_ordering`) is a pure data read with no import edge, so it is safe.
+# (ADR-0021 R-topic — keep the dependency edge one-directional.)
+_DEFAULT_TOPIC_SLUGS: tuple[str, ...] = (
+    "roman_empire",
+    "greek_philosophy",
+    "persian_empire",
+    "ancient_india",
+)
 
-#: The slot ids the layer manages. Unknown ids submitted by a client are
-#: rejected — the slot set is a product decision, not user data.
-ALLOWED_CARD_IDS: tuple[str, ...] = tuple(SLOT_BY_ID)
+
+def _pack_slugs() -> list[str]:
+    """Exploration-package slugs from ``data/exploration_packages.json``."""
+    path = _REPO_ROOT / "data" / "exploration_packages.json"
+    if not path.is_file():
+        return []
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(raw, dict):
+        return []
+    packages = raw.get("packages")
+    if not isinstance(packages, list):
+        return []
+    slugs = [p.get("slug") for p in packages if isinstance(p, dict)]
+    return [s for s in slugs if isinstance(s, str) and s]
+
+
+def _topic_slugs() -> list[str]:
+    """Featured topic slugs.
+
+    Prefers the persisted ``topic_ordering`` in site-config.json (so the
+    image-config slots track whatever the operator featured); falls back to
+    the compiled default when that file is absent or unreadable. Must stay in
+    sync with ``site_config_store.DEFAULT_TOPIC_ORDERING``.
+    """
+    path = _REPO_ROOT / "data" / "content" / "site-config.json"
+    if path.is_file():
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(raw, dict) and isinstance(raw.get("topic_ordering"), list):
+                slugs = [s for s in raw["topic_ordering"] if isinstance(s, str) and s]
+                if slugs:
+                    return slugs[:12]
+        except (OSError, json.JSONDecodeError):
+            pass
+    return list(_DEFAULT_TOPIC_SLUGS)
+
+
+def _dynamic_slots() -> list[ContentSlot]:
+    """Slots for explore_packs + explore_topics, derived from live data."""
+    slots: list[ContentSlot] = []
+    for slug in _pack_slugs():
+        slots.append(
+            ContentSlot(
+                id=f"explore_packs.{slug}",
+                module="explore_packs",
+                module_label=_PACKS,
+                label=f"探索包 · {slug}",
+                where=f"探索页「官方探索包」卡片封面（{slug}）",
+                supports_image=True,
+                title=slug,
+                desc="",
+            )
+        )
+    for slug in _topic_slugs():
+        slots.append(
+            ContentSlot(
+                id=f"explore_topics.{slug}",
+                module="explore_topics",
+                module_label=_TOPICS,
+                label=f"主题 · {slug}",
+                where=f"首页精选主题卡片封面（{slug}）",
+                supports_image=True,
+                title=slug,
+                desc="",
+            )
+        )
+    return slots
+
+
+#: Static registry + data-derived dynamic slots, merged once at import.
+_ALL_SLOTS: tuple[ContentSlot, ...] = tuple(list(CONTENT_SLOTS) + _dynamic_slots())
+_SLOT_BY_ID: dict[str, ContentSlot] = {slot.id: slot for slot in _ALL_SLOTS}
+ALLOWED_CARD_IDS: tuple[str, ...] = tuple(_SLOT_BY_ID)
 
 #: v1 addressed the four landing cards by bare id. Documents written then are
 #: migrated on read so an existing install keeps its edits (ADR-0021 D3).
@@ -405,7 +499,7 @@ MAX_ITEMS = 12
 def modules() -> list[dict[str, Any]]:
     """Registry grouped by module — drives the admin console's sections."""
     grouped: dict[str, dict[str, Any]] = {}
-    for slot in CONTENT_SLOTS:
+    for slot in _ALL_SLOTS:
         bucket = grouped.setdefault(
             slot.module,
             {"module": slot.module, "label": slot.module_label, "card_ids": []},
@@ -456,7 +550,7 @@ def default_document() -> dict[str, Any]:
         "version": CONTENT_VERSION,
         "updated_at": None,
         "modules": modules(),
-        "cards": [slot.to_card() for slot in CONTENT_SLOTS],
+        "cards": [slot.to_card() for slot in _ALL_SLOTS],
     }
 
 
@@ -464,7 +558,7 @@ def _canonical_id(raw: Any) -> str | None:
     if not isinstance(raw, str):
         return None
     candidate = _LEGACY_IDS.get(raw, raw)
-    return candidate if candidate in SLOT_BY_ID else None
+    return candidate if candidate in _SLOT_BY_ID else None
 
 
 def _clean_text(value: Any, limit: int) -> str | None:
@@ -496,7 +590,7 @@ def _read_overrides(stored: Any) -> dict[str, _Override]:
         slot_id = _canonical_id(entry.get("id"))
         if slot_id is None:
             continue  # unknown / retired slot — silently dropped
-        slot = SLOT_BY_ID[slot_id]
+        slot = _SLOT_BY_ID[slot_id]
         override = _Override(
             title=_clean_text(entry.get("title"), TITLE_LIMIT),
             desc=_clean_text(entry.get("desc"), DESC_LIMIT),
@@ -568,7 +662,7 @@ def save_content(cards: list[dict[str, Any]]) -> dict[str, Any]:
         slot_id = _canonical_id(raw_id)
         if slot_id is None:
             raise ContentError(f"unknown card id: {raw_id!r}")
-        slot = SLOT_BY_ID[slot_id]
+        slot = _SLOT_BY_ID[slot_id]
 
         entry: dict[str, Any] = {"id": slot_id}
         title = _clean_text(card.get("title"), TITLE_LIMIT)
