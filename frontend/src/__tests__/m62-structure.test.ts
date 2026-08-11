@@ -4,8 +4,10 @@
 //
 // Wave2-#140: M85 replaced the data-tier="*" attributes with ExplorerShell
 // slots (narrativeSection / interpretationSection / supportingSection).
-// The three-tier contract is unchanged — assertions now anchor on the
-// slot names in DOM order.
+// 2026-08-11: M90 rework dropped those slot names — ExplorerShell now takes
+// globalBar / questionHeader / modeBar / contextRail / companionDock and the
+// content itself lives in ModeCanvas. The guardrail anchors on the current
+// slot contract (presence + DOM order).
 
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
@@ -16,15 +18,23 @@ const APP = resolve(dirname(fileURLToPath(import.meta.url)), '../../src/App.tsx'
 const src = readFileSync(APP, 'utf8')
 
 describe('M62 — three-tier narrative structure in App.tsx', () => {
-  it('wraps the result view in narrative/interpretation/supporting tiers in DOM order', () => {
-    expect(src).toContain('narrativeSection={')
-    expect(src).toContain('interpretationSection={')
-    expect(src).toContain('supportingSection={')
-    const ni = src.indexOf('narrativeSection={')
-    const ii = src.indexOf('interpretationSection={')
-    const si = src.indexOf('supportingSection={')
-    expect(ni).toBeLessThan(ii)
-    expect(ii).toBeLessThan(si)
+  it('wraps ExplorerShell slots in a stable DOM order (M90 contract)', () => {
+    // Top chrome → context rail → content → companion dock.
+    expect(src).toContain('globalBar={')
+    expect(src).toContain('modeBar={')
+    expect(src).toContain('contextRail={')
+    expect(src).toContain('companionDock={')
+    expect(src).toContain('<ModeCanvas')
+    const gb = src.indexOf('globalBar={')
+    const mb = src.indexOf('modeBar={')
+    const cr = src.indexOf('contextRail={')
+    const mc = src.indexOf('<ModeCanvas')
+    const cd = src.indexOf('companionDock={')
+    expect(gb).toBeGreaterThanOrEqual(0)
+    expect(gb).toBeLessThan(mb)
+    expect(mb).toBeLessThan(cr)
+    expect(cr).toBeLessThan(cd)  // companionDock 是 ExplorerShell 的 prop（先于子元素）
+    expect(mc).toBeGreaterThanOrEqual(0)  // ModeCanvas 是子元素，出现在 prop 之后
   })
 
   it('exposes view toggle elements for relationship and timeline', () => {

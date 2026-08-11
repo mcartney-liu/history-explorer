@@ -88,10 +88,10 @@ describe('RelationshipInsight (T2)', () => {
     })
     const text = container.textContent ?? ''
     expect(text).toContain('基于知识库证据')          // answer prefix + title
-    expect(text).toContain('确定性输出')               // deterministic badge
-    expect(text).toContain('person-augustus')          // evidence
-    expect(text).toContain('src-tacitus-ann')          // source bound
-    expect(text).toContain('participated_in')          // relationship from evidence
+    expect(text).toContain('知识库推荐')                 // deterministic badge（67f18e1 覆盖文案）
+    expect(text).toContain('罗马帝国建立')                // next 实体名中文化（event-roman-empire-established）
+    expect(text).toContain('tacitus ann')                // source id 格式化（formatSourceId）
+    expect(text).toContain('参与')                        // 关系类型中文化（participated_in→参与）
     expect(text).not.toContain('AI 生成')              // deterministic ≠ AI
   })
 

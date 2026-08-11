@@ -121,7 +121,7 @@ describe('ExplorationPolicy (M88.2)', () => {
       })
       const decision = evaluateExploration(state, defaultPolicyContext)
 
-      expect(decision.output.targetRef).toContain('economy')
+      expect(decision.output.targetRef).toContain('经济维度')
       expect(decision.output.reason).toContain('economy')
     })
 
@@ -303,12 +303,12 @@ describe('ExplorationPolicy (M88.2)', () => {
   // ── 测试 8: 去重逻辑 ──
   describe('Deduplication', () => {
     it('targetRef 已在 exploredAnchors 中 → 跳过当前规则', () => {
-      // missingDimensions → targetRef = entity:罗马帝国-economy
-      // 如果已在 exploredAnchors 中，应跳过
+      // missingDimensions → resolveDimensionTarget 映射为维度名（economy→经济维度）
+      // 如果该维度名已在 exploredAnchors 中，应跳过 open_dimension
       const state = makeState({
         missingDimensions: ['economy'],
         missingConnections: [],
-        exploredAnchors: ['entity:rome', 'entity:gaul', 'entity:罗马帝国-economy'],
+        exploredAnchors: ['entity:rome', 'entity:gaul', '经济维度'],
       })
       const decision = evaluateExploration(state, defaultPolicyContext)
 

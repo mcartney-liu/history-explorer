@@ -93,9 +93,9 @@ describe('ExplorationSuggestions (T1)', () => {
     const text = container.textContent ?? ''
     expect(text).toContain('基于知识库证据的探索建议')   // deterministic title
     expect(text).toContain('确定性输出')                 // engine badge
-    expect(text).toContain('Roman Empire Established')  // next item
-    expect(text).toContain('participated_in')
-    expect(text).toContain('src-tacitus-ann')           // source bound
+    expect(text).toContain('罗马帝国建立')                // next item（实体名中文化）
+    expect(text).toContain('参与')                        // 关系类型中文化（participated_in→参与）
+    expect(text).toContain('tacitus ann')                // source id 格式化（formatSourceId）
     expect(text).not.toContain('AI 生成')                // deterministic ≠ AI
   })
 

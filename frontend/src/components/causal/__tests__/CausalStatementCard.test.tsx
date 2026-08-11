@@ -34,7 +34,7 @@ describe('CausalStatementCard', () => {
   it('renders confidence as human-readable label key (not raw enum)', () => {
     const html = renderToStaticMarkup(<CausalStatementCard cs={cs({ confidence: 'high' })} />)
     expect(html).toContain('causal.confidenceHigh')
-    expect(html).not.toContain('"high"')
+    expect(html).not.toContain('>high<')  // 显示层不出现裸枚举值（data-confidence 属性不受影响）
   })
 
   it('renders low confidence label key', () => {
