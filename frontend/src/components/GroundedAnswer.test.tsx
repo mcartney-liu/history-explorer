@@ -96,6 +96,74 @@ describe('GroundedAnswer', () => {
     expect(html).toContain('置信度：高')
   })
 
+  // 2026-08-11 (PO): structured cross-dimensional synthesis answer must render
+  // as a readable view (主题 / 维度关联 / 结论), NOT as a raw JSON dict dump.
+  it('renders a structured cross-dimensional synthesis answer as sections', () => {
+    const synthesis = JSON.stringify({
+      cross_dimensional_theme: '罗马治下的埃及与罗马文明紧密相连。',
+      dimensional_relations: {
+        政治制度: '作为罗马行省，行政效率提升。',
+        军事体系: '罗马军力保障稳定。',
+      },
+      conclusion: '共同推动了地中海文明进程。',
+    })
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse({ answer: synthesis })} />,
+    )
+    expect(html).toContain('跨维度主题')
+    expect(html).toContain('维度关联')
+    expect(html).toContain('结论')
+    expect(html).toContain('罗马治下的埃及与罗马文明紧密相连。')
+    expect(html).toContain('作为罗马行省，行政效率提升。')
+    expect(html).toContain('共同推动了地中海文明进程。')
+    // The raw dict-string must NOT leak into the output.
+    expect(html).not.toContain("{'cross_dimensional_theme'")
+    expect(html).not.toContain('{"cross_dimensional_theme"')
+  })
+
+  it('falls back to a plain paragraph for non-synthesis JSON answers', () => {
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse({ answer: '{"summary":"纯文本包装"}' })} />,
+    )
+    expect(html).toContain('ga-answer')
+    expect(html).not.toContain('跨维度主题')
+  })
+
+  it('renders Chinese-key synthesis answers (cross-dimensional analysis prompt)', () => {
+    const synthesis = JSON.stringify({
+      跨维度主题: '罗马治下的埃及与罗马文明紧密相连。',
+      维度关联: {
+        政治制度: '作为罗马行省，行政效率提升。',
+        军事体系: '罗马军力保障稳定。',
+      },
+      结论: '共同推动了地中海文明进程。',
+    })
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse({ answer: synthesis })} />,
+    )
+    expect(html).toContain('跨维度主题')
+    expect(html).toContain('维度关联')
+    expect(html).toContain('结论')
+    expect(html).toContain('罗马治下的埃及与罗马文明紧密相连。')
+    expect(html).toContain('作为罗马行省，行政效率提升。')
+    expect(html).not.toContain('{"跨维度主题"')
+  })
+
+  it('strips markdown code block wrapper from synthesis JSON', () => {
+    const synthesis = '```json\n' + JSON.stringify({
+      cross_dimensional_theme: '主题',
+      dimensional_relations: { 政治: '关联' },
+      conclusion: '结论',
+    }) + '\n```'
+    const html = renderToStaticMarkup(
+      <GroundedAnswer response={makeResponse({ answer: synthesis })} />,
+    )
+    expect(html).toContain('跨维度主题')
+    expect(html).toContain('主题')
+    expect(html).toContain('结论')
+    expect(html).not.toContain('```json')
+  })
+
   it('does not render confidence badge when absent (backward compat)', () => {
     const html = renderToStaticMarkup(
       <GroundedAnswer response={makeResponse()} />,

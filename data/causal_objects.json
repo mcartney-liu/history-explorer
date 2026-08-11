@@ -1,0 +1,427 @@
+[
+  {
+    "id": "co-001",
+    "cause_id": "china_v1:idea-keju",
+    "effect_id": "china_v1:idea-wenguan",
+    "mechanism": "科举制度通过标准化考试选拔文官，取代了魏晋以来门阀世袭的选官方式。考试内容以儒家经典为主，确保了文官群体在意识形态上的一致性。这一制度使「学而优则仕」成为社会共识，打通了社会流动通道。",
+    "consequence": "文官体系的确立使中国形成了世界上最早的职业官僚制度。此后历朝历代均以科举为核心选官机制，直至1905年废除。这一制度深刻影响了东亚各国的官僚选拔模式。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001", "ec-cn-007"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-sanxing-liubu",
+      "china_v1:idea-neige",
+      "china_v1:idea-qinzhi"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-wenguan",
+        "to": "china_v1:idea-sanxing-liubu",
+        "relationship": "preceded",
+        "label": "文官体系如何演化为三省六部制度"
+      },
+      {
+        "from": "china_v1:idea-wenguan",
+        "to": "china_v1:idea-neige",
+        "relationship": "evolved_into",
+        "label": "文官制度如何催生内阁体系"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-004",
+        "relation_type": "institutional_evolution",
+        "explanation": "科举制度是秦制所开创的中央集权框架在人才选拔领域的深化。理解秦制如何通过郡县制建立「中央任命地方官」的制度逻辑，有助于理解为什么中国最终选择标准化考试而非门阀世袭作为选官方式——这是制度逻辑的自然延伸，而非偶然选择。"
+      },
+      {
+        "target_id": "co-010",
+        "relation_type": "institutional_evolution",
+        "explanation": "科举选拔的文官群体构成了三省六部和内阁制度的人力基础。理解科举如何培养标准化的儒家官僚，有助于理解为什么三省六部的分工体系和内阁的决策机制需要依赖这批通过考试选拔的士大夫。"
+      }
+    ]
+  },
+  {
+    "id": "co-005",
+    "cause_id": "china_v1:tp-ming",
+    "effect_id": "china_v1:event-zheng-he",
+    "mechanism": "明成祖朱棣通过靖难之役夺取皇位后，面临合法性危机。他需要通过大规模的国家工程来展示「天命所归」。明朝当时拥有世界上最先进的造船技术和强大的国力，郑和作为宦官亲信被委以重任。",
+    "consequence": "郑和七下西洋展示了明朝的海上力量，建立了从东南亚到东非的朝贡网络。然而，巨大的财政消耗和内部政治压力最终导致远航停止——中国从海洋主动撤退，此后500年将海洋主导权让给了欧洲。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-007"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-sichouzhilu",
+      "china_v1:idea-haijin"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:event-zheng-he",
+        "to": "china_v1:idea-sichouzhilu",
+        "relationship": "preceded",
+        "label": "海上探索如何对比陆上丝绸之路"
+      },
+      {
+        "from": "china_v1:event-zheng-he",
+        "to": "china_v1:idea-haijin",
+        "relationship": "led_to",
+        "label": "远航停止后海禁政策的形成"
+      }
+    ]
+  },
+  {
+    "id": "co-008",
+    "cause_id": "china_v1:idea-yinshuashu",
+    "effect_id": "china_v1:idea-zhishichuanbo",
+    "mechanism": "雕版印刷到活字印刷的技术演进，大幅降低了书籍的复制成本。此前书籍依赖手工抄写，数量稀少且价格昂贵。印刷术使知识从精英阶层向更广泛的社会群体扩散成为可能。",
+    "consequence": "印刷术降低知识传播成本后，知识不再被少数精英垄断。这一技术变革为后续教育普及、科学革命、宗教改革提供了基础设施——知识传播的边际成本趋近于零。欧洲的古腾堡印刷术在15世纪引发了类似的传播革命。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-keju",
+      "china_v1:idea-lixue"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-zhishichuanbo",
+        "to": "china_v1:idea-keju",
+        "relationship": "enabled",
+        "label": "知识传播如何影响科举制度的发展"
+      },
+      {
+        "from": "china_v1:idea-zhishichuanbo",
+        "to": "china_v1:idea-lixue",
+        "relationship": "contributed_to",
+        "label": "知识扩散如何催生理学思潮"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-011",
+        "relation_type": "technological_chain",
+        "explanation": "印刷术的革命性依赖于纸张的廉价和普及。造纸术在东汉的改进（蔡伦，105年）将书写材料成本降低了数十倍，使大规模复制文字成为可能。印刷术在此基础上将复制效率再提升一个数量级。理解造纸术对书写材料成本的降低，是理解印刷术为什么能产生革命性影响的前提。"
+      }
+    ]
+  },
+  {
+    "id": "co-004",
+    "cause_id": "china_v1:idea-qinzhi",
+    "effect_id": "china_v1:idea-sanxing-liubu",
+    "mechanism": "秦统一六国后，废分封、行郡县，建立了中国历史上第一个中央集权官僚体系。秦始皇通过统一文字（书同文）、统一度量衡（车同轨）、统一法律，将分散的封建领主治理转变为垂直的中央—郡—县三级行政结构。这种制度设计的核心逻辑是：通过标准化行政消除地方割据的制度基础。",
+    "consequence": "秦制奠定了此后两千年中国政治制度的基本框架。郡县制取代封建制，使「统一」成为中国政治文化的默认状态。汉承秦制、唐承隋制——每一次王朝更替都在秦制的基础上进行改良而非推翻。但同时，秦制的过度集权也导致了秦朝速亡，揭示了中央集权与地方治理之间的永恒张力。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-wenguan",
+      "china_v1:idea-keju"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-sanxing-liubu",
+        "to": "china_v1:idea-neige",
+        "relationship": "evolved_into",
+        "label": "三省六部如何催生内阁制度"
+      },
+      {
+        "from": "china_v1:idea-qinzhi",
+        "to": "china_v1:idea-keju",
+        "relationship": "preceded",
+        "label": "中央集权制度如何为科举选拔提供制度前提"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-001",
+        "relation_type": "institutional_evolution",
+        "explanation": "秦代建立中央集权的郡县制框架后，官僚体系的运作需要标准化的选官机制。科举制度在隋唐的出现，本质上是秦制所开创的「中央任命地方官」这一制度逻辑的深化——当官僚体系规模扩大，门阀世袭无法满足治理需求时，标准化考试成为必然选择。"
+      }
+    ]
+  },
+  {
+    "id": "co-009",
+    "cause_id": "roman_empire:civ-roman",
+    "effect_id": "roman_empire:civ-byzantine",
+    "mechanism": "罗马法经历了从《十二铜表法》（约公元前450年）到查士丁尼《民法大全》（公元534年）近千年的持续编纂和精炼。罗马法的核心创新在于将法律从宗教仪式和习惯法中分离出来，建立了独立的法学体系——包括公法与私法的区分、物权与债权的概念、以及「法律面前人人平等」的原则雏形。这一体系的形成得益于罗马帝国的广袤疆域，需要一套超越地方习惯的统一法律框架来治理多元族群。",
+    "consequence": "罗马法在中世纪被重新发现后，成为欧洲大陆法系的基础。11世纪博洛尼亚大学对《民法大全》的研究开启了欧洲法学的复兴，拿破仑法典（1804年）和德国民法典（1900年）均以罗马法为蓝本。今天全球约60%的司法管辖区使用大陆法系，其根源均可追溯到罗马法。与英国的普通法（判例法）不同，罗马法传统强调成文法典的系统性和逻辑完备性。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "roman_empire:event-roman-empire-established",
+      "roman_empire:event-empire-fall"
+    ],
+    "exploration_paths": [
+      {
+        "from": "roman_empire:civ-byzantine",
+        "to": "roman_empire:event-edict-milan",
+        "relationship": "issued",
+        "label": "拜占庭帝国如何通过法律确立基督教地位"
+      },
+      {
+        "from": "roman_empire:civ-roman",
+        "to": "roman_empire:event-roman-empire-established",
+        "relationship": "achieved",
+        "label": "罗马法如何为帝国治理提供制度基础"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-004",
+        "relation_type": "civilization_contrast",
+        "explanation": "罗马法和秦制分别代表了西方和东方制度文明的两个不同起点。罗马法通过成文法典和法学体系实现社会治理——「以法律管人」；秦制通过郡县制和官僚层级实现中央集权——「以制度管人」。理解这两种路径的差异，有助于理解为什么西方发展出法治传统，而中国形成了官僚治理传统。"
+      }
+    ]
+  },
+  {
+    "id": "co-010",
+    "cause_id": "china_v1:idea-sanxing-liubu",
+    "effect_id": "china_v1:idea-neige",
+    "mechanism": "三省六部制在唐代达到成熟，但其集体决策机制效率较低——中书出令、门下封驳、尚书执行的流程在面对紧急政务时反应迟缓。明初废除丞相后，皇帝直接面对三省六部的庞大政务负担，被迫设立内阁作为咨询机构协助处理奏章。内阁大学士从秘书角色逐渐演变为实际决策者，权力从三省向内阁转移。",
+    "consequence": "内阁体系在明清两代成为实际上的最高行政中枢，但其权力始终依赖皇帝个人的信任——内阁没有法定的独立权力。这一制度的脆弱性在明代后期暴露无遗：万历怠政时内阁无法独立运作，崇祯朝内阁首辅更换频繁导致政策缺乏连续性。与同时期英国的内阁制不同，中国内阁始终是皇权的附属而非制约。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001", "ec-cn-002"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-wenguan",
+      "china_v1:idea-keju"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-neige",
+        "to": "china_v1:idea-wenguan",
+        "relationship": "depended_on",
+        "label": "内阁制度如何依赖文官体系的支撑"
+      },
+      {
+        "from": "china_v1:idea-sanxing-liubu",
+        "to": "china_v1:idea-keju",
+        "relationship": "operated_with",
+        "label": "三省六部如何与科举制度共同运作"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-004",
+        "relation_type": "institutional_evolution",
+        "explanation": "三省六部制是秦制中央集权框架在行政分工上的精细化。秦制通过郡县制解决了「中央如何管地方」的问题，三省六部则进一步解决了「中央内部如何分工协作」的问题——中书出令、门下封驳、尚书执行的三权分立，是中央集权制度成熟的组织形态。"
+      },
+      {
+        "target_id": "co-001",
+        "relation_type": "institutional_evolution",
+        "explanation": "三省六部制的运作离不开科举选拔的标准化文官。三省六部提供了行政分工的框架，科举提供了填充这个框架的人力资源。理解两者的关系，有助于理解中国官僚制度为什么能在没有现代管理科学的情况下实现大规模行政运作。"
+      }
+    ]
+  },
+  {
+    "id": "co-011",
+    "cause_id": "china_v1:tech-zaopi",
+    "effect_id": "china_v1:idea-zhishichuanbo",
+    "mechanism": "蔡伦于公元105年改进造纸术，使用树皮、麻头、破布和渔网等廉价原料，使纸张的大规模生产成为可能。此前书写材料依赖竹简（笨重）和丝帛（昂贵），限制了文字信息的传播范围。纸张的轻便和低成本使其迅速取代竹简和丝帛，成为知识和行政文书的主要载体，并通过丝绸之路传播到中亚、阿拉伯和欧洲。",
+    "consequence": "造纸术的传播直接推动了全球知识体系的扩展。阿拉伯帝国在8世纪获得造纸技术后，巴格达的「智慧宫」成为世界翻译和学术中心，保存和发扬了希腊哲学和科学著作。12世纪造纸术传入欧洲后，为文艺复兴和宗教改革提供了物质基础——没有廉价纸张，古腾堡的印刷术就不会产生革命性影响。造纸术是中国对世界文明最重要的技术贡献之一。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-yinshuashu",
+      "silk_road:silk_road"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-zhishichuanbo",
+        "to": "china_v1:idea-yinshuashu",
+        "relationship": "enabled",
+        "label": "造纸术如何为印刷术的革命性影响提供前提"
+      },
+      {
+        "from": "silk_road:silk_road",
+        "to": "silk_road:tech-paper",
+        "relationship": "transmitted",
+        "label": "丝绸之路如何传播造纸技术到西方"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-008",
+        "relation_type": "technological_chain",
+        "explanation": "造纸术为印刷术提供了廉价的书写的材料基础。蔡伦改进造纸术（105年）使纸张成本降低数十倍，印刷术（唐代雕版→宋代活字）在此基础上将文字复制效率提升了一个数量级。造纸解决的是「用什么写」，印刷解决的是「怎么快速复制」——两个技术互补构成了知识传播的基础设施。"
+      }
+    ]
+  },
+  {
+    "id": "co-012",
+    "cause_id": "china_v1:tech-huoyao",
+    "effect_id": "china_v1:idea-qinzhi",
+    "mechanism": "火药最初在唐代由炼丹家意外发现（硫磺、硝石和木炭的混合物），最初用于烟花爆竹和信号。宋代开始系统性地将火药应用于军事——出现了火枪、火箭和震天雷等早期火器。火药武器的出现改变了战争的形态：城墙的防御优势被削弱，重装骑兵面对火器时的冲击力不再决定性。",
+    "consequence": "火药通过蒙古西征和丝绸之路传入伊斯兰世界和欧洲，引发了全球性的军事变革。在欧洲，火药武器加速了封建制度的瓦解——城堡不再坚不可摧，骑士阶层被火枪兵取代。火药帮助欧洲国家建立了中央集权的常备军，推动了近代民族国家的形成。讽刺的是，火药的故乡中国在明清两代反而在火器技术上落后于欧洲——部分原因是科举制度下的士大夫阶层轻视军事技术，部分原因是游牧民族入主中原后有意限制火器发展以维持骑射优势。",
+    "confidence": "medium",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "silk_road:silk_road",
+      "china_v1:tech-hanghai"
+    ],
+    "exploration_paths": [
+      {
+        "from": "silk_road:silk_road",
+        "to": "china_v1:tech-zaopi",
+        "relationship": "transmitted",
+        "label": "丝绸之路如何同时传播了火药、造纸和印刷术"
+      },
+      {
+        "from": "china_v1:tech-huoyao",
+        "to": "china_v1:tech-hanghai",
+        "relationship": "parallel_to",
+        "label": "火药技术与航海技术如何共同改变世界格局"
+      }
+    ]
+  },
+  {
+    "id": "co-013",
+    "cause_id": "ancient_india:religion-buddhism",
+    "effect_id": "china_v1:idea-zongjiao-ronghe",
+    "mechanism": "佛教在公元1世纪前后通过丝绸之路从印度传入中国。最初作为外来宗教面临文化隔阂，但通过与本土道家思想的对话和融合（「格义」），佛教逐渐找到了在中国的表达方式。魏晋南北朝时期的社会动荡为佛教提供了传播土壤——乱世中人们对「因果报应」和「轮回解脱」的信仰需求增强。唐代玄奘西行取经（629-645年）带回了大量梵文佛经，系统性的翻译工作使中国成为大乘佛教的第二个中心。",
+    "consequence": "佛教在中国的传播远不止宗教层面的影响。它深刻改变了中国的哲学、文学、艺术和日常生活——禅宗影响了宋明理学的心性论，佛教壁画和雕塑催生了敦煌艺术，佛教的寺院经济成为重要的社会组织形式。更重要的是，中国成为佛教向朝鲜、日本和越南传播的中转站，形成了「东亚佛教文化圈」。然而，佛教也多次遭遇政治打压（如唐武宗灭佛），反映了外来宗教与本土政治秩序之间的持续张力。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:idea-lixue",
+      "china_v1:rel-fojiao",
+      "silk_road:silk_road"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-zongjiao-ronghe",
+        "to": "china_v1:idea-lixue",
+        "relationship": "influenced",
+        "label": "佛教思想如何影响宋明理学的形成"
+      },
+      {
+        "from": "ancient_india:religion-buddhism",
+        "to": "ancient_india:person-ashoka",
+        "relationship": "promoted_by",
+        "label": "阿育王如何将佛教从地区宗教推广为世界性宗教"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-016",
+        "relation_type": "ideological_influence",
+        "explanation": "丝绸之路是佛教传入中国的物理通道，但佛教在中国的成功远不止「传入」——它需要与中国本土的道家、儒家思想对话和融合。co-013 解释佛教如何本地化适应，co-016 解释丝绸之路如何促成多元宗教共存。将两者放在一起理解，可以形成「传播通道 × 文化适应」的双层认知。"
+      }
+    ]
+  },
+  {
+    "id": "co-014",
+    "cause_id": "china_v1:idea-lixue",
+    "effect_id": "china_v1:idea-xinxue",
+    "mechanism": "朱熹的理学将「理」（宇宙的普遍原则）作为最高的哲学范畴，强调通过「格物致知」——即对外部事物的观察和思考——来认识和把握天理。理学在南宋后期被确立为官学后，成为科举考试的标准解释体系。然而到了明代中期，理学的「格物」路径被批评为支离繁琐——学者们皓首穷经于注疏考证，却失去了对道德本心的直接体认。王阳明在龙场悟道后提出「心即理」和「致良知」，将道德认知的焦点从外部事物转向内心体验。",
+    "consequence": "心学的兴起标志着中国哲学从「外在规范」向「内在自觉」的重大转向。王阳明的「知行合一」打破了理学家对「知先行后」的教条，强调道德认知与道德实践的统一。心学在明代中后期影响深远——它不仅改变了士大夫的修身方式，还影响了日本的明治维新（阳明学是许多维新志士的精神资源）。但心学的「向内求」倾向也引发了批评——部分学者认为心学的泛滥导致了晚明士人空谈心性、不务实际的学风，间接加速了明朝的衰落。",
+    "confidence": "medium",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "china_v1:person-zhu-xi",
+      "china_v1:person-wang-yangming",
+      "china_v1:idea-keju"
+    ],
+    "exploration_paths": [
+      {
+        "from": "china_v1:idea-xinxue",
+        "to": "china_v1:person-wang-yangming",
+        "relationship": "founded_by",
+        "label": "王阳明的心学思想及其政治实践"
+      },
+      {
+        "from": "china_v1:idea-lixue",
+        "to": "china_v1:idea-keju",
+        "relationship": "standardized",
+        "label": "理学如何通过科举成为官方意识形态"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-001",
+        "relation_type": "ideological_influence",
+        "explanation": "理学在南宋被确立为官学后，成为科举考试的标准解释体系。理解科举如何选拔文官，有助于理解理学为什么能成为中国近八百年的官方意识形态——科举是理学思想从学术讨论进入国家治理的制度通道。"
+      },
+      {
+        "target_id": "co-013",
+        "relation_type": "ideological_influence",
+        "explanation": "佛教思想深刻影响了宋明理学的形成。禅宗的「明心见性」启发了理学家对心性论的探讨，佛教的思辨方法推动了儒学从伦理规范向哲学体系的升级。理解佛教如何在中国传播和本土化，有助于理解理学为什么能在佛教挑战下完成儒学的哲学化转型。"
+      }
+    ]
+  },
+  {
+    "id": "co-015",
+    "cause_id": "greek_philosophy:idea-logic",
+    "effect_id": "roman_empire:civ-roman",
+    "mechanism": "亚里士多德建立了西方第一个系统的逻辑学体系——三段论推理，为理性思维提供了形式化工具。希腊化时期，斯多葛学派进一步发展了命题逻辑。当罗马征服希腊后，罗马精英阶层系统性地吸收希腊哲学——西塞罗将希腊哲学术语翻译为拉丁语，塞内卡将斯多葛主义融入罗马政治伦理。罗马人虽然不擅长原创哲学，但他们在法学和工程学中将希腊逻辑学的方法论应用到了极致——罗马法的体系化编纂正是逻辑学思维的实际应用。",
+    "consequence": "希腊逻辑学通过罗马文明的传承成为西方理性传统的基础。中世纪经院哲学（如托马斯·阿奎那）用亚里士多德逻辑论证基督教神学，文艺复兴时期对希腊经典的重新发现直接推动了科学方法的诞生。培根的归纳法和笛卡尔的演绎法都可以追溯到希腊逻辑学传统。与同时期的中国墨家逻辑（后被边缘化）和印度因明学（主要服务于宗教辩论）不同，希腊逻辑学通过罗马的世俗化传播进入法学和科学领域，成为西方文明的核心思维工具。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "greek_philosophy:person-aristotle",
+      "hellenistic_world:idea-stoicism"
+    ],
+    "exploration_paths": [
+      {
+        "from": "greek_philosophy:idea-logic",
+        "to": "greek_philosophy:person-aristotle",
+        "relationship": "founded_by",
+        "label": "亚里士多德如何建立西方逻辑学体系"
+      },
+      {
+        "from": "hellenistic_world:idea-stoicism",
+        "to": "roman_empire:event-pax-romana",
+        "relationship": "influenced",
+        "label": "斯多葛主义如何塑造罗马帝国的治理哲学"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-009",
+        "relation_type": "ideological_influence",
+        "explanation": "希腊逻辑学（亚里士多德的三段论、斯多葛学派的命题逻辑）为罗马法提供了形式化的思维工具。罗马法学家将希腊逻辑学的分类和推理方法应用于法律编纂——公法与私法的区分、物权与债权的概念体系，都可以追溯到逻辑学对概念精确分类的要求。"
+      }
+    ]
+  },
+  {
+    "id": "co-016",
+    "cause_id": "silk_road:silk_road",
+    "effect_id": "china_v1:idea-zongjiao-ronghe",
+    "mechanism": "丝绸之路不仅是商品贸易通道，更是思想和信仰的传播通道。佛教、景教（基督教聂斯托利派）、祆教（琐罗亚斯德教）和伊斯兰教先后通过丝绸之路传入中国。商人、僧侣和使节在长途旅行中不仅携带货物，也携带经书、圣物和宗教仪式。敦煌莫高窟的壁画和文书证明了丝绸之路上多元宗教共存的历史——佛教壁画旁可能刻有景教的十字架符号，粟特商人的祆教祠与汉人的佛寺比邻而立。",
+    "consequence": "丝绸之路促成的宗教和文化交流深刻塑造了欧亚大陆的文明格局。佛教从印度经中亚传入中国，再由中国传入朝鲜和日本；伊斯兰教从阿拉伯半岛沿丝绸之路向东传播，使中亚和新疆地区的突厥语民族逐渐伊斯兰化。丝绸之路上的文化交流也带来了艺术和技术的融合——希腊化艺术风格影响了犍陀罗佛教造像，波斯和阿拉伯的数学和天文学通过丝绸之路传入中国（如元代的回回司天监）。丝绸之路的本质是：商品交换为表，文明对话为里。",
+    "confidence": "high",
+    "evidence_refs": ["ec-cn-001"],
+    "object_type": "causal",
+    "related_entities": [
+      "silk_road:loc-samarkand",
+      "persian_empire:civ-persian",
+      "ancient_india:religion-buddhism"
+    ],
+    "exploration_paths": [
+      {
+        "from": "silk_road:silk_road",
+        "to": "silk_road:loc-samarkand",
+        "relationship": "passed_through",
+        "label": "撒马尔罕——丝绸之路上的文明交汇点"
+      },
+      {
+        "from": "persian_empire:civ-persian",
+        "to": "silk_road:silk_road",
+        "relationship": "controlled",
+        "label": "波斯帝国如何控制丝绸之路的中段"
+      }
+    ],
+    "related_causal_objects": [
+      {
+        "target_id": "co-013",
+        "relation_type": "ideological_influence",
+        "explanation": "丝绸之路为佛教传入中国提供了物理通道，但传入不等于传播成功。理解丝绸之路如何促成多元宗教共存（景教、祆教、伊斯兰教与佛教并行），有助于理解佛教为什么能在众多外来宗教中脱颖而出——它不仅依赖通道，更需要与本土思想的对话能力。"
+      }
+    ]
+  }
+]

@@ -14,6 +14,8 @@
 import { useLocale } from '../../data/locale'
 import type { AIConfidence, AIEngine, AIEvidence, AINextExploration } from '../../data/aiClient'
 import { Badge, type BadgeTone } from '../ui/Badge'
+import { getRelationshipLabel, formatSourceId, translateEvidenceText } from '../../data/entity/entityLabels'
+import { getEntityDisplayName } from '../../data/explorationPackages'
 
 interface TrustDisplayProps {
   evidence?: AIEvidence[]
@@ -25,6 +27,10 @@ interface TrustDisplayProps {
    *  global_id when a next-exploration item is clicked. The consumer wires
    *  this to the EXISTING onEntityClick path; no new navigation logic here. */
   onNextClick?: (globalId: string) => void
+  /** 2026-08-11 (PO): 覆盖引擎徽标——推荐列表为确定性产物时，调用方传入
+   *  "知识库推荐"等准确文案，避免把 AI answer 的 engine 徽标错绑到
+   *  确定性推荐内容上。undefined = 按 engine 推断；null = 不显示。 */
+  engineBadgeLabel?: string | null
 }
 
 function engineBadge(engine: AIEngine | undefined, t: (k: string) => string): {
@@ -91,11 +97,19 @@ export function TrustDisplay({
   engine,
   confidence,
   onNextClick,
+  engineBadgeLabel,
 }: TrustDisplayProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const evidenceList = evidence ?? []
   const nextList = nextExploration ?? []
-  const badge = engineBadge(engine, t)
+  // 引擎徽标：调用方显式覆盖时以覆盖为准（推荐列表确定性产物标"知识库推荐"），
+  // 否则按 engine 推断（AI 回答场景保持"AI 生成"）。
+  const badge =
+    engineBadgeLabel !== undefined
+      ? engineBadgeLabel
+        ? { tone: 'primary' as const, label: engineBadgeLabel }
+        : null
+      : engineBadge(engine, t)
   const conf = confidenceLabel(confidence, t)
 
   if (evidenceList.length === 0 && nextList.length === 0) {
@@ -115,6 +129,7 @@ export function TrustDisplay({
           {badge && <Badge tone={badge.tone}>{badge.label}</Badge>}
         </span>
       </header>
+      <p className="trust-display-perspective">{t('ai.trust_perspective')}</p>
 
       {nextList.length > 0 && (
         <div className="trust-display-section">
@@ -129,13 +144,13 @@ export function TrustDisplay({
                       className="trust-display-next-btn"
                       onClick={() => onNextClick(item.global_id)}
                     >
-                      <span className="trust-display-next-name">{item.label}</span>
-                      <span className="trust-display-next-rel">{item.relationship}</span>
+                      <span className="trust-display-next-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+                      <span className="trust-display-next-rel">{getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}</span>
                     </button>
                   ) : (
-                    <span className="trust-display-next-name">
-                      {item.label} <span className="trust-display-next-rel">{item.relationship}</span>
-                    </span>
+                  <span className="trust-display-next-name">
+                    {getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')} <span className="trust-display-next-rel">{getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}</span>
+                  </span>
                   )}
                 </div>
                 {/* M74-004-002 (2B): Evidence Card detail — ALL fields come from
@@ -144,28 +159,31 @@ export function TrustDisplay({
                 {item.reason && (
                   <p className="trust-display-next-reason">
                     <span className="trust-display-detail-label">{t('ai.evidence_reason')}：</span>
-                    {item.reason}
+                    {translateEvidenceText(item.reason)}
                   </p>
                 )}
                 {item.claim_text && (
                   <p className="trust-display-next-claim">
                     <span className="trust-display-detail-label">{t('ai.evidence_claim')}：</span>
-                    {item.claim_text}
+                    {translateEvidenceText(item.claim_text)}
                   </p>
                 )}
                 {(item.source_title || item.source_tier) && (
                   <p className="trust-display-next-source">
                     <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
                     {item.source_title && <span className="trust-display-source-title">{item.source_title}</span>}
+                    {/* 2026-08-11 (PO)：来源书目信息（作者·出版社），增强可信度 */}
+                    {item.source_creator && <span className="trust-display-source-meta"> · {item.source_creator}</span>}
+                    {item.source_publisher && <span className="trust-display-source-meta"> · {item.source_publisher}</span>}
                     {item.source_tier && (
                       <Badge tone={tierTone(item.source_tier)}>{tierLabel(item.source_tier, t)}</Badge>
                     )}
                     {/* source_id always surfaces — auditable reference id */}
-                    <code className="trust-display-source">{item.source_id}</code>
+                    <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
                   </p>
                 )}
                 {!item.reason && !item.claim_text && !item.source_title && !item.source_tier && (
-                  <code className="trust-display-source">{item.source_id}</code>
+                  <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
                 )}
               </li>
             ))}
@@ -174,22 +192,78 @@ export function TrustDisplay({
       )}
 
       {evidenceList.length > 0 && (
-        <div className="trust-display-section">
-          <p className="trust-display-label">{t('ai.trust_evidence_label')}</p>
-          <ul className="trust-display-evidence">
-            {evidenceList.map((ev, i) => (
-              <li key={`${ev.global_id}-${i}`} className="trust-display-evidence-item">
-                <span className="trust-display-evidence-name">{ev.label}</span>
-                <code className="trust-display-source">{ev.global_id}</code>
-                {ev.status === 'verified' && (
-                  <Badge tone="primary">{t('ai.trust_verified')}</Badge>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <EvidenceList items={evidenceList} />
+      )}
+
+      {/* M90.x: 有证据但无推荐时给明确提示（避免"探索建议"标题下静默空白） */}
+      {nextList.length === 0 && evidenceList.length > 0 && (
+        <p className="trust-display-empty">{t('ai.trust_no_next')}</p>
       )}
     </section>
+  )
+}
+
+/**
+ * M90.x: 可复用的证据列表（从 TrustDisplay 抽出，供身份卡历史见解等场景复用）。
+ * 保持原 TrustDisplay 证据样式（claim 原文 + 来源标题 + tier 徽标 + 来源编号）；
+ * source_url 存在时来源标题渲染为外链（<a target="_blank">）。
+ */
+export function EvidenceList({ items }: { items: AIEvidence[] }) {
+  const { t, locale } = useLocale()
+  return (
+    <div className="trust-display-section">
+      <p className="trust-display-label">{t('ai.trust_evidence_label')}</p>
+      <ul className="trust-display-evidence">
+        {items.map((ev, i) => (
+          <li key={`${ev.global_id}-${i}`} className="trust-display-evidence-item">
+            <div className="trust-display-next-head">
+              <span className="trust-display-evidence-name">{getEntityDisplayName(ev.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+              {ev.status === 'verified' && (
+                <Badge tone="primary">{t('ai.trust_verified')}</Badge>
+              )}
+            </div>
+            {ev.label && (
+              <p className="trust-display-next-claim">
+                {/* 2026-08-11 (PO)：证据原文加"原文/摘要"标签，与引用格式对齐 */}
+                <span className="trust-display-detail-label">{t('ai.evidence_summary')}：</span>
+                {translateEvidenceText(ev.label)}
+              </p>
+            )}
+            {(ev.source_title || ev.source_tier) && (
+              <p className="trust-display-next-source">
+                <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
+                {ev.source_title &&
+                  (ev.source_url ? (
+                    <a
+                      className="trust-display-source-title trust-display-source-link"
+                      href={ev.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {ev.source_title}
+                    </a>
+                  ) : (
+                    <span className="trust-display-source-title">{ev.source_title}</span>
+                  ))}
+                {/* 2026-08-11 (PO)：引用格式——编者；出版社，年；ISBN（有值才显示） */}
+                {ev.source_creator && <span className="trust-display-source-meta">；编者：{ev.source_creator}</span>}
+                {ev.source_publisher && (
+                  <span className="trust-display-source-meta">
+                    ；出版社：{ev.source_publisher}
+                    {ev.source_year ? `，${ev.source_year}` : ''}
+                  </span>
+                )}
+                {ev.source_isbn && <span className="trust-display-source-meta">；ISBN：{ev.source_isbn}</span>}
+                {ev.source_tier && (
+                  <Badge tone={tierTone(ev.source_tier)}>{tierLabel(ev.source_tier, t)}</Badge>
+                )}
+                {ev.source_id && <code className="trust-display-source">{formatSourceId(ev.source_id)}</code>}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 

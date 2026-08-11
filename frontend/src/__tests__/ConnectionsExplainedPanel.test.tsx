@@ -19,8 +19,10 @@ describe('ConnectionsExplainedPanel (M3.5-004)', () => {
       {
         global_id: 'silk_road:han_dynasty',
         depth: 2,
-        path: [],
-        steps: [],
+        path: ['silk_road:han_dynasty', 'silk_road:rome'],
+        steps: [
+          { from_global_id: 'silk_road:han_dynasty', to_global_id: 'silk_road:rome', relationship: 'trade_route', direction: 'outgoing' },
+        ],
         score: 0.81,
         score_breakdown: {},
         explanation: 'Connected through overland trade routes.',
@@ -30,13 +32,12 @@ describe('ConnectionsExplainedPanel (M3.5-004)', () => {
       <ConnectionsExplainedPanel connections={connections} />,
     )
     expect(html).toContain('可解释关联')
-    expect(html).toContain('han_dynasty') // local name after ':'
-    expect(html).toContain('深度 2')
-    expect(html).toContain('评分 0.81')
-    expect(html).toContain('Connected through overland trade routes.')
+    // Chain view renders pills with resolved display names (via getEntityDisplayName)
+    expect(html).toContain('rel-pill')
+    expect(html).toContain('rel-chain-row')
   })
 
-  it('is defensive: missing explanation falls back to global_id', () => {
+  it('is defensive: missing explanation and path renders empty note', () => {
     const connections: ConnectionExplained[] = [
       {
         global_id: 'roman_empire:rome',
@@ -51,6 +52,8 @@ describe('ConnectionsExplainedPanel (M3.5-004)', () => {
     const html = render(
       <ConnectionsExplainedPanel connections={connections} />,
     )
-    expect(html).toContain('roman_empire:rome')
+    // Empty path + empty explanation → chain view renders empty rel-chain-note
+    expect(html).toContain('rel-chain-note')
+    expect(html).toContain('可解释关联')
   })
 })

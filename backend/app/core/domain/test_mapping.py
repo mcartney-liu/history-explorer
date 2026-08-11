@@ -51,7 +51,7 @@ def test_mc1_white_list_is_frozen_mirror():
     from ...validation import RELATIONSHIP_TYPES
 
     assert set(white_list()) == set(RELATIONSHIP_TYPES)
-    assert len(white_list()) == 18  # M3.5 Schema Freeze baseline count
+    assert len(white_list()) == 20  # M3.5 baseline + ADR-0019 disputes/reinterprets
     assert "part_of" in white_list()
     assert "ruled" in white_list()
     # born_in / ruled_in are local types NOT in the frozen white-list.
@@ -125,7 +125,7 @@ def test_mc5_drift_guard_blocks_whitelist_expansion():
     assert "not_a_real_global_rel" not in white_list()
     from ...validation import RELATIONSHIP_TYPES
 
-    assert len(white_list()) == len(RELATIONSHIP_TYPES)  # still 18, no expansion
+    assert len(white_list()) == len(RELATIONSHIP_TYPES)  # mirrors the enum
 
 
 def test_mc6_provenance_retained_on_resolve():

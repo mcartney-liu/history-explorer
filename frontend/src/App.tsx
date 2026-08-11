@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useNavigationHistory } from './hooks/useNavigationHistory'
 import { usePackageContext } from './hooks/usePackageContext'
-import SearchBox from './components/SearchBox'
 import EntitySearchBox from './components/EntitySearchBox'
 import SummaryPanel from './components/SummaryPanel'
 import MainEntityCard, { MainEntity } from './components/MainEntityCard'
@@ -10,12 +9,13 @@ import RelationshipView from './components/RelationshipView'
 import TimelinePanel, { TimelineItem } from './components/TimelinePanel'
 import type { ConnectionItem } from './components/ConnectionsPanel'
 import ThemesPanel from './components/ThemesPanel'
+import DisputesPanel from './components/DisputesPanel'
 import InterpretationPanel from './components/InterpretationPanel'
 import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import MultiEntityTimeline from './components/MultiEntityTimeline'
 import CrossTopicView from './components/CrossTopicView'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
-import RecommendationPanel from './components/RecommendationPanel'
+import NextStepPanel from './components/NextStepPanel'
 import AIExplanationPanel from './components/AIExplanationPanel'
 import MultiEntityContextPanel from './components/MultiEntityContextPanel'
 import EntityPickerPanel from './components/EntityPickerPanel'
@@ -47,45 +47,153 @@ import type { ExplorationContextIntelligence } from './components/ai/CompanionCo
 import HistoryBar from './components/HistoryBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
+import { featuredSlugs, useSiteConfigRevision } from './data/siteConfig'
 import LandingPage, { TopicSummary } from './components/LandingPage'
-import FirstExplorationGuide from './components/FirstExplorationGuide'
-import { resolveStarters, resolveEntityStarters } from './data/explorationStarters'
+import TopicExploreStarters from './components/TopicExploreStarters'
+import { resolveEntityStarters } from './data/explorationStarters'
 import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { buildEntityTimeMap } from './data/temporalUtils'
-import { resolveTopic } from './data/topicResolver'
-import { ExplorationShell } from './components/shell/ExplorationShell'
+import { resolveEntryQuery } from './data/topicResolver'
+import { ExplorerShell } from './components/shell/ExplorerShell'
+import { GlobalBar } from './components/shell/GlobalBar'
+import { QuestionHeader } from './components/shell/QuestionHeader'
+import { ModeBar } from './components/shell/ModeBar'
+import { LandingTabs } from './components/shell/LandingTabs'
+import { ProductIntro } from './components/shell/ProductIntro'
+import { UnderstandingStatus } from './components/shell/UnderstandingStatus'
+import { MirrorPanel } from './components/shell/MirrorPanel'
+import { ModeCanvas } from './components/shell/ModeCanvas'
+import { UnderstandingCanvas } from './components/shell/UnderstandingCanvas'
+import { UnderstandingOverview } from './components/shell/UnderstandingOverview'
+import { UnderstandingWorkspace } from './pages/m89/UnderstandingWorkspace'
+import { hasUnderstandingData } from './next/exploration/topicUnderstandingState'
 import { CompanionShell } from './components/ai/CompanionShell'
 import RelationshipContext from './components/RelationshipContext'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
-import DevCatalog from './pages/DevCatalog'
+import { getCausalObjectName } from './data/causalObjectNames'
 import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
 import DiscoverPage from './pages/DiscoverPage'
-import { addJourneyEntry, entryFromNode, type JourneyEntry } from './lib/journey'
+import { MyExplorationPanel } from './components/discover/MyExplorationPanel'
+import { addJourneyEntry, entryFromNode } from './lib/journey'
 import FeedbackWidget from './components/FeedbackWidget'
+
+// M86.1 — Explorer Runtime Context（Experience Runtime 单一语义核心）
+import {
+  ExplorerRuntimeContext,
+  EMPTY_CONTEXT,
+  type ExplorerRuntimeContextValue,
+  type CreateContextInput,
+  type UpdateAnchorInput,
+  type Anchor,
+} from './next/ExplorerRuntimeContext'
+
+  // M86.1 Batch 3 — Understanding Projection Runtime
+import {
+  computeUnderstandingProjection,
+  EMPTY_PROJECTION,
+  type UnderstandingProjection,
+  type ContextSnapshot,
+  type UnderstandingTemplate,
+} from './next/UnderstandingProjection'
+
+// M90.3 Stage E — ExplorationPolicy wiring (previously backend-only, now UI-visible)
+import { evaluateExploration, type ExplorationAction } from './next/exploration/ExplorationPolicy'
+import { buildExplorationState, type ExplorationState, EMPTY_EXPLORATION_STATE } from './next/exploration/ExplorationState'
+import type { Decision, PolicyContext } from './runtime/evaluation/Decision'
+
+// M90.3 Stage E-3 — ExplorationMetrics + Memory wiring
+import { computeExplorationMetrics, type ExplorationMetrics } from './next/exploration/ExplorationMetrics'
+
+// M86.1 — Evaluation Runtime
+
+// M86.2 — Memory Module（Evaluation Runtime 的第二个 Domain Module）
+import {
+  evaluateMemory,
+  type ProjectionDelta,
+  type MemoryPersistencePayload,
+  type ExistingMemoryState,
+} from './next/memory/MemoryPolicy'
+import {
+  GrowthGraphStore,
+  type GrowthSnapshot,
+} from './next/memory/GrowthGraphStore'
 
 // M69 — Exploration Package page
 import ExplorationPackagePage from './pages/ExplorationPackagePage'
+
+// M85.8 — CausalObject Explorer Experience
+import CausalObjectDetailPage from './components/causal/CausalObjectDetailPage'
+import type { CausalObjectData } from './data/causalStatement'
+import causalObjectsRaw from '../../data/causal_objects.json'
+
+// M85.9.3 — Explorer Path Instrumentation
+import { recordVisit, completePath } from './data/ExplorerPath'
+
+// M90.3 Stage A — unified Router (single URL truth source)
+import { useRouter, runLegacyRedirect } from './routing'
 
 // Backend base URL is externalized via Vite env (config, M3-002). Falls back
 // to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
 const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
-// M5-A-3: curated "start here" topics. Editorially chosen, REAL slugs only
-// (must match the backend topic registry — see JsonTopicRepository.list_topics
-// over data/examples/*_example.json). This is purely frontend curation; the
-// underlying data is still fetched from GET /topics. Slugs absent from the
-// catalog are dropped at render time, so the list stays safe if a topic is
-// later renamed or removed.
-const FEATURED_SLUGS = [
-  'roman_empire',
-  'greek_philosophy',
-  'persian_empire',
-  'ancient_india',
-]
+// M5-A-3: curated "start here" topics. The ordered slug list now lives in the
+// site-config layer (backend `topic_ordering` + frontend compiled default), so
+// an operator can reorder / curate the landing "featured" strip without a code
+// change. Slugs absent from the catalog are dropped at render time, so the
+// list stays safe if a topic is later renamed or removed.
+
+// M86.2 — computeDelta: 对比两次 Projection 生成 ProjectionDelta
+function computeDelta(
+  previous: UnderstandingProjection | null,
+  current: UnderstandingProjection,
+  sessionRef: string,
+): ProjectionDelta {
+  const delta: ProjectionDelta = {
+    deltaId: `delta-${Date.now()}`,
+    sessionRef,
+    timestamp: Date.now(),
+    cause: 'user_progress',
+  }
+
+  if (!previous || previous.topicRef !== current.topicRef) {
+    // 首次 Projection——无对比
+    return delta
+  }
+
+  // stage 变化
+  if (previous.stage !== current.stage) {
+    delta.stageChanged = { previous: previous.stage, current: current.stage }
+  }
+
+  // coverage 变化
+  const prevCov = previous.coverageState.coverageRatio
+  const currCov = current.coverageState.coverageRatio
+  if (Math.abs(currCov - prevCov) > 0.01) {
+    delta.coverageChanged = { previous: prevCov, current: currCov }
+  }
+
+  // 新维度覆盖
+  const prevDims = new Set(previous.coverageState.coveredDimensions)
+  const newDims = current.coverageState.coveredDimensions.filter((d) => !prevDims.has(d))
+  if (newDims.length > 0) {
+    delta.dimensionsCompleted = newDims
+  }
+
+  // missingLinks 减少
+  const prevMissing = previous.missingLinks.length
+  const currMissing = current.missingLinks.length
+  if (currMissing < prevMissing) {
+    delta.missingLinksResolved = current.missingLinks
+      .filter((m) => !previous.missingLinks.some((pm) => pm.fromRef === m.fromRef && pm.toRef === m.toRef))
+      .map((m) => `${m.fromRef}→${m.toRef}`)
+  }
+
+  return delta
+}
 
 type ExplorationResult = {
   topic: string
@@ -111,10 +219,149 @@ function prettifyTopic(t: string): string {
 }
 
 function App() {
-  const [topic, setTopic] = useState('')
+  // =========================================================================
+  // M90.3 Stage A — legacy URL migration (one-shot, before any route read)
+  // Must run before useRouter() initializes so the parsed route sees the
+  // canonical URL, not the legacy hash.
+  // =========================================================================
+  runLegacyRedirect()
+
+  // =========================================================================
+  // M90.3 Stage A — unified Router (single URL truth source, K-1.4)
+  // =========================================================================
+  const router = useRouter()
+
+  // Subscribe to runtime site-config so the landing "featured" strip re-renders
+  // when the operator reorders topics in the admin console. The compiled default
+  // keeps first paint identical to before this layer existed.
+  useSiteConfigRevision()
+
+  // =========================================================================
+  // M86.1 — Explorer Runtime Context（Experience Runtime 单一语义核心）
+  // 宿主：App() = ExplorePage 层。所有 Experience Layer 通过同一个 Context
+  // 实例读写——不创建副本，不独立推断，不各自维护。
+  // Batch 2: Anchor/Relation 语义数据模型 + anchorChain/relationChain
+  // =========================================================================
+  const [runtimeContext, setRuntimeContext] = useState<ExplorerRuntimeContextValue>(EMPTY_CONTEXT)
+
+  const createContext = useCallback((input: CreateContextInput) => {
+    // EP-009: user_question 和 understanding_goal 来自 Curator 预写数据，
+    // 不由 AI 生成，不由开发者硬编码。来源由调用方保证。
+    setRuntimeContext({
+      explorationId: input.explorationId,
+      userQuestion: input.userQuestion,
+      understandingGoal: input.understandingGoal,
+      currentAnchor: null,
+      previousAnchor: null,
+      activeRelation: null,
+      anchorChain: [],
+      relationChain: [],
+      cognitiveStage: 'FACT',
+      unresolvedGap: null,
+    })
+  }, [])
+
+  const updateAnchor = useCallback((input: UpdateAnchorInput) => {
+    // Batch 2: 接收 Anchor 对象 + 可选 Relation。
+    // EP-007: Anchor 存的是理解锚点（用户概念），不是 Entity 数据副本。
+    // activeRelation 来源 = Causal Layer 已有关系数据（EP-009）。
+    // cognitive_stage 不由 Navigation 写入——由 Understanding Layer 判定（M86.1.2）。
+    setRuntimeContext((prev) => ({
+      ...prev,
+      currentAnchor: input.anchor,
+      previousAnchor: prev.currentAnchor,
+      activeRelation: input.relation ?? null,
+      // 累积锚点链和关系链
+      anchorChain: [...prev.anchorChain, input.anchor],
+      relationChain: input.relation
+        ? [...prev.relationChain, input.relation]
+        : prev.relationChain,
+    }))
+  }, [])
+
+  const clearContext = useCallback(() => {
+    // Batch 2 note: 当前为销毁语义。M86.2 应演进为 completeContext()
+    // → Workspace Snapshot（保留理解记忆）。
+    setRuntimeContext(EMPTY_CONTEXT)
+  }, [])
+
+  const contextApi = useMemo(() => ({
+    context: runtimeContext,
+    createContext,
+    updateAnchor,
+    clearContext,
+  }), [runtimeContext, createContext, updateAnchor, clearContext])
+  // =========================================================================
+
+  // =========================================================================
+  // M86.1 Batch 3 — Understanding Projection Runtime
+  // Understanding Layer = Analysis Runtime。独立于 Context，单向依赖。
+  // 读取 Context 快照 + UnderstandingTemplate → 输出 UnderstandingProjection。
+  // =========================================================================
+  const [projection, setProjection] = useState<UnderstandingProjection>(EMPTY_PROJECTION)
+
+  // =========================================================================
+  // M86.2 — Memory Module（Evaluation Runtime 的第二个 Domain Module）
+  // Memory 是 Evaluation Runtime 的 Consumer，不是参与者。
+  // 消费 ProjectionDelta → MemoryPolicy → Decision<MemoryPersistencePayload>
+  // =========================================================================
+  const [lastProjection, setLastProjection] = useState<UnderstandingProjection | null>(null)
+  const [, setMemoryDecision] = useState<Decision<MemoryPersistencePayload> | null>(null)
+
+  // M90.3 Stage E — ExplorationPolicy live state (wired from projection)
+  const [policyAction, setPolicyAction] = useState<ExplorationAction | null>(null)
+  const [explorationState, setExplorationState] = useState<ExplorationState>(EMPTY_EXPLORATION_STATE)
+
+  // M90.3 Stage E-3 — ExplorationMetrics (before → after delta)
+  const [explorationMetrics, setExplorationMetrics] = useState<ExplorationMetrics | null>(null)
+  const previousExplorationState = useRef<ExplorationState>(EMPTY_EXPLORATION_STATE)
+
+  // M86.2 Phase 2 — GrowthGraphStore（Append Only 认知成长图）
+  const [graphStore] = useState(() => new GrowthGraphStore('graph-default', 'unit-default'))
+
+  // 当 Projection 变化时，计算 Delta → 调用 MemoryPolicy → 驱动 GrowthGraphStore
+  useEffect(() => {
+    if (!projection.topicRef) {
+      setMemoryDecision(null)
+      return
+    }
+
+    const delta: ProjectionDelta = computeDelta(lastProjection, projection, runtimeContext.explorationId!)
+    setLastProjection(projection)
+
+    const existingState: ExistingMemoryState = {
+      currentStage: lastProjection?.stage ?? 'FACT',
+      currentCoverageRatio: lastProjection?.coverageState.coverageRatio ?? 0,
+      lastMilestoneAt: null,
+      growthNodeCount: graphStore.getGraph().nodes.length,
+    }
+
+    const decision = evaluateMemory(delta, existingState, {
+      timestamp: Date.now(),
+      policyVersion: '1.0',
+      engineProtocolVersion: '1.0',
+    })
+    setMemoryDecision(decision)
+
+    // Phase 2: 基于 Decision 驱动 GrowthGraphStore
+    const snapshot: GrowthSnapshot = {
+      stage: projection.stage,
+      coverageRatio: projection.coverageState.coverageRatio,
+      missingLinkCount: projection.missingLinks.length,
+      dimensionCount: projection.coverageState.coveredDimensions.length,
+    }
+    graphStore.applyDecision(decision, delta, snapshot)
+  }, [projection])
+  // =========================================================================
+
   const [result, setResult] = useState<ExplorationResult | null>(null)
-  const [error, setError] = useState('') // topic-input validation only
   const [loading, setLoading] = useState(false)
+  // P5-S4: 首屏 LandingTabs 激活态（受控）。初始化默认「了解」
+  //（PO 2026-08-09：系统初始化从了解界面开始）。
+  const [landingTab, setLandingTab] = useState<'mine' | 'understand' | 'research' | 'expand'>('understand')
+  // T1: which EntityPage tab to land on. Set when navigation originates from a
+  // research bookmark so the user arrives directly in the research tab.
+  const [entityInitialTab, setEntityInitialTab] = useState<'info' | 'research' | 'extensions'>('info')
 
   // M2-002: cross-dataset entity search.
   const [searchQuery, setSearchQuery] = useState('')
@@ -146,9 +393,14 @@ function App() {
     // Home exit (breadcrumb Home / goHome): exit package context AND reset
     // App's view state (result/entity/search/journey annotations/focus).
     onHomeExit: () => {
+      // M85.9.3 — Complete current exploration path before resetting
+      completePath()
       closePackage()
+      // M86.1 — 探索结束时清除 Context
+      clearContext()
       setResult(null)
       setEntityData(null)
+      setCausalObjectData(null)
       setSearchResults(null)
       setJourneyReasons(new Map())
       setFocusedEntityId(null)
@@ -174,6 +426,27 @@ function App() {
   // every navigation (fetchNode) and on goHome, so it never leaks across pages.
   const [focusedEntityId, setFocusedEntityId] = useState<string | null>(null)
 
+  // M85.8 — CausalObject Explorer Experience
+  const causalObjects = causalObjectsRaw as CausalObjectData[]
+  const causalObjectsById = useMemo(
+    () => Object.fromEntries(causalObjects.map((o) => [o.id, o])),
+    [],
+  )
+  const causalObjectTitleMap = useMemo(
+    () =>
+      Object.fromEntries(
+        causalObjects.map((o) => {
+          // Derive a human-readable title from cause_id + effect_id
+          // TODO M85.8+: resolve Entity GID → display name from KG data
+          const causeLabel = o.cause_id.includes(':') ? o.cause_id.split(':').pop() ?? o.cause_id : o.cause_id
+          const effectLabel = o.effect_id.includes(':') ? o.effect_id.split(':').pop() ?? o.effect_id : o.effect_id
+          return [o.id, `${causeLabel} → ${effectLabel}`]
+        }),
+      ),
+    [],
+  )
+  const [causalObjectData, setCausalObjectData] = useState<CausalObjectData | null>(null)
+
   // M69 — Package page state (renders instead of Discover when set).
   // M73 Phase1: lifecycle + hash ownership moved to usePackageContext (pkg).
   const packageSlug = pkg.packageSlug
@@ -182,9 +455,6 @@ function App() {
   // views stay reachable; only one renders at a time to cut panel density).
   const [relView, setRelView] = useState<'list' | 'spatial'>('list')
   const [timeView, setTimeView] = useState<'single' | 'multi'>('single')
-
-  // M65 Phase 3A: controlled timeline strip index (click a dot → parent state flows back)
-  const [selectedTimelineIndex, setSelectedTimelineIndex] = useState<number>(0)
 
   // Load persisted recent explorations once on mount.
   useEffect(() => {
@@ -213,37 +483,188 @@ function App() {
 
   // M5-A-3: derive the curated "start here" subset from the loaded catalog.
   // No extra fetch / API / state — purely a filtered, order-preserving view of
-  // `topics` keyed by FEATURED_SLUGS. Empty until the catalog loads.
-  const featuredTopics: TopicSummary[] = FEATURED_SLUGS.map(
-    (slug) => topics.find((t) => t.topic === slug),
-  ).filter((t): t is TopicSummary => Boolean(t))
+  // `topics` keyed by the runtime `featuredSlugs()` (site-config topic_ordering,
+  // falling back to the compiled default). Empty until the catalog loads.
+  const featuredTopics: TopicSummary[] = featuredSlugs()
+    .map((slug) => topics.find((t) => t.topic === slug))
+    .filter((t): t is TopicSummary => Boolean(t))
 
   useEffect(() => {
-    const controller = new AbortController()
-    setTopicsLoading(true)
-    setTopicsError('')
-    fetch(`${API_BASE}/topics`, { signal: controller.signal })
-      .then((resp) => {
-        if (!resp.ok) throw new Error(`status:${resp.status}`)
-        return resp.json()
-      })
-      .then((data: { topics?: unknown }) => {
-        setTopics(Array.isArray(data?.topics) ? (data.topics as TopicSummary[]) : [])
-      })
-      .catch(() => {
-        if (controller.signal.aborted) return
-        setTopicsError('network')
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setTopicsLoading(false)
-      })
+    let cancelled = false
+    const attempt = (retriesLeft: number): void => {
+      if (cancelled) return
+      setTopicsLoading(true)
+      const controller = new AbortController()
+      fetch(`${API_BASE}/topics`, { signal: controller.signal })
+        .then((resp) => {
+          if (!resp.ok) throw new Error(`status:${resp.status}`)
+          return resp.json()
+        })
+        .then((data: { topics?: unknown }) => {
+          if (cancelled) return
+          setTopics(Array.isArray(data?.topics) ? (data.topics as TopicSummary[]) : [])
+          setTopicsError('')
+          setTopicsLoading(false)
+        })
+        .catch(() => {
+          if (cancelled || controller.signal.aborted) return
+          if (retriesLeft > 0) {
+            // M74: a single transient blip must not surface the scary
+            // "无法连接后端" banner — the backend is usually fine, so retry
+            // once before flagging a real connectivity problem.
+            setTimeout(() => attempt(retriesLeft - 1), 600)
+            return
+          }
+          setTopicsError('network')
+          setTopicsLoading(false)
+        })
+    }
+    attempt(1)
     return () => {
-      controller.abort()
+      cancelled = true
     }
   }, [])
 
   const current: NavNode | null =
     cursor >= 0 && cursor < history.length ? history[cursor] : null
+
+  // M60 type-debt fix: NavNode is a union; derive topic/id strings narrowly so
+  // the projection useEffect can read them without `current?.topic`/`current?.id`
+  // (which only exist on the topic / entity variants). Preserves prior runtime
+  // behaviour (undefined → '' fallback).
+  const currentTopic = current?.type === 'topic' ? current.topic : ''
+  const currentRef = current?.type === 'entity' ? current.id : ''
+
+  // =========================================================================
+  // M90.3 Stage E — Projection → ExplorationState → ExplorationPolicy
+  // Re-compute when anchorChain or relationChain changes. Moved after
+  // `current` declaration to avoid TDZ.
+  // =========================================================================
+  useEffect(() => {
+    console.log('[Projection useEffect] TRIGGERED', {
+      hasResult: !!result,
+      entityCount: result?.entities?.length,
+      anchorChainLen: runtimeContext.anchorChain?.length,
+    })
+    // Compute projection for ALL topics as soon as data is available.
+    const hasTopicData = result && result.entities && result.entities.length > 0
+    if (!hasTopicData && runtimeContext.anchorChain.length === 0) {
+      console.log('[Projection useEffect] SKIPPED — no topic data and no anchor chain')
+      setProjection(EMPTY_PROJECTION)
+      return
+    }
+
+    const effectiveExplorationId = runtimeContext.explorationId || 'exploration-default'
+
+    const snapshot: ContextSnapshot = {
+      explorationId: effectiveExplorationId,
+      anchorChain: runtimeContext.anchorChain,
+      relationChain: runtimeContext.relationChain,
+    }
+
+    // Build UnderstandingTemplate from topic data.
+    const entityTypes = result?.entities
+      ? [...new Set(result.entities.map((e) => e.type).filter(Boolean))]
+      : []
+    const dimensionMapping: Record<string, string[]> = {}
+    if (result?.entities) {
+      for (const e of result.entities) {
+        if (!e.type) continue
+        if (!dimensionMapping[e.type]) dimensionMapping[e.type] = []
+        dimensionMapping[e.type].push(e.id)
+      }
+    }
+    const template: UnderstandingTemplate = {
+      templateId: 'auto-generated-from-topic-data',
+      version: '1.0',
+      topic: runtimeContext.userQuestion ?? currentTopic ?? '',
+      goal: runtimeContext.understandingGoal ?? '',
+      requiredDimensions: entityTypes,
+      dimensionMapping,
+      expectedRelations: (result?.relationships || result?.exploration?.related_entities || []).map((r: any) => ({
+        from: r.source || r.from_entity_id || '',
+        to: r.target || r.to_entity_id || '',
+        type: r.relation_type || r.relationship || 'related_to',
+      })),
+    }
+
+    const newProjection = computeUnderstandingProjection(snapshot, template)
+    console.log('[Understanding] Projection computed:', {
+      stage: newProjection.stage,
+      coverageRatio: newProjection.coverageState?.coverageRatio,
+      requiredDimensions: newProjection.coverageState?.requiredDimensions,
+      coveredDimensions: newProjection.coverageState?.coveredDimensions,
+      missingLinks: newProjection.missingLinks?.length,
+      templateDims: template.requiredDimensions,
+      entityCount: result?.entities?.length,
+    })
+    setProjection(newProjection)
+
+    // Projection → Context (stage + primaryGap)
+    setRuntimeContext((prev) => ({
+      ...prev,
+      cognitiveStage: newProjection.stage,
+      unresolvedGap: newProjection.missingLinks.length > 0
+        ? `Missing connection: ${newProjection.missingLinks[0].fromRef} → ${newProjection.missingLinks[0].toRef}`
+        : null,
+    }))
+
+    // Build ExplorationState → run ExplorationPolicy
+    const eState = buildExplorationState({
+      explorationId: runtimeContext.explorationId || '',
+      currentTopic: currentTopic,
+      currentAnchorRef: currentRef,
+      understandingProjection: {
+        stage: newProjection.stage,
+        coverageState: {
+          requiredDimensions: newProjection.coverageState.requiredDimensions || [],
+          coveredDimensions: newProjection.coverageState.coveredDimensions || [],
+          coverageRatio: newProjection.coverageState.coverageRatio || 0,
+        },
+        missingLinks: newProjection.missingLinks,
+        basedOn: newProjection.basedOn || { projectionVersion: '1.0' },
+      },
+      memoryProjection: {
+        totalNodes: history.length,
+        daysSinceStart: 0,
+        activeBranches: [],
+      },
+      sessionHistory: {
+        exploredAnchors: runtimeContext.anchorChain.map((a) => a.entityId),
+        exploredRelations: runtimeContext.relationChain.map((r) => r.relationId),
+        activeQuestions: runtimeContext.userQuestion ? [runtimeContext.userQuestion] : [],
+      },
+    })
+    setExplorationState(eState)
+
+    // M90.3 Stage E-3 — Compute ExplorationMetrics (before → after delta)
+    const prev = previousExplorationState.current
+    if (prev.explorationId && prev.explorationId !== eState.explorationId) {
+      // Topic changed — treat as new session, metrics show growth from empty
+      const metrics = computeExplorationMetrics(EMPTY_EXPLORATION_STATE, eState, prev.missingDimensions)
+      setExplorationMetrics(metrics)
+    } else if (prev.coverageRatio !== eState.coverageRatio || prev.missingDimensions.length !== eState.missingDimensions.length) {
+      // Same topic, cognitive state changed — compute delta
+      const metrics = computeExplorationMetrics(prev, eState, prev.missingDimensions)
+      setExplorationMetrics(metrics)
+    }
+    previousExplorationState.current = eState
+
+    const policyContext: PolicyContext = {
+      policyVersion: '1.0',
+      timestamp: Date.now(),
+      engineProtocolVersion: '1.0',
+    }
+    const decision = evaluateExploration(eState, policyContext)
+    console.log('[ExplorationPolicy] Decision:', {
+      actionType: decision.output?.type,
+      reason: decision.output?.reason,
+      coverageRatio: eState.coverageRatio,
+      missingDimensions: eState.missingDimensions,
+    })
+    setPolicyAction(decision.output)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef])
 
   // Fetch a node's data and update view state. Pure I/O; history navigation
   // decides *which* node, this decides *how* to load it.
@@ -256,6 +677,23 @@ function App() {
     setFocusedEntityId(null)
     try {
       let data: unknown
+      if (node.type === 'causal_object') {
+        // M85.8 — CausalObject is static data (no backend API)
+        const obj = causalObjectsById[node.objectId]
+        if (!obj) {
+          setErrorKind('notfound')
+          setResult(null)
+          setEntityData(null)
+          setCausalObjectData(null)
+          setLoading(false)
+          return
+        }
+        setCausalObjectData(obj)
+        setResult(null)
+        setEntityData(null)
+        setLoading(false)
+        return
+      }
       if (node.type === 'topic') {
         const resp = await fetch(`${API_BASE}/explore/${encodeURIComponent(node.topic)}`)
         if (!resp.ok) throw new Error(`status:${resp.status}`)
@@ -303,33 +741,57 @@ function App() {
     nav.navigateTo(node)
   }
 
-  // M35 Feature D: re-open a journey entry from the JourneyPanel.
-  function handleJourneyClick(entry: JourneyEntry) {
-    if (entry.kind === 'topic') {
-      navigateTo({ type: 'topic', topic: entry.globalId, title: entry.label })
-    } else {
-      navigateTo({ type: 'entity', id: entry.globalId, name: entry.label })
-    }
+  // M85.8 — Open a CausalObject by id
+  function openCausalObject(objectId: string) {
+    // 2026-08-11 (PO): 从探索包点因果对象同样先退出包上下文
+    //（causalDetail 渲染条件也带 !packageSlug）。
+    if (pkg.packageSlug) closePackage()
+    // M85.9.3 — Record visit on current exploration path
+    recordVisit(objectId)
+    navigateTo({ type: 'causal_object', objectId })
   }
 
   // Open an entity by id (with a display name for the breadcrumb).
-  function openEntity(id: string, name?: string) {
-    navigateTo({ type: 'entity', id, name: name || id })
+  // M86.1 Batch 2 — Navigation Context Layer：每次跳转构造 Anchor 对象并更新。
+  // EP-007: Anchor 存的是理解锚点（用户概念），不是 Entity 数据副本。
+  // activeRelation 来源 = Causal Layer 已有关系数据（EP-009）。
+  // cognitive_stage 不由 Navigation 写入——由 Understanding Layer 判定（M86.1.2）。
+  function openEntity(
+    id: string,
+    name?: string,
+    // T1: which EntityPage tab to land on (research bookmarks open 'research').
+    tab: 'info' | 'research' | 'extensions' = 'info',
+  ) {
+    // 2026-08-11 (PO): 从探索包/因果对象页点实体——先退出包上下文。
+    // entityDetail 渲染条件带 !packageSlug，不关则实体页被挡住跳不过去。
+    if (pkg.packageSlug) closePackage()
+    const displayName = name || id
+    setEntityInitialTab(tab)
+    // 只有当 Context 已创建时才更新锚点（用户在一条 Exploration 内）
+    if (runtimeContext.explorationId) {
+      // Batch 2: 构造 Anchor 对象（entityProvenance + selectionContext 分离）
+      const anchor: Anchor = {
+        entityId: id,
+        entityType: guessEntityType(id, displayName),
+        displayName,
+        entityProvenance: { source: 'knowledge_layer' },
+        selectionContext: {
+          source: runtimeContext.currentAnchor ? 'knowledge_layer' : 'curator_layer',
+          reason: runtimeContext.currentAnchor
+            ? `Related Entity: ${runtimeContext.currentAnchor.displayName} → ${displayName}`
+            : '探索包入口',
+        },
+      }
+      // Batch 2: activeRelation 暂为 null——Causal Layer 关系数据接入在 Batch 3
+      updateAnchor({ anchor, relation: null })
+    }
+    navigateTo({ type: 'entity', id, name: displayName })
   }
 
-  // M65 Phase 3D-2: timeline dot → entity navigation. Reuses the exact resolve
-  // chain that TimelinePanel's onEventClick uses (event name → local id →
-  // openEntity), so the bottom strip and the TimelinePanel stay semantically
-  // aligned. Dots whose event name does not match an entity stay inert — no
-  // error, no navigation.
-  function handleTimelineSelect(index: number) {
-    setSelectedTimelineIndex(index)
-    const item = result?.timeline?.[index]
-    if (!item) return
-    const localId = exploreNameToId[item.event]
-    if (localId) {
-      openEntity(localId, exploreNameById[localId] ?? item.event)
-    }
+  // M86.1 Batch 2: 辅助——从 entity id/name 推断类型（暂时简化，未来从 Knowledge Layer 查询）
+  function guessEntityType(_id: string, _name: string): string {
+    // Batch 2 简化版：后续可从 Entity 数据中获取准确类型
+    return 'concept'
   }
 
   function goTo(newCursor: number) {
@@ -354,36 +816,42 @@ function App() {
     nav.onCrumbClick(index)
   }
 
-  function handleExplore(topicValue?: string) {
-    const raw = topicValue ?? topic
-    const trimmed = typeof raw === 'string' ? raw.trim() : ''
-    if (!trimmed) {
-      setError('Please enter a historical topic.')
-      return
-    }
-    // Backend TOPIC_PATTERN = ^[a-z0-9_-]+$ — reject non-ASCII early
-    // so the user gets a clear message instead of a misleading 400 / "无法连通后端服务器".
-    if (!/^[a-z0-9_-]+$/.test(trimmed)) {
-      setError('请输入英文主题名（如 roman_empire、ancient_civilizations）。当前不支持中文搜索。')
-      return
-    }
-    setError('')
-    navigateTo({ type: 'topic', topic: trimmed, title: prettifyTopic(trimmed) })
-  }
-
   // M5-A-2: a catalog topic click reuses the existing exploration flow.
   // Same node shape as SearchResults / CrossTopicTopicList topic clicks, so
   // there is exactly one navigation path (navigateTo) — no duplicated logic,
   // no second navigation mechanism.
   function handleTopicClick(t: string) {
+    // T3: a normal topic click must also open an Explorer Runtime Context.
+    // Previously only openPackage() called createContext(), so anchorChain
+    // never grew for topic navigation and UnderstandingStatus (Projection)
+    // progress stayed permanently hidden.
+    createContext({
+      explorationId: `exp-${t}-${Date.now()}`,
+      userQuestion: prettifyTopic(t),
+      understandingGoal: '',
+    })
     navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
   }
 
   // M69 — Open an Exploration Package page (overlays Discover/home).
   // M73 Phase1 — lifecycle + #/package/ hash + open_package telemetry now live
   // in usePackageContext (telemetry injected via onOpenPackage callback).
+  // M86.1 — 用户选择探索包时创建 Explorer Runtime Context（Curiosity Entry）
   function openPackage(slug: string) {
     pkg.openPackage(slug)
+    // EP-009: user_question 和 understanding_goal 来自 Curator 预写数据。
+    // 动态 import 避免循环依赖——getPackageBySlug 仅在 openPackage 时调用。
+    import('./data/explorationPackages').then(({ getPackageBySlug }) => {
+      const pkgData = getPackageBySlug(slug)
+      if (pkgData) {
+        createContext({
+          explorationId: `exp-${slug}-${Date.now()}`,
+          userQuestion: (pkgData.seed_topic as any)?.zh
+            || (typeof pkgData.seed_topic === 'string' ? pkgData.seed_topic : pkgData.title?.zh || slug),
+          understandingGoal: pkgData.exploration_goals?.zh || pkgData.summary?.zh || '',
+        })
+      }
+    })
   }
 
   function closePackage() {
@@ -408,12 +876,25 @@ function App() {
     try {
       const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`)
       if (!response.ok) {
-        throw new Error(`Search failed (${response.status})`)
+        throw new Error(`status:${response.status}`)
       }
       const data = await response.json()
       setSearchResults(data.results as SearchResultItem[])
     } catch (err) {
-      setSearchError('Unable to search. Is the backend running?')
+      // M74 C3 alignment (same classification as navigateTo): a 4xx means the
+      // backend is ONLINE and rejected the input — surfacing that as
+      // "Unable to search. Is the backend running?" misled users into
+      // checking connectivity. 400 = invalid input, 404 = endpoint missing,
+      // anything else (network / 5xx) = backend unreachable.
+      const msg = err instanceof Error ? err.message : String(err)
+      const status = msg.startsWith('status:') ? msg.slice('status:'.length) : ''
+      if (status === '400') {
+        setSearchError('搜索请求未通过校验（400），请换个说法试试')
+      } else if (status === '404') {
+        setSearchError('搜索接口不存在（404），请检查后端版本')
+      } else {
+        setSearchError('Unable to search. Is the backend running?')
+      }
       setSearchResults([])
     } finally {
       setSearchLoading(false)
@@ -592,14 +1073,6 @@ function App() {
   // chrome the monolith rendered, so the smoke tests stay green.
   const searchSlot = (
     <>
-      <SearchBox
-        topic={topic}
-        loading={loading}
-        error={error}
-        onTopicChange={setTopic}
-        onExplore={handleExplore}
-      />
-
       <EntitySearchBox
         onSearch={handleSearch}
         loading={searchLoading}
@@ -649,15 +1122,12 @@ function App() {
   const workspaceItems: WorkspaceItem[] = useMemo(() => {
     const items: WorkspaceItem[] = []
     if (current && result) {
-      // NavNode is a discriminated union: `topic` lives on the topic branch,
-      // `id` on the entity branch. The original `current.topic` read silently
-      // worked at runtime (when the field was always present in the M2 era)
-      // but the type guard makes the entity branch explicit.
+      // M85.8 — NavNode now includes 'causal_object' type
       const fallbackName =
-        current.type === 'entity' ? current.id : current.topic
+        current.type === 'entity' ? current.id : current.type === 'causal_object' ? getCausalObjectName(current.objectId) : current.topic
       const title = result.title || (entityData?.name ?? fallbackName)
       items.push({
-        id: current.type === 'entity' ? current.id : current.topic,
+        id: current.type === 'entity' ? current.id : current.type === 'causal_object' ? current.objectId : current.topic,
         title,
         subtitle: '',
         icon: current.type === 'entity' ? 'book' : 'globe',
@@ -667,18 +1137,48 @@ function App() {
   }, [current, result, entityData])
 
   // M59-020: Workspace history — from navigation stack
+  // M90.3 fix: include ALL node types (topic/entity/causal_object), not just entity.
+  // Before: only type==='entity' showed up. Users exploring topics and causal objects
+  // saw an empty workspace.
   const workspaceHistory: WorkspaceItem[] = useMemo(() => {
+    const typeLabels: Record<string, string> = {
+      topic: '主题',
+      entity: '实体',
+      causal_object: '因果',
+      package: '探索包',
+    }
+    const typeIcons: Record<string, string> = {
+      topic: 'globe',
+      entity: 'book',
+      causal_object: 'graph',
+      package: 'box',
+    }
     return history
-      .filter((n) => n.type === 'entity')
-      .map((n) => ({
-        id: n.id,
-        title: n.name || n.id,
-        subtitle: '',
-        icon: 'book',
-        timestamp: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
-      }))
+      .map((n) => {
+        let id = ''
+        let title = ''
+        let subtitle = ''
+        let icon = 'book'
+        if (n.type === 'topic') {
+          id = n.topic
+          title = n.title
+          subtitle = typeLabels.topic
+          icon = typeIcons.topic
+        } else if (n.type === 'entity') {
+          id = n.id
+          title = n.name || n.id
+          subtitle = typeLabels.entity
+          icon = typeIcons.entity
+        } else if (n.type === 'causal_object') {
+          id = n.objectId
+          title = getCausalObjectName(n.objectId)
+          subtitle = typeLabels.causal_object
+          icon = typeIcons.causal_object
+        }
+        return { id, title, subtitle, icon }
+      })
       .reverse()
-      .slice(0, 8)
+      .slice(0, 12)
   }, [history])
 
   // M66: read-only exploration context intelligence (narrow projection of
@@ -709,11 +1209,25 @@ function App() {
     }
   }, [history.length, intelTick])
 
+  // T2 — real behavioral signals for the Discover Cognitive Mirror.
+  // Read-only projection of state App already owns. It is a MIRROR, never an
+  // input to any recommendation engine.
+  const discoverSignals = useMemo(() => {
+    const titleOf = (n: NavNode): string =>
+      n.type === 'topic' ? n.title : n.type === 'entity' ? n.name : n.objectId
+    return {
+      navTitles: history.map(titleOf),
+      recentTitles: recent.map(titleOf),
+      journeyReasons: [...journeyReasons.values()].flatMap((j) => j.reasons ?? []),
+      growthLabels: graphStore.getGraph().nodes.map((n) => n.cause).filter(Boolean),
+    }
+  }, [history, recent, journeyReasons, graphStore])
+
   // M65 Phase 3B: read-only workspace context for AI Companion
   // M65 Phase 3C-2: extended with entityType + multi-entity contextGlobalIds
   const workspaceContext = useMemo(() => ({
     currentEntityId: current?.type === 'entity' ? current.id : undefined,
-    currentEntityName: current?.type === 'entity' ? current.name : current?.title,
+    currentEntityName: current?.type === 'entity' ? current.name : current?.type === 'topic' ? current.title : undefined,
     entityType: current?.type === 'entity' ? entityData?.type ?? null : null,
     contextGlobalIds: aiContextIds,
     recentEntityIds: workspaceHistory.map((h) => h.id),
@@ -722,303 +1236,188 @@ function App() {
     intelligence: workspaceIntelligence,
   }), [current, workspaceHistory, workspaceItems, history.length, entityData?.type, aiContextIds, workspaceIntelligence])
 
-  // M59-021: Dev catalog route — hash-based, dev only
-  if (typeof window !== 'undefined' && window.location.hash === '#/dev/catalog') {
-    return <DevCatalog />
-  }
+  // M90.3 Stage A — legacy hash early-returns removed.
+  // #/m89     → legacyRedirect rewrites to #/explore/french-revolution/understanding
+  // #/causal/ → legacyRedirect rewrites to #/explore/:topic/explanation/:id
+  // All route decisions now flow through useRouter().
+  //
+  // #/dev/catalog is preserved as a conditional inside the main return.
+  // K-3: #/entity/:gid is dead — no code path generates it anymore.
 
   return (
-    <ExplorationShell
-      workspace={
-        <WorkspacePanel
-          current={workspaceItems[0] ?? null}
-          history={workspaceHistory}
-          onEntityClick={(id, name) => openEntity(id, name)}
-        />
+    <ExplorerRuntimeContext.Provider value={contextApi}>
+    <ExplorerShell
+      globalBar={<GlobalBar topic={router.route?.topic ?? null} mode={router.route?.mode ?? null} />}
+      questionHeader={
+        router.route?.topic ? (
+          <QuestionHeader
+            question={runtimeContext.userQuestion}
+            goal={runtimeContext.understandingGoal}
+          />
+        ) : null
       }
-      companion={<CompanionShell workspaceContext={workspaceContext} onNavigateEntity={openNode} />}
-      timelineItems={result?.timeline}
-      timelineActiveLabel={result?.title || (current?.type === 'entity' ? current.id : current?.title)}
-      timelineActiveIndex={selectedTimelineIndex}
-      onTimelineSelect={handleTimelineSelect}
+      modeBar={
+        router.route?.topic ? (
+          <ModeBar
+            currentMode={router.route?.mode ?? null}
+            currentTopic={router.route?.topic ?? null}
+            currentFocus={router.route?.focus ?? null}
+            onModeChange={(state) => router.navigate(state)}
+          />
+        ) : null
+      }
+      contextRail={
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <UnderstandingStatus
+            cognitiveStage={runtimeContext.cognitiveStage}
+            unresolvedGap={runtimeContext.unresolvedGap}
+            explorationState={explorationState}
+            policyAction={policyAction}
+            explorationMetrics={explorationMetrics}
+            graphStore={graphStore}
+          />
+          <MirrorPanel graphStore={graphStore} cognitiveStage={runtimeContext.cognitiveStage} />
+          <WorkspacePanel
+            current={workspaceItems[0] ?? null}
+            history={workspaceHistory}
+            onEntityClick={(id, name) => openEntity(id, name)}
+          />
+        </div>
+      }
+      companionDock={<CompanionShell workspaceContext={workspaceContext} onNavigateEntity={openNode} actions={policyAction ? [policyAction] : []} />}
+      navigationBar={null}
     >
-      {searchSlot}
-      {navSlot}
-          {loading && (
-            <LoadingSkeleton
-              label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'}
-            />
-          )}
-
-          {!loading && errorKind && (
-            <ErrorCard
-              kind={errorKind}
-              onRetry={current ? () => fetchNode(current, cursor) : undefined}
-            />
-          )}
-
-          {!loading && !errorKind && current?.type === 'topic' && result && (
-            <div className="result">
-              <section data-tier="narrative">
-              <SummaryPanel title={result.title} summary={result.summary} />
-              <FirstExplorationGuide
-                topic={current.topic}
-                title={result.title}
-                starters={resolveStarters(current.topic)}
-                onStarterClick={(t) => navigateTo(t)}
-              />
-              {/* M35.1: restore the curated narrative for the active topic.
-                  StorySection / WhyImportantPanel render null when no copy
-                  exists, so topics without curated narrative are unaffected. */}
-              <StorySection narrativeKey={current.topic} />
-              <WhyImportantPanel narrativeKey={current.topic} />
-              <MainEntityCard mainEntity={result.exploration.main_entity} />
-              </section>
-              <section data-tier="interpretation">
-              <div className="m62-view-toggle" role="group" aria-label="关系视图切换">
-                <button
-                  type="button"
-                  className={relView === 'list' ? 'active' : ''}
-                  aria-pressed={relView === 'list'}
-                  onClick={() => setRelView('list')}
-                >列表</button>
-                <button
-                  type="button"
-                  className={relView === 'spatial' ? 'active' : ''}
-                  aria-pressed={relView === 'spatial'}
-                  onClick={() => setRelView('spatial')}
-                >图谱</button>
+      <ModeCanvas
+        mode={router.route?.mode ?? null}
+        searchSlot={searchSlot}
+        navSlot={navSlot}
+        loadingSlot={loading ? <LoadingSkeleton label={current?.type === 'entity' ? 'Loading entity…' : 'Loading exploration…'} /> : null}
+        errorSlot={!loading && errorKind ? <ErrorCard kind={errorKind} onRetry={current ? () => fetchNode(current, cursor) : undefined} /> : null}
+        topicRoot={!loading && !errorKind && current?.type === 'topic' && result && !packageSlug ? (
+          <UnderstandingCanvas
+            cognitiveStage={runtimeContext.cognitiveStage}
+            explorationState={explorationState}
+            exploreSection={
+              <div className="explore-a">
+                <div className="explore-page-head">
+                  <h1 className="explore-page-title">{result.title}</h1>
+                  <p className="explore-page-sub">探索 · 主要信息</p>
+                </div>
+                <SummaryPanel title={result.title} summary={result.summary} />
+                <div className="explore-hero">
+                  <MainEntityCard mainEntity={result.exploration.main_entity} />
+                </div>
+                <StorySection narrativeKey={current.topic} />
+                <WhyImportantPanel narrativeKey={current.topic} />
+                <TopicExploreStarters topic={current.topic} title={result.title} onStarterClick={(t) => navigateTo(t)} />
               </div>
-              {relView === 'list' ? (
-              <RelationshipView
-                mainEntity={result.exploration.main_entity}
-                relatedEntities={result.exploration.related_entities}
-                nameById={exploreNameById}
-                onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
-                globalIdById={exploreEntityGlobalById}
-                focusedId={focusedEntityId ?? undefined}
-                onEntityFocus={(gid) => setFocusedEntityId(gid)}
-              />
-              ) : (
-              <GraphViewPanel
-                mainEntity={result.exploration.main_entity}
-                relatedEntities={result.exploration.related_entities}
-                nameById={exploreNameById}
-                onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
-              />
-              )}
-              </section>
-              <section data-tier="supporting">
-              <CrossTopicView
-                connections={result.exploration.cross_topic_related}
-                relatedTopics={result.related_topics}
-                focusedId={focusedEntityId ?? undefined}
-                onEntityClick={(gid) => openEntity(gid)}
-                onTopicClick={handleTopicClick}
-              />
-              <RelatedEntityList
-                relatedEntities={result.exploration.related_entities}
-                nameById={exploreNameById}
-                mainEntityName={result.exploration.main_entity.name}
-                onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])}
-              />
-              <div className="m62-view-toggle" role="group" aria-label="时间线视图切换">
-                <button
-                  type="button"
-                  className={timeView === 'single' ? 'active' : ''}
-                  aria-pressed={timeView === 'single'}
-                  onClick={() => setTimeView('single')}
-                >单线</button>
-                <button
-                  type="button"
-                  className={timeView === 'multi' ? 'active' : ''}
-                  aria-pressed={timeView === 'multi'}
-                  onClick={() => setTimeView('multi')}
-                >多线</button>
-              </div>
-              {timeView === 'single' ? (
+            }
+            explainSection={
               <>
-              <TimelinePanel
-                timeline={result.timeline}
-                nameToId={exploreNameToId}
-                onEventClick={(id) => openEntity(id, exploreNameById[id])}
-                globalIdById={exploreEntityGlobalById}
-                focusedId={focusedEntityId ?? undefined}
-              />
-              <TemporalComparisonPanel entities={result.entities} />
-              </>
-              ) : (
-              <MultiEntityTimeline entities={result.entities} />
-              )}
-              <RelationshipContext
-                connections={result.connections}
-                connectionsExplained={result.connections_explained}
-                onNodeClick={openNodeNamed}
-                candidates={pickedCandidates}
-                relationships={exploreThemesRelationships}
-                timeMap={exploreEntityTimeByName}
-                mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]}
-                mainEntityName={result.exploration.main_entity.name}
-                nameByGlobalId={exploreNameByGlobalId}
-              />
-              <InterpretationPanel
-                interpretations={toInterpretationViewModels(result.connections_explained)}
-                understandings={buildUnderstandingsFromConnectionsExplained(
-                  result.connections_explained,
-                  result.exploration.main_entity.name,
-                  Object.fromEntries(
-                    (result.entities ?? []).map((e) => [
-                      e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`,
-                      e.name,
-                    ]),
-                  ),
-                  exploreEntityTimeByName,
+                <div className="m62-view-toggle" role="group" aria-label="时间线视图切换">
+                  <button type="button" className={timeView === 'single' ? 'active' : ''} aria-pressed={timeView === 'single'} onClick={() => setTimeView('single')}>单线</button>
+                  <button type="button" className={timeView === 'multi' ? 'active' : ''} aria-pressed={timeView === 'multi'} onClick={() => setTimeView('multi')}>多线</button>
+                </div>
+                {timeView === 'single' ? (
+                <>
+                <TimelinePanel timeline={result.timeline} nameToId={exploreNameToId} onEventClick={(id) => openEntity(id, exploreNameById[id])} globalIdById={exploreEntityGlobalById} focusedId={focusedEntityId ?? undefined} />
+                <TemporalComparisonPanel entities={result.entities} />
+                </>
+                ) : (
+                <MultiEntityTimeline entities={result.entities} />
                 )}
-                onNodeClick={openNodeNamed}
-              />
-              <ThemesPanel
-                relationships={exploreThemesRelationships}
-                onNodeClick={openNodeNamed}
-              />
-              <ContinueExploringPanel
-                connections={result.connections_explained}
-                crossTopicRelated={result.exploration.cross_topic_related}
-                relatedTopics={result.related_topics}
-                seenGlobalIds={seenGlobalIds}
-                onNodeClick={openNodeNamed}
+                <InterpretationPanel interpretations={toInterpretationViewModels(result.connections_explained)} understandings={buildUnderstandingsFromConnectionsExplained(result.connections_explained, result.exploration.main_entity.name, Object.fromEntries((result.entities ?? []).map((e) => [e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`, e.name])), exploreEntityTimeByName)} onNodeClick={openNodeNamed} />
+                <DisputesPanel
+                  relationships={result.relationships ?? []}
+                  nameById={exploreNameById}
+                  globalIdById={exploreEntityGlobalById}
+                  onNodeClick={openNodeNamed}
+                />
+                <AIExplanationPanel contextGlobalIds={aiContextIds} onCitationClick={(gid) => openEntity(gid)} />
+                <TopicComparisonPanel key={result?.topic ?? current.topic} crossTopicRelated={result.exploration.cross_topic_related} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+                <EntityPickerPanel onCandidatesChange={setPickedCandidates} />
+                <MultiEntityContextPanel candidates={pickedCandidates} candidateGids={Object.values(exploreEntityGlobalById)} onCitationClick={(gid) => openEntity(gid)} />
+              </>
+            }
+            relateSection={
+              <>
+                <div className="m62-view-toggle" role="group" aria-label="关系视图切换">
+                  <button type="button" className={relView === 'list' ? 'active' : ''} aria-pressed={relView === 'list'} onClick={() => setRelView('list')}>列表</button>
+                  <button type="button" className={relView === 'spatial' ? 'active' : ''} aria-pressed={relView === 'spatial'} onClick={() => setRelView('spatial')}>图谱</button>
+                </div>
+                {relView === 'list' ? (
+                <RelationshipView mainEntity={result.exploration.main_entity} relatedEntities={result.exploration.related_entities} nameById={exploreNameById} onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])} globalIdById={exploreEntityGlobalById} focusedId={focusedEntityId ?? undefined} onEntityFocus={(gid) => setFocusedEntityId(gid)} />
+                ) : (
+                <GraphViewPanel mainEntity={result.exploration.main_entity} relatedEntities={result.exploration.related_entities} nameById={exploreNameById} onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])} />
+                )}
+                <CrossTopicView connections={result.exploration.cross_topic_related} relatedTopics={result.related_topics} focusedId={focusedEntityId ?? undefined} onEntityClick={(gid) => openEntity(gid)} onTopicClick={handleTopicClick} />
+                <RelatedEntityList relatedEntities={result.exploration.related_entities} nameById={exploreNameById} mainEntityName={result.exploration.main_entity.name} onEntityClick={(id) => openEntity(`${exploreTopic}:${id}`, exploreNameById[id])} />
+                <ThemesPanel relationships={exploreThemesRelationships} onNodeClick={openNodeNamed} />
+                <RelationshipContext connections={result.connections} connectionsExplained={result.connections_explained} onNodeClick={openNodeNamed} candidates={pickedCandidates} relationships={exploreThemesRelationships} timeMap={exploreEntityTimeByName} mainGlobalId={exploreEntityGlobalById[result.exploration.main_entity.id]} mainEntityName={result.exploration.main_entity.name} nameByGlobalId={exploreNameByGlobalId} />
+              </>
+            }
+            understandingSection={
+              <>
+                <UnderstandingOverview signals={discoverSignals} topicTitle={result.title} />
+                {hasUnderstandingData(current.topic) && <UnderstandingWorkspace topic={current.topic} />}
+                <ContinueExploringPanel connections={result.connections_explained} crossTopicRelated={result.exploration.cross_topic_related} relatedTopics={result.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNodeNamed} onTopicClick={handleTopicClick} />
+              </>
+            }
+          />
+        ) : null}
+        entityDetail={!loading && !errorKind && current?.type === 'entity' && entityData && !packageSlug ? (
+          <>
+            <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} />
+            <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
+            <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
+            <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+          </>
+        ) : null}
+        causalDetail={!loading && !errorKind && current?.type === 'causal_object' && causalObjectData && !packageSlug ? (
+          <CausalObjectDetailPage object={causalObjectData} objectTitleMap={causalObjectTitleMap} onEntityClick={(gid) => openEntity(gid)} onCausalObjectClick={(objectId) => openCausalObject(objectId)} onBack={goBack} />
+        ) : null}
+        packageDetail={packageSlug ? (
+          <ExplorationPackagePage slug={packageSlug} onEntityClick={(gid) => openEntity(gid)} onOpenPackage={(s) => openPackage(s)} onBack={closePackage} />
+        ) : null}
+        landing={!current && !packageSlug ? (
+          <LandingTabs
+            activeTab={landingTab}
+            onTabChange={setLandingTab}
+            mine={
+              <MyExplorationPanel
+                behavioralSignals={discoverSignals}
                 onTopicClick={handleTopicClick}
+                onStarterClick={navigateTo}
+                onOpenResearch={(gid, name) => openEntity(gid, name, 'research')}
               />
-              <TopicComparisonPanel
-                key={result?.topic ?? current.topic}
-                crossTopicRelated={result.exploration.cross_topic_related}
-                onNodeClick={openNode}
-                onTopicClick={handleTopicClick}
-              />
-
-              <AIExplanationPanel
-                contextGlobalIds={aiContextIds}
-                onCitationClick={(gid) => openEntity(gid)}
-              />
-              <EntityPickerPanel onCandidatesChange={setPickedCandidates} />
-              <MultiEntityContextPanel
-                candidates={pickedCandidates}
-                candidateGids={Object.values(exploreEntityGlobalById)}
-                onCitationClick={(gid) => openEntity(gid)}
-              />
-              </section>
-            </div>
-          )}
-
-          {!loading && !errorKind && current?.type === 'entity' && entityData && (
-            <>
-              <EntityPage
-                entity={entityData}
-                entityId={current.id}
-                entityName={entityData.name}
-                entityStarters={resolveEntityStarters(current.id)}
-                onStarterClick={(t) => navigateTo(t)}
-                onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])}
-                onNodeClick={openNode}
-                onTopicClick={handleTopicClick}
-              />
-              <ExplorationPath
-                view="journey"
-                history={history}
-                cursor={cursor}
-                journeyReasons={journeyReasons}
-                onStepClick={goTo}
-              />
-              <RecommendationPanel
-                entityId={current.id}
-                seenGlobalIds={seenGlobalIds}
-                max={5}
-                onNodeClick={(gid, ctx) => {
-                  // Capture the "why" only when the click came from a
-                  // recommendation (ctx present). Direct navigation leaves the
-                  // annotation null. This never creates navigation state — it
-                  // only enriches the Journey view via the journeyReasons map.
-                  if (ctx) {
-                    setJourneyReasons((prev) => {
-                      const next = new Map(prev)
-                      next.set(gid, {
-                        fromGlobalId: current.id,
-                        fromName: entityData?.name ?? current.id,
-                        relationPath: ctx.relation_path,
-                        reasons: ctx.reasons,
-                        score: ctx.score,
-                        candidateSource: ctx.candidateSource,
-                        capturedAt: new Date().toISOString(),
-                      })
-                      // Persist the annotation so the arrival reason survives a
-                      // refresh. Idempotent write (adapter swallows quota errors).
-                      saveReasons(next)
-                      return next
-                    })
-                  }
-                  openNode(gid)
-                }}
-              />
-              <ContinueExploringPanel
-                connections={entityData.connections_explained}
-                relatedTopics={entityData.related_topics}
-                seenGlobalIds={seenGlobalIds}
-                onNodeClick={openNode}
-                onTopicClick={handleTopicClick}
-              />
-            </>
-          )}
-
-          {!current && (
-            packageSlug ? (
-              <ExplorationPackagePage
-                slug={packageSlug}
-                onEntityClick={(gid) => openEntity(gid)}
-                onOpenPackage={(s) => openPackage(s)}
-                onBack={closePackage}
-              />
-            ) : (
-            <>
-            {/* M35: Discover experience — presentational; both callbacks reuse
-                the single navigation truth (navigateTo via handleTopicClick). */}
-            <DiscoverPage
-              onTopicClick={handleTopicClick}
-              onStarterClick={(t) => navigateTo(t)}
-              onPackageClick={(s) => openPackage(s)}
-            />
-            <LandingPage
-              topics={topics}
-              loading={topicsLoading}
-              error={topicsError}
-              onTopicClick={handleTopicClick}
-              featured={featuredTopics}
-              recent={recent}
-              onRecentSelect={navigateTo}
-              onRecentClear={clearRecent}
-              onQuickStart={(q) => {
-                setTopic(q)
-                // M74 Phase1: QuickStart questions are natural-language. Resolve
-                // them to a package / entity via the deterministic resolver;
-                // unknown -> search feedback (empty-state hint). NEVER navigate
-                // a raw Chinese question as a topic — the backend TOPIC_PATTERN
-                // (^[a-z0-9_-]+$) would reject it with 400 + misleading copy.
-                const resolved = resolveTopic(q)
-                if (resolved?.kind === 'package') {
-                  openPackage(resolved.slug)
-                } else if (resolved?.kind === 'entity') {
-                  openEntity(resolved.globalId)
-                } else {
-                  handleSearch(q)
-                }
-              }}
-            />
-            {/* M35 Feature D: exploration journey trace — localStorage only,
-                reuses the single navigateTo entry via handleJourneyClick. */}
-            <ExplorationPath view="panel" onNavigate={handleJourneyClick} />
-            {/* M35 Feature E: lightweight feedback — localStorage only, no API. */}
-            <FeedbackWidget page="discover" />
-            </>
-          ))}
-    </ExplorationShell>
+            }
+            understand={
+              <>
+                <DiscoverPage topics={topics} onTopicClick={handleTopicClick} onPackageClick={openPackage} />
+                <FeedbackWidget page="discover" />
+              </>
+            }
+            research={
+              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onCausalObjectClick={(objectId) => openCausalObject(objectId)} onQuickStart={(q) => { const { resolution } = resolveEntryQuery(q); if (resolution?.kind === 'topic') { handleTopicClick(resolution.slug); return } if (resolution?.kind === 'package') { openPackage(resolution.slug) } else if (resolution?.kind === 'entity') { openEntity(resolution.globalId) } else { handleSearch(q) } }} />
+            }
+            expand={
+              <div className="discover-expand">
+                <h3 className="discover-section-heading">扩展功能</h3>
+                <p className="discover-section-sub">更多功能即将推出。包括 AI 内容创作、教育模块和社交探索。</p>
+                <p className="discover-expand-soon">敬请期待</p>
+              </div>
+            }
+          />
+        ) : null}
+        productIntro={!current && !packageSlug ? <ProductIntro /> : null}
+        understandingMode={null}
+        devCatalog={null}
+        isDevCatalog={false}
+        isUnderstandingRoute={false}
+        hasPackage={!!packageSlug}
+      />
+    </ExplorerShell>
+    </ExplorerRuntimeContext.Provider>
   )
 }
 

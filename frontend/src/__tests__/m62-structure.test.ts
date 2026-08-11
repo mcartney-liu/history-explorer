@@ -2,8 +2,12 @@
 // App.tsx must wrap the result view in narrative → interpretation →
 // supporting tiers in DOM order, and expose view toggles.
 //
-// M65 Phase 1: internal JSX of the three rendering branches is UNCHANGED,
-// so source-code string check remains valid and lightweight.
+// Wave2-#140: M85 replaced the data-tier="*" attributes with ExplorerShell
+// slots (narrativeSection / interpretationSection / supportingSection).
+// 2026-08-11: M90 rework dropped those slot names — ExplorerShell now takes
+// globalBar / questionHeader / modeBar / contextRail / companionDock and the
+// content itself lives in ModeCanvas. The guardrail anchors on the current
+// slot contract (presence + DOM order).
 
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
@@ -14,15 +18,23 @@ const APP = resolve(dirname(fileURLToPath(import.meta.url)), '../../src/App.tsx'
 const src = readFileSync(APP, 'utf8')
 
 describe('M62 — three-tier narrative structure in App.tsx', () => {
-  it('wraps the result view in narrative/interpretation/supporting tiers in DOM order', () => {
-    expect(src).toContain('data-tier="narrative"')
-    expect(src).toContain('data-tier="interpretation"')
-    expect(src).toContain('data-tier="supporting"')
-    const ni = src.indexOf('data-tier="narrative"')
-    const ii = src.indexOf('data-tier="interpretation"')
-    const si = src.indexOf('data-tier="supporting"')
-    expect(ni).toBeLessThan(ii)
-    expect(ii).toBeLessThan(si)
+  it('wraps ExplorerShell slots in a stable DOM order (M90 contract)', () => {
+    // Top chrome → context rail → content → companion dock.
+    expect(src).toContain('globalBar={')
+    expect(src).toContain('modeBar={')
+    expect(src).toContain('contextRail={')
+    expect(src).toContain('companionDock={')
+    expect(src).toContain('<ModeCanvas')
+    const gb = src.indexOf('globalBar={')
+    const mb = src.indexOf('modeBar={')
+    const cr = src.indexOf('contextRail={')
+    const mc = src.indexOf('<ModeCanvas')
+    const cd = src.indexOf('companionDock={')
+    expect(gb).toBeGreaterThanOrEqual(0)
+    expect(gb).toBeLessThan(mb)
+    expect(mb).toBeLessThan(cr)
+    expect(cr).toBeLessThan(cd)  // companionDock 是 ExplorerShell 的 prop（先于子元素）
+    expect(mc).toBeGreaterThanOrEqual(0)  // ModeCanvas 是子元素，出现在 prop 之后
   })
 
   it('exposes view toggle elements for relationship and timeline', () => {
@@ -31,9 +43,11 @@ describe('M62 — three-tier narrative structure in App.tsx', () => {
     expect(src).toContain('setTimeView')
   })
 
-  // M65 Phase 1: invariant — ExplorationShell must exist
-  it('uses slot-based ExplorationShell layout', () => {
-    expect(src).toContain('ExplorationShell')
-    expect(src).toContain('companion={<CompanionShell')
+  // M65 Phase 1: invariant — ExplorerShell must exist
+  // Wave2-#140: M85.11 renamed the shell to ExplorerShell and the companion
+  // slot to companionDock; assertions aligned to the shipped structure.
+  it('uses slot-based ExplorerShell layout', () => {
+    expect(src).toContain('ExplorerShell')
+    expect(src).toContain('companionDock={<CompanionShell')
   })
 })

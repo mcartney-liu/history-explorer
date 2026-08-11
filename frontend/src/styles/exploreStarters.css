@@ -1,0 +1,20 @@
+/* site_config 维度4：后台可配「推荐探索起点」建议条（LandingPage）。
+   仅布局容器样式；chip 视觉复用 .he-quick-btn（QuickStartChips）。
+   独立文件以免触碰 App.css（含未拍板改动）。 */
+
+.he-explore-starters {
+  margin: 24px 0;
+}
+
+.he-explore-starters-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary, #445);
+  margin: 0 0 10px;
+}
+
+.he-explore-starters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

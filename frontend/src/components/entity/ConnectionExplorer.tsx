@@ -12,12 +12,29 @@ import type { GraphNode, GraphEdge } from '../../data/entity/entityTypes'
 import type { TimelineEvent } from '../../data/entity/entityTypes'
 import { useLocale } from '../../data/locale'
 import { getEntityLabel } from '../../data/entity/entityLabels'
+import { formatTimeValue, type TimeValue } from '../../data/temporalUtils'
 
 interface ConnectionExplorerProps {
   graphNodes: GraphNode[]
   graphEdges: GraphEdge[]
   timeline: TimelineEvent[]
   onEntityClick?: (id: string) => void
+}
+
+// The backend returns each timeline event's `date` as a *TimeValue* object
+// ({ value, precision, certainty, label }), even though TimelineEvent types
+// it as `string`. Rendering that object directly throws
+// "Objects are not valid as a React child". Normalize to a string so the
+// timeline view never crashes regardless of which shape the data arrives in.
+function eventDateLabel(event: TimelineEvent): string {
+  if (event.year != null && event.year !== '') return String(event.year)
+  const d = event.date
+  if (typeof d === 'string') return d
+  if (d && typeof d === 'object') {
+    const s = formatTimeValue(d as TimeValue)
+    if (s) return s
+  }
+  return ''
 }
 
 export function ConnectionExplorer({
@@ -77,7 +94,7 @@ export function ConnectionExplorer({
                     <div className="ce-timeline-dot" />
                     <div className="ce-timeline-content">
                       <span className="ce-timeline-year">
-                        {event.year ?? event.date ?? ''}
+                        {eventDateLabel(event)}
                       </span>
                       <span className="ce-timeline-label">
                         {(event.label ?? event.name ?? event.event) as string}

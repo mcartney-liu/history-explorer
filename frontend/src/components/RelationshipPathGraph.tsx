@@ -47,11 +47,11 @@ const GRID_STEP_X = NODE_W + 46
 const GRID_STEP_Y = NODE_H + 46
 const GRID_PATH_GAP = 40
 
-const NODE_FILL = 'var(--bg-elevated)'
-const NODE_STROKE = 'var(--border-default)'
-const TEXT_FILL = 'var(--hi)'
-const EDGE_STROKE = 'var(--border-subtle)'
-const EDGE_TEXT_FILL = 'var(--mid)'
+const NODE_FILL = 'var(--color-paper-200)'
+const NODE_STROKE = 'var(--color-paper-300)'
+const TEXT_FILL = 'var(--color-ink-900)'
+const EDGE_STROKE = 'var(--color-paper-300)'
+const EDGE_TEXT_FILL = 'var(--color-ink-500)'
 
 /** Top-left (x, y) of node `j` within path `pi`, for the active layout. */
 function gridPathTop(pi: number, paths: RelationshipPath[]): number {

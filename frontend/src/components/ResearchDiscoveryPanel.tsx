@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useLocale } from '../data/locale'
 import { generateRecommendations } from '../data/ResearchPlanner'
 import { listResearch } from '../data/ResearchHistory'
 import ResearchRecommendationCardView from './ResearchRecommendationCard'
@@ -20,11 +21,12 @@ export function ResearchDiscoveryPanelView({
   recommendations?: ReturnType<typeof generateRecommendations>
   insightText?: string | null
 }) {
+  const { t } = useLocale()
   return (
-    <section className="rdp" aria-label="推荐探索">
-      <h3 className="rdp-title">推荐探索</h3>
+    <section className="rdp" aria-label={t('discover.recommendAria')}>
+      <h3 className="rdp-title">{t('discover.recommendTitle')}</h3>
       <p className="rdp-subtitle">
-        根据实体关系与您的研究历史，为您发现下一步探索方向。
+        {t('discover.recommendSubtitle')}
       </p>
 
       {insightText && (
@@ -33,7 +35,7 @@ export function ResearchDiscoveryPanelView({
 
       {recommendations.length === 0 ? (
         <p className="rdp-empty">
-          暂无推荐探索。探索更多实体后，将为您发现新的关联路径。
+          {t('discover.recommendEmpty')}
         </p>
       ) : (
         <div className="rdp-cards">

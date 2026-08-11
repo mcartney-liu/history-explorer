@@ -8,6 +8,7 @@ import { relationshipContext } from '../data/aiContext'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
 import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
+import { RELATIONSHIP_TYPES } from '../data/relationshipUtils'
 
 type RelationshipViewProps = {
   mainEntity: MainEntity
@@ -62,7 +63,23 @@ function RelationshipView({
 
   return (
     <div className="result-section">
-      <h3>{t('relationship.network')}</h3>
+      <div className="rel-heading-row">
+        <h3>{t('relationship.network')}</h3>
+        <details className="rel-legend" aria-label="关系类型图例">
+          <summary className="rel-legend-toggle">关系图例</summary>
+          <ul className="rel-legend-list">
+            {Array.from(RELATIONSHIP_TYPES)
+              .sort()
+              .map((type) => (
+                <li key={type} className="rel-legend-item">
+                  <span className="rel-legend-swatch" aria-hidden="true" />
+                  <span className="rel-legend-type">{type}</span>
+                  <span className="rel-legend-label">{getRelationshipLabel(type, locale)}</span>
+                </li>
+              ))}
+          </ul>
+        </details>
+      </div>
       <div className="rel-network">
         <div className="rel-root">
           <span className="rel-root-name">{getDisplayName(mainEntity.name, locale, prefs.properNameMode)}</span>

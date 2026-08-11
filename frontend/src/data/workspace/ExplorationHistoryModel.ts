@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { NavNode } from '../../components/navigation'
+import { getCausalObjectName } from '../causalObjectNames'
 
 // ---- Exploration History ----
 export interface ExplorationHistoryItem {
@@ -25,9 +26,9 @@ export interface ExplorationHistory {
 /** Build history from navigation stack */
 export function buildExplorationHistory(nodes: NavNode[]): ExplorationHistory {
   const items: ExplorationHistoryItem[] = nodes.map((n, i) => ({
-    id: n.type === 'entity' ? n.id : n.topic,
-    entityId: n.type === 'entity' ? n.id : n.topic,
-    name: n.type === 'entity' ? (n.name || n.id) : n.topic,
+    id: n.type === 'entity' ? n.id : n.type === 'causal_object' ? n.objectId : n.topic,
+    entityId: n.type === 'entity' ? n.id : n.type === 'causal_object' ? n.objectId : n.topic,
+    name: n.type === 'entity' ? (n.name || n.id) : n.type === 'causal_object' ? getCausalObjectName(n.objectId) : n.topic,
     type: n.type,
     visitedAt: Date.now() - (nodes.length - i) * 60000,
     source: i === 0 ? 'direct' : 'related',
@@ -37,8 +38,8 @@ export function buildExplorationHistory(nodes: NavNode[]): ExplorationHistory {
   const last = nodes[nodes.length - 1]
   return {
     items,
-    currentPath: nodes.map((n) => (n.type === 'entity' ? (n.name || n.id) : n.topic)),
-    currentEntityId: last ? (last.type === 'entity' ? last.id : last.topic) : undefined,
+    currentPath: nodes.map((n) => (n.type === 'entity' ? (n.name || n.id) : n.type === 'causal_object' ? getCausalObjectName(n.objectId) : n.topic)),
+    currentEntityId: last ? (last.type === 'entity' ? last.id : last.type === 'causal_object' ? last.objectId : last.topic) : undefined,
   }
 }
 

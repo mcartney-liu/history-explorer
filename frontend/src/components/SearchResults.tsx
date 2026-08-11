@@ -167,7 +167,12 @@ function SearchResults({
           )}
         </>
       ) : (
-        <EmptyState message={t('search.noResults')} />
+        <>
+          <EmptyState message={t('search.noResults')} />
+          {query && (
+            <p className="search-noresults-hint">{t('search.noResultsHint', { query })}</p>
+          )}
+        </>
       )}
     </div>
   )

@@ -11,14 +11,14 @@ import MultiEntityContextPanel, {
   resolveCandidates,
 } from './MultiEntityContextPanel'
 
-const GIDS = ['egypt:person:1', 'egypt:place:2', 'egypt:event:3']
+const GIDS = ['egypt:person-ramesses', 'egypt:place-giza', 'egypt:event-unification']
 const CANDIDATES: Candidate[] = [
   { gid: 'qin_dynasty:person-qsh', name: '秦始皇', type: 'Person', topic: 'qin_dynasty' },
   { gid: 'ancient_greece:person-alex', name: '亚历山大', type: 'Person', topic: 'ancient_greece' },
 ]
 
 describe('MultiEntityContextView (M13/M14)', () => {
-  it('renders the heading and every candidate as an unchecked box (friendly name/type)', () => {
+  it('renders the heading and every candidate as a toggle chip (friendly name/type)', () => {
     const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
@@ -31,10 +31,10 @@ describe('MultiEntityContextView (M13/M14)', () => {
     expect(html).toContain('已选 0/8')
     expect(html).toContain('秦始皇')
     expect(html).toContain('亚历山大')
-    expect(html).toContain('Person')
+    expect(html).toContain('人物')
   })
 
-  it('marks selected candidates as checked and shows the count', () => {
+  it('marks selected candidates as pressed and shows the count', () => {
     const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
@@ -44,11 +44,13 @@ describe('MultiEntityContextView (M13/M14)', () => {
       />,
     )
     expect(html).toContain('已选 2/8')
+    // Selected chips render in the top bar with aria-pressed=true.
+    expect(html).toContain('aria-pressed="true"')
     // The inner AIExplanationPanel renders an idle panel scoped to 2 entities.
     expect(html).toContain('基于当前探索上下文（2 个实体）')
   })
 
-  it('disables unchecked boxes once the selection cap is reached (MAX_N is UI-only)', () => {
+  it('disables unselected chips once the selection cap is reached (MAX_N is UI-only)', () => {
     const html = render(
       <MultiEntityContextView
         candidates={CANDIDATES}
@@ -130,13 +132,19 @@ describe('resolveCandidates (M14 compatibility-first resolution)', () => {
 })
 
 describe('MultiEntityContextPanel container (M13/M14)', () => {
-  it('backward-compatible: renders from bare candidateGids (name === gid)', () => {
+  it('backward-compatible: parses bare candidateGids into readable display names/types', () => {
     const html = render(
       <MultiEntityContextPanel candidateGids={GIDS} onCitationClick={() => {}} />,
     )
     expect(html).toContain('AI 多实体联合解读')
     expect(html).toContain('已选 0/8')
-    expect(html).toContain('egypt:person:1')
+    // Raw IDs are parsed into title-cased slugs and grouped by inferred type.
+    expect(html).toContain('Ramesses')
+    expect(html).toContain('Giza')
+    expect(html).toContain('Unification')
+    expect(html).toContain('人物')
+    expect(html).toContain('地点')
+    expect(html).toContain('事件')
   })
 
   it('M14: renders friendly candidates when the candidates prop is supplied', () => {
@@ -156,6 +164,7 @@ describe('MultiEntityContextPanel container (M13/M14)', () => {
       />,
     )
     expect(html).toContain('秦始皇')
-    expect(html).not.toContain('egypt:person:1')
+    expect(html).toContain('亚历山大')
+    expect(html).not.toContain('Ramesses')
   })
 })

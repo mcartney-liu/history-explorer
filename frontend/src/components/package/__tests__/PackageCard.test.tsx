@@ -1,10 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToStaticMarkup as renderToStaticMarkupRaw } from 'react-dom/server'
 import { getPackages } from '../../../data/explorationPackages'
 import PackageCard from '../PackageCard'
+import { LocaleProvider } from '../../../data/locale'
 
 const china = getPackages().find((p) => p.slug === 'china-civilization-v1')!
 const noop = () => {}
+
+function renderToStaticMarkup(node: JSX.Element) {
+  return renderToStaticMarkupRaw(<LocaleProvider>{node}</LocaleProvider>)
+}
 
 describe('PackageCard', () => {
   it('renders the official package title and summary', () => {

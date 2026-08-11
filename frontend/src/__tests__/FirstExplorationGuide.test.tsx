@@ -36,11 +36,11 @@ describe('FirstExplorationGuide — presentational first-explore nudge', () => {
     expect(html).toContain('data-starter="roman_empire:person-augustus"')
     expect(html).toContain('data-starter="roman_empire:civ-roman"')
     expect(html).toContain('data-starter="roman_empire:religion-christianity"')
-    expect(html).toContain('aria-label="探索 Augustus"')
-    expect(html).toContain('aria-label="探索 Roman Civilization"')
-    expect(html).toContain('aria-label="探索 Christianity"')
-    expect(html).toContain('Augustus')
-    expect(html).toContain('Roman Civilization')
+    expect(html).toContain('aria-label="探索 奥古斯都"')
+    expect(html).toContain('aria-label="探索 罗马文明"')
+    expect(html).toContain('aria-label="探索 基督教"')
+    expect(html).toContain('奥古斯都')
+    expect(html).toContain('罗马文明')
   })
 
   it('renders the dismiss control', () => {

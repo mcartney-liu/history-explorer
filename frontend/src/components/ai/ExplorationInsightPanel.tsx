@@ -14,6 +14,7 @@ import { useCompanion } from './CompanionContext'
 
 // Neutral exploration-mode labels (facts, not judgements).
 const PATTERN_LABELS: Record<string, string> = {
+  deep_exploration: '深度探索',
   research_loop: '研究循环',
   quick_lookup: '快速查阅',
   breadth_scan: '广度浏览',

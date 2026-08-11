@@ -73,9 +73,12 @@ def _synthetic_provider():
     return _FakeProvider()
 
 
-def test_provenance_record_has_exactly_four_fields():
-    r = ProvenanceRecord(subject_id="x", source_id="s", claim_id="c", reference="r")
-    assert set(r.to_dict().keys()) == {"subject_id", "source_id", "claim_id", "reference"}
+def test_provenance_record_has_exactly_five_fields():
+    r = ProvenanceRecord(subject_id="x", source_id="s", claim_id="c",
+                         claim_text="t", reference="r")
+    assert set(r.to_dict().keys()) == {
+        "subject_id", "source_id", "claim_id", "claim_text", "reference",
+    }
 
 
 def test_source_id_resolves_reference():
@@ -94,6 +97,7 @@ def test_claim_resolve_returns_correct_fields():
     assert r.subject_id == "ent-b"
     assert r.source_id == "s1"
     assert r.claim_id == "ec3"
+    assert r.claim_text == "claim C"
     assert r.reference == "Ref One"
 
 
@@ -128,11 +132,13 @@ def test_immutable_examples_hash_unchanged():
     assert before == after
 
 
-def test_real_curated_provenance_resolves_with_four_fields():
+def test_real_curated_provenance_resolves_with_five_fields():
     idx = ProvenanceIndex().build(build_dataset_provider(DATA_DIR))
     assert len(idx) > 0
     for subj in idx.subjects():
         for r in idx.resolve(subj):
             d = r.to_dict()
-            assert set(d.keys()) == {"subject_id", "source_id", "claim_id", "reference"}
+            assert set(d.keys()) == {
+                "subject_id", "source_id", "claim_id", "claim_text", "reference",
+            }
             assert d["subject_id"] == subj

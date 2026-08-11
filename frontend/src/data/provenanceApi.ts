@@ -6,6 +6,8 @@ export type ProvenanceRecord = {
   subject_id: string
   source_id: string
   claim_id: string
+  /** Human-curated assertion text (EvidenceClaim.claim), projected from the backend. */
+  claim_text: string
   reference: string
 }
 

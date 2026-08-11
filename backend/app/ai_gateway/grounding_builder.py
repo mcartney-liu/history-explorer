@@ -383,26 +383,94 @@ class GroundingBuilder:
         ]
         return ClaimGraph(focus_global_id, neighbors, claims, sources)
 
+    def build_claim_graph_expanded(
+        self, focus_global_id: str, max_claims: int = 10
+    ) -> "ClaimGraph":
+        """Claim graph with neighbor-evidence expansion (PO 2026-08-11).
+
+        Interval/container entities (Time Period, topic hub, ...) carry no
+        claims of their own — their historical meaning lives in the events
+        inside the interval. For these the graph is expanded to the focus
+        entity's graph neighbors, so AI-generated insights stay grounded in
+        real curated knowledge (never fabricated, never guessed).
+
+        Behavior contract: when the focus entity has direct claims, this is
+        EXACTLY build_claim_graph (zero change for entities that already
+        have evidence). Only when direct claims are empty AND neighbors
+        exist are neighbor claims collected (deduped by claim id, capped by
+        max_claims). Read-only; no graph mutation.
+        """
+        graph = self.build_claim_graph(focus_global_id, max_claims=max_claims)
+        if graph.claims or not graph.neighbors:
+            return graph
+
+        resolver = RelationshipResolver(self._ks)
+        claims: list = []
+        seen: set = set()
+        for nb in graph.neighbors:
+            nb_gid = nb.get("global_id") or nb.get("id")
+            if not nb_gid or nb_gid == focus_global_id:
+                continue
+            for claim in self._ks.get_claims_for_entity(nb_gid):
+                cid = claim.get("id") or ""
+                if cid in seen:
+                    continue
+                seen.add(cid)
+                sid = claim.get("subject_id")
+                entry = self._claim_to_entry(claim, sid, resolver)
+                if entry.claim_text:
+                    claims.append(entry)
+                if len(claims) >= max_claims:
+                    break
+            if len(claims) >= max_claims:
+                break
+
+        if not claims:
+            return graph
+
+        source_ids = {c.source_id for c in claims if c.source_id}
+        sources = [s for s in (self._ks.get_source(sid) for sid in source_ids) if s]
+        return ClaimGraph(focus_global_id, graph.neighbors, claims, sources)
+
+    def _claim_truth(self, claim: dict, claim_id: str):
+        """Curated truth grading for a claim (ADR-0018).
+
+        Reads the canonical record through `KnowledgeService.get_evidence_claim`
+        when available, falling back to the raw claim dict already in hand (so
+        stub knowledge services without the helper keep working). Read-only.
+        """
+        from ..core.evidence_claim import build_truth
+
+        raw = claim
+        getter = getattr(self._ks, "get_evidence_claim", None)
+        if callable(getter):
+            raw = getter(claim_id) or claim
+        return build_truth(raw)
+
     def _claim_to_entry(self, claim: dict, subject_id, resolver) -> "ClaimEntry":
         """Map a curated claim into the unified ClaimEntry model.
 
         Grounding Gate semantics: a claim that cannot bind (unresolvable
         subject / pair side) is carried with resolved=False — it is never
         used as evidence. Never guessed, never auto-completed.
+
+        ADR-0018: the curated truth grading travels with the entry instead of
+        being dropped here.
         """
         from .citation_model import ClaimEntry
 
         cid = claim.get("id") or ""
         text = claim.get("claim") or ""
         source_id = claim.get("source_id") or ""
+        truth = self._claim_truth(claim, cid)
         if not isinstance(subject_id, str) or not subject_id.strip():
-            return ClaimEntry(cid, "", text, source_id, None, None, None, False)
+            return ClaimEntry(cid, "", text, source_id, None, None, None, False, truth)
 
         if "->" in subject_id:
             pair = resolver.parse(subject_id)
             if pair is None or not pair.resolved:
                 return ClaimEntry(
-                    cid, subject_id, text, source_id, None, None, None, False
+                    cid, subject_id, text, source_id, None, None, None, False, truth
                 )
             return ClaimEntry(
                 cid,
@@ -413,15 +481,18 @@ class GroundingBuilder:
                 pair.object_global_id,
                 pair.relationship,
                 True,
+                truth,
             )
 
         # Entity-subject claim (unified model: object side is None).
         gid = self._ks.find_global_id(subject_id.strip())
         if not gid:
             return ClaimEntry(
-                cid, subject_id, text, source_id, None, None, None, False
+                cid, subject_id, text, source_id, None, None, None, False, truth
             )
-        return ClaimEntry(cid, subject_id.strip(), text, source_id, gid, None, None, True)
+        return ClaimEntry(
+            cid, subject_id.strip(), text, source_id, gid, None, None, True, truth
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -554,6 +625,11 @@ def derive_next_exploration(claim_graph, limit: int = 3) -> list:
                 "claim_text": (claim_entry.claim_text if claim_entry else "") or "",
                 "source_title": (source.get("title") or "") or "",
                 "source_tier": (source.get("tier") or "") or "",
+                # 2026-08-11 (PO)：来源完整书目信息（作者/出版社/类型），
+                # 供前端推荐卡来源区展示；additive，向后兼容。
+                "source_creator": (source.get("creator") or "") or "",
+                "source_publisher": (source.get("publisher_or_archive") or "") or "",
+                "source_type": (source.get("type") or "") or "",
             }
         )
     return result

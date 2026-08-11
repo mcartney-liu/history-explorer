@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { AICitation } from '../data/aiClient'
 
 type CitationListProps = {
@@ -13,10 +14,10 @@ const KIND_LABEL: Record<string, string> = {
   timeline: '时间线',
 }
 
-// Renders grounded citations and rejected citations SIDE BY SIDE. Rejected
-// citations are NEVER hidden and NEVER made clickable — the user must see what
-// the backend refused to verify, but cannot be misled into treating it as a
-// navigable fact.
+// Renders grounded citations and rejected citations. Rejected citations are
+// NEVER made clickable — the user must see what the backend refused to verify,
+// but cannot be misled into treating it as a navigable fact. By default the
+// rejected list is COLLAPSED to save space; the user can expand it on demand.
 export default function CitationList({
   citations,
   rejected_citations = [],
@@ -24,6 +25,7 @@ export default function CitationList({
 }: CitationListProps) {
   const valid = citations ?? []
   const rejected = rejected_citations ?? []
+  const [showRejected, setShowRejected] = useState(false)
 
   return (
     <div className="citation-list">
@@ -65,21 +67,35 @@ export default function CitationList({
 
       {rejected.length > 0 && (
         <div className="cl-group cl-group-rejected">
-          <h4 className="cl-heading">未通过验证的引用（{rejected.length}）</h4>
-          <ul className="cl-items">
-            {rejected.map((c, i) => (
-              <li
-                key={`rejected-${c.global_id}-${i}`}
-                className="cl-item cl-item-rejected"
-                aria-disabled="true"
-              >
-                <span className="cl-kind">{KIND_LABEL[c.kind] ?? c.kind}</span>
-                <span className="cl-label">{c.label || c.global_id}</span>
-                <span className="cl-id">{c.global_id}</span>
-                <span className="cl-rejected-tag">未通过验证</span>
-              </li>
-            ))}
-          </ul>
+          <button
+            type="button"
+            className="cl-rejected-toggle"
+            aria-expanded={showRejected}
+            onClick={() => setShowRejected((v) => !v)}
+          >
+            <span className="cl-rejected-label">
+              未通过验证的引用（{rejected.length}）
+            </span>
+            <span className="cl-rejected-chevron" aria-hidden="true">
+              {showRejected ? '收起' : '展开'}
+            </span>
+          </button>
+          {showRejected && (
+            <ul className="cl-items cl-items-rejected">
+              {rejected.map((c, i) => (
+                <li
+                  key={`rejected-${c.global_id}-${i}`}
+                  className="cl-item cl-item-rejected"
+                  aria-disabled="true"
+                >
+                  <span className="cl-kind">{KIND_LABEL[c.kind] ?? c.kind}</span>
+                  <span className="cl-label">{c.label || c.global_id}</span>
+                  <span className="cl-id">{c.global_id}</span>
+                  <span className="cl-rejected-tag">未通过验证</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>

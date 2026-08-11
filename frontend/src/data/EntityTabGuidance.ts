@@ -1,11 +1,22 @@
 // ============================================================
 // M44 Phase 2 — EntityTabGuidance
-// Static guidance data for each EntityPage tab.
+// Guidance copy for each EntityPage tab.
 // Helps users understand what each tab does before clicking in.
-// Zero AI. Zero backend. Purely presentational.
+// Zero AI. Purely presentational.
+//
+// ADR-0021 R2 — the title / description / recommended actions are now
+// editable at runtime through the Content Configuration Layer
+// (#/admin, module `entity_tabs`). `TAB_GUIDANCE` below stays the
+// shipped default (fallback tier ②): it is what renders with no
+// backend, and what the unit tests assert against. `guidanceFor()`
+// overlays whatever has been configured on top of it.
+//
+// Consumers that should reflect an edit without a reload subscribe via
+// `useContentRevision()` (see EntityPageShell).
 // ============================================================
 
 import type { EntityTab } from '../components/EntityPageShell'
+import { slotDesc, slotItems, slotTitle } from './contentRuntime'
 
 export interface TabGuidance {
   id: EntityTab
@@ -26,7 +37,7 @@ export const TAB_GUIDANCE: Record<EntityTab, TabGuidance> = {
   explore: {
     id: 'explore',
     title: '探索历史关系',
-    description: '通过人物、事件、文明之间的关联继续发现新的历史路径。你也可以向 AI 历史学���提问——每个回答都有事实溯源。',
+    description: '通过人物、事件、文明之间的关联继续发现新的历史路径。你也可以向 AI 历史学家提问——每个回答都有事实溯源。',
     userGoal: '我想继续探索这个主题',
     recommendedActions: ['查看系统推荐', '开启历史旅程', '与 AI 历史学家对话'],
   },
@@ -53,6 +64,25 @@ export const TAB_GUIDANCE: Record<EntityTab, TabGuidance> = {
   },
 }
 
+/** Registry slot backing a tab, e.g. `explore` -> `entity_tabs.explore`. */
+export function tabSlotId(tab: EntityTab): string {
+  return `entity_tabs.${tab}`
+}
+
+/**
+ * Guidance for a tab: configured copy where it exists, shipped copy otherwise.
+ *
+ * `userGoal` is intentionally NOT configurable — it is an internal label for
+ * the tab's intent, never rendered, so exposing it in the console would be
+ * noise with no visible effect.
+ */
 export function guidanceFor(tab: EntityTab): TabGuidance {
-  return TAB_GUIDANCE[tab]
+  const base = TAB_GUIDANCE[tab]
+  const slot = tabSlotId(tab)
+  return {
+    ...base,
+    title: slotTitle(slot, base.title),
+    description: slotDesc(slot, base.description),
+    recommendedActions: [...slotItems(slot, base.recommendedActions)],
+  }
 }

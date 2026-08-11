@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History Explorer — 首页原型 v1</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #0a0e17;
+  color: #d4d4dc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ===== GLOBAL BACKGROUND — Earth from space ===== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  z-index: -2;
+  opacity: 0.45;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg,
+    rgba(10,14,23,0.25) 0%,
+    rgba(10,14,23,0.55) 40%,
+    rgba(10,14,23,0.85) 70%,
+    #0a0e17 95%
+  );
+  z-index: -1;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 60px;
+  background: rgba(10,14,23,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-left { display: flex; align-items: center; gap: 24px; }
+.logo {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #f0ece4;
+}
+.search-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px; width: 260px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  color: #6b7280; font-size: 13px;
+}
+.search-bar svg { width: 15px; height: 15px; opacity: 0.5; }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  font-size: 13px; color: #9ca3af;
+  transition: color .2s;
+}
+.nav-links a:hover { color: #e8e8e8; }
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center; padding: 72px 48px 52px;
+}
+.hero-title {
+  font-family: Georgia, 'Times New Roman', 'Noto Serif SC', serif;
+  font-size: 46px; font-weight: 900;
+  color: #f0ece4;
+  letter-spacing: 1.5px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.hero-sub {
+  font-size: 15px; color: #9ca3af;
+  max-width: 520px; margin: 0 auto;
+  line-height: 1.75;
+}
+
+/* ===== FEATURE CARDS (2×2 glass cards) ===== */
+.features {
+  max-width: 1100px; margin: 0 auto 48px; padding: 0 48px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+}
+.feat-card {
+  display: flex; gap: 18px; padding: 26px 28px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.feat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212,168,83,0.25);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.3), 0 0 0 1px rgba(212,168,83,0.08);
+}
+.feat-icon {
+  flex-shrink: 0; width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  background: rgba(212,168,83,0.1);
+  color: #D4A853;
+}
+.feat-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+.feat-body h3 {
+  font-size: 16px; font-weight: 600; color: #e8e8e8; margin-bottom: 6px;
+}
+.feat-body p {
+  font-size: 13px; color: #888; line-height: 1.65;
+}
+
+/* ===== TABS ===== */
+.tabs-wrap {
+  max-width: 1100px; margin: 0 auto; padding: 0 48px;
+}
+.tabs { display: inline-flex; gap: 4px; padding: 4px;
+  background: rgba(255,255,255,0.04); border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.tab {
+  appearance: none; border: none; background: transparent;
+  padding: 8px 20px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  color: #6b7280; transition: all .2s;
+}
+.tab.active {
+  background: rgba(212,168,83,0.12); color: #D4A853;
+}
+.tab:not(.active):hover { color: #d4d4dc; background: rgba(255,255,255,0.05); }
+
+/* ===== ANCIENT MAP BANNER ===== */
+.map-banner {
+  margin: 42px 0; padding: 64px 48px;
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1526778548025-fa2f459cd8c1?w=1600&q=80');
+  background-size: cover; background-position: center;
+  border-top: 1px solid rgba(212,168,83,0.12);
+  border-bottom: 1px solid rgba(212,168,83,0.12);
+}
+.map-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10,14,23,0.55) 0%, rgba(10,14,23,0.2) 30%, rgba(10,14,23,0.2) 70%, rgba(10,14,23,0.55) 100%),
+    sepia(0.3) contrast(1.05);
+  pointer-events: none;
+}
+.map-banner-inner {
+  position: relative; text-align: center;
+}
+.map-banner h2 {
+  font-family: Georgia, 'Times New Roman', 'Noto Serif SC', serif;
+  font-size: 32px; font-weight: 700; color: #f0ece4;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.map-banner p {
+  font-size: 14px; color: #b0a898;
+  max-width: 480px; margin: 0 auto;
+}
+
+/* ===== RESEARCH FOOTPRINT SECTION ===== */
+.section { max-width: 1100px; margin: 0 auto; padding: 0 48px 48px; }
+.section-heading {
+  font-family: Georgia, 'Times New Roman', 'Noto Serif SC', serif;
+  font-size: 20px; color: #e8e8e8; margin-bottom: 20px;
+}
+.footprint-card {
+  display: flex; gap: 32px; padding: 32px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+}
+.footprint-left { flex: 1; min-width: 0; }
+.footprint-left h3 { font-size: 17px; color: #e8e8e8; margin-bottom: 8px; }
+.footprint-left p { font-size: 13px; color: #888; line-height: 1.7; }
+.footprint-right {
+  flex: 0 0 280px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+}
+/* SVG donut chart placeholder */
+.chart-ring {
+  width: 140px; height: 140px; position: relative;
+}
+.chart-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.chart-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  text-align: center;
+}
+.chart-num { font-size: 24px; font-weight: 700; color: #D4A853; }
+.chart-unit { font-size: 11px; color: #6b7280; }
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 11px 24px;
+  background: linear-gradient(135deg, #D4A853 0%, #c49a48 100%);
+  color: #0a0e17; font-weight: 600; font-size: 13px;
+  border: none; border-radius: 9px; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212,168,83,0.25);
+}
+
+/* ===== LIST SECTIONS ===== */
+.list-section { margin-bottom: 36px; }
+.list-item {
+  display: flex; gap: 14px; padding: 16px 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 11px; margin-bottom: 10px;
+  transition: border-color .2s;
+}
+.list-item:hover { border-color: rgba(212,168,83,0.2); }
+.list-icon {
+  flex-shrink: 0; width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 9px; background: rgba(212,168,83,0.08); color: #D4A853;
+}
+.list-icon svg { width: 18px; height: 18px; }
+.list-body h4 { font-size: 14px; color: #e0e0e0; margin-bottom: 3px; }
+.list-body p { font-size: 12.5px; color: #777; line-height: 1.55; }
+
+/* ===== STARTER CARDS (3 horizontal) ===== */
+.starter-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  margin-bottom: 42px;
+}
+.starter-card {
+  display: flex; gap: 16px; padding: 20px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 13px;
+  transition: transform .2s, border-color .2s;
+}
+.starter-card:hover { transform: translateY(-2px); border-color: rgba(212,168,83,0.2); }
+.starter-thumb {
+  flex-shrink: 0; width: 72px; height: 72px; border-radius: 10px;
+  object-fit: cover; background: rgba(255,255,255,0.06);
+}
+.starter-info h4 { font-size: 14px; color: #e0e0e0; margin-bottom: 4px; }
+.starter-info p { font-size: 12px; color: #777; line-height: 1.55; }
+
+/* ===== PACKAGE CARD GRID (THE STAR — with cover images + gold buttons) ===== */
+.pkg-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  margin-bottom: 48px;
+}
+.pkg-card {
+  display: flex; flex-direction: column;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; overflow: hidden;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.pkg-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212,168,83,0.25);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+.pkg-cover {
+  width: 100%; height: 160px; object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.pkg-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.pkg-badge {
+  align-self: flex-start; font-size: 11px; letter-spacing: 0.06em;
+  color: #D4A853; border: 1px solid rgba(212,168,83,0.25);
+  border-radius: 999px; padding: 2px 10px;
+  background: rgba(212,168,83,0.06);
+}
+.pkg-title { font-size: 16px; font-weight: 600; color: #e8e8e8; }
+.pkg-desc { font-size: 13px; color: #888; line-height: 1.6; flex: 1; }
+.pkg-cta {
+  align-self: flex-start; margin-top: 8px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #D4A853 0%, #c49a48 100%);
+  color: #0a0e17; font-weight: 600; font-size: 13px;
+  border: none; border-radius: 9px; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.pkg-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212,168,83,0.25);
+}
+
+/* ===== MY EXPLORATION SPACE ===== */
+.space-card {
+  padding: 28px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 14px;
+  margin-bottom: 24px;
+}
+.space-card h3 { font-size: 17px; color: #e8e8e8; margin-bottom: 8px; }
+.space-card p { font-size: 13px; color: #777; }
+
+/* ===== SYSTEM INFO ===== */
+.sys-card {
+  padding: 24px 28px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 14px;
+  margin-bottom: 48px;
+}
+.sys-card h4 { font-size: 15px; color: #d4d4dc; margin-bottom: 6px; }
+.sys-card p { font-size: 13px; color: #888; }
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center; padding: 28px 48px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 12px; color: #555;
+}
+.footer span { color: #D4A853; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 800px) {
+  .features { grid-template-columns: 1fr; }
+  .pkg-grid { grid-template-columns: 1fr 1fr; }
+  .starter-grid { grid-template-columns: 1fr; }
+  .footprint-card { flex-direction: column; }
+  .footprint-right { flex: 0 0 auto; }
+  .navbar { padding: 0 20px; }
+  .hero-title { font-size: 32px; }
+  .section { padding: 0 20px 32px; }
+}
+@media (max-width: 520px) {
+  .pkg-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left">
+    <span class="logo">History Explorer</span>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <span>搜索...</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Timeline</a>
+    <a href="#">Maps</a>
+    <a href="#">Topics</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1 class="hero-title">History Explorer 是什么</h1>
+  <p class="hero-sub">从一个人、一条路、一个事件出发，穿越时空看见历史的全貌。<br>手写叙事，关系图谱，深度研究——让每一次探索都有据可查。</p>
+</section>
+
+<!-- FEATURE CARDS -->
+<div class="features">
+  <!-- Card 1 -->
+  <article class="feat-card">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+    </div>
+    <div class="feat-body">
+      <h3>历史探索</h3>
+      <p>从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。</p>
+    </div>
+  </article>
+  <!-- Card 2 -->
+  <article class="feat-card">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 7.38 16.75L12 22l-7.38-3.25A10 10 0 0 1 12 2z"/></svg>
+    </div>
+    <div class="feat-body">
+      <h3>文明探索</h3>
+      <p>穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。</p>
+    </div>
+  </article>
+  <!-- Card 3 -->
+  <article class="feat-card">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="feat-body">
+      <h3>教育指南</h3>
+      <p>为教师和学生设计的探索路径。从入门到进阶，循序渐进理解历史脉络。</p>
+    </div>
+  </article>
+  <!-- Card 4 -->
+  <article class="feat-card">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4Z"/><path d="M12 14c-3 0-6 2-6 5v1h12v-1c0-3-3-5-6-5Z"/><circle cx="12" cy="6" r="1"/></svg>
+    </div>
+    <div class="feat-body">
+      <h3>AI 智能家</h3>
+      <p>随时向 AI 历史学家提问。回答基于知识图谱，不凭空捏造。</p>
+    </div>
+  </article>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active">广角</button>
+    <button class="tab">聚焦</button>
+  </div>
+</div>
+
+<!-- ANCIENT MAP BANNER -->
+<div class="map-banner">
+  <div class="map-banner-inner">
+    <h2>原来历史还能这样探索</h2>
+    <p>不再死记硬背年代和人名——用关系网络看见文明的脉络，<br>用时间轴追踪事件的涟漪，用证据链验证每一个结论。</p>
+  </div>
+</div>
+
+<!-- RESEARCH FOOTPRINT -->
+<div class="section">
+  <h2 class="section-heading">我的研究 · 我的探索足迹</h2>
+  <div class="footprint-card">
+    <div class="footprint-left">
+      <h3>我的研究</h3>
+      <p>你已累计完成 23 次探索，跨越 6 个主题领域。最近一次探索聚焦于「丝绸之路的东西方交流」，产生了 47 条实体关联和 12 条证据链。</p>
+    </div>
+    <div class="footprint-right">
+      <div class="chart-ring">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#D4A853" stroke-width="10"
+            stroke-dasharray="220 94" stroke-linecap="round"/>
+        </svg>
+        <div class="chart-label">
+          <div class="chart-num">23</div>
+          <div class="chart-unit">次探索</div>
+        </div>
+      </div>
+      <button class="btn-gold">开始探索 &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED RESEARCH -->
+<div class="section list-section">
+  <h2 class="section-heading">精选研究</h2>
+  <div class="list-item">
+    <div class="list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+    <div class="list-body">
+      <h4>奥古斯都与罗马帝国的奠基</h4>
+      <p>从屋大维到奥古斯都——权力转型如何重塑罗马政治体系，为 Pax Romana 奠定基础。</p>
+    </div>
+  </div>
+  <div class="list-item">
+    <div class="list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+    <div class="list-body">
+      <h4>丝绸之路的经济与文化交换</h4>
+      <p>追踪丝绸之路上商品、宗教、技术的流动路径，理解古代全球化网络。</p>
+    </div>
+  </div>
+</div>
+
+<!-- STARTER JOURNEYS -->
+<div class="section">
+  <h2 class="section-heading">开始一段 · 文明时期探</h2>
+  <div class="starter-grid">
+    <article class="starter-card">
+      <img class="starter-thumb" src="https://images.unsplash.com/photo-1552832230-c419d979c543?w=200&q=80" alt="罗马斗兽场"/>
+      <div class="starter-info">
+        <h4>「一个人的崛起」— 从屋大维到奥古斯都</h4>
+        <p>追踪屋大维如何在混乱的内战后一步步掌握权力。</p>
+      </div>
+    </article>
+    <article class="starter-card">
+      <img class="starter-thumb" src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=200&q=80" alt="沙漠商队"/>
+      <div class="starter-info">
+        <h4>为什么丝绸之路被称为东西方交流的生命线？</h4>
+        <p>追踪丝绸之路上商品、宗教、技术的流动路径。</p>
+      </div>
+    </article>
+    <article class="starter-card">
+      <img class="starter-thumb" src="https://images.unsplash.com/photo-1539762926540-3b88f4c8e8c4?w=200&q=80" alt="古希腊雕塑"/>
+      <div class="starter-info">
+        <h4>人类如何看待世界的真相，又如何被错误引导？</h4>
+        <p>从托勒密到哥白尼——天文学革命如何改变人类认知。</p>
+      </div>
+    </article>
+  </div>
+</div>
+
+<!-- PACKAGE GRID (THE STAR) -->
+<div class="section">
+  <h2 class="section-heading">开始探索</h2>
+  <div class="pkg-grid">
+
+    <!-- Package 1: 中华文明 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400&q=80" alt="中国长城"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">中华文明探索包 V1</h3>
+        <p class="pkg-desc">从夏商周到秦汉统一，追溯五千年文明的政治制度演变、思想流派争鸣与技术发明传承。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 2: 罗马帝国 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1552832230-c419d979c543?w=400&q=80" alt="罗马斗兽场"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">罗马帝国探索包 V1</h3>
+        <p class="pkg-desc">从共和国到帝国的转型，军事扩张、法律体系、基础设施工程如何支撑起地中海霸权。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 3: 伊斯兰黄金时代 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&q=80" alt="伊斯兰建筑"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">伊斯兰文明探索包 V1</h3>
+        <p class="pkg-desc">巴格达智慧宫、阿拉伯数字传播、医学与天文学的黄金时代——中世纪的知识灯塔。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 4: 人权/启蒙运动 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1580136608707-63b6f3963e71?w=400&q=80" alt="启蒙运动书籍"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">人权（启蒙运动）探索包 V1</h3>
+        <p class="pkg-desc">从洛克到卢梭，天赋人权思想如何催生现代民主制度与社会契约理论。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 5: 美洲大陆 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1518189683936-a1cdbba81d2f?w=400&q=80" alt="美洲原住民"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">美洲大陆探索包 V1</h3>
+        <p class="pkg-desc">阿兹特克、印加、玛雅三大文明的兴衰，以及哥伦布大交换带来的全球性变革。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 6: 宗教改革 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1548625361-987864af693b?w=400&q=80" alt="教堂彩色玻璃"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">宗教思想探索包 V2</h3>
+        <p class="pkg-desc">从宗教改革到启蒙理性——基督教内部的分裂如何意外推动了世俗化进程与现代科学诞生。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 7: 黑死病与大萧条 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1576086213369-97fdfd87e1ec?w=400&q=80" alt="瘟疫/经济危机"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">黑死病与大灾变探索包 V1</h3>
+        <p class="pkg-desc">1347 年黑死病如何重塑欧洲社会结构——劳动力短缺、农奴制瓦解、教会权威动摇。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 8: 宇宙观革命 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=80" alt="星空天文"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">宇宙观与灾变探索包 V1</h3>
+        <p class="pkg-desc">从地心说到日心说——天文学革命如何改变人类对自身在宇宙中位置的认知。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+    <!-- Package 9: 字母起源 -->
+    <article class="pkg-card">
+      <img class="pkg-cover" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=80" alt="古代文字"/>
+      <div class="pkg-body">
+        <span class="pkg-badge">Pack V1</span>
+        <h3 class="pkg-title">字母起源探索包 V2</h3>
+        <p class="pkg-desc">腓尼基字母如何演变为希腊字母、拉丁字母——书写系统的扩散塑造了西方文明的面貌。</p>
+        <button class="pkg-cta">开始探索 &rarr;</button>
+      </div>
+    </article>
+
+  </div><!-- end pkg-grid -->
+</div>
+
+<!-- MY EXPLORATION SPACE -->
+<div class="section">
+  <h2 class="section-heading">我的探索空间 · My Exploration</h2>
+  <div class="space-card">
+    <h3>Welcome</h3>
+    <p>你的个人探索空间。在这里管理你的研究项目、保存发现、追踪认知成长轨迹。</p>
+  </div>
+</div>
+
+<!-- SYSTEM INFO -->
+<div class="section">
+  <h2 class="section-heading">系统信息 · 统计概览</h2>
+  <div class="sys-card">
+    <h4>Silk Road</h4>
+    <p>当前活跃主题：丝绸之路 · 状态：探索中 · 实体数：186 · 关系数：257 · 最近更新：刚刚</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>&copy; 2026 History Explorer &mdash; <span>Powered by Knowledge Graph</span></p>
+</footer>
+
+</body>
+</html>

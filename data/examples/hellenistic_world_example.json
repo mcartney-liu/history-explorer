@@ -1,12 +1,13 @@
 {
-  "title": "Hellenistic World — Greece, Alexander & the Ptolemaic Bridge",
-  "summary": "The Greek-speaking world forged by Alexander's conquests, the bridge that linked Pharaonic Egypt to Rome.",
+  "title": "希腊化世界 — 希腊、亚历山大与托勒密桥梁",
+  "summary": "亚历山大征服所缔造的希腊语世界，连接法老埃及与罗马的桥梁。",
+  "category": "Event",
   "entities": [
     {
       "id": "civ-greek",
       "type": "Civilization",
       "name": "Ancient Greek Civilization",
-      "description": "The city-state culture of the Aegean whose language, philosophy, and political thought shaped the Mediterranean.",
+      "description": "爱琴海的城邦文化，其语言、哲学和政治传统。hought shaped the Mediterranean.",
       "global_id": "hellenistic_world:civ-greek",
       "aliases": [
         "Hellenic world",
@@ -14,7 +15,8 @@
       ],
       "labels": {
         "en": "Ancient Greek Civilization",
-        "el": "Ellinikos Kosmos"
+        "el": "Ellinikos Kosmos",
+        "zh": "古希腊文明"
       },
       "start_date": {
         "value": -800,
@@ -39,14 +41,15 @@
       "id": "person-alexander",
       "type": "Person",
       "name": "Alexander the Great",
-      "description": "King of Macedon who conquered the Persian Empire and Egypt, spreading Greek culture from the Balkans to the Indus.",
+      "description": "马其顿国王，征服波斯帝国和埃及，传播希腊文化。ure from the Balkans to the Indus.",
       "global_id": "hellenistic_world:person-alexander",
       "aliases": [
         "Alexander III of Macedon"
       ],
       "labels": {
         "en": "Alexander the Great",
-        "el": "Megas Alexandros"
+        "el": "Megas Alexandros",
+        "zh": "亚历山大大帝"
       },
       "start_date": {
         "value": -356,
@@ -88,13 +91,14 @@
       "id": "emp-hellenistic",
       "type": "Civilization",
       "name": "Hellenistic Empire",
-      "description": "The successor kingdoms (Ptolemaic, Seleucid, Antigonid) that carried Greek language and culture across the Near East after Alexander.",
+      "description": "继承希腊语言和制度的继业者王国（托勒密、塞琉古、安提柯）。age and culture across the Near East after Alexander.",
       "global_id": "hellenistic_world:emp-hellenistic",
       "aliases": [
         "Diadochi kingdoms"
       ],
       "labels": {
-        "en": "Hellenistic Empire"
+        "en": "Hellenistic Empire",
+        "zh": "希腊化帝国"
       },
       "start_date": {
         "value": -323,
@@ -119,14 +123,15 @@
       "id": "civ-ptolemaic-egypt",
       "type": "Civilization",
       "name": "Ptolemaic Egypt",
-      "description": "The Macedonian-Greek dynasty that ruled Egypt from Alexandria after Alexander, merging Greek and Egyptian rule until Rome annexed it.",
+      "description": "亚历山大之后从亚历山大城统治埃及的马其顿-希腊王朝。erging Greek and Egyptian rule until Rome annexed it.",
       "global_id": "hellenistic_world:civ-ptolemaic-egypt",
       "aliases": [
         "Ptolemaic Kingdom",
         "Ptolemaic dynasty"
       ],
       "labels": {
-        "en": "Ptolemaic Egypt"
+        "en": "Ptolemaic Egypt",
+        "zh": "托勒密埃及"
       },
       "start_date": {
         "value": -305,
@@ -151,14 +156,15 @@
       "id": "person-cleopatra",
       "type": "Person",
       "name": "Cleopatra VII",
-      "description": "The last active ruler of Ptolemaic Egypt; her alliances with Rome ended with the kingdom's annexation by Augustus.",
+      "description": "托勒密埃及最后一位实际统治者；她与罗马的联盟以罗马征服告终。 kingdom's annexation by Augustus.",
       "global_id": "hellenistic_world:person-cleopatra",
       "aliases": [
         "Cleopatra"
       ],
       "labels": {
         "en": "Cleopatra VII",
-        "el": "Kleopatra"
+        "el": "Kleopatra",
+        "zh": "克利奥帕特拉七世"
       },
       "start_date": {
         "value": -69,
@@ -197,14 +203,15 @@
       "id": "loc-alexandria",
       "type": "Location",
       "name": "Alexandria",
-      "description": "The port city founded by Alexander at the Nile delta, a hub of Greek learning and the seat of the Ptolemaic court.",
+      "description": "亚历山大在尼罗河三角洲建立的港口城市，希腊学术和文化中心。d the seat of the Ptolemaic court.",
       "global_id": "hellenistic_world:loc-alexandria",
       "aliases": [
         "Alexandria on the Caucasus"
       ],
       "labels": {
         "en": "Alexandria",
-        "el": "Alexandreia"
+        "el": "Alexandreia",
+        "zh": "亚历山大城"
       },
       "start_date": {
         "value": -331,
@@ -229,11 +236,12 @@
       "id": "event-gaugamela",
       "type": "Event",
       "name": "Battle of Gaugamela",
-      "description": "Alexander's decisive victory over Darius III in 331 BC, opening the path to Babylon, Persia, and Egypt.",
+      "description": "亚历山大在公元前331年对大流士三世的决定性胜利，打开了通往巴比伦的道路。lon, Persia, and Egypt.",
       "global_id": "hellenistic_world:event-gaugamela",
       "aliases": [],
       "labels": {
-        "en": "Battle of Gaugamela"
+        "en": "Battle of Gaugamela",
+        "zh": "高加米拉战役"
       },
       "start_date": {
         "value": -331,
@@ -256,11 +264,12 @@
       "id": "event-alexandria-founded",
       "type": "Event",
       "name": "Founding of Alexandria",
-      "description": "Alexander founded the city in 331 BC; it became the greatest Hellenistic metropolis and link between Greece and Egypt.",
+      "description": "亚历山大在公元前331年建立了这座城市；它成为最伟大的希腊化大都市。lis and link between Greece and Egypt.",
       "global_id": "hellenistic_world:event-alexandria-founded",
       "aliases": [],
       "labels": {
-        "en": "Founding of Alexandria"
+        "en": "Founding of Alexandria",
+        "zh": "亚历山大城建城"
       },
       "start_date": {
         "value": -331,
@@ -283,14 +292,15 @@
       "id": "idea-stoicism",
       "type": "Idea",
       "name": "Stoicism",
-      "description": "A Hellenistic school of philosophy emphasizing reason and virtue, which spread from Greece to Rome and shaped Roman thought.",
+      "description": "强调理性和德性的希腊化哲学学派，传播自rom Greece to Rome and shaped Roman thought.",
       "global_id": "hellenistic_world:idea-stoicism",
       "aliases": [
         "Stoic philosophy"
       ],
       "labels": {
         "en": "Stoicism",
-        "el": "Stoikismos"
+        "el": "Stoikismos",
+        "zh": "斯多葛主义"
       },
       "start_date": {
         "value": -300,
@@ -307,14 +317,15 @@
       "id": "idea-democracy",
       "type": "Idea",
       "name": "Democracy",
-      "description": "The Greek idea of citizen rule, born in the city-states, whose concepts spread and were debated across later civilizations including Rome.",
+      "description": "希腊的公民统治理念，诞生于城邦，其概念传播至nd were debated across later civilizations including Rome.",
       "global_id": "hellenistic_world:idea-democracy",
       "aliases": [
         "Popular government"
       ],
       "labels": {
         "en": "Democracy",
-        "el": "Demokratia"
+        "el": "Demokratia",
+        "zh": "民主制度"
       },
       "start_date": {
         "value": -500,
@@ -331,40 +342,43 @@
       "id": "loc-pergamum",
       "type": "Location",
       "name": "Pergamon",
-      "description": "Hellenistic kingdom and cultural center in Anatolia.",
+      "description": "安纳托利亚的希腊化王国和文化中心。",
       "global_id": "hellenistic_world:loc-pergamum",
       "aliases": [
         "Pergamum"
       ],
       "labels": {
-        "en": "Pergamon"
+        "en": "Pergamon",
+        "zh": "帕加马"
       }
     },
     {
       "id": "tech-parchment",
       "type": "Technology",
       "name": "Parchment",
-      "description": "Writing material of prepared animal skin, refined at Pergamon.",
+      "description": "精制动物皮制成的书写材料，在帕加马得到改良。",
       "global_id": "hellenistic_world:tech-parchment",
       "aliases": [
         "Pergamena"
       ],
       "labels": {
-        "en": "Parchment"
+        "en": "Parchment",
+        "zh": "羊皮纸"
       }
     },
     {
       "id": "event-alexander-conquest",
       "type": "Event",
       "name": "Alexander's Conquest of Persia",
-      "description": "Alexander the Great's campaign (334-323 BC) that toppled the Achaemenid Persian Empire and created the largest empire the world had yet seen, stretching from Greece to India.",
+      "description": "亚历山大大帝的征战（公元前334-323年），推翻了阿契美尼德波斯帝国。 Empire and created the largest empire the world had yet seen, stretching from Greece to India.",
       "global_id": "hellenistic_world:event-alexander-conquest",
       "aliases": [
         "Alexander's Campaign",
         "Macedonian Conquest"
       ],
       "labels": {
-        "en": "Alexander's Conquest of Persia"
+        "en": "Alexander's Conquest of Persia",
+        "zh": "亚历山大征服波斯"
       },
       "start_date": {
         "value": -334,
@@ -399,14 +413,15 @@
       "id": "event-diadochi-wars",
       "type": "Event",
       "name": "Wars of the Diadochi",
-      "description": "A series of conflicts (322-275 BC) among Alexander's generals (the Diadochi) over the division of his empire, resulting in the formation of the major Hellenistic kingdoms: Ptolemaic Egypt, Seleucid Empire, and Antigonid Macedon.",
+      "description": "亚历山大诸将（继业者）之间一系列冲突（公元前322-275年），争夺r the division of his empire, resulting in the formation of the major Hellenistic kingdoms: Ptolemaic Egypt, Seleucid Empire, and Antigonid Macedon.",
       "global_id": "hellenistic_world:event-diadochi-wars",
       "aliases": [
         "Successor Wars",
         "Wars of Alexander's Successors"
       ],
       "labels": {
-        "en": "Wars of the Diadochi"
+        "en": "Wars of the Diadochi",
+        "zh": "继业者战争"
       },
       "start_date": {
         "value": -322,
@@ -714,6 +729,21 @@
       "evidence": [],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "hellenistic_world:person-alexander",
+      "target": "hellenistic_world:event-diadochi-wars",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "阿利安《亚历山大远征记》；普鲁塔克《亚历山大传》",
+      "evidence": [
+        "ec-he-015"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "亚历山大死因（疾病 vs 毒杀）的对立解释，直接影响对继业者战争正当性的评价。",
+      "reviewed": true
     }
   ],
   "timeline": [

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { AICitation } from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
@@ -20,11 +21,32 @@ export type ResearchDimension = {
 
 export type ResearchDimensionCardProps = {
   dimension: ResearchDimension
+  /** per-dimension key → optional artwork at assets/research/<key>.<ext> */
+  dimKey?: string
 }
 
-export function ResearchDimensionCardView({ dimension }: ResearchDimensionCardProps) {
+export function ResearchDimensionCardView({ dimension, dimKey }: ResearchDimensionCardProps) {
+  const [imgOk, setImgOk] = useState(true)
+  const [fmt, setFmt] = useState(0)
+  const formats = ['webp', 'png', 'jpg', 'jpeg']
+  const showImg = !!dimKey && imgOk && fmt < formats.length
+  const imgSrc = showImg
+    ? `${import.meta.env.BASE_URL}assets/research/${dimKey}.${formats[fmt]}`
+    : ''
   return (
-    <div className={`rdc-card rdc-card--${dimension.status}`}>
+    <div className={`rdc-card rdc-card--${dimension.status}${showImg ? ' has-art' : ''}`}>
+      {showImg && (
+        <img
+          className="rdc-art"
+          src={imgSrc}
+          alt=""
+          aria-hidden="true"
+          onError={() => {
+            if (fmt < formats.length - 1) setFmt(fmt + 1)
+            else setImgOk(false)
+          }}
+        />
+      )}
       <h4 className="rdc-title">{dimension.title}</h4>
       <p className="rdc-question">{dimension.question}</p>
 
@@ -72,10 +94,10 @@ export function ResearchDimensionCardView({ dimension }: ResearchDimensionCardPr
               mode: 'explain',
             }}
           />
-          {dimension.citations && dimension.citations.length > 0 && (
+          {((dimension.citations?.length ?? 0) + (dimension.rejected_citations?.length ?? 0)) > 0 && (
             <CitationList
-              citations={dimension.citations}
-              rejected_citations={dimension.rejected_citations}
+              citations={dimension.citations ?? []}
+              rejected_citations={dimension.rejected_citations ?? []}
             />
           )}
         </div>

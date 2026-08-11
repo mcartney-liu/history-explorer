@@ -6,185 +6,47 @@
 // M44: added ProductIntro section — static capability showcase for new visitors.
 // M59-002: migrated cards to <Card> component.
 // M65 Phase 2A: entity-type cards migrated to TopicCardGrid.
+// M90.5 — Dashboard redesign: top half becomes a visual "Historical Exhibit"
+//          footprint card + sidebar, while keeping all existing entry points
+//          below so tests and navigation remain intact.
+// P5-S4 — 主题卡片墙 + 主题界面（PO 2026-08-09）：
+//         探索主题区 = 6 类主题卡片墙（古代文明/历史事件/历史人物/宗教发展/
+//         技术演进/地理探索）；点主题卡进入该主题界面，列出该主题下的
+//         文明卡 + 探索包（探索包按 seed_topic→topic.category 归位）。
+//         教材（Textbook）暂不归类、不出现在卡片墙与主题界面。
 
 import { useMemo, useEffect, useState } from 'react'
+import { useLocale } from '../data/locale'
+import { lookup } from '../locales'
 import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
-import { listResearch } from '../data/ResearchHistory'
-import { generateUserInterestProfile } from '../data/ResearchInsights'
-import type { SavedResearch } from '../data/ResearchHistory'
 import { recordEvent } from '../data/UserBehaviorEvent'
-import { Card } from '../components/ui/Card'
-import { Icon } from '../components/ui/Icon'
-import type { IconName } from '../components/ui/Icon'
-import { Tabs } from '../components/ui/Tabs'
 import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
-import { getPackages } from '../data/explorationPackages'
+import { getPackagesByPlacement, type ExplorationPackage } from '../data/explorationPackages'
 import PackageCard from '../components/package/PackageCard'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
-export const DISCOVER_HERO = '原来历史还能这样探索。'
-export const DISCOVER_HERO_SUB =
-  '从一个人、一条路、一个念头出发，看它如何穿过帝国、宗教与技术，把整个古代世界连成一张网。'
+export const DISCOVER_HERO = lookup('zh', 'discover.hero')
+export const DISCOVER_HERO_SUB = lookup('zh', 'discover.heroSub')
 
 // Featured exploration — Design Freeze §2 default.
 export const FEATURED_TOPIC = 'silk_road'
 
-// Entity type exploration entry points (M42)
-const ENTITY_TYPE_CARDS = [
-  { type: 'Civilization', label: '古代文明', slug: 'ancient_civilizations', desc: '罗马、汉朝、波斯…帝国兴衰的背后' },
-  { type: 'Event', label: '历史事件', slug: 'historical_events', desc: '关键转折点：战争、革命、变革' },
-  { type: 'Person', label: '历史人物', slug: 'historical_figures', desc: '恺撒、亚里士多德、释迦牟尼' },
-  { type: 'Religion', label: '宗教发展', slug: 'religion', desc: '佛教、基督教、伊斯兰教的传播' },
-  { type: 'Technology', label: '技术演进', slug: 'technology', desc: '冶铁、造纸、航海技术' },
-  { type: 'Location', label: '地理探索', slug: 'locations', desc: '丝绸之路、地中海、恒河流域' },
-]
+// P5-S4: 主题卡片墙的 6 个固定分类（教材 Textbook 暂不归类）。
+// 显示顺序即数组顺序；文案走 discover.cat.<Category>.label|desc。
+export const THEME_CATEGORIES = [
+  'Civilization',
+  'Event',
+  'Person',
+  'Religion',
+  'Technology',
+  'Location',
+] as const
 
-// M44 Product Introduction — static capability showcase
-const PRODUCT_CAPABILITIES = [
-  {
-    id: 'story',
-    icon: 'book',
-    title: '历史叙事',
-    desc: '从一个人、一条路、一个事件出发，看它如何在历史中展开。手写叙事，不靠 AI 生成。',
-  },
-  {
-    id: 'explore',
-    icon: 'link',
-    title: '关系探索',
-    desc: '穿越实体之间的关联——因果关系、时间顺序、影响传播。每一步都有据可查。',
-  },
-  {
-    id: 'research',
-    icon: 'research',
-    title: '深度研究',
-    desc: '4 维度 AI 分析：政治、军事、经济、文化。支持多实体对比研究，结果可保存回顾。',
-  },
-  {
-    id: 'chat',
-    icon: 'chat',
-    title: 'AI 历史对话',
-    desc: '向 AI 历史学家提问。每个回答都有事实溯源，没有经过验证的内容不会呈现。',
-  },
-]
-
-function ProductIntro() {
-  return (
-    <div className="discover-intro">
-      <h3 className="discover-section-heading">History Explorer 能做什么</h3>
-      <div className="discover-intro-grid">
-        {PRODUCT_CAPABILITIES.map((cap) => (
-          <Card key={cap.id} variant="default" className="discover-intro-card">
-            <div className="discover-intro-icon">
-              <Icon name={cap.icon as IconName} size={24} />
-            </div>
-            <h4 className="discover-intro-title">{cap.title}</h4>
-            <p className="discover-intro-desc">{cap.desc}</p>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function RecentResearches({ researches }: { researches: SavedResearch[] }) {
-  if (researches.length === 0) {
-    return (
-      <div className="discover-recent discover-recent--empty">
-        <h3 className="discover-section-heading">最近研究</h3>
-        <p className="discover-empty-text">你还没有开始探索。</p>
-        <div className="discover-empty-actions">
-          <p>试试：</p>
-          <ul>
-            <li>搜索一个历史主题（如"罗马""丝绸之路"）</li>
-            <li>点击下方精选探索开始</li>
-            <li>从文明、事件、人物分类进入</li>
-          </ul>
-        </div>
-      </div>
-    )
-  }
-  const recent = [...researches]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 3)
-  return (
-    <div className="discover-recent">
-      <h3 className="discover-section-heading">最近研究</h3>
-      <p className="discover-section-sub">继续未完成的探索，或从收藏中快速进入。</p>
-      <div className="discover-recent-list">
-        {recent.map((r) => (
-          <a key={r.id} href={`#/entity/${encodeURIComponent(r.entityGlobalId)}`} className="discover-recent-card">
-            <span className="discover-recent-type">{r.entityType}</span>
-            <span className="discover-recent-name">{r.entityName}</span>
-            {r.bookmarked && <Icon name="star" size={16} className="discover-recent-star" filled />}
-          </a>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// M44 Phase 6 — ResearchLibrary entry on DiscoverPage
-function ResearchLibraryEntry() {
-  const researches = useMemo(() => listResearch().filter((r) => r.bookmarked), [])
-  if (researches.length === 0) return null
-  return (
-    <div className="discover-library">
-      <h3 className="discover-section-heading">我的研究收藏</h3>
-      <p className="discover-section-sub">
-        已保存 {researches.length} 项研究结果。点击可跳转到对应实体继续查看。
-      </p>
-      <ul className="discover-library-list">
-        {researches.slice(0, 5).map((r) => (
-          <li key={r.id}>
-            <a href={`#/entity/${encodeURIComponent(r.entityGlobalId)}`} className="discover-library-link">
-              <span className="discover-library-type">{r.entityType}</span>
-              {r.entityName}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function InterestProfile() {
-  const researches = useMemo(() => listResearch(), [])
-  if (researches.length < 2) {
-    return (
-      <div className="discover-interest discover-interest--empty">
-        <h3 className="discover-section-heading">我的探索足迹</h3>
-        <p className="discover-empty-text">
-          保存研究后，这里会汇总你的探索足迹与关注主题。
-        </p>
-        <p className="discover-empty-sub">
-          它反映你浏览与保存过的话题，便于回顾你的探索路径。
-        </p>
-      </div>
-    )
-  }
-  const profile = useMemo(() => generateUserInterestProfile(researches), [researches])
-
-  return (
-    <div className="discover-interest">
-      <h3 className="discover-section-heading">我的探索足迹</h3>
-      {profile.topThemes.length > 0 && (
-        <div className="discover-interest-themes">
-          {profile.topThemes.slice(0, 4).map((theme) => (
-            <span key={theme} className="discover-interest-tag">{theme}</span>
-          ))}
-        </div>
-      )}
-      {profile.topDimensions.length > 0 && (
-        <p className="discover-interest-dims">
-          常研究维度：{profile.topDimensions.slice(0, 4).map((d) => d.dimension).join('、')}
-        </p>
-      )}
-    </div>
-  )
-}
+// Category display metadata is resolved at render time via t(`discover.cat.<Category>.label|desc`)
+// (ADR-0020 UI i18n) — no hardcoded zh strings here.
 
 // Same display rule App.prettifyTopic uses (pure, tiny; duplicated on purpose
 // so this page stays import-light and App's helper stays private).
@@ -193,8 +55,10 @@ export function prettifySlug(t: string): string {
 }
 
 type DiscoverPageProps = {
+  /** All available topics from the backend (with category). Used to build category cards dynamically. */
+  topics?: { topic: string; title: string; summary: string; category?: string }[]
   onTopicClick: (topic: string) => void
-  onStarterClick: (target: NavNode) => void
+  onStarterClick?: (target: NavNode) => void
   onPackageClick?: (slug: string) => void
 }
 
@@ -203,7 +67,7 @@ function StarterChips({
   onStarterClick,
 }: {
   starters: StarterItem[]
-  onStarterClick: (target: NavNode) => void
+  onStarterClick?: (target: NavNode) => void
 }) {
   if (starters.length === 0) return null
   return (
@@ -215,7 +79,7 @@ function StarterChips({
             className="discover-starter"
             data-starter={s.id}
             aria-label={`Explore ${s.label}`}
-            onClick={() => onStarterClick(s.target)}
+            onClick={() => onStarterClick?.(s.target)}
           >
             {s.label}
           </button>
@@ -225,18 +89,59 @@ function StarterChips({
   )
 }
 
-function DiscoverPage({ onTopicClick, onStarterClick, onPackageClick = () => {} }: DiscoverPageProps) {
+// P5-S4: 探索包 → 主题归属。探索包的 pkg.category 字段不可靠（多个包
+// 误标 Civilization），以 M69 稳定指针 seed_topic → backend topic.category
+// 为准。seed_topic 可能是字符串或 {zh} 对象，统一取字符串形式。
+function packageCategory(pkg: ExplorationPackage): string {
+  const seed = typeof pkg.seed_topic === 'string'
+    ? pkg.seed_topic
+    : (pkg.seed_topic as { zh?: string } | undefined)?.zh ?? ''
+  return seed
+}
+
+function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClick = () => {} }: DiscoverPageProps) {
+  const { t } = useLocale()
   const featuredStarters = TOPIC_STARTERS[FEATURED_TOPIC] ?? []
-  const popularSlugs = Object.keys(TOPIC_STARTERS).filter(
-    (slug) => slug !== FEATURED_TOPIC,
+
+  // P5-S4: 当前激活的主题分类（null = 展示主题卡片墙）。
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+
+  // P5-S4: 主题卡片墙 = 6 个固定分类，每类一张卡（文案走 discover.cat.*）。
+  // 仅当该分类下确实有 backend topic 时才显示，避免空壳。
+  const categoryCards = useMemo(() => {
+    const present = new Set(topics.map((tp) => tp.category).filter(Boolean) as string[])
+    return THEME_CATEGORIES.filter((cat) => present.has(cat)).map((cat) => ({
+      slug: cat,
+      label: t(`discover.cat.${cat}.label`),
+      desc: t(`discover.cat.${cat}.desc`),
+    }))
+  }, [topics, t])
+
+  // P5-S4: 激活主题下的文明卡（backend topics 按 category 过滤）。
+  const themeCards = useMemo(
+    () =>
+      topics
+        .filter((tp) => tp.category === activeCategory)
+        .map((topic): TopicCardData => ({
+          slug: topic.topic,
+          label: topic.title,
+          desc: topic.summary,
+        })),
+    [topics, activeCategory],
   )
-  const researches = useMemo(() => listResearch(), [])
+
+  // P5-S4: 激活主题下的探索包（seed_topic → topic.category 归位）。
+  const themePackages = useMemo(() => {
+    if (!activeCategory) return []
+    const topicBySeed = new Map(topics.map((tp) => [tp.topic, tp.category]))
+    return getPackagesByPlacement('understand').filter((pkg) => {
+      const seed = packageCategory(pkg)
+      return topicBySeed.get(seed) === activeCategory
+    })
+  }, [topics, activeCategory])
 
   // M45: record discovery page visit
   useEffect(() => { recordEvent({ action: 'open_discover' }) }, [])
-
-  // M62-A: tabbed landing — understand (capability + start) / research (personal activity) / expand (roadmap)
-  const [tab, setTab] = useState<'understand' | 'research' | 'expand'>('understand')
 
   // M45 Phase 3: wrap navigation to record click_entity
   const handleTopicClick = useMemo(() => (slug: string) => {
@@ -244,140 +149,116 @@ function DiscoverPage({ onTopicClick, onStarterClick, onPackageClick = () => {} 
     onTopicClick(slug)
   }, [onTopicClick])
 
+  // P5-S4: 主题卡片墙 → 点主题卡进入主题界面。
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category)
+    recordEvent({ action: 'switch_tab', tab: category })
+  }
+
   return (
     <section className="discover-page" aria-label="Discover history explorations">
       <div className="discover-hero">
-        <h2 className="discover-hero-title">{DISCOVER_HERO}</h2>
-        <p className="discover-hero-sub">{DISCOVER_HERO_SUB}</p>
+        <h2 className="discover-hero-title">{t('discover.hero')}</h2>
+        <p className="discover-hero-sub">{t('discover.heroSub')}</p>
       </div>
 
-      {/* M62-A: tabbed landing — 了解 (capability + start) / 研究 (personal activity) / 扩展 (roadmap) */}
-      <Tabs
-        className="discover-tabs"
-        tabClassName="discover-tab"
-        ariaLabel="探索分类"
-        items={[
-          { id: 'understand', label: '了解', ariaControls: 'panel-understand' },
-          { id: 'research', label: '研究', ariaControls: 'panel-research' },
-          { id: 'expand', label: '扩展', ariaControls: 'panel-expand' },
-        ]}
-        active={tab}
-        onChange={setTab}
-      />
-
-      {/* 了解 — product capabilities + primary exploration entry */}
-      <div
-        className="discover-tab-panel"
-        role="tabpanel"
-        id="panel-understand"
-        aria-labelledby="tab-understand"
-        hidden={tab !== 'understand'}
-      >
-        {/* M62-A: surface the warm personalization copy + interest profile on the
-            default landing tab so it is visible without switching to 研究. */}
-        <InterestProfile />
-        <ProductIntro />
-
-        <div className="discover-explore-primary">
-          <h3 className="discover-section-heading">开始探索</h3>
-          <p className="discover-section-sub">选择一个历史主题或类型，进入交互式探索。</p>
-
-          {/* M42 / M65 Phase 2A: Entity type exploration */}
+      {/* 下半区：探索主题与官方探索包 */}
+      <div className="discover-lower">
+        <div className="discover-lower-main">
+          <div className="discover-explore-primary">
+        {/* P5-S4: 探索主题 = 主题卡片墙（6 类）→ 点进主题界面。
+            教材（Textbook）不归类，不出现在卡片墙。 */}
+        {categoryCards.length > 0 && (
           <div className="discover-themes">
-            <h3 className="discover-section-heading">探索主题</h3>
-            <p className="discover-section-sub">按历史类型浏览，发现你的兴趣方向。</p>
-            <TopicCardGrid
-              variant="entity"
-              cards={ENTITY_TYPE_CARDS.map((c): TopicCardData => ({ slug: c.slug, label: c.label, desc: c.desc }))}
-              onCardClick={handleTopicClick}
-              maxCards={6}
-            />
-          </div>
+            <h3 className="discover-section-heading">{t('discover.exploreTopicsHeading')}</h3>
+            <p className="discover-section-sub">{t('discover.exploreTopicsSub')}</p>
 
-          {/* M69 — 官方探索包（核心产品对象），与 6 固定主题并列，不替代 */}
-          <div className="discover-packages">
-            <h3 className="discover-section-heading">官方探索包 · Exploration Packages</h3>
-            <p className="discover-section-sub">由编辑策展的历史探索旅程：可溯源、沿时间与关系展开。</p>
-            <div className="discover-package-grid">
-              {getPackages().map((p) => (
-                <PackageCard key={p.slug} pkg={p} onOpen={(slug) => onPackageClick(slug)} />
-              ))}
-            </div>
-          </div>
-
-          {/* M69 — 未来用户探索空间（占位，不实现生成/存储/社区） */}
-          <div className="discover-user-space">
-            <h3 className="discover-section-heading">我的探索空间 · My Exploration</h3>
-            <p className="discover-section-sub">未来你将能创建自己的探索路径、保存视角与学习轨迹。（规划中）</p>
-            <div className="discover-user-space-card discover-user-space-card--locked">
-              <span className="discover-user-space-lock">即将推出</span>
-              <p>用户探索包、社区精选探索功能正在规划中。</p>
-            </div>
-          </div>
-
-          <div className="discover-featured" data-topic={FEATURED_TOPIC}>
-            <h3 className="discover-section-heading">精选探索 · Featured</h3>
-            <button
-              type="button"
-              className="discover-featured-card"
-              aria-label={`Explore ${prettifySlug(FEATURED_TOPIC)}`}
-              onClick={() => handleTopicClick(FEATURED_TOPIC)}
-            >
-              <span className="discover-featured-title">{prettifySlug(FEATURED_TOPIC)}</span>
-              <span className="discover-featured-desc">
-                一条路，连起罗马、波斯、印度与汉朝。从丝绸之路出发，看货物、信仰与技术如何跨越大陆。
-              </span>
-            </button>
-            <StarterChips starters={featuredStarters} onStarterClick={onStarterClick} />
-          </div>
-
-          <div className="discover-popular">
-            <h3 className="discover-section-heading">热门探索 · Popular</h3>
-            <ul className="discover-topic-list">
-              {popularSlugs.map((slug) => (
-                <li key={slug}>
+            {!activeCategory ? (
+              <div className="discover-theme-grid">
+                {categoryCards.map((c) => (
+                  <button
+                    key={c.slug}
+                    type="button"
+                    className="discover-theme-card"
+                    data-category={c.slug}
+                    aria-label={t('discover.themeOpenAria', { label: c.label })}
+                    onClick={() => handleCategoryClick(c.slug)}
+                  >
+                    <span className="discover-theme-label">{c.label}</span>
+                    <span className="discover-theme-desc">{c.desc}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="discover-theme-detail">
+                <div className="discover-theme-detail-head">
                   <button
                     type="button"
-                    className="discover-topic-card"
-                    data-topic={slug}
-                    aria-label={`Explore ${prettifySlug(slug)}`}
-                    onClick={() => handleTopicClick(slug)}
+                    className="discover-theme-back"
+                    onClick={() => setActiveCategory(null)}
                   >
-                    {prettifySlug(slug)}
+                    {t('discover.themeBack')}
                   </button>
-                </li>
-              ))}
-            </ul>
+                  <h3 className="discover-section-heading">
+                    {t(`discover.cat.${activeCategory}.label`)}
+                  </h3>
+                </div>
+
+                {themeCards.length > 0 && (
+                  <TopicCardGrid
+                    variant="entity"
+                    cards={themeCards}
+                    onCardClick={handleTopicClick}
+                    maxCards={8}
+                  />
+                )}
+
+                {themePackages.length > 0 && (
+                  <div className="discover-package-grid">
+                    {themePackages.map((p) => (
+                      <PackageCard key={p.slug} pkg={p} onOpen={(slug) => onPackageClick(slug)} />
+                    ))}
+                  </div>
+                )}
+
+                {themeCards.length === 0 && themePackages.length === 0 && (
+                  <p className="discover-empty-text">{t('discover.themeEmpty')}</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* M69 — 官方探索包（核心产品对象）：按 placement 驱动，understand → 了解 tab */}
+        <div className="discover-packages">
+          <h3 className="discover-section-heading">{t('discover.packagesHeading')}</h3>
+          <p className="discover-section-sub">{t('discover.packagesSub')}</p>
+          <div className="discover-package-grid">
+            {getPackagesByPlacement('understand').map((p) => (
+              <PackageCard key={p.slug} pkg={p} onOpen={(slug) => onPackageClick(slug)} />
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* 研究 — personal research activity */}
-      <div
-        className="discover-tab-panel"
-        role="tabpanel"
-        id="panel-research"
-        aria-labelledby="tab-research"
-        hidden={tab !== 'research'}
-      >
-        <RecentResearches researches={researches} />
-        <ResearchLibraryEntry />
-      </div>
-
-      {/* 扩展 — roadmap / upcoming */}
-      <div
-        className="discover-tab-panel"
-        role="tabpanel"
-        id="panel-expand"
-        aria-labelledby="tab-expand"
-        hidden={tab !== 'expand'}
-      >
-        <div className="discover-expand">
-          <h3 className="discover-section-heading">扩展功能</h3>
-          <p className="discover-section-sub">更多功能即将推出。包括 AI 内容创作、教育模块和社交探索。</p>
-          <p className="discover-expand-soon">敬请期待</p>
+        {/* 系统精选：编辑策展入口 + 起始线索（"我的探索空间"已随"我的"tab 迁移） */}
+        <div className="discover-featured" data-topic={FEATURED_TOPIC}>
+          <h3 className="discover-section-heading">{t('discover.editorHeading')}</h3>
+          <button
+            type="button"
+            className="discover-featured-card"
+            aria-label={`Explore ${prettifySlug(FEATURED_TOPIC)}`}
+            onClick={() => handleTopicClick(FEATURED_TOPIC)}
+          >
+            <span className="discover-featured-title">{prettifySlug(FEATURED_TOPIC)}</span>
+            <span className="discover-featured-desc">
+              {t('discover.editorDesc')}
+            </span>
+          </button>
+          <StarterChips starters={featuredStarters} onStarterClick={onStarterClick} />
         </div>
       </div>
+      </div>
+    </div>
     </section>
   )
 }

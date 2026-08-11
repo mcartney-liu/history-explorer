@@ -1,8 +1,73 @@
 # History Explorer - Product Constitution
 
-Version: 1.0
+Version: 2.0
 
 Status: Active
+
+Last Amendment: 2026-08-07 (ADR-0013, Article 0 established)
+
+
+# 0. Article 0 - Ultimate Positioning（产品终极定位）
+
+> Authority: highest. This article overrides every other section of this constitution.
+> Source: PO, 2026-08-07. Ratified by ADR-0013.
+> The Chinese text below is the authoritative wording. English is reference translation only.
+
+## 0.1 The Three Sentences（三句话，权威文本）
+
+**第一句**：它是一个帮助人类逐渐形成文明、理解、认知结构的探索系统。
+
+**第二句**：它能够帮助用户找到自己的兴趣和自己的学习方法。
+
+**第三句**：它帮助用户无限逼近真相。
+
+**通俗版**：用户进来的时候好奇，离开的时候有了一个更聪明的自己。
+
+Reference translation:
+1. A system that helps humans progressively build civilizational, interpretive and cognitive structures.
+2. It helps users discover their own interests and their own way of learning.
+3. It helps users approach truth without limit.
+   Plain form: users arrive curious, and leave with a smarter version of themselves.
+
+## 0.2 The Three Layers（三层结构，唯一权威解读）
+
+| Layer | Sentence | Question answered | What is measured |
+|-------|----------|-------------------|------------------|
+| Object 对象层 | 1 | What grew inside the user's mind | Cognitive structure |
+| Subject 主体层 | 2 | What the user learned about themselves | Meta-cognition |
+| Truth 真值层 | 3 | Whether what grew is trustworthy | Credibility |
+
+None of the three layers is optional.
+Sentence 1 alone means "knowing more". 1+2 means "knowing how one knows". Only 1+2+3 means "smarter".
+
+## 0.3 Domain Boundary（领域边界）
+
+- Product essence: a cognitive-structure exploration system. Domain-agnostic by nature.
+- Current carrier: history, and history only.
+- Implementation scope is locked to history for MVP and all foreseeable milestones. This article grants no authorization for multi-domain implementation.
+- "History understanding exploration engine" remains valid as a **carrier-level** description, no longer as the product essence.
+
+## 0.4 Falsifiability Test（可证伪判据，最高判据）
+
+At exit, the user must be able to answer: **"你觉得自己变聪明了吗？"**（Do you feel you got smarter?）
+Inability to answer means the positioning has failed.
+
+The M89.1 test ("is it answering questions, or leading me to understand a topic?") remains valid as a secondary test.
+
+## 0.5 Precedence（效力层级）
+
+```
+Article 0  Ultimate Positioning
+   binds
+Section 2  Core Product Beliefs (B1-B5)
+Section 3  Product Boundaries
+           Experience Constitution P01-P09
+           Frontend Non-negotiables FP-01..03
+           Architecture Freeze Boundary
+           Governance / Decision Questions / Team P0 Rules
+```
+
+Where any lower provision conflicts with Article 0, Article 0 prevails, and the conflicting provision must be amended through the Freeze Revision Gate.
 
 
 # 1. Purpose

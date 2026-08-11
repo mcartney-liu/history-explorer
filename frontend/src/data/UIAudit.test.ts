@@ -20,7 +20,7 @@ describe('UIAudit', () => {
     const names = DISCOVER_PAGE_AUDIT.sections.map((s) => s.name)
     expect(names).toContain('DiscoverHero')
     expect(names).toContain('RecentResearches')
-    expect(names).toContain('InterestProfile')
+    expect(names).toContain('ExplorationTrail')
     expect(names).toContain('ThemeExplorer')
     expect(names).toContain('FeaturedExploration')
   })

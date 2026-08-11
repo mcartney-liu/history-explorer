@@ -1,12 +1,14 @@
 // ============================================================
-// M62 — Canonical Icon System
+// M62 — Canonical Icon System (locked unified SVG icon library)
 // Semantic, implementation-agnostic icon registry. Every icon is
 // referenced by a semantic NAME (e.g. "book", "globe", "person"),
 // never by a raw emoji or a hard-bound third-party library. The
-// visual style is locked to DS V1.0 FINAL §2.6: 1.5px stroke,
+// visual style is locked to VS-01 §5 (FRW Phase 4): 2px stroke,
 // linear, currentColor, three fixed sizes (16 / 20 / 24). No new
 // dependency is introduced (inline SVG keeps the freeze baseline
-// intact).
+// intact). ADR-0016: this registry IS the locked unified SVG icon
+// library — supersedes the literal lucide-react reading of VS-01 §5.1
+// to respect the freeze baseline "no new dependency" hard red line.
 //
 // WHY: emoji are banned as functional icons (project P0 rule);
 // binding to a specific icon library would violate the "no new
@@ -34,6 +36,8 @@ export type IconName =
   | 'timeline'
   | 'arrow-right'
   | 'check'
+  | 'chevron-down'
+  | 'chevron-up'
   // --- entity-type icons (replaces the old emoji set) ---
   | 'person'
   | 'civilization'
@@ -48,8 +52,17 @@ export type IconName =
   | 'warning'
   | 'circle'
   | 'cross'
+  | 'scholar'
+  | 'lock'
 
 const PATHS: Record<IconName, JSX.Element> = {
+  // 🔒 lock (read-only projection marker, VS-03 TP-19/22)
+  lock: (
+    <>
+      <rect x="5.5" y="10.5" width="13" height="9" rx="1.8" />
+      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+    </>
+  ),
   // 📖 open book
   book: (
     <>
@@ -147,6 +160,14 @@ const PATHS: Record<IconName, JSX.Element> = {
   check: (
     <path d="M5 12.5l4 4 10-10" />
   ),
+  // chevron-down (collapsible section drawer)
+  'chevron-down': (
+    <path d="M6 9l6 6 6-6" />
+  ),
+  // chevron-up (move item up / reverse drawer)
+  'chevron-up': (
+    <path d="M6 15l6-6 6 6" />
+  ),
   // 👤 person
   person: (
     <>
@@ -234,6 +255,14 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M9 9l6 6M15 9l-6 6" />
     </>
   ),
+  // 🎓 scholar (graduation cap + person)
+  scholar: (
+    <>
+      <path d="M12 3L3 8l9 5 7-3.9V14" />
+      <path d="M3 8v4c0 3 4 5.5 9 5.5s9-2.5 9-5.5V8" />
+      <path d="M12 16.5V22" />
+    </>
+  ),
 }
 
 const SIZES = { 16: 16, 20: 20, 24: 24 } as const
@@ -262,7 +291,7 @@ export function Icon({ name, size = 20, className, style, title, filled }: IconP
       viewBox="0 0 24 24"
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       role="img"

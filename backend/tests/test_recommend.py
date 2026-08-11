@@ -44,8 +44,8 @@ V1 = "/api/v1"
 # ---------------------------------------------------------------------------
 def test_recommend_next_is_deterministic():
     ks = _ks()
-    r1 = ks.recommend_next(ROME)
-    r2 = ks.recommend_next(ROME)
+    r1 = ks.generate_candidates(ROME)
+    r2 = ks.generate_candidates(ROME)
     # Same input -> identical RecommendationItem objects (value equality).
     assert r1.recommendations == r2.recommendations
     # Full deterministic payload (excluding informational metadata.generated_at)
@@ -60,8 +60,8 @@ def test_recommend_next_is_deterministic():
 def test_recommend_next_deterministic_with_seen():
     ks = _ks()
     seen = {"silk_road:silk_road", "roman_empire:event-punic-wars"}
-    a = ks.recommend_next(ROME, seen_global_ids=seen).to_dict()
-    b = ks.recommend_next(ROME, seen_global_ids=seen).to_dict()
+    a = ks.generate_candidates(ROME, seen_global_ids=seen).to_dict()
+    b = ks.generate_candidates(ROME, seen_global_ids=seen).to_dict()
     a["metadata"].pop("generated_at", None)
     b["metadata"].pop("generated_at", None)
     assert a == b
@@ -72,7 +72,7 @@ def test_recommend_next_deterministic_with_seen():
 # ---------------------------------------------------------------------------
 def test_recommendation_ranking_formula_and_order():
     ks = _ks()
-    res = ks.recommend_next(ROME, max_results=10)
+    res = ks.generate_candidates(ROME, max_results=10)
     recs = res.recommendations
     assert recs, "expected recommendations for Rome"
     scores = []
@@ -97,11 +97,11 @@ def test_recommendation_ranking_formula_and_order():
 
 def test_recommendation_diversity_penalizes_seen():
     ks = _ks()
-    base = ks.recommend_next(ROME, max_results=10)
+    base = ks.generate_candidates(ROME, max_results=10)
     top_gid = base.recommendations[0].target_entity["global_id"]
     base_top_score = base.recommendations[0].score
 
-    seen = ks.recommend_next(ROME, seen_global_ids={top_gid}, max_results=10)
+    seen = ks.generate_candidates(ROME, seen_global_ids={top_gid}, max_results=10)
     seen_top = seen.recommendations[0]
     # The previously-top item must drop (diversity 0.2) when marked seen.
     assert (
@@ -119,12 +119,12 @@ def test_recommendation_diversity_penalizes_seen():
 
 def test_recommendation_type_diversity_rewards_novelty():
     ks = _ks()
-    recs = ks.recommend_next(ROME, max_results=10).recommendations
+    recs = ks.generate_candidates(ROME, max_results=10).recommendations
     # Build a seen set from the top items' types to force novelty elsewhere.
     first = recs[0]
     # Directly-constructed seen set of the first item's gid.
     seen = {first.target_entity["global_id"]}
-    resp = ks.recommend_next(ROME, seen_global_ids=seen, max_results=10)
+    resp = ks.generate_candidates(ROME, seen_global_ids=seen, max_results=10)
     # If the first item is still present, it carries the 0.2 seen penalty.
     still = next(
         (i for i in resp.recommendations if i.target_entity["global_id"] == first.target_entity["global_id"]),
@@ -139,7 +139,7 @@ def test_recommendation_type_diversity_rewards_novelty():
 # ---------------------------------------------------------------------------
 def test_recommendation_explainability():
     ks = _ks()
-    res = ks.recommend_next(ROME, max_results=5)
+    res = ks.generate_candidates(ROME, max_results=5)
     for item in res.recommendations:
         # Every recommendation carries at least one reason.
         assert item.reasons, "each recommendation must have >=1 reason"
@@ -161,8 +161,8 @@ def test_recommendation_explainability():
 def test_explore_unchanged_by_recommendation_layer():
     ks = _ks()
     before = ks.explore_from(ROME, max_depth=2)
-    ks.recommend_next(ROME)  # exercise the new additive layer
-    ks.recommend_next(ROME, seen_global_ids={"silk_road:silk_road"})
+    ks.generate_candidates(ROME)  # exercise the new additive layer
+    ks.generate_candidates(ROME, seen_global_ids={"silk_road:silk_road"})
     after = ks.explore_from(ROME, max_depth=2)
     assert before == after
     # The frozen exploration score-breakdown keys are intact.
@@ -176,37 +176,11 @@ def test_explore_unchanged_by_recommendation_layer():
 
 
 # ---------------------------------------------------------------------------
-# 5. Route parity: /api/v1 MUST equal legacy (v1 == legacy convention)
+# 5. Route parity tests REMOVED (A3 / ADR-0015 D1)
+# The public /entity/{id}/recommendations endpoint is retired; the "next step"
+# capability is now produced by the frontend ExplorationPolicy. The deterministic
+# candidate-generation KERNEL (renamed generate_candidates) remains covered below.
 # ---------------------------------------------------------------------------
-def test_recommendations_route_parity():
-    legacy = client.get("/entity/person-augustus/recommendations").json()
-    v1 = client.get(f"{V1}/entity/person-augustus/recommendations").json()
-    # metadata.generated_at is informational only (M9-001 §6/§12.1) and is
-    # excluded from the determinism guarantee, so compare the deterministic
-    # payload exactly.
-    legacy["metadata"].pop("generated_at", None)
-    v1["metadata"].pop("generated_at", None)
-    assert v1 == legacy
-    assert v1["algorithm_version"] == ALGORITHM_VERSION
-    assert "recommendations" in v1
-
-
-def test_recommendations_route_parity_with_seen():
-    legacy = client.get(
-        "/entity/person-augustus/recommendations?seen=silk_road:silk_road&limit=3"
-    ).json()
-    v1 = client.get(
-        f"{V1}/entity/person-augustus/recommendations?seen=silk_road:silk_road&limit=3"
-    ).json()
-    legacy["metadata"].pop("generated_at", None)
-    v1["metadata"].pop("generated_at", None)
-    assert v1 == legacy
-    assert len(v1["recommendations"]) <= 3
-
-
-def test_recommendations_route_404_on_unknown_entity():
-    res = client.get(f"{V1}/entity/does-not-exist/recommendations")
-    assert res.status_code == 404
 
 
 # ---------------------------------------------------------------------------
@@ -214,7 +188,7 @@ def test_recommendations_route_404_on_unknown_entity():
 # ---------------------------------------------------------------------------
 def test_freeze_enum_counts_unchanged():
     assert len(ENTITY_TYPES) == 8
-    assert len(RELATIONSHIP_TYPES) == 18
+    assert len(RELATIONSHIP_TYPES) == 20  # ADR-0019
 
 
 def test_frozen_exploration_weights_untouched():
@@ -229,7 +203,7 @@ def test_frozen_exploration_weights_untouched():
 
 def test_recommendation_result_contract_shape():
     ks = _ks()
-    res = ks.recommend_next(ROME)
+    res = ks.generate_candidates(ROME)
     d = res.to_dict()
     assert set(d.keys()) == {
         "current_entity",
@@ -252,11 +226,11 @@ def test_recommendation_result_is_json_safe():
     import json
 
     ks = _ks()
-    json.dumps(ks.recommend_next(ROME).to_dict())
+    json.dumps(ks.generate_candidates(ROME).to_dict())
 
 
 def test_recommend_next_unknown_entity_returns_empty():
     ks = _ks()
-    res = ks.recommend_next("no_such:node")
+    res = ks.generate_candidates("no_such:node")
     assert isinstance(res, RecommendationResult)
     assert res.recommendations == []

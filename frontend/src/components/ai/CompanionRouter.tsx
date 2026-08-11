@@ -13,9 +13,10 @@ import { useCompanionAI } from './useCompanionAI'
 import { AIExplanationView, type AIExplanationViewProps } from '../AIExplanationPanel'
 import { HistorianChatView } from '../HistorianChat'
 import { ResearchPanelView } from '../ResearchPanel'
-import RecommendationPanel from '../RecommendationPanel'
+import NextStepPanel from '../NextStepPanel'
+import type { ExplorationAction } from '../../next/exploration/ExplorationPolicy'
 
-export function CompanionRouter({ onNavigateEntity }: { onNavigateEntity?: (globalId: string) => void }) {
+export function CompanionRouter({ onNavigateEntity, actions }: { onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[] }) {
   const { state, workspace } = useCompanion()
   const { activeMode } = state
   const { status, response, error, ask, chatMessages, sendChat, clearChat } = useCompanionAI()
@@ -85,10 +86,9 @@ export function CompanionRouter({ onNavigateEntity }: { onNavigateEntity?: (glob
         )
       }
       return (
-        <RecommendationPanel
-          entityId={workspace.currentEntityId}
+        <NextStepPanel
+          actions={actions ?? []}
           seenGlobalIds={discoverSeenIds}
-          max={5}
           onNodeClick={(gid) => onNavigateEntity?.(gid)}
         />
       )

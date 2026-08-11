@@ -5,7 +5,11 @@ import {
 } from '../../data/explorationPackages'
 import { getGuideSnapshot } from '../../data/explorationGuide'
 import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import { useLocale } from '../../data/locale'
+import { recordEvent } from '../../data/UserBehaviorEvent'
 import { Button } from '../ui/Button'
+import CausalStatementCard from '../causal/CausalStatementCard'
+import type { CausalStatementData } from '../../data/causalStatement'
 
 interface GuidePanelProps {
   pkg: ExplorationPackage
@@ -17,6 +21,8 @@ interface GuidePanelProps {
    *  passthrough only; telemetry wiring lives in the page layer (behavior-
    *  analysis only, no recommendation logic). */
   onNextClick?: (to: string) => void
+  /** M82 P2 — CausalStatements for narrative reason enrichment. */
+  causalStatements?: readonly CausalStatementData[]
 }
 
 const MAX_NEXT_STEPS = 5
@@ -31,19 +37,21 @@ export default function GuidePanel({
   locale = 'zh',
   onEntityClick,
   onNextClick,
+  causalStatements,
 }: GuidePanelProps) {
-  const snap = getGuideSnapshot(pkg, visited, locale)
+  const { t } = useLocale()
+  const snap = getGuideSnapshot(pkg, visited, locale, causalStatements)
   if (!snap.position) return null
 
   const entityName = (gid: string) => getEntityDisplayName(gid, locale)
 
   return (
-    <section className="guide-panel" data-testid="exploration-guide" aria-label="探索向导">
-      <h3 className="guide-title">探索向导</h3>
-      <p className="guide-sub">确定性导航：你现在在哪、下一步去哪、以及为什么。</p>
+    <section className="guide-panel" data-testid="exploration-guide" aria-label={t('guide.title')}>
+      <h3 className="guide-title">{t('guide.title')}</h3>
+      <p className="guide-sub">{t('guide.subtitle')}</p>
 
       <div className="guide-position">
-        <span className="guide-position-label">你现在在</span>
+        <span className="guide-position-label">{t('guide.positionLabel')}</span>
         <Button
           variant="text"
           className="guide-position-value"
@@ -52,13 +60,13 @@ export default function GuidePanel({
           {snap.position.name}
         </Button>
         {snap.position.atEntry && (
-          <span className="guide-position-hint">（本包入口）</span>
+          <span className="guide-position-hint">{t('guide.entryHint')}</span>
         )}
       </div>
 
       {snap.nextSteps.length > 0 && (
         <div className="guide-next">
-          <p className="guide-next-label">下一步可以探索</p>
+          <p className="guide-next-label">{t('guide.nextLabel')}</p>
           <ul className="guide-next-list">
             {snap.nextSteps.slice(0, MAX_NEXT_STEPS).map((step, i) => (
               <li key={i} className="guide-next-item">
@@ -66,6 +74,10 @@ export default function GuidePanel({
                   variant="ghost"
                   className="guide-next-btn"
                   onClick={() => {
+                    // M83.1 — track cs_guide_next when CS reason is present
+                    if (step.causal?.id) {
+                      recordEvent({ action: 'cs_guide_next', causalId: step.causal.id })
+                    }
                     onEntityClick?.(step.edge.to)
                     onNextClick?.(step.edge.to)
                   }}
@@ -74,9 +86,13 @@ export default function GuidePanel({
                     {entityName(step.edge.from)} {getRelationshipLabel(step.edge.type, locale)}{' '}
                     {step.toName}
                   </span>
-                  <span className="guide-next-cta">查看 {step.toName} →</span>
+                  <span className="guide-next-cta">{t('guide.nextCta', { name: step.toName })}</span>
                 </Button>
                 <p className="guide-next-reason">{step.reason}</p>
+                {/* M82 P2 — show full CausalStatementCard when CS exists */}
+                {step.causal && (
+                  <CausalStatementCard cs={step.causal} />
+                )}
               </li>
             ))}
           </ul>
@@ -85,12 +101,16 @@ export default function GuidePanel({
 
       <div className="guide-coverage">
         <span className="guide-coverage-text">
-          已探索 {snap.coverage.visitedEntities}/{snap.coverage.totalEntities} 实体 ·{' '}
-          {snap.coverage.visitedRelationships}/{snap.coverage.totalRelationships} 关系 ·{' '}
-          {snap.coverage.entityPercent}%
+          {t('guide.coverageText', {
+            visitedEntities: String(snap.coverage.visitedEntities),
+            totalEntities: String(snap.coverage.totalEntities),
+            visitedRelationships: String(snap.coverage.visitedRelationships),
+            totalRelationships: String(snap.coverage.totalRelationships),
+            entityPercent: String(snap.coverage.entityPercent),
+          })}
         </span>
         {snap.nextSteps.length === 0 && (
-          <span className="guide-coverage-done">—— 本包探索已全部完成</span>
+          <span className="guide-coverage-done">{t('guide.doneText')}</span>
         )}
       </div>
     </section>

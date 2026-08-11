@@ -43,12 +43,13 @@ export function RelationshipContext({
   return (
     <>
       {connections && connections.length > 0 && (
-        <ConnectionsPanel connections={connections} />
+        <ConnectionsPanel connections={connections} subject={mainEntityName} />
       )}
       {connectionsExplained && connectionsExplained.length > 0 && (
         <ConnectionsExplainedPanel
           connections={connectionsExplained}
           onNodeClick={onNodeClick}
+          mainId={mainGlobalId}
         />
       )}
       {candidates && relationships && timeMap && mainGlobalId && mainEntityName && nameByGlobalId && (

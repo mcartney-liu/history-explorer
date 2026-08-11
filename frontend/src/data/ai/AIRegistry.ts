@@ -6,22 +6,27 @@
 // ============================================================
 
 import type { AICapability, AICapabilityId, AICapabilityTrigger } from './AICapabilities'
-import { ALL_CAPABILITIES } from './AICapabilities'
+import { allCapabilities } from './AICapabilities'
 import type { AIContext } from './AIContext'
+
+// ADR-0021 R2: reads go through `allCapabilities()` so capability names,
+// descriptions and suggested prompts reflect whatever the content console has
+// configured. Trigger / requiredContext matching below is unaffected — those
+// fields are not editable, so dispatch behaviour is identical either way.
 
 /** Get a single capability by id */
 export function getCapability(id: AICapabilityId): AICapability | undefined {
-  return ALL_CAPABILITIES.find((c) => c.id === id)
+  return allCapabilities().find((c) => c.id === id)
 }
 
 /** Get all capabilities */
 export function getAllCapabilities(): AICapability[] {
-  return ALL_CAPABILITIES
+  return allCapabilities()
 }
 
 /** Get all capabilities triggered by a specific event */
 export function getCapabilitiesByTrigger(trigger: AICapabilityTrigger): AICapability[] {
-  return ALL_CAPABILITIES.filter((c) => {
+  return allCapabilities().filter((c) => {
     const t = c.trigger
     return Array.isArray(t) ? t.includes(trigger) : t === trigger
   })

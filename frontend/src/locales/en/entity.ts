@@ -9,5 +9,6 @@ export default {
   'entity.explore_path': 'Exploration Path',
   'entity.research': 'Research',
   'entity.compare': 'Compare',
+  'entity.narrativeEmpty': 'Editorial narrative for this entity is being prepared.',
   'insight.intro': '%{name} is a historically significant %{type}.',
 }

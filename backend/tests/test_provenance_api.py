@@ -47,7 +47,11 @@ def test_provenance_v1_and_legacy_return_200_with_records():
         assert isinstance(body["provenance"], list)
         assert len(body["provenance"]) >= 1
         rec = body["provenance"][0]
-        assert set(rec.keys()) == {"subject_id", "source_id", "claim_id", "reference"}
+        assert set(rec.keys()) == {
+            "subject_id", "source_id", "claim_id", "claim_text", "reference",
+        }
+        # The projected claim text is what makes the panel human-readable.
+        assert rec["claim_text"]
 
 
 def test_provenance_unknown_entity_returns_200_empty():

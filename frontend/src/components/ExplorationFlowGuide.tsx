@@ -10,6 +10,14 @@
 //     modified and the freeze holds. The existing M5-A-5 EntityExplorationGuide
 //     (starter cards) is intentionally NOT touched — this is a separate,
 //     complementary closure banner mounted once on the entity page.
+//
+// ADR-0021 R2: the step labels and copy are editable at runtime (#/admin,
+// module `exploration_flow`). STEPS below remains the shipped default — with
+// no backend this renders exactly as it did before, and the component stays
+// stateless: `useContentRevision` only asks React to re-render when configured
+// copy arrives; it holds no data of its own.
+import { slotDesc, slotTitle, useContentRevision } from '../data/contentRuntime'
+
 const STEPS = [
   {
     key: 'relationship',
@@ -33,7 +41,14 @@ const STEPS = [
   },
 ] as const
 
+/** Slot ids use underscores; the DOM keys predate them and stay as-is. */
+function slotIdFor(key: string): string {
+  return `exploration_flow.${key.replace(/-/g, '_')}`
+}
+
 function ExplorationFlowGuide() {
+  useContentRevision()
+
   return (
     <section
       className="result-section exploration-flow-guide"
@@ -41,15 +56,18 @@ function ExplorationFlowGuide() {
     >
       <h3>探索路径</h3>
       <ol className="efg-steps">
-        {STEPS.map((s, i) => (
-          <li className="efg-step" key={s.key}>
-            <span className="efg-step-index" aria-hidden="true">
-              {i + 1}
-            </span>
-            <span className="efg-step-label">{s.label}</span>
-            <span className="efg-step-desc">{s.desc}</span>
-          </li>
-        ))}
+        {STEPS.map((s, i) => {
+          const slot = slotIdFor(s.key)
+          return (
+            <li className="efg-step" key={s.key}>
+              <span className="efg-step-index" aria-hidden="true">
+                {i + 1}
+              </span>
+              <span className="efg-step-label">{slotTitle(slot, s.label)}</span>
+              <span className="efg-step-desc">{slotDesc(slot, s.desc)}</span>
+            </li>
+          )
+        })}
       </ol>
     </section>
   )

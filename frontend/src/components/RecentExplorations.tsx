@@ -6,6 +6,7 @@
 import { NavNode } from './navigation'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getCausalObjectName } from '../data/causalObjectNames'
 
 type RecentExplorationsProps = {
   items: NavNode[]
@@ -29,18 +30,18 @@ function RecentExplorations({ items, onSelect, onClear }: RecentExplorationsProp
       </div>
       <ul className="he-recent-list">
         {items.map((node) => (
-          <li key={`${node.type}:${node.type === 'topic' ? node.topic : node.id}`}>
+          <li key={`${node.type}:${node.type === 'topic' ? node.topic : node.type === 'causal_object' ? node.objectId : node.id}`}>
             <button
               type="button"
               className="he-recent-chip"
               onClick={() => onSelect(node)}
             >
               <span className="he-recent-kind">
-                {node.type === 'topic' ? t('common.kindTopic') : t('common.kindEntity')}
+                {node.type === 'topic' ? t('common.kindTopic') : node.type === 'causal_object' ? '理解' : t('common.kindEntity')}
               </span>
               <span className="he-recent-label">
                 {getDisplayName(
-                  node.type === 'topic' ? node.title : node.name,
+                  node.type === 'topic' ? node.title : node.type === 'causal_object' ? getCausalObjectName(node.objectId) : node.name,
                   locale,
                   prefs.properNameMode,
                 )}

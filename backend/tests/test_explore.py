@@ -43,7 +43,7 @@ def test_explore_known_topic_shape():
     # 1) Full contract present
     assert EXPECTED_TOP_LEVEL_KEYS <= set(body.keys())
     assert body["topic"] == "roman_empire"
-    assert body["title"] == "Roman Empire"
+    assert body["title"] == "罗马帝国"
 
     # 2) Known topic carries real data
     assert isinstance(body["entities"], list) and len(body["entities"]) > 0

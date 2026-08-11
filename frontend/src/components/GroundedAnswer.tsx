@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { AIResponse, AIEngine, AIConfidence } from '../data/aiClient'
 
 type GroundedAnswerProps = {
@@ -59,6 +60,83 @@ function Evidence({ items }: { items: AIResponse['evidence'] }) {
   )
 }
 
+// 2026-08-11 (PO): when the backend returns a STRUCTURED synthesis answer
+// (cross-dimensional analysis), render it as a readable view instead of a raw
+// JSON/text blob. The backend serializes such answers via json.dumps, so they
+// arrive as a JSON string; we only treat it as synthesis when the expected
+// keys are present — any other JSON stays as a plain paragraph.
+//
+// Supports both English keys (cross_dimensional_theme / dimensional_relations /
+// conclusion) and Chinese keys returned by the synthesis prompt
+// (跨维度主题 / 维度关联 / 结论), plus markdown code-block wrapping.
+function tryRenderSynthesis(raw: string): ReactNode | null {
+  let text = raw.trim()
+  // Strip markdown fenced code block if the LLM wrapped JSON in ```json ... ```
+  if (text.startsWith('```')) {
+    text = text.replace(/^```[a-z]*\n?/, '').replace(/\n?```$/, '').trim()
+  }
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(text)
+  } catch {
+    return null
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null
+  const obj = parsed as Record<string, unknown>
+
+  const theme =
+    (typeof obj.cross_dimensional_theme === 'string' && obj.cross_dimensional_theme) ||
+    (typeof obj.跨维度主题 === 'string' && obj.跨维度主题) ||
+    null
+  const relations =
+    (obj.dimensional_relations != null && typeof obj.dimensional_relations === 'object' &&
+      !Array.isArray(obj.dimensional_relations) && obj.dimensional_relations) ||
+    (obj.维度关联 != null && typeof obj.维度关联 === 'object' && !Array.isArray(obj.维度关联) &&
+      obj.维度关联) ||
+    null
+  const conclusion =
+    (typeof obj.conclusion === 'string' && obj.conclusion) ||
+    (typeof obj.结论 === 'string' && obj.结论) ||
+    null
+
+  if (!theme && !relations && !conclusion) return null
+
+  return (
+    <div className="ga-synthesis">
+      {theme && (
+        <section className="ga-synth-section">
+          <h5 className="ga-synth-title">跨维度主题</h5>
+          <p className="ga-synth-text">{theme}</p>
+        </section>
+      )}
+      {relations && (
+        <section className="ga-synth-section">
+          <h5 className="ga-synth-title">维度关联</h5>
+          <div className="ga-synth-relations">
+            {Object.entries(relations as Record<string, unknown>).map(
+              ([k, v]) => (
+                <div key={k} className="ga-synth-rel">
+                  <span className="ga-synth-rel-key">{k}</span>
+                  <span className="ga-synth-rel-val">
+                    {typeof v === 'string' ? v : JSON.stringify(v)}
+                  </span>
+                </div>
+              ),
+            )}
+          </div>
+        </section>
+      )}
+      {conclusion && (
+        <section className="ga-synth-section">
+          <h5 className="ga-synth-title">结论</h5>
+          <p className="ga-synth-text">{conclusion}</p>
+        </section>
+      )}
+    </div>
+  )
+}
+
 // Pure presentational component: given a fully-grounded backend response, show
 // the answer, the engine state, the verification verdict, and (M36.0) the
 // confidence, perspectives, and verified evidence. It never decides truthiness
@@ -98,7 +176,9 @@ export default function GroundedAnswer({ response }: GroundedAnswerProps) {
       {/* M36.0: show LLM-provided alternative perspectives before the answer */}
       <Perspectives items={response.perspectives ?? []} />
 
-      <p className="ga-answer">{response.answer}</p>
+      {tryRenderSynthesis(response.answer) ?? (
+        <p className="ga-answer">{response.answer}</p>
+      )}
 
       {/* M36.0: show server-verified evidence block */}
       <Evidence items={response.evidence} />

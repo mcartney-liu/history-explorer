@@ -7,8 +7,9 @@
 // browser (Node test runner / SSR), keeping tests dependency-free.
 
 import type { NavNode } from '../components/navigation'
+import { getCausalObjectName } from '../data/causalObjectNames'
 
-export type JourneyKind = 'topic' | 'entity'
+export type JourneyKind = 'topic' | 'entity' | 'causal_object'
 
 export interface JourneyEntry {
   globalId: string
@@ -47,6 +48,9 @@ function write(entries: JourneyEntry[]): void {
 export function entryFromNode(node: NavNode): Omit<JourneyEntry, 'ts'> {
   if (node.type === 'topic') {
     return { globalId: node.topic, kind: 'topic', label: node.title || node.topic }
+  }
+  if (node.type === 'causal_object') {
+    return { globalId: node.objectId, kind: 'causal_object', label: getCausalObjectName(node.objectId) }
   }
   return { globalId: node.id, kind: 'entity', label: node.name || node.id }
 }

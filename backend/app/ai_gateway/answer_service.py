@@ -22,26 +22,24 @@ from typing import Any, Dict, List, Optional, Sequence
 from .citation_model import Citation
 from .grounding_builder import GroundingBuilder, GroundingResult
 from .context_serializer import build_grounding_prompt_segment
-from .prompt_service import PromptService, SYSTEM_PROMPT
+from .prompt_service import PromptService
 from .provider import get_provider
 from .fallback_handler import get_fallback_response
 from .response_validator import ResponseValidator
 
 # Instruct the AI to reply with verifiable JSON. Kept here (AI logic in the
 # approved module) so M11-1's prompt_service stays unchanged per the plan.
-# M36.0 adds an OPTIONAL `perspectives` array (alternative interpretations /
-# caveats) — purely additive; the grounding contract from ADR-0003 is unchanged.
+# ADR-0018: `perspectives` is NO LONGER requested from the LLM — dissent is
+# derived server-side from the curated `interpretation_note` of the validated
+# claims, so an alternative reading is always grounded, never hallucinated.
 _CITATION_INSTRUCTION = (
     "\n\nReply ONLY with a JSON object of the form:\n"
     '{"answer": "<your grounded answer>", '
-    '"perspectives": ["<optional alternative interpretation or caveat>", "..."], '
     '"citations": ['
     '{"global_id": "<id>", "kind": "entity|relationship|timeline", '
     '"label": "<short source label>"}]}\n'
     "Every citation.global_id MUST be an entity/relationship/timeline id that "
-    "appears in [ALLOWED FACTS]. Do not cite anything absent from the facts. "
-    "Keep `perspectives` short (1-3 items) and only when genuinely useful; "
-    "otherwise return an empty list."
+    "appears in [ALLOWED FACTS]. Do not cite anything absent from the facts."
 )
 
 # M36.0 AI Response Contract: server-computed confidence. Never trust the LLM
@@ -64,18 +62,29 @@ def _compute_confidence(grounded: bool, valid: int, total: int) -> str:
     return "low"
 
 
-def _extract_perspectives(parsed: dict) -> List[str]:
-    """Pull the LLM-supplied perspectives list, coercing to clean strings."""
-    raw = parsed.get("perspectives") or []
-    if not isinstance(raw, list):
-        return []
-    out: List[str] = []
-    for item in raw:
-        if isinstance(item, str) and item.strip():
-            out.append(item.strip())
-        elif isinstance(item, (int, float)):
-            out.append(str(item))
-    return out
+def _perspectives_from_claims(valid_claims: Sequence[Any], limit: int = 3) -> List[str]:
+    """Grounded dissent: perspectives built from curated interpretation notes.
+
+    ADR-0018: an "alternative reading" is only trustworthy when a human curator
+    wrote it. We therefore read `truth.interpretation_note` off the VALIDATED
+    claims instead of asking the LLM for caveats. Contested claims
+    (controversy_level medium/high) lead, so genuine scholarly disagreement is
+    surfaced first. De-duplicated and bounded; empty when nothing is curated.
+    """
+    ranked: List[tuple] = []
+    seen: set = set()
+    for c in valid_claims:
+        truth = getattr(c, "truth", None)
+        if not isinstance(truth, dict):
+            continue
+        note = (truth.get("interpretation_note") or "").strip()
+        if not note or note in seen:
+            continue
+        seen.add(note)
+        contested = 0 if truth.get("controversy_level") in ("medium", "high") else 1
+        ranked.append((contested, getattr(c, "claim_id", "") or "", note))
+    ranked.sort(key=lambda x: (x[0], x[1]))
+    return [note for _c, _cid, note in ranked[:limit]]
 
 
 def _build_evidence(valid_citations: Sequence[Citation]) -> List[dict]:
@@ -94,6 +103,102 @@ def _build_evidence(valid_citations: Sequence[Citation]) -> List[dict]:
         }
         for c in valid_citations
     ]
+
+
+def _claim_evidence(valid_claims: Sequence[Any], sources: Sequence[dict]) -> List[dict]:
+    """Evidence view of the VALIDATED claims (source grading + truth).
+
+    ADR-0018: the AI answer must carry the graded evidence it was grounded on,
+    not just the graph citations. Additive alongside `_build_evidence` items —
+    same base shape (global_id / kind / label / status) plus the source title,
+    tier and curated truth grading.
+    """
+    by_id = {s.get("id"): s for s in sources if isinstance(s, dict) and s.get("id")}
+    out: List[dict] = []
+    for c in valid_claims:
+        text = (c.claim_text or "").strip()
+        if not text:
+            continue
+        source = by_id.get(c.source_id) or {}
+        out.append(
+            {
+                "global_id": c.subject_global_id or "",
+                "kind": "claim",
+                "label": text,
+                "status": "verified",
+                "claim_id": c.claim_id,
+                "source_id": c.source_id,
+                "source_title": source.get("title") or "",
+                "source_tier": source.get("tier") or "",
+                "truth": dict(c.truth) if getattr(c, "truth", None) else None,
+            }
+        )
+    return out
+
+
+def _claim_facts(valid_claims: Sequence[Any], sources: Sequence[dict]) -> List[str]:
+    """[ALLOWED FACTS] lines built from the validated claims.
+
+    Each line carries the claim text plus its source title and tier, so the
+    model sees WHICH evidence backs a statement and how strong it is — the
+    Truth layer reaching the prompt instead of being bypassed (ADR-0018).
+    """
+    by_id = {s.get("id"): s for s in sources if isinstance(s, dict) and s.get("id")}
+    out: List[str] = []
+    for c in valid_claims:
+        text = (c.claim_text or "").strip()
+        if not text:
+            continue
+        source = by_id.get(c.source_id) or {}
+        title = source.get("title") or c.source_id or "uncited"
+        tier = source.get("tier") or "unknown"
+        out.append("Evidence [source: %s | tier: %s] %s" % (title, tier, text))
+    return out
+
+
+def _run_phase2(builder, context, visited=None, package_context=None):
+    """Run the Phase2 grounding pipeline over the first context entity.
+
+    ClaimGraph -> EvidenceSelector -> EvidenceValidator -> plan_exploration.
+    Returns (valid_claims, sources, next_exploration), or None when there is
+    nothing validated to work with (empty context / unknown focus / no
+    evidence). Shared by BOTH the deterministic path and the AI path — before
+    ADR-0018 the AI path skipped this entirely and lost the Truth layer.
+
+    Defensive: any pipeline failure (e.g. a KnowledgeService lacking the Phase2
+    methods) returns None so the caller degrades gracefully — never 500.
+    """
+    from .citation_model import ClaimGraph
+    from .exploration_planner import plan_exploration
+    from .grounding_builder import EvidenceSelector
+    from .response_validator import EvidenceValidator
+
+    if not context:
+        return None
+
+    try:
+        graph = builder.build_claim_graph(context[0])
+        selection = EvidenceSelector().select(graph)
+        result = EvidenceValidator().validate(selection)
+    except Exception:
+        return None
+
+    if not result.passed or not result.valid_claims:
+        return None
+
+    narrowed = ClaimGraph(
+        focus_global_id=graph.focus_global_id,
+        neighbors=graph.neighbors,
+        claims=list(result.valid_claims),
+        sources=list(selection.sources),
+    )
+    next_exploration = plan_exploration(
+        narrowed,
+        visited=visited,
+        package_context=package_context,
+        limit=3,
+    )
+    return list(result.valid_claims), list(selection.sources), next_exploration
 
 
 def _parse_ai_json(raw: str) -> Optional[Dict[str, Any]]:
@@ -137,30 +242,15 @@ def _deterministic_grounded_response(builder, question, context, mode, visited=N
         evidence-bound, self-free (P7 fix), visited-aware (P2), with a
         deterministic reason — restricted to the validated claim subset.
     """
-    from .citation_model import ClaimGraph
-    from .exploration_planner import plan_exploration
-    from .grounding_builder import EvidenceSelector
-    from .response_validator import EvidenceValidator
-
-    if not context:
+    phase2 = _run_phase2(builder, context, visited, package_context)
+    if phase2 is None:
         return None
-
-    try:
-        graph = builder.build_claim_graph(context[0])
-        selection = EvidenceSelector().select(graph)
-        result = EvidenceValidator().validate(selection)
-    except Exception:
-        # Defensive: any pipeline failure (e.g. a KS lacking Phase2 methods)
-        # must degrade to the unavailable fallback — never 500, never guess.
-        return None
-
-    if not result.passed or not result.valid_claims:
-        return None
+    valid_claims, _sources, next_exploration = phase2
 
     # --- deterministic renderer: answer strictly from validated claim text ---
     seen: set = set()
     claim_texts: List[str] = []
-    for c in result.valid_claims:
+    for c in valid_claims:
         text = (c.claim_text or "").strip()
         if text and text not in seen:
             seen.add(text)
@@ -172,7 +262,7 @@ def _deterministic_grounded_response(builder, question, context, mode, visited=N
 
     # --- citations / evidence bound to the focus (validated claims only) ---
     citations: List[Citation] = []
-    for c in result.valid_claims:
+    for c in valid_claims:
         if c.subject_global_id:
             citations.append(
                 Citation(
@@ -184,21 +274,7 @@ def _deterministic_grounded_response(builder, question, context, mode, visited=N
 
     valid = len(citations)
     grounded = valid > 0
-    confidence = _compute_confidence(grounded, valid, len(result.valid_claims))
-
-    # --- next_exploration via the Exploration Planner (M74-004-002) ---
-    narrowed = ClaimGraph(
-        focus_global_id=graph.focus_global_id,
-        neighbors=graph.neighbors,
-        claims=list(result.valid_claims),
-        sources=list(selection.sources),
-    )
-    next_exploration = plan_exploration(
-        narrowed,
-        visited=visited,
-        package_context=package_context,
-        limit=3,
-    )
+    confidence = _compute_confidence(grounded, valid, len(valid_claims))
 
     payload = {
         "answer": answer,
@@ -247,6 +323,18 @@ def grounded_answer(
 
     builder = GroundingBuilder(knowledge_service)
 
+    # 2026-08-11 (PO)：探索建议（explain + 固定 question "探索建议"）前端只
+    # 消费确定性 next_exploration / evidence（RelationshipInsight /
+    # ExplorationSuggestions 均不渲染 AI answer）——直接走确定性流水线并
+    # 跳过 AI 调用：页面秒开、不烧 token、推荐内容稳定。
+    # 该分支在 provider 判断之前，AI 开启时同样跳过（answer 无人消费）。
+    if mode == "explain" and question == "探索建议":
+        deterministic = _deterministic_grounded_response(
+            builder, question, context, mode, visited, package_context
+        )
+        if deterministic is not None:
+            return deterministic
+
     # M74-003 (C2): Runtime OFF branch — Phase2 pipeline deterministic grounded.
     provider = get_provider()
     if provider is None:
@@ -263,11 +351,21 @@ def grounded_answer(
     if not grounding.facts:
         return _with_echo(get_fallback_response(reason="no_grounding_context"), question, context, mode)
 
+    # ADR-0018: the AI path now runs Phase2 too. The validated claims feed the
+    # prompt as graded evidence, and their exploration plan / truth grading is
+    # merged into the response — previously this whole layer was bypassed.
+    phase2 = _run_phase2(builder, context, visited, package_context)
+    valid_claims, claim_sources, next_exploration = phase2 or ([], [], [])
+
+    facts = list(grounding.facts) + _claim_facts(valid_claims, claim_sources)
+
     prompt_service = PromptService()
-    user_prompt = prompt_service.user_prompt(question, grounding.facts) + _CITATION_INSTRUCTION
+    user_prompt = prompt_service.user_prompt(question, facts) + _CITATION_INSTRUCTION
 
     try:
-        raw = provider.complete(SYSTEM_PROMPT, user_prompt, max_tokens=800)
+        raw = provider.complete(
+            prompt_service.system_prompt(mode), user_prompt, max_tokens=800
+        )
     except Exception:
         # Provider failure / timeout -> graceful deterministic fallback.
         return _with_echo(
@@ -279,20 +377,25 @@ def grounded_answer(
         # Could not verify citations -> return the raw answer but flag ungrounded.
         return {
             "answer": raw,
-            "perspectives": [],
-            "evidence": [],
+            "perspectives": _perspectives_from_claims(valid_claims),
+            "evidence": _claim_evidence(valid_claims, claim_sources),
             "confidence": "low",
             "citations": [],
             "rejected_citations": [],
             "grounded": False,
             "engine": "ai_unverified",
+            "next_exploration": next_exploration,
             "question": question,
             "context_global_ids": context,
             "mode": mode,
         }
 
     answer = parsed.get("answer", "")
-    if not isinstance(answer, str):
+    if isinstance(answer, (dict, list)):
+        # Structured synthesis (e.g. cross-dimensional analysis) — serialize as
+        # valid JSON so the frontend can render it instead of a str() dict dump.
+        answer = json.dumps(answer, ensure_ascii=False)
+    elif not isinstance(answer, str):
         answer = str(answer)
 
     ai_citations: List[Citation] = []
@@ -304,19 +407,26 @@ def grounded_answer(
             continue
 
     validator = ResponseValidator(knowledge_service)
-    result = validator.validate(ai_citations, context)
+    # ADR-0018 fix: validate against the grounding's expanded scope (roots +
+    # bridge entities), not the raw context — otherwise every legitimate 2-hop
+    # citation the prompt was grounded on is rejected.
+    result = validator.validate(
+        ai_citations, grounding.expanded_global_ids or context
+    )
 
     valid = len(result.valid_citations)
     total = len(ai_citations)
     return {
         "answer": answer,
-        "perspectives": _extract_perspectives(parsed),
-        "evidence": _build_evidence(result.valid_citations),
+        "perspectives": _perspectives_from_claims(valid_claims),
+        "evidence": _build_evidence(result.valid_citations)
+        + _claim_evidence(valid_claims, claim_sources),
         "confidence": _compute_confidence(result.grounded, valid, total),
         "citations": [c.to_dict() for c in result.valid_citations],
         "rejected_citations": [c.to_dict() for c in result.rejected_citations],
         "grounded": result.grounded,
         "engine": "ai",
+        "next_exploration": next_exploration,
         "question": question,
         "context_global_ids": context,
         "mode": mode,

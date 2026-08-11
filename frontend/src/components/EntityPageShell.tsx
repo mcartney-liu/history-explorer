@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react'
 import { guidanceFor } from '../data/EntityTabGuidance'
+import { useContentRevision } from '../data/contentRuntime'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import { useLocale } from '../data/locale'
 
@@ -64,6 +65,10 @@ export function EntityPageShellView({
   tabs = TABS,
 }: EntityPageShellProps) {
   const { t } = useLocale()
+  // ADR-0021 R2: re-render when configured tab guidance arrives. `guidanceFor`
+  // reads the overlay synchronously, so without this subscription an edit made
+  // in #/admin would only appear after a full reload.
+  useContentRevision()
   return (
     <div className="eps">
       {/* Tab navigation */}

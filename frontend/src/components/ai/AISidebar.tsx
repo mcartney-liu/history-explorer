@@ -61,7 +61,7 @@ export function AISidebar({ context }: AISidebarProps) {
       <div className="ais">
         <div className="ais-collapsed" role="button" tabIndex={0}>
           <Icon name="chat" size={20} className="ais-icon" />
-          <span className="ais-label">AI Historian</span>
+          <span className="ais-label">AI 历史学家</span>
           <span className="ais-hint">选择实体后可用</span>
         </div>
       </div>
@@ -78,7 +78,7 @@ export function AISidebar({ context }: AISidebarProps) {
           onClick={() => setExpanded(true)}
         >
           <Icon name="chat" size={20} className="ais-icon" />
-          <span className="ais-label">Ask Historian</span>
+          <span className="ais-label">向历史学家提问</span>
           <span className="ais-entity-name">{context.entity.name}</span>
         </div>
       </div>
@@ -94,7 +94,7 @@ export function AISidebar({ context }: AISidebarProps) {
         <div className="ais-header-left">
           <Icon name="chat" size={20} className="ais-icon" />
           <div>
-            <span className="ais-title">AI Historian</span>
+            <span className="ais-title">AI 历史学家</span>
             <span className="ais-subtitle">你的历史研究伙伴</span>
             <span className="ais-entity-name">{context.entity.name}</span>
           </div>

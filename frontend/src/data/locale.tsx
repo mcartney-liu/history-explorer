@@ -44,6 +44,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     if (vars) {
       for (const [k, v] of Object.entries(vars)) {
         text = text.replace(`%{${k}}`, v)
+        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), v)
       }
     }
     return text

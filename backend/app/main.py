@@ -31,9 +31,32 @@ from pydantic import BaseModel, Field
 
 from .ai_gateway import grounded_answer
 
+# ADR-0018 (PO-approved lift of red line C6): research persistence. The router
+# and its sqlite3 store live entirely inside the approved ai_gateway module;
+# this file only mounts it (no storage logic here — freeze boundary §5).
+from .ai_gateway.research_router import router as research_router
+
+# M90.x: entity insight store — 历史见解固化存储（sqlite3, ai_gateway 内）.
+# 生成逻辑在下方 handler 内，存储完全委托给 insight_store（freeze boundary）。
+from .ai_gateway import insight_store
+
+# ADR-0021: Content Configuration Layer. Display copy / artwork for the landing
+# page becomes runtime-editable data. All storage logic lives inside the
+# `content` module; this file only mounts the router (freeze boundary §5).
+from .content import router as content_router
+from .content import site_config_router
+
 # --- Configuration (env-driven, M3-002) -----------------------------------
 settings = get_settings()
 logger = configure_logging(settings.log_level)
+
+# ADR-0017: load backend/.env (AI key / base_url / model / enable flag) for
+# deployment. Guarded so pytest never auto-loads .env — that keeps the AI-off
+# contract verifiable and prevents tests from constructing a real provider.
+if "PYTEST_CURRENT_TEST" not in os.environ:
+    from .ai_gateway.config import _load_dotenv
+
+    _load_dotenv()
 
 app = FastAPI(
     title=settings.app_name,
@@ -200,6 +223,7 @@ def topics():
                 "topic": meta.get("topic", topic),
                 "title": meta.get("title", topic),
                 "summary": meta.get("summary", ""),
+                "category": meta.get("category", ""),
             }
         )
     return {"topics": result}
@@ -227,10 +251,15 @@ def entity(entity_id: str):
         raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
 
     global_id = target.get("global_id")
+    # Prefer Chinese label when available
+    display_name = (
+        (target.get("labels") or {}).get("zh")
+        or target.get("name", "")
+    )
     return {
         "id": target.get("id"),
         "type": target.get("type", ""),
-        "name": target.get("name", ""),
+        "name": display_name,
         "summary": target,
         "timeline": knowledge_service.get_timeline_index(ref.topic),
         "relationships": knowledge_service.get_entity_relationships(ref.topic, ref.local_id),
@@ -246,37 +275,49 @@ def entity(entity_id: str):
     }
 
 
-def recommendations(entity_id: str, limit: int = 5, seen: str = ""):
-    """M9-001 (additive): deterministic, explainable next-node recommendations.
+def explore_starters(topic: str):
+    """Topic-level exploration entry points (M9-001 family).
 
-    Returns a `RecommendationResult` (JSON) listing the top `limit` "next stops"
-    from the current entity, each with `reasons` + `relation_path`. `seen` is an
-    optional comma-separated list of already-visited global_ids driving the
-    diversity penalty. 404 when the entity (or its global_id) is missing.
-
-    NEW endpoint (additive) — the existing /entity/{id} response is unchanged.
-    Mounted under both /api/v1 and the legacy path so v1 == legacy holds.
+    Deterministic, explainable starting entities for a topic, computed from
+    the Knowledge Graph (centrality + type diversity). No AI, no DB. Returns
+    {"topic", "entry_points": [...]}. Frontend uses these as the first nudges
+    on a topic's Explore page, falling back to its static table on empty/error.
     """
-    ref = knowledge_service.resolve_entity(entity_id)
-    if ref is None:
-        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
+    if not TOPIC_PATTERN.match(topic):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid topic. Use only lowercase letters, digits, "
+            "underscores and hyphens (e.g. roman_empire).",
+        )
+    return knowledge_service.topic_entry_points(topic, max_results=3)
 
-    target = knowledge_service.find_by_id(ref.topic, ref.local_id)
-    if target is None:
-        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' not found.")
 
-    global_id = target.get("global_id")
-    if not global_id:
-        raise HTTPException(status_code=404, detail=f"Entity '{entity_id}' has no global_id.")
+def related_entities(gid: str = ""):
+    """Entity-level related entities (M9-001 family).
 
-    seen_set: set = set()
-    if seen:
-        seen_set = {s.strip() for s in seen.split(",") if s.strip()}
+    Deterministic, explainable "next stops" from one entity, computed by the
+    frozen graph engine `generate_candidates` (centrality + type diversity +
+    temporal/theme coherence). No AI, no DB, no wall-clock in ranking — same
+    (gid) -> identical output. Used by the entity-page Research tab to surface
+    "what else can I study" so research has a logical thread (Article 0).
 
-    result = knowledge_service.recommend_next(
-        global_id, seen_global_ids=seen_set, max_results=limit
-    )
+    `gid` carries a topic prefix + colon (e.g. "roman_empire:civ-roman"), so it
+    is passed as a query parameter (not a path segment) to avoid colon parsing
+    pitfalls. Returns RecommendationResult.to_dict():
+      {"current_entity", "recommendations": [{target_entity, reasons, ...}], ...}
+    """
+    if not gid or len(gid) > 256:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid entity global_id. Expected a non-empty graph node id.",
+        )
+    result = knowledge_service.generate_candidates(gid, seen_global_ids=None, max_results=6)
     return result.to_dict()
+
+
+# A3 (ADR-0015 D1): public /entity/{id}/recommendations endpoint retired.
+# The "next step" capability is now produced by the frontend ExplorationPolicy
+# (see frontend/src/components/NextStepPanel.tsx); no backend endpoint participates.
 
 
 # --- M29.1-C: Runtime Provenance Projection exposure (ADR-006 read model) --
@@ -392,6 +433,143 @@ def ai_chat(body: AIRequest):
     )
 
 
+# --- M90.x: 历史见解（固化内容，后台管理刷新） ------------------------------
+# 历史见解 = 后台触发 AI 基于证据生成一次并固化；前端只读固化内容，
+# 不再每次实时 AI 生成（PO 2026-08-10 判定）。
+
+
+class InsightUpdate(BaseModel):
+    """PUT /api/v1/insights/{global_id} — 后台人工编辑历史见解。"""
+
+    insight: str
+    evidence: Optional[list] = None
+
+
+def _generate_entity_insight(global_id: str) -> dict:
+    """AI 基于实体证据生成历史见解并固化。无证据 / 无 AI → 明确 HTTP 错误。
+
+    Prompt 明确要求"仅基于以下证据"，AI 不新增证据之外的事实（真值层纪律）。
+
+    证据扩展（PO 2026-08-11）：时间段等区间实体自身无证据声明时，
+    build_claim_graph_expanded 自动收集其图邻居（区间内事件/人物）的
+    证据声明作为证据池——时间段的意义由区间内事件承载，证据仍全部
+    来自知识库真实声明，不新增任何编造内容。
+    """
+    from .ai_gateway.grounding_builder import GroundingBuilder
+
+    graph = GroundingBuilder(knowledge_service).build_claim_graph_expanded(global_id)
+    claims = list(graph.claims or [])
+    if not claims:
+        raise HTTPException(
+            status_code=422,
+            detail="该实体在知识库中没有可用的证据声明，无法生成历史见解。",
+        )
+
+    evidence_lines: list[str] = []
+    evidence_out: list[dict] = []
+    for c in claims:
+        text = (c.claim_text or "").strip()
+        if not text:
+            continue
+        source_title = ""
+        source_creator = ""
+        source_publisher = ""
+        source_type = ""
+        source_tier = ""
+        sid = c.source_id or None
+        if sid:
+            src = knowledge_service.get_source(sid)
+            if src:
+                source_title = src.get("title", "") or ""
+                source_creator = src.get("creator", "") or ""
+                source_publisher = src.get("publisher_or_archive", "") or ""
+                source_type = src.get("type", "") or ""
+                # 2026-08-11 (PO)：补 source_tier（M90.x 漏带，导致前端等级徽标
+                # 一直不显示）；与 read-time enrich 保持一致。
+                source_tier = src.get("tier", "") or ""
+        evidence_lines.append(f"- {text}" + (f"（来源：{source_title}）" if source_title else ""))
+        evidence_out.append(
+            {
+                "global_id": global_id,
+                "kind": "claim",
+                "label": text,
+                "status": "verified",
+                "source_id": sid,
+                "source_title": source_title,
+                # 来源完整书目信息 + 等级；additive，向后兼容。
+                "source_creator": source_creator,
+                "source_publisher": source_publisher,
+                "source_type": source_type,
+                "source_tier": source_tier,
+                # 证据来源实体（自身或扩展的邻居实体），additive。
+                "subject": c.subject or "",
+            }
+        )
+
+    if not evidence_out:
+        raise HTTPException(status_code=422, detail="该实体没有可用的证据文本。")
+
+    # C5 AI 归位：LLM 调用整体在 ai_gateway/insight_service（prompt 构造 +
+    # provider 接线 + 异常归一），main.py 只做薄委托。
+    from .ai_gateway.insight_service import InsightGenerationError, generate_insight_text
+
+    try:
+        insight_text = generate_insight_text(evidence_lines)
+    except InsightGenerationError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+    return insight_store.save_insight(global_id, insight_text, evidence_out, engine="ai")
+
+
+def _enrich_evidence_with_source(rec: dict) -> dict:
+    """2026-08-11 (PO)：读时补全来源字段——已固化记录（之前 evidence_out 漏
+    带 source_tier，且早期记录也没 source_creator/publisher）自动从
+    sources.json 查出来填上，不需重新生成即全局生效。新生成的记录也会
+    因 evidence_out 已带而走快速路径。"""
+    evidence = rec.get("evidence") or []
+    if not evidence:
+        return rec
+    enriched = []
+    for ev in evidence:
+        ev2 = dict(ev)
+        sid = ev.get("source_id")
+        if sid:
+            src = knowledge_service.get_source(sid)
+            if src:
+                ev2.setdefault("source_creator", src.get("creator", "") or "")
+                ev2.setdefault("source_publisher", src.get("publisher_or_archive", "") or "")
+                ev2.setdefault("source_type", src.get("type", "") or "")
+                ev2.setdefault("source_tier", src.get("tier", "") or "")
+                # 2026-08-11 (PO)：出版年份 + ISBN（图书类来源补 isbn 后显示）
+                ev2.setdefault("source_year", src.get("year") if src.get("year") is not None else "")
+                ev2.setdefault("source_isbn", src.get("isbn", "") or "")
+        enriched.append(ev2)
+    rec["evidence"] = enriched
+    return rec
+
+
+def get_entity_insight(global_id: str):
+    """GET — 前端读取固化历史见解（无则 404，前端显占位）。"""
+    rec = insight_store.get_insight(global_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="该实体暂无固化历史见解，请在后台生成。")
+    return _enrich_evidence_with_source(rec)
+
+
+def generate_entity_insight(global_id: str):
+    """POST /generate — 后台触发：AI 基于证据生成 + 固化。"""
+    return _generate_entity_insight(global_id)
+
+
+def update_entity_insight(global_id: str, body: InsightUpdate):
+    """PUT — 后台人工编辑历史见解（engine=curated）。"""
+    insight = (body.insight or "").strip()
+    if not insight:
+        raise HTTPException(status_code=422, detail="历史见解内容不能为空。")
+    evidence = body.evidence if body.evidence is not None else []
+    return insight_store.save_insight(global_id, insight, evidence, engine="curated")
+
+
 # --- Router wiring: canonical /api/v1 + frozen legacy compat -------------
 v1_router = APIRouter()
 v1_router.add_api_route(
@@ -400,12 +578,7 @@ v1_router.add_api_route(
 v1_router.add_api_route(
     "/entity/{entity_id}", entity, methods=["GET"], operation_id="v1_entity"
 )
-v1_router.add_api_route(
-    "/entity/{entity_id}/recommendations",
-    recommendations,
-    methods=["GET"],
-    operation_id="v1_entity_recommendations",
-)
+    # A3 (ADR-0015 D1): v1 /entity/{id}/recommendations route retired.
 v1_router.add_api_route(
     "/search", search, methods=["GET"], operation_id="v1_search"
 )
@@ -424,11 +597,33 @@ v1_router.add_api_route(
 v1_router.add_api_route(
     "/ai/chat", ai_chat, methods=["POST"], operation_id="v1_ai_chat"
 )
+# M90.x: 历史见解固化内容（后台生成/编辑，前端只读）
+v1_router.add_api_route(
+    "/insights/{global_id}", get_entity_insight, methods=["GET"], operation_id="v1_insight_get"
+)
+v1_router.add_api_route(
+    "/insights/{global_id}/generate", generate_entity_insight, methods=["POST"], operation_id="v1_insight_generate"
+)
+v1_router.add_api_route(
+    "/insights/{global_id}", update_entity_insight, methods=["PUT"], operation_id="v1_insight_update"
+)
 v1_router.add_api_route(
     "/provenance/{entity_id}",
     provenance,
     methods=["GET"],
     operation_id="v1_provenance",
+)
+v1_router.add_api_route(
+    "/topics/{topic}/explore-starters",
+    explore_starters,
+    methods=["GET"],
+    operation_id="v1_topic_explore_starters",
+)
+v1_router.add_api_route(
+    "/related-entities",
+    related_entities,
+    methods=["GET"],
+    operation_id="v1_related_entities",
 )
 
 legacy_router = APIRouter()
@@ -438,12 +633,7 @@ legacy_router.add_api_route(
 legacy_router.add_api_route(
     "/entity/{entity_id}", entity, methods=["GET"], operation_id="entity"
 )
-legacy_router.add_api_route(
-    "/entity/{entity_id}/recommendations",
-    recommendations,
-    methods=["GET"],
-    operation_id="entity_recommendations",
-)
+    # A3 (ADR-0015 D1): legacy /entity/{id}/recommendations route retired.
 legacy_router.add_api_route(
     "/search", search, methods=["GET"], operation_id="search"
 )
@@ -468,9 +658,28 @@ legacy_router.add_api_route(
     methods=["GET"],
     operation_id="provenance",
 )
+legacy_router.add_api_route(
+    "/topics/{topic}/explore-starters",
+    explore_starters,
+    methods=["GET"],
+    operation_id="topic_explore_starters",
+)
+legacy_router.add_api_route(
+    "/related-entities",
+    related_entities,
+    methods=["GET"],
+    operation_id="related_entities",
+)
 
 app.include_router(v1_router, prefix=settings.api_v1_prefix)
 app.include_router(legacy_router)
+# ADR-0018: research persistence is v1-only (no legacy compat surface needed —
+# the endpoint did not exist before this gate).
+app.include_router(research_router, prefix=settings.api_v1_prefix)
+# ADR-0021: content configuration is v1-only (new surface, no legacy compat).
+app.include_router(content_router, prefix=settings.api_v1_prefix)
+# ADR-0021 sibling: site configuration (feature flags / topic ordering / …).
+app.include_router(site_config_router, prefix=settings.api_v1_prefix)
 
 
 # --- Startup: build the in-memory Knowledge Core once ---------------------

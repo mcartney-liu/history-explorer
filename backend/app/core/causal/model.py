@@ -31,5 +31,5 @@ class CausalStatement:
     effect_id: str
     mechanism: str | None = None
     consequence: str | None = None
-    confidence: float | None = None
+    confidence: str | None = None  # "high" | "medium" | "low" | None (C-7 constraint)
     evidence_refs: Tuple[str, ...] = field(default_factory=tuple)

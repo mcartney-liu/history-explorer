@@ -46,11 +46,11 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
     expect(html).toContain('data-starter="roman_empire:event-roman-empire-established"')
     expect(html).toContain('data-starter="roman_empire:loc-rome"')
     expect(html).toContain('data-starter="hellenistic_world:civ-greek"')
-    expect(html).toContain('aria-label="探索 Roman Empire Established"')
-    expect(html).toContain('aria-label="探索 Rome"')
-    expect(html).toContain('aria-label="探索 Ancient Greek Civilization"')
-    expect(html).toContain('Roman Empire Established')
-    expect(html).toContain('Rome')
+    expect(html).toContain('aria-label="探索 罗马帝国建立"')
+    expect(html).toContain('aria-label="探索 罗马"')
+    expect(html).toContain('aria-label="探索 古希腊文明"')
+    expect(html).toContain('罗马帝国建立')
+    expect(html).toContain('罗马')
   })
 
   it('renders the dismiss control', () => {

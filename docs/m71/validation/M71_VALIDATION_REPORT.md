@@ -30,16 +30,20 @@ open_discover → open_package(roman-empire-exploration) → click_guide_next(ro
 ```
 ✅ `open_package` 带 packageSlug；✅ `click_guide_next` 带 entityGlobalId；✅ Guide 位置随事件流实时更新（"你现在在 Roman Empire Established"）
 
-## 4. 体验链路有效性发现（6 项，为 M72 提供依据）
+## 4. 体验链路有效性发现（6 项）→ M81b 修复状态
 
-| # | 发现 | 类型 | M72 建议 |
+| # | 发现 | 类型 | 修复状态 |
 |---|---|---|---|
-| A | **向导「下一步原因」为英文模板**（"Roman Republic preceded 27 BC in time."）——`RELATIONSHIP_TEMPLATES` 未随 locale 本地化，中文界面混排英文 | 理解障碍（H2 相关） | 本地化模板（前端 i18n 扩展，低风险） |
-| B | **罗马/丝绸包实体名与描述为英文**（数据层现状；中国包为中文） | 理解障碍 | 数据内容本地化或双语展示（数据层，需评估） |
-| C | **面包屑「Home」回到包页而非首页**（`packageSlug` state 未随 Home 清除） | 导航闭环瑕疵 | App.tsx 路由语义修正（低风险） |
-| D | **recommended_next 跨包指针指向"规划中"包**（无真实包目标） | 跨包路径受限 | M72 内容库扩展（第 4 包）后回填真实指针 |
-| E | **`open_entity` 埋点未携带 entityGlobalId**（M43 遗留）→ Depth 实体归因 / Coverage 窗口归因受限 | 指标精度（数据质量） | EntityPageShell 补 gid（改 M43 文件，走 Freeze Gate） |
-| F | 「我的探索兴趣」文案暗示"画像"（与无画像红线张力，历史遗留） | 文案一致性 | 文案修正（低风险，不建画像） |
+| A | **向导「下一步原因」为英文模板**（"Roman Republic preceded 27 BC in time."）——`RELATIONSHIP_TEMPLATES` 未随 locale 本地化，中文界面混排英文 | 理解障碍（H2 相关） | ✅ **已完成** (M81b)：`GuidePanel.tsx` 6 处硬编码 → 8 个 i18n key（zh/en/ja）；关系原因模板已在 M72 完成中文适配 |
+| B | **罗马/丝绸包实体名与描述为英文**（数据层现状；中国包为中文） | 理解障碍 | ⚠️ **部分完成**：包级文案（title/summary/goals.zh）已中文；KG 数据层（`data/examples/`）实体名仍英文，暂缓 |
+| C | **面包屑「Home」回到包页而非首页**（`packageSlug` state 未随 Home 清除） | 导航闭环瑕疵 | ✅ **已验证** (M72)：`App.tsx:351-354` 已实现 M72 Line1（onHomeExit → closePackage），仅确认 |
+| D | **recommended_next 跨包指针指向"规划中"包**（无真实包目标） | 跨包路径受限 | 🔴 **暂缓**：可能改变探索路径，等 M81a 验证结束后评估 |
+| E | **`open_entity` 埋点未携带 entityGlobalId**（M43 遗留）→ Depth / Coverage 归因受限 | 指标精度 | ✅ **已验证** (M72)：`EntityPageShell.tsx:126-129` 已实现 M72 Line2，仅确认 |
+| F | 「我的探索兴趣」文案暗示"画像"（与无画像红线张力） | 文案一致性 | ✅ **已完成** (M81b)：用户 UI 此前已改为"我的探索足迹"；本次修正 `UIAudit.ts` 内部审计文档 |
+
+> M81b Phase 1 已关闭（2026-08-04）。完整报告：`docs/product/M81b_PHASE1_COMPLETION_REPORT.md`。B/D 延后，M81a 验证期间禁止新增修复项。
+
+---
 
 ## 5. 四指标基线（详见 METRICS_ANALYSIS.md）
 

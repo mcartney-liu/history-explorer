@@ -3,7 +3,13 @@
 // Universal data shape for all entity display cards.
 // Decouples UI (ExplorationCard) from data (EntityViewModel).
 // Same model serves: Search, Timeline, Graph, Map, AI, Homepage.
+// M90.x (PO 实测): 构建"继续探索"卡时 summary 之前硬编码英文
+// "Connected via ${rel.label}" + rel.label 英文——改为 i18n + locale 翻译。
 // ============================================================
+
+import { getRelationshipLabel } from './entityLabels'
+import { getEntityDisplayName } from '../explorationPackages'
+import type { Locale } from '../../data/locale'
 
 export interface ExplorationCardModel {
   id: string
@@ -31,12 +37,15 @@ export interface ExplorationCardModel {
 
 /** Build cards from EntityViewModel's graph + relations.
  *  Produces one card per connected entity in the graph.
+ *  M90.x: summary 由调用方提供的 t()/locale 走 i18n + rel 翻译（不再是英文硬编码）。
  */
 export function buildCardsFromViewModel(
   graphNodes: { id: string; name: string; type: string }[],
   graphEdges: { source: string; target: string; relation: string; label: string }[],
   getLabel: (type: string) => string,
   getIcon: (type: string) => string,
+  locale: Locale,
+  t: (key: string, vars?: Record<string, string>) => string,
 ): ExplorationCardModel[] {
   return graphNodes.map((node) => {
     const rel = graphEdges.find(
@@ -44,11 +53,13 @@ export function buildCardsFromViewModel(
     )
     return {
       id: node.id,
-      title: node.name,
+      title: getEntityDisplayName(node.id, locale),
       subtitle: getLabel(node.type),
       entityType: node.type,
       icon: getIcon(node.type),
-      summary: rel ? `Connected via ${rel.label}` : '',
+      summary: rel
+        ? t('relationship.connectedVia', { rel: getRelationshipLabel(rel.relation, locale) })
+        : '',
       badges: [getLabel(node.type)],
       meta: { type: node.type },
       target: node.id,

@@ -67,7 +67,7 @@ def test_entity_global_id_lookup():
     assert res.status_code == 200
     body = res.json()
     assert body["id"] == "person-augustus"
-    assert body["name"] == "Augustus"
+    assert body["name"] == "奥古斯都"
     # The four required sections are all still present.
     for key in ("summary", "timeline", "relationships", "exploration"):
         assert key in body

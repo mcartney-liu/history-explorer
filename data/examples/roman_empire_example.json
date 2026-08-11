@@ -1,12 +1,13 @@
 {
-  "title": "Roman Empire",
-  "summary": "A historical civilization whose empire dominated the Mediterranean world for centuries.",
+  "title": "罗马帝国",
+  "summary": "一个历史悠久的文明，其帝国曾统治地中海世界数个世纪。",
+  "category": "Civilization",
   "entities": [
     {
       "id": "event-roman-empire-established",
       "type": "Event",
       "name": "Roman Empire Established",
-      "description": "The Roman Empire was founded in 27 BC under Augustus.",
+      "description": "罗马帝国于公元前27年在奥古斯都治下建立。",
       "global_id": "roman_empire:event-roman-empire-established",
       "aliases": [
         "Principate",
@@ -64,7 +65,7 @@
       "id": "person-augustus",
       "type": "Person",
       "name": "Augustus",
-      "description": "First Roman emperor, reigned from 27 BC.",
+      "description": "罗马第一位皇帝，自公元前27年起统治。",
       "global_id": "roman_empire:person-augustus",
       "aliases": [
         "Octavian",
@@ -142,7 +143,7 @@
       "id": "civ-roman",
       "type": "Civilization",
       "name": "Roman Civilization",
-      "description": "A Mediterranean civilization that dominated the ancient world.",
+      "description": "统治古代世界的地中海文明。",
       "global_id": "roman_empire:civ-roman",
       "aliases": [
         "Rome",
@@ -205,7 +206,7 @@
       "id": "loc-rome",
       "type": "Location",
       "name": "Rome",
-      "description": "Capital city of the Roman Empire.",
+      "description": "罗马帝国的首都。",
       "global_id": "roman_empire:loc-rome",
       "aliases": [
         "Roma"
@@ -258,7 +259,7 @@
       "id": "tp-27bc",
       "type": "Time Period",
       "name": "27 BC",
-      "description": "Year the Roman Empire was founded.",
+      "description": "罗马帝国建立之年。",
       "global_id": "roman_empire:tp-27bc",
       "aliases": [
         "27 BCE",
@@ -311,7 +312,7 @@
       "id": "roman_egypt",
       "type": "Civilization",
       "name": "Roman Egypt (Aegyptus)",
-      "description": "The Roman province established in 30 BC after the fall of Cleopatra, linking the Nile valley to the Mediterranean empire.",
+      "description": "公元前30年克娄巴特拉倒台后建立的罗马行省，连接了 Nile valley to the Mediterranean empire.",
       "global_id": "roman_empire:roman_egypt",
       "aliases": [
         "Aegyptus",
@@ -371,7 +372,7 @@
       "id": "civ-byzantine",
       "type": "Civilization",
       "name": "Byzantine Empire",
-      "description": "The Eastern Roman continuation that inherited Roman law, administration, and Greek learning after the fall of the western empire.",
+      "description": "继承了罗马法律、行政和希腊文化的东罗马延续。ek learning after the fall of the western empire.",
       "global_id": "roman_empire:civ-byzantine",
       "aliases": [
         "Eastern Roman Empire",
@@ -431,7 +432,7 @@
       "id": "religion-christianity",
       "type": "Religion",
       "name": "Christianity",
-      "description": "A monotheistic faith that spread through the Roman Empire and was adopted as its state religion, carrying forward the monotheistic idea across civilizations.",
+      "description": "一种在罗马帝国传播并最终被采纳为国教的一神信仰。 state religion, carrying forward the monotheistic idea across civilizations.",
       "global_id": "roman_empire:religion-christianity",
       "aliases": [
         "Christian faith",
@@ -490,7 +491,7 @@
       "id": "tp-republic",
       "type": "Time Period",
       "name": "Roman Republic",
-      "description": "The Roman state (509-27 BC) before the imperial monarchy.",
+      "description": "帝制君主制之前的罗马国家（公元前509-27年）。",
       "global_id": "roman_empire:tp-republic",
       "aliases": [
         "Res Publica",
@@ -534,7 +535,7 @@
       "id": "person-constantine",
       "type": "Person",
       "name": "Constantine the Great",
-      "description": "Roman emperor (306-337 AD) who legalized Christianity via the Edict of Milan.",
+      "description": "罗马皇帝（公元306-337年），通过米兰敕令使基督教合法化。",
       "global_id": "roman_empire:person-constantine",
       "aliases": [
         "Constantine I",
@@ -593,7 +594,7 @@
       "id": "person-julius-caesar",
       "type": "Person",
       "name": "Julius Caesar",
-      "description": "Roman general and dictator whose crossing of the Rubicon ended the Republic.",
+      "description": "罗马将领与独裁官，跨过卢比孔河终结了共和国。",
       "global_id": "roman_empire:person-julius-caesar",
       "aliases": [
         "Gaius Julius Caesar",
@@ -650,7 +651,7 @@
       "id": "loc-constantinople",
       "type": "Location",
       "name": "Constantinople",
-      "description": "City on the Bosporus founded by Constantine as the new imperial capital.",
+      "description": "君士坦丁在博斯普鲁斯海峡建立的新帝国首都。",
       "global_id": "roman_empire:loc-constantinople",
       "aliases": [
         "Byzantium",
@@ -694,7 +695,7 @@
       "id": "event-edict-milan",
       "type": "Event",
       "name": "Edict of Milan",
-      "description": "313 AD proclamation granting Christians legal toleration in the Roman Empire.",
+      "description": "公元313年授予基督徒在罗马帝国合法地位的公告。",
       "global_id": "roman_empire:event-edict-milan",
       "aliases": [
         "Edict of Toleration",
@@ -738,7 +739,7 @@
       "id": "event-republic-end",
       "type": "Event",
       "name": "End of the Roman Republic",
-      "description": "The collapse of the Roman Republic through civil wars (49-27 BC), culminating in Octavian's victory at Actium and the establishment of the Principate.",
+      "description": "罗马共和国通过内战（公元前49-27年）走向崩溃，最终 Octavian's victory at Actium and the establishment of the Principate.",
       "global_id": "roman_empire:event-republic-end",
       "aliases": [
         "Fall of the Republic",
@@ -800,7 +801,7 @@
       "id": "event-pax-romana",
       "type": "Event",
       "name": "Pax Romana",
-      "description": "A period of relative peace and stability across the Roman Empire lasting approximately 200 years (27 BC – 180 AD), enabling economic prosperity, cultural flourishing, and infrastructural development.",
+      "description": "罗马帝国全境持续约两百年的相对和平与稳定时期。mately 200 years (27 BC – 180 AD), enabling economic prosperity, cultural flourishing, and infrastructural development.",
       "global_id": "roman_empire:event-pax-romana",
       "aliases": [
         "Roman Peace",
@@ -865,7 +866,7 @@
       "id": "event-empire-fall",
       "type": "Event",
       "name": "Fall of the Western Roman Empire",
-      "description": "The gradual decline and eventual collapse of the Western Roman Empire in 476 AD, marking the conventional end of antiquity and the beginning of the Middle Ages in Western Europe.",
+      "description": "西罗马帝国于公元476年逐渐衰落并最终崩溃， marking the conventional end of antiquity and the beginning of the Middle Ages in Western Europe.",
       "global_id": "roman_empire:event-empire-fall",
       "aliases": [
         "Fall of Rome",
@@ -1332,6 +1333,36 @@
       "mechanism": "political",
       "geographic_scope": "Roman Italy",
       "temporal_relation": null
+    },
+    {
+      "source": "event-empire-fall",
+      "target": "civ-roman",
+      "type": "reinterprets",
+      "confidence": "medium",
+      "citation": "Gibbon, Decline and Fall; Cambridge Ancient History",
+      "evidence": [
+        "ec-rom-041"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "罗马衰亡的解释历经重释：吉本18世纪'道德衰败+基督教'论，被20世纪剑桥史学的财政—边疆—制度复合论系统性重写，宗教因素降为多因之一。",
+      "reviewed": true
+    },
+    {
+      "source": "person-julius-caesar",
+      "target": "tp-republic",
+      "type": "disputes",
+      "confidence": "medium",
+      "citation": "Caesar, Commentarii; Suetonius, Twelve Caesars",
+      "evidence": [
+        "ec-rom-042"
+      ],
+      "valid_time": null,
+      "weight": 1,
+      "mechanism": "interpretation",
+      "narrative": "凯撒遇刺性质存在立场对立：共和派视布鲁图斯为'解放者'、凯撒为共和国的威胁；现代政治史强调元老院既得利益与个人野心的结构性冲突。",
+      "reviewed": true
     }
   ],
   "timeline": [

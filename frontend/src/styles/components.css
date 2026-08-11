@@ -5,20 +5,20 @@
 
 /* ---- Common card surface ---- */
 .surf-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--line);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius-lg);
 }
 
 .surf-card-high {
-  background: linear-gradient(158deg, rgba(22,19,14,0.9), rgba(22,19,14,0.95));
-  border: 1px solid var(--gold-line);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-accent-soft);
   border-radius: var(--radius-lg);
 }
 
 .surf-card-gold {
-  background: linear-gradient(158deg, rgba(22,19,14,0.7), rgba(22,19,14,0.8));
-  border: 1px solid var(--line);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
   border-radius: var(--radius-lg);
 }
 
@@ -34,20 +34,20 @@
   cursor: pointer;
   transition: var(--animation-fast);
   font-family: var(--sans);
-  border: 1px solid var(--line);
-  background: var(--bg-surface);
-  color: var(--mid);
+  border: 1px solid var(--color-paper-300);
+  background: var(--color-paper-100);
+  color: var(--color-ink-500);
 }
 
 .btn:hover {
-  color: var(--hi);
-  border-color: var(--gold-line);
+  color: var(--color-ink-900);
+  border-color: var(--color-accent-soft);
 }
 
 .btn-gold {
-  border-color: var(--gold-line);
-  color: var(--gold-hi);
-  background: var(--gold-glow);
+  border-color: var(--color-accent-soft);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
 }
 
 .btn-gold:hover {
@@ -57,19 +57,19 @@
 .btn-ghost {
   background: transparent;
   border-color: transparent;
-  color: var(--low);
+  color: var(--color-ink-500);
   font-size: var(--text-caption);
 }
 
 .btn-ghost:hover {
-  color: var(--hi);
-  background: var(--gold-glow);
+  color: var(--color-ink-900);
+  background: var(--color-accent-soft);
 }
 
 /* ---- Section label ---- */
 .sec-label {
   font-size: var(--text-label);
-  color: var(--low);
+  color: var(--color-ink-500);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -77,6 +77,115 @@
 /* ---- Separator ---- */
 .hr {
   border: none;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--color-paper-300);
   margin: var(--space-4) 0;
+}
+
+/* ---- M82 P3 LayerBadge ---- */
+.layer-badge {
+  display: inline-block;
+  font-size: 11px;
+  border-radius: 999px;
+  padding: 1px 8px;
+  line-height: 1.6;
+}
+.layer-badge--causal {
+  color: var(--color-truth-strong);
+  border: 1px solid var(--color-truth-strong);
+}
+.layer-badge--inference {
+  color: var(--color-status-info);
+  border: 1px solid var(--color-status-info);
+}
+.layer-badge--evidence {
+  color: var(--color-ink-500);
+  border: 1px solid var(--color-paper-300);
+}
+
+/* ============================================================
+   Wave2-#141(4): de-bright controls — kill the browser-default
+   light-grey button/chip backgrounds that glared against the
+   deep-navy frosted theme. Semantic fallbacks, not hardcoded
+   colours (P0-3): translucent navy glass in legacy, paper-200
+   in v1.
+   ============================================================ */
+.explore-button,
+.discover-starter,
+.feedback-btn,
+.ae-mode-chip {
+  background: var(--glass-navy-rail, var(--color-paper-200));
+  color: var(--color-ink-700, inherit);
+  border-color: var(--color-paper-300, currentColor);
+}
+.explore-button:hover,
+.discover-starter:hover,
+.feedback-btn:hover,
+  .ae-mode-chip:hover {
+    background: var(--glass-navy-panel, var(--color-paper-200));
+  }
+
+  /* M90 / 方案A: unified smart search — helper hint + example chips */
+  .search-hint {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--color-ink-500);
+  }
+  .search-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .search-chip {
+    border: 1px solid var(--color-paper-300);
+    background: var(--color-paper-100);
+    color: var(--color-ink-700);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color .18s ease, background-color .18s ease, color .18s ease;
+  }
+  .search-chip:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+/* P5-S5 理解视角 —— UnderstandingOverview（画像足迹聚合） */
+.discover-understanding { display: flex; flex-direction: column; gap: 16px; }
+.discover-understanding--empty {
+  padding: 24px;
+  border: 1px dashed var(--color-paper-300);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--color-paper-100);
+}
+.discover-understanding-head { display: flex; flex-direction: column; gap: 4px; }
+.discover-understanding-block { display: flex; flex-direction: column; gap: 8px; }
+.discover-understanding-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+}
+.discover-understanding-list {
+  display: flex; flex-direction: column; gap: 6px;
+  margin: 0; padding: 0; list-style: none;
+}
+.discover-understanding-list li {
+  padding: 8px 12px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: 8px;
+  background: var(--color-background-primary);
+  font-size: 13px;
+  color: var(--color-ink-800);
+}
+.discover-understanding-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.discover-understanding-tag {
+  padding: 4px 12px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: 999px;
+  background: var(--color-paper-100);
+  color: var(--color-ink-700);
+  font-size: 12px;
 }
