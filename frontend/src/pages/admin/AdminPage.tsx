@@ -132,7 +132,9 @@ function cardIsEdited(card: ContentCard, def: ContentCard): boolean {
     card.title !== def.title ||
     card.desc !== def.desc ||
     card.image !== def.image ||
-    JSON.stringify(card.items) !== JSON.stringify(def.items)
+    JSON.stringify(card.items) !== JSON.stringify(def.items) ||
+    JSON.stringify(card.title_i18n ?? null) !== JSON.stringify(def.title_i18n ?? null) ||
+    JSON.stringify(card.summary_i18n ?? null) !== JSON.stringify(def.summary_i18n ?? null)
   )
 }
 
@@ -797,11 +799,18 @@ function CardEditor({
       desc: defaults.desc,
       image: defaults.image,
       items: [...defaults.items],
+      title_i18n: defaults.title_i18n ?? null,
+      summary_i18n: defaults.summary_i18n ?? null,
     })
   }, [card.id, defaults, onPatch])
 
   const setItems = useCallback(
     (next: string[]) => onPatch(card.id, { items: next }),
+    [card.id, onPatch],
+  )
+
+  const setGuidedQuestions = useCallback(
+    (next: string[]) => onPatch(card.id, { guided_questions: next }),
     [card.id, onPatch],
   )
 
@@ -967,12 +976,61 @@ function CardEditor({
         />
       </label>
 
+      {card.supports_text_i18n ? (
+        <div className="admin-i18n">
+          <p className="admin-field-label">三语标题（留空 = 沿用数据源）</p>
+          {(['zh', 'en', 'ja'] as const).map((loc) => (
+            <label className="admin-field" key={`t-${loc}`}>
+              <span className="admin-field-label">{loc.toUpperCase()}</span>
+              <input
+                className="admin-input"
+                type="text"
+                value={card.title_i18n?.[loc] ?? ''}
+                disabled={locked}
+                onChange={(e) =>
+                  onPatch(card.id, {
+                    title_i18n: { ...(card.title_i18n ?? {}), [loc]: e.target.value },
+                  })
+                }
+              />
+            </label>
+          ))}
+          <p className="admin-field-label">三语描述（留空 = 沿用数据源）</p>
+          {(['zh', 'en', 'ja'] as const).map((loc) => (
+            <label className="admin-field" key={`s-${loc}`}>
+              <span className="admin-field-label">{loc.toUpperCase()}</span>
+              <textarea
+                className="admin-textarea"
+                rows={3}
+                value={card.summary_i18n?.[loc] ?? ''}
+                disabled={locked}
+                onChange={(e) =>
+                  onPatch(card.id, {
+                    summary_i18n: { ...(card.summary_i18n ?? {}), [loc]: e.target.value },
+                  })
+                }
+              />
+            </label>
+          ))}
+        </div>
+      ) : null}
+
       {card.supports_items ? (
         <ItemListEditor
           items={card.items}
           itemsLabel={itemsLabel}
           locked={locked}
           onChange={setItems}
+          onError={onError}
+        />
+      ) : null}
+
+      {card.supports_guided_questions ? (
+        <ItemListEditor
+          items={card.guided_questions ?? []}
+          itemsLabel="引导问题"
+          locked={locked}
+          onChange={setGuidedQuestions}
           onError={onError}
         />
       ) : null}

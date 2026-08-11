@@ -7,7 +7,7 @@
 
 import { useState, type SyntheticEvent } from 'react'
 import { useLocale } from '../../data/locale'
-import { slotImageName, useContentRevision } from '../../data/contentRuntime'
+import { slotGuidedQuestions, slotImageName, slotSummaryI18n, slotTitleI18n, useContentRevision } from '../../data/contentRuntime'
 import { mediaUrl } from '../../data/contentApi'
 
 export interface TopicCardData {
@@ -29,7 +29,7 @@ interface TopicCardProps {
 const ART_FORMATS = ['png', 'jpg', 'jpeg'] as const
 
 export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   useContentRevision()
   const [artOk, setArtOk] = useState(false)
   // Admin-configured cover (slot `explore_topics.<slug>`) wins when set;
@@ -67,8 +67,13 @@ export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps
           onLoad={() => setArtOk(true)}
           onError={handleArtError}
         />
-        <span className="discover-theme-label">{card.label}</span>
-        <span className="discover-theme-desc">{card.desc}</span>
+        <span className="discover-theme-label">{slotTitleI18n(`explore_topics.${card.slug}`, locale, card.label)}</span>
+        <span className="discover-theme-desc">{slotSummaryI18n(`explore_topics.${card.slug}`, locale, card.desc ?? '')}</span>
+        {slotGuidedQuestions(`explore_topics.${card.slug}`, []).map((q) => (
+          <span className="discover-theme-desc" key={q}>
+            {q}
+          </span>
+        ))}
       </button>
     )
   }
@@ -81,8 +86,8 @@ export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps
       aria-label={t('discover.topicAria', { label: card.label })}
       onClick={() => onClick(card.slug)}
     >
-      <span className="he-card-title">{card.label}</span>
-      {card.desc && <span className="he-card-summary">{card.desc}</span>}
+      <span className="he-card-title">{slotTitleI18n(`explore_topics.${card.slug}`, locale, card.label)}</span>
+      {card.desc && <span className="he-card-summary">{slotSummaryI18n(`explore_topics.${card.slug}`, locale, card.desc)}</span>}
       <span className="he-card-cta">{t('discover.topicStart')}</span>
     </button>
   )

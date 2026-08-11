@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react'
 import { guidanceFor } from '../data/EntityTabGuidance'
-import { useContentRevision } from '../data/contentRuntime'
+import { useContentRevision, slotItems } from '../data/contentRuntime'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import { useLocale } from '../data/locale'
 
@@ -69,11 +69,15 @@ export function EntityPageShellView({
   // reads the overlay synchronously, so without this subscription an edit made
   // in #/admin would only appear after a full reload.
   useContentRevision()
+  // ADR-0021 R2: the section tab labels are operator-editable via the
+  // `entity_tabs.nav_labels` slot (in TABS order); fall back to the
+  // shipped locale strings when nothing is configured.
+  const configuredTabLabels = slotItems('entity_tabs.nav_labels', [])
   return (
     <div className="eps">
       {/* Tab navigation */}
       <nav className="eps-nav" role="tablist" aria-label={t('entity.tabNavAria')}>
-        {tabs.map((tab) => (
+        {tabs.map((tab, idx) => (
           <button
             key={tab.id}
             type="button"
@@ -83,7 +87,7 @@ export function EntityPageShellView({
             aria-label={t(tab.ariaLabel)}
             onClick={() => onTabChange(tab.id)}
           >
-            {t(tab.label)}
+            {configuredTabLabels[idx] ?? t(tab.label)}
           </button>
         ))}
       </nav>
