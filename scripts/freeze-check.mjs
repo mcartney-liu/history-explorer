@@ -201,6 +201,7 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/provenanceApi.ts",
   "frontend/src/data/provenanceApi.test.ts",
   "frontend/src/components/ProvenancePanel.tsx",
+  "frontend/src/components/ProvenancePanel.css",
   "frontend/src/components/ProvenancePanel.test.tsx",
   "frontend/src/components/EntityPage.tsx",
   // M30-B (Exploration UX Upgrade) — Frontend Freeze Revision Gate (lightweight
@@ -809,6 +810,20 @@ export const SCOPE_ALLOWLIST = [
   // P5 — Home capability card artwork (ProductIntro four-grid: chat / story /
   // explore / research). Drop-in real artwork; straight corners, no slate edge.
   "frontend/public/assets/cards/",
+  // P5 — Explore-theme card background artwork (DiscoverPage theme grid). Drop-in
+  // real artwork keyed by topic slug; the card shows it as a background only when
+  // present, falling back to the plain paper card otherwise. No code/schema change.
+  "frontend/public/assets/topics/",
+  // P5 — Research dimension artwork (AI 研究模式 idle 维度卡). Drop-in generic
+  // per-dimension imagery shared across ALL entities; keyed by dimension key
+  // (politics/military/...). Card shows it full-bleed only when present,
+  // falling back to a plain paper card otherwise. No code/schema change.
+  "frontend/public/assets/research/",
+  // P5 — Entity insight card artwork (历史见解 block). Drop-in per-entity
+  // real artwork keyed by entity id (e.g. civ-roman.webp); the card shows it
+  // beside the insight only when present, falling back to plain style otherwise.
+  // No code/schema change. Directory prefix so each <id>.webp is allowed.
+  "frontend/public/assets/entities/",
   "frontend/src/styles/explorer-experience.css",
   "frontend/src/styles/components.css",
   "frontend/src/pages/m89/m89.css",
