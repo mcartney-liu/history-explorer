@@ -65,8 +65,18 @@ function LandingPage({
   ]
   return (
     <section className="he-landing" aria-label="探索历史">
-      {/* Hero */}
+      {/* Hero — AI 历史学家向导主角 + 做旧金线 + 浮入 */}
       <div className="he-hero">
+        <div className="he-hero-guide" aria-hidden="true">
+          <img
+            className="he-hero-guide-img"
+            src={`${import.meta.env.BASE_URL}assets/cards/card-explore.jpg`}
+            alt=""
+          />
+        </div>
+        <div className="he-hero-rule" aria-hidden="true">
+          <i />
+        </div>
         <h1 className="he-hero-title">{t('landing.hero')}</h1>
         <p className="he-hero-sub">{t('landing.sub')}</p>
       </div>
@@ -112,6 +122,11 @@ function LandingPage({
           </div>
         </div>
       )}
+
+      {/* 卷轴横幅 — 产品信条分隔带 */}
+      <div className="he-scroll-banner" role="note" aria-label={t('landing.hero')}>
+        {t('landing.hero')}
+      </div>
 
       {/* Topics */}
       {loading && <LoadingSkeleton label={t('landing.loading')} />}
