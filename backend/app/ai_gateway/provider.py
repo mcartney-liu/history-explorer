@@ -88,3 +88,14 @@ def get_provider(config=None):
         )
     except AIUnavailableError:
         return None
+
+
+def resolve_provider(config=None):
+    """Main.py-safe alias — keeps provider wiring inside ai_gateway (C5).
+
+    main.py handlers must NOT reference get_provider directly (thin-delegate
+    guardrail, test_main_py_ai_handler_is_thin_delegate). This wrapper gives
+    the composition root a stable entry point without leaking provider
+    internals into app wiring.
+    """
+    return get_provider(config)

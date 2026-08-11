@@ -456,7 +456,6 @@ def _generate_entity_insight(global_id: str) -> dict:
     来自知识库真实声明，不新增任何编造内容。
     """
     from .ai_gateway.grounding_builder import GroundingBuilder
-    from .ai_gateway.provider import AIUnavailableError, get_provider
 
     graph = GroundingBuilder(knowledge_service).build_claim_graph_expanded(global_id)
     claims = list(graph.claims or [])
@@ -510,26 +509,14 @@ def _generate_entity_insight(global_id: str) -> dict:
     if not evidence_out:
         raise HTTPException(status_code=422, detail="该实体没有可用的证据文本。")
 
-    try:
-        provider = get_provider()
-    except AIUnavailableError as e:
-        raise HTTPException(status_code=503, detail=f"AI 服务未启用：{e}")
+    # C5 AI 归位：LLM 调用整体在 ai_gateway/insight_service（prompt 构造 +
+    # provider 接线 + 异常归一），main.py 只做薄委托。
+    from .ai_gateway.insight_service import InsightGenerationError, generate_insight_text
 
-    system_prompt = (
-        "你是严谨的历史研究助手。请仅依据下方提供的证据生成该实体的历史见解。"
-        "严格限定在证据范围内，不得添加证据之外的事实或推测。使用简体中文。"
-    )
-    user_prompt = (
-        "证据：\n" + "\n".join(evidence_lines)
-        + "\n\n请基于以上证据，用一段话阐述该实体在历史上的意义与影响（历史见解）。"
-    )
     try:
-        insight_text = provider.complete(system_prompt, user_prompt, max_tokens=500).strip()
-    except Exception as e:  # noqa: BLE001 — network/model errors surface as 502
-        raise HTTPException(status_code=502, detail=f"AI 生成失败：{e}")
-
-    if not insight_text:
-        raise HTTPException(status_code=502, detail="AI 未返回内容。")
+        insight_text = generate_insight_text(evidence_lines)
+    except InsightGenerationError as e:
+        raise HTTPException(status_code=502, detail=str(e))
 
     return insight_store.save_insight(global_id, insight_text, evidence_out, engine="ai")
 

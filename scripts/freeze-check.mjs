@@ -297,6 +297,11 @@ export const SCOPE_ALLOWLIST = [
   // openai SDK to DeepSeek/通义/智谱). Zero new dependency; grounding + fallback
   // unchanged; default behaviour byte-identical when AI_BASE_URL/AI_MODEL unset.
   "backend/app/ai_gateway/provider.py",
+  // 2026-08-11 (C5 AI 归位, PO approved): entity insight generation moves out of
+  // main.py into ai_gateway (thin-delegate guardrail). main.py stays free of
+  // provider.(complete|chat) / get_provider; insight_service is the only LLM
+  // entry point for the /insights/{gid}/generate route.
+  "backend/app/ai_gateway/insight_service.py",
   "frontend/src/data/aiClient.ts",
   "frontend/src/data/aiClient.test.ts",  // M65-A04 (PO-approved) — AI client contract tests (H9 real-AI link)
   // M74-003 (C3-2, PO-approved): AI exploration suggestions build-time flag.
