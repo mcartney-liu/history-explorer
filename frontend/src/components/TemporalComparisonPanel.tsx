@@ -35,7 +35,7 @@ function hasDate(e: TemporalEntity): boolean {
 }
 
 function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   // 1. Keep named entities only, dedupe by name, preserve input order.
   //    No sorting — avoids any hidden ranking / similarity behavior.
   const seen = new Set<string>()
@@ -84,7 +84,7 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
   const rangeB: TemporalRange = { start: entityB.start_date, end: entityB.end_date }
   const cmp = compareTemporalRanges(rangeA, rangeB)
   const facts = cmp.comparable
-    ? buildTemporalComparisonText(cmp, entityA.name, entityB.name)
+    ? buildTemporalComparisonText(cmp, entityA.name, entityB.name, locale)
     : []
 
   const rangeText = (e: TemporalEntity) =>

@@ -130,53 +130,57 @@ export function compareTemporalRanges(
 
 // Deterministic template sentences. Same input -> same output. No judgement,
 // no "importance", no "influence", no "cause" — only mechanical interval facts.
+// 2026-08-12 (PO): locale-aware — zh renders Chinese sentences, en keeps the
+// original English templates (default 'en' = backward compat).
 export function buildTemporalComparisonText(
   cmp: TemporalComparison,
   aName: string,
   bName: string,
+  locale = 'en',
 ): string[] {
+  const zh = locale === 'zh'
   const out: string[] = []
 
   for (const r of cmp.relations) {
     switch (r) {
       case 'before':
-        out.push(`${aName} existed entirely before ${bName}.`)
+        out.push(zh ? `${aName} 的存续时间整体早于 ${bName}。` : `${aName} existed entirely before ${bName}.`)
         break
       case 'after':
-        out.push(`${aName} existed entirely after ${bName}.`)
+        out.push(zh ? `${aName} 的存续时间整体晚于 ${bName}。` : `${aName} existed entirely after ${bName}.`)
         break
       case 'overlap':
-        out.push(`${aName} and ${bName} overlapped for ${cmp.overlapYears} years.`)
+        out.push(zh ? `${aName} 与 ${bName} 重叠共存了 ${cmp.overlapYears} 年。` : `${aName} and ${bName} overlapped for ${cmp.overlapYears} years.`)
         break
       case 'contains':
-        out.push(`${aName} encompassed the entire span of ${bName}.`)
+        out.push(zh ? `${aName} 完整涵盖了 ${bName} 的整个存续期。` : `${aName} encompassed the entire span of ${bName}.`)
         break
       case 'contained_by':
-        out.push(`${aName} was entirely contained within ${bName}.`)
+        out.push(zh ? `${aName} 完全包含于 ${bName} 的存续期内。` : `${aName} was entirely contained within ${bName}.`)
         break
       case 'equals':
-        out.push(`${aName} and ${bName} occupied the exact same time span.`)
+        out.push(zh ? `${aName} 与 ${bName} 处于完全相同的存续时段。` : `${aName} and ${bName} occupied the exact same time span.`)
         break
     }
   }
 
   if (cmp.startGapYears !== undefined) {
     if (cmp.startGapYears === 0) {
-      out.push(`${aName} began in the same year as ${bName}.`)
+      out.push(zh ? `${aName} 与 ${bName} 始于同一年。` : `${aName} began in the same year as ${bName}.`)
     } else {
       const abs = Math.abs(cmp.startGapYears)
       const dir = cmp.startGapYears < 0 ? 'before' : 'after'
-      out.push(`${aName} began ${abs} years ${dir} ${bName}.`)
+      out.push(zh ? `${aName} 比 ${bName} ${dir === 'before' ? '早' : '晚'} ${abs} 年开始。` : `${aName} began ${abs} years ${dir} ${bName}.`)
     }
   }
 
   if (cmp.durationDiffYears !== undefined) {
     if (cmp.durationDiffYears === 0) {
-      out.push(`${aName} and ${bName} lasted the same number of years.`)
+      out.push(zh ? `${aName} 与 ${bName} 存续年数相同。` : `${aName} and ${bName} lasted the same number of years.`)
     } else {
       const abs = Math.abs(cmp.durationDiffYears)
       const dir = cmp.durationDiffYears > 0 ? 'longer' : 'shorter'
-      out.push(`${aName} lasted ${abs} years ${dir} than ${bName}.`)
+      out.push(zh ? `${aName} 比 ${bName} 存续${dir === 'longer' ? '长' : '短'} ${abs} 年。` : `${aName} lasted ${abs} years ${dir} than ${bName}.`)
     }
   }
 
