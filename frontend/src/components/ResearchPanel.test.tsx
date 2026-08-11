@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { ResearchPanelView, restoreResearch } from './ResearchPanel'
+import { applyContentDocument, resetContentRuntime } from '../data/contentRuntime'
 import type { EntityRelationship } from './EntityPage'
 
 const baseProps = {
@@ -21,6 +22,32 @@ describe('ResearchPanelView', () => {
     expect(html).toContain('经济网络')
     expect(html).toContain('文化影响')
     expect(html).toContain('开始研究')
+    expect(html).toContain('rp-dim-grid')
+    expect(html).toContain('rp-dim-card')
+  })
+
+  it('renders idle dimensions as a 2x2 artwork card grid', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView {...baseProps} mode="idle" dimensions={[]} />,
+    )
+    expect(html).toContain('assets/research/politics.webp')
+    expect(html).toContain('rp-dim-card-art')
+  })
+
+  it('prefers admin-configured image over the bundle artwork', () => {
+    applyContentDocument({
+      version: 2,
+      cards: [{ id: 'research_dims.politics', image: 'abc123.png', title: '', desc: '' }],
+    } as any)
+    try {
+      const html = renderToStaticMarkup(
+        <ResearchPanelView {...baseProps} mode="idle" dimensions={[]} />,
+      )
+      expect(html).toContain('/api/v1/content/media/abc123.png')
+      expect(html).not.toContain('assets/research/politics.webp')
+    } finally {
+      resetContentRuntime()
+    }
   })
 
   it('renders Event template (4 dimensions)', () => {

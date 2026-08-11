@@ -7,6 +7,7 @@ import {
 import EmptyState from './EmptyState'
 import ErrorCard, { type ErrorKind } from './ErrorCard'
 import LoadingSkeleton from './LoadingSkeleton'
+import './ProvenancePanel.css'
 
 export type ProvenanceStatus = 'loading' | 'success' | 'empty' | 'error' | 'disabled'
 
@@ -78,17 +79,36 @@ function groupBySource(records: ProvenanceRecord[]): Array<[string, ProvenanceRe
   return [...map.entries()]
 }
 
+// 中文序号：给论断行标"第一/第二…"，超过 10 用"第 N"兜底。
+const ORDINALS = ['第一', '第二', '第三', '第四', '第五', '第六', '第七', '第八', '第九', '第十']
+function ordinalLabel(i: number): string {
+  return ORDINALS[i] ?? `第${i + 1}`
+}
+
 // Presentational view — drives every visual state purely from props, so tests
 // can render any state without running an effect.
+//
+// Redesign (2026-08-11): the panel previously showed machine IDs
+// (source_id / claim_id) as the primary content and repeated `reference` on
+// every row. Now each source becomes a card whose human-readable `reference`
+// citation is shown ONCE, the curated `claim_text` is the prominent content of
+// each evidence row, and the internal IDs are demoted to secondary, dim tags.
+// subject_id is never rendered.
 export function ProvenancePanelView({
   status,
   records,
   errorKind,
   onRetry,
 }: ProvenancePanelViewProps) {
+  const groups = status === 'success' ? groupBySource(records) : []
+  const sourceCount = groups.length
+  const claimCount = records.length
+
   return (
     <section className="provenance-panel" aria-label="实体证据与溯源">
-      <h3>证据与溯源</h3>
+      <h3 className="provenance-title">证据与溯源</h3>
+      <p className="provenance-perspective">关于它，哪些事实可证、依据什么</p>
+
       {status === 'loading' && <LoadingSkeleton label="读取事实溯源…" />}
       {status === 'disabled' && (
         <EmptyState message="事实溯源投影未启用（PROVENANCE_PROJECTION=false）。" />
@@ -99,26 +119,52 @@ export function ProvenancePanelView({
       {status === 'error' && (
         <ErrorCard kind={errorKind ?? 'network'} onRetry={onRetry} />
       )}
+
       {status === 'success' && (
-        <div className="provenance-groups">
-          {groupBySource(records).map(([sourceId, recs]) => (
-            <section className="provenance-group" key={sourceId}>
-              <h4 className="provenance-group-head">来源：{sourceId}</h4>
-              <ul className="provenance-list">
-                {recs.map((r) => (
-                  <li className="provenance-item" key={r.claim_id}>
-                    <div>
-                      <strong>论断：</strong>{r.claim_id}
-                    </div>
-                    <div>
-                      <strong>引用：</strong>{r.reference}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-        </div>
+        <>
+          <p className="provenance-summary">
+            本实体的事实由 <strong>{sourceCount}</strong> 个来源、
+            <strong>{claimCount}</strong> 条论断支撑。
+          </p>
+          <div className="provenance-sources">
+            {groups.map(([sourceId, recs]) => {
+              const reference = recs[0]?.reference ?? ''
+              return (
+                <article className="prov-source" key={sourceId}>
+                  <header className="prov-source__head">
+                    <span className="prov-source__label">来源</span>
+                    <span className="prov-source__id" title="来源编号">
+                      {sourceId}
+                    </span>
+                  </header>
+
+                  <p className="prov-source__cite">
+                    {reference || '（出处未标注）'}
+                  </p>
+
+                  <div className="prov-source__claims-block">
+                    <h4 className="prov-claims__label">论断</h4>
+                    <ul className="prov-source__claims">
+                      {recs.map((r, i) => (
+                        <li className="prov-claim" key={r.claim_id}>
+                          <span className="prov-claim__index" aria-hidden="true">
+                            {ordinalLabel(i)}
+                          </span>
+                          <span className="prov-claim__text">
+                            {r.claim_text || reference || '（未提供论断文本）'}
+                          </span>
+                          <span className="prov-claim__id" title="证据编号">
+                            {r.claim_id}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </>
       )}
     </section>
   )

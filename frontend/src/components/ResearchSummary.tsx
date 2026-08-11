@@ -110,7 +110,7 @@ export function ResearchSummaryView({
             }}
           />
 
-          {citations.length > 0 && (
+          {(citations.length + rejected_citations.length) > 0 && (
             <CitationList
               citations={citations}
               rejected_citations={rejected_citations}

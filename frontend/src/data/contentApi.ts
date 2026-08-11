@@ -142,12 +142,12 @@ export function cardTheme(slotId: string): 'parchment' | 'network' | 'ledger' | 
 /**
  * Built-in artwork path — the drop-in convention that predates this layer.
  *
- * Most cards live at `assets/cards/card-<key>.jpg`, but the explore-pack and
- * explore-topic slots keep their artwork in dedicated folders (`assets/packs`,
- * `assets/topics`) that the registry layer was laid on top of. Route those two
- * modules to their real location so the console preview shows the same artwork
- * the front-end cards render (the preview then falls back png/jpg/jpeg just
- * like the cards do).
+ * Most cards live at `assets/cards/card-<key>.jpg`, but the explore-pack,
+ * explore-topic and research-dimension slots keep their artwork in dedicated
+ * folders (`assets/packs`, `assets/topics`, `assets/research`) that the
+ * registry layer was laid on top of. Route those modules to their real
+ * location so the console preview shows the same artwork the front-end cards
+ * render (the preview then falls back png/jpg/jpeg just like the cards do).
  */
 export function defaultImageSrc(slotId: string): string {
   const key = slotKey(slotId)
@@ -156,6 +156,9 @@ export function defaultImageSrc(slotId: string): string {
   }
   if (slotId.startsWith('explore_topics.')) {
     return `${import.meta.env.BASE_URL}assets/topics/${key}.webp`
+  }
+  if (slotId.startsWith('research_dims.')) {
+    return `${import.meta.env.BASE_URL}assets/research/${key}.webp`
   }
   return `${import.meta.env.BASE_URL}assets/cards/card-${key}.jpg`
 }

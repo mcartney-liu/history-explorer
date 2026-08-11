@@ -8,6 +8,8 @@ import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
 import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
 import type { EntityRelationship } from './EntityPage'
+import { slotImageName, useContentRevision } from '../data/contentRuntime'
+import { mediaUrl } from '../data/contentApi'
 
 /** T1: an explicit restore request raised by the parent (ResearchLibrary). */
 export type RestoreRequest = {
@@ -89,25 +91,30 @@ type DimTpl = { key: string; title: string; question: string }
  *  plain paper card when no image is dropped). Mirrors the exploration-pack
  *  "image-as-card" treatment. */
 function ResearchDimCard({ index, dim }: { index: number; dim: DimTpl }) {
-  const [imgOk, setImgOk] = useState(true)
-  const [fmt, setFmt] = useState(0)
+  useContentRevision()
+  const configuredName = slotImageName(`research_dims.${dim.key}`)
   const formats = ['webp', 'png', 'jpg', 'jpeg']
-  const showImg = imgOk && fmt < formats.length
-  const src = showImg
-    ? `${import.meta.env.BASE_URL}assets/research/${dim.key}.${formats[fmt]}`
-    : ''
+  // phase 0 = admin-configured artwork (when present); 1..4 = bundle fallback
+  // chain (assets/research/{key}.{webp|png|jpg|jpeg}), mirroring the explore
+  // pack treatment. The configured upload is the first attempt; on failure we
+  // fall through to the bundle artwork, exactly like PackageCard.
+  const [phase, setPhase] = useState(0)
+  const showImg = phase <= formats.length
+  const useConfigured = configuredName !== null && phase === 0
+  const src = !showImg
+    ? ''
+    : useConfigured
+      ? mediaUrl(configuredName as string)
+      : `${import.meta.env.BASE_URL}assets/research/${dim.key}.${formats[Math.max(0, phase - 1)]}`
   return (
-    <li className={`rp-dim-card${imgOk ? ' has-art' : ''}`}>
+    <li className={`rp-dim-card${showImg ? ' has-art' : ''}`}>
       {showImg && (
         <img
           className="rp-dim-card-art"
           src={src}
           alt=""
           aria-hidden="true"
-          onError={() => {
-            if (fmt < formats.length - 1) setFmt(fmt + 1)
-            else setImgOk(false)
-          }}
+          onError={() => setPhase((p) => p + 1)}
         />
       )}
       <div className="rp-dim-card-body">
@@ -219,8 +226,8 @@ export function ResearchPanelView({
             </span>
           </div>
 
-          {dimensions.map((dim) => (
-            <ResearchDimensionCard key={dim.id} dimension={dim} />
+          {dimensions.map((dim, i) => (
+            <ResearchDimensionCard key={dim.id} dimension={dim} dimKey={template[i]?.key} />
           ))}
 
           {mode === 'done' && (
@@ -318,8 +325,8 @@ export function ResearchPanelView({
           )}
           {dimensions.length > 0 && (
             <div className="rp-results">
-              {dimensions.map((dim) => (
-                <ResearchDimensionCard key={dim.id} dimension={dim} />
+              {dimensions.map((dim, i) => (
+                <ResearchDimensionCard key={dim.id} dimension={dim} dimKey={template[i]?.key} />
               ))}
             </div>
           )}

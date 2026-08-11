@@ -129,6 +129,7 @@ export function TrustDisplay({
           {badge && <Badge tone={badge.tone}>{badge.label}</Badge>}
         </span>
       </header>
+      <p className="trust-display-perspective">{t('ai.trust_perspective')}</p>
 
       {nextList.length > 0 && (
         <div className="trust-display-section">

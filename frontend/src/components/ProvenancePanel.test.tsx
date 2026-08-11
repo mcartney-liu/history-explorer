@@ -9,12 +9,14 @@ const records: ProvenanceRecord[] = [
     subject_id: 'person-ashoka',
     source_id: 'src-1',
     claim_id: 'claim-1',
+    claim_text: '阿育王在羯陵伽之战后转向宣扬佛教',
     reference: 'ref-1',
   },
   {
     subject_id: 'person-ashoka',
     source_id: 'src-2',
     claim_id: 'claim-2',
+    claim_text: '阿育王颁布石刻诏令以宣达政令',
     reference: 'ref-2',
   },
 ]
@@ -55,32 +57,61 @@ describe('ProvenancePanelView', () => {
     expect(html).toContain('重试')
   })
 
-  it('renders records on success and hides subject_id', () => {
+  it('renders the curated claim text as primary content and hides subject_id', () => {
     const html = renderToStaticMarkup(
       <ProvenancePanelView status="success" records={records} />,
     )
-    expect(html).toContain('claim-1')
+    // The human-readable assertion is now the main content.
+    expect(html).toContain('阿育王在羯陵伽之战后转向宣扬佛教')
+    // Source / claim ids are still present but demoted to secondary tags.
     expect(html).toContain('src-1')
+    expect(html).toContain('claim-1')
     expect(html).toContain('ref-2')
     // Per design, subject_id is an internal index key and must NOT be shown.
     expect(html).not.toContain('person-ashoka')
   })
 
-  it('groups records by source_id on success (S4)', () => {
+  it('shows a trust summary with source and claim counts', () => {
+    const html = renderToStaticMarkup(
+      <ProvenancePanelView status="success" records={records} />,
+    )
+    expect(html).toContain('个来源')
+    expect(html).toContain('条论断')
+    expect(html).toContain('关于它，哪些事实可证')   // 视角副标题：可溯源事实
+  })
+
+  it('labels the claims section with a "论断" heading and ordinal indices', () => {
     const grouped: ProvenanceRecord[] = [
-      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-1', reference: 'ref-1' },
-      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-2', reference: 'ref-2' },
-      { subject_id: 'person-ashoka', source_id: 'src-2', claim_id: 'claim-3', reference: 'ref-3' },
+      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-1', claim_text: '论断一', reference: 'ref-1' },
+      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-2', claim_text: '论断二', reference: 'ref-1' },
+      { subject_id: 'person-ashoka', source_id: 'src-2', claim_id: 'claim-3', claim_text: '论断三', reference: 'ref-3' },
     ]
     const html = renderToStaticMarkup(
       <ProvenancePanelView status="success" records={grouped} />,
     )
-    expect(html).toContain('provenance-group')
-    // Two distinct sources => exactly two group headers.
-    const heads = html.match(/provenance-group-head/g) || []
+    // The claims list now carries its own heading + first/second ordinal labels.
+    expect(html).toContain('prov-claims__label')
+    expect(html).toContain('第一')
+    expect(html).toContain('第二')
+  })
+
+  it('groups records by source_id into source cards (S4)', () => {
+    const grouped: ProvenanceRecord[] = [
+      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-1', claim_text: '论断一', reference: 'ref-1' },
+      { subject_id: 'person-ashoka', source_id: 'src-1', claim_id: 'claim-2', claim_text: '论断二', reference: 'ref-1' },
+      { subject_id: 'person-ashoka', source_id: 'src-2', claim_id: 'claim-3', claim_text: '论断三', reference: 'ref-3' },
+    ]
+    const html = renderToStaticMarkup(
+      <ProvenancePanelView status="success" records={grouped} />,
+    )
+    expect(html).toContain('prov-source')
+    // Two distinct sources => exactly two source cards.
+    const heads = html.match(/prov-source__head/g) || []
     expect(heads.length).toBe(2)
-    expect(html).toContain('claim-1')
-    expect(html).toContain('claim-3')
+    expect(html).toContain('论断一')
+    expect(html).toContain('论断三')
+    // The shared reference is shown once per source card, not per claim.
+    expect(html).toContain('ref-1')
     // subject_id still hidden after grouping.
     expect(html).not.toContain('person-ashoka')
   })

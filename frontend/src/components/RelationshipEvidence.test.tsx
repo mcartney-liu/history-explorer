@@ -9,12 +9,14 @@ const records: ProvenanceRecord[] = [
     subject_id: 'person-ashoka',
     source_id: 'src-1',
     claim_id: 'claim-1',
+    claim_text: '阿育王推崇佛教',
     reference: 'ref-1',
   },
   {
     subject_id: 'person-ashoka',
     source_id: 'src-2',
     claim_id: 'claim-2',
+    claim_text: '阿育王颁布石刻诏令',
     reference: 'ref-2',
   },
 ]
@@ -90,6 +92,7 @@ describe('local id contract (provenance resolution)', () => {
           subject_id: 'person-ashoka',
           source_id: 'src-1',
           claim_id: 'claim-1',
+          claim_text: '阿育王推崇佛教',
           reference: 'ref-1',
         },
       ],

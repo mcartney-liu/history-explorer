@@ -4,6 +4,7 @@ export default {
   'workspace.ai_subtitle': 'あなたの歴史研究パートナー',
   'ai.trust_title': '知識ベースの根拠に基づく探索提案',
   'ai.trust_aria_label': '知識ベースの根拠に基づく探索提案',
+  'ai.trust_perspective': 'これに沿って、次に誰を探索するかおすすめします',
   'ai.trust_evidence_label': '根拠',
   'ai.trust_next_label': 'おすすめの探索',
   'ai.trust_engine_deterministic': '決定論的出力',

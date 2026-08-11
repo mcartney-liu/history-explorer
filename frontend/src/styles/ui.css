@@ -81,6 +81,13 @@
   font-weight: 600;
   color: var(--color-ink-900);
 }
+/* 视角副标题：点明本块是"顺着它下一步看什么"的探索导航视角 */
+.trust-display-perspective {
+  margin: -6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-ink-500);
+}
 .trust-display-section {
   display: flex;
   flex-direction: column;

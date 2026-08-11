@@ -26,6 +26,7 @@ describe('getProvenance', () => {
           subject_id: 'person-ashoka',
           source_id: 'src-1',
           claim_id: 'claim-1',
+          claim_text: '阿育王推崇佛教',
           reference: 'ref-1',
         },
       ],

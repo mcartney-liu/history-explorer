@@ -6,6 +6,7 @@ export default {
   // for deterministic output (PO Condition 2).
   'ai.trust_title': '基于知识库证据的探索建议',
   'ai.trust_aria_label': '基于知识库证据的探索建议',
+  'ai.trust_perspective': '顺着它，推荐你下一步探索谁',
   'ai.trust_evidence_label': '证据依据',
   // M74-004-003 (G2): section label differentiated from GuidePanel's
   // "下一步可以探索" — two suggestion sources must not share the same copy.

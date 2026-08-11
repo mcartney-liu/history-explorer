@@ -76,6 +76,7 @@ describe('TrustDisplay', () => {
     const el = renderTrust({ evidence: EVIDENCE, nextExploration: NEXT, engine: 'deterministic' })
     const text = el.textContent ?? ''
     expect(text).toContain('基于知识库证据的探索建议')
+    expect(text).toContain('顺着它')            // 视角副标题：探索导航
     expect(text).toContain('确定性输出')
     expect(text).not.toContain('AI 生成')          // deterministic ≠ AI-generated
     expect(text).not.toContain('AI-generated')

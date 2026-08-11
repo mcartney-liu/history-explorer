@@ -6,6 +6,7 @@ export default {
   // for deterministic output (PO Condition 2).
   'ai.trust_title': 'Exploration suggestions based on knowledge-base evidence',
   'ai.trust_aria_label': 'Exploration suggestions based on knowledge-base evidence',
+  'ai.trust_perspective': 'Follow it to see who to explore next',
   'ai.trust_evidence_label': 'Evidence',
   // M74-004-003 (G2): section label differentiated from GuidePanel's "Explore
   // next" — two suggestion sources must not share the same copy.
