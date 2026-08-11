@@ -30,7 +30,7 @@
 const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
 /** Modules the registry currently groups slots into. */
-export type SlotModule = 'landing' | 'entity_tabs' | 'exploration_flow' | 'ai_capabilities'
+export type SlotModule = 'landing' | 'entity_tabs' | 'exploration_flow' | 'ai_capabilities' | 'site'
 
 /** The editable half of a slot — what an author actually changes. */
 export interface CapabilityCard {
@@ -58,6 +58,16 @@ export interface ContentCard extends CapabilityCard {
   theme: string | null
   supports_image: boolean
   supports_items: boolean
+  /** Whether this slot exposes trilingual title/summary overrides in the console. */
+  supports_text_i18n?: boolean
+  /** Trilingual title override (zh/en/ja); null/undefined = use data source. */
+  title_i18n?: Record<string, string> | null
+  /** Trilingual summary override (zh/en/ja); null/undefined = use data source. */
+  summary_i18n?: Record<string, string> | null
+  /** Whether this slot exposes a guided-questions list in the console. */
+  supports_guided_questions?: boolean
+  /** Guided exploration questions (featured topics); null/undefined = use data source. */
+  guided_questions?: string[] | null
   /** What the bullet list is called on this slot ("推荐动作" / "示例问题"). */
   items_label: string
   items: string[]

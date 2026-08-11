@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import type { ExplorationPackage } from '../../data/explorationPackages'
 import { Button } from '../ui/Button'
 import { useLocale } from '../../data/locale'
-import { slotImageName, useContentRevision } from '../../data/contentRuntime'
+import { slotImageName, slotSummaryI18n, slotTitleI18n, useContentRevision } from '../../data/contentRuntime'
 import { mediaUrl } from '../../data/contentApi'
 
 // Per-pack decorative SVG illustration (line-art, currentColor) embedded in
@@ -102,8 +102,10 @@ export default function PackageCard({ pkg, onOpen }: PackageCardProps) {
   // Subscribe so a console upload swaps the cover in without a reload.
   useContentRevision()
   const [imgLoaded, setImgLoaded] = useState(false)
-  const title = pkg.title[locale] ?? pkg.title.zh
-  const summary = pkg.summary[locale] ?? pkg.summary.zh
+  const fallbackTitle = pkg.title[locale] ?? pkg.title.zh
+  const fallbackSummary = pkg.summary[locale] ?? pkg.summary.zh
+  const title = slotTitleI18n(`explore_packs.${pkg.slug}`, locale, fallbackTitle)
+  const summary = slotSummaryI18n(`explore_packs.${pkg.slug}`, locale, fallbackSummary)
   const typeLabel = pkg.type === 'official' ? t('discover.pkgOfficial') : pkg.type
 
   const art = PACK_ART[pkg.slug]

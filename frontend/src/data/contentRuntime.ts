@@ -36,6 +36,12 @@ export interface SlotValues {
   desc?: string
   image?: string | null
   items?: string[]
+  /** Trilingual title override, keyed by locale (zh/en/ja). */
+  title_i18n?: Record<string, string>
+  /** Trilingual summary override, keyed by locale (zh/en/ja). */
+  summary_i18n?: Record<string, string>
+  /** Guided exploration questions (featured topics). */
+  guided_questions?: string[]
 }
 
 let overrides: Record<string, SlotValues> = {}
@@ -65,6 +71,24 @@ export function applyContentDocument(document: ContentDocument | null): void {
     if (typeof card.desc === 'string' && card.desc) values.desc = card.desc
     if (card.image === null || typeof card.image === 'string') values.image = card.image
     if (Array.isArray(card.items)) values.items = card.items.filter((i) => typeof i === 'string')
+    if (card.title_i18n && typeof card.title_i18n === 'object') {
+      const t: Record<string, string> = {}
+      for (const [k, v] of Object.entries(card.title_i18n)) {
+        if (typeof v === 'string' && v) t[k] = v
+      }
+      if (Object.keys(t).length) values.title_i18n = t
+    }
+    if (card.summary_i18n && typeof card.summary_i18n === 'object') {
+      const s: Record<string, string> = {}
+      for (const [k, v] of Object.entries(card.summary_i18n)) {
+        if (typeof v === 'string' && v) s[k] = v
+      }
+      if (Object.keys(s).length) values.summary_i18n = s
+    }
+    if (Array.isArray(card.guided_questions)) {
+      const qs = card.guided_questions.filter((q) => typeof q === 'string')
+      if (qs.length) values.guided_questions = qs
+    }
     next[card.id] = values
   }
   overrides = next
@@ -117,6 +141,54 @@ export function slotDesc(slotId: string, fallback: string): string {
 export function slotItems<T extends readonly string[]>(slotId: string, fallback: T): readonly string[] {
   const configured = overrides[slotId]?.items
   return configured ?? fallback
+}
+
+/**
+ * Configured trilingual title for a slot, else the compiled-in default.
+ *
+ * `locale` is the active UI language (zh/en/ja); the admin-configured dict is
+ * consulted first, falling back to the bundled copy when the locale is unset
+ * or blank. Used by the exploration-pack and featured-topic cards so their
+ * titles/summaries are editable per language from the admin console.
+ */
+export function slotTitleI18n(slotId: string, locale: string, fallback: string): string {
+  const dict = overrides[slotId]?.title_i18n
+  const value = dict?.[locale]
+  return typeof value === 'string' && value ? value : fallback
+}
+
+/** Configured trilingual summary for a slot, else the compiled-in default. */
+export function slotSummaryI18n(slotId: string, locale: string, fallback: string): string {
+  const dict = overrides[slotId]?.summary_i18n
+  const value = dict?.[locale]
+  return typeof value === 'string' && value ? value : fallback
+}
+
+/**
+ * Configured site brand name shown in the global top bar.
+ *
+ * Backed by the `site.brand` slot's plain title so the operator can rename the
+ * product from the admin console without a code change. Falls back to the
+ * shipped "History Explorer" when nothing is configured.
+ */
+export function siteBrandName(fallback = 'History Explorer'): string {
+  return slotTitle('site.brand', fallback)
+}
+
+/** Configured site tagline (subtitle under the brand); empty when unset. */
+export function siteSubtitle(fallback = ''): string {
+  return slotDesc('site.brand', fallback)
+}
+
+/**
+ * Configured guided questions for a slot, else the compiled-in defaults.
+ *
+ * Used by featured-topic cards so the operator can curate the exploration
+ * starters shown to users from the admin console.
+ */
+export function slotGuidedQuestions(slotId: string, fallback: readonly string[]): readonly string[] {
+  const configured = overrides[slotId]?.guided_questions
+  return configured && configured.length ? configured : fallback
 }
 
 /**

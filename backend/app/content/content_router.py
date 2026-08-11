@@ -47,6 +47,7 @@ class ContentCard(BaseModel):
     supports_image: bool = False
     supports_items: bool = False
     supports_text_i18n: bool = False
+    supports_guided_questions: bool = False
     items_label: str = "要点"
     title: str
     desc: str
@@ -59,6 +60,9 @@ class ContentCard(BaseModel):
     )
     summary_i18n: Optional[dict[str, str]] = Field(
         None, description="Trilingual summary override (zh/en/ja); null = use data source"
+    )
+    guided_questions: Optional[list[str]] = Field(
+        None, description="Guided exploration questions for featured topics; null = use data source"
     )
 
 
@@ -85,6 +89,7 @@ class CardUpdate(BaseModel):
     items: Optional[list[str]] = None
     title_i18n: Optional[dict[str, str]] = None
     summary_i18n: Optional[dict[str, str]] = None
+    guided_questions: Optional[list[str]] = None
 
 
 class ContentUpdate(BaseModel):

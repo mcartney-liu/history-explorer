@@ -84,6 +84,9 @@ class ContentSlot:
     #: extension for the gallery console). Front-end falls back to the source
     #: when the override is absent.
     supports_text_i18n: bool = False
+    #: Featured topics carry a short list of guided questions the operator
+    #: wants surfaced as exploration starters (admin-configurable, ADR-0021).
+    supports_guided_questions: bool = False
     theme: str | None = None
     items: tuple[str, ...] = ()
     items_label: str = "要点"
@@ -101,6 +104,8 @@ class ContentSlot:
         if self.supports_text_i18n:
             payload["title_i18n"] = None
             payload["summary_i18n"] = None
+        if self.supports_guided_questions:
+            payload["guided_questions"] = []
         return payload
 
     def to_card(self) -> dict[str, Any]:
@@ -115,12 +120,14 @@ class ContentSlot:
             "supports_image": self.supports_image,
             "supports_items": self.supports_items,
             "supports_text_i18n": self.supports_text_i18n,
+            "supports_guided_questions": self.supports_guided_questions,
             "items_label": self.items_label,
             "image": None,
             "items": list(self.items),
             "title": self.title,
             "desc": self.desc,
             **({"title_i18n": None, "summary_i18n": None} if self.supports_text_i18n else {}),
+            **({"guided_questions": []} if self.supports_guided_questions else {}),
         }
 
 
@@ -131,6 +138,7 @@ _AI = "AI 历史学家 · 能力说明"
 _PACKS = "探索 · 探索包"
 _TOPICS = "首页 · 精选主题"
 _RESEARCH = "研究 · 维度配图"
+_SITE = "站点 · 品牌"
 
 
 #: Research-dimension artwork slots, derived from the front-end's
@@ -279,6 +287,18 @@ CONTENT_SLOTS: tuple[ContentSlot, ...] = (
         desc="更多功能即将推出。包括 AI 内容创作、教育模块和社交探索。",
         items=("敬请期待",),
     ),
+    ContentSlot(
+        id="entity_tabs.nav_labels",
+        module="entity_tabs",
+        module_label=_TABS,
+        label="板块标签名（顶栏切换）",
+        where="实体页顶栏的板块切换标签，按「信息 / 研究 / 扩展」顺序填写",
+        supports_items=True,
+        items_label="标签名",
+        title="板块标签名",
+        desc="实体页顶栏切换标签的显示文字，按当前顺序填写。",
+        items=("信息", "研究", "扩展"),
+    ),
     # -- 探索路径四步 ------------------------------------------------------
     ContentSlot(
         id="exploration_flow.relationship",
@@ -413,6 +433,16 @@ CONTENT_SLOTS: tuple[ContentSlot, ...] = (
         desc="总结当前探索成果，形成研究笔记",
         items=("总结我对 {entity} 的探索收获", "我在这段探索中了解了什么？"),
     ),
+    # -- 站点品牌（置于末尾：默认测试依赖 landing.story 为首个槽）--------
+    ContentSlot(
+        id="site.brand",
+        module="site",
+        module_label=_SITE,
+        label="站点品牌名 + 副标题",
+        where="全局顶栏左侧品牌（副标题显示在品牌名下方）",
+        title="History Explorer",
+        desc="在史料与关系之间，重建你自己的历史认知。",
+    ),
 )
 
 # --------------------------------------------------------------------------
@@ -500,9 +530,10 @@ def _dynamic_slots() -> list[ContentSlot]:
                 module="explore_topics",
                 module_label=_TOPICS,
                 label=f"主题 · {slug}",
-            where=f"首页精选主题卡片封面（{slug}）",
+                where=f"首页精选主题卡片封面（{slug}）",
             supports_image=True,
             supports_text_i18n=True,
+            supports_guided_questions=True,
             title=slug,
             desc="",
         )
@@ -592,6 +623,7 @@ class _Override:
     items: list[str] | None = field(default=None)
     title_i18n: dict[str, str] | None = None
     summary_i18n: dict[str, str] | None = None
+    guided_questions: list[str] | None = None
 
 
 # --------------------------------------------------------------------------
@@ -672,6 +704,8 @@ def _read_overrides(stored: Any) -> dict[str, _Override]:
         if slot.supports_text_i18n:
             override.title_i18n = _clean_i18n(entry.get("title_i18n"), TITLE_LIMIT)
             override.summary_i18n = _clean_i18n(entry.get("summary_i18n"), DESC_LIMIT)
+        if slot.supports_guided_questions:
+            override.guided_questions = _clean_items(entry.get("guided_questions"))
         overrides[slot_id] = override
     return overrides
 
@@ -702,6 +736,8 @@ def _merge_with_defaults(stored: Any) -> dict[str, Any]:
             card["title_i18n"] = override.title_i18n
         if override.summary_i18n:
             card["summary_i18n"] = override.summary_i18n
+        if override.guided_questions is not None:
+            card["guided_questions"] = override.guided_questions
 
     if isinstance(stored, dict):
         updated_at = stored.get("updated_at")
@@ -761,6 +797,10 @@ def save_content(cards: list[dict[str, Any]]) -> dict[str, Any]:
             summary_i18n = _clean_i18n(card.get("summary_i18n"), DESC_LIMIT)
             if summary_i18n:
                 entry["summary_i18n"] = summary_i18n
+        if slot.supports_guided_questions:
+            guided = _clean_items(card.get("guided_questions"))
+            if guided is not None:
+                entry["guided_questions"] = guided
         cleaned.append(entry)
 
     document = {

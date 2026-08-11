@@ -16,6 +16,7 @@ import { useMemo } from 'react'
 import type { ExperienceMode } from '../../routing'
 import LanguageSwitcher from '../LanguageSwitcher'
 import { Icon } from '../ui/Icon'
+import { useContentRevision, siteBrandName, siteSubtitle } from '../../data/contentRuntime'
 
 const MODE_LABELS: Record<ExperienceMode, string> = {
   exploration: '探索',
@@ -42,15 +43,24 @@ export function GlobalBar({ topic, mode, topicTitles }: GlobalBarProps) {
     return topicTitles?.[topic] ?? topic.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
   }, [topic, topicTitles])
 
+  // ADR-0021 R2: re-render the brand when the operator edits it in #/admin.
+  useContentRevision()
+  const subtitle = siteSubtitle('')
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%' }}>
-      <span style={{
-        fontFamily: 'var(--serif, "Spectral", serif)',
-        fontSize: '1rem',
-        fontWeight: 700,
-        color: 'var(--color-accent)',
-      }}>
-        History Explorer
+      <span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.15 }}>
+        <span style={{
+          fontFamily: 'var(--serif, "Spectral", serif)',
+          fontSize: '1rem',
+          fontWeight: 700,
+          color: 'var(--color-accent)',
+        }}>
+          {siteBrandName('History Explorer')}
+        </span>
+        {subtitle && (
+          <span style={{ fontSize: '0.7rem', color: 'var(--color-ink-500)' }}>{subtitle}</span>
+        )}
       </span>
       {title && (
         <>

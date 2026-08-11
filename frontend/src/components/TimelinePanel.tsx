@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import EmptyState from './EmptyState'
-import { sortTimeline, groupTimeline } from '../data/timelineUtils'
+import { sortTimeline, groupTimeline, localizeBucketLabel } from '../data/timelineUtils'
 import type { TimeValue } from '../data/temporalUtils'
 import AIExplanationPanel from './AIExplanationPanel'
 import { entityContext } from '../data/aiContext'
@@ -116,7 +116,7 @@ function TimelinePanel({
               <Fragment key={idx}>
                 {header && (
                   <div className="timeline-bucket-header" key={`h-${idx}`}>
-                    {header}
+                    {localizeBucketLabel(header, locale)}
                   </div>
                 )}
                 {node}

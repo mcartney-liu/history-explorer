@@ -373,6 +373,33 @@ def test_dynamic_slot_exposes_i18n_fields(client):
         assert card.get("summary_i18n") is None
 
 
+def test_dynamic_slot_exposes_guided_questions(client, admin_on):
+    """explore_topics expose a guided-questions list the operator can curate."""
+    body = client.get("/api/v1/content").json()
+    first_topic = next(c["id"] for c in body["cards"] if c["module"] == "explore_topics")
+    cards = {c["id"]: c for c in body["cards"]}
+    assert cards[first_topic]["supports_guided_questions"] is True
+    assert cards[first_topic].get("guided_questions") == []
+
+    questions = ["这个文明如何组织水利？", "它和周边文明有何交流？"]
+    put = client.put(
+        "/api/v1/content",
+        json={"cards": [{"id": first_topic, "guided_questions": questions}]},
+    )
+    assert put.status_code == 200
+    refreshed = {c["id"]: c for c in client.get("/api/v1/content").json()["cards"]}
+    assert refreshed[first_topic]["guided_questions"] == questions
+
+    # A blank list is a legitimate edit, not a reason to resurrect defaults.
+    put2 = client.put(
+        "/api/v1/content",
+        json={"cards": [{"id": first_topic, "guided_questions": []}]},
+    )
+    assert put2.status_code == 200
+    refreshed2 = {c["id"]: c for c in client.get("/api/v1/content").json()["cards"]}
+    assert refreshed2[first_topic]["guided_questions"] == []
+
+
 def test_i18n_text_override_round_trips(client, admin_on):
     body = client.get("/api/v1/content").json()
     first_pack = next(c["id"] for c in body["cards"] if c["module"] == "explore_packs")

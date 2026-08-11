@@ -22,6 +22,7 @@
 
 import { useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
+import { useContentRevision, siteBrandName } from '../../data/contentRuntime'
 
 // ============================================================
 // Fixed theme: legacy (deep-navy frosted glass + Earth backdrop).
@@ -71,6 +72,8 @@ export function ExplorerShell({
   // 由用户按需展开，主内容区最大化）。
   const [contextCollapsed, setContextCollapsed] = useState(true)
   const [companionCollapsed, setCompanionCollapsed] = useState(true)
+  // ADR-0021 R2: re-render the fallback brand when the operator edits it in #/admin.
+  useContentRevision()
 
   return (
     <div className="explorer-shell">
@@ -80,7 +83,7 @@ export function ExplorerShell({
       <header className="explorer-global-bar" aria-label="全局导航">
         {globalBar ?? (
           <div className="explorer-global-placeholder">
-            <span className="explorer-global-title">History Explorer</span>
+            <span className="explorer-global-title">{siteBrandName('History Explorer')}</span>
             <span className="explorer-global-topic">—</span>
           </div>
         )}

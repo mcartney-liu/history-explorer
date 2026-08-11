@@ -7,6 +7,7 @@ import {
   bucketForValue,
   groupTimeline,
   type DatedTimelineItem,
+  localizeBucketLabel,
 } from '../data/timelineUtils'
 
 const item = (period: string, event: string, value?: number): DatedTimelineItem => ({
@@ -137,5 +138,20 @@ describe('groupTimeline', () => {
     expect(TIME_BUCKETS.length).toBe(6)
     expect(TIME_BUCKETS[0].label).toBe('Before 500 BCE')
     expect(TIME_BUCKETS[5].label).toBe('After 1500 CE')
+  })
+})
+
+// 2026-08-12 (PO): zh bucket labels for the timeline headers.
+describe('localizeBucketLabel (2026-08-12 PO)', () => {
+  it('zh translates fixed buckets to 公元前/公元', () => {
+    expect(localizeBucketLabel('500 BCE – 1 CE', 'zh')).toBe('公元前 500 – 公元 1 年')
+    expect(localizeBucketLabel('Before 500 BCE', 'zh')).toBe('公元前 500 年以前')
+    expect(localizeBucketLabel('Undated', 'zh')).toBe('无日期')
+  })
+  it('en keeps original labels', () => {
+    expect(localizeBucketLabel('500 BCE – 1 CE', 'en')).toBe('500 BCE – 1 CE')
+  })
+  it('unknown buckets pass through', () => {
+    expect(localizeBucketLabel('Whatever', 'zh')).toBe('Whatever')
   })
 })

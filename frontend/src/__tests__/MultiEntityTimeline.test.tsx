@@ -35,7 +35,7 @@ describe('MultiEntityTimeline', () => {
 
   it('renders deterministic date-range labels', () => {
     const html = render(<MultiEntityTimeline entities={entities} />)
-    expect(html).toContain('753 BC - 476 CE')
+    expect(html).toContain('公元前 753 年 - 公元 476 年')
   })
 
   it('shows "No date data" for an undated entity without crashing', () => {

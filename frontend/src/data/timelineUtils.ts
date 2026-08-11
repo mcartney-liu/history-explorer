@@ -35,6 +35,24 @@ export interface TimeBucket {
   max: number
 }
 
+// 2026-08-12 (PO): zh display labels for the fixed buckets — the zh UI renders
+// 公元前/公元 instead of BCE/CE. Bucket identity stays the EN label (sorting,
+// grouping, tests); rendering translates via localizeBucketLabel.
+const TIME_BUCKET_LABELS_ZH: Record<string, string> = {
+  'Before 500 BCE': '公元前 500 年以前',
+  '500 BCE – 1 CE': '公元前 500 – 公元 1 年',
+  '1 – 500 CE': '公元 1 – 500 年',
+  '500 – 1000 CE': '公元 500 – 1000 年',
+  '1000 – 1500 CE': '公元 1000 – 1500 年',
+  'After 1500 CE': '公元 1500 年以后',
+  Undated: '无日期',
+}
+
+export function localizeBucketLabel(bucket: string, locale = 'en'): string {
+  if (locale === 'zh' && TIME_BUCKET_LABELS_ZH[bucket]) return TIME_BUCKET_LABELS_ZH[bucket]
+  return bucket
+}
+
 export const TIME_BUCKETS: TimeBucket[] = [
   { label: 'Before 500 BCE', min: -Infinity, max: -500 },
   { label: '500 BCE – 1 CE', min: -500, max: 1 },

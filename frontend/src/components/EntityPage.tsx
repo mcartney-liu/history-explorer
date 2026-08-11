@@ -187,7 +187,7 @@ function EntityPage({
       start_date: entity.summary.start_date as TimeValue | undefined,
       end_date: entity.summary.end_date as TimeValue | undefined,
     },
-  ])
+  ], locale)
 
   return (
     <div className="result">
