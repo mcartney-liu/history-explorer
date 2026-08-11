@@ -283,6 +283,37 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 .discover-theme-label{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--color-ink-900)}
 .discover-theme-desc{font-size:13px;color:var(--color-ink-500)}
 
+/* Drop-in background artwork — only when a topic has an image dropped in.
+   Without it the card above keeps its plain paper style (unchanged). */
+.discover-theme-card.has-art{
+  position:relative;
+  min-height:150px;
+  justify-content:flex-end;
+  padding:24px;
+  color:#f7f5f0;
+  border-color:rgba(255,255,255,0.16);
+  overflow:hidden;
+}
+.discover-theme-art{
+  position:absolute;inset:0;z-index:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center 30%;
+}
+.discover-theme-card.has-art::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,0.14),transparent 40%,rgba(0,0,0,0.62) 100%);
+}
+.discover-theme-card.has-art .discover-theme-label,
+.discover-theme-card.has-art .discover-theme-desc{
+  position:relative;z-index:2;color:#f7f5f0;
+}
+.discover-theme-card.has-art .discover-theme-desc{color:rgba(247,245,240,0.82)}
+.discover-theme-card.has-art:hover{
+  border-color:rgba(212,175,55,0.7);
+  box-shadow:0 10px 26px rgba(0,0,0,0.42),0 0 16px rgba(203,161,53,0.22);
+  transform:translateY(-4px);
+}
+
 /* P5-S4: 主题界面（点主题卡进入）——返回按钮 + 头部 + 内容区 */
 .discover-theme-detail{margin-top:8px}
 .discover-theme-detail-head{display:flex;align-items:center;gap:12px;margin-bottom:20px}
@@ -507,6 +538,81 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 .rp-progress{margin-bottom:16px}
 .rp-progress-bar{height:4px;background:var(--color-paper-100);border-radius:2px;overflow:hidden}
 .rp-progress-fill{height:100%;background:var(--color-accent);border-radius:2px;transition:width .4s}
+
+/* ---- AI 研究模式：研究后结果（双栏，呼应 idle 2×2）---- */
+.rp-results{
+  counter-reset:rdc;
+  column-count:2;column-gap:14px;
+  margin:0 0 18px;
+}
+@media (max-width:560px){.rp-results{column-count:1}}
+.rdc-card{
+  position:relative;break-inside:avoid;
+  display:block;width:100%;
+  margin:0 0 14px;
+  background:var(--color-paper-100);
+  border:1px solid var(--color-paper-300);border-radius:12px;
+  padding:14px 16px 16px;
+  transition:border-color var(--transition-fast,150ms ease);
+}
+.rdc-card::before{
+  content:counter(rdc);
+  position:absolute;top:14px;left:14px;
+  width:22px;height:22px;border-radius:50%;
+  border:1.5px solid var(--color-accent);color:var(--color-accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:500;
+}
+.rdc-title{
+  margin:0 0 4px;padding-left:30px;
+  font-family:var(--serif,serif);font-weight:500;font-size:15px;color:var(--color-ink-900);
+}
+.rdc-question{margin:0 0 10px;padding-left:30px;font-size:12px;line-height:1.5;color:var(--color-ink-500)}
+.rdc-answer{margin-top:8px}
+.rdc-idle,.rdc-loading,.rdc-error{font-size:13px;color:var(--color-ink-500);margin:2px 0 0;padding-left:30px}
+.rdc-error{color:#A32D2D}
+.rdc-card--error{border-color:#E24B4A}
+.rdc-grounded-badge,.rdc-citation-count{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:12px;margin:0 10px 0 0;
+}
+.rdc-grounded-badge{padding:2px 8px;border-radius:20px}
+.rdc-grounded-true{background:rgba(99,153,34,.14);color:#3B6D11}
+.rdc-grounded-false{background:rgba(186,117,23,.14);color:#BA7517}
+.rdc-citation-count{color:var(--color-ink-500)}
+
+/* ---- AI 研究模式：idle 态 2×2 维度卡（图即卡，通用维度图）---- */
+.rp-dim-grid{
+  list-style:none;margin:0 0 18px;padding:0;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+}
+.rp-dim-card{
+  position:relative;min-height:172px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  background:var(--color-paper-100);
+  border:1px solid var(--color-paper-300);border-radius:12px;
+  transition:border-color var(--transition-fast,150ms ease),transform var(--transition-fast,150ms ease);
+}
+.rp-dim-card:hover{border-color:var(--color-accent);transform:translateY(-2px)}
+.rp-dim-card-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rp-dim-card.has-art{background:var(--color-ink-900)}
+.rp-dim-card::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 38%,rgba(0,0,0,.66) 100%);
+}
+.rp-dim-card.has-art::after{opacity:1}
+.rp-dim-card-body{position:relative;z-index:2;padding:14px 14px 16px}
+.rp-dim-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rp-dim-badge{
+  width:22px;height:22px;border-radius:50%;flex:none;
+  border:1.5px solid var(--color-accent);color:var(--color-accent);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;
+}
+.rp-dim-title{font-family:var(--serif,serif);font-weight:500;font-size:15px;color:var(--color-ink-900)}
+.rp-dim-card.has-art .rp-dim-title{color:#fff}
+.rp-dim-question{margin:0;font-size:12px;line-height:1.5;color:var(--color-ink-500)}
+.rp-dim-card.has-art .rp-dim-question{color:rgba(255,255,255,.82)}
+@media (max-width:560px){.rp-dim-grid{grid-template-columns:1fr}}
 
 /* ========== JOURNEY ========== */
 .jc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
@@ -766,6 +872,22 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
   border:1px solid var(--color-paper-300);border-radius:6px;padding:3px 10px}
 /* Remove old eic-ask since AI button is hidden */
 .eic-ask{display:none}
+/* 视角副标题：点明本块是"这个实体是什么"的综合叙述视角 */
+.eic-perspective{margin:0 0 var(--space-2);font-size:12px;line-height:1.5;
+  color:var(--color-ink-500);letter-spacing:.02em}
+
+/* Per-entity artwork drop-in (optional, additive — see EntityInsightCard).
+   无图时 .eic-art 隐藏、卡片保持纯文字版式，外观零变化。 */
+.eic-body{flex:1 1 auto;min-width:0}
+.eic-art{display:none;flex:0 0 140px;width:140px;align-self:stretch;
+  object-fit:cover;border-radius:var(--radius-sm,8px);
+  border:1px solid var(--color-paper-300)}
+.eic.has-art{display:flex;align-items:stretch;gap:var(--space-4)}
+.eic.has-art .eic-art{display:block}
+@media (max-width:520px){
+  .eic.has-art{flex-direction:column;gap:var(--space-3)}
+  .eic-art{flex-basis:160px;width:100%;height:160px;align-self:auto}
+}
 
 /* ========== LOCALE SWITCHER (M60) — P5-S2 TP-28 VS-01 tokens ========== */
 .app-nav-right{display:flex;align-items:center;gap:var(--space-3)}
@@ -2147,3 +2269,28 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 .relationship-insight-loading{margin:0;font-size:0.82rem;color:var(--color-ink-500);line-height:1.6}
 
 
+
+/* ============================================================
+   历史研究恢复（ResearchPanel restored）—— 2026-08-11 (PO 方案①)
+   醒目标识 + 摘要 + 维度卡片，让「打开」有明确的视觉反馈。
+   ============================================================ */
+.rp-restored{
+  display:flex;flex-direction:column;gap:14px;margin-top:4px;
+  padding:18px;border-radius:14px;
+  background:var(--color-paper-100);border:1px solid var(--color-border-secondary)}
+.rp-restored-banner{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;border-radius:10px;
+  background:var(--color-accent-soft);border:1px solid var(--color-accent-soft);
+  color:var(--color-accent);font-weight:700;font-size:0.9rem}
+.rp-restored-banner-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--color-accent);
+  flex:none;box-shadow:0 0 0 3px var(--color-accent-soft)}
+.rp-restored-summary{
+  padding:14px 16px;border-radius:12px;
+  background:var(--color-paper-200);border:1px solid var(--color-paper-300)}
+.rp-restored-summary-title{
+  margin:0 0 6px;font-size:0.78rem;font-weight:700;letter-spacing:0.05em;
+  text-transform:uppercase;color:var(--color-ink-500)}
+.rp-restored-summary-text{
+  margin:0;font-size:0.9rem;line-height:1.7;color:var(--color-ink-100);white-space:pre-wrap}

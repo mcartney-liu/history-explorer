@@ -35,6 +35,8 @@ export interface SavedDimension {
   answer?: string
   grounded?: boolean
   citationCount: number
+  /** 2026-08-11 (PO 方案①)：引用明细——恢复历史研究时把出处一并带回。 */
+  citations?: SavedCitation[]
 }
 
 export interface SavedCitation {
@@ -68,6 +70,8 @@ function dimToSaved(dim: ResearchDimension): SavedDimension {
     answer: dim.answer,
     grounded: dim.grounded,
     citationCount: (dim.citations ?? []).length,
+    // 2026-08-11 (PO 方案①)：保存引用明细，供恢复时还原出处。
+    citations: (dim.citations ?? []).map(citToSaved),
   }
 }
 
