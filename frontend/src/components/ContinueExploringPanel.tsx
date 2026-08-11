@@ -17,11 +17,6 @@ import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import { CrossTopicRelated, RelatedTopic, formatTopicLabel } from './crossTopic'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityDisplayName } from '../data/explorationPackages'
-
-// M73-A P0-1: removed localName() (string-slicing exposed internal IDs like
-// "civ-romanciv-roman").  Replaced with getEntityDisplayName() which resolves
-// labels[locale] → name → fallback — same fix as ConnectionsExplainedPanel.
 
 const DEFAULT_MAX = 5
 
@@ -35,6 +30,11 @@ type ContinueExploringPanelProps = {
   max?: number
   onNodeClick?: (globalId: string) => void
   onTopicClick?: (topic: string) => void
+}
+
+function localName(globalId: string): string {
+  if (!globalId || !globalId.includes(':')) return globalId
+  return globalId.split(':').slice(1).join(':') || globalId
 }
 
 function ContinueExploringPanel({
@@ -91,10 +91,10 @@ function ContinueExploringPanel({
                 <button
                   type="button"
                   className={seen ? 'he-continue-node is-seen' : 'he-continue-node'}
-                  aria-label={t('discover.continueToAria', { name: getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja') })}
+                  aria-label={t('discover.continueToAria', { name: localName(gid) })}
                   onClick={() => onNodeClick?.(gid)}
                 >
-                  <span className="he-continue-name">{getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')}</span>
+                  <span className="he-continue-name">{localName(gid)}</span>
                   {seen && (
                     <span className="he-continue-seen" aria-hidden="true">
                       {t('discover.continueSeen')}
@@ -115,7 +115,7 @@ function ContinueExploringPanel({
           {fallbackEntities.map((c, idx) => {
             const gid = c.global_id as string
             const seen = seenGlobalIds?.has(gid) ?? false
-            const name = c.name || getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')
+            const name = c.name || localName(gid)
             return (
               <li key={`${gid}-${idx}`} className="he-continue-item">
                 <button

@@ -73,9 +73,6 @@ function FirstExplorationGuide({
                 {s.description ? (
                   <span className="he-guide-desc">{s.description}</span>
                 ) : null}
-                {s.reason ? (
-                  <span className="he-guide-reason">{s.reason}</span>
-                ) : null}
               </button>
             </li>
           ))}

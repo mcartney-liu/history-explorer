@@ -11,7 +11,6 @@
 // backend Planner as `visited` — one source, two consumers.
 import { useMemo } from 'react'
 import { useLocale } from '../../data/locale'
-import { getEntityDisplayName } from '../../data/explorationPackages'
 import { visitedFromEvents } from '../../data/explorationGuide'
 import { getEvents } from '../../data/UserBehaviorEvent'
 
@@ -23,7 +22,7 @@ interface JourneyTrailProps {
 }
 
 export function JourneyTrail({ maxSteps = 5, onEntityClick }: JourneyTrailProps) {
-  const { t, locale } = useLocale()
+  const { t } = useLocale()
 
   // Consume-only: read the existing event stream once per mount. No new
   // collection, no storage writes (PO C1: journey visualization, not profiling).
@@ -47,10 +46,10 @@ export function JourneyTrail({ maxSteps = 5, onEntityClick }: JourneyTrailProps)
                 className="journey-trail-link"
                 onClick={() => onEntityClick(gid)}
               >
-                {getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')}
+                {gid}
               </button>
             ) : (
-              <span className="journey-trail-gid">{getEntityDisplayName(gid, locale as 'zh' | 'en' | 'ja')}</span>
+              <span className="journey-trail-gid">{gid}</span>
             )}
           </li>
         ))}
