@@ -897,7 +897,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
           alignItems: 'center',
           marginBottom: 8,
           fontSize: '0.78rem',
-          color: 'var(--color-ink-500)',
+          color: 'var(--color-ink-700, #4a4231)',
         }}
       >
         <span style={{ fontWeight: 600 }}>前端预览</span>
@@ -950,7 +950,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
               style={{
                 margin: '0 0 8px',
                 fontSize: '0.78rem',
-                color: 'var(--color-ink-500)',
+                color: 'var(--color-ink-700, #4a4231)',
               }}
             >
               前台将按当前语言显示（留空时回退「{card.label}」）
@@ -965,11 +965,11 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
               }}
             >
               <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>ZH</span>
-              <span style={{ fontWeight: 600 }}>{i18nTitles.zh}</span>
-              <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>EN</span>
-              <span style={{ fontWeight: 600 }}>{i18nTitles.en}</span>
-              <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>JA</span>
-              <span style={{ fontWeight: 600 }}>{i18nTitles.ja}</span>
+              <span style={{ fontWeight: 600, color: 'var(--color-ink-900, #1c1810)' }}>{i18nTitles.zh}</span>
+              <span style={{ color: 'var(--color-ink-700, #4a4231)', fontSize: '0.75rem' }}>EN</span>
+              <span style={{ fontWeight: 600, color: 'var(--color-ink-900, #1c1810)' }}>{i18nTitles.en}</span>
+              <span style={{ color: 'var(--color-ink-700, #4a4231)', fontSize: '0.75rem' }}>JA</span>
+              <span style={{ fontWeight: 600, color: 'var(--color-ink-900, #1c1810)' }}>{i18nTitles.ja}</span>
 
               {i18nSummaries.zh || i18nSummaries.en || i18nSummaries.ja ? (
                 <>
@@ -980,7 +980,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
                       if (!text) return null
                       return (
                         <p key={loc} style={{ margin: '0 0 4px' }}>
-                          <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-400)' }}>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-700, #4a4231)' }}>
                             {loc.toUpperCase()}
                           </span>{' '}
                           {text.length > 90 ? `${text.slice(0, 90)}…` : text}
@@ -994,7 +994,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
           </>
         ) : (
           <>
-            <div style={{ fontWeight: 600, fontSize: '0.92rem' }}>{fallbackTitle}</div>
+            <div style={{ fontWeight: 600, fontSize: '0.92rem', color: 'var(--color-ink-900, #1c1810)' }}>{fallbackTitle}</div>
             {card.desc ? (
               <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--color-ink-600)' }}>
                 {card.desc.length > 80 ? `${card.desc.slice(0, 80)}…` : card.desc}
@@ -1013,7 +1013,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
                 margin: '4px 0 0',
                 paddingLeft: 18,
                 fontSize: '0.8rem',
-                color: 'var(--color-ink-600)',
+                color: 'var(--color-ink-900, #1c1810)',
               }}
             >
               {items.slice(0, 4).map((it, i) => (
@@ -1032,7 +1032,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
                 margin: '4px 0 0',
                 paddingLeft: 18,
                 fontSize: '0.8rem',
-                color: 'var(--color-ink-600)',
+                color: 'var(--color-ink-900, #1c1810)',
               }}
             >
               {questions.slice(0, 4).map((q, i) => (
