@@ -165,6 +165,11 @@ function getChangedFiles() {
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
 //   data/examples/*, frontend/* (except entries listed below).
 export const SCOPE_ALLOWLIST = [
+  // Env template (chore, 2026-08-12, PO-approved): frontend/.env.example is a
+  // Vite env TEMPLATE (config, not business logic). It was previously gitignored
+  // by the overly-broad ".env.*" rule and never committed. Added so the template
+  // is trackable. Does NOT change runtime defaults (still 8000).
+  "frontend/.env.example",
   // M24 (Data Foundation) — Freeze Revision Gate
   "backend/app/core/dataset.py",
   "backend/tests/test_dataset_metadata.py",
