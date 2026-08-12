@@ -964,7 +964,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
                 alignItems: 'baseline',
               }}
             >
-              <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>ZH</span>
+              <span style={{ color: 'var(--color-ink-700, #4a4231)', fontSize: '0.75rem' }}>ZH</span>
               <span style={{ fontWeight: 600, color: 'var(--color-ink-900, #1c1810)' }}>{i18nTitles.zh}</span>
               <span style={{ color: 'var(--color-ink-700, #4a4231)', fontSize: '0.75rem' }}>EN</span>
               <span style={{ fontWeight: 600, color: 'var(--color-ink-900, #1c1810)' }}>{i18nTitles.en}</span>
@@ -973,8 +973,8 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
 
               {i18nSummaries.zh || i18nSummaries.en || i18nSummaries.ja ? (
                 <>
-                  <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>描述</span>
-                  <div style={{ color: 'var(--color-ink-600)' }}>
+                  <span style={{ color: 'var(--color-ink-700, #4a4231)', fontSize: '0.75rem' }}>描述</span>
+                  <div style={{ color: 'var(--color-ink-900, #1c1810)' }}>
                     {(['zh', 'en', 'ja'] as const).map((loc) => {
                       const text = i18nSummaries[loc]
                       if (!text) return null
@@ -996,7 +996,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
           <>
             <div style={{ fontWeight: 600, fontSize: '0.92rem', color: 'var(--color-ink-900, #1c1810)' }}>{fallbackTitle}</div>
             {card.desc ? (
-              <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--color-ink-600)' }}>
+              <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--color-ink-900, #1c1810)' }}>
                 {card.desc.length > 80 ? `${card.desc.slice(0, 80)}…` : card.desc}
               </p>
             ) : null}
@@ -1005,7 +1005,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
 
         {items.length > 0 ? (
           <div style={{ marginTop: 10 }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-700, #4a4231)' }}>
               {card.items_label || '要点'}
             </span>
             <ul
@@ -1026,7 +1026,7 @@ function AdminCardPreview({ card }: { card: ContentCard }) {
 
         {questions.length > 0 ? (
           <div style={{ marginTop: 10 }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>引导问题</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-700, #4a4231)' }}>引导问题</span>
             <ul
               style={{
                 margin: '4px 0 0',
