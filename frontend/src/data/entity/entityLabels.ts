@@ -151,6 +151,74 @@ export function getRelationshipLabel(
 }
 
 // ============================================================
+// Relationship type → visual category (colored Badge grouping)
+// Groups the 18 frozen relationship types (+ ADR-0019 disputes/
+// reinterprets) into 6 UX categories so the "探索建议" can render
+// causal / evolution / political / cultural / economic / association
+// links with distinct colors instead of a flat text log.
+// ============================================================
+
+export type RelationshipCategory =
+  | 'causal'
+  | 'inheritance'
+  | 'political'
+  | 'cultural'
+  | 'economic'
+  | 'association'
+
+export const RELATIONSHIP_CATEGORY_LABELS: Record<RelationshipCategory, string> = {
+  causal: '因果',
+  inheritance: '演变',
+  political: '政权',
+  cultural: '文化',
+  economic: '贸易',
+  association: '关联',
+}
+
+const RELATIONSHIP_CATEGORY_MAP: Record<string, RelationshipCategory> = {
+  // 因果：导致 / 影响 / 征服
+  caused: 'causal',
+  influenced: 'causal',
+  conquered: 'causal',
+  // 演变：继承 / 属于 / 时间先后 / 同时代
+  inherited: 'inheritance',
+  part_of: 'inheritance',
+  before: 'inheritance',
+  after: 'inheritance',
+  contemporary_with: 'inheritance',
+  // 政权：统治 / 参与
+  ruled: 'political',
+  participated_in: 'political',
+  // 贸易：经济往来
+  traded_with: 'economic',
+  // 文化：传播 / 实践 / 语言 / 发明 / 发现
+  spread: 'cultural',
+  practiced: 'cultural',
+  spoke: 'cultural',
+  invented: 'cultural',
+  discovered: 'cultural',
+  // 关联（兜底）：关联 / 位于 / 争议 / 重新解释
+  related_to: 'association',
+  located_at: 'association',
+  disputes: 'association',
+  reinterprets: 'association',
+}
+
+export function getRelationshipCategory(relType: string): RelationshipCategory {
+  return RELATIONSHIP_CATEGORY_MAP[relType] || 'association'
+}
+
+/** CSS class suffix for the relationship-category badge color. */
+export const RELATIONSHIP_CATEGORY_CLASS: Record<RelationshipCategory, string> = {
+  causal: 'rel-causal',
+  inheritance: 'rel-inheritance',
+  political: 'rel-political',
+  cultural: 'rel-cultural',
+  economic: 'rel-economic',
+  association: 'rel-association',
+}
+
+// ============================================================
 // Entity display-name mapping (English backend names → Chinese)
 //
 // The backend API returns English names for some entities/events.

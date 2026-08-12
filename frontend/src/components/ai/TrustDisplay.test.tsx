@@ -163,4 +163,43 @@ describe('TrustDisplay', () => {
     const section = el.querySelector('[data-testid="trust-display"]')
     expect(section!.getAttribute('aria-label')).toBe('基于知识库证据的探索建议')
   })
+
+  // ---- 2026-08-11 (PO): 叙事卡片链重构断言 ----
+
+  it('narrative chain: renders ol.trust-display-chain with node name + colored relationship badge', () => {
+    const el = renderTrust({ nextExploration: NEXT, engine: 'deterministic' })
+    const chain = el.querySelector('.trust-display-chain')
+    expect(chain).not.toBeNull()
+    const name = el.querySelector('.trust-display-node-name')
+    expect(name).not.toBeNull()
+    expect(name!.textContent).toContain('罗马帝国建立')
+    // 关系 Badge：participated_in → political(rel-political) 彩色胶囊
+    const badge = el.querySelector('.rel-badge')
+    expect(badge).not.toBeNull()
+    expect(badge!.className).toContain('rel-political')
+    expect(badge!.textContent).toContain('参与')
+  })
+
+  it('narrative chain: detail is in the DOM but folded (not is-open) by default', () => {
+    const el = renderTrust({ nextExploration: NEXT_FULL, engine: 'deterministic' })
+    const detail = el.querySelector('.trust-display-detail')
+    expect(detail).not.toBeNull()
+    // 默认收起：is-open 不存在，但原文仍在 DOM（可审计/可访问）
+    expect(detail!.className).not.toContain('is-open')
+    expect(detail!.textContent).toContain('因为该事件与焦点实体的关系有两条已校验证据支持')
+  })
+
+  it('narrative chain: shows a "view more" toggle when more than 3 recommendations', () => {
+    const many: AINextExploration[] = [
+      NEXT[0],
+      { ...NEXT[0], global_id: 'roman_empire:event-republic-end' },
+      { ...NEXT[0], global_id: 'roman_empire:civ-byzantine' },
+      { ...NEXT[0], global_id: 'roman_empire:religion-christianity' },
+    ]
+    const el = renderTrust({ nextExploration: many, engine: 'deterministic' })
+    const more = el.querySelector('.trust-display-more')
+    expect(more).not.toBeNull()
+    // 默认只展 3 条，第 4 条被折叠（is-hidden）
+    expect(el.querySelectorAll('.trust-display-link.is-hidden').length).toBe(1)
+  })
 })
