@@ -80,14 +80,12 @@ export function ResearchDimensionCardView({ dimension, dimKey }: ResearchDimensi
           }}
         />
       )}
-      <h4 className="rdc-title">
-        {dimIcon && (
-          <span className="rdc-title-icon" aria-hidden="true">
-            <Icon name={dimIcon} size={16} />
-          </span>
-        )}
-        {dimension.title}
-      </h4>
+      {dimIcon && (
+        <span className="rdc-logo" aria-hidden="true">
+          <Icon name={dimIcon} size={24} />
+        </span>
+      )}
+      <h4 className="rdc-title">{dimension.title}</h4>
       <p className="rdc-question">{dimension.question}</p>
 
       {dimension.status === 'idle' && (
