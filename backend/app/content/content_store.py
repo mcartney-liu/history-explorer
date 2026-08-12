@@ -734,8 +734,9 @@ def _merge_with_defaults(stored: Any) -> dict[str, Any]:
             card["desc"] = override.desc
         if override.image:
             card["image"] = override.image
-            if override.image_focus:
-                card["image_focus"] = override.image_focus
+        # 焦点独立于图片：即使使用内置图(image=null)也应生效
+        if override.image_focus:
+            card["image_focus"] = override.image_focus
         if override.items is not None:
             card["items"] = override.items
         if override.title_i18n:
