@@ -4,7 +4,7 @@ import {
   PROMPT_MODES,
   type AIResponse,
 } from '../data/aiClient'
-import { exampleQuestions } from '../data/ai/questionTemplates'
+import { exampleQuestions, withAngle } from '../data/ai/questionTemplates'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
 import GroundingBadge from './ui/GroundingBadge'
@@ -56,8 +56,14 @@ export default function AIExplanationPanel({
     setError('')
     setResponse(null)
     try {
+      // 2026-08-13 (PO)：把「分析角度」拼进问题，让模式在前端问题层也生效
+      // （系统层 Focus 保留不动，这里增强用户感知）。
+      const activeMode = PROMPT_MODES.find((m) => m.key === promptMode)
+      const asked = activeMode
+        ? withAngle(activeMode.key, trimmed, activeMode.angle)
+        : trimmed
       const res = await explainAI(
-        trimmed,
+        asked,
         contextGlobalIds,
         controller.signal,
         promptMode,

@@ -43,3 +43,23 @@ export function exampleQuestions(mode: string, name: string): string[] {
   const pick = templates[mode] ?? templates.why_important
   return pick(n)
 }
+
+/**
+ * 2026-08-13 (PO)：把「分析角度」拼进问题，让模式在前端问题层也生效
+ * （系统层 Focus 保留不动，这里是增强）。
+ *
+ * 例如：mode=why_happened + question「罗马文明为什么在历史上重要？」
+ * → 「请从【发生与成因】的角度分析：罗马文明为什么在历史上重要？」
+ *
+ * @param mode     PROMPT_MODES 的 key
+ * @param question 用户输入的问题
+ * @param angle    角度词（PROMPT_MODES 的 angle 字段）
+ */
+export function withAngle(_mode: string, question: string, angle: string): string {
+  const q = (question ?? '').trim()
+  if (!q) return q
+  const a = (angle ?? '').trim()
+  if (!a) return q
+  return `请从【${a}】的角度分析：${q}`
+}
+

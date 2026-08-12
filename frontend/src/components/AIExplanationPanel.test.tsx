@@ -133,11 +133,11 @@ describe('AIExplanationView', () => {
         onModeChange={() => {}}
       />,
     )
-    expect(html).toContain('为何重要')
-    expect(html).toContain('为何发生')
-    expect(html).toContain('历史影响')
-    expect(html).toContain('多文明视角')
-    expect(html).toContain('时间线解读')
+    expect(html).toContain('历史地位')
+    expect(html).toContain('发生与成因')
+    expect(html).toContain('影响与遗产')
+    expect(html).toContain('跨文明比较')
+    expect(html).toContain('时间线梳理')
   })
 
   it('highlights the active mode chip', () => {
