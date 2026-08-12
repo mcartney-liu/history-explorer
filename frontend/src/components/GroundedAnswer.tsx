@@ -156,6 +156,61 @@ function isArtifactJSON(jsonStr: string): boolean {
 }
 
 /**
+ * 用括号计数器从文本中提取所有 JSON 块（{...} 或 [...]），支持任意深度嵌套。
+ * 比 [^{}] 正则更可靠——能正确处理 {"answer":"...", "citations":[{"global_id":...}]}
+ *
+ * @param text - 要扫描的文本
+ * @param onBlock - 对每个找到的 JSON 块的回调，返回替换字符串（''=删除）
+ * @returns 替换后的文本
+ */
+function extractJSONBlocks(
+  text: string,
+  onBlock: (block: string) => string,
+): string {
+  // 找到所有顶级 JSON 块的位置，从最内层开始替换（避免位置偏移）
+  const blocks: { start: number; end: number; content: string }[] = []
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    if (ch !== '{' && ch !== '[') continue
+
+    // 括号计数：找匹配的闭合括号
+    let depth = 1
+    let j = i + 1
+    const close = ch === '{' ? '}' : ']'
+    let inString = false
+    let escape = false
+
+    while (j < text.length && depth > 0) {
+      const c = text[j]
+      if (escape) { escape = false; j++; continue }
+      if (c === '\\') { escape = true; j++; continue }
+      if (c === '"') { inString = !inString; j++; continue }
+      if (inString) { j++; continue }
+      if (c === ch) depth++
+      else if (c === close) depth--
+      j++
+    }
+
+    if (depth === 0) {
+      blocks.push({ start: i, end: j, content: text.slice(i, j) })
+    }
+  }
+
+  // 从后向前替换（保持位置有效）
+  let result = text
+  for (let b = blocks.length - 1; b >= 0; b--) {
+    const block = blocks[b]
+    const replacement = onBlock(block.content)
+    if (replacement !== block.content) {
+      result = result.slice(0, block.start) + replacement + result.slice(block.end)
+    }
+  }
+
+  return result
+}
+
+/**
  * 从文本中剥离末尾/嵌入/截断的 JSON artifact 块（{...} 或 [...]）。
  * 匹配条件：该块包含已知 artifact 关键字。
  * 保护正常文本中的花括号（如数学公式、代码示例）不被误剥。
@@ -171,27 +226,24 @@ function stripJSONArtifacts(text: string): string {
   for (let round = 0; round < 5; round++) {
     const prev = result
 
-    // === 第 1 层：完整 JSON 对象（非贪婪，优先匹配最内层）===
-    result = result.replace(
-      /\{[^{}]*(?:"(?:[^"\\]|\\.)*"[^{}]*)*\}/g,
-      (match) => {
-        try {
-          if (isArtifactJSON(match)) return ''
-        } catch { /* 不是合法 JSON，保留 */ }
-        return match
-      },
-    )
-
-    // === 第 1 层：完整 JSON 数组 ===
-    result = result.replace(
-      /\[[^\[\]]*(?:"(?:[^"\\]|\\.)*"[^\[\]]*)*\]/g,
-      (match) => {
-        try {
-          if (isArtifactJSON(match)) return ''
-        } catch { /* 保留 */ }
-        return match
-      },
-    )
+    // === 第 1 层：完整 JSON 块（支持嵌套）===
+    // 用括号计数器找到所有 { ... } 和 [ ... ] 块（含任意深度嵌套）
+    // 比 [^{}] 正则更可靠——能正确处理 {"answer":"...", "citations":[{...}]}
+    // 策略：检测到 artifact JSON 时，尝试提取其中的 answer 字段值（因为后端常把
+    // 正文包在 {"answer":"...","citations":[...]} 里返回）；无 answer 字段则整块删除。
+    result = extractJSONBlocks(result, (block) => {
+      try {
+        if (!isArtifactJSON(block)) return block
+        // 尝试解析并提取 answer 字段
+        const parsed = JSON.parse(block)
+        if (typeof parsed.answer === 'string' && parsed.answer.trim()) {
+          return parsed.answer.trim()
+        }
+        // 有 citations 但无 answer → 整块是元数据，删除
+        return ''
+      } catch { /* 不是合法 JSON，保留 */ }
+      return block
+    })
 
     // === 第 2 层：截断 JSON（LLM 输出被截断时的常见残留）===
     // 匹配从 { 或 [ 开始、到字符串末尾的不完整 JSON 块
