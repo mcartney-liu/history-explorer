@@ -138,35 +138,117 @@ function tryRenderSynthesis(raw: string): ReactNode | null {
   )
 }
 
+// 已知的 LLM JSON artifact 关键字——出现在 JSON value 中时说明这是结构化数据
+// 而非用户可读文本，应被剥离而非展示。
+const JSON_ARTifact_KEYS = [
+  'global_id', 'kind', 'entity', 'label',   // citation / entity 引用
+  'answer', 'citations', 'rejected_citations', // AI 响应包装
+  'confidence', 'grounded', 'engine', 'evidence', // AI 元数据
+  'perspectives', 'next_exploration', 'mode', 'question', // AI 扩展字段
+]
+
+/** 判断一个 JSON 字符串是否像 LLM artifact（含上述关键字） */
+function isArtifactJSON(jsonStr: string): boolean {
+  // 快速排除：太短不可能是 artifact
+  if (jsonStr.length < 20) return false
+  const lower = jsonStr.toLowerCase()
+  return JSON_ARTifact_KEYS.some((k) => lower.includes(`"${k}"`))
+}
+
+/**
+ * 从文本中剥离末尾/嵌入的 JSON artifact 块（{...} 或 [...]）。
+ * 匹配条件：该块必须是合法 JSON 且包含已知 artifact 关键字。
+ * 保护正常文本中的花括号（如数学公式、代码示例）不被误剥。
+ */
+function stripJSONArtifacts(text: string): string {
+  let result = text
+  // 反复剥离（处理多层嵌套 artifact），上限 5 轮防死循环
+  for (let round = 0; round < 5; round++) {
+    const prev = result
+    // 匹配 {...} 形式的 JSON 对象（非贪婪，优先匹配最内层）
+    result = result.replace(
+      /\{[^{}]*(?:"(?:[^"\\]|\\.)*"[^{}]*)*\}/g,
+      (match) => {
+        try {
+          // 验证是否为合法 JSON + 是否含 artifact 关键字
+          if (isArtifactJSON(match)) return ''
+        } catch { /* 不是合法 JSON，保留 */ }
+        return match
+      },
+    )
+    // 匹配 [...] 形式的 JSON 数组
+    result = result.replace(
+      /\[[^\[\]]*(?:"(?:[^"\\]|\\.)*"[^\[\]]*)*\]/g,
+      (match) => {
+        try {
+          if (isArtifactJSON(match)) return ''
+        } catch { /* 保留 */ }
+        return match
+      },
+    )
+    if (result === prev) break // 无变化，退出
+  }
+  return result
+}
+
 // 2026-08-11 (PO)：LLM 输出不稳定的最后防线——任何没被 tryRenderSynthesis
 // 识别的 JSON 对象，递归提取其中的字符串值拼接展示，绝不让用户看到
-// 原始 JSON dump（"像保存文件的内容"）。非 JSON 原样返回。
-function humanizeAnswer(raw: string): string {
+// 原始 JSON dump（"像保存文件的内容")。
+//
+// 2026-08-12 (增强)：新增「混合内容清洗」模式——当 answer 同时包含可读文本和
+// JSON artifact（LLM 常把引用数据/响应包装追加在正文后面），自动剥离 JSON 部分，
+// 只保留人类可读文本。覆盖三种输入形态：
+//   ① 纯 JSON → 提取字符串值（原有逻辑）
+//   ② 纯文本 → 原样返回（原有逻辑）
+//   ③ 混合内容（文本 + JSON）→ 剥离 JSON artifact，保留文本（新增）
+export function humanizeAnswer(raw: string): string {
   const text = (raw ?? '').trim()
   if (!text) return raw ?? ''
-  if (!text.startsWith('{') && !text.startsWith('[')) return raw
 
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(text)
-  } catch {
-    return raw
-  }
-  if (parsed === null || typeof parsed !== 'object') return raw
+  // 先剥 markdown code fence 残留（LLM 有时用 ```json 包裹输出但后端未完全剥离）
+  let cleaned = text
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*$/g, '')
 
-  const parts: string[] = []
-  const walk = (v: unknown): void => {
-    if (typeof v === 'string') {
-      const s = v.trim()
-      if (s) parts.push(s)
-    } else if (Array.isArray(v)) {
-      v.forEach(walk)
-    } else if (v && typeof v === 'object') {
-      Object.values(v).forEach(walk)
+  // 模式①：整个字符串是纯 JSON → 提取字符串（原有逻辑）
+  const trimmed = cleaned.trim()
+  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(trimmed)
+    } catch {
+      // 以 {/[ 开头但不是合法 JSON → 可能是混合内容的极端情况，
+      // 走模式③ 剥离尝试
+      cleaned = stripJSONArtifacts(cleaned)
+      return cleaned.trim() || raw
     }
+    if (parsed === null || typeof parsed !== 'object') return raw
+
+    const parts: string[] = []
+    const walk = (v: unknown): void => {
+      if (typeof v === 'string') {
+        const s = v.trim()
+        if (s) parts.push(s)
+      } else if (Array.isArray(v)) {
+        v.forEach(walk)
+      } else if (v && typeof v === 'object') {
+        Object.values(v).forEach(walk)
+      }
+    }
+    walk(parsed)
+    return parts.length > 0 ? parts.join('\n\n') : raw
   }
-  walk(parsed)
-  return parts.length > 0 ? parts.join('\n\n') : raw
+
+  // 模式②：不含 JSON 特征 → 原样返回（快速路径，原有行为）
+  if (!trimmed.includes('{') && !trimmed.includes('[')) return raw
+
+  // 模式③：混合内容（可读文本 + 嵌入/末尾 JSON artifact）→ 剥离 JSON
+  cleaned = stripJSONArtifacts(cleaned)
+
+  // 清理剥离后可能残留的多余空行
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n').trim()
+
+  return cleaned || raw
 }
 
 // Pure presentational component: given a fully-grounded backend response, show

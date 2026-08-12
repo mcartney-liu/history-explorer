@@ -1,6 +1,7 @@
 import type { ResearchDimension } from './ResearchDimensionCard'
 import type { AICitation } from '../data/aiClient'
 import Icon from './ui/Icon'
+import { humanizeAnswer } from './GroundedAnswer'
 
 export type ResearchReportProps = {
   /** Entity being researched. */
@@ -66,7 +67,7 @@ export function ResearchReportView({ entityName, entityType, dimensions, compare
             <div key={dim.id} className="rreport-finding">
               <h5 className="rreport-finding-title">{dim.title}</h5>
               <p className="rreport-finding-text">
-                {dim.answer ? dim.answer.slice(0, 300) + (dim.answer.length > 300 ? '…' : '') : ''}
+                {dim.answer ? humanizeAnswer(dim.answer).slice(0, 300) + (dim.answer.length > 300 ? '…' : '') : ''}
               </p>
               <span className="rreport-finding-citations">
                 {(dim.citations?.length ?? 0)} 条引用

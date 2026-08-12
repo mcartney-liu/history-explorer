@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { explainAI, type AICitation, type AIEngine } from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
+import { humanizeAnswer } from './GroundedAnswer'
 import CitationList from './CitationList'
 import type { ResearchDimension } from './ResearchDimensionCard'
 
@@ -57,9 +58,9 @@ function validDimensions(dimensions: ResearchDimension[]): ResearchDimension[] {
   )
 }
 
-/** 取答案片段，过长截断并补省略号。 */
+/** 取答案片段，过长截断并补省略号。经 humanizeAnswer 清洗 JSON artifact。 */
 function excerpt(text: string | undefined, max = 130): string {
-  const flat = (text ?? '').replace(/\s+/g, ' ').trim()
+  const flat = humanizeAnswer(text ?? '').replace(/\s+/g, ' ').trim()
   if (flat.length <= max) return flat
   return flat.slice(0, max).replace(/[，。、；：,.;:\s]+$/, '') + '…'
 }
