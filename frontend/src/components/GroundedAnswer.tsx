@@ -156,27 +156,33 @@ function isArtifactJSON(jsonStr: string): boolean {
 }
 
 /**
- * 从文本中剥离末尾/嵌入的 JSON artifact 块（{...} 或 [...]）。
- * 匹配条件：该块必须是合法 JSON 且包含已知 artifact 关键字。
+ * 从文本中剥离末尾/嵌入/截断的 JSON artifact 块（{...} 或 [...]）。
+ * 匹配条件：该块包含已知 artifact 关键字。
  * 保护正常文本中的花括号（如数学公式、代码示例）不被误剥。
+ *
+ * 三层匹配（由严到松）：
+ *   1. 完整 JSON 对象/数组（配对括号，可 JSON.parse 验证）
+ *   2. 截断 JSON（{... 开头但无闭合括号，常见于 LLM 输出被截断）
+ *   3. 孤立 artifact 关键字片段（连花括号都不全的残留）
  */
 function stripJSONArtifacts(text: string): string {
   let result = text
   // 反复剥离（处理多层嵌套 artifact），上限 5 轮防死循环
   for (let round = 0; round < 5; round++) {
     const prev = result
-    // 匹配 {...} 形式的 JSON 对象（非贪婪，优先匹配最内层）
+
+    // === 第 1 层：完整 JSON 对象（非贪婪，优先匹配最内层）===
     result = result.replace(
       /\{[^{}]*(?:"(?:[^"\\]|\\.)*"[^{}]*)*\}/g,
       (match) => {
         try {
-          // 验证是否为合法 JSON + 是否含 artifact 关键字
           if (isArtifactJSON(match)) return ''
         } catch { /* 不是合法 JSON，保留 */ }
         return match
       },
     )
-    // 匹配 [...] 形式的 JSON 数组
+
+    // === 第 1 层：完整 JSON 数组 ===
     result = result.replace(
       /\[[^\[\]]*(?:"(?:[^"\\]|\\.)*"[^\[\]]*)*\]/g,
       (match) => {
@@ -186,6 +192,33 @@ function stripJSONArtifacts(text: string): string {
         return match
       },
     )
+
+    // === 第 2 层：截断 JSON（LLM 输出被截断时的常见残留）===
+    // 匹配从 { 或 [ 开始、到字符串末尾的不完整 JSON 块
+    // 特征：含 artifact 关键字 + 典型的 JSON 键值对模式
+    result = result.replace(
+      /(?:^|[\s.…~—\-_]{4,})(\{[^]*$)/gm,
+      (match, jsonCandidate) => {
+        // 截断 JSON 通常至少 15 字符才值得检查
+        if (jsonCandidate.length < 15) return match
+        if (isArtifactJSON(jsonCandidate)) return ''
+        return match
+      },
+    )
+    // 也处理无前缀的裸截断 JSON（{ 开头直达行尾/串尾）
+    result = result.replace(
+      /(?<!\w)(\{[^{}"]*"(?:global_id|kind|"answer|"citations)[^}]*$)/gm,
+      (match) => {
+        if (match.length < 15) return match
+        if (isArtifactJSON(match)) return ''
+        return match
+      },
+    )
+
+    // === 第 3 层：清理剥离后可能留下的孤立前缀垃圾 ===
+    // 点号串、省略号串、横线串等"截断标记"
+    result = result.replace(/[\s.…~\-]{6,}\s*$/g, '').trim()
+
     if (result === prev) break // 无变化，退出
   }
   return result
