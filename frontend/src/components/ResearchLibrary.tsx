@@ -60,7 +60,7 @@ export function ResearchLibraryView({
     <div className="rlib">
       <div className="rlib-head">
         <Icon name="book" size={20} className="rlib-head-icon" />
-        <h3 className="rlib-title">研究收藏库</h3>
+        <h3 className="rlib-title">研究库</h3>
         <span className="rlib-count">{items.length} 项</span>
       </div>
 

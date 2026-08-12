@@ -174,10 +174,10 @@ export const RESEARCH_FUNNEL: JourneyFunnel = {
     },
     {
       id: 'r4_restore',
-      location: 'EntityPage / 研究收藏库',
+      location: 'EntityPage / 研究库',
       userGoal: '恢复之前的研究',
-      entryPoint: 'EntityPage → 研究收藏库区域',
-      blocker: '研究收藏库在页面底部，不显眼',
+      entryPoint: 'EntityPage → 研究库区域',
+      blocker: '研究库在页面底部，不显眼',
       missingGuidance: '首页应提示"你保存了 N 个研究"',
       nextStepVisible: false,
     },

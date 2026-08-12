@@ -281,7 +281,7 @@ describe('ResearchPanelView', () => {
         ]}
       />,
     )
-    expect(html).toContain('研究收藏库')
+    expect(html).toContain('研究库')
     expect(html).toContain('保存这份研究结果')
   })
 
