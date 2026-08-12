@@ -28,8 +28,8 @@ export default {
   'discover.via': '%{name} 経由',
   'discover.suggestedBecause': '推奨理由：',
   'discover.openAria': '%{name} を開く',
-  'discover.interpretationTitle': 'なぜこれらの関連が探索に値するか',
-  'discover.historicalMeaning': '歴史的意味',
+  'discover.interpretationTitle': '関連の解釈',
+  'discover.historicalMeaning': '{name}の歴史的意義',
   'discover.score': 'スコア %{score}',
   'discover.timeLabel': '時期：',
   // --- DiscoverPage (ADR-0020 UI i18n) ---

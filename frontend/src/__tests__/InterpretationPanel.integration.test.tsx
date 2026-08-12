@@ -53,7 +53,7 @@ describe('InterpretationPanel integration (M5-A-6)', () => {
   it('renders panels in the frozen WHAT -> WHY -> HOW order', () => {
     const html = render(<Stack />)
     const what = html.indexOf('可解释关联')
-    const why = html.indexOf('为何这些关联值得探索')
+    const why = html.indexOf('关联解读')
     const how = html.indexOf('探索路径')
     expect(what).toBeGreaterThan(-1)
     expect(why).toBeGreaterThan(-1)

@@ -423,6 +423,7 @@ function EntityPage({
                         locale,
                       )}
                       onNodeClick={onNodeClick}
+                      entityName={entity.name}
                     />
                     {entityGlobalId ? (
                       <AIExplanationPanel

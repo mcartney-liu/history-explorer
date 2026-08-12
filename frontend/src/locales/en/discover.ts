@@ -39,8 +39,8 @@ export default {
   'discover.via': 'via %{name}',
   'discover.suggestedBecause': 'Suggested because:',
   'discover.openAria': 'Open %{name}',
-  'discover.interpretationTitle': 'Why these connections are worth exploring',
-  'discover.historicalMeaning': 'Historical Meaning',
+  'discover.interpretationTitle': 'Connection interpretations',
+  'discover.historicalMeaning': 'Historical significance of {name}',
   'discover.score': 'score %{score}',
   'discover.timeLabel': 'Time:',
   // --- DiscoverPage (ADR-0020 UI i18n) ---
