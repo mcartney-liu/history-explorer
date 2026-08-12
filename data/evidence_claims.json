@@ -3316,6 +3316,52 @@
     }
   },
   {
+    "id": "ec-rom-043",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-livy",
+    "claim": "Roman civilization is traditionally dated from the founding of Rome in 753 BCE (Varro's chronology, Ab urbe condita), beginning the regal period (753-509 BCE) of seven kings that preceded the Republic.",
+    "notes": "Regal period; traditional foundation date.",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "medium",
+    "interpretation_note": "753 BCE (Ab urbe condita) is an antiquarian tradition; archaeological evidence shows gradual Latin settlement growth in the 8th-7th c. BCE rather than a single founding event."
+  },
+  {
+    "id": "ec-rom-044",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-cah",
+    "claim": "The Roman Republic (509-27 BCE) was governed by the Senate and annually elected magistrates; the Law of the Twelve Tables (c. 450 BCE) codified Roman civil law.",
+    "notes": "Republican institutions and legal codification.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none"
+  },
+  {
+    "id": "ec-rom-045",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-cah",
+    "claim": "Rome's rise to Mediterranean hegemony culminated in the Punic Wars against Carthage (264-146 BCE), ending with the destruction of Carthage and Roman dominance of the western Mediterranean.",
+    "notes": "Punic Wars and western Mediterranean expansion.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none"
+  },
+  {
+    "id": "ec-rom-046",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-oxford-byzantium",
+    "claim": "Roman civilization continued in the East as the Byzantine Empire, conventionally dated from the foundation of Constantinople in 330 CE until the city's fall in 1453 CE, preserving Roman law in the Corpus Juris Civilis.",
+    "notes": "Eastern continuation (Byzantine period).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "interpretation_note": "Byzantine period is conventionally 330-1453 CE; the East preserved Roman legal and administrative traditions."
+  },
+  {
     "id": "ec-cn-015",
     "subject_type": "entity",
     "subject_id": "idea-lixue",

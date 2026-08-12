@@ -147,8 +147,7 @@
       "global_id": "roman_empire:civ-roman",
       "aliases": [
         "Rome",
-        "Romanitas",
-        "Imperium Romanum"
+        "Romanitas"
       ],
       "labels": {
         "en": "Roman Civilization",
@@ -156,21 +155,25 @@
         "zh": "罗马文明"
       },
       "start_date": {
-        "value": -27,
+        "value": -753,
         "precision": "year",
-        "certainty": "exact",
-        "label": "27 BC"
+        "certainty": "approximate",
+        "label": "753 BC"
       },
       "end_date": {
-        "value": 476,
+        "value": 1453,
         "precision": "year",
-        "certainty": "exact",
-        "label": "476 CE"
+        "certainty": "approximate",
+        "label": "1453 CE"
       },
       "source": "src-cah",
       "evidence": [
         "ec-rom-001",
-        "ec-rom-002"
+        "ec-rom-002",
+        "ec-rom-043",
+        "ec-rom-044",
+        "ec-rom-045",
+        "ec-rom-046"
       ],
       "reliability": "high",
       "period": "tp-27bc",
