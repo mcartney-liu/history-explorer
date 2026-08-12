@@ -394,6 +394,32 @@
   font-weight: 700;
   color: var(--color-ink-900);
 }
+/* 2026-08-13 (PO)：报告标题前 logo 图标 */
+.rreport-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: -6px;
+  border-radius: 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+/* 2026-08-13 (PO)：研究中评标题前 logo 图标 */
+.rsummary-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: -6px;
+  border-radius: 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
 .rreport-topic {
   display: flex;
   align-items: baseline;

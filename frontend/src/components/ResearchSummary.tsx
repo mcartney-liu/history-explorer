@@ -3,6 +3,7 @@ import { explainAI, type AICitation, type AIEngine } from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
 import { humanizeAnswer } from './GroundedAnswer'
 import CitationList from './CitationList'
+import Icon from './ui/Icon'
 import type { ResearchDimension } from './ResearchDimensionCard'
 
 export type ResearchSummaryProps = {
@@ -144,6 +145,9 @@ export function ResearchSummaryView({
     <div className="rsummary">
       <div className={`rsummary-header${isComparative ? ' rsummary-header--compare' : ''}`}>
         <h3 className="rsummary-title">
+          <span className="rsummary-title-icon" aria-hidden="true">
+            <Icon name="spark" size={20} />
+          </span>
           {isComparative ? '比较研究综述' : '研究综述'}
         </h3>
         <span className="rsummary-context">

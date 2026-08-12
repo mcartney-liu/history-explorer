@@ -127,6 +127,9 @@ export function ResearchReportView({
   return (
     <div className="rreport">
       <h3 className="rreport-title">
+        <span className="rreport-title-icon" aria-hidden="true">
+          <Icon name="scroll" size={20} />
+        </span>
         {isComparative ? '比较研究报告' : '历史研究报告'}
       </h3>
 

@@ -25,6 +25,38 @@ export type ResearchDimensionCardProps = {
   dimKey?: string
 }
 
+/** 2026-08-13 (PO)：维度 key → 图标映射（政治/军事/经济/文化 logo）。 */
+const DIM_ICONS: Record<string, 'politics' | 'military' | 'economy' | 'culture' | 'event'> = {
+  politics: 'politics',
+  military: 'military',
+  economy: 'economy',
+  culture: 'culture',
+  background: 'politics',
+  process: 'military',
+  impact: 'economy',
+  significance: 'culture',
+  life: 'politics',
+  contribution: 'military',
+  influence: 'economy',
+  evaluation: 'culture',
+  origin: 'culture',
+  doctrine: 'politics',
+  spread: 'economy',
+  civilization: 'culture',
+  invention: 'military',
+  principle: 'politics',
+  application: 'economy',
+  'tech-impact': 'culture',
+  geography: 'economy',
+  strategy: 'military',
+  events: 'event',
+  connection: 'economy',
+  'idea-origin': 'politics',
+  meaning: 'culture',
+  'idea-spread': 'economy',
+  modern: 'politics',
+}
+
 export function ResearchDimensionCardView({ dimension, dimKey }: ResearchDimensionCardProps) {
   const [imgOk, setImgOk] = useState(true)
   const [fmt, setFmt] = useState(0)
@@ -33,6 +65,7 @@ export function ResearchDimensionCardView({ dimension, dimKey }: ResearchDimensi
   const imgSrc = showImg
     ? `${import.meta.env.BASE_URL}assets/research/${dimKey}.${formats[fmt]}`
     : ''
+  const dimIcon = (dimKey && DIM_ICONS[dimKey]) || undefined
   return (
     <div className={`rdc-card rdc-card--${dimension.status}${showImg ? ' has-art' : ''}`}>
       {showImg && (
@@ -47,7 +80,14 @@ export function ResearchDimensionCardView({ dimension, dimKey }: ResearchDimensi
           }}
         />
       )}
-      <h4 className="rdc-title">{dimension.title}</h4>
+      <h4 className="rdc-title">
+        {dimIcon && (
+          <span className="rdc-title-icon" aria-hidden="true">
+            <Icon name={dimIcon} size={16} />
+          </span>
+        )}
+        {dimension.title}
+      </h4>
       <p className="rdc-question">{dimension.question}</p>
 
       {dimension.status === 'idle' && (

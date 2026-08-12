@@ -574,6 +574,14 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
   margin:0 0 4px;padding:0 32px 0 0;
   font-family:var(--serif,serif);font-weight:500;font-size:15px;color:var(--color-ink-900);
 }
+/* 2026-08-13 (PO)：维度标题前 logo 图标（政治/军事/经济/文化） */
+.rdc-title-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;margin-right:8px;vertical-align:-7px;
+  border-radius:8px;
+  background:var(--color-accent-soft);
+  color:var(--color-accent);
+}
 .rdc-question{margin:0 0 10px;padding:0 32px 0 0;font-size:12px;line-height:1.5;color:var(--color-ink-500)}
 .rdc-answer{margin-top:8px}
 .rdc-idle,.rdc-loading,.rdc-error{font-size:13px;color:var(--color-ink-500);margin:2px 0 0;padding:0 32px 0 0}
