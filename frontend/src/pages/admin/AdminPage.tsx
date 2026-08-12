@@ -852,6 +852,201 @@ const ADMIN_TABS: { id: AdminTab; label: string }[] = [
   { id: 'sitecfg', label: '站点配置' },
 ]
 
+/**
+ * 后台卡片前端预览。
+ *
+ * 关键设计：预览必须和前台真实回退逻辑一致，否则用户不知道调的字对应哪里。
+ *   - supports_text_i18n 的卡片（探索包/探索主题）：前台用 slotTitleI18n / slotSummaryI18n，
+ *     优先取 title_i18n/summary_i18n 的当前语言值，留空时回退到卡片的默认名称/描述。
+ *   - 普通卡片：前台直接用 slotTitle / slotDesc，显示 card.title / card.desc。
+ *   - supports_guided_questions / supports_items 的卡片同步列出问题或要点。
+ */
+function AdminCardPreview({ card }: { card: ContentCard }) {
+  const fallbackTitle = card.title || card.label
+  const fallbackSummary = card.desc
+
+  const resolve = (dict: Record<string, string> | null | undefined, fb: string) => {
+    const zh = dict?.zh?.trim() || fb
+    const en = dict?.en?.trim() || fb
+    const ja = dict?.ja?.trim() || fb
+    return { zh, en, ja }
+  }
+
+  const i18nTitles = resolve(card.title_i18n, fallbackTitle)
+  const i18nSummaries = resolve(card.summary_i18n, fallbackSummary)
+
+  const items = card.supports_items ? card.items : []
+  const questions = card.supports_guided_questions ? card.guided_questions ?? [] : []
+
+  return (
+    <div
+      className="admin-preview"
+      style={{
+        marginTop: 8,
+        marginBottom: 14,
+        border: '1px solid var(--color-line-200, #e5e0d8)',
+        borderRadius: 10,
+        padding: 12,
+        background: 'var(--color-surface-50, #faf8f4)',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 8,
+          fontSize: '0.78rem',
+          color: 'var(--color-ink-500)',
+        }}
+      >
+        <span style={{ fontWeight: 600 }}>前端预览</span>
+        <span style={{ fontFamily: 'monospace' }}>{card.id}</span>
+      </div>
+
+      <div
+        style={{
+          width: '100%',
+          maxWidth: 320,
+          aspectRatio: '16 / 10',
+          overflow: 'hidden',
+          borderRadius: 8,
+          background: '#ddd',
+        }}
+      >
+        <img
+          key={`prev-${card.image ?? 'builtin'}`}
+          src={cardImageSrc(card)}
+          alt=""
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: card.image_focus || '50% 50%',
+            display: 'block',
+          }}
+          onError={(e) => {
+            const el = e.currentTarget as HTMLImageElement
+            if (!card.image) {
+              const order = ['png', 'jpg', 'jpeg']
+              const step = parseInt(el.dataset.fb ?? '0', 10)
+              if (step < order.length) {
+                el.dataset.fb = String(step + 1)
+                el.src = el.src.replace(/\.[a-z]+$/i, `.${order[step]}`)
+              } else {
+                el.style.visibility = 'hidden'
+              }
+            } else {
+              el.style.visibility = 'hidden'
+            }
+          }}
+        />
+      </div>
+
+      <div style={{ marginTop: 10 }}>
+        {card.supports_text_i18n ? (
+          <>
+            <p
+              style={{
+                margin: '0 0 8px',
+                fontSize: '0.78rem',
+                color: 'var(--color-ink-500)',
+              }}
+            >
+              前台将按当前语言显示（留空时回退「{card.label}」）
+            </p>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '32px 1fr',
+                gap: '6px 10px',
+                fontSize: '0.85rem',
+                alignItems: 'baseline',
+              }}
+            >
+              <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>ZH</span>
+              <span style={{ fontWeight: 600 }}>{i18nTitles.zh}</span>
+              <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>EN</span>
+              <span style={{ fontWeight: 600 }}>{i18nTitles.en}</span>
+              <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>JA</span>
+              <span style={{ fontWeight: 600 }}>{i18nTitles.ja}</span>
+
+              {i18nSummaries.zh || i18nSummaries.en || i18nSummaries.ja ? (
+                <>
+                  <span style={{ color: 'var(--color-ink-500)', fontSize: '0.75rem' }}>描述</span>
+                  <div style={{ color: 'var(--color-ink-600)' }}>
+                    {(['zh', 'en', 'ja'] as const).map((loc) => {
+                      const text = i18nSummaries[loc]
+                      if (!text) return null
+                      return (
+                        <p key={loc} style={{ margin: '0 0 4px' }}>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-400)' }}>
+                            {loc.toUpperCase()}
+                          </span>{' '}
+                          {text.length > 90 ? `${text.slice(0, 90)}…` : text}
+                        </p>
+                      )
+                    })}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontWeight: 600, fontSize: '0.92rem' }}>{fallbackTitle}</div>
+            {card.desc ? (
+              <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--color-ink-600)' }}>
+                {card.desc.length > 80 ? `${card.desc.slice(0, 80)}…` : card.desc}
+              </p>
+            ) : null}
+          </>
+        )}
+
+        {items.length > 0 ? (
+          <div style={{ marginTop: 10 }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>
+              {card.items_label || '要点'}
+            </span>
+            <ul
+              style={{
+                margin: '4px 0 0',
+                paddingLeft: 18,
+                fontSize: '0.8rem',
+                color: 'var(--color-ink-600)',
+              }}
+            >
+              {items.slice(0, 4).map((it, i) => (
+                <li key={i}>{it}</li>
+              ))}
+              {items.length > 4 ? <li>…等 {items.length} 条</li> : null}
+            </ul>
+          </div>
+        ) : null}
+
+        {questions.length > 0 ? (
+          <div style={{ marginTop: 10 }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>引导问题</span>
+            <ul
+              style={{
+                margin: '4px 0 0',
+                paddingLeft: 18,
+                fontSize: '0.8rem',
+                color: 'var(--color-ink-600)',
+              }}
+            >
+              {questions.slice(0, 4).map((q, i) => (
+                <li key={i}>{q}</li>
+              ))}
+              {questions.length > 4 ? <li>…等 {questions.length} 条</li> : null}
+            </ul>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 /** 某张卡片在当前维度 tab 下是否有可编辑字段（用于隐藏空卡片）。 */
 function tabHasField(card: ContentCard, tab: AdminTab): boolean {
   switch (tab) {
@@ -953,102 +1148,9 @@ function CardEditor({
       <div className="admin-card-label">{card.label}</div>
       {card.where ? <p className="admin-card-where">{card.where}</p> : null}
 
-      {/* 前端预览：始终可见，实时反映这张卡在前台的渲染（图按 objectPosition 裁切 + 文字 + 引导问题），
+      {/* 前端预览：始终可见，按前台真实回退逻辑重绘文字，
           让后台编辑能直接对应"我改的是前端哪块"。 */}
-      <div
-        className="admin-preview"
-        style={{
-          marginTop: 8,
-          marginBottom: 14,
-          border: '1px solid var(--color-line-200, #e5e0d8)',
-          borderRadius: 10,
-          padding: 12,
-          background: 'var(--color-surface-50, #faf8f4)',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 8,
-            fontSize: '0.78rem',
-            color: 'var(--color-ink-500)',
-          }}
-        >
-          <span style={{ fontWeight: 600 }}>前端预览</span>
-          <span style={{ fontFamily: 'monospace' }}>{card.id}</span>
-        </div>
-        <div
-          style={{
-            width: '100%',
-            maxWidth: 320,
-            aspectRatio: '16 / 10',
-            overflow: 'hidden',
-            borderRadius: 8,
-            background: '#ddd',
-          }}
-        >
-          <img
-            key={`prev-${card.image ?? 'builtin'}`}
-            src={cardImageSrc(card)}
-            alt=""
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: card.image_focus || '50% 50%',
-              display: 'block',
-            }}
-            onError={(e) => {
-              const el = e.currentTarget as HTMLImageElement
-              if (!card.image) {
-                const order = ['png', 'jpg', 'jpeg']
-                const step = parseInt(el.dataset.fb ?? '0', 10)
-                if (step < order.length) {
-                  el.dataset.fb = String(step + 1)
-                  el.src = el.src.replace(/\.[a-z]+$/i, `.${order[step]}`)
-                } else {
-                  el.style.visibility = 'hidden'
-                }
-              } else {
-                el.style.visibility = 'hidden'
-              }
-            }}
-          />
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <div style={{ fontWeight: 600, fontSize: '0.92rem' }}>
-            {card.title || card.label}
-            {card.title_i18n && (card.title_i18n as Record<string, string>).en ? (
-              <span
-                style={{
-                  fontWeight: 400,
-                  color: 'var(--color-ink-500)',
-                  marginLeft: 6,
-                  fontSize: '0.8rem',
-                }}
-              >
-                EN: {(card.title_i18n as Record<string, string>).en}
-              </span>
-            ) : null}
-          </div>
-          {card.desc ? (
-            <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--color-ink-600)' }}>
-              {card.desc.length > 80 ? `${card.desc.slice(0, 80)}…` : card.desc}
-            </p>
-          ) : null}
-          {Array.isArray(card.guided_questions) && (card.guided_questions as string[]).length > 0 ? (
-            <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: '0.8rem', color: 'var(--color-ink-600)' }}>
-              {(card.guided_questions as string[])
-                .slice(0, 4)
-                .map((q: string, i: number) => (
-                  <li key={i}>{q}</li>
-                ))}
-            </ul>
-          ) : null}
-        </div>
-      </div>
+      <AdminCardPreview card={card} />
 
       {activeTab === 'image' ? (
         <>
@@ -1237,6 +1339,11 @@ function CardEditor({
 
       {activeTab === 'text' && (
        <>
+        {card.supports_text_i18n ? (
+          <p className="admin-hint" style={{ marginBottom: 12 }}>
+            提示：此卡片前台优先读取「三语与引导」里的文案；这里的标题/描述仅作为备用回退。
+          </p>
+        ) : null}
         <label className="admin-field">
         <span className="admin-field-label">
           标题
