@@ -148,6 +148,8 @@ export function AdminPage() {
   const [status, setStatus] = useState<StatusMessage | null>(null)
   const [busy, setBusy] = useState(false)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  // 横向维度 tab：按编辑维度分组，而非按栏目堆叠
+  const [activeTab, setActiveTab] = useState<AdminTab>('image')
 
   // ---- site configuration (ADR-0021 sibling) -----------------------------
   const [siteConfig, setSiteConfig] = useState<SiteConfigDocument | null>(null)
@@ -397,7 +399,8 @@ export function AdminPage() {
   }, [baseline])
 
   const toggleModule = useCallback((moduleId: string) => {
-    setCollapsed((prev) => ({ ...prev, [moduleId]: !prev[moduleId] }))
+    // 默认语义：未记录(id 缺失) = 折叠；仅显式 false 才展开
+    setCollapsed((prev) => ({ ...prev, [moduleId]: prev[moduleId] === false ? true : false }))
   }, [])
 
   // ---- site-config patch helpers ----------------------------------------
@@ -498,11 +501,58 @@ export function AdminPage() {
       <main className="admin-main">
         <GateBanner adminEnabled={adminEnabled} backendReachable={backendReachable} />
 
-        {modules.map((module) => {
-          const isCollapsed = collapsed[module.module] === true
+        {/* 横向维度 tab：按编辑维度分组，而非按栏目堆叠 */}
+        <div
+          role="tablist"
+          aria-label="编辑维度"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 8,
+            margin: '0 0 18px',
+            paddingBottom: 12,
+            borderBottom: '1px solid var(--color-paper-300, #e3dccb)',
+          }}
+        >
+          {ADMIN_TABS.map((t) => {
+            const selected = activeTab === t.id
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setActiveTab(t.id)}
+                style={{
+                  appearance: 'none',
+                  cursor: 'pointer',
+                  font: 'inherit',
+                  fontSize: '0.9rem',
+                  fontWeight: selected ? 600 : 500,
+                  padding: '8px 16px',
+                  borderRadius: 999,
+                  border: selected
+                    ? '1px solid var(--color-accent, #c8a83a)'
+                    : '1px solid var(--color-paper-300, #e3dccb)',
+                  background: selected ? 'var(--color-accent-soft, #f3ecd8)' : 'transparent',
+                  color: selected ? 'var(--color-ink-900, #1c1810)' : 'var(--color-ink-600, #5b513c)',
+                }}
+              >
+                {t.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {activeTab !== 'sitecfg' && (
+          <>
+            {modules.map((module) => {
+          const isCollapsed = collapsed[module.module] !== false
           const moduleCards = module.card_ids
             .map((id) => byId.get(id))
             .filter((card): card is ContentCard => Boolean(card))
+            .filter((card) => tabHasField(card, activeTab))
+          if (moduleCards.length === 0) return null
           const editedCount = moduleCards.filter((card) => {
             const def = defaults.find((d) => d.id === card.id)
             return def ? cardIsEdited(card, def) : card.image !== null
@@ -534,6 +584,7 @@ export function AdminPage() {
                     <CardEditor
                       key={card.id}
                       card={card}
+                      activeTab={activeTab}
                       defaults={defaults.find((d) => d.id === card.id) ?? null}
                       locked={locked}
                       onPatch={patchCard}
@@ -551,19 +602,19 @@ export function AdminPage() {
           <button
             type="button"
             className="admin-module-head"
-            aria-expanded={collapsed.entity_insights !== true}
+            aria-expanded={collapsed.entity_insights === false}
             onClick={() => toggleModule('entity_insights')}
           >
             <Icon
               name="chevron-down"
               size={20}
-              className={collapsed.entity_insights === true ? 'is-collapsed' : undefined}
+              className={collapsed.entity_insights !== false ? 'is-collapsed' : undefined}
             />
             <span className="admin-module-label">历史见解管理</span>
             <span className="admin-module-count">AI 基于证据生成 · 前端只读</span>
           </button>
 
-          {collapsed.entity_insights !== true && (
+          {collapsed.entity_insights === false && (
               <div className="admin-insight">
                 <p className="admin-hint">
                   历史见解由 AI 基于该实体的知识库证据生成一次并固化；前端只读此内容，刷新由本后台管理。
@@ -647,8 +698,10 @@ export function AdminPage() {
             </div>
           )}
         </section>
+          </>
+        )}
 
-        {siteConfig ? (
+        {activeTab === 'sitecfg' && siteConfig ? (
           <SiteConfigEditor
             config={siteConfig}
             defaults={siteConfigDefaults}
@@ -789,14 +842,40 @@ function focusPoint(raw: string | null | undefined): { x: number; y: number } {
   return { x: 50, y: 50 }
 }
 
+/** 后台编辑维度 tab。改图片就只看图片，改文字就只看文字。 */
+export type AdminTab = 'image' | 'text' | 'i18n' | 'sitecfg'
+
+const ADMIN_TABS: { id: AdminTab; label: string }[] = [
+  { id: 'image', label: '图片与焦点' },
+  { id: 'text', label: '文字内容' },
+  { id: 'i18n', label: '三语与引导' },
+  { id: 'sitecfg', label: '站点配置' },
+]
+
+/** 某张卡片在当前维度 tab 下是否有可编辑字段（用于隐藏空卡片）。 */
+function tabHasField(card: ContentCard, tab: AdminTab): boolean {
+  switch (tab) {
+    case 'image':
+      return true // 所有卡片均可配图（文字/按钮类卡片前端暂无图位，图存入作数据预埋）
+    case 'text':
+      return true // 标题/描述对所有卡片可用
+    case 'i18n':
+      return Boolean(card.supports_text_i18n || card.supports_guided_questions)
+    case 'sitecfg':
+      return false // 站点配置单独渲染，不进卡片网格
+  }
+}
+
 function CardEditor({
   card,
+  activeTab,
   defaults,
   locked,
   onPatch,
   onError,
 }: {
   card: ContentCard
+  activeTab: AdminTab
   defaults: ContentCard | null
   locked: boolean
   onPatch: (id: string, patch: Partial<ContentCard>) => void
@@ -874,7 +953,104 @@ function CardEditor({
       <div className="admin-card-label">{card.label}</div>
       {card.where ? <p className="admin-card-where">{card.where}</p> : null}
 
-      {card.supports_image ? (
+      {/* 前端预览：始终可见，实时反映这张卡在前台的渲染（图按 objectPosition 裁切 + 文字 + 引导问题），
+          让后台编辑能直接对应"我改的是前端哪块"。 */}
+      <div
+        className="admin-preview"
+        style={{
+          marginTop: 8,
+          marginBottom: 14,
+          border: '1px solid var(--color-line-200, #e5e0d8)',
+          borderRadius: 10,
+          padding: 12,
+          background: 'var(--color-surface-50, #faf8f4)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 8,
+            fontSize: '0.78rem',
+            color: 'var(--color-ink-500)',
+          }}
+        >
+          <span style={{ fontWeight: 600 }}>前端预览</span>
+          <span style={{ fontFamily: 'monospace' }}>{card.id}</span>
+        </div>
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 320,
+            aspectRatio: '16 / 10',
+            overflow: 'hidden',
+            borderRadius: 8,
+            background: '#ddd',
+          }}
+        >
+          <img
+            key={`prev-${card.image ?? 'builtin'}`}
+            src={cardImageSrc(card)}
+            alt=""
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: card.image_focus || '50% 50%',
+              display: 'block',
+            }}
+            onError={(e) => {
+              const el = e.currentTarget as HTMLImageElement
+              if (!card.image) {
+                const order = ['png', 'jpg', 'jpeg']
+                const step = parseInt(el.dataset.fb ?? '0', 10)
+                if (step < order.length) {
+                  el.dataset.fb = String(step + 1)
+                  el.src = el.src.replace(/\.[a-z]+$/i, `.${order[step]}`)
+                } else {
+                  el.style.visibility = 'hidden'
+                }
+              } else {
+                el.style.visibility = 'hidden'
+              }
+            }}
+          />
+        </div>
+        <div style={{ marginTop: 8 }}>
+          <div style={{ fontWeight: 600, fontSize: '0.92rem' }}>
+            {card.title || card.label}
+            {card.title_i18n && (card.title_i18n as Record<string, string>).en ? (
+              <span
+                style={{
+                  fontWeight: 400,
+                  color: 'var(--color-ink-500)',
+                  marginLeft: 6,
+                  fontSize: '0.8rem',
+                }}
+              >
+                EN: {(card.title_i18n as Record<string, string>).en}
+              </span>
+            ) : null}
+          </div>
+          {card.desc ? (
+            <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--color-ink-600)' }}>
+              {card.desc.length > 80 ? `${card.desc.slice(0, 80)}…` : card.desc}
+            </p>
+          ) : null}
+          {Array.isArray(card.guided_questions) && (card.guided_questions as string[]).length > 0 ? (
+            <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: '0.8rem', color: 'var(--color-ink-600)' }}>
+              {(card.guided_questions as string[])
+                .slice(0, 4)
+                .map((q: string, i: number) => (
+                  <li key={i}>{q}</li>
+                ))}
+            </ul>
+          ) : null}
+        </div>
+      </div>
+
+      {activeTab === 'image' ? (
         <>
           <div
             className={`admin-drop${dragging ? ' is-dragging' : ''}${locked ? ' is-locked' : ''}`}
@@ -1051,10 +1227,17 @@ function CardEditor({
               </button>
             </div>
           ) : null}
+          {!card.supports_image ? (
+            <p className="admin-hint" style={{ marginTop: 8, color: 'var(--color-ink-500)' }}>
+              提示：该栏位前端暂未设图位，图片会保存但当前不显示（数据预埋，后续组件支持即生效）。
+            </p>
+          ) : null}
         </>
       ) : null}
 
-      <label className="admin-field">
+      {activeTab === 'text' && (
+       <>
+        <label className="admin-field">
         <span className="admin-field-label">
           标题
           <span className="admin-counter">{card.title.length}/{TITLE_LIMIT}</span>
@@ -1083,8 +1266,10 @@ function CardEditor({
           onChange={(e) => onPatch(card.id, { desc: e.target.value })}
         />
       </label>
+       </>
+      )}
 
-      {card.supports_text_i18n ? (
+      {activeTab === 'i18n' && card.supports_text_i18n ? (
         <div className="admin-i18n">
           <p className="admin-field-label">三语标题（留空 = 沿用数据源）</p>
           {(['zh', 'en', 'ja'] as const).map((loc) => (
@@ -1123,7 +1308,7 @@ function CardEditor({
         </div>
       ) : null}
 
-      {card.supports_items ? (
+      {activeTab === 'text' && card.supports_items ? (
         <ItemListEditor
           items={card.items}
           itemsLabel={itemsLabel}
@@ -1133,7 +1318,7 @@ function CardEditor({
         />
       ) : null}
 
-      {card.supports_guided_questions ? (
+      {activeTab === 'i18n' && card.supports_guided_questions ? (
         <ItemListEditor
           items={card.guided_questions ?? []}
           itemsLabel="引导问题"

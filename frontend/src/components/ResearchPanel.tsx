@@ -8,7 +8,7 @@ import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
 import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
 import type { EntityRelationship } from './EntityPage'
-import { slotImageName, useContentRevision } from '../data/contentRuntime'
+import { slotImageName, slotImageFocus, useContentRevision } from '../data/contentRuntime'
 import { mediaUrl } from '../data/contentApi'
 
 /** T1: an explicit restore request raised by the parent (ResearchLibrary). */
@@ -93,6 +93,7 @@ type DimTpl = { key: string; title: string; question: string }
 function ResearchDimCard({ index, dim }: { index: number; dim: DimTpl }) {
   useContentRevision()
   const configuredName = slotImageName(`research_dims.${dim.key}`)
+  const focus = slotImageFocus(`research_dims.${dim.key}`)
   const formats = ['webp', 'png', 'jpg', 'jpeg']
   // phase 0 = admin-configured artwork (when present); 1..4 = bundle fallback
   // chain (assets/research/{key}.{webp|png|jpg|jpeg}), mirroring the explore
@@ -114,6 +115,7 @@ function ResearchDimCard({ index, dim }: { index: number; dim: DimTpl }) {
           src={src}
           alt=""
           aria-hidden="true"
+          style={focus ? { objectPosition: focus } : undefined}
           onError={() => setPhase((p) => p + 1)}
         />
       )}
