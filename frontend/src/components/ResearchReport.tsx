@@ -271,6 +271,7 @@ export default function ResearchReport(props: ResearchReportProps) {
       `2. 维度关联：分析各维度发现之间的相互印证或张力；\n` +
       `3. 矛盾与未解：指出研究中出现的矛盾之处或尚待解答的问题（如有）；\n` +
       `4. 总体评价：对该历史主体的整体历史地位给出综合评述。\n\n` +
+      `请务必使用简体中文回答，直接输出连贯的中文段落，不要输出 JSON 或任何代码格式。\n\n` +
       `【${props.entityName}】各维度研究内容如下：\n\n${context}`
 
     explainAI(question, props.entityGlobalId ? [props.entityGlobalId] : [])

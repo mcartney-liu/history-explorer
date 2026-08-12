@@ -272,7 +272,9 @@ export default function ResearchSummary(props: ResearchSummaryProps) {
 
     setStatus('loading')
     const context = buildSummaryContext(completed)
-    const question = `请基于以下${completed.length}个维度的历史研究，提炼跨维度主题、维度间的关联，以及综合分析结论：\n\n${context}`
+    const question =
+      `请基于以下${completed.length}个维度的历史研究，提炼跨维度主题、维度间的关联，以及综合分析结论。` +
+      `请务必使用简体中文回答，直接输出连贯的中文段落，不要输出 JSON 或任何代码格式：\n\n${context}`
 
     explainAI(question, [props.entityGlobalId])
       .then((res) => {
