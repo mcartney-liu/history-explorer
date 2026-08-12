@@ -151,6 +151,12 @@ export function ResearchPanelView({
   onBookmarkUpdate = () => {},
   // 2026-08-11 (PO 方案①)：恢复的研究记录（横幅显示实体名 + 摘要）。
   restoreData = null as SavedResearch | null,
+  // 2026-08-13 (PO 方案①)：三阶段自主触发状态。
+  aiAvailable = false,
+  summaryStarted = false,
+  reportStarted = false,
+  onStartSummary = () => {},
+  onStartReport = () => {},
 }: ResearchPanelProps & {
   mode?: ResearchMode
   dimensions?: ResearchDimension[]
@@ -163,6 +169,11 @@ export function ResearchPanelView({
   onSave?: () => void
   onBookmarkUpdate?: () => void
   restoreData?: SavedResearch | null
+  aiAvailable?: boolean
+  summaryStarted?: boolean
+  reportStarted?: boolean
+  onStartSummary?: () => void
+  onStartReport?: () => void
 }) {
   const template = templateFor(entityType)
 
@@ -234,20 +245,59 @@ export function ResearchPanelView({
 
           {mode === 'done' && (
             <>
-              <ResearchSummary
-                entityName={entityName}
-                entityType={entityType}
-                entityGlobalId={entityGlobalId}
-                dimensions={dimensions}
-                comparedNames={selectedEntities.map((e) => e.name)}
-              />
-              <ResearchReport
-                entityName={entityName}
-                entityType={entityType}
-                entityGlobalId={entityGlobalId}
-                dimensions={dimensions}
-                comparedNames={selectedEntities.map((e) => e.name)}
-              />
+              {/* 2026-08-13 (PO 方案①)：三阶段自主触发。
+                  研究中评：AI 可用（任一维度 engine≠deterministic）才显示「生成」按钮，
+                  点击后挂载 ResearchSummary 触发 AI；AI 不可用时整体隐藏。
+                  综合报告：研究中评触发后出现「生成」按钮，点击后挂载 ResearchReport。 */}
+              {aiAvailable && !summaryStarted && (
+                <div className="rp-stage-trigger">
+                  <button
+                    type="button"
+                    className="rp-stage-btn"
+                    onClick={onStartSummary}
+                  >
+                    生成研究中评
+                  </button>
+                  <p className="rp-stage-hint">
+                    基于 {dimensions.filter((d) => d.status === 'success').length} 个已验证维度，提炼跨维度主题与关联。
+                  </p>
+                </div>
+              )}
+
+              {aiAvailable && summaryStarted && (
+                <ResearchSummary
+                  entityName={entityName}
+                  entityType={entityType}
+                  entityGlobalId={entityGlobalId}
+                  dimensions={dimensions}
+                  comparedNames={selectedEntities.map((e) => e.name)}
+                />
+              )}
+
+              {!reportStarted && (
+                <div className="rp-stage-trigger">
+                  <button
+                    type="button"
+                    className="rp-stage-btn"
+                    onClick={onStartReport}
+                  >
+                    {aiAvailable && summaryStarted ? '生成综合报告' : '生成历史研究报告'}
+                  </button>
+                  <p className="rp-stage-hint">
+                    从主题主线、维度关联、矛盾与未解、总体评价四个角度形成完整报告。
+                  </p>
+                </div>
+              )}
+
+              {reportStarted && (
+                <ResearchReport
+                  entityName={entityName}
+                  entityType={entityType}
+                  entityGlobalId={entityGlobalId}
+                  dimensions={dimensions}
+                  comparedNames={selectedEntities.map((e) => e.name)}
+                />
+              )}
 
               {/* M44: Research completion guidance */}
               <div className="rp-completion-guidance" role="status">
@@ -367,6 +417,11 @@ export default function ResearchPanel(props: ResearchPanelProps) {
   const [dimensions, setDimensions] = useState<ResearchDimension[]>([])
   const [selectedEntities, setSelectedEntities] = useState<SelectableEntity[]>([])
   const [saveState, setSaveState] = useState<SaveState>({ status: 'idle' })
+  // 2026-08-13 (PO 方案①)：三阶段自主触发——四维 → 研究中评 → 综合报告。
+  // 研究中评/综合报告不再挂载即自动调 AI，改为用户点击「生成」按钮后才
+  // 挂载组件触发；研究中评在 AI 不可用时整体隐藏（不假装综合）。
+  const [summaryStarted, setSummaryStarted] = useState(false)
+  const [reportStarted, setReportStarted] = useState(false)
 
   // Build available entities from relationships
   const availableEntities: SelectableEntity[] = (props.relationships ?? [])
@@ -467,6 +522,9 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     if (selectedEntities.length > 0) {
       recordEvent({ action: 'start_comparison', entityGlobalId: props.entityGlobalId })
     }
+    // 三阶段自主触发：新研究开始，研究中评/综合报告回到未触发态
+    setSummaryStarted(false)
+    setReportStarted(false)
 
     const template = templateFor(props.entityType)
     const comparisonPrefix = selectedEntities.length > 0
@@ -502,6 +560,12 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     }
   }
 
+  // 2026-08-13 (PO 方案①)：AI 可用性 = 任一成功维度的 engine 不是 deterministic。
+  // 研究中评「必须 AI」——AI 关时整体隐藏该区块（不假装综合）。
+  const aiAvailable = dimensions.some(
+    (d) => d.status === 'success' && d.engine && d.engine !== 'deterministic',
+  )
+
   return (
     <ResearchPanelView
       {...props}
@@ -513,6 +577,8 @@ export default function ResearchPanel(props: ResearchPanelProps) {
         setDimensions([])
         setSelectedEntities([])
         setSaveState({ status: 'idle' })
+        setSummaryStarted(false)
+        setReportStarted(false)
       }}
       selectedEntities={selectedEntities}
       availableEntities={availableEntities}
@@ -530,6 +596,11 @@ export default function ResearchPanel(props: ResearchPanelProps) {
         )
         if (saveState.status === 'saved') props.onSaved?.(saveState.research)
       }}
+      aiAvailable={aiAvailable}
+      summaryStarted={summaryStarted}
+      reportStarted={reportStarted}
+      onStartSummary={() => setSummaryStarted(true)}
+      onStartReport={() => setReportStarted(true)}
     />
   )
 }

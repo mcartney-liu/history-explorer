@@ -177,10 +177,75 @@ describe('ResearchPanelView', () => {
         dimensions={[
           { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'Answer', grounded: true, citations: [{ global_id: 'x', kind: 'entity', label: 'X' }], rejected_citations: [] },
         ]}
+        reportStarted={true}
       />,
     )
     expect(html).toContain('历史研究报告')
     expect(html).toContain('关键发现')
+  })
+
+  // --- 2026-08-13 (PO 方案①)：三阶段自主触发 ---
+
+  it('shows 生成研究中评 button when done and AI available, no auto-render', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: '答案', grounded: true, engine: 'ai', citations: [] },
+        ]}
+        aiAvailable={true}
+      />,
+    )
+    expect(html).toContain('生成研究中评')
+    expect(html).not.toContain('各维度核心发现')  // 未点击 → 不渲染中评内容
+  })
+
+  it('renders ResearchSummary after summary started', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: '答案', grounded: true, engine: 'ai', citations: [] },
+        ]}
+        aiAvailable={true}
+        summaryStarted={true}
+      />,
+    )
+    expect(html).toContain('研究综述')
+  })
+
+  it('shows 生成综合报告 button after summary started, report not auto-rendered', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: '答案', grounded: true, engine: 'ai', citations: [] },
+        ]}
+        aiAvailable={true}
+        summaryStarted={true}
+      />,
+    )
+    expect(html).toContain('生成综合报告')
+    expect(html).not.toContain('历史研究报告')  // 未点击报告按钮 → 报告未挂载
+  })
+
+  it('hides 研究中评 when AI unavailable (deterministic engine)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: '基于知识库证据：…', grounded: true, engine: 'deterministic', citations: [] },
+        ]}
+        aiAvailable={false}
+      />,
+    )
+    expect(html).not.toContain('生成研究中评')
+    expect(html).not.toContain('研究综述')
+    expect(html).toContain('生成历史研究报告')  // 报告降级仍可生成
   })
 
   // --- M39 Phase 2: MultiEntity ---
