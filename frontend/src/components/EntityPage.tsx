@@ -429,6 +429,7 @@ function EntityPage({
                       <AIExplanationPanel
                         contextGlobalIds={entityContext(entityGlobalId)}
                         onCitationClick={onNodeClick}
+                        entityName={entity.name}
                       />
                     ) : (
                       <EmptyState message="该实体缺少全局 ID，AI 解释暂不可用。" />

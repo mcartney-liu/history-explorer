@@ -124,6 +124,156 @@
     background: var(--glass-navy-panel, var(--color-paper-200));
   }
 
+/* ── AI 事实溯源解读（AIExplanationPanel）────────────── */
+.ai-explanation {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+}
+.ae-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ae-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+.ae-context-note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+.ae-mode-label {
+  margin: 12px 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-700);
+}
+.ae-mode-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ae-mode-chip {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-700);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--motion-duration-fast, 150ms) var(--motion-ease-standard, ease);
+}
+.ae-mode-chip--active {
+  background: var(--color-accent);
+  color: var(--color-accent-ink, #fff);
+  border-color: var(--color-accent);
+}
+.ae-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 12px;
+}
+.ae-examples-label {
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+.ae-example-chip {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--motion-duration-fast, 150ms) var(--motion-ease-standard, ease);
+}
+.ae-example-chip:hover {
+  background: var(--color-accent);
+  color: var(--color-accent-ink, #fff);
+}
+.ae-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.ae-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--color-ink-900);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius);
+}
+.ae-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.ae-ask {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-ink, #fff);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.ae-ask:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ae-disclaimer,
+.ae-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+.ae-loading {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--color-ink-600);
+}
+.ae-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--color-status-danger);
+}
+.ae-result {
+  margin-top: 12px;
+}
+.ae-fallback {
+  padding: 10px 12px;
+  border-left: 3px solid var(--color-ink-400);
+  background: var(--color-paper-100);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.ae-fallback-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-ink-600);
+}
+.ae-fallback-reason {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+
   /* M90 / 方案A: unified smart search — helper hint + example chips */
   .search-hint {
     margin: 10px 0 0;

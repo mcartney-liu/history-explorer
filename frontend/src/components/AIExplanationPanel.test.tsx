@@ -180,4 +180,61 @@ describe('AIExplanationView', () => {
     expect(html).toContain('ae-result--fallback')
     expect(html).toContain('provider_error')
   })
+
+  // --- 2026-08-13 (PO)：示例问题 + 大白话副标题 ---
+  it('shows plain-language subtitle with entity name', () => {
+    const html = renderToStaticMarkup(
+      <AIExplanationView
+        status="idle"
+        question=""
+        response={null}
+        error=""
+        contextCount={3}
+        promptMode="why_important"
+        entityName="罗马文明"
+        onQuestionChange={() => {}}
+        onAsk={() => {}}
+        onModeChange={() => {}}
+      />,
+    )
+    expect(html).toContain('《罗马文明》')
+    expect(html).not.toContain('基于当前探索上下文')
+  })
+
+  it('renders example questions for the active mode and fills on click', () => {
+    const html = renderToStaticMarkup(
+      <AIExplanationView
+        status="idle"
+        question=""
+        response={null}
+        error=""
+        contextCount={3}
+        promptMode="why_important"
+        entityName="罗马文明"
+        onQuestionChange={() => {}}
+        onAsk={() => {}}
+        onModeChange={() => {}}
+      />,
+    )
+    expect(html).toContain('试试问：')
+    expect(html).toContain('罗马文明为什么在历史上重要？')
+    expect(html).toContain('ae-example-chip')
+  })
+
+  it('shows 选一个角度 label above mode chips', () => {
+    const html = renderToStaticMarkup(
+      <AIExplanationView
+        status="idle"
+        question=""
+        response={null}
+        error=""
+        contextCount={1}
+        promptMode="explain"
+        onQuestionChange={() => {}}
+        onAsk={() => {}}
+        onModeChange={() => {}}
+      />,
+    )
+    expect(html).toContain('选一个角度（必选）')
+  })
 })
