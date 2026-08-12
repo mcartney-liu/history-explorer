@@ -40,7 +40,8 @@ describe('ContinueExploringPanel (M5-B-1)', () => {
     )
     expect(html).toContain('继续探索')
     expect(html).toContain('augustus')
-    expect(html).toContain('han_dynasty')
+    // 2026-08-13 (PO)：图谱里有的实体翻译成中文名（silk_road:han_dynasty → 汉朝）。
+    expect(html).toContain('汉朝')
     // The engine's "why" is shown.
     expect(html).toContain('Founder of the empire.')
     // Each next step is a labelled, clickable action carrying its global_id.

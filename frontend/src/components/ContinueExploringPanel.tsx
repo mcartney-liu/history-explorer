@@ -17,6 +17,8 @@ import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import { CrossTopicRelated, RelatedTopic, formatTopicLabel } from './crossTopic'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityDisplayName } from '../data/explorationPackages'
+import { formatConnectionZh } from '../data/ai/connectionZhFormatter'
 
 const DEFAULT_MAX = 5
 
@@ -35,6 +37,12 @@ type ContinueExploringPanelProps = {
 function localName(globalId: string): string {
   if (!globalId || !globalId.includes(':')) return globalId
   return globalId.split(':').slice(1).join(':') || globalId
+}
+
+/** 2026-08-13 (PO)：实体名中文化——用图谱 labels 翻译 global_id。 */
+function displayName(globalId: string, locale: string): string {
+  const resolved = getEntityDisplayName(globalId, locale as 'zh' | 'en' | 'ja')
+  return resolved && resolved !== globalId ? resolved : localName(globalId)
 }
 
 function ContinueExploringPanel({
@@ -91,10 +99,10 @@ function ContinueExploringPanel({
                 <button
                   type="button"
                   className={seen ? 'he-continue-node is-seen' : 'he-continue-node'}
-                  aria-label={t('discover.continueToAria', { name: localName(gid) })}
+                  aria-label={t('discover.continueToAria', { name: displayName(gid, locale) })}
                   onClick={() => onNodeClick?.(gid)}
                 >
-                  <span className="he-continue-name">{localName(gid)}</span>
+                  <span className="he-continue-name">{displayName(gid, locale)}</span>
                   {seen && (
                     <span className="he-continue-seen" aria-hidden="true">
                       {t('discover.continueSeen')}
@@ -102,7 +110,9 @@ function ContinueExploringPanel({
                   )}
                 </button>
                 {item.explanation ? (
-                  <p className="he-continue-why">{item.explanation}</p>
+                  <p className="he-continue-why">
+                    {formatConnectionZh(item, locale as 'zh' | 'en' | 'ja')}
+                  </p>
                 ) : null}
               </li>
             )
