@@ -289,6 +289,54 @@ function stripJSONArtifacts(text: string): string {
     // 3c: 兜底——如果整行/整串只剩垃圾（≥6 字符的纯标点/空白/符号），直接清空
     if (result.length > 6 && /^[\p{P}\p{Z}\p{S}]+$/u.test(result)) result = ''
 
+    // === 第 4 层：散落 artifact 键值对片段清理（2026-08-12 bugfix）===
+    // LLM 有时把 citations 数据的半序列化碎片粘进 answer 文本里。
+    // 这些碎片不是完整的 {}/[] 块（L1 抓不到），也不是末尾截断（L2 抓不到），
+    // 而是 SCATTERED fragments like:
+    //   "label": "罗马文明", ["global_id": "...", "kind": "entity", ...
+    //   ], ["global_id": "...", "label": "..."]
+    // 特征：含 artifact 关键字、有 ": " 键值格式、含 [ ] 数组标记、无中文正文。
+    //
+    // 策略：两步
+    //  4a) 行级删除：删除「整行都是 JSON 碎片」的行（以 " 或 [ 开头，含 artifact 键）
+    //  4b) 尾部截断：从正文末尾找到 artifact 碎片起始点，截断之后所有内容
+
+    // 4a — 删除整行 JSON 碎片行（每行独立匹配）
+    // 匹配两种形态：
+    //   A) "key": "value" ...  （标准键值对行）
+    //   B) "entity", "key": ... （entity 值出现在行首，常见于 LLM 碎片）
+    //   C) [... 开头           （数组片段行）
+    //   D) ], ["key": ...      （数组闭合+新片段）
+    result = result.replace(
+      /^(?:\s*)(?:"(?:global_id|kind|entity|label|answer|citations)"\s*:|\["(?:global_id|kind|entity|label|answer|citations)"|\],?\s*"[^"]*"|\[)[^\n]*$/gm,
+      (line) => {
+        const lower = line.toLowerCase()
+        const hitCount = JSON_ARTifact_KEYS.filter(k => lower.includes(`"${k}"`)).length
+        return hitCount >= 1 ? '' : line
+      }
+    )
+
+    // 4b — 尾部截断：找到最后一个中文句子结尾（。！？；），
+    //     如果之后有 ≥2 个 artifact 关键字密集出现，说明是追加的垃圾，截断。
+    const lastSentenceEnd = Math.max(
+      result.lastIndexOf('。'),
+      result.lastIndexOf('！'),
+      result.lastIndexOf('？'),
+      result.lastIndexOf('；'),
+    )
+    if (lastSentenceEnd > 10) { // 只要不是太靠开头就检查
+      const afterSentence = result.slice(lastSentenceEnd + 1)
+      const trailingArtifactCount = JSON_ARTifact_KEYS.filter(k =>
+        afterSentence.toLowerCase().includes(`"${k}"`)
+      ).length
+      if (trailingArtifactCount >= 2) {
+        result = result.slice(0, lastSentenceEnd + 1).trim()
+      }
+    }
+
+    // 4c — 收尾：清理可能留下的孤立前缀（尾随逗号、空括号）
+    result = result.replace(/,\s*$/g, '').trim()
+
     if (result === prev) break // 无变化，退出
   }
   return result

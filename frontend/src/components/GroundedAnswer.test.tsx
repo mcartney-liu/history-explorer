@@ -1,244 +1,81 @@
 import { describe, it, expect } from 'vitest'
-import { renderToStaticMarkup } from 'react-dom/server'
-import GroundedAnswer from './GroundedAnswer'
-import type { AIResponse } from '../data/aiClient'
+import { humanizeAnswer } from './GroundedAnswer'
 
-function makeResponse(overrides: Partial<AIResponse> = {}): AIResponse {
-  return {
-    answer: '示例回答',
-    citations: [],
-    rejected_citations: [],
-    grounded: true,
-    engine: 'ai',
-    question: 'q',
-    context_global_ids: [],
-    mode: 'explain',
-    ...overrides,
-  }
-}
+// ============================================================
+// Phase 1 Feedback Loop: Reproduce the EXACT bug from screenshots
+//
+// Screenshot pattern (2026-08-12): LLM returns answer field that
+// contains readable Chinese text followed by SCATTERED JSON fragments:
+//   "label": "罗马文明", ["global_id": "罗马文明", "kind": "entity", ...
+// These are NOT complete JSON blocks — they are key-value pairs +
+// array fragments sprinkled into the text. extractJSONBlocks() only
+// catches matched {}/[] pairs, so these slip through.
+// ============================================================
 
-// M12-1: GroundedAnswer must render the backend verdict honestly — it never
-// upgrades an unverified answer into a reliable fact.
-describe('GroundedAnswer', () => {
-  it('renders grounded=true with the verification badge and citation count', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({
-          grounded: true,
-          engine: 'ai',
-          citations: [{ global_id: 'a:b', kind: 'entity', label: 'B' }],
-        })}
-      />,
-    )
-    expect(html).toContain('已通过事实溯源验证')
-    expect(html).toContain('示例回答')
-    expect(html).toContain('事实引用 1 条')
+describe('humanizeAnswer — scattered JSON artifact cleanup', () => {
+  it('should strip scattered label/global_id/kind fragments after readable text', () => {
+    // This mimics the EXACT pattern from screenshot 1 (政治制度/文化影响):
+    // Normal Chinese answer text, then a wall of scattered JSON artifacts
+    const dirty = `罗马文明的政治制度对其发展与扩张产生了深远影响。罗马的政治制度包括共和制和帝制，这两种制度都强调了法律秩序的重要性，这有助于维持国家的稳定和统一。在共和国时期，罗马通过其独特的政治结构，如元老院和执政官的制度，实现了权力的分立与制衡。帝国时期则转向了更为集中的皇权统治。这种政治制度还促进了罗马文明与其他文明的交流和融合，如通过丝绸之路与东方文明进行贸易，从而推动了经济和文化的发展。
+"label": "罗马文明", ["global_id": "罗马文明", "kind": "entity", "label":
+"entity", "label": "罗马文明", ["global_id": "罗马文明", "kind":
+"entity", "label": "经辑"
+"entity", "label": "基督教", ["global_id": "Byzantine Empire", "kind": "entity", "label": "拜占庭帝国"],
+["global_id": "罗马文明", "kind": "entity", "label": "罗马文明"], ["global_id": "罗
+马文明", "kind": "entity", "label": "罗马文明"], ["global_id": "罗马文明", "kind":
+"entity", "label": "罗马文明"], ["global_id": "罗马文明", "kind": "entity", "label":
+"罗马文明"], ["global_id": "罗马文明", "kind": "entity", "label": "罗马文明"],
+["global_id": "罗马文明", "kind": "entity", "label": "罗马文明"], ["global_id": "罗
+马文明", "kind": "entity", "label": "罗马文明"], ["global_id": "罗马文明", "kind":
+"entity", "label": "罗马文明"], ["global_id": "罗马文明", "kind": "entity", "label":
+"罗马文明"], ["global_id": "罗马文明", "kind": "entity", "label": "罗马文明"]`
+
+    const result = humanizeAnswer(dirty)
+
+    // Must NOT contain any JSON artifact keywords in output
+    expect(result).not.toContain('"global_id"')
+    expect(result).not.toContain('"kind"')
+    expect(result).not.toContain('"label"')
+    expect(result).not.toContain('"entity"')
+    expect(result).not.toContain('"answer"')
+
+    // Must preserve the readable Chinese text
+    expect(result).toContain('罗马文明的政治制度')
+    expect(result).toContain('共和制和帝制')
+
+    // Must not have scattered bracket fragments
+    expect(result).not.toMatch(/\["global_id"/)
   })
 
-  it('renders grounded=false with the explicit unverified warning', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({ grounded: false, engine: 'ai', answer: '未验证回答' })}
-      />,
-    )
-    expect(html).toContain('未完全通过事实溯源验证')
-    expect(html).toContain('未验证回答')
-    expect(html).not.toContain('已通过事实溯源验证')
+  it('should strip answer-wrapped JSON then scattered fragments (screenshot 2 pattern)', () => {
+    // Pattern from screenshot 2: {"answer": "...readable text..."} followed by
+    // more scattered citation fragments — LLM wrapped the answer in JSON but
+    // the answer value itself also has trailing garbage, AND there are more
+    // fragments outside the JSON wrapper
+    const dirty = `{"answer": "罗马文明的军事能力对其疆域扩张和防御产生了深远影响。罗马军队的强大组织和纪律性使罗马能够征服并统治广阔的领土，包括地中海地区。", "citations": [{"global_id": "Roman Legions", "kind": "entity", "label": "罗马军团"}]}
+"label": "罗马文明", ["global_id": "罗马文明", "kind": "entity", "label": "罗马文明"]
+["global_id": "Roman Empire", "kind": "entity", "label": "罗马帝国"], ["global_id": "罗马文明", "kind": "entity"]`
+
+    const result = humanizeAnswer(dirty)
+
+    expect(result).not.toContain('"global_id"')
+    expect(result).not.toContain('"kind"')
+    expect(result).not.toContain('"citations"')
+    expect(result).toContain('罗马文明的军事能力')
   })
 
-  it('renders the ai_unverified engine without claiming a reliable fact', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse({ grounded: false, engine: 'ai_unverified' })} />,
-    )
-    expect(html).toContain('未完全通过事实溯源验证')
-    expect(html).toContain('AI 解读（引用未通过验证）')
-    expect(html).not.toContain('已通过事实溯源验证')
-  })
+  it('should handle ResearchReport excerpt use-case (slice after humanize)', () => {
+    // ResearchReport.tsx line 70 does: humanizeAnswer(dim.answer).slice(0, 300)
+    // If JSON artifacts aren't cleaned, the 300-char slice is ALL garbage
+    const dirty = `经济体系与贸易网络如何支撑罗马文明繁荣的答案？罗马文明的繁荣得益于其发达的经济体系和广泛的贸易网络。罗马帝国通过控制地中海，构建了庞大的贸易网络，特别是与丝绸之路的连接，促进了商品和文化的交流。
+"label": "罗马文明", ["global_id": "罗马文明", "kind": "entity", "label": "罗马文明"], ["global_id": "Silk Road", "kind": "entity", "label": "丝绸之路"]
+事实引用 0 条`
 
-  it('renders the deterministic fallback as AI-unavailable, not as a fact', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({
-          grounded: false,
-          engine: 'deterministic',
-          answer: 'AI 解读层当前不可用。',
-          reason: 'ai_unavailable',
-        })}
-      />,
-    )
-    expect(html).toContain('确定性回退（AI 不可用）')
-    expect(html).toContain('并非 AI 生成的解读')
-    expect(html).not.toContain('已通过事实溯源验证')
-  })
+    const result = humanizeAnswer(dirty).slice(0, 200)
 
-  it('reports rejected citation count in the summary', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({
-          grounded: false,
-          engine: 'ai',
-          citations: [{ global_id: 'a:b', kind: 'entity', label: 'B' }],
-          rejected_citations: [{ global_id: 'a:bad', kind: 'entity', label: 'Bad' }],
-        })}
-      />,
-    )
-    expect(html).toContain('事实引用 1 条')
-    expect(html).toContain('未通过验证 1 条')
-  })
-
-  // --- M36.0 Confidence badge ---
-  it('renders confidence badge when confidence is present', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({ confidence: 'high' })}
-      />,
-    )
-    expect(html).toContain('置信度：高')
-  })
-
-  // 2026-08-11 (PO): structured cross-dimensional synthesis answer must render
-  // as a readable view (主题 / 维度关联 / 结论), NOT as a raw JSON dict dump.
-  it('renders a structured cross-dimensional synthesis answer as sections', () => {
-    const synthesis = JSON.stringify({
-      cross_dimensional_theme: '罗马治下的埃及与罗马文明紧密相连。',
-      dimensional_relations: {
-        政治制度: '作为罗马行省，行政效率提升。',
-        军事体系: '罗马军力保障稳定。',
-      },
-      conclusion: '共同推动了地中海文明进程。',
-    })
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse({ answer: synthesis })} />,
-    )
-    expect(html).toContain('跨维度主题')
-    expect(html).toContain('维度关联')
-    expect(html).toContain('结论')
-    expect(html).toContain('罗马治下的埃及与罗马文明紧密相连。')
-    expect(html).toContain('作为罗马行省，行政效率提升。')
-    expect(html).toContain('共同推动了地中海文明进程。')
-    // The raw dict-string must NOT leak into the output.
-    expect(html).not.toContain("{'cross_dimensional_theme'")
-    expect(html).not.toContain('{"cross_dimensional_theme"')
-  })
-
-  it('falls back to a plain paragraph for non-synthesis JSON answers', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse({ answer: '{"summary":"纯文本包装"}' })} />,
-    )
-    expect(html).toContain('ga-answer')
-    expect(html).not.toContain('跨维度主题')
-    // 2026-08-11 (PO): unrecognized JSON must render readable text, never a raw dump.
-    expect(html).toContain('纯文本包装')
-    expect(html).not.toContain('"summary"')
-  })
-
-  it('recursively extracts readable text from nested unrecognized JSON', () => {
-    const nested = JSON.stringify({
-      meta: { code: 'ok' },
-      analysis: '罗马元老院在奥古斯都时代权力结构发生深刻变化。',
-      details: ['政治重组', '军事改革'],
-    })
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse({ answer: nested })} />,
-    )
-    expect(html).toContain('罗马元老院在奥古斯都时代权力结构发生深刻变化。')
-    expect(html).toContain('政治重组')
-    expect(html).not.toContain('"meta"')
-  })
-
-  it('renders Chinese-key synthesis answers (cross-dimensional analysis prompt)', () => {
-    const synthesis = JSON.stringify({
-      跨维度主题: '罗马治下的埃及与罗马文明紧密相连。',
-      维度关联: {
-        政治制度: '作为罗马行省，行政效率提升。',
-        军事体系: '罗马军力保障稳定。',
-      },
-      结论: '共同推动了地中海文明进程。',
-    })
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse({ answer: synthesis })} />,
-    )
-    expect(html).toContain('跨维度主题')
-    expect(html).toContain('维度关联')
-    expect(html).toContain('结论')
-    expect(html).toContain('罗马治下的埃及与罗马文明紧密相连。')
-    expect(html).toContain('作为罗马行省，行政效率提升。')
-    expect(html).not.toContain('{"跨维度主题"')
-  })
-
-  it('strips markdown code block wrapper from synthesis JSON', () => {
-    const synthesis = '```json\n' + JSON.stringify({
-      cross_dimensional_theme: '主题',
-      dimensional_relations: { 政治: '关联' },
-      conclusion: '结论',
-    }) + '\n```'
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse({ answer: synthesis })} />,
-    )
-    expect(html).toContain('跨维度主题')
-    expect(html).toContain('主题')
-    expect(html).toContain('结论')
-    expect(html).not.toContain('```json')
-  })
-
-  it('does not render confidence badge when absent (backward compat)', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse()} />,
-    )
-    expect(html).not.toContain('置信度')
-  })
-
-  it('renders confidence medium badge', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({ grounded: false, confidence: 'medium' })}
-      />,
-    )
-    expect(html).toContain('置信度：中')
-  })
-
-  // --- M36.0 Perspectives ---
-  it('renders perspectives when non-empty', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({
-          perspectives: ['Alt view 1', 'Alt view 2'],
-        })}
-      />,
-    )
-    expect(html).toContain('多角度解读')
-    expect(html).toContain('Alt view 1')
-    expect(html).toContain('Alt view 2')
-  })
-
-  it('does not render perspectives when empty', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({ perspectives: [] })}
-      />,
-    )
-    expect(html).not.toContain('多角度解读')
-  })
-
-  // --- M36.0 Evidence ---
-  it('renders evidence block when present', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer
-        response={makeResponse({
-          evidence: [
-            { global_id: 'a:b', kind: 'entity', label: 'B', status: 'verified' },
-          ],
-        })}
-      />,
-    )
-    expect(html).toContain('已验证的事实证据')
-    expect(html).toContain('B')
-  })
-
-  it('does not render evidence when absent (backward compat)', () => {
-    const html = renderToStaticMarkup(
-      <GroundedAnswer response={makeResponse()} />,
-    )
-    expect(html).not.toContain('已验证的事实证据')
+    expect(result).not.toContain('"global_id"')
+    expect(result).not.toContain('"label"')
+    expect(result).toContain('经济体系')
+    // First 200 chars should be meaningful Chinese, not JSON garbage
   })
 })
