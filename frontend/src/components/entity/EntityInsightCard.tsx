@@ -20,8 +20,25 @@ interface EntityInsightCardProps {
 // Mirror the TopicCard drop-in convention: webp → png → jpg → jpeg.
 const ART_FORMATS = ['png', 'jpg', 'jpeg'] as const
 
+// 2026-08-13 (PO)：AI 偶发输出 Markdown（《**政治与行政体系**》），前端渲染
+// 是纯文本，需要把残留的 markdown 标记剥掉。后端同时在 prompt 约束
+// 纯文本输出，前端做兜底。
+export function stripMarkdown(text: string): string {
+  return text
+    // 加粗/斜体：**xxx** / __xxx__
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/_([^_]+)_/g, '$1')
+    // 标题、行内代码、链接最简剥离
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+}
+
 export function EntityInsightCard({ insight, entitySlug }: EntityInsightCardProps) {
   const [artOk, setArtOk] = useState(false)
+  const cleanText = stripMarkdown(insight.text)
 
   const handleArtError = (e: SyntheticEvent<HTMLImageElement>) => {
     const el = e.currentTarget
@@ -43,7 +60,7 @@ export function EntityInsightCard({ insight, entitySlug }: EntityInsightCardProp
         <p className="eic-perspective">一句话讲清：这个实体是什么</p>
 
         {/* Narrative paragraph */}
-        <p className="eic-text">{insight.text}</p>
+        <p className="eic-text">{cleanText}</p>
 
         {/* Key relationships */}
         {insight.keyNames.length > 0 && (

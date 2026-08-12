@@ -35,6 +35,8 @@ def generate_insight_text(evidence_lines: list[str], entity_name: str = "") -> s
     system_prompt = (
         "你是严谨的历史研究助手。请仅依据下方提供的证据生成该实体的历史见解。"
         "严格限定在证据范围内，不得添加证据之外的事实或推测。使用简体中文。"
+        "**输出格式要求：纯文本，禁止使用任何 Markdown 语法（如 **加粗**、# 标题、- 列表、> 引用、代码块等）。"
+        "如果需要分段，请直接换行；不需要任何修饰符号。**"
     )
     user_prompt = (
         f"实体名称：{subject}\n\n"
@@ -43,6 +45,7 @@ def generate_insight_text(evidence_lines: list[str], entity_name: str = "") -> s
         + f"\n\n请围绕「{subject}」本身组织内容，阐述该实体在历史上的意义与影响（历史见解）。"
         "注意：证据中可能出现与实体相近的其他概念（如「罗马帝国」之于「罗马文明」），"
         "请以实体名称为准组织内容，不要用相近概念替代实体本身。"
+        "再次强调：纯文本输出，不要 Markdown 装饰。"
     )
 
     try:
