@@ -69,7 +69,7 @@ export type AINextExploration = {
 
 export type AIConfidence = 'high' | 'medium' | 'low'
 
-export type AIEngine = 'ai' | 'ai_unverified' | 'deterministic'
+export type AIEngine = 'ai' | 'ai_unverified' | 'deterministic' | 'synthetic'
 
 export type AIResponse = {
   answer: string

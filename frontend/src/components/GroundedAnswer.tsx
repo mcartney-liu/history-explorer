@@ -14,6 +14,7 @@ const ENGINE_LABEL: Record<AIEngine, string> = {
   ai: 'AI 解读',
   ai_unverified: 'AI 解读（引用未通过验证）',
   deterministic: '确定性回退（AI 不可用）',
+  synthetic: '本地综合（已验证维度）',
 }
 
 // M36.0 server-computed confidence labels — never trust LLM self-rating.

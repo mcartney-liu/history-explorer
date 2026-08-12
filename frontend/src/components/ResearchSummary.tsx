@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { explainAI, type AICitation } from '../data/aiClient'
+import { useState, useMemo } from 'react'
+import { explainAI, type AICitation, type AIEngine } from '../data/aiClient'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
 import type { ResearchDimension } from './ResearchDimensionCard'
@@ -36,6 +36,67 @@ function uniqueCitations(dimensions: ResearchDimension[]): AICitation[] {
   return result
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// 本地综评兜底（无 LLM）：用已完成的各维度答案，拼出一篇跨维度中文综评。
+// 当 AI 综述返回兜底占位 / 空串 / engine=deterministic 时启用，确保研究中评
+// 永远有保底的真实内容，而不是英文占位句。
+// ─────────────────────────────────────────────────────────────────────────
+const FALLBACK_MARKERS = ['interpretation layer', 'currently unavailable']
+
+/** 判断一段文本是否为 AI 不可用时的兜底占位。 */
+export function isResearchFallback(text: string | undefined): boolean {
+  if (!text || !text.trim()) return true
+  const t = text.toLowerCase()
+  return FALLBACK_MARKERS.some((m) => t.includes(m))
+}
+
+/** 仅保留「成功且答案非空且非兜底」的维度。 */
+function validDimensions(dimensions: ResearchDimension[]): ResearchDimension[] {
+  return dimensions.filter(
+    (d) => d.status === 'success' && d.answer && !isResearchFallback(d.answer),
+  )
+}
+
+/** 取答案片段，过长截断并补省略号。 */
+function excerpt(text: string | undefined, max = 130): string {
+  const flat = (text ?? '').replace(/\s+/g, ' ').trim()
+  if (flat.length <= max) return flat
+  return flat.slice(0, max).replace(/[，。、；：,.;:\s]+$/, '') + '…'
+}
+
+export type SyntheticSummary = {
+  valid: { title: string; finding: string }[]
+  theme: string
+  conclusion: string
+}
+
+/** 由已完成维度答案本地拼出跨维度综评视图模型（不依赖 LLM）。 */
+export function buildSyntheticSummary(
+  dimensions: ResearchDimension[],
+  entityName: string,
+  entityType: string,
+  comparedNames?: string[],
+): SyntheticSummary | null {
+  const valid = validDimensions(dimensions)
+  if (valid.length === 0) return null
+  const comparePrefix =
+    comparedNames && comparedNames.length > 0
+      ? `${entityName} 与 ${comparedNames.join('、')} 的比较研究中，`
+      : ''
+  const points = valid.map((d) => `「${d.title}」维度：${excerpt(d.answer, 90)}`)
+  const theme =
+    `${comparePrefix}围绕《${entityName}》的${entityType}研究，已从 ${valid.length} 个维度完成独立分析。` +
+    points.join(' ')
+  const conclusion =
+    `${comparePrefix}综合上述 ${valid.length} 个维度的独立分析，《${entityName}》` +
+    `的历史面貌由多重因素交织而成，各维度的发现互为印证，共同构成对其整体角色的理解。`
+  return {
+    valid: valid.map((d) => ({ title: d.title, finding: excerpt(d.answer, 130) })),
+    theme,
+    conclusion,
+  }
+}
+
 export function ResearchSummaryView({
   entityName,
   entityType,
@@ -48,6 +109,7 @@ export function ResearchSummaryView({
   grounded = true,
   error = '',
   comparedNames,
+  engine,
 }: ResearchSummaryProps & {
   status?: SummaryStatus
   answer?: string
@@ -55,10 +117,20 @@ export function ResearchSummaryView({
   rejected_citations?: AICitation[]
   grounded?: boolean
   error?: string
+  engine?: AIEngine
 }) {
   const completedCount = dimensions.filter((d) => d.status === 'success').length
   const allCitations = uniqueCitations(dimensions)
   const isComparative = !!(comparedNames && comparedNames.length > 0)
+
+  // 本地综评兜底：answer 为空 / 兜底占位，且维度有真实答案时，用维度现拼。
+  // 这样「研究中评」无论 AI 开没开、实体有没有事实存档，都有保底的真实内容。
+  const synth = useMemo(
+    () => buildSyntheticSummary(dimensions, entityName, entityType, comparedNames),
+    [dimensions, entityName, entityType, comparedNames],
+  )
+  const useSynthetic =
+    (engine === 'synthetic' || !answer || isResearchFallback(answer)) && !!synth
 
   return (
     <div className="rsummary">
@@ -90,8 +162,48 @@ export function ResearchSummaryView({
         </div>
       )}
 
-      {/* Success */}
-      {status === 'success' && answer && (
+      {/* Success — 本地综评兜底（AI 不可用 / 返回占位 / 调用失败时） */}
+      {status === 'success' && useSynthetic && synth && (
+        <div className="rsummary-content">
+          <span className="rsummary-badge">
+            基于 {synth.valid.length} 个已验证研究维度 · 本地综合
+          </span>
+
+          <p className="rsummary-synth-theme">{synth.theme}</p>
+
+          <h4 className="rsummary-synth-title">各维度核心发现</h4>
+          <ul className="rsummary-synth-list">
+            {synth.valid.map((v, i) => (
+              <li key={i}>
+                <span className="rsummary-synth-dim">{v.title}</span>
+                {v.finding}
+              </li>
+            ))}
+          </ul>
+
+          <h4 className="rsummary-synth-title">综合评述</h4>
+          <p className="rsummary-synth-conclusion">{synth.conclusion}</p>
+
+          {allCitations.length > 0 && (
+            <div className="rsummary-evidences">
+              <h4 className="rsummary-evidences-title">
+                维度引用证据 ({allCitations.length} 个唯一实体)
+              </h4>
+              <ul className="rsummary-evidences-list">
+                {allCitations.slice(0, 8).map((c, i) => (
+                  <li key={i}>
+                    <span className="rsummary-evid-kind">{c.kind}</span>
+                    {c.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Success — AI 真实综述 */}
+      {status === 'success' && !useSynthetic && answer && !isResearchFallback(answer) && (
         <div className="rsummary-content">
           <span className="rsummary-badge">
             基于 {completedCount} 个已验证研究维度
@@ -103,7 +215,7 @@ export function ResearchSummaryView({
               citations,
               rejected_citations,
               grounded,
-              engine: 'ai',
+              engine: engine ?? 'ai',
               question: `关于${entityName}的跨维度综合分析`,
               context_global_ids: [],
               mode: 'explain',
@@ -143,10 +255,11 @@ export default function ResearchSummary(props: ResearchSummaryProps) {
   const [rejected, setRejected] = useState<AICitation[]>([])
   const [grounded, setGrounded] = useState(true)
   const [error, setError] = useState('')
+  const [engine, setEngine] = useState<AIEngine>('ai')
 
   // Start summary generation when component mounts with completed dimensions
   useState(() => {
-    const completed = props.dimensions.filter((d) => d.status === 'success')
+    const completed = validDimensions(props.dimensions)
     if (completed.length === 0) return
 
     setStatus('loading')
@@ -155,15 +268,20 @@ export default function ResearchSummary(props: ResearchSummaryProps) {
 
     explainAI(question, [props.entityGlobalId])
       .then((res) => {
+        // 把 AI 结果原样交给视图层判断：真实综述 → AI 分支；占位/空串 → 视图自动切本地兜底。
         setAnswer(res.answer)
         setCitations(res.citations)
         setRejected(res.rejected_citations ?? [])
         setGrounded(res.grounded)
+        setEngine(res.engine)
         setStatus('success')
       })
       .catch((e) => {
+        // 调用失败：answer 留空，视图层会基于维度答案自动拼本地综评。
+        setAnswer('')
         setError(e instanceof Error ? e.message : 'AI 调用失败')
-        setStatus('error')
+        setEngine('synthetic')
+        setStatus('success')
       })
   })
 
@@ -176,6 +294,7 @@ export default function ResearchSummary(props: ResearchSummaryProps) {
       rejected_citations={rejected}
       grounded={grounded}
       error={error}
+      engine={engine}
     />
   )
 }
