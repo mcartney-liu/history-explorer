@@ -124,4 +124,5 @@ export default {
   'understand.dimensions': '你偏好的探索维度',
   'understand.prefTitle': '你的探索偏好',
   'understand.deepResearch': '深度研究此主题',
+  'understand.askCompanion': '对此主题直接发问',
 }

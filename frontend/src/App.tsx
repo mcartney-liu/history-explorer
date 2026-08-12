@@ -1242,6 +1242,20 @@ function App() {
     intelligence: workspaceIntelligence,
   }), [current, workspaceHistory, workspaceItems, history.length, entityData?.type, aiContextIds, workspaceIntelligence])
 
+  // M65 第二批：Companion dock 折叠态提升到 App 层，供理解视角「直接发问」按钮跨组件展开。
+  // companionCollapsed=true 表示 dock 收起（默认，PO 2026-08-09）。
+  const [companionCollapsed, setCompanionCollapsed] = useState(true)
+  // 仅「直接发问」打开时设为 'chat'，其余（含切换按钮）保持默认 explain。
+  const [companionOpenMode, setCompanionOpenMode] = useState<'chat' | undefined>(undefined)
+  const openCompanionForAsk = () => {
+    setCompanionOpenMode('chat')
+    setCompanionCollapsed(false)
+  }
+  // dock 收起后重置打开模式，保证下一次普通展开回到 explain。
+  useEffect(() => {
+    if (companionCollapsed) setCompanionOpenMode(undefined)
+  }, [companionCollapsed])
+
   // M90.3 Stage A — legacy hash early-returns removed.
   // #/m89     → legacyRedirect rewrites to #/explore/french-revolution/understanding
   // #/causal/ → legacyRedirect rewrites to #/explore/:topic/explanation/:id
@@ -1253,6 +1267,8 @@ function App() {
   return (
     <ExplorerRuntimeContext.Provider value={contextApi}>
     <ExplorerShell
+      companionCollapsed={companionCollapsed}
+      onCompanionCollapseChange={setCompanionCollapsed}
       globalBar={<GlobalBar topic={router.route?.topic ?? null} mode={router.route?.mode ?? null} />}
       questionHeader={
         router.route?.topic ? (
@@ -1290,7 +1306,7 @@ function App() {
           />
         </div>
       }
-      companionDock={<CompanionShell workspaceContext={workspaceContext} onNavigateEntity={openNode} actions={policyAction ? [policyAction] : []} />}
+      companionDock={<CompanionShell mode={companionOpenMode} workspaceContext={workspaceContext} onNavigateEntity={openNode} actions={policyAction ? [policyAction] : []} />}
       navigationBar={null}
     >
       <ModeCanvas
@@ -1369,6 +1385,7 @@ function App() {
                   mainEntityGlobalId={result.exploration.main_entity.global_id ?? ''}
                   mainEntityName={result.exploration.main_entity.name}
                   onDeepResearch={(gid, name) => openEntity(gid, name, 'research')}
+                  onAskCompanion={openCompanionForAsk}
                 />
                 {hasUnderstandingData(current.topic) && <UnderstandingWorkspace topic={current.topic} />}
                 <ContinueExploringPanel connections={result.connections_explained} crossTopicRelated={result.exploration.cross_topic_related} relatedTopics={result.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNodeNamed} onTopicClick={handleTopicClick} />

@@ -124,4 +124,5 @@ export default {
   'understand.dimensions': 'Your preferred dimensions',
   'understand.prefTitle': 'Your exploration preferences',
   'understand.deepResearch': 'Deep research on this topic',
+  'understand.askCompanion': 'Ask about this topic',
 }
