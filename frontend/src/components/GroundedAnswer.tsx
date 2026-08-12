@@ -195,13 +195,20 @@ function stripJSONArtifacts(text: string): string {
 
     // === 第 2 层：截断 JSON（LLM 输出被截断时的常见残留）===
     // 匹配从 { 或 [ 开始、到字符串末尾的不完整 JSON 块
-    // 特征：含 artifact 关键字 + 典型的 JSON 键值对模式
+    // 注意：截断 JSON 通常只有 15-25 字符，不能用 isArtifactJSON 的 20 字符门槛
     result = result.replace(
       /(?:^|[\s.…~—\-_]{4,})(\{[^]*$)/gm,
       (match, jsonCandidate) => {
-        // 截断 JSON 通常至少 15 字符才值得检查
-        if (jsonCandidate.length < 15) return match
-        if (isArtifactJSON(jsonCandidate)) return ''
+        // 截断 JSON 至少 12 字符才值得检查（比完整 JSON 的 20 更宽松）
+        if (jsonCandidate.length < 12) return match
+        // 用低阈值版本检查（截断段天然短）
+        if (
+          jsonCandidate.length >= 12 &&
+          JSON_ARTifact_KEYS.some((k) =>
+            jsonCandidate.toLowerCase().includes(`"${k}"`),
+          )
+        )
+          return ''
         return match
       },
     )
@@ -209,15 +216,26 @@ function stripJSONArtifacts(text: string): string {
     result = result.replace(
       /(?<!\w)(\{[^{}"]*"(?:global_id|kind|"answer|"citations)[^}]*$)/gm,
       (match) => {
-        if (match.length < 15) return match
-        if (isArtifactJSON(match)) return ''
+        if (match.length < 12) return match
+        if (
+          JSON_ARTifact_KEYS.some((k) =>
+            match.toLowerCase().includes(`"${k}"`),
+          )
+        )
+          return ''
         return match
       },
     )
 
-    // === 第 3 层：清理剥离后可能留下的孤立前缀垃圾 ===
-    // 点号串、省略号串、横线串等"截断标记"
-    result = result.replace(/[\s.…~\-]{6,}\s*$/g, '').trim()
+    // === 第 3 层：清理剥离后可能留下的孤立前缀/嵌入垃圾 ===
+    // 3a: 末尾垃圾（点号串/省略号串/横线串 ≥4 字符）
+    result = result.replace(/[\s.…\-~]{4,}\s*$/g, '').trim()
+    // 3b: 嵌入式垃圾（标签/文本 + 点号串 + 引号/括号/末尾）
+    //     如 "政治制度....................""" 或 "军事体系..........{"global_id"...
+    //     用 \p{P}（标点）+ \p{Z}（空白）+ \p{S}（符号）匹配，避免手写字符类的范围歧义
+    result = result.replace(/([^\p{P}\p{Z}\p{S}])([\p{P}\p{Z}\p{S}]{4,})(["']?\s*$)/gu, '$1$3').trim()
+    // 3c: 兜底——如果整行/整串只剩垃圾（≥6 字符的纯标点/空白/符号），直接清空
+    if (result.length > 6 && /^[\p{P}\p{Z}\p{S}]+$/u.test(result)) result = ''
 
     if (result === prev) break // 无变化，退出
   }
@@ -273,7 +291,18 @@ export function humanizeAnswer(raw: string): string {
   }
 
   // 模式②：不含 JSON 特征 → 原样返回（快速路径，原有行为）
-  if (!trimmed.includes('{') && !trimmed.includes('[')) return raw
+  // 但仍需清理可能的垃圾残留（纯点号串、截断标记等）
+  if (!trimmed.includes('{') && !trimmed.includes('[')) {
+    // 仅跑垃圾清理层（L3），不跑 JSON 剥离（已知无 JSON 特征）
+    let quick = trimmed
+      .replace(/[\s.…\-~]{4,}\s*$/g, '') // 3a: 末尾垃圾
+      .replace(/([^\p{P}\p{Z}\p{S}])([\p{P}\p{Z}\p{S}]{4,})(["']?\s*$)/gu, '$1$3') // 3b: 嵌入垃圾（保留标签+尾部，删除中间垃圾）
+      .trim()
+    // 3c 兜底：纯垃圾串直接清空
+    if (quick.length > 6 && /^[\p{P}\p{Z}\p{S}]+$/u.test(quick)) quick = ''
+    // 注意：quick 可能为空字符串（垃圾被全清），此时应返回空串而非 fallback 到 raw
+    return quick
+  }
 
   // 模式③：混合内容（可读文本 + 嵌入/末尾 JSON artifact）→ 剥离 JSON
   cleaned = stripJSONArtifacts(cleaned)
