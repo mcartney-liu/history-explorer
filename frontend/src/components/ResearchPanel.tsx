@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { explainAI, type AICitation } from '../data/aiClient'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } from './ResearchDimensionCard'
-import ResearchReport from './ResearchReport'
+import ResearchReport, { ResearchReportView } from './ResearchReport'
 import ResearchSummary, { ResearchSummaryView } from './ResearchSummary'
 import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
@@ -244,13 +244,14 @@ export function ResearchPanelView({
               <ResearchReport
                 entityName={entityName}
                 entityType={entityType}
+                entityGlobalId={entityGlobalId}
                 dimensions={dimensions}
                 comparedNames={selectedEntities.map((e) => e.name)}
               />
 
               {/* M44: Research completion guidance */}
               <div className="rp-completion-guidance" role="status">
-                <p>研究完成。你可以保存这份研究结果到「研究收藏库」中，之后随时恢复查看或与其他实体进行对比。</p>
+                <p>研究完成。你可以保存这份研究结果到「研究库」中，之后随时恢复查看或与其他实体进行对比。</p>
               </div>
 
               {/* T1: the save loop actually closes here — primary action. */}
@@ -258,7 +259,7 @@ export function ResearchPanelView({
                 {saveState.status === 'saved' ? (
                   <div className="rp-save-done" role="status">
                     <span className="rp-save-done-text">
-                      已保存到「研究收藏库」
+                      已保存到「研究库」
                       {saveState.remote ? '' : '（当前离线，已存在本机，联网后可再次保存同步）'}
                     </span>
                     <ResearchBookmarkView
@@ -347,7 +348,7 @@ export function ResearchPanelView({
                 answer={restoreData?.summaryAnswer ?? ''}
                 grounded={true}
               />
-              <ResearchReport
+              <ResearchReportView
                 entityName={entityName}
                 entityType={entityType}
                 dimensions={dimensions}

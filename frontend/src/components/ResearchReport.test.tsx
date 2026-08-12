@@ -107,4 +107,71 @@ describe('ResearchReportView', () => {
     expect(html).toContain('比较研究报告')
     expect(html).toContain('Roman Empire × Han Dynasty')
   })
+
+  // --- 2026-08-12 (PO): 研究报告升级为 AI 综合报告 + 本地结构化降级 ---
+
+  it('renders AI synthesis report when aiAnswer has real Chinese content', () => {
+    const html = renderToStaticMarkup(
+      <ResearchReportView
+        entityName="Test"
+        entityType="Event"
+        dimensions={dims([
+          { title: 'A', status: 'success', answer: 'Answer A' },
+          { title: 'B', status: 'success', answer: 'Answer B' },
+        ])}
+        aiAnswer="该文明的政治制度与经济发展互为表里：元老院的制衡结构保障了财政体系的稳定，而贸易网络的扩张又反过来巩固了中央集权。由此可提炼出「制度—经济共生」这一贯穿主题。"
+        aiGrounded={true}
+        aiEngine="ai"
+        aiCitations={[{ global_id: 'a:b', kind: 'entity', label: 'Rome' }]}
+      />,
+    )
+    expect(html).toContain('综合报告')
+    expect(html).toContain('AI 综合')
+    expect(html).toContain('制度—经济共生')
+  })
+
+  it('falls back to local structured findings when aiAnswer is JSON junk (few Chinese chars)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchReportView
+        entityName="Test"
+        entityType="Event"
+        dimensions={dims([
+          { title: 'Military', status: 'success', answer: '军事制度沿革及其对扩张的影响。', citations: [], grounded: true },
+        ])}
+        aiAnswer='"label": "Rome", ["global_id": "Rome", "kind": "entity", "label": "Rome"]'
+      />,
+    )
+    expect(html).toContain('关键发现')
+    expect(html).not.toContain('综合报告')
+    expect(html).toContain('Military')
+  })
+
+  it('shows loading placeholder while AI synthesis is in flight', () => {
+    const html = renderToStaticMarkup(
+      <ResearchReportView
+        entityName="Test"
+        entityType="Event"
+        dimensions={dims([{ title: 'A', status: 'success', answer: 'Answer A' }])}
+        aiLoading={true}
+      />,
+    )
+    expect(html).toContain('综合报告')
+    expect(html).toContain('正在跨维度提炼')
+  })
+
+  it('local findings show lead sentence instead of full answer text', () => {
+    const longAnswer = '第一句是核心观点，用于验证只取首句而不是全文。' +
+      '这是第二句，不应该出现在本地要点里因为太长了。'
+    const html = renderToStaticMarkup(
+      <ResearchReportView
+        entityName="Test"
+        entityType="Event"
+        dimensions={dims([
+          { title: 'A', status: 'success', answer: longAnswer, citations: [], grounded: true },
+        ])}
+      />,
+    )
+    expect(html).toContain('第一句是核心观点')
+    expect(html).not.toContain('这是第二句')
+  })
 })

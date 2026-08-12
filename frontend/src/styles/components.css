@@ -379,3 +379,126 @@
   color: var(--color-status-danger);
   border-color: var(--color-status-danger-soft);
 }
+
+/* ── 研究报告（ResearchReport）：AI 综合报告 + 本地结构化降级 ────────── */
+.rreport {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+}
+.rreport-title {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+.rreport-topic {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-paper-300);
+}
+.rreport-topic-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.rreport-topic-name { font-size: 15px; font-weight: 600; color: var(--color-ink-800); }
+.rreport-section { margin-top: 14px; }
+.rreport-section-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+.rreport-summary,
+.rreport-evidence-summary,
+.rreport-local-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-ink-600);
+}
+.rreport-ai-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 999px;
+}
+.rreport-ai-loading {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-ink-500);
+}
+.rreport-finding {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--color-accent-soft);
+  background: var(--color-paper-100);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.rreport-finding-title { margin: 0 0 4px; font-size: 13px; font-weight: 700; color: var(--color-ink-800); }
+.rreport-finding-text { margin: 0; font-size: 13px; line-height: 1.7; color: var(--color-ink-600); }
+.rreport-finding-citations {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+.rreport-citation-list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rreport-citation-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 13px;
+  color: var(--color-ink-600);
+  border-bottom: 1px dashed var(--color-paper-300);
+}
+.rreport-citation-kind {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 999px;
+}
+.rreport-citation-id { font-size: 12px; color: var(--color-ink-400); }
+.rreport-citation-more { border-bottom: none; color: var(--color-ink-500); }
+.rreport-coverage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.rreport-coverage-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-600);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  border-radius: 999px;
+}
+.rreport-coverage--success { color: var(--color-status-success, #2e7d32); }
+.rreport-coverage--error { color: var(--color-status-danger); }
+.rreport-coverage--loading { color: var(--color-ink-400); }
+

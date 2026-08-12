@@ -133,6 +133,13 @@ export function ResearchSummaryView({
   const useSynthetic =
     (engine === 'synthetic' || !answer || isResearchFallback(answer)) && !!synth
 
+  // 质量门控（2026-08-12 bugfix）：AI answer 经 humanizeAnswer 清洗 JSON
+  // artifact 后，如果可读中文太少，说明 LLM 返回的是英文或碎片垃圾输出，
+  // 自动降级到本地综评兜底——用户始终看到有意义的可读内容。
+  const cleanedAnswer = humanizeAnswer(answer).trim()
+  const zhCharCount = (cleanedAnswer.match(/[\u4e00-\u9fff]/g) ?? []).length
+  const shouldUseSynthetic = useSynthetic || zhCharCount < 10
+
   return (
     <div className="rsummary">
       <div className={`rsummary-header${isComparative ? ' rsummary-header--compare' : ''}`}>
@@ -163,8 +170,8 @@ export function ResearchSummaryView({
         </div>
       )}
 
-      {/* Success — 本地综评兜底（AI 不可用 / 返回占位 / 调用失败时） */}
-      {status === 'success' && useSynthetic && synth && (
+      {/* Success — 本地综评兜底（AI 不可用 / 返回占位 / 调用失败 / 英文垃圾时） */}
+      {status === 'success' && shouldUseSynthetic && synth && (
         <div className="rsummary-content">
           <span className="rsummary-badge">
             基于 {synth.valid.length} 个已验证研究维度 · 本地综合
@@ -203,8 +210,8 @@ export function ResearchSummaryView({
         </div>
       )}
 
-      {/* Success — AI 真实综述 */}
-      {status === 'success' && !useSynthetic && answer && !isResearchFallback(answer) && (
+      {/* Success — AI 真实综述（仅当清洗后仍有充足中文内容时展示） */}
+      {status === 'success' && !shouldUseSynthetic && answer && !isResearchFallback(answer) && (
         <div className="rsummary-content">
           <span className="rsummary-badge">
             基于 {completedCount} 个已验证研究维度
