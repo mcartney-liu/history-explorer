@@ -1403,7 +1403,7 @@ function App() {
               </>
             }
             research={
-              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onCausalObjectClick={(objectId) => openCausalObject(objectId)} onQuickStart={(q) => { const { resolution } = resolveEntryQuery(q); if (resolution?.kind === 'topic') { handleTopicClick(resolution.slug); return } if (resolution?.kind === 'package') { openPackage(resolution.slug) } else if (resolution?.kind === 'entity') { openEntity(resolution.globalId) } else { handleSearch(q) } }} />
+              <LandingPage topics={topics} loading={topicsLoading} error={topicsError} onTopicClick={handleTopicClick} featured={featuredTopics} recent={recent} onRecentSelect={navigateTo} onRecentClear={clearRecent} onCausalObjectClick={(objectId) => openCausalObject(objectId)} onQuickStart={(q) => { const { resolution } = resolveEntryQuery(q); if (resolution?.kind === 'topic') { handleTopicClick(resolution.slug); return } if (resolution?.kind === 'package') { openPackage(resolution.slug); return } else if (resolution?.kind === 'entity') { openEntity(resolution.globalId) } else { handleSearch(q) } }} />
             }
             expand={
               <div className="discover-expand">
