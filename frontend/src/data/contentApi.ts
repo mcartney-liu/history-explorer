@@ -39,6 +39,8 @@ export interface CapabilityCard {
   desc: string
   /** Stored media filename, or null to use the built-in artwork. */
   image: string | null
+  /** Cover focal point as 'x% y%' for object-position; null = center. */
+  image_focus?: string | null
 }
 
 /**

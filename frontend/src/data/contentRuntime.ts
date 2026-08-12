@@ -35,6 +35,8 @@ export interface SlotValues {
   title?: string
   desc?: string
   image?: string | null
+  /** Cover focal point as 'x% y%' (object-position); null = center. */
+  image_focus?: string | null
   items?: string[]
   /** Trilingual title override, keyed by locale (zh/en/ja). */
   title_i18n?: Record<string, string>
@@ -70,6 +72,7 @@ export function applyContentDocument(document: ContentDocument | null): void {
     if (typeof card.title === 'string' && card.title) values.title = card.title
     if (typeof card.desc === 'string' && card.desc) values.desc = card.desc
     if (card.image === null || typeof card.image === 'string') values.image = card.image
+    if (card.image_focus === null || typeof card.image_focus === 'string') values.image_focus = card.image_focus
     if (Array.isArray(card.items)) values.items = card.items.filter((i) => typeof i === 'string')
     if (card.title_i18n && typeof card.title_i18n === 'object') {
       const t: Record<string, string> = {}
@@ -204,6 +207,19 @@ export function slotGuidedQuestions(slotId: string, fallback: readonly string[])
 export function slotImageName(slotId: string): string | null {
   const img = overrides[slotId]?.image
   return typeof img === 'string' && img ? img : null
+}
+
+/**
+ * Configured cover focal point for a slot, or null when unset.
+ *
+ * Returns the raw `object-position` value (e.g. "30% 40%") that a display
+ * component applies to its `<img>` so a large uploaded image keeps the
+ * operator-chosen area in frame instead of the default center crop. Null means
+ * "no override" — the component then keeps its own CSS `object-position`.
+ */
+export function slotImageFocus(slotId: string): string | null {
+  const focus = overrides[slotId]?.image_focus
+  return typeof focus === 'string' && focus ? focus : null
 }
 
 // --------------------------------------------------------------------------

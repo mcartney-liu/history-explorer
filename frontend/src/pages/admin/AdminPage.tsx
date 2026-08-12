@@ -771,6 +771,24 @@ function GateBanner({
 // Single card editor: artwork dropzone + copy fields + (optional) item list.
 // The card's registry metadata decides which controls appear.
 // --------------------------------------------------------------------------
+
+/** Clamp a percentage to the valid 0–100 range. */
+function clampPct(n: number): number {
+  return Math.max(0, Math.min(100, n))
+}
+
+/**
+ * Parse a stored focal point ("x% y%") into clamped integer coordinates.
+ * Anything malformed falls back to center (50% / 50%).
+ */
+function focusPoint(raw: string | null | undefined): { x: number; y: number } {
+  if (typeof raw === 'string') {
+    const m = raw.match(/(\d+(?:\.\d+)?)\s*%\s*(\d+(?:\.\d+)?)\s*%/)
+    if (m) return { x: clampPct(Number(m[1])), y: clampPct(Number(m[2])) }
+  }
+  return { x: 50, y: 50 }
+}
+
 function CardEditor({
   card,
   defaults,
@@ -790,6 +808,7 @@ function CardEditor({
 
   const theme = cardTheme(card.id)
   const edited = defaults ? cardIsEdited(card, defaults) : card.image !== null
+  const focus = focusPoint(card.image_focus)
   const itemsLabel = card.items_label || '要点'
 
   const restore = useCallback(() => {
@@ -798,6 +817,7 @@ function CardEditor({
       title: defaults.title,
       desc: defaults.desc,
       image: defaults.image,
+      image_focus: defaults.image_focus ?? null,
       items: [...defaults.items],
       title_i18n: defaults.title_i18n ?? null,
       summary_i18n: defaults.summary_i18n ?? null,
@@ -877,6 +897,7 @@ function CardEditor({
             }}
           >
             <img
+              key={card.image ?? 'builtin'}
               className="admin-drop-img"
               src={cardImageSrc(card)}
               alt=""
@@ -898,6 +919,13 @@ function CardEditor({
                 } else {
                   el.style.visibility = 'hidden'
                 }
+              }}
+              // Clear any lingering hidden state so a newly-selected image
+              // (or a built-in that finally resolves) is always shown. Without
+              // this, the inline `visibility:hidden` set on error sticks across
+              // `src` changes and the preview stays invisible forever.
+              onLoad={(e) => {
+                e.currentTarget.style.visibility = 'visible'
               }}
             />
             <div className="admin-drop-overlay">
@@ -943,6 +971,86 @@ function CardEditor({
               <code>{defaultImageSrc(card.id).replace(/^.*\/assets/, 'assets')}</code>
             </p>
           )}
+          {card.image ? (
+            <div
+              className="admin-focus"
+              style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 10 }}
+            >
+              <div
+                className="admin-focus-head"
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600 }}
+              >
+                <span>图片焦点位置</span>
+                <span className="admin-focus-coord" style={{ color: 'var(--color-ink-500)', fontWeight: 400 }}>
+                  {focus.x}% · {focus.y}%
+                </span>
+              </div>
+              <p className="admin-hint">
+                点击预览图，选择前台裁切时保留的重点区域；不设置则居中显示。
+              </p>
+              <div
+                role="button"
+                tabIndex={locked ? -1 : 0}
+                aria-label="设置图片焦点位置"
+                onClick={(e) => {
+                  if (locked) return
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  const x = clampPct(Math.round(((e.clientX - rect.left) / rect.width) * 100))
+                  const y = clampPct(Math.round(((e.clientY - rect.top) / rect.height) * 100))
+                  onPatch(card.id, { image_focus: `${x}% ${y}%` })
+                }}
+                onKeyDown={(e) => {
+                  if (locked) return
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onPatch(card.id, { image_focus: '50% 50%' })
+                  }
+                }}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  maxWidth: 260,
+                  aspectRatio: '16 / 10',
+                  overflow: 'hidden',
+                  borderRadius: 8,
+                  cursor: locked ? 'default' : 'crosshair',
+                  border: '1px solid var(--color-paper-300, #e3dccb)',
+                  marginTop: 8,
+                }}
+              >
+                <img
+                  src={cardImageSrc(card)}
+                  alt=""
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+                <span
+                  style={{
+                    position: 'absolute',
+                    left: `${focus.x}%`,
+                    top: `${focus.y}%`,
+                    width: 14,
+                    height: 14,
+                    marginLeft: -7,
+                    marginTop: -7,
+                    borderRadius: '50%',
+                    border: '2px solid #fff',
+                    boxShadow: '0 0 0 1px rgba(0,0,0,0.4)',
+                    background: 'rgba(165,160,245,0.7)',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                className="admin-linkbtn"
+                disabled={locked}
+                onClick={() => onPatch(card.id, { image_focus: null })}
+                style={{ marginTop: 6 }}
+              >
+                重置为居中
+              </button>
+            </div>
+          ) : null}
         </>
       ) : null}
 

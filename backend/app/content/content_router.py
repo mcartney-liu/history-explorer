@@ -54,6 +54,11 @@ class ContentCard(BaseModel):
     image: Optional[str] = Field(
         None, description="Stored media filename, or null to use the built-in artwork"
     )
+    image_focus: Optional[str] = Field(
+        None,
+        max_length=16,
+        description="Cover focal point as 'x% y%' (object-position); null = center",
+    )
     items: list[str] = Field(default_factory=list)
     title_i18n: Optional[dict[str, str]] = Field(
         None, description="Trilingual title override (zh/en/ja); null = use data source"
@@ -86,6 +91,7 @@ class CardUpdate(BaseModel):
     title: Optional[str] = Field(None, max_length=store.TITLE_LIMIT)
     desc: Optional[str] = Field(None, max_length=store.DESC_LIMIT)
     image: Optional[str] = Field(None, max_length=255)
+    image_focus: Optional[str] = Field(None, max_length=16)
     items: Optional[list[str]] = None
     title_i18n: Optional[dict[str, str]] = None
     summary_i18n: Optional[dict[str, str]] = None

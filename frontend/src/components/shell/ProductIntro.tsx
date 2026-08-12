@@ -33,7 +33,7 @@ import {
   slotKey,
   type CapabilityCard,
 } from '../../data/contentApi'
-import { applyContentDocument } from '../../data/contentRuntime'
+import { applyContentDocument, slotImageFocus } from '../../data/contentRuntime'
 
 export function ProductIntro() {
   const [cards, setCards] = useState<CapabilityCard[]>(() => DEFAULT_CARDS.map((c) => ({ ...c })))
@@ -73,6 +73,7 @@ export function ProductIntro() {
           // predate that and use the bare key — a dot here would split the
           // class in two.
           const key = slotKey(cap.id)
+          const focus = slotImageFocus(cap.id)
           return (
             <Card key={cap.id} variant="default" className={`discover-intro-card intro-theme-${theme} intro-card-${key}`}>
               {/* Photo IS the card: configured artwork, else the drop-in default
@@ -85,6 +86,7 @@ export function ProductIntro() {
                   src={cardImageSrc(cap)}
                   alt=""
                   loading="lazy"
+                  style={focus ? { objectPosition: focus } : undefined}
                   onError={(e) => { e.currentTarget.style.display = 'none' }}
                 />
               </div>
