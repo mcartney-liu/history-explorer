@@ -122,4 +122,6 @@ export default {
   'understand.footprints': 'Your recent steps',
   'understand.focus': 'Your focus areas',
   'understand.dimensions': 'Your preferred dimensions',
+  'understand.prefTitle': 'Your exploration preferences',
+  'understand.deepResearch': 'Deep research on this topic',
 }

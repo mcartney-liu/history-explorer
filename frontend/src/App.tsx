@@ -68,6 +68,7 @@ import { MirrorPanel } from './components/shell/MirrorPanel'
 import { ModeCanvas } from './components/shell/ModeCanvas'
 import { UnderstandingCanvas } from './components/shell/UnderstandingCanvas'
 import { UnderstandingOverview } from './components/shell/UnderstandingOverview'
+import { UnderstandingActions } from './components/shell/UnderstandingActions'
 import { UnderstandingWorkspace } from './pages/m89/UnderstandingWorkspace'
 import { hasUnderstandingData } from './next/exploration/topicUnderstandingState'
 import { CompanionShell } from './components/ai/CompanionShell'
@@ -1364,6 +1365,11 @@ function App() {
             understandingSection={
               <>
                 <UnderstandingOverview signals={discoverSignals} topicTitle={result.title} />
+                <UnderstandingActions
+                  mainEntityGlobalId={result.exploration.main_entity.global_id ?? ''}
+                  mainEntityName={result.exploration.main_entity.name}
+                  onDeepResearch={(gid, name) => openEntity(gid, name, 'research')}
+                />
                 {hasUnderstandingData(current.topic) && <UnderstandingWorkspace topic={current.topic} />}
                 <ContinueExploringPanel connections={result.connections_explained} crossTopicRelated={result.exploration.cross_topic_related} relatedTopics={result.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNodeNamed} onTopicClick={handleTopicClick} />
               </>

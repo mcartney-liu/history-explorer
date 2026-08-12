@@ -122,4 +122,6 @@ export default {
   'understand.footprints': '你最近走过的',
   'understand.focus': '你的兴趣焦点',
   'understand.dimensions': '你偏好的探索维度',
+  'understand.prefTitle': '你的探索偏好',
+  'understand.deepResearch': '深度研究此主题',
 }

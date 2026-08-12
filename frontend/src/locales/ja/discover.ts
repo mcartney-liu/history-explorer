@@ -111,6 +111,8 @@ export default {
   'understand.footprints': '最近たどったもの',
   'understand.focus': '関心の焦点',
   'understand.dimensions': '好みの探索軸',
+  'understand.prefTitle': 'あなたの探索の好み',
+  'understand.deepResearch': 'このテーマを深く研究',
   'discover.themesHeading': 'テーマ',
   'discover.threadsByType': 'タイプ別に分類',
   'discover.nextStepSeen': '閲覧済み',
