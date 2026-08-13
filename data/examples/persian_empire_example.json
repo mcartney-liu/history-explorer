@@ -362,9 +362,11 @@
       "target": "event-cyrus-conquests",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-144"
+      ],
+      "valid_time": "600 BCE–530 BCE",
       "weight": null
     },
     {
@@ -372,9 +374,11 @@
       "target": "civ-persian",
       "type": "caused",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-145"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -382,9 +386,11 @@
       "target": "civ-persian",
       "type": "ruled",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-146"
+      ],
+      "valid_time": "550 BCE–530 BCE",
       "weight": null
     },
     {
@@ -392,9 +398,11 @@
       "target": "civ-persian",
       "type": "ruled",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-147"
+      ],
+      "valid_time": "550 BCE–486 BCE",
       "weight": null
     },
     {
@@ -402,9 +410,11 @@
       "target": "civ-persian",
       "type": "ruled",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-148"
+      ],
+      "valid_time": "519 BCE–465 BCE",
       "weight": null
     },
     {
@@ -412,9 +422,11 @@
       "target": "loc-persepolis",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Behistun Inscription",
+      "evidence": [
+        "ec-149"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -422,9 +434,11 @@
       "target": "religion-zoroastrianism",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-150"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -432,9 +446,11 @@
       "target": "religion-zoroastrianism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-151"
+      ],
+      "valid_time": "1000 BCE onward",
       "weight": null
     },
     {
@@ -442,9 +458,11 @@
       "target": "tech-royal-road",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-152"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -452,9 +470,11 @@
       "target": "tp-achaemenid",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-153"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -462,8 +482,10 @@
       "target": "loc-persepolis",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Behistun Inscription",
+      "evidence": [
+        "ec-154"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -472,9 +494,11 @@
       "target": "hellenistic_world:person-alexander",
       "type": "conquered",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-155"
+      ],
+      "valid_time": "356 BCE–330 BCE",
       "weight": null
     },
     {
@@ -482,9 +506,11 @@
       "target": "hellenistic_world:civ-greek",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-156"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -492,9 +518,11 @@
       "target": "silk_road:silk_road",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-157"
+      ],
+      "valid_time": "330 BCE",
       "weight": null
     },
     {
@@ -502,9 +530,11 @@
       "target": "egypt_technology_religion:civ-egypt",
       "type": "conquered",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-158"
+      ],
+      "valid_time": "550 BCE–332 BCE",
       "weight": null
     },
     {
@@ -512,9 +542,11 @@
       "target": "egypt_technology_religion:idea-monotheism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-159"
+      ],
+      "valid_time": "1350 BCE onward",
       "weight": null
     },
     {
@@ -522,9 +554,11 @@
       "target": "civ-persian",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Behistun Inscription",
+      "evidence": [
+        "ec-160"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -532,9 +566,11 @@
       "target": "civ-persian",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",
+      "evidence": [
+        "ec-161"
+      ],
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -542,9 +578,11 @@
       "target": "silk_road:silk_road",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-162"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -556,10 +594,80 @@
       "evidence": [
         "ec-pe-013"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–486 BCE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "大流士即位性质的对立叙述：官方铭文自称神授平叛，希罗多德记载为合谋夺位，构成波斯帝国正统起源的解释分歧。",
+      "reviewed": true
+    },
+    {
+      "source": "person-xerxes",
+      "target": "person-cyrus",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Cyropaedia",
+      "evidence": [
+        "ec-b-053"
+      ],
+      "valid_time": "530 BCE",
+      "weight": null,
+      "narrative": "薛西斯为阿契美尼德王系，居鲁士之孙。",
+      "reviewed": true
+    },
+    {
+      "source": "person-zarathustra",
+      "target": "religion-mithra",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Avesta (incl. the Gathas)",
+      "evidence": [
+        "ec-b-054"
+      ],
+      "valid_time": "1000 BCE onward",
+      "weight": null,
+      "narrative": "密特拉信仰与琐罗亚斯德教同源。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-susa",
+      "target": "loc-persepolis",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Persepolis Fortification Tablets",
+      "evidence": [
+        "ec-b-055"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "苏萨与波斯波利斯为波斯两大都城。",
+      "reviewed": true
+    },
+    {
+      "source": "religion-mithra",
+      "target": "religion-zoroastrianism",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Avesta (incl. the Gathas)",
+      "evidence": [
+        "ec-b-056"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "密特拉信仰源于琐罗亚斯德教。",
+      "reviewed": true
+    },
+    {
+      "source": "religion-zoroastrianism",
+      "target": "religion-mithra",
+      "type": "caused",
+      "confidence": null,
+      "citation": "The Avesta (incl. the Gathas)",
+      "evidence": [
+        "ec-b-074"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "密特拉信仰源于琐罗亚斯德教。",
       "reviewed": true
     }
   ],
