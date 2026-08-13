@@ -1397,8 +1397,10 @@ function App() {
           <>
             <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} />
             <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
-            <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
-            <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+            <div className="entity-exploration-footer">
+              <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
+              <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+            </div>
           </>
         ) : null}
         causalDetail={!loading && !errorKind && current?.type === 'causal_object' && causalObjectData && !packageSlug ? (
