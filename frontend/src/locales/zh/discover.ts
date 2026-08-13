@@ -39,8 +39,8 @@ export default {
   'discover.via': '经由 %{name}',
   'discover.suggestedBecause': '推荐原因：',
   'discover.openAria': '打开 %{name}',
-  'discover.interpretationTitle': '为何这些关联值得探索',
-  'discover.historicalMeaning': '历史意涵',
+  'discover.interpretationTitle': '关联解读',
+  'discover.historicalMeaning': '{name}的历史意义',
   'discover.score': '评分 %{score}',
   'discover.timeLabel': '时间：',
   // --- DiscoverPage (ADR-0020 UI i18n) ---
@@ -122,4 +122,7 @@ export default {
   'understand.footprints': '你最近走过的',
   'understand.focus': '你的兴趣焦点',
   'understand.dimensions': '你偏好的探索维度',
+  'understand.prefTitle': '你的探索偏好',
+  'understand.deepResearch': '深度研究此主题',
+  'understand.askCompanion': '对此主题直接发问',
 }

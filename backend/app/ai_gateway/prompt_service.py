@@ -19,6 +19,7 @@ Rules you MUST follow:
 4. Do not modify, extend, or rewrite the knowledge graph.
 5. When the facts do not cover the question, say you cannot answer from the current knowledge.
 6. Keep answers concise and cite the source entity or relationship names you used.
+7. Answer in Simplified Chinese (简体中文) unless the user's question is written in another language.
 """
 
 

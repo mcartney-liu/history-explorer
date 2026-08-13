@@ -124,6 +124,156 @@
     background: var(--glass-navy-panel, var(--color-paper-200));
   }
 
+/* ── AI 事实溯源解读（AIExplanationPanel）────────────── */
+.ai-explanation {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+}
+.ae-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ae-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+.ae-context-note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+.ae-mode-label {
+  margin: 12px 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-700);
+}
+.ae-mode-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ae-mode-chip {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-700);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--motion-duration-fast, 150ms) var(--motion-ease-standard, ease);
+}
+.ae-mode-chip--active {
+  background: var(--color-accent);
+  color: var(--color-accent-ink, #fff);
+  border-color: var(--color-accent);
+}
+.ae-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 12px;
+}
+.ae-examples-label {
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+.ae-example-chip {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--motion-duration-fast, 150ms) var(--motion-ease-standard, ease);
+}
+.ae-example-chip:hover {
+  background: var(--color-accent);
+  color: var(--color-accent-ink, #fff);
+}
+.ae-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.ae-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--color-ink-900);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius);
+}
+.ae-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.ae-ask {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-ink, #fff);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.ae-ask:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ae-disclaimer,
+.ae-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+.ae-loading {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--color-ink-600);
+}
+.ae-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--color-status-danger);
+}
+.ae-result {
+  margin-top: 12px;
+}
+.ae-fallback {
+  padding: 10px 12px;
+  border-left: 3px solid var(--color-ink-400);
+  background: var(--color-paper-100);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.ae-fallback-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-ink-600);
+}
+.ae-fallback-reason {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+
   /* M90 / 方案A: unified smart search — helper hint + example chips */
   .search-hint {
     margin: 10px 0 0;
@@ -189,3 +339,373 @@
   color: var(--color-ink-700);
   font-size: 12px;
 }
+
+/* ============================================================
+   ResearchLibrary — "收藏库" 网格书架 (C 方案)
+   用语义 token，暗金(legacy) / 浅色(v1) 主题都适配。
+   ============================================================ */
+.rlib { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.rlib-head { display: flex; align-items: center; gap: var(--space-2); }
+.rlib-head-icon { color: var(--color-accent); flex: none; }
+.rlib-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-900);
+}
+.rlib-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--color-ink-500);
+  padding: 2px 10px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: 999px;
+}
+
+.rlib-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  color: var(--color-ink-500);
+  border: 1px dashed var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-50);
+}
+.rlib-empty-icon { color: var(--color-ink-300); }
+.rlib-empty p { margin: 0; max-width: 320px; font-size: 13px; line-height: 1.6; }
+
+/* ── Grid: 书架 ── */
+.rlib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  gap: var(--space-4);
+}
+
+/* ── Card: 藏品 ── */
+.rlib-card {
+  position: relative;
+  display: flex;
+  min-height: 168px;
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  overflow: hidden;
+  transition:
+    transform var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-normal) var(--motion-ease-standard),
+    border-color var(--motion-duration-normal) var(--motion-ease-standard);
+}
+.rlib-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card), 0 6px 22px var(--color-accent-soft);
+}
+
+/* 左侧类型彩条 */
+.rlib-card-rail {
+  width: 4px;
+  flex: none;
+  background: var(--color-ink-300);
+}
+.rlib-card--civ .rlib-card-rail { background: var(--color-accent); }
+.rlib-card--dyn .rlib-card-rail { background: #B7791F; }
+.rlib-card--event .rlib-card-rail { background: var(--color-status-danger); }
+.rlib-card--person .rlib-card-rail { background: var(--color-status-info); }
+.rlib-card--loc .rlib-card-rail { background: var(--color-truth-strong); }
+.rlib-card--concept .rlib-card-rail { background: #8B5CF6; }
+.rlib-card--tech .rlib-card-rail { background: #0EA5E9; }
+.rlib-card--rel .rlib-card-rail { background: #C2410C; }
+.rlib-card--culture .rlib-card-rail { background: #DB2777; }
+.rlib-card--default .rlib-card-rail { background: var(--color-ink-300); }
+
+.rlib-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  flex: 1;
+  min-width: 0;
+}
+
+.rlib-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.rlib-card-type {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  color: var(--color-ink-700);
+  background: var(--color-paper-200);
+  border: 1px solid var(--color-paper-300);
+  white-space: nowrap;
+}
+.rlib-card--civ .rlib-card-type { color: var(--color-accent-hover); border-color: var(--color-accent-soft); }
+.rlib-card--dyn .rlib-card-type { color: #8a5a14; }
+.rlib-card--event .rlib-card-type { color: #b23b2e; }
+.rlib-card--person .rlib-card-type { color: #2563EB; }
+.rlib-card--loc .rlib-card-type { color: var(--color-truth-strong); }
+.rlib-card-star { color: var(--color-accent); flex: none; }
+
+.rlib-card-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-ink-900);
+  word-break: break-word;
+}
+
+.rlib-card-compare {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-ink-500);
+  word-break: break-word;
+}
+.rlib-card-compare-icon { color: var(--color-ink-300); flex: none; }
+
+.rlib-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+.rlib-meta-chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-200);
+  color: var(--color-ink-500);
+  border: 1px solid var(--color-paper-300);
+}
+.rlib-meta-chip--time { color: var(--color-ink-300); }
+
+.rlib-card-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.rlib-card-open,
+.rlib-card-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background var(--motion-duration-fast) var(--motion-ease-standard);
+}
+.rlib-card-open {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent-soft);
+}
+.rlib-card-open:hover { background: var(--color-accent); color: var(--color-accent-ink); }
+.rlib-card-delete {
+  background: transparent;
+  color: var(--color-ink-500);
+  border-color: var(--color-paper-300);
+}
+.rlib-card-delete:hover {
+  background: var(--color-status-danger-soft);
+  color: var(--color-status-danger);
+  border-color: var(--color-status-danger-soft);
+}
+
+/* ── 研究报告（ResearchReport）：AI 综合报告 + 本地结构化降级 ────────── */
+.rreport {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+}
+.rreport-title {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+/* 2026-08-13 (PO)：报告标题前 logo 图标 */
+.rreport-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: -6px;
+  border-radius: 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+/* 2026-08-13 (PO)：研究中评标题前 logo 图标 */
+.rsummary-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: -6px;
+  border-radius: 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.rreport-topic {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-paper-300);
+}
+.rreport-topic-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.rreport-topic-name { font-size: 15px; font-weight: 600; color: var(--color-ink-800); }
+.rreport-section { margin-top: 14px; }
+.rreport-section-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+.rreport-summary,
+.rreport-evidence-summary,
+.rreport-local-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-ink-600);
+}
+.rreport-ai-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 999px;
+}
+.rreport-ai-loading {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-ink-500);
+}
+.rreport-finding {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--color-accent-soft);
+  background: var(--color-paper-100);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.rreport-finding-title { margin: 0 0 4px; font-size: 13px; font-weight: 700; color: var(--color-ink-800); }
+.rreport-finding-text { margin: 0; font-size: 13px; line-height: 1.7; color: var(--color-ink-600); }
+.rreport-finding-citations {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+.rreport-citation-list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rreport-citation-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 13px;
+  color: var(--color-ink-600);
+  border-bottom: 1px dashed var(--color-paper-300);
+}
+.rreport-citation-kind {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 999px;
+}
+.rreport-citation-id { font-size: 12px; color: var(--color-ink-400); }
+.rreport-citation-more { border-bottom: none; color: var(--color-ink-500); }
+.rreport-coverage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.rreport-coverage-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-600);
+  background: var(--color-paper-100);
+  border: 1px solid var(--color-paper-300);
+  border-radius: 999px;
+}
+.rreport-coverage--success { color: var(--color-status-success, #2e7d32); }
+.rreport-coverage--error { color: var(--color-status-danger); }
+.rreport-coverage--loading { color: var(--color-ink-400); }
+
+/* ── 研究中评/综合报告：三阶段自主触发按钮（2026-08-13 PO 方案①） ── */
+.rp-stage-trigger {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px dashed var(--color-paper-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-100);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.rp-stage-btn {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--motion-duration-fast) var(--motion-ease-standard);
+}
+.rp-stage-btn:hover { background: var(--color-accent-hover); }
+.rp-stage-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+

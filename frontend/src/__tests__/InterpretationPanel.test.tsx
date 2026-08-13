@@ -34,7 +34,7 @@ describe('InterpretationPanel (M5-A-6)', () => {
     const html = render(
       <InterpretationPanel interpretations={vms} />,
     )
-    expect(html).toContain('为何这些关联值得探索')
+    expect(html).toContain('关联解读')
     expect(html).toContain('han_dynasty')
     expect(html).toContain('评分 0.81')
     expect(html).toContain('Connected through overland trade routes.')
@@ -89,13 +89,26 @@ describe('InterpretationPanel (M5-A-6)', () => {
       <InterpretationPanel interpretations={vms} understandings={understandings} onNodeClick={() => {}} />,
     )
     // New Historical Meaning layer present
-    expect(html).toContain('历史意涵')
+    expect(html).toContain('该实体的历史意义')
     expect(html).toContain('Rome conquered Greece')
     expect(html).toContain('as conqueror')
     // Existing interpretation layer still rendered (additive, not replacing)
     expect(html).toContain('data-node="silk_road:han_dynasty"')
     expect(html).toContain('han_dynasty')
     expect(html).toContain('Connected through overland trade routes.')
+  })
+
+  it('2026-08-13 (PO): historical meaning title carries the entity name', () => {
+    const html = render(
+      <InterpretationPanel
+        interpretations={vms}
+        understandings={understandings}
+        onNodeClick={() => {}}
+        entityName="罗马文明"
+      />,
+    )
+    expect(html).toContain('罗马文明的历史意义')
+    expect(html).not.toContain('历史意涵')
   })
 
   it('M5-D Case7: empty understandings array renders nothing (no empty shell)', () => {
@@ -107,9 +120,9 @@ describe('InterpretationPanel (M5-A-6)', () => {
     const html = render(
       <InterpretationPanel interpretations={vms} />,
     )
-    expect(html).toContain('为何这些关联值得探索')
+    expect(html).toContain('关联解读')
     expect(html).toContain('han_dynasty')
-    expect(html).not.toContain('历史意涵')
+    expect(html).not.toContain('该实体的历史意义')
   })
 
   // --- M6-P1: Temporal Context Injection (additive Time sub-line) ---------
@@ -131,7 +144,7 @@ describe('InterpretationPanel (M5-A-6)', () => {
       <InterpretationPanel understandings={understandingsWithTime} />,
     )
     // Historical Meaning block still present (additive, not replacing)
-    expect(html).toContain('历史意涵')
+    expect(html).toContain('该实体的历史意义')
     expect(html).toContain('Rome conquered Egypt')
     // New Time sub-line
     expect(html).toContain('时间：')
@@ -143,7 +156,7 @@ describe('InterpretationPanel (M5-A-6)', () => {
     const html = render(
       <InterpretationPanel understandings={understandings} />,
     )
-    expect(html).toContain('历史意涵')
+    expect(html).toContain('该实体的历史意义')
     expect(html).not.toContain('Time:')
     expect(html).not.toContain('he-meaning-time')
   })

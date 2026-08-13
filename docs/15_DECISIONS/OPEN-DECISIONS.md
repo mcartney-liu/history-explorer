@@ -5,10 +5,10 @@
 > 已关闭的项可升格为 ADR（架构决策记录）。
 > 三类固定 slug：`waiting-on-external-condition` / `design-decision-to-evaluate` / `existing-design-boundary`。
 
-## 当前汇总（2026-08-07 更新，Round 1+2 裁决完成）
+## 当前汇总（2026-08-12 更新：OD-08/09/10 已于 2026-08-08 Wave2 闭环 RESOLVED，自汇总移除）
 
 - **已决（Phase 1 裁决，PO 拍板）**：OD-02、Q-01、Q-03、R5、Q-04、Q-05、OD-06、OD-07 —— 共 8 项 RESOLVED（详见 ADR-0015）。
-- **仍 OPEN**：OD-01、OD-03、OD-04、OD-05、OD-08、OD-09、OD-10，及 Phase 0 残留 R2/R3/R4/R7/R8。
+- **仍 OPEN**：OD-01、OD-03、OD-04、OD-05，及 Phase 0 残留 R2/R3/R4/R7/R8。（OD-08/09/10 已于 2026-08-08 Wave2 闭环 RESOLVED）
 - **Phase 2 入口条件**：所有 Phase 1 阻塞项已全部裁决，可进入 Phase 2（Experience Architecture）。
 
 ## 登记册

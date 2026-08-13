@@ -27,7 +27,7 @@ function mkItem(overrides: Partial<SavedResearch> = {}): SavedResearch {
 describe('ResearchLibraryView', () => {
   it('renders empty state', () => {
     const html = renderToStaticMarkup(<ResearchLibraryView items={[]} />)
-    expect(html).toContain('研究收藏库')
+    expect(html).toContain('研究库')
     expect(html).toContain('暂无保存的研究')
   })
 

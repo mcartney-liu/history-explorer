@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import type { ExplorationPackage } from '../../data/explorationPackages'
 import { Button } from '../ui/Button'
 import { useLocale } from '../../data/locale'
-import { slotImageName, slotSummaryI18n, slotTitleI18n, useContentRevision } from '../../data/contentRuntime'
+import { slotImageName, slotImageFocus, slotSummaryI18n, slotTitleI18n, useContentRevision } from '../../data/contentRuntime'
 import { mediaUrl } from '../../data/contentApi'
 
 // Per-pack decorative SVG illustration (line-art, currentColor) embedded in
@@ -112,6 +112,7 @@ export default function PackageCard({ pkg, onOpen }: PackageCardProps) {
   // Admin-configured cover (slot `explore_packs.<slug>`) wins when set;
   // otherwise fall back to the drop-in folder convention (webp→png→jpg).
   const configuredName = slotImageName(`explore_packs.${pkg.slug}`)
+  const focus = slotImageFocus(`explore_packs.${pkg.slug}`)
   const artImg = configuredName
     ? mediaUrl(configuredName)
     : `${import.meta.env.BASE_URL}assets/packs/${pkg.slug}.webp`
@@ -125,6 +126,7 @@ export default function PackageCard({ pkg, onOpen }: PackageCardProps) {
           src={artImg}
           alt=""
           loading="lazy"
+          style={focus ? { objectPosition: focus } : undefined}
           onLoad={() => setImgLoaded(true)}
           // Chain fallback webp → png → jpg → jpeg so pack-art can be dropped
           // in any format. SVG remains on screen if every format 404s.
