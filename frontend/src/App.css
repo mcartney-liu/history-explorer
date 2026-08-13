@@ -964,6 +964,50 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 .he-card-cta{font-size:var(--text-caption);color:var(--color-accent);margin-top:auto}
 .he-guide-reason{display:block;margin-top:4px;font-size:var(--text-caption);line-height:1.4;color:var(--color-ink-500)}
 .he-guide-empty{margin:8px 0 0;font-size:var(--text-caption);color:var(--color-ink-500);line-height:1.6}
+
+/* ========== 2026-08-13 (PO): he-guide 基础样式补齐 ==========
+   EntityExplorationGuide / FirstExplorationGuide 共用 .he-guide* class 族，
+   但基础样式缺失 → 浏览器默认白底+灰按钮，与深色 UI 格格不入。
+   仅追加，不删改任何既有规则；两个组件自动受益。 */
+.he-guide{
+  margin:16px 0;
+  padding:14px 16px;
+  background:var(--color-paper);
+  border:1px solid var(--color-paper-300);
+  border-radius:var(--radius-lg);
+}
+.he-guide-head{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.he-guide-heading{
+  margin:0;
+  font-family:var(--serif,serif);
+  font-size:16px;font-weight:700;color:var(--color-ink-900);
+}
+.he-guide-dismiss{
+  background:transparent;border:0;color:var(--color-ink-500);
+  cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:6px;
+  transition:background var(--transition-fast,150ms ease),color var(--transition-fast,150ms ease);
+}
+.he-guide-dismiss:hover{background:var(--color-paper-200);color:var(--color-ink-900)}
+.he-guide-intro{
+  margin:8px 0 12px;
+  font-size:13px;line-height:1.6;color:var(--color-ink-500);
+}
+.he-guide-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+.he-guide-card{
+  display:block;width:100%;text-align:left;
+  padding:10px 12px;
+  background:var(--color-paper-100);
+  border:1px solid var(--color-paper-300);border-radius:var(--radius);
+  color:var(--color-ink-700);font-size:13px;line-height:1.5;cursor:pointer;
+  transition:background var(--transition-fast,150ms ease),border-color var(--transition-fast,150ms ease),color var(--transition-fast,150ms ease);
+}
+.he-guide-card:hover{
+  background:var(--color-accent-soft);border-color:var(--color-accent);color:var(--color-ink-900);
+}
+.he-guide-label{font-weight:600;display:block}
+.he-guide-desc{display:block;color:var(--color-ink-500);font-size:12px;margin-top:4px}
 /* Loading/error */
 .he-landing .he-landing-head{display:none}
 
