@@ -512,6 +512,90 @@
       "mechanism": "interpretation",
       "narrative": "丝路东方起点存在长安/洛阳之争：传统以长安为汉代起点，近年研究主张东汉洛阳同为丝路东端枢纽，形成对起点认定的挑战。",
       "reviewed": true
+    },
+    {
+      "source": "silk_road",
+      "target": "china_v1:tp-tang",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "Hansen, The Silk Road: A New History; Old Book of Tang (Jiu Tangshu).",
+      "evidence": [
+        "ec-025"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "han_dynasty",
+      "target": "china_v1:tp-tang",
+      "type": "before",
+      "confidence": null,
+      "citation": "Qian Mu, Guoshi Dagang (Outline of National History); The Cambridge History of China.",
+      "evidence": [
+        "ec-026"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-silk-road-opened",
+      "target": "china_v1:tp-tang",
+      "type": "influenced",
+      "confidence": null,
+      "citation": "Book of Han (Hanshu), Biography of Zhang Qian; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-027"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "loc-chang-an",
+      "target": "china_v1:loc-changan",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Old Book of Tang (Jiu Tangshu); Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-028"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-paper",
+      "target": "china_v1:tech-zaopi",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-029"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-paper",
+      "target": "china_v1:tp-tang",
+      "type": "spread",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-030"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zhang-qian",
+      "target": "china_v1:tp-tang",
+      "type": "before",
+      "confidence": null,
+      "citation": "Book of Han (Hanshu), Biography of Zhang Qian and Li Guangli.",
+      "evidence": [
+        "ec-031"
+      ],
+      "valid_time": null,
+      "weight": null
     }
   ],
   "timeline": [

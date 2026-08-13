@@ -616,7 +616,37 @@
     { "source": "tech-su", "target": "loc-huanghe", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "粟作起于黄河流域。", "reviewed": true },
     { "source": "tech-ganlan", "target": "loc-changjiang", "type": "located_at", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "干栏建筑见于长江流域。", "reviewed": true },
     { "source": "idea-baijia", "target": "tp-warring-states", "type": "caused", "confidence": null, "citation": "", "evidence": [], "valid_time": null, "weight": null, "narrative": "战国催生诸子百家。", "reviewed": true }
-  ],
+  ,
+    {
+      "source": "person-kongzi",
+      "target": "greek_philosophy:person-socrates",
+      "type": "contemporary_with",
+      "confidence": null,
+      "citation": "Qian Mu, Guoshi Dagang; The Cambridge Ancient History (for Socrates).",
+      "evidence": ["ec-041"],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "event-baijia-zhengming",
+      "target": "greek_philosophy:person-socrates",
+      "type": "contemporary_with",
+      "confidence": null,
+      "citation": "The Cambridge History of Ancient China; The Cambridge Ancient History.",
+      "evidence": ["ec-042"],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-warring-states",
+      "target": "persian_empire:civ-persian",
+      "type": "contemporary_with",
+      "confidence": null,
+      "citation": "The Cambridge History of Ancient China; The Cambridge History of Iran, Vol. 2.",
+      "evidence": ["ec-043"],
+      "valid_time": null,
+      "weight": null
+    }],
   "timeline": [
     { "period": { "value": -1700000, "precision": "year", "certainty": "approximate", "label": "c. 1.7M BCE" }, "event": "中国境内早期人类活动（元谋人、北京人）" },
     { "period": { "value": -7000, "precision": "year", "certainty": "approximate", "label": "c. 7000 BCE" }, "event": "长江流域河姆渡栽培水稻，黄河流域半坡栽培粟" },

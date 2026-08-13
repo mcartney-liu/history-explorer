@@ -2080,6 +2080,114 @@
       "mechanism": "interpretation",
       "narrative": "朱熹格物致知与王阳明致良知的路径之争：前者向外即物穷理，后者向内发明本心，是宋明理学内部最经典的学派对立。",
       "reviewed": true
+    },
+    {
+      "source": "rel-fojiao",
+      "target": "ancient_india:religion-buddhism",
+      "type": "spread",
+      "confidence": null,
+      "citation": "Thapar, The Penguin History of Early India; Book of the Later Han (Hou Hanshu), Account of the Western Regions.",
+      "evidence": [
+        "ec-032"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-zaopi",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "Hansen, The Silk Road: A New History; The Cambridge History of China.",
+      "evidence": [
+        "ec-033"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-yinshua",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-034"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tech-huoyao",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-035"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-yuan",
+      "target": "persian_empire:civ-persian",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Cambridge History of Iran, Vol. 2; The Cambridge History of China.",
+      "evidence": [
+        "ec-036"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "person-zheng-he",
+      "target": "silk_road:silk_road",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "The Cambridge History of China (Ming volume).",
+      "evidence": [
+        "ec-037"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "loc-quanzhou",
+      "target": "silk_road:silk_road",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-038"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "civ-zhonghua",
+      "target": "tb_cn_v1:civ-huaxia",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "Qian Mu, Guoshi Dagang; The Cambridge History of Ancient China.",
+      "evidence": [
+        "ec-039"
+      ],
+      "valid_time": null,
+      "weight": null
+    },
+    {
+      "source": "tp-tang",
+      "target": "tb_cn_v1:tp-spring-autumn",
+      "type": "after",
+      "confidence": null,
+      "citation": "The Cambridge History of Ancient China; Qian Mu, Guoshi Dagang.",
+      "evidence": [
+        "ec-040"
+      ],
+      "valid_time": null,
+      "weight": null
     }
   ],
   "timeline": [

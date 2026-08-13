@@ -3444,5 +3444,272 @@
       "controversy_level": "high",
       "interpretation_note": "福音书为信仰文本、成书晚于事件；历史学无法以超自然为解释变量，学界对同一文本给出神学与史学两套重释，属 reinterprets。"
     }
+  },
+  {
+    "id": "ec-025",
+    "subject_type": "relationship",
+    "subject_id": "silk_road->china_v1:tp-tang",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road",
+      "src-cn-jiu-tangshu"
+    ],
+    "claim": "The Tang dynasty (618-907) made Chang'an the eastern terminus of the Silk Road; Silk Road trade peaked under Tang rule.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-026",
+    "subject_type": "relationship",
+    "subject_id": "han_dynasty->china_v1:tp-tang",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ],
+    "claim": "The Han dynasty (202 BCE-220 CE) preceded the Tang dynasty (618-907 CE) by several centuries.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-027",
+    "subject_type": "relationship",
+    "subject_id": "event-silk-road-opened->china_v1:tp-tang",
+    "source_id": "src-cn-hanshu",
+    "source_ids": [
+      "src-cn-hanshu",
+      "src-hansen-silk-road"
+    ],
+    "claim": "The Silk Road opened by Zhang Qian's missions (2nd c. BCE) reached its cultural and commercial zenith under the Tang.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-028",
+    "subject_type": "relationship",
+    "subject_id": "loc-chang-an->china_v1:loc-changan",
+    "source_id": "src-cn-jiu-tangshu",
+    "source_ids": [
+      "src-cn-jiu-tangshu",
+      "src-hansen-silk-road"
+    ],
+    "claim": "The 'Chang'an' in the Silk Road package (loc-chang-an) and Tang Chang'an (china_v1:loc-changan) denote the same city; this is a cross-package dedup link.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Modeling link between two packages referring to the same historical city; not a historical dispute."
+  },
+  {
+    "id": "ec-029",
+    "subject_type": "relationship",
+    "subject_id": "tech-paper->china_v1:tech-zaopi",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "The 'paper' in the Silk Road package (tech-paper) and Tang paper (china_v1:tech-zaopi) refer to the same Chinese invention; cross-package dedup link.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Cross-package dedup link for the same technology."
+  },
+  {
+    "id": "ec-030",
+    "subject_type": "relationship",
+    "subject_id": "tech-paper->china_v1:tp-tang",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Paper-making, perfected in the Tang period, spread westward along the Silk Road after the Battle of Talas (751).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-031",
+    "subject_type": "relationship",
+    "subject_id": "person-zhang-qian->china_v1:tp-tang",
+    "source_id": "src-cn-hanshu",
+    "source_ids": [
+      "src-cn-hanshu"
+    ],
+    "claim": "Zhang Qian (c. 164-114 BCE), who opened relations with the Western Regions, lived centuries before the Tang dynasty.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-032",
+    "subject_type": "relationship",
+    "subject_id": "rel-fojiao->ancient_india:religion-buddhism",
+    "source_id": "src-thapar-early-india",
+    "source_ids": [
+      "src-thapar-early-india",
+      "src-cn-houhanshu"
+    ],
+    "claim": "Buddhism spread from India to China around the 1st-2nd c. CE; the White Horse Temple at Luoyang marks an early center.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-033",
+    "subject_type": "relationship",
+    "subject_id": "tech-zaopi->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road",
+      "src-cn-cambridge"
+    ],
+    "claim": "Chinese paper-making travelled west along the Silk Road, reaching the Islamic world by the 8th c. and Europe by the 12th c.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-034",
+    "subject_type": "relationship",
+    "subject_id": "tech-yinshua->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Woodblock and movable-type printing spread westward via the Silk Road and maritime trade, informing later European printing.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "medium",
+    "interpretation_note": "The direct influence of Chinese printing on Gutenberg is debated; the westward transmission of the technology is well attested."
+  },
+  {
+    "id": "ec-035",
+    "subject_type": "relationship",
+    "subject_id": "tech-huoyao->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Gunpowder technology passed to the Islamic world and Europe in the 13th c. via the Mongol conquests and Silk Road exchange.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-036",
+    "subject_type": "relationship",
+    "subject_id": "tp-yuan->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran",
+      "src-cn-cambridge"
+    ],
+    "claim": "The Yuan dynasty (1271-1368) maintained close political and cultural ties with the Persian Ilkhanate (1256-1335) following the Mongol westward campaigns.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-037",
+    "subject_type": "relationship",
+    "subject_id": "person-zheng-he->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge"
+    ],
+    "claim": "Zheng He's seven maritime expeditions (1405-1433) extended the maritime Silk Road and the tributary trade network.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-038",
+    "subject_type": "relationship",
+    "subject_id": "loc-quanzhou->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Quanzhou was a major terminus and port of the Maritime Silk Road during the Song and Yuan periods.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-039",
+    "subject_type": "relationship",
+    "subject_id": "civ-zhonghua->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "The Chinese civilization (post-Qin unification) inherited the ethnicity, script, and ritual institutions of the pre-Qin Huaxia civilization.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-040",
+    "subject_type": "relationship",
+    "subject_id": "tp-tang->tb_cn_v1:tp-spring-autumn",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient",
+      "src-cn-qianmu"
+    ],
+    "claim": "The Tang dynasty (618-907 CE) came many centuries after the Spring and Autumn period (770-476 BCE).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-041",
+    "subject_type": "relationship",
+    "subject_id": "person-kongzi->greek_philosophy:person-socrates",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cah"
+    ],
+    "claim": "Confucius (551-479 BCE) and Socrates (470-399 BCE) were near-contemporaries, active in East Asia and the Mediterranean respectively.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-042",
+    "subject_type": "relationship",
+    "subject_id": "event-baijia-zhengming->greek_philosophy:person-socrates",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient",
+      "src-cah"
+    ],
+    "claim": "The Hundred Schools of Thought (c. 5th-3rd c. BCE) coincided broadly with the golden age of Greek philosophy (Socrates, Plato, Aristotle).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-043",
+    "subject_type": "relationship",
+    "subject_id": "tp-warring-states->persian_empire:civ-persian",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient",
+      "src-cambridge-iran"
+    ],
+    "claim": "China's Warring States period (475-221 BCE) overlapped broadly with the Achaemenid Persian Empire (550-330 BCE) and successor Hellenistic kingdoms.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
   }
 ]
