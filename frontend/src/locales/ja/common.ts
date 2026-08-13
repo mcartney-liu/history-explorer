@@ -3,6 +3,7 @@ export default {
   'common.searchEntityPlaceholder': '文明・人物・出来事を検索（例：古代ローマ、秦の始皇帝、ルネサンス）',
   'common.searching': '検索中…',
   'common.kindTopic': 'テーマ',
+  'common.home': 'ホーム',
   'search.button': '検索',
   'tab.info': '概要',
   'tab.research': '研究',

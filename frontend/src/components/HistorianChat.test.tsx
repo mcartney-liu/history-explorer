@@ -32,7 +32,7 @@ describe('HistorianChatView', () => {
       />,
     )
     expect(html).toContain('AI 历史学家')
-    expect(html).toContain('向 AI 历史学家提问')
+    expect(html).toContain('不会脱离本实体')
     expect(html).toContain('为什么Roman Empire Established会发生？')
     expect(html).toContain('Roman Empire Established对后世有什么影响？')
   })
@@ -195,7 +195,7 @@ describe('HistorianChatView', () => {
     expect(html).toContain('输入追问')
   })
 
-  it('does not show follow-up when no messages', () => {
+  it('shows free-text input in initial state (no messages) alongside suggestions', () => {
     const html = renderToStaticMarkup(
       <HistorianChatView
         entityGlobalId="test:ev-1"
@@ -205,7 +205,27 @@ describe('HistorianChatView', () => {
         messages={[]}
       />,
     )
+    // Initial state must present a free-text input, not just suggested buttons.
+    expect(html).toContain('或输入你自己的问题')
+    expect(html).toContain('输入关于')
+    // It should not be labelled as a follow-up until a conversation exists.
     expect(html).not.toContain('继续追问')
+  })
+
+  it('renders a send button alongside the free-text input in initial state', () => {
+    const html = renderToStaticMarkup(
+      <HistorianChatView
+        entityGlobalId="test:ev-1"
+        entityName="Test"
+        entityType="Event"
+        status="idle"
+        messages={[]}
+      />,
+    )
+    // A visible send button must accompany the free-text input so users
+    // without keyboard access (e.g. mobile) can submit.
+    expect(html).toContain('发送')
+    expect(html).toContain('hc-send-btn')
   })
 })
 

@@ -9,41 +9,52 @@ type Crumb = { key: string; label: string; index: number }
 type BreadcrumbProps = {
   crumbs: Crumb[]
   onCrumbClick: (index: number) => void
+  /** Retained for navSlot wiring compatibility; back/forward controls were
+   *  removed from this view per PO request (covered by browser / trail). */
+  onBack?: () => void
+  canBack?: boolean
+  onForward?: () => void
+  canForward?: boolean
 }
 
 function Breadcrumb({ crumbs, onCrumbClick }: BreadcrumbProps) {
   const { t } = useLocale()
-  if (crumbs.length <= 1) return null
+  const showTrail = crumbs.length > 1
+  if (!showTrail) return null
   return (
-    <nav className="he-breadcrumb" aria-label={t('common.breadcrumbAria')}>
-      <ol className="he-breadcrumb-list">
-        {crumbs.map((c, i) => {
-          const isLast = i === crumbs.length - 1
-          return (
-            <li key={c.key} className="he-breadcrumb-item">
-              {isLast ? (
-                <span className="he-breadcrumb-current" aria-current="page">
-                  {c.label}
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  className="he-breadcrumb-link"
-                  onClick={() => onCrumbClick(c.index)}
-                >
-                  {c.label}
-                </button>
-              )}
-              {!isLast && (
-                <span className="he-breadcrumb-sep" aria-hidden="true">
-                  {'›'}
-                </span>
-              )}
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
+    <>
+      <div className="he-breadcrumb-head">{t('discover.currentPosition')}</div>
+      <nav className="he-breadcrumb" aria-label={t('common.breadcrumbAria')}>
+        <ol className="he-breadcrumb-list">
+          {crumbs.map((c, i) => {
+            const isLast = i === crumbs.length - 1
+            const label = c.label
+            return (
+              <li key={c.key} className="he-breadcrumb-item">
+                {isLast ? (
+                  <span className="he-breadcrumb-current" aria-current="page">
+                    {label}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    className="he-breadcrumb-link"
+                    onClick={() => onCrumbClick(c.index)}
+                  >
+                    {label}
+                  </button>
+                )}
+                {!isLast && (
+                  <span className="he-breadcrumb-arrow" aria-hidden="true">
+                    {'→'}
+                  </span>
+                )}
+              </li>
+            )
+          })}
+        </ol>
+      </nav>
+    </>
   )
 }
 

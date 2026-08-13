@@ -7,6 +7,39 @@
 
 import type { EntityDetail, EntityRelationship, GraphNode, GraphEdge } from './entityTypes'
 
+/**
+ * Relationship type → Chinese label map.
+ * Covers all 20 types observed in production data (2026-08-13 audit).
+ * Unknown types fall through to underscore-to-space + title-case formatting.
+ */
+const RELATION_TYPE_LABELS: Record<string, string> = {
+  after: '晚于',
+  before: '早于',
+  caused: '导致',
+  conquered: '征服',
+  contemporary_with: '同时代',
+  discovered: '发现',
+  disputes: '冲突',
+  influenced: '影响',
+  inherited: '继承',
+  invented: '发明',
+  located_at: '位于',
+  part_of: '属于',
+  participated_in: '参与',
+  practiced: '实践',
+  reinterprets: '重新诠释',
+  related_to: '相关',
+  ruled: '统治',
+  spoke: '使用语言',
+  spread: '传播',
+  traded_with: '贸易往来',
+}
+
+/** Translate a raw relation type key to a display label (Chinese). */
+export function translateRelationType(type: string): string {
+  return RELATION_TYPE_LABELS[type] ?? type.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 // ---- Time Extraction ----
 export function extractTime(entity: EntityDetail): string {
   const summary = entity.summary
@@ -131,7 +164,7 @@ export function buildGraph(
       source: entity.id,
       target: otherId,
       relation: rel.type,
-      label: rel.type.replace(/_/g, ' '),
+      label: translateRelationType(rel.type),
     })
   }
 

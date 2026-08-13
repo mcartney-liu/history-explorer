@@ -17,6 +17,7 @@ export default {
   'common.clear': '清除',
   'common.kindTopic': '主题',
   'common.kindEntity': '实体',
+  'common.home': '首页',
   'common.connectionsHeading': '关联',
   'common.connectionsEmpty': '暂无关联。',
   'common.searchEntityPlaceholder': '搜索文明、人物或事件（如 古罗马 / 秦始皇 / 文艺复兴）',
