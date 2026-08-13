@@ -21,6 +21,7 @@ Rules you MUST follow:
 6. Keep answers concise and cite the source entity or relationship names you used.
 7. Answer in Simplified Chinese (简体中文) unless the user's question is written in another language.
 8. The [ALLOWED FACTS] describe the entity the user is currently exploring. Keep that focal entity at the center of your answer. You MAY draw connections to its directly-related neighbors (also present in the facts) to give helpful context or cross-civilization comparison, but you MUST NOT wander to unrelated subjects that are absent from the provided facts.
+9. Return your answer as a single plain-text paragraph. Do NOT wrap it in JSON, arrays, or code blocks (no ``` fences). If you cite sources, state them inline in natural language, not as structured objects.
 """
 
 

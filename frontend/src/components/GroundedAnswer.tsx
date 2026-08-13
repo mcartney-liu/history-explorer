@@ -342,6 +342,26 @@ function stripJSONArtifacts(text: string): string {
   return result
 }
 
+// 2026-08-13 (PO, P-U02 根治)：从 LLM 偶发的「answer 包装」中提取纯文本正文。
+// 覆盖两种形态：
+//   对象包装  { answer: "正文", citations: [...] }      → 取 answer 字段
+//   数组包装  ["answer", "正文", "citations", [...]]     → 取第二个元素
+// 命中任一即返回正文（不再把 "answer"/"citations" 键名与 citations 内部结构拼进展示）。
+// 非包装形态（如普通字符串数组）返回 null，交由下方兜底逻辑处理。
+function extractAnswerBody(parsed: object): string | null {
+  if (Array.isArray(parsed)) {
+    if (parsed.length >= 2 && parsed[0] === 'answer' && typeof parsed[1] === 'string') {
+      return parsed[1].trim()
+    }
+    return null
+  }
+  const obj = parsed as Record<string, unknown>
+  if (typeof obj.answer === 'string' && obj.answer.trim()) {
+    return obj.answer.trim()
+  }
+  return null
+}
+
 // 2026-08-11 (PO)：LLM 输出不稳定的最后防线——任何没被 tryRenderSynthesis
 // 识别的 JSON 对象，递归提取其中的字符串值拼接展示，绝不让用户看到
 // 原始 JSON dump（"像保存文件的内容")。
@@ -361,7 +381,7 @@ export function humanizeAnswer(raw: string): string {
     .replace(/```json\s*/gi, '')
     .replace(/```\s*$/g, '')
 
-  // 模式①：整个字符串是纯 JSON → 提取字符串（原有逻辑）
+  // 模式①：整个字符串是纯 JSON → 语义化提取「正文」，而非无差别全拼
   const trimmed = cleaned.trim()
   if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
     let parsed: unknown
@@ -375,6 +395,12 @@ export function humanizeAnswer(raw: string): string {
     }
     if (parsed === null || typeof parsed !== 'object') return raw
 
+    // 2026-08-13 (PO, P-U02 根治)：优先提取 answer 包装的正文，
+    // 不再把键名 / citations 内部结构无差别拼进展示。
+    const body = extractAnswerBody(parsed)
+    if (body) return body
+
+    // 兜底：非标准包装（如纯字符串数组）→ 递归提取所有字符串值
     const parts: string[] = []
     const walk = (v: unknown): void => {
       if (typeof v === 'string') {

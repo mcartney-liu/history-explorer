@@ -202,13 +202,12 @@
 > 本 IDEA 文档为灵感/问题暂存区，性质仍为非决策、非 PRD/DNA；问题升格处理待统一排期。
 > `USER_ISSUES.md` 为权威 live tracker，本表为快照，改动以该文件为准。
 
-### 累计清单（2026-08-13 快照，共 12 条：PENDING 6 / RESOLVED 6）
+### 累计清单（2026-08-13 快照，共 12 条：PENDING 5 / RESOLVED 7）
 
 **PENDING（待改）**
 
 | ID | 问题 | 根因（简述） | 状态 |
 |---|---|---|---|
-| P-U02 | 文化维度显示原始 JSON 代码 | 文化维度 answer 为 `["answer",...]` 数组格式，`humanizeAnswer` 模式① `walk()` 把键名/citations 全拼 | 待改 |
 | P-U03 | 四维研究批量+单点并存 | 现有 idle 卡片纯展示不可点、无单点触发入口；需新增每维度「研究/重研」按钮 | 待改 |
 | P-U04 | 完成后折叠 + 按需「查看报告」展开 | 现状四维度报告直接全铺开，界面冗长 | 待改 |
 | P-U05 | 单点研究报告弹 modal 小窗（方案 A） | 单点报告用 overlay 浮层（非新页面）更具动感 | 待改 |
@@ -225,5 +224,6 @@
 | R-U04 | 关系链英文脱节不可点 | 改可点击关系链（当前实体→关系·中文→目标实体） |
 | R-U05 | 实体页「下一步探索」消失 | 根因 `setResult(null)` + 557 守卫早退；按 `relationships`+`related_entities` 喂法修复 |
 | R-U06 | 研究中评未存档（原 P-U01） | `ResearchSummary` 加 `onAnswered` 回调回传正文 → `ResearchPanel` 提 `summaryAnswer` state → `handleSave` 传 `summaryAnswer`；存储层本已支持，纯补 React 断点（2026-08-13 代码已改，未提交） |
+| R-U07 | 文化维度显示原始 JSON 代码（原 P-U02） | 根因 `humanizeAnswer` 模式①「无差别全拼」（非文化特殊，任何维度都可能中招，取决于 LLM 偶发吐 JSON；之前 5-7 轮只堵当时形态未治根）。根治 `extractAnswerBody` 语义化提取（数组 `["answer",正文,...]` / 对象 `{"answer":...}` 统一取正文）+ 后端 prompt 第 9 条纯文本约束（治源）+ 多形态测试锁死（6/6 通过）（2026-08-13 已修，未提交） |
 
 > 详细（含方案/文件面/证据）见 `.workbuddy/memory/USER_ISSUES.md`，本表为快照。
