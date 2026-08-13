@@ -143,6 +143,17 @@ export function projectHistoricalKnowledge(
 ): ExplorationStateBuilderInput {
   const entityIds = projection.entities.map((e) => e.ref)
 
+  // P-U08: 维度实体映射（实体维度标签 → 该维度下的实体 ref）。
+  // Policy Rule 1 据此产出「真实可达实体」作为 open_dimension 目标，
+  // 而非中文维度标签（旧版会产出 404 目标）。
+  const dimensionMapping: Record<string, string[]> = {}
+  for (const e of projection.entities) {
+    for (const dim of e.dimensions) {
+      if (!dimensionMapping[dim]) dimensionMapping[dim] = []
+      if (!dimensionMapping[dim].includes(e.ref)) dimensionMapping[dim].push(e.ref)
+    }
+  }
+
   return {
     explorationId,
     currentTopic: projection.topicName,
@@ -162,6 +173,7 @@ export function projectHistoricalKnowledge(
       })),
       basedOn: { projectionVersion: '1.0' },
     },
+    dimensionMapping,
     memoryProjection: {
       totalNodes: 0,
       daysSinceStart: 0,

@@ -79,3 +79,35 @@ describe('humanizeAnswer — scattered JSON artifact cleanup', () => {
     // First 200 chars should be meaningful Chinese, not JSON garbage
   })
 })
+
+describe('humanizeAnswer — answer-wrapped JSON (P-U02 root-cause fix)', () => {
+  it('should extract body from array-wrapped answer ["answer", text, "citations", [...]]', () => {
+    const raw = JSON.stringify([
+      'answer',
+      '罗马文明通过征服、贸易和文化交流等方式传播并影响了其他文明和后世。',
+      'citations',
+      [{ global_id: '罗马文明', kind: 'entity', label: '罗马文明' }],
+    ])
+    const result = humanizeAnswer(raw)
+    expect(result).toBe('罗马文明通过征服、贸易和文化交流等方式传播并影响了其他文明和后世。')
+    expect(result).not.toContain('"answer"')
+    expect(result).not.toContain('"citations"')
+    expect(result).not.toContain('"global_id"')
+  })
+
+  it('should extract body from object-wrapped answer {answer, citations}', () => {
+    const raw = JSON.stringify({
+      answer: '罗马帝国的军事组织是其扩张的基石。',
+      citations: [{ global_id: '罗马军团', kind: 'entity', label: '罗马军团' }],
+    })
+    const result = humanizeAnswer(raw)
+    expect(result).toBe('罗马帝国的军事组织是其扩张的基石。')
+    expect(result).not.toContain('"citations"')
+    expect(result).not.toContain('"global_id"')
+  })
+
+  it('should still render plain-text answers verbatim', () => {
+    const raw = '罗马文明的政治制度对后世影响深远。'
+    expect(humanizeAnswer(raw)).toBe(raw)
+  })
+})

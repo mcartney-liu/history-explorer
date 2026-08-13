@@ -91,11 +91,7 @@ type EntityPageProps = {
 import { useMemo, useEffect, useState } from 'react'
 import { buildEntityViewModel } from '../data/entity/EntityViewModel'
 import { EntityHero } from './entity/EntityHero'
-import { ExplorationCard } from './entity/ExplorationCard'
-import { buildCardsFromViewModel } from '../data/entity/ExplorationCardModel'
-import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
 import { buildInsight } from '../data/entity/EntityInsightModel'
-import { EntityInsightCard } from './entity/EntityInsightCard'
 import { ConnectionExplorer } from './entity/ConnectionExplorer'
 import { ExplorationGuide } from './entity/ExplorationGuide'
 import { EntityExperienceHeader } from './entity/EntityExperienceHeader'
@@ -127,19 +123,6 @@ function EntityPage({
     () => buildEntityViewModel(entity as Parameters<typeof buildEntityViewModel>[0]),
     [entity],
   )
-  const relatedCards = useMemo(
-    () =>
-      buildCardsFromViewModel(
-        viewModel.connections.graphNodes.filter((n) => n.id !== entity.id),
-        viewModel.connections.graphEdges,
-        getEntityLabel,
-        getEntityIcon,
-        locale,
-        t,
-      ),
-    [viewModel, entity.id, locale, t],
-  )
-
   const summaryObj = entity.summary ?? {}
   const description =
     typeof summaryObj.description === 'string' ? summaryObj.description : ''
@@ -233,6 +216,8 @@ function EntityPage({
                       <EntityHero
                         identity={viewModel.identity}
                         globalId={entityGlobalId}
+                        insightSummary={buildInsight(entity)}
+                        onEntityClick={onEntityClick}
                         onResearch={() => {
                           console.log('[Research] Start research:', viewModel.identity.name)
                         }}
@@ -243,16 +228,14 @@ function EntityPage({
                     }
                     guide={
                       <>
-                        <EntityInsightCard
-                          insight={buildInsight(entity)}
-                          entitySlug={entity.id}
-                        />
                         <ExplorationGuide
                           entityName={viewModel.identity.name}
                           nodes={viewModel.connections.graphNodes}
                           edges={viewModel.connections.graphEdges}
                           timelineCount={viewModel.connections.timeline.length}
                           onExploreNode={(id) => onEntityClick(id)}
+                          onViewRelations={() => document.querySelector('.ce')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                          onViewTimeline={() => document.querySelector('.ce-timeline')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                         />
                       </>
                     }
@@ -290,22 +273,6 @@ function EntityPage({
                     timeline={viewModel.connections.timeline}
                     onEntityClick={onEntityClick}
                   />
-
-                  {/* Layer 3: Related entities */}
-                  {relatedCards.length > 0 && (
-                    <div className="explore-section">
-                      <h4 className="explore-section-title">{t('entity.continue')}</h4>
-                      <div className="explore-section-grid">
-                        {relatedCards.map((card) => (
-                          <ExplorationCard
-                            key={card.id}
-                            model={card}
-                            onClick={(target) => onEntityClick(target)}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
 
                   {/* M60-001: AI conversation — from old 'explore' tab */}
                   <p className="explore-hint">

@@ -1,0 +1,35 @@
+#!/bin/sh
+# History Explorer - pre-commit 数据验收钩子
+#
+# 行为：当本次提交改动 data/ 下任何文件（实体 / 关系 / 证据 / 来源）时，
+#       自动运行 scripts/data-patch-check.py。验收未达成（脚本退出码非 0）
+#       则阻断提交；data/ 未改动则直接放行。
+#
+# 验收标准见 scripts/data-patch-check.py 顶部 docstring：
+#   来源红线（每条关系带 evidence+citation）/ 结构洞（叶子 0）/ 因果链（>=25）
+#   / 去重 / 时间锚定。
+#
+# 激活方式（一次性，本机）：
+#   git config core.hooksPath .githooks
+# 本文件为单一可信源，已纳入版本库；新克隆执行上面一行即可启用。
+
+# 仅当 data/ 有已暂存改动时才跑
+if git diff --cached --name-only --diff-filter=ACMR | grep -q '^data/'; then
+  echo "[pre-commit] 检测到 data/ 改动，运行数据验收…"
+else
+  exit 0
+fi
+
+# 定位 python：CI(ubuntu) 用 python3；本机回退到 WorkBuddy 托管 python
+PY=""
+for cand in python3 python "C:/Users/haizhi/.workbuddy/binaries/python/versions/3.13.12/python.exe"; do
+  if command -v "$cand" >/dev/null 2>&1; then PY="$cand"; break; fi
+done
+if [ -z "$PY" ]; then
+  echo "[pre-commit] 未找到 python，跳过数据验收（请安装 Python 或加入 PATH）" >&2
+  exit 0
+fi
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+"$PY" "$REPO_ROOT/scripts/data-patch-check.py"
+# 退出码透传：验收未达成（非 0）-> 阻断提交

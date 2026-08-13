@@ -52,7 +52,7 @@ const mockTimeline = [
 
 const mockInsight: EntityInsight = {
   text: 'Julius Caesar 是罗马共和国末期最重要的军事与政治人物之一。他的征服和改革改变了罗马政治结构，并最终推动共和国向帝国转变。',
-  keyNames: ['Pompey', 'Rome'],
+  keyNames: [{ name: 'Pompey', id: 'pompey' }, { name: 'Rome', id: 'rome' }],
   timelineHighlights: ['高卢战争', '被刺杀'],
   sourceFields: ['summary.description', 'relationships'],
 }

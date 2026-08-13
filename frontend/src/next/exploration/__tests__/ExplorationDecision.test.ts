@@ -36,6 +36,11 @@ function makeState(overrides?: Partial<ExplorationState>): ExplorationState {
     coverageRatio: 0.5,
     coveredDimensions: ['military', 'politics'],
     missingDimensions: ['economy', 'culture'],
+    // P-U08: 维度实体映射（Rule 1 目标必须是真实实体）
+    dimensionMapping: {
+      economy: ['entity:port-of-ostia'],
+      culture: ['entity:roman-art'],
+    },
     missingConnections: [
       {
         fromRef: 'entity:rome',

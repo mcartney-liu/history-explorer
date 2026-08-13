@@ -7,10 +7,16 @@
 
 import type { EntityDetail } from './entityTypes'
 
+export interface InsightKey {
+  name: string
+  /** Global id used for navigation (other.global_id ?? other.id) */
+  id: string
+}
+
 export interface EntityInsight {
   text: string
-  /** Key relationship names for UI badges */
-  keyNames: string[]
+  /** Key relationships as clickable badges: name + global id for navigation */
+  keyNames: InsightKey[]
   /** Timeline highlights for UI timeline chip */
   timelineHighlights: string[]
   sourceFields: string[]
@@ -96,9 +102,20 @@ export function buildInsight(entity: EntityDetail): EntityInsight {
 
   const text = parts.join(' ')
 
+  // Key relationships as clickable badges: dedupe by name, carry global id
+  // so the UI can navigate to the related entity on click.
+  const seenNames = new Set<string>()
+  const keyNames: InsightKey[] = []
+  for (const r of relationships.slice(0, 5)) {
+    const nm = r.other?.name
+    if (!nm || seenNames.has(nm)) continue
+    seenNames.add(nm)
+    keyNames.push({ name: nm, id: r.other.global_id ?? r.other.id })
+  }
+
   return {
     text,
-    keyNames: [...new Set(relationships.slice(0, 5).map((r) => r.other.name))],
+    keyNames,
     timelineHighlights: timelineHighlights.slice(0, 5),
     sourceFields: [
       ...(description ? ['summary.description'] : []),
@@ -107,4 +124,20 @@ export function buildInsight(entity: EntityDetail): EntityInsight {
       ...(timeline.length > 0 ? ['timeline'] : []),
     ],
   }
+}
+
+/**
+ * Strip residual Markdown markers from AI/backend text so the UI (which
+ * renders plain text) doesn't surface **bold** / __italic__ / # headings /
+ * `code`. Backend also constrains pure-text output; this is a front-end net.
+ */
+export function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/_([^_]+)_/g, '$1')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
 }

@@ -49,6 +49,13 @@ function makeBaseInput(): ExplorationStateBuilderInput {
       ],
       basedOn: { projectionVersion: '1.0' },
     },
+    // P-U08: 维度实体映射（Rule 1 目标必须是真实实体）
+    dimensionMapping: {
+      military: ['entity:roman-legion'],
+      economy: ['entity:trade-network'],
+      politics: ['entity:senate'],
+      culture: ['entity:roman-art'],
+    },
     memoryProjection: {
       totalNodes: 3,
       daysSinceStart: 0,
@@ -69,10 +76,12 @@ function adoptAction(state: ExplorationState): ExplorationStateBuilderInput {
   input.currentAnchorRef = state.currentAnchorRef
   input.sessionHistory.exploredAnchors = [...state.exploredAnchors]
 
-  // 模拟采纳：将当前 missingDimensions 的第一个维度对应的 entity 加入已探索
+  // 模拟采纳：将当前 missingDimensions 的第一个维度对应的实体加入已探索
   if (state.missingDimensions.length > 0) {
     const dim = state.missingDimensions[0]
-    const newEntity = `entity:罗马帝国-${dim}`
+    // P-U08: 采纳 Policy 产出的目标（mapping 里的真实实体）；无映射时兜底旧式命名
+    const mapped = state.dimensionMapping[dim]
+    const newEntity = mapped && mapped[0] ? mapped[0] : `entity:罗马帝国-${dim}`
     input.sessionHistory.exploredAnchors.push(newEntity)
     // 更新 coveredDimensions
     input.understandingProjection.coverageState.coveredDimensions = [

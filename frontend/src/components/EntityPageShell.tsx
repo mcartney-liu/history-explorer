@@ -28,14 +28,6 @@ const TABS: TabConfig[] = [
 
 const TAB_STORAGE_KEY = 'history-explorer.entity.active-tab'
 
-function loadSavedTab(): EntityTab | null {
-  try {
-    const saved = localStorage.getItem(TAB_STORAGE_KEY)
-    if (saved && TABS.some((t) => t.id === saved)) return saved as EntityTab
-  } catch { /* noop */ }
-  return null
-}
-
 function saveTab(tab: EntityTab): void {
   try { localStorage.setItem(TAB_STORAGE_KEY, tab) } catch { /* noop */ }
 }
@@ -123,8 +115,10 @@ export function EntityPageShellView({
 // ============================================================
 
 export default function EntityPageShell(props: EntityPageShellProps) {
+  // P-U15：初始 tab 完全由入口意图决定（App 传入的 activeTab：普通点击 info、
+  // 「深研」进 research），不再读 localStorage 的 loadSavedTab 以免污染所有实体的初始 tab。
   const [activeTab, setActiveTab] = useState<EntityTab>(
-    () => loadSavedTab() ?? 'info',
+    () => props.activeTab ?? 'info',
   )
 
   // M45: record entity page open.

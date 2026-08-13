@@ -50,6 +50,60 @@ describe('ResearchPanelView', () => {
     }
   })
 
+  // --- 2026-08-13 (P-U10)：done 态维度卡也引用后台上传图 ---
+  it('uses admin-configured image for done dimension cards (P-U10)', () => {
+    applyContentDocument({
+      version: 2,
+      cards: [{ id: 'research_dims.politics', image: 'abc123.png', title: '', desc: '' }],
+    } as any)
+    try {
+      const html = renderToStaticMarkup(
+        <ResearchPanelView
+          {...baseProps}
+          mode="done"
+          dimensions={[
+            { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'ok', grounded: true, citations: [], rejected_citations: [] },
+          ]}
+        />,
+      )
+      expect(html).toContain('/api/v1/content/media/abc123.png')
+      expect(html).toContain('has-art')
+      expect(html).not.toContain('assets/research/politics.webp')
+    } finally {
+      resetContentRuntime()
+    }
+  })
+
+  // --- 2026-08-13 (P-U09)：全部展开 / 收起全部 ---
+  it('renders 全部展开 button when done with success dimensions (P-U09)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        onToggleExpandAll={() => {}}
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'ok', grounded: true, citations: [], rejected_citations: [] },
+        ]}
+      />,
+    )
+    expect(html).toContain('全部展开')
+  })
+
+  it('renders 收起全部 when expandAll true (P-U09)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        expandAll={true}
+        onToggleExpandAll={() => {}}
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: 'ok', grounded: true, citations: [], rejected_citations: [] },
+        ]}
+      />,
+    )
+    expect(html).toContain('收起全部')
+  })
+
   it('renders Event template (4 dimensions)', () => {
     const html = renderToStaticMarkup(
       <ResearchPanelView
@@ -94,11 +148,12 @@ describe('ResearchPanelView', () => {
     expect(html).toContain('正在分析')
   })
 
-  it('renders done state with answers', () => {
+  it('renders done state with answers (externalExpand controls inline body)', () => {
     const html = renderToStaticMarkup(
       <ResearchPanelView
         {...baseProps}
         mode="done"
+        expandAll={true}
         dimensions={[
           {
             id: '0', title: 'A', question: 'Q', status: 'success',
@@ -186,7 +241,7 @@ describe('ResearchPanelView', () => {
 
   // --- 2026-08-13 (PO 方案①)：三阶段自主触发 ---
 
-  it('shows 生成研究中评 button when done and AI available, no auto-render', () => {
+  it('shows 生成研究中评 button when done, AI available and all dimensions success, no auto-render', () => {
     const html = renderToStaticMarkup(
       <ResearchPanelView
         {...baseProps}
@@ -195,10 +250,30 @@ describe('ResearchPanelView', () => {
           { id: '0', title: 'A', question: 'Q', status: 'success', answer: '答案', grounded: true, engine: 'ai', citations: [] },
         ]}
         aiAvailable={true}
+        allSuccess={true}
       />,
     )
     expect(html).toContain('生成研究中评')
     expect(html).not.toContain('各维度核心发现')  // 未点击 → 不渲染中评内容
+  })
+
+  // 2026-08-13 (P-U06)：研究中评门控 = 四维度全 success。
+  // 即便 AI 可用，只要还有维度 error（未补齐），就不显示「生成研究中评」。
+  it('hides 生成研究中评 when a dimension errored even if AI available', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        dimensions={[
+          { id: '0', title: 'A', question: 'Q', status: 'success', answer: '答案', grounded: true, engine: 'ai', citations: [] },
+          { id: '1', title: 'B', question: 'Q', status: 'error', error: '失败', citations: [] },
+        ]}
+        aiAvailable={true}
+        allSuccess={false}
+      />,
+    )
+    expect(html).not.toContain('生成研究中评')
+    expect(html).toContain('生成历史研究报告')  // 报告降级仍可生成
   })
 
   it('renders ResearchSummary after summary started', () => {
@@ -232,7 +307,9 @@ describe('ResearchPanelView', () => {
     expect(html).not.toContain('历史研究报告')  // 未点击报告按钮 → 报告未挂载
   })
 
-  it('hides 研究中评 when AI unavailable (deterministic engine)', () => {
+  // 2026-08-13 (PO 纠偏)：研究中评不再以 aiAvailable 隐藏——四维度全 success 即显示，
+  // 即便 engine=deterministic（AI 关）也照常出现，由 ResearchSummary 内部兜底。
+  it('shows 研究中评 when all success even if AI unavailable (deterministic engine)', () => {
     const html = renderToStaticMarkup(
       <ResearchPanelView
         {...baseProps}
@@ -241,10 +318,11 @@ describe('ResearchPanelView', () => {
           { id: '0', title: 'A', question: 'Q', status: 'success', answer: '基于知识库证据：…', grounded: true, engine: 'deterministic', citations: [] },
         ]}
         aiAvailable={false}
+        allSuccess={true}
       />,
     )
-    expect(html).not.toContain('生成研究中评')
-    expect(html).not.toContain('研究综述')
+    expect(html).toContain('生成研究中评')
+    expect(html).not.toContain('研究综述')  // 未点击 → 中评内容不挂载
     expect(html).toContain('生成历史研究报告')  // 报告降级仍可生成
   })
 
@@ -279,7 +357,8 @@ describe('ResearchPanelView', () => {
       />,
     )
     expect(html).toContain('已恢复历史研究')
-    expect(html).toContain('Answer')
+    // P-U04 纠偏：恢复态维度卡提供「查看报告」弹 modal 入口（正文默认折叠）。
+    expect(html).toContain('查看报告')
   })
 
   // 2026-08-11 (PO 问题二)：恢复的研究必须展示完整报告（综合报告 + 研究报告），
@@ -359,5 +438,39 @@ describe('ResearchPanelView', () => {
       />,
     )
     expect(html).not.toContain('保存这份研究结果')
+  })
+
+  // --- 2026-08-13 (P-U07)：单点/批量研究后「尚未保存」轻提示 ---
+  it('renders pending-save hint with count when pendingSaveCount > 0 (P-U07)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        pendingSaveCount={3}
+      />,
+    )
+    expect(html).toContain('本会话有 3 个维度尚未保存')
+    expect(html).toContain('rp-pending-save')
+  })
+
+  it('does not render pending-save hint when pendingSaveCount is 0 (P-U07)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+        pendingSaveCount={0}
+      />,
+    )
+    expect(html).not.toContain('尚未保存')
+  })
+
+  it('defaults to no pending-save hint (P-U07)', () => {
+    const html = renderToStaticMarkup(
+      <ResearchPanelView
+        {...baseProps}
+        mode="done"
+      />,
+    )
+    expect(html).not.toContain('尚未保存')
   })
 })

@@ -65,8 +65,8 @@ export function EntityInsightCard({ insight, entitySlug }: EntityInsightCardProp
         {/* Key relationships */}
         {insight.keyNames.length > 0 && (
           <div className="eic-badges">
-            {insight.keyNames.map((name) => (
-              <span key={name} className="eic-badge">{name}</span>
+            {insight.keyNames.map((k) => (
+              <span key={k.id} className="eic-badge">{k.name}</span>
             ))}
           </div>
         )}

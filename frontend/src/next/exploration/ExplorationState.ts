@@ -59,6 +59,10 @@ export interface ExplorationState {
   /** 缺失的维度 */
   missingDimensions: string[]
 
+  // ── 维度实体映射（P-U08：open_dimension 的目标必须是真实实体，而非中文标签） ──
+  /** 维度名 → 该维度下的实体 id（global_id 优先）。供 Rule 1 解析可达目标。 */
+  dimensionMapping: Record<string, string[]>
+
   // ── 认知缺口（来自 UnderstandingProjection） ──
   /** 缺失的因果连接 */
   missingConnections: MissingConnection[]
@@ -112,6 +116,8 @@ export interface ExplorationStateBuilderInput {
       projectionVersion: string
     }
   }
+  /** P-U08：维度名 → 实体 id 列表（可选，默认 {}）。Policy Rule 1 用它产出可达的 open_dimension 目标。 */
+  dimensionMapping?: Record<string, string[]>
   memoryProjection: {
     totalNodes: number
     daysSinceStart: number
@@ -174,6 +180,7 @@ export function buildExplorationState(
     coverageRatio: understandingProjection.coverageState.coverageRatio,
     coveredDimensions: understandingProjection.coverageState.coveredDimensions,
     missingDimensions,
+    dimensionMapping: input.dimensionMapping ?? {},
     missingConnections,
     exploredAnchors: [...sessionHistory.exploredAnchors],
     exploredRelations: [...sessionHistory.exploredRelations],
@@ -201,6 +208,7 @@ export const EMPTY_EXPLORATION_STATE: ExplorationState = {
   coverageRatio: 0,
   coveredDimensions: [],
   missingDimensions: [],
+  dimensionMapping: {},
   missingConnections: [],
   exploredAnchors: [],
   exploredRelations: [],

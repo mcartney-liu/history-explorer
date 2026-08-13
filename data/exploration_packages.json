@@ -171,8 +171,8 @@
         "silk_road:silk_road",
         "silk_road:han_dynasty",
         "silk_road:person-zhang-qian",
-        "silk_road:loc-chang-an",
-        "silk_road:tech-paper",
+        "china_v1:loc-changan",
+        "china_v1:tech-zaopi",
         "silk_road:tech-silk",
         "silk_road:event-silk-road-opened",
         "silk_road:loc-samarkand",
@@ -189,16 +189,16 @@
         },
         {
           "from": "silk_road:event-silk-road-opened",
-          "to": "silk_road:loc-chang-an",
+          "to": "china_v1:loc-changan",
           "type": "located_at"
         },
         {
           "from": "silk_road:han_dynasty",
-          "to": "silk_road:tech-paper",
+          "to": "china_v1:tech-zaopi",
           "type": "invented"
         },
         {
-          "from": "silk_road:tech-paper",
+          "from": "china_v1:tech-zaopi",
           "to": "roman_empire:civ-roman",
           "type": "spread"
         },
@@ -234,7 +234,7 @@
           "entity": "silk_road:event-silk-road-opened"
         },
         {
-          "entity": "silk_road:tech-paper"
+          "entity": "china_v1:tech-zaopi"
         }
       ],
       "source_references": [

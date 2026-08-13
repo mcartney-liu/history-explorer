@@ -1346,7 +1346,7 @@
       "evidence": [
         "ec-rom-041"
       ],
-      "valid_time": null,
+      "valid_time": "376 CE–476 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "罗马衰亡的解释历经重释：吉本18世纪'道德衰败+基督教'论，被20世纪剑桥史学的财政—边疆—制度复合论系统性重写，宗教因素降为多因之一。",
@@ -1365,6 +1365,76 @@
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "凯撒遇刺性质存在立场对立：共和派视布鲁图斯为'解放者'、凯撒为共和国的威胁；现代政治史强调元老院既得利益与个人野心的结构性冲突。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-constantinople",
+      "target": "civ-byzantine",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Cambridge Ancient History, Vol. 13: The Late Empire",
+      "evidence": [
+        "ec-b-051"
+      ],
+      "valid_time": "330 CE–1453 CE",
+      "weight": null,
+      "narrative": "君士坦丁堡为拜占庭帝国首都。",
+      "reviewed": true
+    },
+    {
+      "source": "event-republic-end",
+      "target": "tp-republic",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Ab Urbe Condita",
+      "evidence": [
+        "ec-b-052"
+      ],
+      "valid_time": "49 BCE–27 BCE",
+      "weight": null,
+      "narrative": "共和国终结处罗马共和国末期。",
+      "reviewed": true
+    },
+    {
+      "source": "person-constantine",
+      "target": "religion-christianity",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Edict of Milan (preserved in Lactantius, De Mortibus Persecutorum)",
+      "evidence": [
+        "ec-b-076"
+      ],
+      "valid_time": "30 CE onward",
+      "weight": null,
+      "narrative": "君士坦丁合法化基督教。",
+      "reviewed": true
+    },
+    {
+      "source": "person-julius-caesar",
+      "target": "event-republic-end",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Commentarii de Bello Civili",
+      "evidence": [
+        "ec-b-080"
+      ],
+      "valid_time": "49 BCE–27 BCE",
+      "weight": null,
+      "narrative": "凯撒跨越卢比孔，加速共和国终结。",
+      "reviewed": true
+    },
+    {
+      "source": "person-augustus",
+      "target": "tp-27bc",
+      "type": "caused",
+      "confidence": null,
+      "citation": "De Vita Caesarum (The Twelve Caesars)",
+      "evidence": [
+        "ec-b-083"
+      ],
+      "valid_time": "63 BCE–14 CE",
+      "weight": null,
+      "narrative": "奥古斯都于前27年确立元首制。",
       "reviewed": true
     }
   ],

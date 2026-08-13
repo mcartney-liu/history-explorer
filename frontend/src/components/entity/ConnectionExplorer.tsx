@@ -73,11 +73,23 @@ export function ConnectionExplorer({
             )}
             {graphEdges.length > 0 && (
               <div className="ce-graph-edges">
-                {graphEdges.slice(0, 5).map((edge, i) => (
-                  <span key={i} className="ce-edge-label">
-                    {edge.label}
-                  </span>
-                ))}
+                {graphEdges.slice(0, 5).map((edge, i) => {
+                  const targetName =
+                    graphNodes.find((n) => n.id === edge.target)?.name ?? edge.target
+                  return (
+                    <span key={i} className="ce-edge-label">
+                      <span className="ce-edge-rel">{edge.label}</span>
+                      <button
+                        type="button"
+                        className="ce-edge-target"
+                        onClick={() => onEntityClick?.(edge.target)}
+                        title={`查看 ${targetName}`}
+                      >
+                        {targetName}
+                      </button>
+                    </span>
+                  )
+                })}
               </div>
             )}
           </div>

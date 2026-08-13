@@ -6,6 +6,7 @@ import ResearchReport, { ResearchReportView } from './ResearchReport'
 import ResearchSummary, { ResearchSummaryView } from './ResearchSummary'
 import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
+import DimensionReportModal from './DimensionReportModal'
 import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
 import type { EntityRelationship } from './EntityPage'
 import { slotImageName, slotImageFocus, useContentRevision } from '../data/contentRuntime'
@@ -90,7 +91,16 @@ type DimTpl = { key: string; title: string; question: string }
  *  is generic per-dimension and shared across all entities; falls back to a
  *  plain paper card when no image is dropped). Mirrors the exploration-pack
  *  "image-as-card" treatment. */
-function ResearchDimCard({ index, dim }: { index: number; dim: DimTpl }) {
+function ResearchDimCard({
+  index,
+  dim,
+  onResearch,
+}: {
+  index: number
+  dim: DimTpl
+  /** P-U03：单点「研究」入口（计划态每维度独立触发）。 */
+  onResearch?: (dimKey: string) => void
+}) {
   useContentRevision()
   const configuredName = slotImageName(`research_dims.${dim.key}`)
   const focus = slotImageFocus(`research_dims.${dim.key}`)
@@ -125,6 +135,15 @@ function ResearchDimCard({ index, dim }: { index: number; dim: DimTpl }) {
           <span className="rp-dim-title">{dim.title}</span>
         </div>
         <p className="rp-dim-question">{dim.question}</p>
+        {onResearch && (
+          <button
+            type="button"
+            className="rp-dim-research-btn"
+            onClick={() => onResearch(dim.key)}
+          >
+            研究
+          </button>
+        )}
       </div>
     </li>
   )
@@ -157,6 +176,14 @@ export function ResearchPanelView({
   reportStarted = false,
   onStartSummary = () => {},
   onStartReport = () => {},
+  onSummaryAnswered = (_answer: string) => {},
+  onResearch,
+  allSuccess = false,
+  onViewReport,
+  expandAll = false,
+  onToggleExpandAll,
+  // P-U07：待保存维度数（>0 显示顶部轻提示）。
+  pendingSaveCount = 0,
 }: ResearchPanelProps & {
   mode?: ResearchMode
   dimensions?: ResearchDimension[]
@@ -174,12 +201,38 @@ export function ResearchPanelView({
   reportStarted?: boolean
   onStartSummary?: () => void
   onStartReport?: () => void
+  /** P-U01：研究中评生成后回传正文，由容器随整份研究存档。 */
+  onSummaryAnswered?: (answer: string) => void
+  /** P-U03：单点「研究 / 重研」回调（传 dimKey，容器映射回维度）。 */
+  onResearch?: (dimKey: string) => void
+  /** P-U04 纠偏：点「查看报告」弹 modal（容器接管）。 */
+  onViewReport?: (dimKey: string) => void
+  /** P-U09：全部展开（受控内联展开所有维度报告）。 */
+  expandAll?: boolean
+  /** P-U09：切换全部展开 / 收起全部。 */
+  onToggleExpandAll?: () => void
+  /** P-U06：四维度全 success（研究中评门控用）。 */
+  allSuccess?: boolean
+  /** P-U07：已完成但尚未点「保存」的维度数（>0 时面板顶部显示轻提示）。 */
+  pendingSaveCount?: number
 }) {
   const template = templateFor(entityType)
+  // P-U10：订阅内容修订，使 done/restored 卡片的背景图随后台改图实时更新（与 idle 同源）。
+  useContentRevision()
+  // 2026-08-13 (PO 纠偏)：研究中评门控 = 四维度全 success（error 维度不算成功，需重研补齐）。
+  // 不再以 aiAvailable 隐藏——AI 关时研究中评仍显示，由 ResearchSummary 内部兜底（isResearchFallback）。
+  const canAnalyze = (allSuccess ?? false)
 
   return (
     <section className="research-panel" aria-label="AI 研究模式">
       <h3 className="rp-title">AI 研究模式</h3>
+
+      {/* 2026-08-13 (P-U07)：本会话已完成但尚未保存的维度提示（刷新即丢，提醒先保存）。 */}
+      {pendingSaveCount > 0 && (
+        <p className="rp-pending-save" role="status">
+          本会话有 {pendingSaveCount} 个维度尚未保存，记得点「保存」进入收藏
+        </p>
+      )}
 
       {/* Context badge — what entity is being researched */}
       <div className="rp-context-badge">
@@ -198,7 +251,7 @@ export function ResearchPanelView({
           <p className="rp-plan-label">研究维度（{template.length} 个）：</p>
           <ul className="rp-dim-grid">
             {template.map((d, i) => (
-              <ResearchDimCard key={d.key} index={i} dim={d} />
+              <ResearchDimCard key={d.key} index={i} dim={d} onResearch={onResearch} />
             ))}
           </ul>
           <button
@@ -239,17 +292,46 @@ export function ResearchPanelView({
             </span>
           </div>
 
-          {dimensions.map((dim, i) => (
-            <ResearchDimensionCard key={dim.id} dimension={dim} dimKey={template[i]?.key} />
-          ))}
+          {/* P-U09：全部展开 / 收起全部——受控内联展开所有维度报告（仅此入口做内联展开）。 */}
+          {dimensions.some((d) => d.status === 'success') && onToggleExpandAll && (
+            <div className="rp-expand-all">
+              <button
+                type="button"
+                className="rp-expand-all-btn"
+                onClick={onToggleExpandAll}
+              >
+                {expandAll ? '收起全部' : '全部展开'}
+              </button>
+            </div>
+          )}
+
+          <div className="rdc-grid">
+          {dimensions.map((dim, i) => {
+            const dk = template[i]?.key
+            // P-U10：后台上传图优先（slotImageName+mediaUrl），缺失回退本地 bundle。
+            const artName = dk ? slotImageName(`research_dims.${dk}`) : null
+            const artSrc = artName ? mediaUrl(artName as string) : null
+            return (
+              <ResearchDimensionCard
+                key={dim.id}
+                dimension={dim}
+                dimKey={dk}
+                onResearch={onResearch}
+                onViewReport={onViewReport}
+                artSrc={artSrc}
+                externalExpand={expandAll}
+              />
+            )
+          })}
+          </div>
 
           {mode === 'done' && (
             <>
-              {/* 2026-08-13 (PO 方案①)：三阶段自主触发。
-                  研究中评：AI 可用（任一维度 engine≠deterministic）才显示「生成」按钮，
-                  点击后挂载 ResearchSummary 触发 AI；AI 不可用时整体隐藏。
+              {/* 2026-08-13 (PO 纠偏)：三阶段顺序触发。
+                  研究中评：四维度全 success 即显示「生成」按钮（不再以 AI 可用性隐藏），
+                  点击后挂载 ResearchSummary（其内部按 engine 决定是否走 AI，AI 关时兜底）。
                   综合报告：研究中评触发后出现「生成」按钮，点击后挂载 ResearchReport。 */}
-              {aiAvailable && !summaryStarted && (
+              {canAnalyze && !summaryStarted && (
                 <div className="rp-stage-trigger">
                   <button
                     type="button"
@@ -264,13 +346,14 @@ export function ResearchPanelView({
                 </div>
               )}
 
-              {aiAvailable && summaryStarted && (
+              {summaryStarted && (
                 <ResearchSummary
                   entityName={entityName}
                   entityType={entityType}
                   entityGlobalId={entityGlobalId}
                   dimensions={dimensions}
                   comparedNames={selectedEntities.map((e) => e.name)}
+                  onAnswered={onSummaryAnswered}
                 />
               )}
 
@@ -378,9 +461,24 @@ export function ResearchPanelView({
           )}
           {dimensions.length > 0 && (
             <div className="rp-results">
-              {dimensions.map((dim, i) => (
-                <ResearchDimensionCard key={dim.id} dimension={dim} dimKey={template[i]?.key} />
-              ))}
+            <div className="rdc-grid">
+              {dimensions.map((dim, i) => {
+                const dk = template[i]?.key
+                // P-U10：恢复态也引用后台上传图，保证背景图一致。
+                const artName = dk ? slotImageName(`research_dims.${dk}`) : null
+                const artSrc = artName ? mediaUrl(artName as string) : null
+                return (
+                  <ResearchDimensionCard
+                    key={dim.id}
+                    dimension={dim}
+                    dimKey={dk}
+                    onResearch={onResearch}
+                    onViewReport={onViewReport}
+                    artSrc={artSrc}
+                  />
+                )
+              })}
+            </div>
             </div>
           )}
           {/* 2026-08-11 (PO 问题二)：恢复的研究也要展示完整报告——
@@ -422,6 +520,15 @@ export default function ResearchPanel(props: ResearchPanelProps) {
   // 挂载组件触发；研究中评在 AI 不可用时整体隐藏（不假装综合）。
   const [summaryStarted, setSummaryStarted] = useState(false)
   const [reportStarted, setReportStarted] = useState(false)
+  // 2026-08-13 (P-U01)：研究中评正文，生成后由 ResearchSummary 回传，随整份研究一起存档。
+  const [summaryAnswer, setSummaryAnswer] = useState<string | null>(null)
+  // 2026-08-13 (P-U05)：单点研究的报告弹窗（完成后弹出 modal 小窗）。
+  const [singleReport, setSingleReport] = useState<ResearchDimension | null>(null)
+  // 2026-08-13 (P-U09)：全部展开（受控内联展开所有维度报告）。
+  const [expandAll, setExpandAll] = useState(false)
+  // 2026-08-13 (P-U07)：已完成但尚未点「保存」的维度 key（单点/批量研究只写内存，
+  // 不保存则刷新即丢；顶部轻提示「本会话有 N 个维度尚未保存」）。
+  const [pendingSaveDims, setPendingSaveDims] = useState<string[]>([])
 
   // Build available entities from relationships
   const availableEntities: SelectableEntity[] = (props.relationships ?? [])
@@ -465,6 +572,8 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     }
     setSaveState({ status: 'idle' })
     setMode('restored')
+    // 2026-08-13 (P-U07)：恢复的研究来自存档，无需「尚未保存」提示。
+    setPendingSaveDims([])
     // 2026-08-11 (PO 方案①)：自动滚动到研究主区，恢复结果立即可见。
     requestAnimationFrame(() => {
       const panel = document.querySelector('.entity-research-group')
@@ -499,6 +608,7 @@ export default function ResearchPanel(props: ResearchPanelProps) {
         comparedNames: selectedEntities.map((e) => e.name),
         dimensions,
         summaryCitations: citations,
+        summaryAnswer: summaryAnswer ?? undefined,
         question: `关于${props.entityName}的多维度分析`,
         contextGlobalIds: contextGlobalIds,
         visited: contextGlobalIds,
@@ -507,6 +617,8 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       // T1: the ONLY place save_research is emitted.
       recordEvent({ action: 'save_research', entityGlobalId: props.entityGlobalId })
       setSaveState({ status: 'saved', research, remote })
+      // 2026-08-13 (P-U07)：保存成功 → 清除「尚未保存」提示。
+      setPendingSaveDims([])
       props.onSaved?.(research)
     } catch (err) {
       setSaveState({
@@ -555,18 +667,103 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       )
       setDimensions(results)
       setMode('done')
+      // 2026-08-13 (P-U07)：批量研究完成 → 全部维度计入「尚未保存」。
+      setPendingSaveDims(template.map((t) => t.key))
     } catch {
       setMode('error')
     }
   }
 
-  // 2026-08-13 (PO 方案①)：AI 可用性 = 任一成功维度的 engine 不是 deterministic。
-  // 研究中评「必须 AI」——AI 关时整体隐藏该区块（不假装综合）。
+  // 2026-08-13 (P-U03)：单点「研究 / 重研」——只更新该维度，不重置其它维度；
+  // 完成后弹出 modal 小窗（P-U05）。复用 contextGlobalIds 与批量同一套 grounding。
+  async function onResearchSingle(dimKey: string) {
+    const template = templateFor(props.entityType)
+    const idx = template.findIndex((t) => t.key === dimKey)
+    if (idx < 0) return
+    const t = template[idx]
+
+    // 首次单点：先把四维按 idle 初始化（其余维度等待单独触发）。
+    let base = dimensions
+    if (base.length === 0) {
+      base = template.map((tt, i) => ({
+        id: `dim-${i}`,
+        title: tt.title,
+        question: tt.question,
+        status: 'idle' as DimensionStatus,
+      }))
+      setDimensions(base)
+      setMode('running')
+    }
+    const dimId = `dim-${idx}`
+
+    setDimensions((prev) =>
+      prev.map((d) =>
+        d.id === dimId ? { ...d, status: 'loading' as DimensionStatus, error: undefined } : d,
+      ),
+    )
+
+    const comparisonPrefix = selectedEntities.length > 0
+      ? `比较 ${props.entityName} 与 ${selectedEntities.map((e) => e.name).join('、')}»`
+      : ''
+    const question = comparisonPrefix
+      ? `${comparisonPrefix}${t.question.replace('这个', '')}`
+      : t.question.replace('这个', props.entityName).replace('他/她', props.entityName)
+
+    const target = base.find((d) => d.id === dimId) ?? { id: dimId, title: t.title, question }
+    try {
+      const res = await explainAI(question, contextGlobalIds)
+      const updated: ResearchDimension = {
+        ...target,
+        ...res,
+        id: dimId,
+        title: t.title,
+        question,
+        status: 'success' as DimensionStatus,
+      }
+      setDimensions((prev) => prev.map((d) => (d.id === dimId ? updated : d)))
+      setSingleReport(updated) // P-U05：单点报告弹 modal
+      // 2026-08-13 (P-U07)：单点研究完成 → 该维度计入「尚未保存」。
+      setPendingSaveDims((prev) => (prev.includes(dimKey) ? prev : [...prev, dimKey]))
+      recordEvent({ action: 'start_research', entityGlobalId: props.entityGlobalId })
+    } catch {
+      setDimensions((prev) =>
+        prev.map((d) =>
+          d.id === dimId
+            ? {
+                ...d,
+                id: dimId,
+                title: t.title,
+                question,
+                status: 'error' as DimensionStatus,
+                error: '请求失败',
+              }
+            : d,
+        ),
+      )
+    }
+  }
+
+  // 2026-08-13 (PO 纠偏)：aiAvailable 仍用于「综合报告 / 研究中评」文案区分（AI 走综合、否则走历史研究报告）。
+  // 注意：研究中评按钮不再以 aiAvailable 隐藏（PO 要求跑完即出现），由 ResearchSummary 内部兜底。
   const aiAvailable = dimensions.some(
     (d) => d.status === 'success' && d.engine && d.engine !== 'deterministic',
   )
 
+  // 2026-08-13 (P-U06)：四维度全 success（error 维度不算成功，需重研补齐）。
+  const allSuccess =
+    dimensions.length > 0 && dimensions.every((d) => d.status === 'success')
+
+  // 2026-08-13 (P-U04 纠偏)：点「查看报告」→ 弹 modal（按 dimKey 找回该维度）。
+  function handleViewReport(dimKey: string) {
+    const tpl = templateFor(props.entityType)
+    const idx = tpl.findIndex((t) => t.key === dimKey)
+    if (idx < 0) return
+    const dim = dimensions.find((d) => d.id === `dim-${idx}`)
+    if (dim) setSingleReport(dim)
+  }
+
   return (
+    <>
     <ResearchPanelView
       {...props}
       mode={mode}
@@ -579,6 +776,7 @@ export default function ResearchPanel(props: ResearchPanelProps) {
         setSaveState({ status: 'idle' })
         setSummaryStarted(false)
         setReportStarted(false)
+        setPendingSaveDims([]) // P-U07：重置清空「尚未保存」提示
       }}
       selectedEntities={selectedEntities}
       availableEntities={availableEntities}
@@ -597,11 +795,22 @@ export default function ResearchPanel(props: ResearchPanelProps) {
         if (saveState.status === 'saved') props.onSaved?.(saveState.research)
       }}
       aiAvailable={aiAvailable}
+      allSuccess={allSuccess}
+      onResearch={onResearchSingle}
+      onViewReport={handleViewReport}
+      expandAll={expandAll}
+      onToggleExpandAll={() => setExpandAll((e) => !e)}
       summaryStarted={summaryStarted}
       reportStarted={reportStarted}
       onStartSummary={() => setSummaryStarted(true)}
       onStartReport={() => setReportStarted(true)}
+      onSummaryAnswered={setSummaryAnswer}
+      pendingSaveCount={pendingSaveDims.length}
     />
+      {singleReport && (
+        <DimensionReportModal dimension={singleReport} onClose={() => setSingleReport(null)} />
+      )}
+    </>
   )
 }
 

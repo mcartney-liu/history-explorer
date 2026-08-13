@@ -44,7 +44,6 @@ import Breadcrumb from './components/Breadcrumb'
 import { getEvents, recordEvent } from './data/UserBehaviorEvent'
 import { analyzeProductUsage } from './data/ProductUsageAnalysis'
 import type { ExplorationContextIntelligence } from './components/ai/CompanionContext'
-import HistoryBar from './components/HistoryBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
 import { featuredSlugs, useSiteConfigRevision } from './data/siteConfig'
@@ -223,7 +222,7 @@ function prettifyTopic(t: string): string {
 function App() {
   // M72 Line1 (2026-08-11 PO): UnderstandingCard sentences follow the UI
   // language — zh UI renders Chinese templates, en/ja keep their own.
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
 
   // =========================================================================
   // M90.3 Stage A — legacy URL migration (one-shot, before any route read)
@@ -554,8 +553,12 @@ function App() {
     })
     // Compute projection for ALL topics as soon as data is available.
     const hasTopicData = result && result.entities && result.entities.length > 0
-    if (!hasTopicData && runtimeContext.anchorChain.length === 0) {
-      console.log('[Projection useEffect] SKIPPED — no topic data and no anchor chain')
+    const hasEntityData = !!(
+      entityData &&
+      (entityData.relationships?.length || entityData.exploration?.related_entities?.length)
+    )
+    if (!hasTopicData && !hasEntityData && runtimeContext.anchorChain.length === 0) {
+      console.log('[Projection useEffect] SKIPPED — no topic data, no entity data, no anchor chain')
       setProjection(EMPTY_PROJECTION)
       return
     }
@@ -568,29 +571,52 @@ function App() {
       relationChain: runtimeContext.relationChain,
     }
 
-    // Build UnderstandingTemplate from topic data.
-    const entityTypes = result?.entities
-      ? [...new Set(result.entities.map((e) => e.type).filter(Boolean))]
-      : []
-    const dimensionMapping: Record<string, string[]> = {}
-    if (result?.entities) {
-      for (const e of result.entities) {
-        if (!e.type) continue
-        if (!dimensionMapping[e.type]) dimensionMapping[e.type] = []
-        dimensionMapping[e.type].push(e.id)
-      }
+    // Build UnderstandingTemplate. Entity-dimension source prefers topic
+    // `result.entities`; on a bare entity page (result cleared by fetchNode)
+    // it falls back to the current entity's `exploration.related_entities`
+    // (neighbor entity types), so the projection still has dimensions to cover.
+    const dimensionEntities: Array<{ id: string; type?: string }> = result?.entities
+      ? result.entities.map((e) => ({ id: e.id, type: e.type }))
+      : (entityData?.exploration?.related_entities ?? []).map((e) => ({ id: e.id ?? e.name, type: e.type }))
+    const entityTypes = [...new Set(dimensionEntities.map((e) => e.type).filter((t): t is string => Boolean(t)))]
+    // P-U08: local id → global_id ("topic:localid") map. Entity pages carry
+    // global_ids in `relationships[].other`; topic results carry them on each
+    // entity. Used so open_dimension next-steps point at real, clickable
+    // entities instead of Chinese dimension labels (which 404).
+    const shortToGlobal: Record<string, string> = {}
+    for (const r of entityData?.relationships ?? []) {
+      if (r.other?.global_id && r.other?.id) shortToGlobal[r.other.id] = r.other.global_id
     }
+    for (const e of result?.entities ?? []) {
+      if (e.global_id && e.id) shortToGlobal[e.id] = e.global_id
+    }
+    const dimensionMapping: Record<string, string[]> = {}
+    for (const e of dimensionEntities) {
+      if (!e.type) continue
+      if (!dimensionMapping[e.type]) dimensionMapping[e.type] = []
+      const gid = shortToGlobal[e.id] ?? e.id
+      if (!dimensionMapping[e.type].includes(gid)) dimensionMapping[e.type].push(gid)
+    }
+    // Relation source prefers topic `result.relationships`, falls back to the
+    // current entity's `relationships` (clean source/target/type triples) so the
+    // policy can generate a meaningful next-step action anchored on this entity.
+    const relationSource: any[] =
+      result?.relationships ||
+      entityData?.relationships ||
+      result?.exploration?.related_entities ||
+      entityData?.exploration?.related_entities ||
+      []
     const template: UnderstandingTemplate = {
       templateId: 'auto-generated-from-topic-data',
       version: '1.0',
-      topic: runtimeContext.userQuestion ?? currentTopic ?? '',
+      topic: runtimeContext.userQuestion ?? currentTopic ?? entityData?.name ?? '',
       goal: runtimeContext.understandingGoal ?? '',
       requiredDimensions: entityTypes,
       dimensionMapping,
-      expectedRelations: (result?.relationships || result?.exploration?.related_entities || []).map((r: any) => ({
+      expectedRelations: relationSource.map((r: any) => ({
         from: r.source || r.from_entity_id || '',
         to: r.target || r.to_entity_id || '',
-        type: r.relation_type || r.relationship || 'related_to',
+        type: r.relation_type || r.relationship || r.type || 'related_to',
       })),
     }
 
@@ -630,6 +656,7 @@ function App() {
         missingLinks: newProjection.missingLinks,
         basedOn: newProjection.basedOn || { projectionVersion: '1.0' },
       },
+      dimensionMapping, // P-U08: Policy Rule 1 用真实实体作 open_dimension 目标
       memoryProjection: {
         totalNodes: history.length,
         daysSinceStart: 0,
@@ -670,7 +697,7 @@ function App() {
     })
     setPolicyAction(decision.output)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef])
+  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef, entityData])
 
   // Fetch a node's data and update view state. Pure I/O; history navigation
   // decides *which* node, this decides *how* to load it.
@@ -1063,7 +1090,7 @@ function App() {
   const openNodeNamed = (gid: string) =>
     openEntity(gid, exploreNameById[gid.split(':').pop() ?? gid] ?? gid)
 
-  const crumbs = buildBreadcrumb(history, cursor)
+  const crumbs = buildBreadcrumb(history, cursor, t('common.home'))
 
   // M5-B-1: global ids the user has already visited, derived from the recent
   // explorations list. Entity nodes carry a global_id in `.id` (that is what
@@ -1103,17 +1130,20 @@ function App() {
 
   const navSlot = current ? (
     <>
-      <Breadcrumb crumbs={crumbs} onCrumbClick={onCrumbClick} />
-      <HistoryBar
-        canBack={canBack(cursor)}
-        canForward={canForward(cursor, history.length)}
+      <Breadcrumb
+        crumbs={crumbs}
+        onCrumbClick={onCrumbClick}
         onBack={goBack}
+        canBack={canBack(cursor)}
         onForward={goForward}
+        canForward={canForward(cursor, history.length)}
       />
       {/* M10-2 trail convergence: ExplorationPathTree is the single
           full-journey view here (it supersedes the earlier
           ExplorationTrail, which is retained but no longer rendered by
-          default). ExplorationJourney still renders on the entity page. */}
+          default). ExplorationJourney still renders on the entity page.
+          M90.x: HistoryBar's back/forward controls merged into Breadcrumb
+          (single unified nav row) — see components/Breadcrumb.tsx. */}
       <ExplorationPath
         view="tree"
         history={history}
@@ -1397,8 +1427,10 @@ function App() {
           <>
             <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} />
             <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
-            <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
-            <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+            <div className="entity-exploration-footer">
+              <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
+              <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
+            </div>
           </>
         ) : null}
         causalDetail={!loading && !errorKind && current?.type === 'causal_object' && causalObjectData && !packageSlug ? (
