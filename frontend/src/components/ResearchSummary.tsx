@@ -13,6 +13,8 @@ export type ResearchSummaryProps = {
   dimensions: ResearchDimension[]
   /** Names of comparison entities (multi-entity research). */
   comparedNames?: string[]
+  /** 研究中评生成后把正文回传父组件，用于存档（恢复时才能还原综述）。 */
+  onAnswered?: (answer: string) => void
 }
 
 type SummaryStatus = 'pending' | 'loading' | 'success' | 'error'
@@ -289,6 +291,8 @@ export default function ResearchSummary(props: ResearchSummaryProps) {
         setGrounded(res.grounded)
         setEngine(res.engine)
         setStatus('success')
+        // 把综述正文抛回父组件，使其能随整份研究一起存档（P-U01 修复）。
+        props.onAnswered?.(res.answer)
       })
       .catch((e) => {
         // 调用失败：answer 留空，视图层会基于维度答案自动拼本地综评。

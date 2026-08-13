@@ -157,6 +157,7 @@ export function ResearchPanelView({
   reportStarted = false,
   onStartSummary = () => {},
   onStartReport = () => {},
+  onSummaryAnswered = (_answer: string) => {},
 }: ResearchPanelProps & {
   mode?: ResearchMode
   dimensions?: ResearchDimension[]
@@ -174,6 +175,8 @@ export function ResearchPanelView({
   reportStarted?: boolean
   onStartSummary?: () => void
   onStartReport?: () => void
+  /** P-U01：研究中评生成后回传正文，由容器随整份研究存档。 */
+  onSummaryAnswered?: (answer: string) => void
 }) {
   const template = templateFor(entityType)
 
@@ -271,6 +274,7 @@ export function ResearchPanelView({
                   entityGlobalId={entityGlobalId}
                   dimensions={dimensions}
                   comparedNames={selectedEntities.map((e) => e.name)}
+                  onAnswered={onSummaryAnswered}
                 />
               )}
 
@@ -422,6 +426,8 @@ export default function ResearchPanel(props: ResearchPanelProps) {
   // 挂载组件触发；研究中评在 AI 不可用时整体隐藏（不假装综合）。
   const [summaryStarted, setSummaryStarted] = useState(false)
   const [reportStarted, setReportStarted] = useState(false)
+  // 2026-08-13 (P-U01)：研究中评正文，生成后由 ResearchSummary 回传，随整份研究一起存档。
+  const [summaryAnswer, setSummaryAnswer] = useState<string | null>(null)
 
   // Build available entities from relationships
   const availableEntities: SelectableEntity[] = (props.relationships ?? [])
@@ -499,6 +505,7 @@ export default function ResearchPanel(props: ResearchPanelProps) {
         comparedNames: selectedEntities.map((e) => e.name),
         dimensions,
         summaryCitations: citations,
+        summaryAnswer: summaryAnswer ?? undefined,
         question: `关于${props.entityName}的多维度分析`,
         contextGlobalIds: contextGlobalIds,
         visited: contextGlobalIds,
@@ -601,6 +608,7 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       reportStarted={reportStarted}
       onStartSummary={() => setSummaryStarted(true)}
       onStartReport={() => setReportStarted(true)}
+      onSummaryAnswered={setSummaryAnswer}
     />
   )
 }

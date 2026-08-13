@@ -191,3 +191,39 @@
 - 探索层命名最终确定（Exploration Layer / Exploration Memory / Collective Exploration Graph？）。
 - 持久化走 A / B / C 哪一路径。
 - 是否将"三层边界 + 非干扰原则"正式写入 DNA/PRD（与 vM81 Side Index 治理模型对齐）。
+
+---
+
+## 待解决问题追踪（Founder 指令 2026-08-13 起 · 双写约定）
+
+> **协作约定（2026-08-13 翔哥指令）**：凡对话中产生的「待解决的问题」，双写两处——
+> ① 项目记忆 `.workbuddy/memory/USER_ISSUES.md`（本机跨会话 tracker，被 gitignore，不污染产品代码）；
+> ② 本 IDEA 文档此节。
+> 本 IDEA 文档为灵感/问题暂存区，性质仍为非决策、非 PRD/DNA；问题升格处理待统一排期。
+> `USER_ISSUES.md` 为权威 live tracker，本表为快照，改动以该文件为准。
+
+### 累计清单（2026-08-13 快照，共 12 条：PENDING 6 / RESOLVED 6）
+
+**PENDING（待改）**
+
+| ID | 问题 | 根因（简述） | 状态 |
+|---|---|---|---|
+| P-U02 | 文化维度显示原始 JSON 代码 | 文化维度 answer 为 `["answer",...]` 数组格式，`humanizeAnswer` 模式① `walk()` 把键名/citations 全拼 | 待改 |
+| P-U03 | 四维研究批量+单点并存 | 现有 idle 卡片纯展示不可点、无单点触发入口；需新增每维度「研究/重研」按钮 | 待改 |
+| P-U04 | 完成后折叠 + 按需「查看报告」展开 | 现状四维度报告直接全铺开，界面冗长 | 待改 |
+| P-U05 | 单点研究报告弹 modal 小窗（方案 A） | 单点报告用 overlay 浮层（非新页面）更具动感 | 待改 |
+| P-U06 | 研究中评门控改四全 success | 现状 `aiAvailable`（任一 success）即解锁研究中评；研究中评 prompt 依赖四维度 context，须四全 success | 待改 |
+| P-U07 | 单点研究未保存提示 | 单点结果只活内存，未点整体「保存」则刷新/关页丢失 | 待定（PO 倾向并入整改） |
+
+**RESOLVED（已解决）**
+
+| ID | 问题 | 解决 |
+|---|---|---|
+| R-U01 | AI 聊天框无发送按钮 | 加「发送」文字按钮，与回车共用 `onAsk` |
+| R-U02 | AI 历史学家未锚定本实体 | 副标题声明"围绕本实体" + 后端 prompt 补软聚焦第 8 条 |
+| R-U03 | AI 历史学家初始无输入框 | 输入框改为初始常显 |
+| R-U04 | 关系链英文脱节不可点 | 改可点击关系链（当前实体→关系·中文→目标实体） |
+| R-U05 | 实体页「下一步探索」消失 | 根因 `setResult(null)` + 557 守卫早退；按 `relationships`+`related_entities` 喂法修复 |
+| R-U06 | 研究中评未存档（原 P-U01） | `ResearchSummary` 加 `onAnswered` 回调回传正文 → `ResearchPanel` 提 `summaryAnswer` state → `handleSave` 传 `summaryAnswer`；存储层本已支持，纯补 React 断点（2026-08-13 代码已改，未提交） |
+
+> 详细（含方案/文件面/证据）见 `.workbuddy/memory/USER_ISSUES.md`，本表为快照。
