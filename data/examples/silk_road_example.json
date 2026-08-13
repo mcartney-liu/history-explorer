@@ -121,70 +121,6 @@
       ]
     },
     {
-      "id": "loc-chang-an",
-      "type": "Location",
-      "name": "Chang'an",
-      "description": "汉朝都城，位于丝绸之路东端，陆路路线的终点。utes into China.",
-      "global_id": "silk_road:loc-chang-an",
-      "aliases": [
-        "Xi'an"
-      ],
-      "labels": {
-        "en": "Chang'an",
-        "zh": "长安"
-      },
-      "start_date": {
-        "value": -202,
-        "precision": "year",
-        "certainty": "approximate",
-        "label": "202 BC"
-      },
-      "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
-      "coordinates": {
-        "lat": 34.3416,
-        "lng": 108.9398
-      },
-      "region": "Guanzhong Basin",
-      "related_events": [
-        "event-silk-road-opened"
-      ]
-    },
-    {
-      "id": "tech-paper",
-      "type": "Technology",
-      "name": "Papermaking",
-      "description": "汉代用桑树皮和破布造纸的技术，沿丝路传播。 west along the Silk Road.",
-      "global_id": "silk_road:tech-paper",
-      "aliases": [
-        "Paper"
-      ],
-      "labels": {
-        "en": "Papermaking",
-        "zh": "造纸术"
-      },
-      "start_date": {
-        "value": -105,
-        "precision": "year",
-        "certainty": "approximate",
-        "label": "c. 105 BC"
-      },
-      "end_date": null,
-      "source": "",
-      "evidence": [],
-      "reliability": "",
-      "invented_by": "han_dynasty",
-      "invented_in": {
-        "value": -105,
-        "precision": "year",
-        "certainty": "approximate",
-        "label": "c. 105 BC"
-      },
-      "category": "writing-materials"
-    },
-    {
       "id": "event-silk-road-opened",
       "type": "Event",
       "name": "Silk Road Opened",
@@ -310,12 +246,14 @@
   "relationships": [
     {
       "source": "han_dynasty",
-      "target": "tech-paper",
+      "target": "china_v1:tech-zaopi",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-163"
+      ],
+      "valid_time": "206 BCE–220 CE",
       "weight": null
     },
     {
@@ -323,19 +261,23 @@
       "target": "event-silk-road-opened",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-178"
+      ],
+      "valid_time": "164 BCE–114 BCE",
       "weight": null
     },
     {
       "source": "event-silk-road-opened",
-      "target": "loc-chang-an",
+      "target": "china_v1:loc-changan",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "China: Ergebnisse eigener Reisen und darauf gegründeter Studien, Bd. I",
+      "evidence": [
+        "ec-165"
+      ],
+      "valid_time": "130 BCE onward",
       "weight": null
     },
     {
@@ -343,9 +285,11 @@
       "target": "han_dynasty",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-166"
+      ],
+      "valid_time": "130 BCE–220 CE",
       "weight": null
     },
     {
@@ -353,9 +297,11 @@
       "target": "silk_road",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-167"
+      ],
+      "valid_time": "130 BCE–114 BCE",
       "weight": null
     },
     {
@@ -363,9 +309,11 @@
       "target": "roman_empire:civ-roman",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-168"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -373,9 +321,11 @@
       "target": "tech-silk",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-169"
+      ],
+      "valid_time": "206 BCE–220 CE",
       "weight": null
     },
     {
@@ -383,19 +333,23 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-170"
+      ],
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
-      "source": "tech-paper",
+      "source": "china_v1:tech-zaopi",
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-171"
+      ],
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -403,9 +357,11 @@
       "target": "roman_empire:civ-roman",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-172"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -413,9 +369,11 @@
       "target": "persian_empire:civ-persian",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-173"
+      ],
+      "valid_time": "330 BCE",
       "weight": null
     },
     {
@@ -423,9 +381,11 @@
       "target": "roman_empire:civ-roman",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-174"
+      ],
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -433,9 +393,11 @@
       "target": "silk_road",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-175"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -443,9 +405,11 @@
       "target": "silk_road",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-176"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -453,9 +417,11 @@
       "target": "event-silk-road-opened",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-177"
+      ],
+      "valid_time": "130 BCE onward",
       "weight": null
     },
     {
@@ -463,9 +429,11 @@
       "target": "event-silk-road-opened",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-178"
+      ],
+      "valid_time": "164 BCE–114 BCE",
       "weight": null
     },
     {
@@ -473,9 +441,11 @@
       "target": "silk_road",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Tipitaka (Pali Canon)",
+      "evidence": [
+        "ec-179"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -483,9 +453,11 @@
       "target": "idea-chinese-language",
       "type": "spoke",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-180"
+      ],
+      "valid_time": "164 BCE–114 BCE",
       "weight": null
     },
     {
@@ -493,13 +465,15 @@
       "target": "silk_road",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-181"
+      ],
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
-      "source": "loc-chang-an",
+      "source": "china_v1:loc-changan",
       "target": "silk_road",
       "type": "disputes",
       "confidence": "medium",
@@ -507,7 +481,7 @@
       "evidence": [
         "ec-sr-012"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–1453 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "丝路东方起点存在长安/洛阳之争：传统以长安为汉代起点，近年研究主张东汉洛阳同为丝路东端枢纽，形成对起点认定的挑战。",
@@ -522,7 +496,7 @@
       "evidence": [
         "ec-025"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE–907 CE",
       "weight": null
     },
     {
@@ -534,7 +508,7 @@
       "evidence": [
         "ec-026"
       ],
-      "valid_time": null,
+      "valid_time": "220 CE",
       "weight": null
     },
     {
@@ -546,35 +520,11 @@
       "evidence": [
         "ec-027"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE–907 CE",
       "weight": null
     },
     {
-      "source": "loc-chang-an",
-      "target": "china_v1:loc-changan",
-      "type": "related_to",
-      "confidence": null,
-      "citation": "Old Book of Tang (Jiu Tangshu); Hansen, The Silk Road: A New History.",
-      "evidence": [
-        "ec-028"
-      ],
-      "valid_time": null,
-      "weight": null
-    },
-    {
-      "source": "tech-paper",
-      "target": "china_v1:tech-zaopi",
-      "type": "related_to",
-      "confidence": null,
-      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
-      "evidence": [
-        "ec-029"
-      ],
-      "valid_time": null,
-      "weight": null
-    },
-    {
-      "source": "tech-paper",
+      "source": "china_v1:tech-zaopi",
       "target": "china_v1:tp-tang",
       "type": "spread",
       "confidence": null,
@@ -582,7 +532,7 @@
       "evidence": [
         "ec-030"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE–907 CE",
       "weight": null
     },
     {
@@ -594,8 +544,78 @@
       "evidence": [
         "ec-031"
       ],
-      "valid_time": null,
+      "valid_time": "114 BCE",
       "weight": null
+    },
+    {
+      "source": "loc-samarkand",
+      "target": "china_v1:loc-changan",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-064"
+      ],
+      "valid_time": "618 CE onward",
+      "weight": null,
+      "narrative": "撒马尔罕与长安为丝路东西重镇。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-kashgar",
+      "target": "loc-samarkand",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-065"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "喀什与撒马尔罕为西域重镇。",
+      "reviewed": true
+    },
+    {
+      "source": "person-ban-chao",
+      "target": "han_dynasty",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-066"
+      ],
+      "valid_time": "206 BCE–220 CE",
+      "weight": null,
+      "narrative": "班超为东汉经营西域。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-glass",
+      "target": "tech-silk",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Roads: Routes of Dialogue",
+      "evidence": [
+        "ec-b-067"
+      ],
+      "valid_time": "2700 BCE onward",
+      "weight": null,
+      "narrative": "玻璃与丝织皆为丝路重要商品。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-chinese-language",
+      "target": "han_dynasty",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-068"
+      ],
+      "valid_time": "206 BCE–220 CE",
+      "weight": null,
+      "narrative": "汉语为汉朝通用语言。",
+      "reviewed": true
     }
   ],
   "timeline": [

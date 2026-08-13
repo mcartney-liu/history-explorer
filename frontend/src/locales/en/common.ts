@@ -17,6 +17,7 @@ export default {
   'common.clear': 'Clear',
   'common.kindTopic': 'Topic',
   'common.kindEntity': 'Entity',
+  'common.home': 'Home',
   'common.connectionsHeading': 'Connections',
   'common.connectionsEmpty': 'No connections.',
   'common.searchEntityPlaceholder': 'Search a civilization, person, or event (e.g. Ancient Rome, Qin Shi Huang, Renaissance)',

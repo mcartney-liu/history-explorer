@@ -95,6 +95,17 @@ export function HistorianChatView({
   onClear?: () => void
 }) {
   const suggestions = questionsFor(entityType, entityName)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function submitFromInput() {
+    const el = inputRef.current
+    if (!el) return
+    const q = el.value.trim()
+    if (q) {
+      onAsk(q)
+      el.value = ''
+    }
+  }
 
   return (
     <section className="historian-chat" aria-label="AI 历史学家对话">
@@ -108,7 +119,7 @@ export function HistorianChatView({
       </div>
 
       <p className="hc-subtitle">
-        向 AI 历史学家提问关于 {entityName} 的问题。AI 将基于知识图谱中的事实给出带溯源的回答。
+        这是围绕「{entityName}」的对话。AI 仅依据该实体的关联知识作答——可延伸至相关文明与事件，但不会脱离本实体。
       </p>
 
       {/* Messages */}
@@ -188,23 +199,36 @@ export function HistorianChatView({
         </div>
       )}
 
-      {status === 'idle' && messages.length > 0 && (
+      {status === 'idle' && (
         <div className="hc-followup">
-          <p className="hc-followup-label">继续追问：</p>
-          <input
-            className="hc-followup-input"
-            type="text"
-            placeholder="输入追问…"
-            aria-label="追问 AI 历史学家"
-            onKeyDown={(e) => {
-              const target = e.target as HTMLInputElement
-              const q = target.value.trim()
-              if (e.key === 'Enter' && q) {
-                onAsk(q)
-                target.value = ''
-              }
-            }}
-          />
+          <p className="hc-followup-label">
+            {messages.length === 0 ? '或输入你自己的问题：' : '继续追问：'}
+          </p>
+          <div className="hc-followup-row">
+            <input
+              ref={inputRef}
+              className="hc-followup-input"
+              type="text"
+              placeholder={messages.length === 0 ? `输入关于 ${entityName} 的问题…` : '输入追问…'}
+              aria-label="向 AI 历史学家提问"
+              onKeyDown={(e) => {
+                const target = e.target as HTMLInputElement
+                const q = target.value.trim()
+                if (e.key === 'Enter' && q) {
+                  onAsk(q)
+                  target.value = ''
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="hc-send-btn"
+              onClick={submitFromInput}
+              disabled={status !== 'idle'}
+            >
+              发送
+            </button>
+          </div>
         </div>
       )}
     </section>

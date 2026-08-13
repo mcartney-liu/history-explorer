@@ -96,12 +96,7 @@ export function ExplorationPathTreeView({ entries, onStepClick }: ExplorationPat
       <h3>{t('discover.pathHeading')}</h3>
       <ol className="he-pathtree-list">
         {entries.map((e) => (
-          <li
-            key={e.key}
-            className="he-pathtree-step"
-            // Indentation encodes traversal depth: a visible PATH, not a graph.
-            style={{ marginLeft: `${e.index * 14}px` }}
-          >
+          <li key={e.key} className="he-pathtree-step">
             <button
               type="button"
               className={e.isCurrent ? 'he-pathtree-node is-current' : 'he-pathtree-node'}
@@ -134,6 +129,12 @@ export function ExplorationPathTreeView({ entries, onStepClick }: ExplorationPat
                 ) : null}
               </div>
             ) : null}
+
+            {e.index < entries.length - 1 && (
+              <span className="he-pathtree-arrow" aria-hidden="true">
+                {'→'}
+              </span>
+            )}
           </li>
         ))}
       </ol>

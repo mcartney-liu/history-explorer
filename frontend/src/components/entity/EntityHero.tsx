@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from 'react'
 import type { EntityViewModel } from '../../data/entity/entityTypes'
+import { type EntityInsight, stripMarkdown } from '../../data/entity/EntityInsightModel'
 import { getEntityLabel, getEntityIcon } from '../../data/entity/entityLabels'
 import { getEntityInsight, type AIEvidence } from '../../data/aiClient'
 import { EvidenceList } from '../ai/TrustDisplay'
@@ -19,6 +20,10 @@ interface EntityHeroProps {
   identity: EntityViewModel['identity']
   /** 实体全局 id，用于 AI 生成「历史见解」；为空则隐藏见解区 */
   globalId?: string
+  /** 简版历史见解（本地 buildInsight）—— 并入身份卡顶部，作「先总后分」的总览 */
+  insightSummary?: EntityInsight
+  /** 点击关联实体徽章时跳转 */
+  onEntityClick?: (id: string) => void
   /** M59-016: AI Companion entry — hidden in M60 (mock AI is a liability) */
   onAskAI?: () => void
   /** M59-016: Research entry */
@@ -27,7 +32,7 @@ interface EntityHeroProps {
   onCompare?: () => void
 }
 
-export function EntityHero({ identity, globalId, onResearch, onCompare }: EntityHeroProps) {
+export function EntityHero({ identity, globalId, insightSummary, onEntityClick, onResearch, onCompare }: EntityHeroProps) {
   const { name, type, timeLabel, locationLabel, keyFacts } = identity
   const label = getEntityLabel(type)
   const icon = getEntityIcon(type)
@@ -77,6 +82,39 @@ export function EntityHero({ identity, globalId, onResearch, onCompare }: Entity
 
       {/* Name */}
       <h1 className="eh-name">{name}</h1>
+
+      {/* 简版历史见解（总览）—— 并入身份卡、置于详细描述之上，形成先总后分 */}
+      {insightSummary && (
+        <div className="eh-insight">
+          <div className="eic-header">
+            <span className="eic-label">历史见解</span>
+          </div>
+          <p className="eic-perspective">一句话讲清：这个实体是什么</p>
+          <p className="eic-text">{stripMarkdown(insightSummary.text)}</p>
+          {insightSummary.keyNames.length > 0 && (
+            <div className="eic-badges">
+              {insightSummary.keyNames.map((k) => (
+                <button
+                  key={k.id}
+                  type="button"
+                  className="eic-badge eic-badge--link"
+                  onClick={() => onEntityClick?.(k.id)}
+                  title={`查看 ${k.name}`}
+                >
+                  {k.name}
+                </button>
+              ))}
+            </div>
+          )}
+          {insightSummary.timelineHighlights.length > 0 && (
+            <div className="eic-timeline-chips">
+              {insightSummary.timelineHighlights.map((event, i) => (
+                <span key={i} className="eic-chip"><Icon name="time-period" size={16} /> {event}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Meta */}
       <div className="eh-meta">

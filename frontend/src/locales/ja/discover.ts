@@ -19,6 +19,7 @@ export default {
   'discover.journeyHeading': 'あなたの探索の旅',
   'discover.journeyAria': '探索の旅',
   'discover.pathHeading': 'あなたの探索パス',
+  'discover.currentPosition': '現在位置',
   'discover.pathAria': '探索パス',
   'discover.pathsHeading': '探索パス',
   'discover.trailHeading': 'あなたの探索足跡',

@@ -87,8 +87,9 @@ export function crumbCursor(index: number): number {
 export function buildBreadcrumb(
   history: NavNode[],
   cursor: number,
+  homeLabel = 'Home',
 ): { key: string; label: string; index: number }[] {
-  const crumbs = [{ key: 'home', label: 'Home', index: 0 }]
+  const crumbs = [{ key: 'home', label: homeLabel, index: 0 }]
   for (let i = 0; i <= cursor && i < history.length; i++) {
     const n = history[i]
     crumbs.push({
