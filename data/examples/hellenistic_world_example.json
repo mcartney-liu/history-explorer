@@ -551,7 +551,7 @@
       "evidence": [
         "ec-124"
       ],
-      "valid_time": null,
+      "valid_time": "356 BCE–323 BCE",
       "weight": null
     },
     {
@@ -563,7 +563,7 @@
       "evidence": [
         "ec-125"
       ],
-      "valid_time": null,
+      "valid_time": "356 BCE–323 BCE",
       "weight": null
     },
     {
@@ -575,7 +575,7 @@
       "evidence": [
         "ec-126"
       ],
-      "valid_time": null,
+      "valid_time": "323 BCE",
       "weight": null
     },
     {
@@ -587,7 +587,7 @@
       "evidence": [
         "ec-127"
       ],
-      "valid_time": null,
+      "valid_time": "69 BCE–30 BCE",
       "weight": null
     },
     {
@@ -599,7 +599,7 @@
       "evidence": [
         "ec-128"
       ],
-      "valid_time": null,
+      "valid_time": "69 BCE–30 BCE",
       "weight": null
     },
     {
@@ -611,7 +611,7 @@
       "evidence": [
         "ec-129"
       ],
-      "valid_time": null,
+      "valid_time": "331 BCE onward",
       "weight": null
     },
     {
@@ -623,7 +623,7 @@
       "evidence": [
         "ec-130"
       ],
-      "valid_time": null,
+      "valid_time": "356 BCE–323 BCE",
       "weight": null
     },
     {
@@ -635,7 +635,7 @@
       "evidence": [
         "ec-131"
       ],
-      "valid_time": null,
+      "valid_time": "323 BCE–31 BCE",
       "weight": null
     },
     {
@@ -647,7 +647,7 @@
       "evidence": [
         "ec-132"
       ],
-      "valid_time": null,
+      "valid_time": "356 BCE–332 BCE",
       "weight": null
     },
     {
@@ -659,7 +659,7 @@
       "evidence": [
         "ec-133"
       ],
-      "valid_time": null,
+      "valid_time": "332 BCE",
       "weight": null
     },
     {
@@ -671,7 +671,7 @@
       "evidence": [
         "ec-134"
       ],
-      "valid_time": null,
+      "valid_time": "30 BCE",
       "weight": null
     },
     {
@@ -683,7 +683,7 @@
       "evidence": [
         "ec-135"
       ],
-      "valid_time": null,
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -695,7 +695,7 @@
       "evidence": [
         "ec-136"
       ],
-      "valid_time": null,
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -707,7 +707,7 @@
       "evidence": [
         "ec-137"
       ],
-      "valid_time": null,
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -719,7 +719,7 @@
       "evidence": [
         "ec-138"
       ],
-      "valid_time": null,
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -731,7 +731,7 @@
       "evidence": [
         "ec-139"
       ],
-      "valid_time": null,
+      "valid_time": "323 BCE–31 BCE",
       "weight": null
     },
     {
@@ -743,7 +743,7 @@
       "evidence": [
         "ec-140"
       ],
-      "valid_time": null,
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -767,7 +767,7 @@
       "evidence": [
         "ec-142"
       ],
-      "valid_time": null,
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -779,7 +779,7 @@
       "evidence": [
         "ec-143"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–30 BCE",
       "weight": null
     },
     {
@@ -791,7 +791,7 @@
       "evidence": [
         "ec-he-015"
       ],
-      "valid_time": null,
+      "valid_time": "323 BCE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "亚历山大死因（疾病 vs 毒杀）的对立解释，直接影响对继业者战争正当性的评价。",
@@ -806,7 +806,7 @@
       "evidence": [
         "ec-b-050"
       ],
-      "valid_time": null,
+      "valid_time": "331 BCE onward",
       "weight": null,
       "narrative": "帕加马与亚历山大城为两大希腊化文化中心。",
       "reviewed": true
@@ -820,7 +820,7 @@
       "evidence": [
         "ec-b-082"
       ],
-      "valid_time": null,
+      "valid_time": "322 BCE–275 BCE",
       "weight": null,
       "narrative": "继业者战争瓜分亚历山大帝国。",
       "reviewed": true

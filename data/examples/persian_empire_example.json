@@ -366,7 +366,7 @@
       "evidence": [
         "ec-144"
       ],
-      "valid_time": null,
+      "valid_time": "600 BCE–530 BCE",
       "weight": null
     },
     {
@@ -378,7 +378,7 @@
       "evidence": [
         "ec-145"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -390,7 +390,7 @@
       "evidence": [
         "ec-146"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–530 BCE",
       "weight": null
     },
     {
@@ -402,7 +402,7 @@
       "evidence": [
         "ec-147"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–486 BCE",
       "weight": null
     },
     {
@@ -414,7 +414,7 @@
       "evidence": [
         "ec-148"
       ],
-      "valid_time": null,
+      "valid_time": "519 BCE–465 BCE",
       "weight": null
     },
     {
@@ -426,7 +426,7 @@
       "evidence": [
         "ec-149"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -438,7 +438,7 @@
       "evidence": [
         "ec-150"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -450,7 +450,7 @@
       "evidence": [
         "ec-151"
       ],
-      "valid_time": null,
+      "valid_time": "1000 BCE onward",
       "weight": null
     },
     {
@@ -462,7 +462,7 @@
       "evidence": [
         "ec-152"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -474,7 +474,7 @@
       "evidence": [
         "ec-153"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -498,7 +498,7 @@
       "evidence": [
         "ec-155"
       ],
-      "valid_time": null,
+      "valid_time": "356 BCE–330 BCE",
       "weight": null
     },
     {
@@ -510,7 +510,7 @@
       "evidence": [
         "ec-156"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -522,7 +522,7 @@
       "evidence": [
         "ec-157"
       ],
-      "valid_time": null,
+      "valid_time": "330 BCE",
       "weight": null
     },
     {
@@ -534,7 +534,7 @@
       "evidence": [
         "ec-158"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–332 BCE",
       "weight": null
     },
     {
@@ -546,7 +546,7 @@
       "evidence": [
         "ec-159"
       ],
-      "valid_time": null,
+      "valid_time": "1350 BCE onward",
       "weight": null
     },
     {
@@ -558,7 +558,7 @@
       "evidence": [
         "ec-160"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -570,7 +570,7 @@
       "evidence": [
         "ec-161"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -582,7 +582,7 @@
       "evidence": [
         "ec-162"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -594,7 +594,7 @@
       "evidence": [
         "ec-pe-013"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–486 BCE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "大流士即位性质的对立叙述：官方铭文自称神授平叛，希罗多德记载为合谋夺位，构成波斯帝国正统起源的解释分歧。",
@@ -609,7 +609,7 @@
       "evidence": [
         "ec-b-053"
       ],
-      "valid_time": null,
+      "valid_time": "530 BCE",
       "weight": null,
       "narrative": "薛西斯为阿契美尼德王系，居鲁士之孙。",
       "reviewed": true
@@ -623,7 +623,7 @@
       "evidence": [
         "ec-b-054"
       ],
-      "valid_time": null,
+      "valid_time": "1000 BCE onward",
       "weight": null,
       "narrative": "密特拉信仰与琐罗亚斯德教同源。",
       "reviewed": true

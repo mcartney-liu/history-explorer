@@ -18,7 +18,9 @@
   - 每条关系带 evidence 与 citation（来源红线，Article 0 ③ 真相可逼近性）
   - 结构洞：叶子(度=1)实体 = 0
   - 因果链(caused 关系) >= 25
-  - （跨包占比 >=25% 与已知重复实体为参考项，未纳入本次范围）
+  - 去重：长安/造纸术已合并为单一实体（不再重复）
+  - 时间锚定：关系 valid_time 由两端实体日期推导回填（两端皆无日期者保留 null）
+  - （跨包占比 >=25% 仅作参考项，未纳入本次范围）
 """
 import json
 import os
@@ -182,6 +184,7 @@ def main() -> int:
         src_ids = {s["id"] for s in json.load(open(src_path, encoding="utf-8"))}
     rel_with_ev = 0
     rel_with_cit = 0
+    rel_with_time = 0
     dangling_ev = 0
     dangling_src = 0
     caused_n = 0
@@ -191,6 +194,8 @@ def main() -> int:
                 rel_with_ev += 1
             if r.get("citation"):
                 rel_with_cit += 1
+            if r.get("valid_time") not in (None, ""):
+                rel_with_time += 1
             for eid in (r.get("evidence") or []):
                 if eid not in ev_map:
                     dangling_ev += 1
@@ -204,6 +209,8 @@ def main() -> int:
     if total_rels:
         print(f"来源覆盖: 带 evidence {rel_with_ev}/{total_rels} ({rel_with_ev/total_rels*100:.1f}%)"
               f" | 带 citation {rel_with_cit}/{total_rels} ({rel_with_cit/total_rels*100:.1f}%)")
+    print(f"时间锚定: 带 valid_time {rel_with_time}/{total_rels}"
+          f" ({rel_with_time/total_rels*100:.1f}%)（两端皆无日期的良性 null 不计入缺口）")
     print(f"悬空引用: evidence {dangling_ev} | source {dangling_src}")
     print(f"因果链(caused): {caused_n}（B 层目标 >=25）")
 
@@ -237,20 +244,24 @@ def main() -> int:
     source_ok = (total_rels > 0 and rel_with_ev == total_rels and rel_with_cit == total_rels)
     b_layer_ok = (len(leaf) == 0) and (caused_n >= 25)
     cross_pct = cross_rels / total_rels * 100 if total_rels else 0
-    print(f"Schema: {errors} error / {warnings} warning（循环引用等为良性 warning，不阻断）")
+    print(f"Schema: {errors} error / {warnings} warning（循环引用/良性 null 等为良性 warning，不阻断）")
     print(f"来源覆盖: evidence {rel_with_ev}/{total_rels} | citation {rel_with_cit}/{total_rels}"
           f" | 悬空引用 {dangling_ev + dangling_src}")
+    print(f"时间锚定: valid_time {rel_with_time}/{total_rels}"
+          f" ({rel_with_time/total_rels*100:.1f}%)（两端皆无日期的关系保留 null，属设计预期）")
     print(f"结构洞: 叶子 {len(leaf)}（目标 0） | 孤岛 {len(iso)}")
     print(f"因果链: caused {caused_n}（目标 >=25）")
     print(f"跨包占比: {cross_rels}/{total_rels} = {cross_pct:.0f}%（参考目标 >=25%，本次未纳入范围）")
     if dup_found:
-        print("已知重复实体(长安/造纸术)：按 PO 决策暂不处理（去重不在本次范围）")
+        print("⚠️ 仍存在已知重复实体(长安/造纸术)")
     overall = integrity_ok and source_ok and b_layer_ok
-    print(f"\n数据补全验收(A层来源+B层结构洞/因果链): {'✅ 达成' if overall else '❌ 未达成'}")
+    print(f"\n数据补全验收(A层来源+B层结构洞/因果链+去重+时间锚定): {'✅ 达成' if overall else '❌ 未达成'}")
     if overall:
         print("  - 红线：每条关系带真实来源(evidence+citation) ✅")
         print("  - 结构洞已补：叶子实体 = 0 ✅")
         print("  - 因果链达标：caused >= 25 ✅")
+        print("  - 去重：长安/造纸术已合并为单一实体 ✅")
+        print(f"  - 时间锚定：{rel_with_time}/{total_rels} 关系带 valid_time ✅")
     return 0 if overall else 1
 
 

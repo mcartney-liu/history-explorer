@@ -287,7 +287,7 @@
       "evidence": [
         "ec-080"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null
     },
     {
@@ -299,7 +299,7 @@
       "evidence": [
         "ec-081"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null
     },
     {
@@ -311,7 +311,7 @@
       "evidence": [
         "ec-097"
       ],
-      "valid_time": null,
+      "valid_time": "2560 BCE onward",
       "weight": null
     },
     {
@@ -335,7 +335,7 @@
       "evidence": [
         "ec-084"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–539 BCE",
       "weight": null
     },
     {
@@ -347,7 +347,7 @@
       "evidence": [
         "ec-085"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null
     },
     {
@@ -359,7 +359,7 @@
       "evidence": [
         "ec-086"
       ],
-      "valid_time": null,
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -371,7 +371,7 @@
       "evidence": [
         "ec-087"
       ],
-      "valid_time": null,
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -383,7 +383,7 @@
       "evidence": [
         "ec-088"
       ],
-      "valid_time": null,
+      "valid_time": "305 BCE–30 BCE",
       "weight": null
     },
     {
@@ -395,7 +395,7 @@
       "evidence": [
         "ec-089"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null
     },
     {
@@ -407,7 +407,7 @@
       "evidence": [
         "ec-090"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null
     },
     {
@@ -419,7 +419,7 @@
       "evidence": [
         "ec-091"
       ],
-      "valid_time": null,
+      "valid_time": "2560 BCE onward",
       "weight": null
     },
     {
@@ -455,7 +455,7 @@
       "evidence": [
         "ec-094"
       ],
-      "valid_time": null,
+      "valid_time": "550 BCE–330 BCE",
       "weight": null
     },
     {
@@ -467,7 +467,7 @@
       "evidence": [
         "ec-095"
       ],
-      "valid_time": null,
+      "valid_time": "27 BCE onward",
       "weight": null
     },
     {
@@ -479,7 +479,7 @@
       "evidence": [
         "ec-096"
       ],
-      "valid_time": null,
+      "valid_time": "1350 BCE onward",
       "weight": null
     },
     {
@@ -491,7 +491,7 @@
       "evidence": [
         "ec-097"
       ],
-      "valid_time": null,
+      "valid_time": "2560 BCE onward",
       "weight": null
     },
     {
@@ -503,7 +503,7 @@
       "evidence": [
         "ec-eg-014"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "考古学将\"奴隶苦役建造金字塔\"的古典叙事重释为专业化自由劳工的工程组织，改写了两千年的建造者想象。",
@@ -518,7 +518,7 @@
       "evidence": [
         "ec-b-057"
       ],
-      "valid_time": null,
+      "valid_time": "3500 BCE–539 BCE",
       "weight": null,
       "narrative": "美索不达米亚与一神论观念有观念史联系。",
       "reviewed": true
@@ -532,7 +532,7 @@
       "evidence": [
         "ec-b-058"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null,
       "narrative": "新王国时期属古埃及文明。",
       "reviewed": true
@@ -546,7 +546,7 @@
       "evidence": [
         "ec-b-059"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null,
       "narrative": "奥西里斯崇拜为古埃及文明宗教。",
       "reviewed": true
@@ -588,7 +588,7 @@
       "evidence": [
         "ec-b-062"
       ],
-      "valid_time": null,
+      "valid_time": "3100 BCE–332 BCE",
       "weight": null,
       "narrative": "伊姆霍特普为古埃及重臣。",
       "reviewed": true
@@ -602,7 +602,7 @@
       "evidence": [
         "ec-b-075"
       ],
-      "valid_time": null,
+      "valid_time": "1350 BCE onward",
       "weight": null,
       "narrative": "阿肯那顿一神论冲击古埃及传统宗教。",
       "reviewed": true

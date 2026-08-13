@@ -909,7 +909,12 @@
       "evidence": [
         "ec-014"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": -563,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "563 BCE–483 BCE"
+      },
       "weight": 0.3,
       "mechanism": "cultural",
       "geographic_scope": "Gangetic plain (loose link to broader North India)"
@@ -1060,7 +1065,12 @@
       "evidence": [
         "ec-b-042"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BCE–297 BCE"
+      },
       "weight": null,
       "narrative": "旃陀罗笈多建立孔雀王朝。",
       "reviewed": true
@@ -1074,7 +1084,12 @@
       "evidence": [
         "ec-b-043"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": -322,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "322 BCE–185 BCE"
+      },
       "weight": null,
       "narrative": "印度河流域文明与孔雀王朝同属印度文明脉络。",
       "reviewed": true
@@ -1088,7 +1103,12 @@
       "evidence": [
         "ec-b-044"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": 400,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "400 CE–450 CE"
+      },
       "weight": null,
       "narrative": "迦梨陀娑主要活跃于笈多时期。",
       "reviewed": true
@@ -1102,7 +1122,12 @@
       "evidence": [
         "ec-b-045"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": 400,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "400 CE–450 CE"
+      },
       "weight": null,
       "narrative": "迦梨陀娑为笈多时期诗人。",
       "reviewed": true
@@ -1116,7 +1141,12 @@
       "evidence": [
         "ec-b-046"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": 320,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "320 CE–550 CE"
+      },
       "weight": null,
       "narrative": "零与十进制在笈多黄金时代成熟。",
       "reviewed": true
@@ -1130,7 +1160,12 @@
       "evidence": [
         "ec-b-072"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": -304,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "304 BCE–232 BCE"
+      },
       "weight": null,
       "narrative": "羯陵伽之战促使阿育王转变。",
       "reviewed": true
@@ -1144,7 +1179,12 @@
       "evidence": [
         "ec-b-073"
       ],
-      "valid_time": null,
+      "valid_time": {
+        "value": -304,
+        "precision": "year",
+        "certainty": "approximate",
+        "label": "304 BCE–232 BCE"
+      },
       "weight": null,
       "narrative": "阿育王弘扬佛教。",
       "reviewed": true

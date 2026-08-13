@@ -283,7 +283,7 @@
       "evidence": [
         "ec-062"
       ],
-      "valid_time": null,
+      "valid_time": "4 CE–30 CE",
       "weight": null
     },
     {
@@ -307,7 +307,7 @@
       "evidence": [
         "ec-064"
       ],
-      "valid_time": null,
+      "valid_time": "5 CE–67 CE",
       "weight": null
     },
     {
@@ -331,7 +331,7 @@
       "evidence": [
         "ec-066"
       ],
-      "valid_time": null,
+      "valid_time": "4 CE–30 CE",
       "weight": null
     },
     {
@@ -343,7 +343,7 @@
       "evidence": [
         "ec-067"
       ],
-      "valid_time": null,
+      "valid_time": "5 CE–67 CE",
       "weight": null
     },
     {
@@ -379,7 +379,7 @@
       "evidence": [
         "ec-070"
       ],
-      "valid_time": null,
+      "valid_time": "4 CE–30 CE",
       "weight": null
     },
     {
@@ -391,7 +391,7 @@
       "evidence": [
         "ec-071"
       ],
-      "valid_time": null,
+      "valid_time": "4 CE–30 CE",
       "weight": null
     },
     {
@@ -403,7 +403,7 @@
       "evidence": [
         "ec-072"
       ],
-      "valid_time": null,
+      "valid_time": "30 CE onward",
       "weight": null
     },
     {
@@ -415,7 +415,7 @@
       "evidence": [
         "ec-073"
       ],
-      "valid_time": null,
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -427,7 +427,7 @@
       "evidence": [
         "ec-074"
       ],
-      "valid_time": null,
+      "valid_time": "1350 BCE onward",
       "weight": null
     },
     {
@@ -451,7 +451,7 @@
       "evidence": [
         "ec-076"
       ],
-      "valid_time": null,
+      "valid_time": "30 CE onward",
       "weight": null
     },
     {
@@ -463,7 +463,7 @@
       "evidence": [
         "ec-077"
       ],
-      "valid_time": null,
+      "valid_time": "5 CE–67 CE",
       "weight": null
     },
     {
@@ -499,7 +499,7 @@
       "evidence": [
         "ec-ch-012"
       ],
-      "valid_time": null,
+      "valid_time": "4 CE–30 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "复活事件在神学（信仰事件）与历史学（门徒信仰经验）之间被给出两套重释，是早期基督教研究最核心的解释分歧。",
@@ -528,7 +528,7 @@
       "evidence": [
         "ec-b-077"
       ],
-      "valid_time": null,
+      "valid_time": "4 CE–30 CE",
       "weight": null,
       "narrative": "耶稣创立早期教会。",
       "reviewed": true

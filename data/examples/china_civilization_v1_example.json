@@ -1451,7 +1451,7 @@
       "evidence": [
         "ec-cn-011"
       ],
-      "valid_time": null,
+      "valid_time": "907 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1465,7 +1465,7 @@
       "evidence": [
         "ec-044"
       ],
-      "valid_time": null,
+      "valid_time": "1271 CE–1279 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1479,7 +1479,7 @@
       "evidence": [
         "ec-045"
       ],
-      "valid_time": null,
+      "valid_time": "1368 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1493,7 +1493,7 @@
       "evidence": [
         "ec-046"
       ],
-      "valid_time": null,
+      "valid_time": "1636 CE–1644 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1507,7 +1507,7 @@
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1521,7 +1521,7 @@
       "evidence": [
         "ec-047"
       ],
-      "valid_time": null,
+      "valid_time": "581 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1535,7 +1535,7 @@
       "evidence": [
         "ec-cn-002"
       ],
-      "valid_time": null,
+      "valid_time": "960 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1549,7 +1549,7 @@
       "evidence": [
         "ec-cn-012"
       ],
-      "valid_time": null,
+      "valid_time": "1402 CE–1644 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1563,7 +1563,7 @@
       "evidence": [
         "ec-048"
       ],
-      "valid_time": null,
+      "valid_time": "485 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1577,7 +1577,7 @@
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": null,
       "narrative": "唐代科举为宋代文官体系提供选任基础，体现制度跨政权延续。",
       "reviewed": true
@@ -1591,7 +1591,7 @@
       "evidence": [
         "ec-cn-002"
       ],
-      "valid_time": null,
+      "valid_time": "1402 CE–1644 CE",
       "weight": null,
       "narrative": "宋代文官传统经明代内阁承续，内阁由顾问演变为行政中枢。",
       "reviewed": true
@@ -1605,7 +1605,7 @@
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1619,7 +1619,7 @@
       "evidence": [
         "ec-cn-012"
       ],
-      "valid_time": null,
+      "valid_time": "1402 CE",
       "weight": null,
       "narrative": "靖难后迁都并强化内阁辅政格局。",
       "reviewed": true
@@ -1633,7 +1633,7 @@
       "evidence": [
         "ec-049"
       ],
-      "valid_time": null,
+      "valid_time": "1581 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1647,7 +1647,7 @@
       "evidence": [
         "ec-cn-003"
       ],
-      "valid_time": null,
+      "valid_time": "907 CE",
       "weight": null,
       "narrative": "唐诗格律与气象为宋词奠基，词承诗而变。",
       "reviewed": true
@@ -1661,7 +1661,7 @@
       "evidence": [
         "ec-050"
       ],
-      "valid_time": null,
+      "valid_time": "701 CE–762 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1675,7 +1675,7 @@
       "evidence": [
         "ec-051"
       ],
-      "valid_time": null,
+      "valid_time": "712 CE–770 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1689,7 +1689,7 @@
       "evidence": [
         "ec-052"
       ],
-      "valid_time": null,
+      "valid_time": "1037 CE–1101 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1703,7 +1703,7 @@
       "evidence": [
         "ec-053"
       ],
-      "valid_time": null,
+      "valid_time": "1140 CE–1207 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1717,7 +1717,7 @@
       "evidence": [
         "ec-054"
       ],
-      "valid_time": null,
+      "valid_time": "1033 CE–1107 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1731,7 +1731,7 @@
       "evidence": [
         "ec-cn-009"
       ],
-      "valid_time": null,
+      "valid_time": "1130 CE–1200 CE",
       "weight": null,
       "narrative": "朱熹集理学之大成。",
       "reviewed": true
@@ -1745,7 +1745,7 @@
       "evidence": [
         "ec-cn-004"
       ],
-      "valid_time": null,
+      "valid_time": "1088 CE onward",
       "weight": null,
       "narrative": "宋代理学为明心学提供思想前驱，心学进而转向内省。",
       "reviewed": true
@@ -1759,7 +1759,7 @@
       "evidence": [
         "ec-cn-010"
       ],
-      "valid_time": null,
+      "valid_time": "1472 CE–1529 CE",
       "weight": null,
       "narrative": "王阳明阐发心学、倡知行合一。",
       "reviewed": true
@@ -1773,7 +1773,7 @@
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "68 CE onward",
       "weight": null,
       "narrative": "佛教本土化推动三教融合。",
       "reviewed": true
@@ -1787,7 +1787,7 @@
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "551 BCE onward",
       "weight": null,
       "narrative": "儒家正统与佛老并存共生。",
       "reviewed": true
@@ -1801,7 +1801,7 @@
       "evidence": [
         "ec-cn-006"
       ],
-      "valid_time": null,
+      "valid_time": "960 CE–1279 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1815,7 +1815,7 @@
       "evidence": [
         "ec-055"
       ],
-      "valid_time": null,
+      "valid_time": "1129 CE–1276 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1829,7 +1829,7 @@
       "evidence": [
         "ec-056"
       ],
-      "valid_time": null,
+      "valid_time": "105 BCE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1843,7 +1843,7 @@
       "evidence": [
         "ec-cn-006"
       ],
-      "valid_time": null,
+      "valid_time": "700 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1857,7 +1857,7 @@
       "evidence": [
         "ec-057"
       ],
-      "valid_time": null,
+      "valid_time": "850 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1871,7 +1871,7 @@
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1885,7 +1885,7 @@
       "evidence": [
         "ec-cn-006"
       ],
-      "valid_time": null,
+      "valid_time": "700 CE onward",
       "weight": null,
       "narrative": "印刷术降低知识成本，助长商业城市文化。",
       "reviewed": true
@@ -1899,7 +1899,7 @@
       "evidence": [
         "ec-cn-007"
       ],
-      "valid_time": null,
+      "valid_time": "700 CE onward",
       "weight": null,
       "narrative": "印刷品经泉州等港流通。",
       "reviewed": true
@@ -1913,7 +1913,7 @@
       "evidence": [
         "ec-058"
       ],
-      "valid_time": null,
+      "valid_time": "850 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1927,7 +1927,7 @@
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1941,7 +1941,7 @@
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1371 CE–1433 CE",
       "weight": null,
       "narrative": "郑和远航实践并展示航海技术。",
       "reviewed": true
@@ -1955,7 +1955,7 @@
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE–1433 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1969,7 +1969,7 @@
       "evidence": [
         "ec-cn-007"
       ],
-      "valid_time": null,
+      "valid_time": "1368 CE–1644 CE",
       "weight": null,
       "narrative": "泉州为明代海路贸易枢纽（Semantic Review：traded_with 语义要求贸易双方为实体，地点与时期改用 related_to）。",
       "reviewed": true
@@ -1983,7 +1983,7 @@
       "evidence": [
         "ec-059"
       ],
-      "valid_time": null,
+      "valid_time": "1368 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1997,7 +1997,7 @@
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "598 CE–649 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -2011,7 +2011,7 @@
       "evidence": [
         "ec-060"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -2025,7 +2025,7 @@
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "68 CE onward",
       "weight": null,
       "narrative": "佛教自外传入并融入中华文明。",
       "reviewed": true
@@ -2039,7 +2039,7 @@
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -2053,7 +2053,7 @@
       "evidence": [
         "ec-cn-002"
       ],
-      "valid_time": null,
+      "valid_time": "927 CE–976 CE",
       "weight": null,
       "narrative": "宋太祖重文抑武，奠定宋代文官政治基调。",
       "reviewed": true
@@ -2067,7 +2067,7 @@
       "evidence": [
         "ec-061"
       ],
-      "valid_time": null,
+      "valid_time": "1271 CE–1368 CE",
       "weight": null,
       "narrative": "大都（元大都）为元代政治中枢。",
       "reviewed": true
@@ -2081,7 +2081,7 @@
       "evidence": [
         "ec-cn-013"
       ],
-      "valid_time": null,
+      "valid_time": "551 BCE onward",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "后世儒生书写将《史记》所记'坑方士'重释为'坑儒'，把秦政塑造为对儒家学说的系统性毁灭——这是解释层的演化，而非事件本身的扩大。",
@@ -2096,7 +2096,7 @@
       "evidence": [
         "ec-cn-014"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "关于科举起点存在隋/唐两说：传统取隋代进士科，钱穆等制度史学者主张唐代才完成'考试—录用'的制度闭环，属对同一制度的解释重释。",
@@ -2111,7 +2111,7 @@
       "evidence": [
         "ec-cn-015"
       ],
-      "valid_time": null,
+      "valid_time": "1200 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "朱熹格物致知与王阳明致良知的路径之争：前者向外即物穷理，后者向内发明本心，是宋明理学内部最经典的学派对立。",
@@ -2126,7 +2126,7 @@
       "evidence": [
         "ec-032"
       ],
-      "valid_time": null,
+      "valid_time": "68 CE onward",
       "weight": null
     },
     {
@@ -2138,7 +2138,7 @@
       "evidence": [
         "ec-033"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -2150,7 +2150,7 @@
       "evidence": [
         "ec-034"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -2162,7 +2162,7 @@
       "evidence": [
         "ec-035"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -2174,7 +2174,7 @@
       "evidence": [
         "ec-036"
       ],
-      "valid_time": null,
+      "valid_time": "330 BCE",
       "weight": null
     },
     {
@@ -2186,7 +2186,7 @@
       "evidence": [
         "ec-037"
       ],
-      "valid_time": null,
+      "valid_time": "1371 CE–1433 CE",
       "weight": null
     },
     {
@@ -2198,7 +2198,7 @@
       "evidence": [
         "ec-038"
       ],
-      "valid_time": null,
+      "valid_time": "130 BCE–1453 CE",
       "weight": null
     },
     {
@@ -2210,7 +2210,7 @@
       "evidence": [
         "ec-039"
       ],
-      "valid_time": null,
+      "valid_time": "2000 BCE onward",
       "weight": null
     },
     {
@@ -2222,7 +2222,7 @@
       "evidence": [
         "ec-040"
       ],
-      "valid_time": null,
+      "valid_time": "476 BCE",
       "weight": null
     },
     {
@@ -2234,7 +2234,7 @@
       "evidence": [
         "ec-b-001"
       ],
-      "valid_time": null,
+      "valid_time": "1636 CE–1912 CE",
       "weight": null,
       "narrative": "清朝是中华文明后期的大一统王朝。",
       "reviewed": true
@@ -2248,7 +2248,7 @@
       "evidence": [
         "ec-b-002"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE–907 CE",
       "weight": null,
       "narrative": "三省六部制于唐代确立并完善。",
       "reviewed": true
@@ -2262,7 +2262,7 @@
       "evidence": [
         "ec-b-003"
       ],
-      "valid_time": null,
+      "valid_time": "701 CE–762 CE",
       "weight": null,
       "narrative": "李白为盛唐代表诗人。",
       "reviewed": true
@@ -2276,7 +2276,7 @@
       "evidence": [
         "ec-b-004"
       ],
-      "valid_time": null,
+      "valid_time": "712 CE–770 CE",
       "weight": null,
       "narrative": "杜甫为盛唐转中唐代表诗人。",
       "reviewed": true
@@ -2290,7 +2290,7 @@
       "evidence": [
         "ec-b-005"
       ],
-      "valid_time": null,
+      "valid_time": "1037 CE–1101 CE",
       "weight": null,
       "narrative": "苏轼为北宋文豪。",
       "reviewed": true
@@ -2304,7 +2304,7 @@
       "evidence": [
         "ec-b-006"
       ],
-      "valid_time": null,
+      "valid_time": "1140 CE–1207 CE",
       "weight": null,
       "narrative": "辛弃疾为南宋豪放派词人。",
       "reviewed": true
@@ -2318,7 +2318,7 @@
       "evidence": [
         "ec-b-007"
       ],
-      "valid_time": null,
+      "valid_time": "1033 CE–1107 CE",
       "weight": null,
       "narrative": "程颐为北宋理学家。",
       "reviewed": true
@@ -2332,7 +2332,7 @@
       "evidence": [
         "ec-b-008"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE–649 CE",
       "weight": null,
       "narrative": "唐太宗为唐朝皇帝。",
       "reviewed": true
@@ -2346,7 +2346,7 @@
       "evidence": [
         "ec-b-009"
       ],
-      "valid_time": null,
+      "valid_time": "960 CE–976 CE",
       "weight": null,
       "narrative": "宋太祖建立宋朝。",
       "reviewed": true
@@ -2360,7 +2360,7 @@
       "evidence": [
         "ec-b-010"
       ],
-      "valid_time": null,
+      "valid_time": "1399 CE–1402 CE",
       "weight": null,
       "narrative": "靖难之役为明初内战。",
       "reviewed": true
@@ -2374,7 +2374,7 @@
       "evidence": [
         "ec-b-011"
       ],
-      "valid_time": null,
+      "valid_time": "1368 CE–1644 CE",
       "weight": null,
       "narrative": "一条鞭法为明万历财政改革。",
       "reviewed": true
@@ -2388,7 +2388,7 @@
       "evidence": [
         "ec-b-012"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE–1433 CE",
       "weight": null,
       "narrative": "郑和下西洋在明初。",
       "reviewed": true
@@ -2402,7 +2402,7 @@
       "evidence": [
         "ec-b-013"
       ],
-      "valid_time": null,
+      "valid_time": "1129 CE–1276 CE",
       "weight": null,
       "narrative": "临安为南宋都城。",
       "reviewed": true
@@ -2416,7 +2416,7 @@
       "evidence": [
         "ec-b-014"
       ],
-      "valid_time": null,
+      "valid_time": "1272 CE onward",
       "weight": null,
       "narrative": "大都为元大都，属中华文明一环。",
       "reviewed": true
@@ -2430,7 +2430,7 @@
       "evidence": [
         "ec-b-070"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE onward",
       "weight": null,
       "narrative": "科举制度催生文官体系。",
       "reviewed": true
@@ -2444,7 +2444,7 @@
       "evidence": [
         "ec-b-071"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE–1433 CE",
       "weight": null,
       "narrative": "航海技术使下西洋成为可能。",
       "reviewed": true
@@ -2458,7 +2458,7 @@
       "evidence": [
         "ec-b-079"
       ],
-      "valid_time": null,
+      "valid_time": "105 BCE onward",
       "weight": null,
       "narrative": "造纸术为印刷术的载体前提。",
       "reviewed": true
