@@ -327,8 +327,10 @@
       "target": "loc-athens",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Geographica",
+      "evidence": [
+        "ec-098"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -337,8 +339,10 @@
       "target": "loc-athens",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Geographica",
+      "evidence": [
+        "ec-099"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -347,8 +351,10 @@
       "target": "loc-athens",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Geographica",
+      "evidence": [
+        "ec-100"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -357,8 +363,10 @@
       "target": "person-plato",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-101"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -367,8 +375,10 @@
       "target": "person-aristotle",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-102"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -377,8 +387,10 @@
       "target": "event-academy-founded",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "History of the Peloponnesian War",
+      "evidence": [
+        "ec-103"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -387,8 +399,10 @@
       "target": "loc-athens",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Geographica",
+      "evidence": [
+        "ec-104"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -397,8 +411,10 @@
       "target": "idea-theory-forms",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-105"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -407,8 +423,10 @@
       "target": "idea-logic",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-117"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -417,8 +435,10 @@
       "target": "idea-theory-forms",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-116"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -427,8 +447,10 @@
       "target": "loc-lyceum",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Geographica",
+      "evidence": [
+        "ec-108"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -437,8 +459,10 @@
       "target": "hellenistic_world:person-alexander",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-109"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -447,8 +471,10 @@
       "target": "hellenistic_world:idea-democracy",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-110"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -457,8 +483,10 @@
       "target": "hellenistic_world:idea-stoicism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-111"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -467,8 +495,10 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-112"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -477,8 +507,10 @@
       "target": "tech-archimedes-screw",
       "type": "discovered",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-113"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -487,8 +519,10 @@
       "target": "early_christianity:idea-koine-greek",
       "type": "spoke",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Lives and Opinions of Eminent Philosophers",
+      "evidence": [
+        "ec-114"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -497,8 +531,10 @@
       "target": "idea-theory-forms",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-115"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -507,8 +543,10 @@
       "target": "idea-theory-forms",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-116"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -517,8 +555,10 @@
       "target": "idea-logic",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-117"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -535,6 +575,48 @@
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "柏拉图对话中的苏格拉底是理想化、承载柏拉图哲学的形象，与色诺芬等呈现的历史苏格拉底构成重释关系；\"真实苏格拉底\"由此成为公案。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-lyceum",
+      "target": "loc-athens",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "Lives and Opinions of Eminent Philosophers",
+      "evidence": [
+        "ec-b-047"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "吕克昂学园位于雅典。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-archimedes-screw",
+      "target": "person-archimedes",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Works of Archimedes",
+      "evidence": [
+        "ec-b-048"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "阿基米德螺旋泵出自阿基米德。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-atomism",
+      "target": "person-pythagoras",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Lives and Opinions of Eminent Philosophers",
+      "evidence": [
+        "ec-b-049"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "原子论承希腊自然哲学传统。",
       "reviewed": true
     }
   ],

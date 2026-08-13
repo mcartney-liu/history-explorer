@@ -283,8 +283,10 @@
       "target": "tech-papyrus",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-080"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -293,8 +295,10 @@
       "target": "religion-ancient-egyptian",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Book of the Dead (Papyrus of Ani)",
+      "evidence": [
+        "ec-081"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -303,8 +307,10 @@
       "target": "loc-ancient-egypt",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-097"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -313,8 +319,10 @@
       "target": "religion-ancient-egyptian",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-083"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -323,8 +331,10 @@
       "target": "civ-mesopotamia",
       "type": "contemporary_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-084"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -333,8 +343,10 @@
       "target": "idea-monotheism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-085"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -343,8 +355,10 @@
       "target": "hellenistic_world:civ-greek",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-086"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -353,8 +367,10 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-087"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -363,8 +379,10 @@
       "target": "hellenistic_world:civ-ptolemaic-egypt",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-088"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -373,8 +391,10 @@
       "target": "tech-hieroglyph",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-089"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -383,8 +403,10 @@
       "target": "tech-mummification",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-090"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -393,8 +415,10 @@
       "target": "event-great-pyramid-built",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-091"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -403,8 +427,10 @@
       "target": "religion-ancient-egyptian",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-092"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -413,8 +439,10 @@
       "target": "tp-new-kingdom",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-093"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -423,8 +451,10 @@
       "target": "persian_empire:tp-achaemenid",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-094"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -433,8 +463,10 @@
       "target": "roman_empire:event-roman-empire-established",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Res Gestae Divi Augusti",
+      "evidence": [
+        "ec-095"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -443,8 +475,10 @@
       "target": "idea-monotheism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-096"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -453,8 +487,10 @@
       "target": "loc-ancient-egypt",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-097"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -471,6 +507,104 @@
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "考古学将\"奴隶苦役建造金字塔\"的古典叙事重释为专业化自由劳工的工程组织，改写了两千年的建造者想象。",
+      "reviewed": true
+    },
+    {
+      "source": "civ-mesopotamia",
+      "target": "idea-monotheism",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Oxford History of Ancient Egypt",
+      "evidence": [
+        "ec-b-057"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "美索不达米亚与一神论观念有观念史联系。",
+      "reviewed": true
+    },
+    {
+      "source": "tp-new-kingdom",
+      "target": "civ-egypt",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Aegyptiaca (surviving fragments)",
+      "evidence": [
+        "ec-b-058"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "新王国时期属古埃及文明。",
+      "reviewed": true
+    },
+    {
+      "source": "religion-osiris",
+      "target": "civ-egypt",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Book of the Dead (Papyrus of Ani)",
+      "evidence": [
+        "ec-b-059"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "奥西里斯崇拜为古埃及文明宗教。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-hieroglyph",
+      "target": "tech-papyrus",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Rosetta Stone",
+      "evidence": [
+        "ec-b-060"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "象形文字书写于莎草纸。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-mummification",
+      "target": "religion-ancient-egyptian",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Book of the Dead (Papyrus of Ani)",
+      "evidence": [
+        "ec-b-061"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "木乃伊制作术与来世信仰相连。",
+      "reviewed": true
+    },
+    {
+      "source": "person-imhotep",
+      "target": "civ-egypt",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Aegyptiaca (surviving fragments)",
+      "evidence": [
+        "ec-b-062"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "伊姆霍特普为古埃及重臣。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-monotheism",
+      "target": "religion-ancient-egyptian",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Amarna Letters (EA corpus)",
+      "evidence": [
+        "ec-b-075"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "阿肯那顿一神论冲击古埃及传统宗教。",
       "reviewed": true
     }
   ],

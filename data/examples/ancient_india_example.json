@@ -1050,6 +1050,104 @@
       "weight": 0.5,
       "mechanism": "cultural",
       "geographic_scope": "Gupta court"
+    },
+    {
+      "source": "person-chandragupta",
+      "target": "tp-maurya",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "Arthashastra",
+      "evidence": [
+        "ec-b-042"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "旃陀罗笈多建立孔雀王朝。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-indus-valley",
+      "target": "civ-maurya",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Penguin History of Early India: From the Origins to AD 1300",
+      "evidence": [
+        "ec-b-043"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "印度河流域文明与孔雀王朝同属印度文明脉络。",
+      "reviewed": true
+    },
+    {
+      "source": "tp-guupta",
+      "target": "person-kalidasa",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Penguin History of Early India: From the Origins to AD 1300",
+      "evidence": [
+        "ec-b-044"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "迦梨陀娑主要活跃于笈多时期。",
+      "reviewed": true
+    },
+    {
+      "source": "person-kalidasa",
+      "target": "tp-guupta",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Penguin History of Early India: From the Origins to AD 1300",
+      "evidence": [
+        "ec-b-045"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "迦梨陀娑为笈多时期诗人。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-zero",
+      "target": "tp-guupta",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Aryabhatiya",
+      "evidence": [
+        "ec-b-046"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "零与十进制在笈多黄金时代成熟。",
+      "reviewed": true
+    },
+    {
+      "source": "event-kalinga-war",
+      "target": "person-ashoka",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Edicts of Ashoka (Rock and Pillar Edicts)",
+      "evidence": [
+        "ec-b-072"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "羯陵伽之战促使阿育王转变。",
+      "reviewed": true
+    },
+    {
+      "source": "person-ashoka",
+      "target": "religion-buddhism",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Edicts of Ashoka (Rock and Pillar Edicts)",
+      "evidence": [
+        "ec-b-073"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "阿育王弘扬佛教。",
+      "reviewed": true
     }
   ],
   "timeline": [

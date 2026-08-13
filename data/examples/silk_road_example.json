@@ -313,8 +313,10 @@
       "target": "tech-paper",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-163"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -323,8 +325,10 @@
       "target": "event-silk-road-opened",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-178"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -333,8 +337,10 @@
       "target": "loc-chang-an",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "China: Ergebnisse eigener Reisen und darauf gegründeter Studien, Bd. I",
+      "evidence": [
+        "ec-165"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -343,8 +349,10 @@
       "target": "han_dynasty",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-166"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -353,8 +361,10 @@
       "target": "silk_road",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-167"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -363,8 +373,10 @@
       "target": "roman_empire:civ-roman",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-168"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -373,8 +385,10 @@
       "target": "tech-silk",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-169"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -383,8 +397,10 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-170"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -393,8 +409,10 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-171"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -403,8 +421,10 @@
       "target": "roman_empire:civ-roman",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-172"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -413,8 +433,10 @@
       "target": "persian_empire:civ-persian",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-173"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -423,8 +445,10 @@
       "target": "roman_empire:civ-roman",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-174"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -433,8 +457,10 @@
       "target": "silk_road",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-175"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -443,8 +469,10 @@
       "target": "silk_road",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-176"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -453,8 +481,10 @@
       "target": "event-silk-road-opened",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-177"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -463,8 +493,10 @@
       "target": "event-silk-road-opened",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-178"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -473,8 +505,10 @@
       "target": "silk_road",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Tipitaka (Pali Canon)",
+      "evidence": [
+        "ec-179"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -483,8 +517,10 @@
       "target": "idea-chinese-language",
       "type": "spoke",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-180"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -493,8 +529,10 @@
       "target": "silk_road",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-181"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -596,6 +634,76 @@
       ],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "loc-samarkand",
+      "target": "loc-chang-an",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-064"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "撒马尔罕与长安为丝路东西重镇。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-kashgar",
+      "target": "loc-samarkand",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-065"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "喀什与撒马尔罕为西域重镇。",
+      "reviewed": true
+    },
+    {
+      "source": "person-ban-chao",
+      "target": "han_dynasty",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-066"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "班超为东汉经营西域。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-glass",
+      "target": "tech-silk",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Roads: Routes of Dialogue",
+      "evidence": [
+        "ec-b-067"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "玻璃与丝织皆为丝路重要商品。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-chinese-language",
+      "target": "han_dynasty",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-b-068"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "汉语为汉朝通用语言。",
+      "reviewed": true
     }
   ],
   "timeline": [

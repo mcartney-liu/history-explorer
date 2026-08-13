@@ -279,8 +279,10 @@
       "target": "event-crucifixion",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-062"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -289,8 +291,10 @@
       "target": "loc-jerusalem",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-063"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -299,8 +303,10 @@
       "target": "event-paul-mission",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-064"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -309,8 +315,10 @@
       "target": "loc-antioch",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-065"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -319,8 +327,10 @@
       "target": "idea-resurrection",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-066"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -329,8 +339,10 @@
       "target": "religion-early-church",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-067"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -339,8 +351,10 @@
       "target": "loc-jerusalem",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-068"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -349,8 +363,10 @@
       "target": "loc-antioch",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-069"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -359,8 +375,10 @@
       "target": "loc-jerusalem",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-070"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -369,8 +387,10 @@
       "target": "roman_empire:religion-christianity",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-071"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -379,8 +399,10 @@
       "target": "roman_empire:religion-christianity",
       "type": "inherited",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge Ancient History, Vols IX-XI: The Roman Republic and Empire",
+      "evidence": [
+        "ec-072"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -389,8 +411,10 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-073"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -399,8 +423,10 @@
       "target": "egypt_technology_religion:idea-monotheism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-074"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -409,8 +435,10 @@
       "target": "event-crucifixion",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-075"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -419,8 +447,10 @@
       "target": "roman_empire:religion-christianity",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-076"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -429,8 +459,10 @@
       "target": "idea-koine-greek",
       "type": "spoke",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Novum Testamentum Graece",
+      "evidence": [
+        "ec-077"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -439,8 +471,10 @@
       "target": "roman_empire:loc-rome",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "Geographica",
+      "evidence": [
+        "ec-078"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -449,8 +483,10 @@
       "target": "religion-early-church",
       "type": "caused",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Oxford History of Christianity",
+      "evidence": [
+        "ec-079"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -467,6 +503,62 @@
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "复活事件在神学（信仰事件）与历史学（门徒信仰经验）之间被给出两套重释，是早期基督教研究最核心的解释分歧。",
+      "reviewed": true
+    },
+    {
+      "source": "event-pentecost",
+      "target": "loc-jerusalem",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "Novum Testamentum (New Testament)",
+      "evidence": [
+        "ec-b-063"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "五旬节事件发生于耶路撒冷。",
+      "reviewed": true
+    },
+    {
+      "source": "person-jesus",
+      "target": "religion-early-church",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Novum Testamentum (New Testament)",
+      "evidence": [
+        "ec-b-077"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "耶稣创立早期教会。",
+      "reviewed": true
+    },
+    {
+      "source": "event-crucifixion",
+      "target": "religion-early-church",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Ecclesiastical History",
+      "evidence": [
+        "ec-b-078"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "耶稣受难成为早期教会的起点。",
+      "reviewed": true
+    },
+    {
+      "source": "person-peter",
+      "target": "religion-early-church",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Novum Testamentum (New Testament)",
+      "evidence": [
+        "ec-b-081"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "彼得被尊为早期教会柱石。",
       "reviewed": true
     }
   ],

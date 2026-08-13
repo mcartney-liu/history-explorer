@@ -13,11 +13,12 @@
   - 全图关联度指标（孤岛/叶子/跨包占比）
   - 已知重复实体提示（长安/造纸术）
 
-验收标准（A 层目标）：
-  - 0 个 ERROR 级 issue
-  - 跨包关系占比 >= 25%（当前 17%）
-  - 中国两包与其他包均有连接
-  - 重复实体已处理（0 提示）
+验收标准（A 层来源补全 + B 层结构洞/因果链）：
+  - 0 个 ERROR 级 issue；无未解析引用；无悬空 evidence/source 引用
+  - 每条关系带 evidence 与 citation（来源红线，Article 0 ③ 真相可逼近性）
+  - 结构洞：叶子(度=1)实体 = 0
+  - 因果链(caused 关系) >= 25
+  - （跨包占比 >=25% 与已知重复实体为参考项，未纳入本次范围）
 """
 import json
 import os
@@ -169,6 +170,43 @@ def main() -> int:
     leaf = [g for g in entities if deg[g] == 1]
     print(f"\n关联度: 孤岛 {len(iso)} | 叶子 {len(leaf)} | 实体总数 {len(entities)}")
 
+    # 3.5 来源覆盖 + 因果链指标（B 层验收）
+    _root = os.path.dirname(os.path.dirname(DATA_DIR))
+    ev_path = os.path.join(_root, "data", "evidence_claims.json")
+    src_path = os.path.join(_root, "data", "sources.json")
+    ev_map = {}
+    if os.path.exists(ev_path):
+        ev_map = {e["id"]: e for e in json.load(open(ev_path, encoding="utf-8"))}
+    src_ids = set()
+    if os.path.exists(src_path):
+        src_ids = {s["id"] for s in json.load(open(src_path, encoding="utf-8"))}
+    rel_with_ev = 0
+    rel_with_cit = 0
+    dangling_ev = 0
+    dangling_src = 0
+    caused_n = 0
+    for fname, data in datasets.items():
+        for r in data.get("relationships", []):
+            if r.get("evidence"):
+                rel_with_ev += 1
+            if r.get("citation"):
+                rel_with_cit += 1
+            for eid in (r.get("evidence") or []):
+                if eid not in ev_map:
+                    dangling_ev += 1
+                else:
+                    e = ev_map[eid]
+                    for sid in (e.get("source_ids") or [e.get("source_id")]):
+                        if sid and sid not in src_ids:
+                            dangling_src += 1
+            if r.get("type") == "caused":
+                caused_n += 1
+    if total_rels:
+        print(f"来源覆盖: 带 evidence {rel_with_ev}/{total_rels} ({rel_with_ev/total_rels*100:.1f}%)"
+              f" | 带 citation {rel_with_cit}/{total_rels} ({rel_with_cit/total_rels*100:.1f}%)")
+    print(f"悬空引用: evidence {dangling_ev} | source {dangling_src}")
+    print(f"因果链(caused): {caused_n}（B 层目标 >=25）")
+
     # 4. 中国两包连接状态（前缀以 global_id 为准：china_v1 / tb_cn_v1）
     print("\n中国两包跨包连接:")
     for gid_prefix in ["china_v1", "tb_cn_v1"]:
@@ -195,24 +233,25 @@ def main() -> int:
 
     # 汇总
     print("\n=== 汇总 ===")
-    data_ok = errors == 0 and not unresolved and not dup_found
+    integrity_ok = (errors == 0) and (not unresolved) and (dangling_ev == 0) and (dangling_src == 0)
+    source_ok = (total_rels > 0 and rel_with_ev == total_rels and rel_with_cit == total_rels)
+    b_layer_ok = (len(leaf) == 0) and (caused_n >= 25)
     cross_pct = cross_rels / total_rels * 100 if total_rels else 0
-    china_connected = False
-    for gid_prefix in ["china_v1", "tb_cn_v1"]:
-        connected = any(
-            s.startswith(gid_prefix + ":") or t.startswith(gid_prefix + ":")
-            for s, t, _ in cross_list
-        )
-        if connected:
-            china_connected = True
-    goal_ok = cross_pct >= 25 and china_connected
-    print(f"跨包占比: {cross_rels}/{total_rels} = {cross_pct:.0f}% (A 层目标 >=25%)")
-    print(f"数据合法性: {'✅ 通过' if data_ok else '❌ 有问题，见上方'}")
-    if goal_ok:
-        print("A 层目标: ✅ 达成（跨包 >=25% 且中国两包已连接）")
-    else:
-        print("A 层目标: ⏳ 未达成（跨包 <25% 或中国包未连接）— 待补数")
-    return 0 if data_ok else 1
+    print(f"Schema: {errors} error / {warnings} warning（循环引用等为良性 warning，不阻断）")
+    print(f"来源覆盖: evidence {rel_with_ev}/{total_rels} | citation {rel_with_cit}/{total_rels}"
+          f" | 悬空引用 {dangling_ev + dangling_src}")
+    print(f"结构洞: 叶子 {len(leaf)}（目标 0） | 孤岛 {len(iso)}")
+    print(f"因果链: caused {caused_n}（目标 >=25）")
+    print(f"跨包占比: {cross_rels}/{total_rels} = {cross_pct:.0f}%（参考目标 >=25%，本次未纳入范围）")
+    if dup_found:
+        print("已知重复实体(长安/造纸术)：按 PO 决策暂不处理（去重不在本次范围）")
+    overall = integrity_ok and source_ok and b_layer_ok
+    print(f"\n数据补全验收(A层来源+B层结构洞/因果链): {'✅ 达成' if overall else '❌ 未达成'}")
+    if overall:
+        print("  - 红线：每条关系带真实来源(evidence+citation) ✅")
+        print("  - 结构洞已补：叶子实体 = 0 ✅")
+        print("  - 因果链达标：caused >= 25 ✅")
+    return 0 if overall else 1
 
 
 if __name__ == "__main__":

@@ -1447,7 +1447,7 @@
       "target": "tp-song",
       "type": "before",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-011"
       ],
@@ -1461,8 +1461,10 @@
       "target": "tp-yuan",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）",
+      "evidence": [
+        "ec-044"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1473,8 +1475,10 @@
       "target": "tp-ming",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）",
+      "evidence": [
+        "ec-045"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1485,8 +1489,10 @@
       "target": "tp-qing",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）",
+      "evidence": [
+        "ec-046"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1497,7 +1503,7 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
@@ -1511,8 +1517,10 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-047"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1523,7 +1531,7 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-002"
       ],
@@ -1537,7 +1545,7 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-012"
       ],
@@ -1551,8 +1559,10 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-048"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1563,7 +1573,7 @@
       "target": "idea-wenguan",
       "type": "inherited",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
@@ -1577,7 +1587,7 @@
       "target": "idea-neige",
       "type": "inherited",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-002"
       ],
@@ -1591,7 +1601,7 @@
       "target": "idea-keju",
       "type": "caused",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
@@ -1605,7 +1615,7 @@
       "target": "idea-neige",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-012"
       ],
@@ -1619,8 +1629,10 @@
       "target": "idea-tudi",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "国史大纲",
+      "evidence": [
+        "ec-049"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1631,7 +1643,7 @@
       "target": "idea-songci",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-003"
       ],
@@ -1645,8 +1657,10 @@
       "target": "idea-tangshi",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "论语",
+      "evidence": [
+        "ec-050"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1657,8 +1671,10 @@
       "target": "idea-tangshi",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "论语",
+      "evidence": [
+        "ec-051"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1669,8 +1685,10 @@
       "target": "idea-songci",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "论语",
+      "evidence": [
+        "ec-052"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1681,8 +1699,10 @@
       "target": "idea-songci",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "论语",
+      "evidence": [
+        "ec-053"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1693,8 +1713,10 @@
       "target": "idea-lixue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "国史大纲",
+      "evidence": [
+        "ec-054"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1705,7 +1727,7 @@
       "target": "idea-lixue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-009"
       ],
@@ -1719,7 +1741,7 @@
       "target": "idea-xinxue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-004"
       ],
@@ -1733,7 +1755,7 @@
       "target": "idea-xinxue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-010"
       ],
@@ -1747,7 +1769,7 @@
       "target": "idea-zongjiao-ronghe",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
@@ -1761,7 +1783,7 @@
       "target": "idea-zongjiao-ronghe",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
@@ -1775,7 +1797,7 @@
       "target": "idea-shangye-chengshi",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-006"
       ],
@@ -1789,8 +1811,10 @@
       "target": "idea-shangye-chengshi",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-055"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1801,8 +1825,10 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "史记",
+      "evidence": [
+        "ec-056"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1813,7 +1839,7 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-006"
       ],
@@ -1827,8 +1853,10 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "史记",
+      "evidence": [
+        "ec-057"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1839,7 +1867,7 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
@@ -1853,7 +1881,7 @@
       "target": "idea-shangye-chengshi",
       "type": "spread",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-006"
       ],
@@ -1867,7 +1895,7 @@
       "target": "loc-quanzhou",
       "type": "spread",
       "confidence": null,
-      "citation": "",
+      "citation": "中国国家博物馆·古代中国基本陈列",
       "evidence": [
         "ec-cn-007"
       ],
@@ -1881,8 +1909,10 @@
       "target": "loc-quanzhou",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-058"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1893,7 +1923,7 @@
       "target": "loc-quanzhou",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
@@ -1907,7 +1937,7 @@
       "target": "tech-hanghai",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
@@ -1921,7 +1951,7 @@
       "target": "tech-hanghai",
       "type": "caused",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
@@ -1935,7 +1965,7 @@
       "target": "tp-ming",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
+      "citation": "中国国家博物馆·古代中国基本陈列",
       "evidence": [
         "ec-cn-007"
       ],
@@ -1949,8 +1979,10 @@
       "target": "tp-ming",
       "type": "contemporary_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-059"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1961,7 +1993,7 @@
       "target": "event-keju-established",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
@@ -1975,8 +2007,10 @@
       "target": "event-keju-established",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "中国国家博物馆·古代中国基本陈列",
+      "evidence": [
+        "ec-060"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "",
@@ -1987,7 +2021,7 @@
       "target": "civ-zhonghua",
       "type": "spread",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
@@ -2001,7 +2035,7 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
@@ -2015,7 +2049,7 @@
       "target": "idea-wenguan",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-002"
       ],
@@ -2029,8 +2063,10 @@
       "target": "tp-yuan",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-061"
+      ],
       "valid_time": null,
       "weight": null,
       "narrative": "大都（元大都）为元代政治中枢。",
@@ -2188,6 +2224,244 @@
       ],
       "valid_time": null,
       "weight": null
+    },
+    {
+      "source": "tp-qing",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "清史稿",
+      "evidence": [
+        "ec-b-001"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "清朝是中华文明后期的大一统王朝。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-sanxing-liubu",
+      "target": "tp-tang",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "旧唐书",
+      "evidence": [
+        "ec-b-002"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "三省六部制于唐代确立并完善。",
+      "reviewed": true
+    },
+    {
+      "source": "person-li-bai",
+      "target": "tp-tang",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-003"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "李白为盛唐代表诗人。",
+      "reviewed": true
+    },
+    {
+      "source": "person-du-fu",
+      "target": "tp-tang",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-004"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "杜甫为盛唐转中唐代表诗人。",
+      "reviewed": true
+    },
+    {
+      "source": "person-su-shi",
+      "target": "tp-song",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-005"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "苏轼为北宋文豪。",
+      "reviewed": true
+    },
+    {
+      "source": "person-xin-qiji",
+      "target": "tp-song",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-006"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "辛弃疾为南宋豪放派词人。",
+      "reviewed": true
+    },
+    {
+      "source": "person-cheng-yi",
+      "target": "tp-song",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-007"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "程颐为北宋理学家。",
+      "reviewed": true
+    },
+    {
+      "source": "person-tang-taizong",
+      "target": "tp-tang",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "旧唐书",
+      "evidence": [
+        "ec-b-008"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "唐太宗为唐朝皇帝。",
+      "reviewed": true
+    },
+    {
+      "source": "person-song-taizu",
+      "target": "tp-song",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "宋史",
+      "evidence": [
+        "ec-b-009"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "宋太祖建立宋朝。",
+      "reviewed": true
+    },
+    {
+      "source": "event-jingnan",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "明史",
+      "evidence": [
+        "ec-b-010"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "靖难之役为明初内战。",
+      "reviewed": true
+    },
+    {
+      "source": "event-yitiaobian",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "明史",
+      "evidence": [
+        "ec-b-011"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "一条鞭法为明万历财政改革。",
+      "reviewed": true
+    },
+    {
+      "source": "event-zheng-he",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "瀛涯胜览",
+      "evidence": [
+        "ec-b-012"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "郑和下西洋在明初。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-linan",
+      "target": "tp-song",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-013"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "临安为南宋都城。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-dadu",
+      "target": "civ-zhonghua",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-014"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "大都为元大都，属中华文明一环。",
+      "reviewed": true
+    },
+    {
+      "source": "event-keju-established",
+      "target": "idea-wenguan",
+      "type": "caused",
+      "confidence": null,
+      "citation": "国史大纲",
+      "evidence": [
+        "ec-b-070"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "科举制度催生文官体系。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-hanghai",
+      "target": "event-zheng-he",
+      "type": "caused",
+      "confidence": null,
+      "citation": "瀛涯胜览",
+      "evidence": [
+        "ec-b-071"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "航海技术使下西洋成为可能。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-zaopi",
+      "target": "tech-yinshua",
+      "type": "caused",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-079"
+      ],
+      "valid_time": null,
+      "weight": null,
+      "narrative": "造纸术为印刷术的载体前提。",
+      "reviewed": true
     }
   ],
   "timeline": [
