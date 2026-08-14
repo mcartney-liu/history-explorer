@@ -179,7 +179,11 @@ function EntityPage({
 
       {/* 探索剧本化 ③（治 D3）：从探索包点进来的实体，顶部常驻"你为什么在这里"，
           回答这一站与包主题/关系链的关系。非包内进入时 originSlug 为空，自动不渲染。 */}
-      <ConnectionCard entityGlobalId={entityGlobalId} entityName={entity.name} />
+      <ConnectionCard
+        entityGlobalId={entityGlobalId}
+        entityName={entity.name}
+        onEntityClick={onEntityClick}
+      />
 
       <SummaryPanel title={entity.name} summary={description} />
 
