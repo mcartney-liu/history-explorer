@@ -191,3 +191,48 @@
 - 探索层命名最终确定（Exploration Layer / Exploration Memory / Collective Exploration Graph？）。
 - 持久化走 A / B / C 哪一路径。
 - 是否将"三层边界 + 非干扰原则"正式写入 DNA/PRD（与 vM81 Side Index 治理模型对齐）。
+
+---
+
+## 待解决问题追踪（Founder 指令 2026-08-13 起 · 双写约定）
+
+> **协作约定（2026-08-13 翔哥指令）**：凡对话中产生的「待解决的问题」，双写两处——
+> ① 项目记忆 `.workbuddy/memory/USER_ISSUES.md`（本机跨会话 tracker，被 gitignore，不污染产品代码）；
+> ② 本 IDEA 文档此节。
+> 本 IDEA 文档为灵感/问题暂存区，性质仍为非决策、非 PRD/DNA；问题升格处理待统一排期。
+> `USER_ISSUES.md` 为权威 live tracker，本表为快照，改动以该文件为准。
+
+### 累计清单（2026-08-13 快照，共 24 条：PENDING 0 / RESOLVED 24）
+
+**PENDING（待改）**
+
+（当前无挂账；新问题发现即追加）
+
+**RESOLVED（已解决）**
+
+| ID | 问题 | 解决 |
+|---|---|---|
+| R-U01 | AI 聊天框无发送按钮 | 加「发送」文字按钮，与回车共用 `onAsk` |
+| R-U02 | AI 历史学家未锚定本实体 | 副标题声明"围绕本实体" + 后端 prompt 补软聚焦第 8 条 |
+| R-U03 | AI 历史学家初始无输入框 | 输入框改为初始常显 |
+| R-U04 | 关系链英文脱节不可点 | 改可点击关系链（当前实体→关系·中文→目标实体） |
+| R-U05 | 实体页「下一步探索」消失 | 根因 `setResult(null)` + 557 守卫早退；按 `relationships`+`related_entities` 喂法修复 |
+| R-U06 | 研究中评未存档（原 P-U01） | `ResearchSummary` 加 `onAnswered` 回调回传正文 → `ResearchPanel` 提 `summaryAnswer` state → `handleSave` 传 `summaryAnswer`；存储层本已支持，纯补 React 断点（2026-08-13 代码已改，未提交） |
+| R-U07 | 文化维度显示原始 JSON 代码（原 P-U02） | 根因 `humanizeAnswer` 模式①「无差别全拼」（非文化特殊，任何维度都可能中招，取决于 LLM 偶发吐 JSON；之前 5-7 轮只堵当时形态未治根）。根治 `extractAnswerBody` 语义化提取（数组 `["answer",正文,...]` / 对象 `{"answer":...}` 统一取正文）+ 后端 prompt 第 9 条纯文本约束（治源）+ 多形态测试锁死（6/6 通过）（2026-08-13 已修，未提交） |
+| P-U03 | 四维研究批量+单点并存 | `ResearchDimensionCard` 加独立「研究/重研」按钮 → `ResearchPanel.onResearchSingle(dimKey)` 复用 `contextGlobalIds` 只更新该维度（2026-08-13 已改，游离 commit 待收口） |
+| P-U04 | 完成后折叠 + 点「查看报告」弹 modal | 内联展开仅由「全部展开」(P-U09) 受控；原「查看报告」内联展开方案已纠偏为弹窗（2026-08-13 已改，游离 commit c981d30） |
+| P-U05 | 单点研究报告弹 modal 小窗（方案 A） | 新建 `DimensionReportModal`（overlay+dialog，复用 `GroundedAnswer`/`CitationList`，不引依赖不跳页）；仅单点用 modal（2026-08-13 已改） |
+| P-U06 | 研究中评门控改四全 success | `ResearchPanel` 门控 `aiAvailable`→`allSuccess`（四全 success 才显「生成研究中评」）（2026-08-13 已改） |
+| P-U09 | 四维研究「全部展开 / 收起全部」按钮 | `ResearchPanel` done 区加 `rp-expand-all` 按钮（`expandAll` 受控）；`ResearchDimensionCard` 加 `externalExpand` 受控内联展开，「查看报告」改调 `onViewReport` 弹 modal（2026-08-13 已改，游离 commit c981d30） |
+| P-U10 | 研究完成后维度背景图消失 | `ResearchDimensionCard` 改引 `slotImageName`+`mediaUrl` 后台图（本地 bundle 兜底）；CSS `.rdc-card.has-art` 改全幅背景衔 idle（2026-08-13 已改，游离 commit c981d30） |
+| P-U11 | 研究完成后 4 张维度卡背景图"歪"/不整齐 | 根因 done 态 `.rdc-card` 无 min-height，4 卡不等高致 `object-fit:cover` 裁剪错位；修：`.rdc-card` 加 `min-height:200px` 等高（2026-08-13 已改，游离 commit 213eb02） |
+| P-U12 | 研究完成后「研究中评」「研究报告」按钮消失 | 根因「研究中评」被 `aiAvailable`(engine=deterministic) 门控隐藏、「研究报告」被变高卡片挤出视口；修：放开「研究中评」门控（四全 success 即显，不再以 AI 可用性隐藏），`ResearchSummary` 挂载门控同步放开（内部 `isResearchFallback` 兜底）（2026-08-13 已改，游离 commit 213eb02） |
+| P-U13 | 研究完成后 4 张维度卡仍"歪" | 根因 P-U11 的 `min-height` 只管下限、内容超高仍不等高 → 裁图错位；修：`.rdc-card` 改固定 `height:200px`+`overflow:hidden`，4 卡强制等高、背景图裁切一致（2026-08-13 已改，游离 commit e00d7b6）；**用户实测仍歪**，真修见 P-U14 |
+| P-U14 | 研究后卡片"变弯/不整齐"（真修 P-U13 不足） | 根因：研究后 `.rdc-card` 是竖排全宽 `height:200px` 扁幅 + `.rp-results` 多列瀑布流，cover 压图成横带、缺 `object-position` 焦点；idle 是 2×2 网格近方形 + `slotImageFocus` 焦点。修：`ResearchDimensionCard` 复用 `slotImageFocus` 设 `object-position`；running/done+restored 两区 map 包 `.rdc-grid`（2×2）；`.rdc-card` 改 `height:auto;min-height:172px`、`.rdc-art` 加 `object-position:center`、`.rp-results` 去 `column-count`（2026-08-13 已改，游离 commit 9387f92） |
+| P-U15 | 所有实体点进去默认都是研究界面（应信息界面） | 根因 `EntityPageShell` 有状态容器用 `loadSavedTab()` 从 localStorage 读上次 tab 初始化 `activeTab`，污染所有实体初始 tab；修：初始 tab 改 `props.activeTab ?? 'info'`（入口意图：普通点击 info、深研进 research），`saveTab` 保留仅不再污染初始化；`App.tsx` 用 `key=\`${current.id}:${entityInitialTab}\`` 重挂，切换实体时重读传入 tab、旧 localStorage 自动失效（2026-08-13 已改，游离 commit 6c50690） |
+| P-U16 | 搜索框下方冗余提示文字 + 示例标签（所有界面共有） | 根因 `EntitySearchBox` 渲染 `search.boxHint` 提示与 `search.chips` 示例标签（古罗马/秦始皇/文艺复兴/丝绸之路）；PO 判断没必要。修：删提示 `<p className="search-hint">` 与 `search-chips` 块（含 `chips` 变量定义），下方直接显结果列表；locale key 与 components.css 孤儿样式保留无害（2026-08-13 已改，游离 commit 6c50690） |
+| P-U17 | 信息界面 ExplorationGuide 区域用户看不懂（进度条+统计标签） | 根因：进度条无标签量什么不明；统计标签是技术术语且像按钮但不可点击；缺上下文。PO 选 B 重写：加「知识概览」标题+引导语；进度条加「探索深度」标签+分数；统计标签改可点击按钮(图标+数字+文案三段式，点后 scrollIntoView 滚到对应面板)；CSS 新增完整样式（2026-08-13 已改，游离 commit 40d8019） |
+| P-U07 | 单点研究未保存提示 | 根因：单点/批量研究只写内存维度数组，未点整体「保存」则刷新即丢、用户易误以为已收藏。修：`ResearchPanel` 加 `pendingSaveDims` state——单点成功/批量完成加入、`handleSave` 成功清空、restore/reset 清空；View 加 `pendingSaveCount`，面板顶部轻提示「本会话有 N 个维度尚未保存，记得点「保存」进入收藏」（CSS `.rp-pending-save` 琥珀色浅条，role=status）；3 用例锁渲染（>0 显 / 0 不显 / 默认不显），ResearchPanel 30/30 绿（2026-08-13 已改，游离 commit 061b367） |
+| P-U08 | 实体下方「下一步探索」消失（回归） | **根因（2026-08-13 实证）**：非「整层不显」，而是 Policy Rule 1(open_dimension) 的 `resolveDimensionTarget()` 把维度名翻译成中文标签（'历史事件'），NextStepPanel 渲染出**不可达假按钮**（点击请求 /entity/历史事件 → 404），且 Rule 1 永远优先 → 所有实体永远只出同一维度标签，用户感知为「下一步推演断掉」。修：①`ExplorationState` 加 `dimensionMapping`（维度→真实实体 id）；②`ExplorationPolicy` Rule 1 改遍历 missingDimensions，目标取 mapping 代表实体（无映射/已探索则跳过，绝不产出中文标签）；③`App.tsx` effect 从 `relationships[].other.global_id` / `result.entities[].global_id` 构建映射（短 id→global_id，点击 200 可达、显示真名）；④`projectHistoricalKnowledge` 同步产出映射。真实数据回归测试锁死（2 用例），exploration 目录全量 155/155 绿（2026-08-13 已改，游离 commit 061b367） |
+
+> 详细（含方案/文件面/证据）见 `.workbuddy/memory/USER_ISSUES.md`，本表为快照。
