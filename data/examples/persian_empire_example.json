@@ -562,8 +562,8 @@
       "weight": null
     },
     {
-      "source": "religion-mithra",
-      "target": "civ-persian",
+      "source": "civ-persian",
+      "target": "religion-mithra",
       "type": "practiced",
       "confidence": null,
       "citation": "The Cambridge History of Iran, Vol. 2: The Median and Achaemenian Periods",

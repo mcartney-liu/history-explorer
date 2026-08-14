@@ -181,6 +181,23 @@ def test_orphan_entity_is_warning():
 
 
 def test_circular_reference_is_warning():
+    # A genuine cycle of >=3 distinct nodes IS flagged as a warning.
+    report = build_validation_report([_ds(
+        "t",
+        entities=[_entity("a"), _entity("b"), _entity("c")],
+        relationships=[
+            {"source": "a", "target": "b", "type": "influenced"},
+            {"source": "b", "target": "c", "type": "influenced"},
+            {"source": "c", "target": "a", "type": "influenced"},
+        ])])
+    warns = [i for i in report.issues if i.code == "CIRCULAR_REFERENCE"]
+    assert len(warns) >= 1
+
+
+def test_bidirectional_two_node_relation_is_not_flagged():
+    # A 2-node back-and-forth (A->B->A) is a legitimate bidirectional history
+    # relation (mutual influence) and must NOT be reported as a cycle.
+    # (M80 Gate B, PO 2026-08-08)
     report = build_validation_report([_ds(
         "t",
         entities=[_entity("a"), _entity("b")],
@@ -189,7 +206,7 @@ def test_circular_reference_is_warning():
             {"source": "b", "target": "a", "type": "influenced"},
         ])])
     warns = [i for i in report.issues if i.code == "CIRCULAR_REFERENCE"]
-    assert len(warns) >= 1
+    assert len(warns) == 0
 
 
 def test_incoming_outgoing_reflected():

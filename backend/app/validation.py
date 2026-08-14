@@ -425,6 +425,11 @@ def check_relationship_consistency(
                 f"Entity `{eid}` has no relationships (orphan)."))
 
     for cycle in _find_cycles(adj):
+        # A 2-node back-and-forth (A->B->A) is a legitimate bidirectional
+        # history relation (mutual influence), not a modeling error. Only
+        # flag genuine cycles spanning >=3 distinct nodes. (M80 Gate B, PO 2026-08-08)
+        if len(set(cycle)) < 3:
+            continue
         issues.append(ValidationIssue(
             "warning", "CIRCULAR_REFERENCE", topic,
             "Circular relationship chain: " + " -> ".join(cycle)))

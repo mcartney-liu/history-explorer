@@ -586,7 +586,7 @@
     { "source": "person-huangdi", "target": "person-yandi", "type": "related_to", "confidence": null, "citation": "国史大纲", "evidence": ["ec-b-017"], "valid_time": null, "weight": null, "narrative": "黄帝与炎帝并称。", "reviewed": true },
     { "source": "person-yao", "target": "person-shun", "type": "related_to", "confidence": null, "citation": "论语", "evidence": ["ec-b-018"], "valid_time": null, "weight": null, "narrative": "尧舜相继，禅让相传。", "reviewed": true },
     { "source": "person-shun", "target": "person-yao", "type": "related_to", "confidence": null, "citation": "论语", "evidence": ["ec-b-019"], "valid_time": null, "weight": null, "narrative": "舜受尧禅。", "reviewed": true },
-    { "source": "person-qi", "target": "person-yu", "type": "related_to", "confidence": null, "citation": "资治通鉴", "evidence": ["ec-b-020"], "valid_time": null, "weight": null, "narrative": "启为禹之子，世袭之始。", "reviewed": true },
+    { "source": "person-yu", "target": "person-qi", "type": "related_to", "confidence": null, "citation": "资治通鉴", "evidence": ["ec-b-020"], "valid_time": null, "weight": null, "narrative": "启为禹之子，世袭之始。", "reviewed": true },
     { "source": "person-tang", "target": "tp-xia", "type": "after", "confidence": null, "citation": "资治通鉴", "evidence": ["ec-b-021"], "valid_time": "2070 BCE–1600 BCE", "weight": null, "narrative": "商汤灭夏，商代夏而立。", "reviewed": true },
     { "source": "person-pangeng", "target": "tp-shang", "type": "related_to", "confidence": null, "citation": "殷墟的发现与研究", "evidence": ["ec-b-022"], "valid_time": "1600 BCE–1046 BCE", "weight": null, "narrative": "盘庚为商王，迁都于殷。", "reviewed": true },
     { "source": "person-youwang", "target": "civ-huaxia", "type": "related_to", "confidence": null, "citation": "国史大纲", "evidence": ["ec-b-023"], "valid_time": "1700000 BCE onward", "weight": null, "narrative": "周幽王属西周，华夏一系。", "reviewed": true },
@@ -607,7 +607,7 @@
     { "source": "idea-fengjian", "target": "civ-huaxia", "type": "related_to", "confidence": null, "citation": "国史大纲", "evidence": ["ec-b-038"], "valid_time": "1046 BCE onward", "weight": null, "narrative": "分封制为华夏早期制度。", "reviewed": true },
     { "source": "idea-rujia", "target": "tp-spring-autumn", "type": "related_to", "confidence": null, "citation": "论语", "evidence": ["ec-b-039"], "valid_time": "770 BCE–476 BCE", "weight": null, "narrative": "儒家起于春秋。", "reviewed": true },
     { "source": "idea-daojia", "target": "tp-spring-autumn", "type": "related_to", "confidence": null, "citation": "老子（道德经）", "evidence": ["ec-b-040"], "valid_time": "770 BCE–476 BCE", "weight": null, "narrative": "道家起于春秋。", "reviewed": true },
-    { "source": "idea-baijia", "target": "tp-spring-autumn", "type": "related_to", "confidence": null, "citation": "国史大纲", "evidence": ["ec-b-041"], "valid_time": "476 BCE", "weight": null, "narrative": "百家争鸣盛于春秋战国。", "reviewed": true },
+    { "source": "tp-spring-autumn", "target": "idea-baijia", "type": "related_to", "confidence": null, "citation": "国史大纲", "evidence": ["ec-b-041"], "valid_time": "476 BCE", "weight": null, "narrative": "百家争鸣盛于春秋战国。", "reviewed": true },
     { "source": "event-baijia-zhengming", "target": "idea-baijia", "type": "caused", "confidence": null, "citation": "国史大纲", "evidence": ["ec-b-069"], "valid_time": "475 BCE–221 BCE", "weight": null, "narrative": "百家争鸣催生诸子百家。", "reviewed": true },
     { "source": "tp-prehistory", "target": "tp-xia", "type": "before", "confidence": null, "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）", "evidence": ["ec-182"], "valid_time": "2070 BCE", "weight": null, "narrative": "史前时期终于王朝兴起。", "reviewed": true },
     { "source": "tp-xia", "target": "tp-shang", "type": "before", "confidence": null, "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）", "evidence": ["ec-183"], "valid_time": "1600 BCE", "weight": null, "narrative": "夏亡商兴。", "reviewed": true },
@@ -643,7 +643,7 @@
     { "source": "tech-daogeng", "target": "loc-changjiang", "type": "located_at", "confidence": null, "citation": "中国国家博物馆·古代中国基本陈列", "evidence": ["ec-213"], "valid_time": "7000 BCE onward", "weight": null, "narrative": "稻作起于长江流域。", "reviewed": true },
     { "source": "tech-su", "target": "loc-huanghe", "type": "located_at", "confidence": null, "citation": "中国国家博物馆·古代中国基本陈列", "evidence": ["ec-214"], "valid_time": "6000 BCE onward", "weight": null, "narrative": "粟作起于黄河流域。", "reviewed": true },
     { "source": "tech-ganlan", "target": "loc-changjiang", "type": "located_at", "confidence": null, "citation": "中国国家博物馆·古代中国基本陈列", "evidence": ["ec-215"], "valid_time": "7000 BCE onward", "weight": null, "narrative": "干栏建筑见于长江流域。", "reviewed": true },
-    { "source": "idea-baijia", "target": "tp-warring-states", "type": "caused", "confidence": null, "citation": "国史大纲", "evidence": ["ec-216"], "valid_time": "475 BCE–221 BCE", "weight": null, "narrative": "战国催生诸子百家。", "reviewed": true }
+    { "source": "tp-warring-states", "target": "idea-baijia", "type": "caused", "confidence": null, "citation": "国史大纲", "evidence": ["ec-216"], "valid_time": "475 BCE–221 BCE", "weight": null, "narrative": "战国催生诸子百家。", "reviewed": true }
   ,
     {
       "source": "person-kongzi",

@@ -1,7 +1,7 @@
 # ADR-M80-MAP: Ontology Mapping Contract (Domain Governance Layer)
 
 ## Status
-Proposed (2026-08-02, M80-B1 revision — pending PO acceptance)
+Accepted (2026-08-14 — PO acceptance via M80 Gate B closure; decision recorded in PO_DECISIONS_2026-08-08 §14/§15)
 
 ## Related
 - ADR-M78-FR — Domain Registration Freeze
