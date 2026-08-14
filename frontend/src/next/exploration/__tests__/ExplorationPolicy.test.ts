@@ -423,4 +423,45 @@ describe('ExplorationPolicy (M88.2)', () => {
       expect(decision.output.confidence).toBeLessThanOrEqual(1)
     })
   })
+
+  // ── 测试 11: Rule 0 — 用户标记的开放缺口（认知闭环） ──
+  describe('Rule 0: User-marked Gap (认知闭环)', () => {
+    it('openGaps 优先于 Rule 1 missingDimensions', () => {
+      const state = makeState({
+        missingDimensions: ['economy', 'culture'],
+        missingConnections: [],
+      })
+      const gapState = { entity_id: 'french-revolution', openGaps: ['culture'] }
+      const decision = evaluateExploration(state, defaultPolicyContext, gapState)
+
+      expect(decision.output.type).toBe('open_dimension')
+      expect(decision.output.targetRef).toBe('entity:roman-art')
+      expect(decision.trace[0].ruleId).toBe('exploration-gap-priority')
+    })
+
+    it('openGaps 为空 → 回落 Rule 1（行为不变，守只增不改红线）', () => {
+      const state = makeState({
+        missingDimensions: ['economy'],
+        missingConnections: [],
+      })
+      const gapState = { entity_id: 'french-revolution', openGaps: [] }
+      const decision = evaluateExploration(state, defaultPolicyContext, gapState)
+
+      expect(decision.trace[0].ruleId).toBe('exploration-open-dimension')
+      expect(decision.output.targetRef).toBe('entity:port-of-ostia')
+    })
+
+    it('openGaps 中维度无映射实体 → 跳过该 gap，回落 Rule 1', () => {
+      const state = makeState({
+        missingDimensions: ['economy'],
+        dimensionMapping: { economy: ['entity:port-of-ostia'] },
+        missingConnections: [],
+      })
+      const gapState = { entity_id: 'french-revolution', openGaps: ['culture'] }
+      const decision = evaluateExploration(state, defaultPolicyContext, gapState)
+
+      expect(decision.trace[0].ruleId).toBe('exploration-open-dimension')
+      expect(decision.output.targetRef).toBe('entity:port-of-ostia')
+    })
+  })
 })

@@ -8,6 +8,7 @@ import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
 import DimensionReportModal from './DimensionReportModal'
 import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
+import { saveGap } from '../data/GapLedger'
 import type { EntityRelationship } from './EntityPage'
 import { slotImageName, slotImageFocus, useContentRevision } from '../data/contentRuntime'
 import { mediaUrl } from '../data/contentApi'
@@ -634,6 +635,9 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     if (selectedEntities.length > 0) {
       recordEvent({ action: 'start_comparison', entityGlobalId: props.entityGlobalId })
     }
+    // Cognitive loop (P2, 2026-08-14): write the User Action back to the gap
+    // ledger so the research becomes part of the loop's persistent trail.
+    saveGap(props.entityGlobalId, { exploring: 'overall' })
     // 三阶段自主触发：新研究开始，研究中评/综合报告回到未触发态
     setSummaryStarted(false)
     setReportStarted(false)
@@ -681,6 +685,9 @@ export default function ResearchPanel(props: ResearchPanelProps) {
     const idx = template.findIndex((t) => t.key === dimKey)
     if (idx < 0) return
     const t = template[idx]
+    // Cognitive loop (P2): record that this single-dimension research started
+    // — the User Action that leaves a trail in the gap ledger.
+    saveGap(props.entityGlobalId, { exploring: dimKey })
 
     // 首次单点：先把四维按 idle 初始化（其余维度等待单独触发）。
     let base = dimensions

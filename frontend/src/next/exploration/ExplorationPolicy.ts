@@ -15,6 +15,10 @@
 
 import type { Decision, PolicyContext } from '../../runtime/evaluation/Decision'
 import type { ExplorationState } from './ExplorationState'
+// Cognitive loop (P2, 2026-08-14): the policy now reads the persisted
+// user-facing Knowledge Gap so the next step can target what the *user* said
+// they still don't get (not just the system-projected missing dimensions).
+import type { GapSnapshot } from '../../data/GapLedger'
 
 // ============================================================================
 // ExplorationActionType
@@ -73,7 +77,35 @@ export interface ExplorationAction {
 export function evaluateExploration(
   state: ExplorationState,
   policyContext: PolicyContext,
+  gapState?: GapSnapshot | null,
 ): Decision<ExplorationAction> {
+  // ── Rule 0: 用户标记的开放缺口（认知闭环，最高优先） ──
+  // 若用户在某主题下显式标记「还想搞清楚」的维度（理解工作区写入
+  // gapState.openGaps），下一步优先对准它——让闭环「读」侧成环
+  // （Knowledge Gap → Next Exploration）。无 openGaps 时整段跳过，
+  // Rule 1–5 行为完全不变（守 §5 只增不改红线）。
+  const openGaps: string[] =
+    gapState && Array.isArray(gapState.openGaps)
+      ? (gapState.openGaps as string[])
+      : []
+  for (const gapDim of openGaps) {
+    const targetRef = resolveDimensionTarget(gapDim, state)
+    if (!targetRef) continue
+    if (isAlreadyExplored(targetRef, state.exploredAnchors)) continue
+    return makeDecision(policyContext, {
+      type: 'open_dimension',
+      targetRef,
+      reason: `你标记了还想搞清楚「${gapDim}」维度`,
+      narrativeHook: `你说过想搞懂「${gapDim}」，先从它相关的实体入手？`,
+      expectedGrowth: { dimension: gapDim, relationType: 'enables' },
+      confidence: 0.95,
+    }, [{
+      ruleId: 'exploration-gap-priority',
+      inputs: { openGap: gapDim, targetRef },
+      decision: true,
+    }])
+  }
+
   // ── Rule 1: 打开缺失维度（最优先） ──
   // 遍历缺失维度，找第一个「有映射实体 且 未探索」的维度作为 open_dimension 目标；
   // 全部不可达则放弃 Rule 1，落到后续规则（绝不产出中文标签这种 404 目标）。

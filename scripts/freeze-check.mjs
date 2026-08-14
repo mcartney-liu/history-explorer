@@ -986,6 +986,11 @@ export const SCOPE_ALLOWLIST = [
   //    deps). Defaults reproduce current behaviour exactly; callers unchanged.
   // No schema / enum / dependency / API-contract / runtime change.
   "frontend/src/pages/m89/UnderstandingWorkspace.tsx",
+  // P2 认知闭环 (2026-08-14, PO 动工): ExplorationPolicy 升级读 GapState —
+  // evaluateExploration() 加可选 gapState 第三参数（Rule 0 优先对准用户标记缺口）。
+  "frontend/src/next/exploration/ExplorationPolicy.ts",
+  // P2 认知闭环 (2026-08-14, PO 动工): ExplorationPolicy Rule 0 测试（用户标记 Gap 优先）。
+  "frontend/src/next/exploration/__tests__/ExplorationPolicy.test.ts",
   "frontend/src/pages/m89/m89.css",
   "frontend/src/__tests__/App.smoke.test.tsx",
   // Wave2-#141(3) — shell cleanup (PO-approved 2026-08-08): ExplorationShell

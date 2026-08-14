@@ -8,7 +8,7 @@
 // with the same inputs + setters it previously closed over, so navigation
 // behaviour and the rendered runtime state are identical.
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import type { ExplorationResult } from '../App'
 import type { EntityDetail } from '../components/EntityPage'
@@ -22,6 +22,8 @@ import {
   type UnderstandingTemplate,
 } from '../next/UnderstandingProjection'
 import { evaluateExploration, type ExplorationAction } from '../next/exploration/ExplorationPolicy'
+import type { GapSnapshot } from '../data/GapLedger'
+import { loadGap } from '../data/GapLedger'
 import {
   buildExplorationState,
   EMPTY_EXPLORATION_STATE,
@@ -63,6 +65,30 @@ export function useExplorationProjection(input: UseExplorationProjectionInput): 
     previousExplorationState,
     setPolicyAction,
   } = input
+
+  // Cognitive loop (P2, 2026-08-14): the persisted user-facing Knowledge Gap
+  // is loaded once per topic and fed into ExplorationPolicy (Rule 0) so the
+  // next step can target what the user said they still don't get.
+  const [gapState, setGapState] = useState<GapSnapshot | null>(null)
+  const [computedState, setComputedState] = useState<ExplorationState | null>(null)
+
+  useEffect(() => {
+    if (!currentTopic) {
+      setGapState(null)
+      return
+    }
+    let cancelled = false
+    loadGap(currentTopic)
+      .then((g) => {
+        if (!cancelled) setGapState(g)
+      })
+      .catch(() => {
+        if (!cancelled) setGapState(null)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [currentTopic])
 
   useEffect(() => {
     console.log('[Projection useEffect] TRIGGERED', {
@@ -201,20 +227,24 @@ export function useExplorationProjection(input: UseExplorationProjectionInput): 
       setExplorationMetrics(metrics)
     }
     previousExplorationState.current = eState
+    // Hand the freshly built state to the policy effect (below), which also
+    // consumes the persisted gap so Rule 0 can target user-marked gaps.
+    setComputedState(eState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef, entityData])
 
+  // Cognitive loop (P2, 2026-08-14): run ExplorationPolicy whenever the
+  // projected state OR the persisted gap changes. Feeding gapState here (not
+  // inside the projection effect) avoids re-running the heavy projection when
+  // only the gap changes, and keeps the Policy's input always up to date.
+  useEffect(() => {
+    if (!computedState) return
     const policyContext: PolicyContext = {
       policyVersion: '1.0',
       timestamp: Date.now(),
       engineProtocolVersion: '1.0',
     }
-    const decision = evaluateExploration(eState, policyContext)
-    console.log('[ExplorationPolicy] Decision:', {
-      actionType: decision.output?.type,
-      reason: decision.output?.reason,
-      coverageRatio: eState.coverageRatio,
-      missingDimensions: eState.missingDimensions,
-    })
+    const decision = evaluateExploration(computedState, policyContext, gapState)
     setPolicyAction(decision.output)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef, entityData])
+  }, [computedState, gapState, setPolicyAction])
 }
