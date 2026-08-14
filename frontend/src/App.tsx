@@ -129,7 +129,7 @@ import ExplorationPackagePage from './pages/ExplorationPackagePage'
 // M85.8 — CausalObject Explorer Experience
 import CausalObjectDetailPage from './components/causal/CausalObjectDetailPage'
 import type { CausalObjectData } from './data/causalStatement'
-import causalObjectsRaw from '../../data/causal_objects.json'
+import { causalObjectsRaw } from './data/DataSource'
 
 // M85.9.3 — Explorer Path Instrumentation
 import { recordVisit, completePath } from './data/ExplorerPath'

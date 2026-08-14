@@ -645,6 +645,7 @@ export const SCOPE_ALLOWLIST = [
   // Least Privilege: no backend / dependency / schema / enum / runtime change.
   // backend diff = 0; runtime 0.13.0 unchanged. No AI/LLM runtime (future AI steps are
   // contract-only placeholders, never executed). data/ JSON is out of scope-check by design.
+  "frontend/src/data/DataSource.ts",
   "frontend/src/data/explorationPackages.ts",
   "frontend/src/data/explorationPackages.test.ts",
   "frontend/src/data/userPackage.ts",
