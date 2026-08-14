@@ -76,9 +76,10 @@ New Gap                 派生新缺口（从新认知中浮现的下一步疑�
 
 ## 6. M89 理解工作区入口（施工前置）
 
-- 现状：`ModeCanvas` 的 `understanding` 分支因 `isDevCatalog` / `hasPackage` 恒 `null` **永不挂载**，用户进不去理解工作区。
+- 现状（2026-08-14 更正）：卡点**非** `isDevCatalog`/`hasPackage` 恒 null；真实根因是 App.tsx 两处硬编码——`understandingMode={null}`（内容节点恒空）+ `isUnderstandingRoute={false}`（ModeCanvas:123 分支条件第一项永 false，永不进）。`isDevCatalog={false}`、`hasPackage={!!packageSlug}` 均正确、非卡点。
 - P2 要「可感知的成长轨迹」，须先让入口可达（修复挂载条件 / 提供默认进入路径）。
 - 这是 P1 之外独立的「入口 bug」，需在 P2 施工第一步修。
+- **状态：✅ 已修复（2026-08-14 首刀，commit `077d8986`）**。`isUnderstandingRoute` 改为由路由推导（`router.route?.mode === 'understanding'`），`understandingMode` 接入已建好的 `pages/m89/UnderstandingWorkspace`（topic 驱动投影，纯前端、无后端、无新依赖）。`#/m89` → `#/explore/french-revolution/understanding` 现可进入理解工作区。三道门全绿、SHA 直推 `plan/next-phase`。
 
 ---
 
@@ -91,6 +92,20 @@ New Gap                 派生新缺口（从新认知中浮现的下一步疑�
 | D3 | 用户动作集 | **仅研究**（Explore/Verify/Synthesize）/ 含收藏 / 含笔记 |
 | D4 | 表面呈现 | **复用 `UnderstandingStatus`**（低成本）/ 开 M89 工作区（重但更完整）|
 | D5 | 文案避「推荐」 | 用「下一步」「可探索」「你可能想搞清楚」等，禁用「为你推荐」|
+
+### 7.1 决议记录（2026-08-14 PO 拍板，全按推荐项）
+
+| # | 决策点 | PO 裁决 | 落盘影响 |
+|---|---|---|---|
+| D1 | Gap 粒度 | **实体级**（某实体没搞懂） | `GapState` 以 `entity_id` 为键；主题/关系级后续派生，不阻塞首版 |
+| D2 | 持久化范围 | **仅 Gap + 理解快照**（轻） | 守 ADR-0018 匿名 sqlite；全轨迹留 v2，不预支 |
+| D3 | 用户动作集 | **仅研究**（Explore/Verify/Synthesize） | 复用现有 `ResearchPanel` 三阶段，零新增零件 |
+| D4 | 表面呈现 | **复用 `UnderstandingStatus`** | 不破 FRW P3 红线（下一步唯一出口 = `NextStepPanel`） |
+| D5 | 文案口径 | 「下一步 / 可探索 / 你可能想搞清楚」 | 禁用「为你推荐」语汇，守 M88.0 / ADR-0015 D1 |
+
+> 状态：**D1–D5 全部 RESOLVED（2026-08-14）**。
+> 施工前置核验：① **P1⑤ 统一数据入口 = 已满足**——P1② 把 `App.tsx` 运行态抽到 `runtime/explorerRuntime`（App.tsx:80 导入、:189 解构消费，无副本），前端单一数据源成立。② **打开 M89 入口 = 纳入首刀**（独立 bug：`ModeCanvas` understanding 分支因 `isDevCatalog`/`hasPackage` 恒 `null` 永不挂载）。
+> 下一步：待 PO 发「动工」进入认知闭环实施（先修 M89 入口 + Gap 状态底座，再串 7 态闭环）。
 
 ---
 
