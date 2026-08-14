@@ -11,7 +11,7 @@ interface JourneyRailProps {
   onEntityClick?: (gid: string) => void
 }
 
-interface Station {
+export interface Station {
   gid: string
   name: string
   index: number
@@ -23,7 +23,7 @@ interface Station {
 // skeleton" that lets the user perceive the WHOLE journey (where they are +
 // what's left) at a glance, answering the "no itinerary / no sense of progress"
 // pain point from the founder dry-run.
-function buildStations(pkg: ExplorationPackage): Station[] {
+export function buildStations(pkg: ExplorationPackage): Station[] {
   const seen = new Set<string>()
   const out: Station[] = []
   const push = (gid: string) => {
