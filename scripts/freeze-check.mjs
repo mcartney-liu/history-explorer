@@ -285,6 +285,10 @@ export const SCOPE_ALLOWLIST = [
   // buildFeaturedTopics() live here. Pure relocation of App.tsx logic; call
   // sites unchanged.
   "frontend/src/runtime/causalObjectMaps.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): navigation / package
+  // adapter functions — useExplorationNavigation() lives here. Pure
+  // relocation of App.tsx logic (447–571); call sites unchanged.
+  "frontend/src/runtime/explorationNavigation.ts",
   // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
   // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
   // frontend change: Discover landing page, static narrative layer
