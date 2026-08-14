@@ -1,8 +1,8 @@
 # P2 认知闭环设计（Cognitive Loop — the real next-phase product spine）
 
-> 分支：`plan/next-phase`（基于 `30ccff6`）
-> 战略定位：Article 0 ②③ 的真落地（找到学习方法 / 无限逼近真相）；盘点 §G/E 反复点名的「下一阶段最重要目标」与「总监最需裁决问题 #3」
-> 本质：**不是造新东西，是把已有零件用「持久化 Gap 状态」串成环**
+> 分支：`plan/next-phase`（基于 `30ccff6`）  
+> 战略定位：Article 0 ②③ 的真落地（找到学习方法 / 无限逼近真相）；盘点 §G/E 反复点名的「下一阶段最重要目标」与「总监最需裁决问题 #3」  
+> 本质：**不是造新东西，是把已有零件用「持久化 Gap 状态」串成环**  
 > 性质：设计文档，本轮不写码；施工前置 = P1 ⑤ + 打开 M89 入口
 
 ---
@@ -43,15 +43,15 @@ New Gap                 派生新缺口（从新认知中浮现的下一步疑�
 
 ## 3. 各态 ↔ 现有零件映射
 
-| 态 | 现有零件 | 现状 | P2 动作 |
-|---|---|---|---|
-| Understanding | `UnderstandingStatus` | 纯展示组件，无持久 gap | 复用为呈现层，消费 Gap |
-| Knowledge Gap | （新增 `GapState`）| 不存在 | **新增**，持久化（见 §4）|
-| Next Exploration | `ExplorationPolicy` | 无状态规则引擎 | 升级为读取 `GapState` 的有状态引擎 |
-| User Action | `ResearchPanel` 三阶段（Explore/Verify/Synthesize）| 现有 | 接入 Gap：动作前记录目标 gap，动作后写回新认知 |
-| New Knowledge | 研究产出 + `evidence_claims` | 现有 | 经 ADR-0018 sqlite 存档（匿名）|
-| Understanding Update | `UnderstandingStatus` | 展示 | 订阅 New Knowledge，刷新 |
-| New Gap | （规则派生）| 不存在 | 从 New Knowledge 规则派生下一缺口 |
+| 态                    | 现有零件                                           | 现状            | P2 动作                       |
+| -------------------- | ---------------------------------------------- | ------------- | --------------------------- |
+| Understanding        | `UnderstandingStatus`                          | 纯展示组件，无持久 gap | 复用为呈现层，消费 Gap               |
+| Knowledge Gap        | （新增 `GapState`）                                | 不存在           | **新增**，持久化（见 §4）            |
+| Next Exploration     | `ExplorationPolicy`                            | 无状态规则引擎       | 升级为读取 `GapState` 的有状态引擎     |
+| User Action          | `ResearchPanel` 三阶段（Explore/Verify/Synthesize） | 现有            | 接入 Gap：动作前记录目标 gap，动作后写回新认知 |
+| New Knowledge        | 研究产出 + `evidence_claims`                       | 现有            | 经 ADR-0018 sqlite 存档（匿名）    |
+| Understanding Update | `UnderstandingStatus`                          | 展示            | 订阅 New Knowledge，刷新         |
+| New Gap              | （规则派生）                                         | 不存在           | 从 New Knowledge 规则派生下一缺口    |
 
 ---
 
@@ -85,31 +85,32 @@ New Gap                 派生新缺口（从新认知中浮现的下一步疑�
 
 ## 7. 五个待 PO 拍板的决策（D1–D5）
 
-| # | 决策点 | 选项（推荐置前）|
-|---|---|---|
-| D1 | Gap 粒度 | **实体级**（某实体没搞懂）/ 主题级 / 关系级 |
-| D2 | 持久化范围 | **仅 Gap + 理解快照**（轻）/ Gap+全轨迹 / 全量 |
-| D3 | 用户动作集 | **仅研究**（Explore/Verify/Synthesize）/ 含收藏 / 含笔记 |
-| D4 | 表面呈现 | **复用 `UnderstandingStatus`**（低成本）/ 开 M89 工作区（重但更完整）|
-| D5 | 文案避「推荐」 | 用「下一步」「可探索」「你可能想搞清楚」等，禁用「为你推荐」|
+| #  | 决策点     | 选项（推荐置前）                                            |
+| -- | ------- | --------------------------------------------------- |
+| D1 | Gap 粒度  | **实体级**（某实体没搞懂）/ 主题级 / 关系级                          |
+| D2 | 持久化范围   | **仅 Gap + 理解快照**（轻）/ Gap+全轨迹 / 全量                   |
+| D3 | 用户动作集   | **仅研究**（Explore/Verify/Synthesize）/ 含收藏 / 含笔记       |
+| D4 | 表面呈现    | **复用 `UnderstandingStatus`**（低成本）/ 开 M89 工作区（重但更完整） |
+| D5 | 文案避「推荐」 | 用「下一步」「可探索」「你可能想搞清楚」等，禁用「为你推荐」                      |
 
 ### 7.1 决议记录（2026-08-14 PO 拍板，全按推荐项）
 
-| # | 决策点 | PO 裁决 | 落盘影响 |
-|---|---|---|---|
-| D1 | Gap 粒度 | **实体级**（某实体没搞懂） | `GapState` 以 `entity_id` 为键；主题/关系级后续派生，不阻塞首版 |
-| D2 | 持久化范围 | **仅 Gap + 理解快照**（轻） | 守 ADR-0018 匿名 sqlite；全轨迹留 v2，不预支 |
-| D3 | 用户动作集 | **仅研究**（Explore/Verify/Synthesize） | 复用现有 `ResearchPanel` 三阶段，零新增零件 |
-| D4 | 表面呈现 | **复用 `UnderstandingStatus`** | 不破 FRW P3 红线（下一步唯一出口 = `NextStepPanel`） |
-| D5 | 文案口径 | 「下一步 / 可探索 / 你可能想搞清楚」 | 禁用「为你推荐」语汇，守 M88.0 / ADR-0015 D1 |
+| #  | 决策点    | PO 裁决                              | 落盘影响                                         |
+| -- | ------ | ---------------------------------- | -------------------------------------------- |
+| D1 | Gap 粒度 | **实体级**（某实体没搞懂）                    | `GapState` 以 `entity_id` 为键；主题/关系级后续派生，不阻塞首版 |
+| D2 | 持久化范围  | **仅 Gap + 理解快照**（轻）                | 守 ADR-0018 匿名 sqlite；全轨迹留 v2，不预支             |
+| D3 | 用户动作集  | **仅研究**（Explore/Verify/Synthesize） | 复用现有 `ResearchPanel` 三阶段，零新增零件               |
+| D4 | 表面呈现   | **复用 `UnderstandingStatus`**       | 不破 FRW P3 红线（下一步唯一出口 = `NextStepPanel`）      |
+| D5 | 文案口径   | 「下一步 / 可探索 / 你可能想搞清楚」              | 禁用「为你推荐」语汇，守 M88.0 / ADR-0015 D1             |
 
-> 状态：**D1–D5 全部 RESOLVED（2026-08-14）**。
-> 施工前置核验：① **P1⑤ 统一数据入口 = 已满足**——P1② 把 `App.tsx` 运行态抽到 `runtime/explorerRuntime`（App.tsx:80 导入、:189 解构消费，无副本），前端单一数据源成立。② **打开 M89 入口 = 首刀已完成**（commit `077d8986`；根因是 `App.tsx` 两处硬编码 `understandingMode={null}` + `isUnderstandingRoute={false}`，已改为路由推导 + 接入既有 `UnderstandingWorkspace`）。
+> 状态：**D1–D5 全部 RESOLVED（2026-08-14）**。  
+> 施工前置核验：① **P1⑤ 统一数据入口 = 已满足**——P1② 把 `App.tsx` 运行态抽到 `runtime/explorerRuntime`（App.tsx:80 导入、:189 解构消费，无副本），前端单一数据源成立。② **打开 M89 入口 = 首刀已完成**（commit `077d8986`；根因是 `App.tsx` 两处硬编码 `understandingMode={null}` + `isUnderstandingRoute={false}`，已改为路由推导 + 接入既有 `UnderstandingWorkspace`）。  
 > 实施进度（认知闭环）：
->  - ① M89 理解入口 ✅ `077d8986`
->  - ② **Gap 状态底座 ✅ `3381692`**（ADR-0018 sqlite `gap_ledger` + `/api/v1/research/gap` 端点 + 前端 `GapLedger` 客户端 + `UnderstandingWorkspace` 最小接入；验收 #3「刷新后 Gap / 理解快照仍在」已达成）
->  - ③ 串 7 态闭环（Understanding→Gap→Next→Action→New K→Update→New Gap）—— **待第三刀**
-> 下一步：发「动工」进第三刀「串 7 态闭环」。
+>
+> - ① M89 理解入口 ✅ `077d8986`
+> - ② **Gap 状态底座 ✅ `3381692`**（ADR-0018 sqlite `gap_ledger` + `/api/v1/research/gap` 端点 + 前端 `GapLedger` 客户端 + `UnderstandingWorkspace` 最小接入；验收 #3「刷新后 Gap / 理解快照仍在」已达成）
+> - ③ 串 7 态闭环 ✅（2026-08-14 第三刀）—— Policy 升级读 Gap（Rule 0 优先对准用户标记缺口）+ 研究动作写回 Gap 账本；理解工作区「还想搞清楚」标记落盘 openGaps。
+>   认知闭环 ①②③ 全绿，闭环已成环。可选第四刀：Gap 状态机（open→exploring→clarified→closed）+ 研究完成后写回 clarified + New Gap 规则派生。
 
 ---
 
