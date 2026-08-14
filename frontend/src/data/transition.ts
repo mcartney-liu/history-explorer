@@ -33,9 +33,21 @@ export interface TransitionResult {
   short: string | null
   /** 最终过渡文本（claim ?? short ?? 路径桥；皆无 = null → 第四层降级）。 */
   text: string | null
+  /** v3 证据分级（P09 真值层）：claim 层取学术共识分级、短句层 strong、
+   *  路径桥层 weak；无过渡时为 null。 */
+  confidence: TransitionConfidence | null
 }
 
+export type TransitionConfidence = 'strong' | 'moderate' | 'weak'
+
 const hasCJK = (s: string) => /[\u4e00-\u9fff]/.test(s)
+
+// evidence claim 的学术共识分级 → 展示分级（P09 真值层）。
+const CLAIM_CONF: Record<string, TransitionConfidence> = {
+  high: 'strong',
+  medium: 'moderate',
+  low: 'weak',
+}
 
 export function describeTransition(
   fromName: string,
@@ -44,25 +56,33 @@ export function describeTransition(
   /** v2 多跳路径桥：A 与 B 的共同邻居（无直接边时使用；可为空）。 */
   commonNeighbor?: { gid: string; name: string } | null,
 ): TransitionResult {
-  // 第三/四层：无直接边。有共同邻居 → 多跳路径桥；否则不编造，交给场景降级。
+  // 第三/四层：无直接边。有共同邻居 → 多跳路径桥（间接关联，weak）；
+  // 否则不编造，交给场景降级。
   if (!edge) {
     if (commonNeighbor) {
       return {
         claim: null,
         short: null,
         text: `${fromName} 与 ${toName} 通过 ${commonNeighbor.name} 相关联`,
+        confidence: 'weak',
       }
     }
-    return { claim: null, short: null, text: null }
+    return { claim: null, short: null, text: null, confidence: null }
   }
-  // 第一层：优先中文 claim 叙述（策展人写的事实，最有意义）。
+  // 第一层：优先中文 claim 叙述（策展人写的事实，最有意义；分级随 claim）。
   const zhClaims = getEvidenceWithSources(edge.evidence ?? [])
     .map((e) => e.claim)
     .filter((c) => c && hasCJK(c))
   if (zhClaims.length > 0) {
-    return { claim: zhClaims[0], short: null, text: zhClaims[0] }
+    const claimConf = getEvidenceWithSources(edge.evidence ?? [])[0]?.confidence
+    return {
+      claim: zhClaims[0],
+      short: null,
+      text: zhClaims[0],
+      confidence: CLAIM_CONF[claimConf ?? ''] ?? 'moderate',
+    }
   }
-  // 第二层：关系短句（准确但朴素）。
+  // 第二层：关系短句（冻结 18 关系边 = 图事实，strong）。
   const short = `${fromName} ${relLabel(edge.type)} ${toName}`
-  return { claim: null, short, text: short }
+  return { claim: null, short, text: short, confidence: 'strong' }
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocale } from '../../data/locale'
 import {
   getPackageBySlug,
   getEntityDisplayName,
@@ -37,6 +38,7 @@ export default function ConnectionCard({
   onOpenPackage,
 }: ConnectionCardProps) {
   // 一次性消费来源包：仅当暂存的实体与当前实体匹配时才显示，避免跨站串卡。
+  const { t } = useLocale()
   const [originSlug] = useState(() => takePackageOrigin(entityGlobalId))
   if (!originSlug || !entityGlobalId) return null
 
@@ -93,7 +95,7 @@ export default function ConnectionCard({
   const prevTransition = prev
     ? describeTransition(prev.name, entityName, prevEdge
         ? { type: prevEdge.type, evidence: prevEdge.evidence }
-        : null, prevCommon).text
+        : null, prevCommon)
     : null
 
   return (
@@ -120,12 +122,19 @@ export default function ConnectionCard({
               </button>
             )}
           </div>
-          {prevTransition && prev && (
+          {prevTransition?.text && prev && (
             <div className="connection-card-transition">
               <span className="connection-card-transition-kicker">
                 从上一站「{prev.name}」来
               </span>
-              <p className="connection-card-transition-text">{prevTransition}</p>
+              <p className="connection-card-transition-text">
+                {prevTransition.text}
+                {prevTransition.confidence && (
+                  <span className={`transition-confidence transition-confidence--${prevTransition.confidence}`}>
+                    {t(`transition.confidence_${prevTransition.confidence}`)}
+                  </span>
+                )}
+              </p>
             </div>
           )}
           <div className="connection-card-nav">

@@ -162,4 +162,8 @@ export default {
   'common.collapse': 'Collapse',
   'common.expand_text': 'Expand full text',
   'common.collapse_text': 'Collapse full text',
+  // Transition Function v3 evidence grading (2026-08-15, P09 truth layer)
+  'transition.confidence_strong': 'Strong evidence',
+  'transition.confidence_moderate': 'Debated',
+  'transition.confidence_weak': 'Indirect link',
 }

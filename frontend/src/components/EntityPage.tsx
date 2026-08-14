@@ -172,10 +172,8 @@ function EntityPage({
     const aNeighbors = getEntityNeighbors(originGid) ?? []
     const bGids = new Set(entity.relationships.map((r) => r.other.global_id ?? r.other.id))
     const common = aNeighbors.find((n) => bGids.has(n.gid)) ?? null
-    return {
-      fromName,
-      bridge: describeTransition(fromName, entity.name, rel ? { type: rel.type } : null, common).text,
-    }
+    const res = describeTransition(fromName, entity.name, rel ? { type: rel.type } : null, common)
+    return { fromName, bridge: res.text, confidence: res.confidence }
   }, [originGid, entity])
 
   // 2026-08-11 (PO 方案B): 消费「我的」tab 写入的 pending restore ——
@@ -217,7 +215,14 @@ function EntityPage({
               : t('entity.origin_bridge_fallback', { name: originBridge.fromName })}
           </span>
           {originBridge.bridge && (
-            <p className="origin-bridge-text">{originBridge.bridge}</p>
+            <p className="origin-bridge-text">
+              {originBridge.bridge}
+              {originBridge.confidence && (
+                <span className={`transition-confidence transition-confidence--${originBridge.confidence}`}>
+                  {t(`transition.confidence_${originBridge.confidence}`)}
+                </span>
+              )}
+            </p>
           )}
         </div>
       )}

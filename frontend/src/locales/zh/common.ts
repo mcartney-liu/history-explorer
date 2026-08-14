@@ -162,4 +162,8 @@ export default {
   'common.collapse': '收起',
   'common.expand_text': '展开全文',
   'common.collapse_text': '收起全文',
+  // Transition Function v3 证据分级 (2026-08-15, P09 真值层)
+  'transition.confidence_strong': '证据强',
+  'transition.confidence_moderate': '有争议',
+  'transition.confidence_weak': '间接关联',
 }
