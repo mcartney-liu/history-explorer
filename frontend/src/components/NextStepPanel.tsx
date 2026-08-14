@@ -16,6 +16,7 @@
 
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
+import CollapsibleList from './ui/CollapsibleList'
 import { getEntityDisplayName } from '../data/explorationPackages'
 import LayerBadge from './common/LayerBadge'
 import type { ExplorationAction, ExplorationActionType } from '../next/exploration/ExplorationPolicy'
@@ -77,7 +78,7 @@ export function NextStepPanelView({
         {t('discover.nextStepHeading')}
         <LayerBadge layer="inference" />
       </h3>
-      <ul className="he-nextstep-list">
+      <CollapsibleList className="he-nextstep-list" visible={4}>
         {actions.map((action, idx) => {
           const gid = action.targetRef
           const name = action.targetRef ? resolveName(gid, locale) : ''
@@ -114,7 +115,7 @@ export function NextStepPanelView({
             </li>
           )
         })}
-      </ul>
+      </CollapsibleList>
     </div>
   )
 }

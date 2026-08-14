@@ -157,4 +157,9 @@ export default {
   'layer.causal': 'Causal explanation',
   'layer.inference': 'System inference',
   'layer.evidence': 'Evidence source',
+  // INFO_FOLDING UX SPEC (2026-08-15, PO): unified folding component copy
+  'common.view_all': 'View all %{count} →',
+  'common.collapse': 'Collapse',
+  'common.expand_text': 'Expand full text',
+  'common.collapse_text': 'Collapse full text',
 }

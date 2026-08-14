@@ -157,4 +157,9 @@ export default {
   'common.connectionsEmpty': '関連はありません。',
   'common.connectedTopics': '関連テーマ',
   'common.crossTopicEdges': '%{count} 件のテーマ横断的な関連',
+  // INFO_FOLDING UX SPEC (2026-08-15, PO): 統一折りたたみコンポーネントの文言
+  'common.view_all': 'すべて表示 %{count} 件 →',
+  'common.collapse': '閉じる',
+  'common.expand_text': '全文を展開',
+  'common.collapse_text': '全文を折りたたむ',
 }

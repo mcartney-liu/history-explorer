@@ -7,6 +7,7 @@ import {
 import EmptyState from './EmptyState'
 import ErrorCard, { type ErrorKind } from './ErrorCard'
 import LoadingSkeleton from './LoadingSkeleton'
+import CollapsibleList from './ui/CollapsibleList'
 import './ProvenancePanel.css'
 
 export type ProvenanceStatus = 'loading' | 'success' | 'empty' | 'error' | 'disabled'
@@ -144,7 +145,7 @@ export function ProvenancePanelView({
 
                   <div className="prov-source__claims-block">
                     <h4 className="prov-claims__label">论断</h4>
-                    <ul className="prov-source__claims">
+                    <CollapsibleList className="prov-source__claims" visible={3}>
                       {recs.map((r, i) => (
                         <li className="prov-claim" key={r.claim_id}>
                           <span className="prov-claim__index" aria-hidden="true">
@@ -158,7 +159,7 @@ export function ProvenancePanelView({
                           </span>
                         </li>
                       ))}
-                    </ul>
+                    </CollapsibleList>
                   </div>
                 </article>
               )

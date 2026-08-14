@@ -157,4 +157,9 @@ export default {
   'layer.causal': '因果解释',
   'layer.inference': '系统推断',
   'layer.evidence': '证据来源',
+  // INFO_FOLDING UX SPEC (2026-08-15, PO): 统一折叠组件文案
+  'common.view_all': '查看全部 %{count} 条 →',
+  'common.collapse': '收起',
+  'common.expand_text': '展开全文',
+  'common.collapse_text': '收起全文',
 }

@@ -12,6 +12,7 @@
 
 import { useEffect, useState } from 'react'
 import { API_BASE } from '../config/api'
+import CollapsibleList from './ui/CollapsibleList'
 
 type EntityRelatedListProps = {
   /** Global id of the current entity, e.g. "roman_empire:civ-roman". */
@@ -122,7 +123,7 @@ export function EntityRelatedList({ gid, onEntityClick }: EntityRelatedListProps
   return (
     <section className="he-related" aria-label="相关实体">
       <h3 className="he-related-head">相关实体 · 可以继续追问</h3>
-      <ul className="he-related-list">
+      <CollapsibleList className="he-related-list" visible={5}>
         {items.map((it) => (
           <li key={it.global_id} className="he-related-item">
               <button
@@ -138,7 +139,7 @@ export function EntityRelatedList({ gid, onEntityClick }: EntityRelatedListProps
               </button>
             </li>
         ))}
-      </ul>
+      </CollapsibleList>
     </section>
   )
 }

@@ -6,6 +6,7 @@ import {
 } from '../../data/explorationPackages'
 import { takePackageOrigin, setPackageOrigin } from './packageOrigin'
 import { buildStations } from './JourneyRail'
+import CollapsibleList from '../ui/CollapsibleList'
 
 interface ConnectionCardProps {
   /** global id of the entity currently shown on the page (may be absent). */
@@ -194,7 +195,7 @@ export default function ConnectionCard({
       </div>
 
       {rels.length > 0 && (
-        <ul className="connection-card-rels">
+        <CollapsibleList className="connection-card-rels" visible={3}>
           {rels.map((r, i) => {
             const isFrom = r.from === entityGlobalId
             const other = isFrom ? r.to : r.from
@@ -212,17 +213,19 @@ export default function ConnectionCard({
               </li>
             )
           })}
-        </ul>
+        </CollapsibleList>
       )}
 
       {evidence.length > 0 && (
         <div className="connection-card-evidence">
           <span className="connection-card-evidence-label">依据</span>
-          {evidence.slice(0, 2).map((e) => (
-            <p key={e.claimId} className="connection-card-evidence-text">
-              {e.claim}
-            </p>
-          ))}
+          <CollapsibleList visible={2}>
+            {evidence.map((e) => (
+              <p key={e.claimId} className="connection-card-evidence-text">
+                {e.claim}
+              </p>
+            ))}
+          </CollapsibleList>
         </div>
       )}
     </aside>

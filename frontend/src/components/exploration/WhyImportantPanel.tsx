@@ -6,6 +6,7 @@
 // uncovered keys render nothing (null).
 
 import { getNarrative } from '../../data/narrative'
+import CollapsibleText from '../ui/CollapsibleText'
 
 type WhyImportantPanelProps = {
   // Global id (entity) or topic slug — must match a key in NARRATIVE.
@@ -19,7 +20,7 @@ export function WhyImportantPanel({ narrativeKey }: WhyImportantPanelProps) {
   return (
     <section className="why-important-panel" data-narrative-key={narrativeKey} aria-label="Why this matters">
       <h3 className="why-important-heading">为什么重要 · Why It Matters</h3>
-      <p className="why-important-body">{block.whyImportant}</p>
+      <CollapsibleText text={block.whyImportant} lines={4} className="why-important-body" />
     </section>
   )
 }

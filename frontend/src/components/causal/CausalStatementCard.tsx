@@ -16,6 +16,7 @@ import { confidenceLabelKey } from '../../data/causalStatement'
 import { useLocale } from '../../data/locale'
 import { recordEvent } from '../../data/UserBehaviorEvent'
 import LayerBadge from '../common/LayerBadge'
+import CollapsibleText from '../ui/CollapsibleText'
 
 interface CausalStatementCardProps {
   cs: CausalStatementData
@@ -72,7 +73,7 @@ export default function CausalStatementCard({
       {cs.mechanism && (
         <section className="causal-section">
           <h4 className="causal-label">{t('causal.mechanism')}</h4>
-          <p className="causal-text">{cs.mechanism}</p>
+          <CollapsibleText text={cs.mechanism} />
         </section>
       )}
 
@@ -80,7 +81,7 @@ export default function CausalStatementCard({
       {cs.consequence && (
         <section className="causal-section">
           <h4 className="causal-label">{t('causal.consequence')}</h4>
-          <p className="causal-text">{cs.consequence}</p>
+          <CollapsibleText text={cs.consequence} />
         </section>
       )}
 
