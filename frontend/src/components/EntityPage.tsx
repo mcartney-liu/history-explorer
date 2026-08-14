@@ -37,6 +37,8 @@ import EntityPageShell from './EntityPageShell'
 import type { EntityTab } from './EntityPageShell'
 import { useLocale } from '../data/locale'
 import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
+import { takeOriginEntity } from '../runtime/originEntity'
+import { relLabel } from '../data/relationshipLabels'
 
 export type EntityRelationship = {
   type: string
@@ -151,6 +153,23 @@ function EntityPage({
   // fallback. Target-side dates remain a documented Future Scope item.
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
+  // 入口桥 (2026-08-15, PO)：从实体 A 跳入本实体 B 时，显示 A↔B 的真实关系边
+  // （有直接边，如"唐 早于 宋"）或降级来源（无直接边，如"从「唐」的探索延续
+  // 而来"）。来源由 openEntity 按目标实体暂存（keyed），同一 B 从不同 A 进入
+  // 读到的是最近来源 → 桥随入口变化。无来源（直达/主题列表进入）不渲染。
+  const [originGid] = useState(() => takeOriginEntity(entityGlobalId))
+  const originBridge = useMemo(() => {
+    if (!originGid) return null
+    const rel = entity.relationships.find(
+      (r) => r.other.global_id === originGid || r.other.id === originGid,
+    )
+    const fromName = rel?.other.name ?? originGid
+    if (rel) {
+      return { fromName, bridge: `${fromName} ${relLabel(rel.type)} ${entity.name}` }
+    }
+    return { fromName, bridge: null }
+  }, [originGid, entity])
+
   // 2026-08-11 (PO 方案B): 消费「我的」tab 写入的 pending restore ——
   // 从收藏/最近点进来时，自动恢复对应研究（复用 ResearchLibrary 的打开链路）。
   useEffect(() => {
@@ -179,6 +198,21 @@ function EntityPage({
   return (
     <div className="result">
       <EntityHeader type={entity.type} />
+
+      {/* 入口桥 (2026-08-15, PO)：从实体 A 跳入时显示"A↔B 的关系承接"，
+          无边时降级来源；无来源（直达）不渲染。 */}
+      {originBridge && (
+        <div className="origin-bridge" aria-label="入口承接">
+          <span className="origin-bridge-kicker">
+            {originBridge.bridge
+              ? t('entity.origin_bridge_from', { name: originBridge.fromName })
+              : t('entity.origin_bridge_fallback', { name: originBridge.fromName })}
+          </span>
+          {originBridge.bridge && (
+            <p className="origin-bridge-text">{originBridge.bridge}</p>
+          )}
+        </div>
+      )}
 
       {/* 探索剧本化 ③（治 D3）：从探索包点进来的实体，顶部常驻"你为什么在这里"，
           回答这一站与包主题/关系链的关系。非包内进入时 originSlug 为空，自动不渲染。 */}

@@ -7,6 +7,7 @@ import {
 import { takePackageOrigin, setPackageOrigin } from './packageOrigin'
 import { buildStations } from './JourneyRail'
 import CollapsibleList from '../ui/CollapsibleList'
+import { relLabel } from '../../data/relationshipLabels'
 
 interface ConnectionCardProps {
   /** global id of the entity currently shown on the page (may be absent). */
@@ -17,36 +18,6 @@ interface ConnectionCardProps {
   onEntityClick?: (gid: string) => void
   /** return to the originating exploration package page (full JourneyRail). */
   onOpenPackage?: (slug: string) => void
-}
-
-// Frozen relationship-type enum → Chinese label. Falls back to the raw token
-// (via formatRelationship-style prettify) for any type not listed here, so the
-// UI never shows a bare snake_case token and never invents a meaning.
-const REL_LABELS: Record<string, string> = {
-  before: '早于',
-  after: '晚于',
-  caused: '导致',
-  resulted_in: '促成',
-  participated_in: '参与',
-  related_to: '关联于',
-  practiced: '信奉',
-  influenced: '影响',
-  influenced_by: '受……影响',
-  inherited: '继承',
-  traded_with: '贸易往来',
-  ruled: '统治',
-  founded: '创立',
-  succeeded: '继任',
-  part_of: '属于',
-  located_in: '位于',
-  born_in: '生于',
-  died_in: '卒于',
-  wrote: '著述',
-  spread_to: '传播至',
-}
-
-function relLabel(type: string): string {
-  return REL_LABELS[type] ?? type.replace(/_/g, ' ')
 }
 
 // 探索剧本化 ③（治 D3）：实体页顶部"你为什么在这里"——
