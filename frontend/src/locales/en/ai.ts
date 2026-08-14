@@ -8,6 +8,9 @@ export default {
   'ai.trust_aria_label': 'Exploration suggestions based on knowledge-base evidence',
   'ai.trust_perspective': 'Follow it to see who to explore next',
   'ai.trust_evidence_label': 'Evidence',
+  // INFO_FOLDING UX SPEC (2026-08-15, PO): evidence folding — 2 default + view all
+  'ai.trust_evidence_more': 'View all {count} →',
+  'ai.trust_evidence_collapse': 'Collapse',
   // M74-004-003 (G2): section label differentiated from GuidePanel's "Explore
   // next" — two suggestion sources must not share the same copy.
   'ai.trust_next_label': 'Recommended',
