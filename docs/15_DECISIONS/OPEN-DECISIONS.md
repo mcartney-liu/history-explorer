@@ -25,6 +25,7 @@
 | 2026-08-07 | Phase 0 / ADR-0013 D5 | OD-05 跨学科学原子化粒度与贯通关系模型 | 未来愿景，不阻塞本期 | 独立架构研究 | 无（未来） | 未来里程碑立项 | OPEN | — |
 | 2026-08-07 | Phase 1 / C-04 | Q-04 Explanation 权威来源 | 三源并存无仲裁（模板短语/AI Gateway/Causal） | 分层仲裁+优先级 | 无 | PO 裁决 | **RESOLVED** | 分层仲裁：L1 事实语言化（connections_explained）作轻量预览；L2 权威解释走 Causal/AI Gateway；优先级 AI>Causal>模板，定义每源可见范围。短期对外实际仅模板可用，但明确其「事实语言化」身份、不配「解释」标签。 |
 | 2026-08-07 | Phase 1 / C-11 | Q-05 Package 归属 | package_context 死参数；data 进前端 bundle | 承认纯前端能力 | 无 | PO 裁决 | **RESOLVED** | 承认 Package 为纯前端能力（data 进 bundle，后端无消费）；Phase 2 按纯前端实现，清理 package_context 死参数与后端空管道；未来个性化需求再评估后端化。 |
+| 2026-08-15 | Phase 5 / 站间衔接 | OD-11 包数据站间过渡补全 | 三层衔接策略 UI 已落地（commit 6c2826a）：有中文 claim 讲叙述、有边无 claim 讲关系短句、无边留白；但 10 包扫描全部存在相邻站无直接边断裂点（3~12 个），且中国包 10 段衔接仅 5 段有中文 claim、其他包 claim 为英文；图 grounded 红线禁止编造过渡 | 数据策展专项：为无 claim/无边段补写中文站间过渡句（产品内容资产，与 title/goals 同级，须人工核对历史事实） | 策展人排期（人工核对历史事实） | 专项立项排期 | OPEN | — |
 | 2026-08-07 | Phase 1 / C18 | OD-06 持久化策略（Memory 无持久化） | C18 无持久化；continuityScore 不可达 | Phase 2 暂不做，列 v2 | 无 | PO 裁决 | **RESOLVED** | Phase 2 不做持久化，Memory/Trail 作前端会话态；持久化列 v2 里程碑，与 OD-02 Mirror 出口解耦。 |
 | 2026-08-07 | Phase 1 / P09 | OD-07 异议叙述范围 | Evidence/Source 无用户出口；P09 承诺异议叙述 | 补用户出口+异议叙述 | 无 | PO 裁决 | **RESOLVED** | Phase 2 给 Evidence/Source 补用户出口：证据强度分级 + 来源分级 + 异议叙述，服务 P09 与 Article 0 第三句。 |
 | 2026-08-07 | Phase 0 | R2/R3/R4/R7/R8 残留未决项 | Phase 0 推荐项 R2–R8 中除 R1/R6 外未关闭者 | 待单独复核 | 主持复核 | 单独复核完成 | OPEN | 详见 `docs/FRW-Phase0-ProductDiscovery-v2-2026-08-07.md` 第十节，需后续单独排期裁决。 |
