@@ -272,6 +272,10 @@ export const SCOPE_ALLOWLIST = [
   // P1-② (Engineering Health, 2026-08-14, PO-approved): runtime state hook —
   // the module useExplorerRuntime() lives in. Pure relocation of App.tsx logic.
   "frontend/src/runtime/explorerRuntime.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): view-derived maps +
+  // node-open helpers — the module buildExplorationDerived() lives in. Pure
+  // relocation of App.tsx logic; same inputs/outputs, call sites unchanged.
+  "frontend/src/runtime/explorationDerived.ts",
   // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
   // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
   // frontend change: Discover landing page, static narrative layer
