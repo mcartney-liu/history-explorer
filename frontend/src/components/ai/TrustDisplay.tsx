@@ -262,11 +262,17 @@ export function TrustDisplay({
  */
 export function EvidenceList({ items }: { items: AIEvidence[] }) {
   const { t, locale } = useLocale()
+  // INFO_FOLDING UX SPEC (2026-08-15, PO 试点)：证据默认折叠——只显前 2 条 +
+  // 「查看全部 N 条 →」就地展开；截断必有出路，不丢弃信息。
+  const [expanded, setExpanded] = useState(false)
+  const VISIBLE = 2
+  const shown = expanded ? items : items.slice(0, VISIBLE)
+  const hasMore = items.length > VISIBLE
   return (
     <div className="trust-display-section">
       <p className="trust-display-label">{t('ai.trust_evidence_label')}</p>
       <ul className="trust-display-evidence">
-        {items.map((ev, i) => (
+        {shown.map((ev, i) => (
           <li key={`${ev.global_id}-${i}`} className="trust-display-evidence-item">
             <div className="trust-display-next-head">
               <span className="trust-display-evidence-name">{getEntityDisplayName(ev.global_id, locale as 'zh' | 'en' | 'ja')}</span>
@@ -315,6 +321,18 @@ export function EvidenceList({ items }: { items: AIEvidence[] }) {
           </li>
         ))}
       </ul>
+      {hasMore && (
+        <button
+          type="button"
+          className="trust-display-more"
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
+        >
+          {expanded
+            ? t('ai.trust_evidence_collapse')
+            : t('ai.trust_evidence_more', { count: String(items.length) })}
+        </button>
+      )}
     </div>
   )
 }

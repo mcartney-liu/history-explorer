@@ -6,6 +6,9 @@ export default {
   'ai.trust_aria_label': '知識ベースの根拠に基づく探索提案',
   'ai.trust_perspective': 'これに沿って、次に誰を探索するかおすすめします',
   'ai.trust_evidence_label': '根拠',
+  // INFO_FOLDING UX SPEC (2026-08-15, PO): 根拠の折りたたみ — 既定 2 件 + すべて表示
+  'ai.trust_evidence_more': 'すべて表示 {count} 件 →',
+  'ai.trust_evidence_collapse': '閉じる',
   'ai.trust_next_label': 'おすすめの探索',
   'ai.trust_engine_deterministic': '決定論的出力',
   'ai.trust_engine_ai': 'AI 生成',
