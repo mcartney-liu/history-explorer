@@ -27,7 +27,7 @@
 // no throw reaches the render path.
 // ============================================================
 
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 /** Modules the registry currently groups slots into. */
 export type SlotModule = 'landing' | 'entity_tabs' | 'exploration_flow' | 'ai_capabilities' | 'site'

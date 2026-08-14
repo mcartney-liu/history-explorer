@@ -31,7 +31,7 @@ import { getEntityLabel } from '../data/entity/entityLabels'
 //   - global_id (Candidate.gid) stays authoritative: filtering/sorting/reorder
 //     never rewrite an id, they only rearrange the SAME candidates.
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 // UI-only cap on how many result rows to render at once (overflow handling).
 // Not a data limit — the full list is still searchable via a narrower query.

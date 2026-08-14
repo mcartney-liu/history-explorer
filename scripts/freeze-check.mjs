@@ -170,6 +170,12 @@ export const SCOPE_ALLOWLIST = [
   // by the overly-broad ".env.*" rule and never committed. Added so the template
   // is trackable. Does NOT change runtime defaults (still 8000).
   "frontend/.env.example",
+  // P1-① (Engineering Health, 2026-08-14, PO-approved): single source of truth
+  // for the backend API base URL. All data modules import API_BASE from here
+  // instead of re-declaring the VITE_API_BASE literal (fixes 8000/8001 drift).
+  // Directory-style entry: git reports the new untracked dir as "frontend/src/config/"
+  // (trailing slash), so an exact-file entry would not match the scope check.
+  "frontend/src/config/",
   // M24 (Data Foundation) — Freeze Revision Gate
   "backend/app/core/dataset.py",
   "backend/tests/test_dataset_metadata.py",

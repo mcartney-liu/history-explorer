@@ -27,6 +27,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import { toCandidate, type Candidate } from '../../data/candidateUtils'
 import type { SearchResultItem } from '../../components/SearchResults'
+import { API_BASE } from '../../config/api'
 import {
   ACCEPTED_IMAGE_TYPES,
   DESC_LIMIT,
@@ -202,8 +203,7 @@ export function AdminPage() {
     }
     setInsightSearching(true)
     try {
-      const apiBase: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
-      const res = await fetch(`${apiBase}/api/v1/search?q=${encodeURIComponent(q)}`)
+      const res = await fetch(`${API_BASE}/api/v1/search?q=${encodeURIComponent(q)}`)
       if (!res.ok) throw new Error(`搜索失败（HTTP ${res.status}）`)
       const data = (await res.json()) as { results?: SearchResultItem[] }
       const cands = (data.results ?? []).map(toCandidate).filter((c): c is Candidate => c !== null)

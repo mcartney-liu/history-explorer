@@ -136,10 +136,8 @@ import { recordVisit, completePath } from './data/ExplorerPath'
 
 // M90.3 Stage A — unified Router (single URL truth source)
 import { useRouter, runLegacyRedirect } from './routing'
+import { API_BASE } from './config/api'
 
-// Backend base URL is externalized via Vite env (config, M3-002). Falls back
-// to the local dev backend when VITE_API_BASE is unset, so behavior is unchanged.
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
 // M5-A-3: curated "start here" topics. The ordered slug list now lives in the
 // site-config layer (backend `topic_ordering` + frontend compiled default), so

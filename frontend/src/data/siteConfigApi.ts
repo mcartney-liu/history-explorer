@@ -15,7 +15,7 @@
 // sync so the offline fallback equals factory state.
 // ============================================================
 
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 export interface EntitySectionValue {
   id: string

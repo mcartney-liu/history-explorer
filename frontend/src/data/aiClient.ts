@@ -5,9 +5,7 @@
 // source of truth for grounding / validation.
 // M36.0 adds: mode pass-through, perspectives, evidence, confidence.
 
-// Reuse the same externalized base URL the rest of the frontend uses (M3-002):
-// VITE_API_BASE with a localhost dev fallback, so behavior is unchanged.
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 export type AICitation = {
   global_id: string
