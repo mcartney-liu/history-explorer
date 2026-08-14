@@ -14,6 +14,8 @@ interface ConnectionCardProps {
   entityName: string
   /** jump to a sibling station in the same package journey (carries origin forward). */
   onEntityClick?: (gid: string) => void
+  /** return to the originating exploration package page (full JourneyRail). */
+  onOpenPackage?: (slug: string) => void
 }
 
 // Frozen relationship-type enum → Chinese label. Falls back to the raw token
@@ -58,6 +60,7 @@ export default function ConnectionCard({
   entityGlobalId,
   entityName,
   onEntityClick,
+  onOpenPackage,
 }: ConnectionCardProps) {
   // 一次性消费来源包：仅当暂存的实体与当前实体匹配时才显示，避免跨站串卡。
   const [originSlug] = useState(() => takePackageOrigin(entityGlobalId))
@@ -101,9 +104,20 @@ export default function ConnectionCard({
 
       {idx >= 0 && (
         <div className="connection-card-journey">
-          <span className="connection-card-position">
-            探索行程 · 第 {idx + 1} / {stations.length} 站
-          </span>
+          <div className="connection-card-journey-head">
+            <span className="connection-card-position">
+              探索行程 · 第 {idx + 1} / {stations.length} 站
+            </span>
+            {onOpenPackage && (
+              <button
+                type="button"
+                className="connection-card-return"
+                onClick={() => onOpenPackage(originSlug)}
+              >
+                查看完整行程 →
+              </button>
+            )}
+          </div>
           <div className="connection-card-nav">
             {prev ? (
               <button type="button" className="connection-card-nav-btn" onClick={() => jump(prev.gid)}>
