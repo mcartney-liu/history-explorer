@@ -104,8 +104,12 @@ New Gap                 派生新缺口（从新认知中浮现的下一步疑�
 | D5 | 文案口径 | 「下一步 / 可探索 / 你可能想搞清楚」 | 禁用「为你推荐」语汇，守 M88.0 / ADR-0015 D1 |
 
 > 状态：**D1–D5 全部 RESOLVED（2026-08-14）**。
-> 施工前置核验：① **P1⑤ 统一数据入口 = 已满足**——P1② 把 `App.tsx` 运行态抽到 `runtime/explorerRuntime`（App.tsx:80 导入、:189 解构消费，无副本），前端单一数据源成立。② **打开 M89 入口 = 纳入首刀**（独立 bug：`ModeCanvas` understanding 分支因 `isDevCatalog`/`hasPackage` 恒 `null` 永不挂载）。
-> 下一步：待 PO 发「动工」进入认知闭环实施（先修 M89 入口 + Gap 状态底座，再串 7 态闭环）。
+> 施工前置核验：① **P1⑤ 统一数据入口 = 已满足**——P1② 把 `App.tsx` 运行态抽到 `runtime/explorerRuntime`（App.tsx:80 导入、:189 解构消费，无副本），前端单一数据源成立。② **打开 M89 入口 = 首刀已完成**（commit `077d8986`；根因是 `App.tsx` 两处硬编码 `understandingMode={null}` + `isUnderstandingRoute={false}`，已改为路由推导 + 接入既有 `UnderstandingWorkspace`）。
+> 实施进度（认知闭环）：
+>  - ① M89 理解入口 ✅ `077d8986`
+>  - ② **Gap 状态底座 ✅ `3381692`**（ADR-0018 sqlite `gap_ledger` + `/api/v1/research/gap` 端点 + 前端 `GapLedger` 客户端 + `UnderstandingWorkspace` 最小接入；验收 #3「刷新后 Gap / 理解快照仍在」已达成）
+>  - ③ 串 7 态闭环（Understanding→Gap→Next→Action→New K→Update→New Gap）—— **待第三刀**
+> 下一步：发「动工」进第三刀「串 7 态闭环」。
 
 ---
 
