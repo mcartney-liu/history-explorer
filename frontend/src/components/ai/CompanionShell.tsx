@@ -6,6 +6,7 @@
 // Internal context scope — not exposed to App or global.
 // ============================================================
 
+import { useEffect } from 'react'
 import { CompanionProvider, useCompanion, type CompanionMode, type WorkspaceContextData } from './CompanionContext'
 import { CompanionRouter } from './CompanionRouter'
 import { ExplorationInsightPanel } from './ExplorationInsightPanel'
@@ -18,8 +19,14 @@ const MODES: { id: CompanionMode; label: string }[] = [
   { id: 'discover', label: '发现' },
 ]
 
-function CompanionInner({ onNavigateEntity, actions }: { onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[] }) {
+function CompanionInner({ onNavigateEntity, actions, mode }: { onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[]; mode?: CompanionMode }) {
   const { state, dispatch } = useCompanion()
+
+  // 「直接发问」从理解视角打开时，将初始模式切到对话（chat）。
+  // 普通展开（mode 未传）保持默认 explain。dock 每次展开都会重新挂载，故挂载即生效。
+  useEffect(() => {
+    if (mode) dispatch({ type: 'SET_MODE', payload: mode })
+  }, [mode, dispatch])
 
   return (
     <div className="companion-shell">
@@ -49,10 +56,10 @@ function CompanionInner({ onNavigateEntity, actions }: { onNavigateEntity?: (glo
   )
 }
 
-export function CompanionShell({ workspaceContext, onNavigateEntity, actions }: { workspaceContext?: WorkspaceContextData; onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[] }) {
+export function CompanionShell({ workspaceContext, onNavigateEntity, actions, mode }: { workspaceContext?: WorkspaceContextData; onNavigateEntity?: (globalId: string) => void; actions?: ExplorationAction[]; mode?: CompanionMode }) {
   return (
     <CompanionProvider workspace={workspaceContext}>
-      <CompanionInner onNavigateEntity={onNavigateEntity} actions={actions} />
+      <CompanionInner onNavigateEntity={onNavigateEntity} actions={actions} mode={mode} />
     </CompanionProvider>
   )
 }

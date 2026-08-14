@@ -1,6 +1,6 @@
 // M30-A: thin data layer over the provenance projection endpoint (M29.1).
 // HTTP ONLY — no UI, no judgement. Mirrors aiClient.ts conventions.
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 export type ProvenanceRecord = {
   subject_id: string

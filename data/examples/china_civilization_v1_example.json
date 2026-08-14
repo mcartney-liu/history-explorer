@@ -1447,11 +1447,11 @@
       "target": "tp-song",
       "type": "before",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-011"
       ],
-      "valid_time": null,
+      "valid_time": "907 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1461,9 +1461,11 @@
       "target": "tp-yuan",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）",
+      "evidence": [
+        "ec-044"
+      ],
+      "valid_time": "1271 CE–1279 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1473,9 +1475,11 @@
       "target": "tp-ming",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）",
+      "evidence": [
+        "ec-045"
+      ],
+      "valid_time": "1368 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1485,9 +1489,11 @@
       "target": "tp-qing",
       "type": "before",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "夏商周断代工程1996—2000年阶段成果报告（简本）",
+      "evidence": [
+        "ec-046"
+      ],
+      "valid_time": "1636 CE–1644 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1497,11 +1503,11 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1511,9 +1517,11 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-047"
+      ],
+      "valid_time": "581 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1523,11 +1531,11 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-002"
       ],
-      "valid_time": null,
+      "valid_time": "960 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1537,11 +1545,11 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-012"
       ],
-      "valid_time": null,
+      "valid_time": "1402 CE–1644 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1551,9 +1559,11 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-048"
+      ],
+      "valid_time": "485 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1563,11 +1573,11 @@
       "target": "idea-wenguan",
       "type": "inherited",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": null,
       "narrative": "唐代科举为宋代文官体系提供选任基础，体现制度跨政权延续。",
       "reviewed": true
@@ -1577,11 +1587,11 @@
       "target": "idea-neige",
       "type": "inherited",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-002"
       ],
-      "valid_time": null,
+      "valid_time": "1402 CE–1644 CE",
       "weight": null,
       "narrative": "宋代文官传统经明代内阁承续，内阁由顾问演变为行政中枢。",
       "reviewed": true
@@ -1591,11 +1601,11 @@
       "target": "idea-keju",
       "type": "caused",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1605,11 +1615,11 @@
       "target": "idea-neige",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-012"
       ],
-      "valid_time": null,
+      "valid_time": "1402 CE",
       "weight": null,
       "narrative": "靖难后迁都并强化内阁辅政格局。",
       "reviewed": true
@@ -1619,9 +1629,11 @@
       "target": "idea-tudi",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "国史大纲",
+      "evidence": [
+        "ec-049"
+      ],
+      "valid_time": "1581 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1631,11 +1643,11 @@
       "target": "idea-songci",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-003"
       ],
-      "valid_time": null,
+      "valid_time": "907 CE",
       "weight": null,
       "narrative": "唐诗格律与气象为宋词奠基，词承诗而变。",
       "reviewed": true
@@ -1645,9 +1657,11 @@
       "target": "idea-tangshi",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "论语",
+      "evidence": [
+        "ec-050"
+      ],
+      "valid_time": "701 CE–762 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1657,9 +1671,11 @@
       "target": "idea-tangshi",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "论语",
+      "evidence": [
+        "ec-051"
+      ],
+      "valid_time": "712 CE–770 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1669,9 +1685,11 @@
       "target": "idea-songci",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "论语",
+      "evidence": [
+        "ec-052"
+      ],
+      "valid_time": "1037 CE–1101 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1681,9 +1699,11 @@
       "target": "idea-songci",
       "type": "practiced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "论语",
+      "evidence": [
+        "ec-053"
+      ],
+      "valid_time": "1140 CE–1207 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1693,9 +1713,11 @@
       "target": "idea-lixue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "国史大纲",
+      "evidence": [
+        "ec-054"
+      ],
+      "valid_time": "1033 CE–1107 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1705,11 +1727,11 @@
       "target": "idea-lixue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-009"
       ],
-      "valid_time": null,
+      "valid_time": "1130 CE–1200 CE",
       "weight": null,
       "narrative": "朱熹集理学之大成。",
       "reviewed": true
@@ -1719,11 +1741,11 @@
       "target": "idea-xinxue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-004"
       ],
-      "valid_time": null,
+      "valid_time": "1088 CE onward",
       "weight": null,
       "narrative": "宋代理学为明心学提供思想前驱，心学进而转向内省。",
       "reviewed": true
@@ -1733,11 +1755,11 @@
       "target": "idea-xinxue",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-010"
       ],
-      "valid_time": null,
+      "valid_time": "1472 CE–1529 CE",
       "weight": null,
       "narrative": "王阳明阐发心学、倡知行合一。",
       "reviewed": true
@@ -1747,11 +1769,11 @@
       "target": "idea-zongjiao-ronghe",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "68 CE onward",
       "weight": null,
       "narrative": "佛教本土化推动三教融合。",
       "reviewed": true
@@ -1761,11 +1783,11 @@
       "target": "idea-zongjiao-ronghe",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "551 BCE onward",
       "weight": null,
       "narrative": "儒家正统与佛老并存共生。",
       "reviewed": true
@@ -1775,11 +1797,11 @@
       "target": "idea-shangye-chengshi",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-006"
       ],
-      "valid_time": null,
+      "valid_time": "960 CE–1279 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1789,9 +1811,11 @@
       "target": "idea-shangye-chengshi",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-055"
+      ],
+      "valid_time": "1129 CE–1276 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1801,9 +1825,11 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "史记",
+      "evidence": [
+        "ec-056"
+      ],
+      "valid_time": "105 BCE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1813,11 +1839,11 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-006"
       ],
-      "valid_time": null,
+      "valid_time": "700 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1827,9 +1853,11 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "史记",
+      "evidence": [
+        "ec-057"
+      ],
+      "valid_time": "850 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1839,11 +1867,11 @@
       "target": "civ-zhonghua",
       "type": "invented",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1853,11 +1881,11 @@
       "target": "idea-shangye-chengshi",
       "type": "spread",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-006"
       ],
-      "valid_time": null,
+      "valid_time": "700 CE onward",
       "weight": null,
       "narrative": "印刷术降低知识成本，助长商业城市文化。",
       "reviewed": true
@@ -1867,11 +1895,11 @@
       "target": "loc-quanzhou",
       "type": "spread",
       "confidence": null,
-      "citation": "",
+      "citation": "中国国家博物馆·古代中国基本陈列",
       "evidence": [
         "ec-cn-007"
       ],
-      "valid_time": null,
+      "valid_time": "700 CE onward",
       "weight": null,
       "narrative": "印刷品经泉州等港流通。",
       "reviewed": true
@@ -1881,9 +1909,11 @@
       "target": "loc-quanzhou",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-058"
+      ],
+      "valid_time": "850 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1893,11 +1923,11 @@
       "target": "loc-quanzhou",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1907,11 +1937,11 @@
       "target": "tech-hanghai",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1371 CE–1433 CE",
       "weight": null,
       "narrative": "郑和远航实践并展示航海技术。",
       "reviewed": true
@@ -1921,11 +1951,11 @@
       "target": "tech-hanghai",
       "type": "caused",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-008"
       ],
-      "valid_time": null,
+      "valid_time": "1405 CE–1433 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1935,11 +1965,11 @@
       "target": "tp-ming",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
+      "citation": "中国国家博物馆·古代中国基本陈列",
       "evidence": [
         "ec-cn-007"
       ],
-      "valid_time": null,
+      "valid_time": "1368 CE–1644 CE",
       "weight": null,
       "narrative": "泉州为明代海路贸易枢纽（Semantic Review：traded_with 语义要求贸易双方为实体，地点与时期改用 related_to）。",
       "reviewed": true
@@ -1949,9 +1979,11 @@
       "target": "tp-ming",
       "type": "contemporary_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-059"
+      ],
+      "valid_time": "1368 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1961,11 +1993,11 @@
       "target": "event-keju-established",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-001"
       ],
-      "valid_time": null,
+      "valid_time": "598 CE–649 CE",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1975,9 +2007,11 @@
       "target": "event-keju-established",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "中国国家博物馆·古代中国基本陈列",
+      "evidence": [
+        "ec-060"
+      ],
+      "valid_time": "618 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -1987,11 +2021,11 @@
       "target": "civ-zhonghua",
       "type": "spread",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "68 CE onward",
       "weight": null,
       "narrative": "佛教自外传入并融入中华文明。",
       "reviewed": true
@@ -2001,11 +2035,11 @@
       "target": "civ-zhonghua",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
+      "citation": "中国历史（义务教育教科书）",
       "evidence": [
         "ec-cn-005"
       ],
-      "valid_time": null,
+      "valid_time": "618 CE onward",
       "weight": null,
       "narrative": "",
       "reviewed": true
@@ -2015,11 +2049,11 @@
       "target": "idea-wenguan",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
+      "citation": "国史大纲",
       "evidence": [
         "ec-cn-002"
       ],
-      "valid_time": null,
+      "valid_time": "927 CE–976 CE",
       "weight": null,
       "narrative": "宋太祖重文抑武，奠定宋代文官政治基调。",
       "reviewed": true
@@ -2029,9 +2063,11 @@
       "target": "tp-yuan",
       "type": "part_of",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge History of Ancient China",
+      "evidence": [
+        "ec-061"
+      ],
+      "valid_time": "1271 CE–1368 CE",
       "weight": null,
       "narrative": "大都（元大都）为元代政治中枢。",
       "reviewed": true
@@ -2045,7 +2081,7 @@
       "evidence": [
         "ec-cn-013"
       ],
-      "valid_time": null,
+      "valid_time": "551 BCE onward",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "后世儒生书写将《史记》所记'坑方士'重释为'坑儒'，把秦政塑造为对儒家学说的系统性毁灭——这是解释层的演化，而非事件本身的扩大。",
@@ -2060,7 +2096,7 @@
       "evidence": [
         "ec-cn-014"
       ],
-      "valid_time": null,
+      "valid_time": "605 CE–1905 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "关于科举起点存在隋/唐两说：传统取隋代进士科，钱穆等制度史学者主张唐代才完成'考试—录用'的制度闭环，属对同一制度的解释重释。",
@@ -2075,10 +2111,356 @@
       "evidence": [
         "ec-cn-015"
       ],
-      "valid_time": null,
+      "valid_time": "1200 CE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "朱熹格物致知与王阳明致良知的路径之争：前者向外即物穷理，后者向内发明本心，是宋明理学内部最经典的学派对立。",
+      "reviewed": true
+    },
+    {
+      "source": "rel-fojiao",
+      "target": "ancient_india:religion-buddhism",
+      "type": "spread",
+      "confidence": null,
+      "citation": "Thapar, The Penguin History of Early India; Book of the Later Han (Hou Hanshu), Account of the Western Regions.",
+      "evidence": [
+        "ec-032"
+      ],
+      "valid_time": "68 CE onward",
+      "weight": null
+    },
+    {
+      "source": "tech-zaopi",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "Hansen, The Silk Road: A New History; The Cambridge History of China.",
+      "evidence": [
+        "ec-033"
+      ],
+      "valid_time": "130 BCE–1453 CE",
+      "weight": null
+    },
+    {
+      "source": "tech-yinshua",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-034"
+      ],
+      "valid_time": "130 BCE–1453 CE",
+      "weight": null
+    },
+    {
+      "source": "tech-huoyao",
+      "target": "silk_road:silk_road",
+      "type": "spread",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-035"
+      ],
+      "valid_time": "130 BCE–1453 CE",
+      "weight": null
+    },
+    {
+      "source": "tp-yuan",
+      "target": "persian_empire:civ-persian",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "The Cambridge History of Iran, Vol. 2; The Cambridge History of China.",
+      "evidence": [
+        "ec-036"
+      ],
+      "valid_time": "330 BCE",
+      "weight": null
+    },
+    {
+      "source": "person-zheng-he",
+      "target": "silk_road:silk_road",
+      "type": "participated_in",
+      "confidence": null,
+      "citation": "The Cambridge History of China (Ming volume).",
+      "evidence": [
+        "ec-037"
+      ],
+      "valid_time": "1371 CE–1433 CE",
+      "weight": null
+    },
+    {
+      "source": "loc-quanzhou",
+      "target": "silk_road:silk_road",
+      "type": "traded_with",
+      "confidence": null,
+      "citation": "The Cambridge History of China; Hansen, The Silk Road: A New History.",
+      "evidence": [
+        "ec-038"
+      ],
+      "valid_time": "130 BCE–1453 CE",
+      "weight": null
+    },
+    {
+      "source": "civ-zhonghua",
+      "target": "tb_cn_v1:civ-huaxia",
+      "type": "inherited",
+      "confidence": null,
+      "citation": "Qian Mu, Guoshi Dagang; The Cambridge History of Ancient China.",
+      "evidence": [
+        "ec-039"
+      ],
+      "valid_time": "2000 BCE onward",
+      "weight": null
+    },
+    {
+      "source": "tp-tang",
+      "target": "tb_cn_v1:tp-spring-autumn",
+      "type": "after",
+      "confidence": null,
+      "citation": "The Cambridge History of Ancient China; Qian Mu, Guoshi Dagang.",
+      "evidence": [
+        "ec-040"
+      ],
+      "valid_time": "476 BCE",
+      "weight": null
+    },
+    {
+      "source": "tp-qing",
+      "target": "civ-zhonghua",
+      "type": "part_of",
+      "confidence": null,
+      "citation": "清史稿",
+      "evidence": [
+        "ec-b-001"
+      ],
+      "valid_time": "1636 CE–1912 CE",
+      "weight": null,
+      "narrative": "清朝是中华文明后期的大一统王朝。",
+      "reviewed": true
+    },
+    {
+      "source": "idea-sanxing-liubu",
+      "target": "tp-tang",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "旧唐书",
+      "evidence": [
+        "ec-b-002"
+      ],
+      "valid_time": "618 CE–907 CE",
+      "weight": null,
+      "narrative": "三省六部制于唐代确立并完善。",
+      "reviewed": true
+    },
+    {
+      "source": "person-li-bai",
+      "target": "tp-tang",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-003"
+      ],
+      "valid_time": "701 CE–762 CE",
+      "weight": null,
+      "narrative": "李白为盛唐代表诗人。",
+      "reviewed": true
+    },
+    {
+      "source": "person-du-fu",
+      "target": "tp-tang",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-004"
+      ],
+      "valid_time": "712 CE–770 CE",
+      "weight": null,
+      "narrative": "杜甫为盛唐转中唐代表诗人。",
+      "reviewed": true
+    },
+    {
+      "source": "person-su-shi",
+      "target": "tp-song",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-005"
+      ],
+      "valid_time": "1037 CE–1101 CE",
+      "weight": null,
+      "narrative": "苏轼为北宋文豪。",
+      "reviewed": true
+    },
+    {
+      "source": "person-xin-qiji",
+      "target": "tp-song",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-006"
+      ],
+      "valid_time": "1140 CE–1207 CE",
+      "weight": null,
+      "narrative": "辛弃疾为南宋豪放派词人。",
+      "reviewed": true
+    },
+    {
+      "source": "person-cheng-yi",
+      "target": "tp-song",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-007"
+      ],
+      "valid_time": "1033 CE–1107 CE",
+      "weight": null,
+      "narrative": "程颐为北宋理学家。",
+      "reviewed": true
+    },
+    {
+      "source": "person-tang-taizong",
+      "target": "tp-tang",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "旧唐书",
+      "evidence": [
+        "ec-b-008"
+      ],
+      "valid_time": "618 CE–649 CE",
+      "weight": null,
+      "narrative": "唐太宗为唐朝皇帝。",
+      "reviewed": true
+    },
+    {
+      "source": "person-song-taizu",
+      "target": "tp-song",
+      "type": "ruled",
+      "confidence": null,
+      "citation": "宋史",
+      "evidence": [
+        "ec-b-009"
+      ],
+      "valid_time": "960 CE–976 CE",
+      "weight": null,
+      "narrative": "宋太祖建立宋朝。",
+      "reviewed": true
+    },
+    {
+      "source": "event-jingnan",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "明史",
+      "evidence": [
+        "ec-b-010"
+      ],
+      "valid_time": "1399 CE–1402 CE",
+      "weight": null,
+      "narrative": "靖难之役为明初内战。",
+      "reviewed": true
+    },
+    {
+      "source": "event-yitiaobian",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "明史",
+      "evidence": [
+        "ec-b-011"
+      ],
+      "valid_time": "1368 CE–1644 CE",
+      "weight": null,
+      "narrative": "一条鞭法为明万历财政改革。",
+      "reviewed": true
+    },
+    {
+      "source": "event-zheng-he",
+      "target": "tp-ming",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "瀛涯胜览",
+      "evidence": [
+        "ec-b-012"
+      ],
+      "valid_time": "1405 CE–1433 CE",
+      "weight": null,
+      "narrative": "郑和下西洋在明初。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-linan",
+      "target": "tp-song",
+      "type": "located_at",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-013"
+      ],
+      "valid_time": "1129 CE–1276 CE",
+      "weight": null,
+      "narrative": "临安为南宋都城。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-dadu",
+      "target": "civ-zhonghua",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-014"
+      ],
+      "valid_time": "1272 CE onward",
+      "weight": null,
+      "narrative": "大都为元大都，属中华文明一环。",
+      "reviewed": true
+    },
+    {
+      "source": "event-keju-established",
+      "target": "idea-wenguan",
+      "type": "caused",
+      "confidence": null,
+      "citation": "国史大纲",
+      "evidence": [
+        "ec-b-070"
+      ],
+      "valid_time": "605 CE onward",
+      "weight": null,
+      "narrative": "科举制度催生文官体系。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-hanghai",
+      "target": "event-zheng-he",
+      "type": "caused",
+      "confidence": null,
+      "citation": "瀛涯胜览",
+      "evidence": [
+        "ec-b-071"
+      ],
+      "valid_time": "1405 CE–1433 CE",
+      "weight": null,
+      "narrative": "航海技术使下西洋成为可能。",
+      "reviewed": true
+    },
+    {
+      "source": "tech-zaopi",
+      "target": "tech-yinshua",
+      "type": "caused",
+      "confidence": null,
+      "citation": "中国历史（义务教育教科书）",
+      "evidence": [
+        "ec-b-079"
+      ],
+      "valid_time": "105 BCE onward",
+      "weight": null,
+      "narrative": "造纸术为印刷术的载体前提。",
       "reviewed": true
     }
   ],

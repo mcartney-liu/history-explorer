@@ -99,6 +99,7 @@ class ContentSlot:
         payload: dict[str, Any] = {"title": self.title, "desc": self.desc}
         if self.supports_image:
             payload["image"] = None
+            payload["image_focus"] = None
         if self.supports_items:
             payload["items"] = list(self.items)
         if self.supports_text_i18n:
@@ -123,6 +124,7 @@ class ContentSlot:
             "supports_guided_questions": self.supports_guided_questions,
             "items_label": self.items_label,
             "image": None,
+            "image_focus": None,
             "items": list(self.items),
             "title": self.title,
             "desc": self.desc,
@@ -620,6 +622,7 @@ class _Override:
     title: str | None = None
     desc: str | None = None
     image: str | None = None
+    image_focus: str | None = None
     items: list[str] | None = field(default=None)
     title_i18n: dict[str, str] | None = None
     summary_i18n: dict[str, str] | None = None
@@ -699,6 +702,7 @@ def _read_overrides(stored: Any) -> dict[str, _Override]:
         )
         if slot.supports_image:
             override.image = _clean_text(entry.get("image"), 255)
+            override.image_focus = _clean_text(entry.get("image_focus"), 16)
         if slot.supports_items:
             override.items = _clean_items(entry.get("items"))
         if slot.supports_text_i18n:
@@ -730,6 +734,9 @@ def _merge_with_defaults(stored: Any) -> dict[str, Any]:
             card["desc"] = override.desc
         if override.image:
             card["image"] = override.image
+        # 焦点独立于图片：即使使用内置图(image=null)也应生效
+        if override.image_focus:
+            card["image_focus"] = override.image_focus
         if override.items is not None:
             card["items"] = override.items
         if override.title_i18n:
@@ -786,6 +793,7 @@ def save_content(cards: list[dict[str, Any]]) -> dict[str, Any]:
             entry["desc"] = desc
         if slot.supports_image:
             entry["image"] = _clean_text(card.get("image"), 255)
+            entry["image_focus"] = _clean_text(card.get("image_focus"), 16)
         if slot.supports_items:
             items = _clean_items(card.get("items"))
             if items is not None:

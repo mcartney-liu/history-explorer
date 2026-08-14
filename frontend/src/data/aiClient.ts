@@ -5,9 +5,7 @@
 // source of truth for grounding / validation.
 // M36.0 adds: mode pass-through, perspectives, evidence, confidence.
 
-// Reuse the same externalized base URL the rest of the frontend uses (M3-002):
-// VITE_API_BASE with a localhost dev fallback, so behavior is unchanged.
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 export type AICitation = {
   global_id: string
@@ -69,7 +67,7 @@ export type AINextExploration = {
 
 export type AIConfidence = 'high' | 'medium' | 'low'
 
-export type AIEngine = 'ai' | 'ai_unverified' | 'deterministic'
+export type AIEngine = 'ai' | 'ai_unverified' | 'deterministic' | 'synthetic'
 
 export type AIResponse = {
   answer: string
@@ -90,13 +88,15 @@ export type AIResponse = {
   next_exploration?: AINextExploration[]
 }
 
-/** M36.0 prompt modes map to backend PromptService._MODE_DIRECTIVES. */
-export const PROMPT_MODES: { key: string; label: string }[] = [
-  { key: 'why_important', label: '为何重要' },
-  { key: 'why_happened', label: '为何发生' },
-  { key: 'historical_impact', label: '历史影响' },
-  { key: 'multi_civilization_view', label: '多文明视角' },
-  { key: 'timeline_explanation', label: '时间线解读' },
+/** M36.0 prompt modes map to backend PromptService._MODE_DIRECTIVES.
+ *  2026-08-13 (PO)：标签改为「分析角度」式命名——用户一眼看出是视角，
+ *  而非问题。key 保持不变（后端 _MODE_DIRECTIVES 不动）。 */
+export const PROMPT_MODES: { key: string; label: string; angle: string }[] = [
+  { key: 'why_important', label: '历史地位', angle: '历史地位与重要性' },
+  { key: 'why_happened', label: '发生与成因', angle: '发生与成因' },
+  { key: 'historical_impact', label: '影响与遗产', angle: '影响与遗产' },
+  { key: 'multi_civilization_view', label: '跨文明比较', angle: '跨文明比较' },
+  { key: 'timeline_explanation', label: '时间线梳理', angle: '时间线梳理' },
 ]
 
 export type AIAskOptions = {

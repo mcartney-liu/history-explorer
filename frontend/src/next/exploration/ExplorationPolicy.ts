@@ -15,6 +15,10 @@
 
 import type { Decision, PolicyContext } from '../../runtime/evaluation/Decision'
 import type { ExplorationState } from './ExplorationState'
+// Cognitive loop (P2, 2026-08-14): the policy now reads the persisted
+// user-facing Knowledge Gap so the next step can target what the *user* said
+// they still don't get (not just the system-projected missing dimensions).
+import type { GapSnapshot } from '../../data/GapLedger'
 
 // ============================================================================
 // ExplorationActionType
@@ -60,6 +64,9 @@ export interface ExplorationAction {
  *
  * 规则优先级（M88.2 第一版——纯规则，非 AI）：
  *   1. missingDimensions > 0 → open_dimension（最优先：补缺口）
+ *      - 目标必须是「真实可达实体」（dimensionMapping 里该维度的代表实体），
+ *        不是中文维度标签（P-U08 根因：中文标签按钮点击 404，用户感知为推演断掉）。
+ *      - 遍历 missingDimensions，跳过已探索 / 无映射实体的维度；全部跳过则落到 Rule 2。
  *   2. missingConnections > 0 → follow_cause
  *   3. understandingStage = 'UNDERSTANDING' → reflect
  *   4. coverageRatio < 1.0 → deep_continue
@@ -70,34 +77,60 @@ export interface ExplorationAction {
 export function evaluateExploration(
   state: ExplorationState,
   policyContext: PolicyContext,
+  gapState?: GapSnapshot | null,
 ): Decision<ExplorationAction> {
-  // ── Rule 1: 打开缺失维度（最优先） ──
-  if (state.missingDimensions.length > 0) {
-    const dim = state.missingDimensions[0]
-    // 尝试找到该维度对应的 entity
-    const targetRef = resolveDimensionTarget(dim, state)
+  // ── Rule 0: 用户标记的开放缺口（认知闭环，最高优先） ──
+  // 若用户在某主题下显式标记「还想搞清楚」的维度（理解工作区写入
+  // gapState.openGaps），下一步优先对准它——让闭环「读」侧成环
+  // （Knowledge Gap → Next Exploration）。无 openGaps 时整段跳过，
+  // Rule 1–5 行为完全不变（守 §5 只增不改红线）。
+  const openGaps: string[] =
+    gapState && Array.isArray(gapState.openGaps)
+      ? (gapState.openGaps as string[])
+      : []
+  for (const gapDim of openGaps) {
+    const targetRef = resolveDimensionTarget(gapDim, state)
+    if (!targetRef) continue
+    if (isAlreadyExplored(targetRef, state.exploredAnchors)) continue
+    return makeDecision(policyContext, {
+      type: 'open_dimension',
+      targetRef,
+      reason: `你标记了还想搞清楚「${gapDim}」维度`,
+      narrativeHook: `你说过想搞懂「${gapDim}」，先从它相关的实体入手？`,
+      expectedGrowth: { dimension: gapDim, relationType: 'enables' },
+      confidence: 0.95,
+    }, [{
+      ruleId: 'exploration-gap-priority',
+      inputs: { openGap: gapDim, targetRef },
+      decision: true,
+    }])
+  }
 
-    // 去重检查
-    if (!isAlreadyExplored(targetRef, state.exploredAnchors)) {
-      return makeDecision(policyContext, {
-        type: 'open_dimension',
+  // ── Rule 1: 打开缺失维度（最优先） ──
+  // 遍历缺失维度，找第一个「有映射实体 且 未探索」的维度作为 open_dimension 目标；
+  // 全部不可达则放弃 Rule 1，落到后续规则（绝不产出中文标签这种 404 目标）。
+  for (const dim of state.missingDimensions) {
+    const targetRef = resolveDimensionTarget(dim, state)
+    if (!targetRef) continue
+    if (isAlreadyExplored(targetRef, state.exploredAnchors)) continue
+
+    return makeDecision(policyContext, {
+      type: 'open_dimension',
+      targetRef,
+      reason: `已覆盖 ${state.coveredDimensions.join('、') || '暂无'}，缺少「${dim}」维度`,
+      narrativeHook: buildDimensionHook(dim, state.currentTopic),
+      expectedGrowth: { dimension: dim, relationType: 'enables' },
+      confidence: calculateConfidence(state.coverageRatio, 0.5),
+    }, [{
+      ruleId: 'exploration-open-dimension',
+      inputs: {
+        missingDimension: dim,
+        missingCount: state.missingDimensions.length,
+        coverageRatio: state.coverageRatio,
         targetRef,
-        reason: `已覆盖 ${state.coveredDimensions.join('、')}，缺少「${dim}」维度`,
-        narrativeHook: buildDimensionHook(dim, state.currentTopic),
-        expectedGrowth: { dimension: dim, relationType: 'enables' },
-        confidence: calculateConfidence(state.coverageRatio, 0.5),
-      }, [{
-        ruleId: 'exploration-open-dimension',
-        inputs: {
-          missingDimension: dim,
-          missingCount: state.missingDimensions.length,
-          coverageRatio: state.coverageRatio,
-        },
-        decision: true,
-      }])
-    }
-    // 去重失败 → 尝试下一个 missingDimension
-    // （简化：只取第一个，后续可扩展为遍历）
+      },
+      decision: true,
+    }])
   }
 
   // ── Rule 2: 追踪因果关系 ──
@@ -219,22 +252,16 @@ function calculateConfidence(coverageRatio: number, baseline: number): number {
   return Math.max(0.3, baseline + coverageRatio * 0.3)
 }
 
-/** 将维度名解析为可读的目标名称 */
-function resolveDimensionTarget(dimension: string, _state: ExplorationState): string {
-  const dimNames: Record<string, string> = {
-    Person: '历史人物',
-    Event: '历史事件',
-    Civilization: '古代文明',
-    Religion: '宗教发展',
-    Technology: '技术演进',
-    Location: '地理探索',
-    economy: '经济维度',
-    politics: '政治维度',
-    culture: '文化维度',
-    military: '军事维度',
-    society: '社会维度',
-  }
-  return dimNames[dimension] || dimension
+/**
+ * 将维度名解析为可达的实体 id（P-U08）：
+ * 优先取 dimensionMapping[dim] 里的代表实体（真实 global_id，可点击可达）；
+ * 该维度无映射实体时返回 null（表示该维度没有可探索目标，Rule 1 跳过它）。
+ * 绝不回退到中文维度标签——那会产出 404 目标（旧版根因）。
+ */
+function resolveDimensionTarget(dimension: string, state: ExplorationState): string | null {
+  const mapped = state.dimensionMapping[dimension]
+  if (mapped && mapped.length > 0 && mapped[0]) return mapped[0]
+  return null
 }
 
 /** 构建维度叙事钩子 */

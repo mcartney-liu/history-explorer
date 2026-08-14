@@ -64,6 +64,8 @@ type InterpretationPanelProps = {
   understandings?: UnderstandingViewModel[]
   title?: string
   onNodeClick?: (globalId: string) => void
+  /** 2026-08-13 (PO)：当前实体名，用于「历史意义」标题（如「罗马文明的历史意义」）。 */
+  entityName?: string
 }
 
 function InterpretationPanel({
@@ -71,6 +73,7 @@ function InterpretationPanel({
   understandings,
   title,
   onNodeClick,
+  entityName = '',
 }: InterpretationPanelProps) {
   const { t, locale } = useLocale()
   const hasInterpretations = !!interpretations && interpretations.length > 0
@@ -78,6 +81,9 @@ function InterpretationPanel({
   if (!hasInterpretations && !hasUnderstandings) return null
 
   const resolvedTitle = title ?? t('discover.interpretationTitle')
+  const meaningTitle = entityName
+    ? t('discover.historicalMeaning', { name: entityName })
+    : t('discover.historicalMeaning', { name: '该实体' })
 
   return (
     <div className="result-section interpretation-panel">
@@ -133,7 +139,7 @@ function InterpretationPanel({
       {hasUnderstandings && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
           <h4 style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)', fontWeight: 600 }}>
-            {t('discover.historicalMeaning')}
+            {meaningTitle}
           </h4>
           {understandings!.map((u, idx) => (
             <UnderstandingCard

@@ -27,7 +27,7 @@
 // no throw reaches the render path.
 // ============================================================
 
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+import { API_BASE } from '../config/api'
 
 /** Modules the registry currently groups slots into. */
 export type SlotModule = 'landing' | 'entity_tabs' | 'exploration_flow' | 'ai_capabilities' | 'site'
@@ -39,6 +39,8 @@ export interface CapabilityCard {
   desc: string
   /** Stored media filename, or null to use the built-in artwork. */
   image: string | null
+  /** Cover focal point as 'x% y%' for object-position; null = center. */
+  image_focus?: string | null
 }
 
 /**
@@ -92,7 +94,7 @@ export interface ContentDocument {
  * Only the landing module is mirrored here: it is the one surface whose copy
  * has no other home in the source tree. Every other module keeps its shipped
  * copy in the component that already owned it (`EntityTabGuidance`,
- * `ExplorationFlowGuide`, `AICapabilities`), so this layer never becomes a
+ * `AICapabilities`), so this layer never becomes a
  * second source of truth for text that already exists.
  *
  * MUST stay in sync with the `landing.*` entries of `CONTENT_SLOTS`.

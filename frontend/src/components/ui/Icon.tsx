@@ -54,6 +54,11 @@ export type IconName =
   | 'cross'
   | 'scholar'
   | 'lock'
+  // --- research dimension icons (2026-08-13 PO: 政治/军事/经济/文化 logo) ---
+  | 'politics'
+  | 'military'
+  | 'economy'
+  | 'culture'
 
 const PATHS: Record<IconName, JSX.Element> = {
   // 🔒 lock (read-only projection marker, VS-03 TP-19/22)
@@ -261,6 +266,38 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M12 3L3 8l9 5 7-3.9V14" />
       <path d="M3 8v4c0 3 4 5.5 9 5.5s9-2.5 9-5.5V8" />
       <path d="M12 16.5V22" />
+    </>
+  ),
+  // ⚖ politics (balance scale — law / governance)
+  politics: (
+    <>
+      <path d="M12 4v16" />
+      <path d="M4 6h16" />
+      <path d="M4 6l-1.5 3a2.5 2.5 0 0 0 5 0L6 6" />
+      <path d="M20 6l-1.5 3a2.5 2.5 0 0 0 5 0L22 6" />
+      <path d="M7 20h10" />
+    </>
+  ),
+  // 🛡 military (shield)
+  military: (
+    <>
+      <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z" />
+      <path d="M12 8v5" />
+    </>
+  ),
+  // 🪙 economy (coin with inner hole — trade / currency)
+  economy: (
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 4v2.5M12 17.5V20M4 12h2.5M17.5 12H20M6 6l1.8 1.8M16.2 16.2 18 18M18 6l-1.8 1.8M7.8 16.2 6 18" />
+    </>
+  ),
+  // 🎨 culture (palette)
+  culture: (
+    <>
+      <path d="M12 3a9 9 0 0 0 0 18c1.2 0 2-.9 2-2 0-.6-.2-1-.6-1.4-.4-.4-.6-.9-.6-1.5 0-1.1.9-2 2-2H18a3.5 3.5 0 0 0 3.5-3.5C21.5 6 17.5 3 12 3Z" />
+      <path d="M7.5 9.5h.01M10.5 7h.01M14.5 7h.01M17 9.5h.01" />
     </>
   ),
 }

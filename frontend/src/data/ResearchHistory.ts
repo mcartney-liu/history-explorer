@@ -1,5 +1,6 @@
 import type { ResearchDimension } from '../components/ResearchDimensionCard'
 import type { AICitation } from './aiClient'
+import { API_BASE } from '../config/api'
 
 // ============================================================
 // Types
@@ -52,8 +53,6 @@ export interface SavedCitation {
 const STORAGE_KEY = 'history-explorer.research.v1'
 const CURRENT_VERSION = 1
 
-// Remote persistence (T1). Same externalized base URL aiClient.ts uses.
-const API_BASE: string = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 const RESEARCH_ENDPOINT = '/api/v1/research'
 const SESSION_KEY = 'history-explorer.session.v1'
 

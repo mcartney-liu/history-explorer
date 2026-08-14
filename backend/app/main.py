@@ -511,10 +511,19 @@ def _generate_entity_insight(global_id: str) -> dict:
 
     # C5 AI 归位：LLM 调用整体在 ai_gateway/insight_service（prompt 构造 +
     # provider 接线 + 异常归一），main.py 只做薄委托。
+    # 2026-08-13 (PO)：传实体名——prompt 围绕实体本身组织，避免证据中
+    # 相近概念（如「罗马帝国」）被当作实体名使用。
     from .ai_gateway.insight_service import InsightGenerationError, generate_insight_text
 
+    entity_name = ""
+    entity_ref = knowledge_service.find_by_global_id(global_id)
+    if entity_ref is not None and len(entity_ref) >= 3:
+        entity = entity_ref[2]
+        if isinstance(entity, dict):
+            entity_name = entity.get("name") or ""
+
     try:
-        insight_text = generate_insight_text(evidence_lines)
+        insight_text = generate_insight_text(evidence_lines, entity_name)
     except InsightGenerationError as e:
         raise HTTPException(status_code=502, detail=str(e))
 

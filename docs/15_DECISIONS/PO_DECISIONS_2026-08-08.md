@@ -2,7 +2,7 @@
 
 > 整理：小梦（执行引擎）｜拍板：翔哥（PO）
 > 日期：2026-08-08
-> 状态：待裁决
+> 状态：已裁决（2026-08-08 翔哥拍板）→ 2026-08-14 收口核验完成（见 §5）
 
 ---
 
@@ -89,3 +89,41 @@
 - 项 2：单选（A/B/C）
 - 项 3：四组各单选（A/B/C），可打包"全部选 A"或逐项指定
 - 裁决后由执行引擎按结果落地（文档对齐 / M80 计划挂账等）
+
+---
+
+## 5. M80 Gate B 收口核验（2026-08-14）
+
+> 执行：小梦（执行引擎）｜ 依据：实时 git / 代码 / 测试核验（非记忆）
+> 注：D1–D4 的 PO 裁决（全部采纳 A）原记录于 `artifacts/HEALTH_AUDIT_v1.1_GATE_B_ARCHITECTURE_BACKEND.md` §14，但该文件位于 `artifacts/`（**gitignore，不受版本控制**）。本 § 将其正式落回受跟踪文档，并核验是否真落地。
+
+### 5.1 PO 裁决（2026-08-08 翔哥拍板，全部采纳 A）
+
+| 项 | 裁决 |
+|---|---|
+| D1（DB-B01 契约测试 RED） | 采纳 A：M80 前置阻塞项，加 `backend/conftest.py` autouse 强隔离（import-baseline 还原 `_ADAPTERS`），同批修 B-07/B-08/B-09/B-10；删除选项 C |
+| D2（DB-B03/B04 词汇源治理） | 采纳 A：M80 Planning 先出"词汇源地图"文档，再决定代码化守卫 |
+| D3（DB-B05/B06 ADR 漂移） | 采纳 A：合并 Release Gate docs-sync 修（Rule 3 措辞 + §Decision 删 causal_type） |
+| D4（DB-B11/B12 PRD 断层） | 采纳 A：Gate E 前补"PRD vs Freeze Baseline 差异登记" |
+
+### 5.2 落实况（2026-08-14 实时核验）
+
+| 项 | 落实况 | 证据 |
+|---|---|---|
+| D1 | **已落地（主交付物）** | `backend/conftest.py` 存在（2098B，autouse 重置 `_ADAPTERS` 至干净基线）。实证：registry 生命周期测试两种顺序均 `10 passed`，B-01 红灯消除。⚠️ 同批 B-07/B-08/B-10 未单独确认修复，遗留 minor debt |
+| D2 | **已落地** | 新增 `docs/10_ARCHITECTURE/VOCABULARY_SOURCE_MAP.md` |
+| D3 | **已落地（2026-08-02 完成）** | `ADR-M79.md` 状态 `Accepted`，`causal_type` 已移除（§61/§191） |
+| D4 | **已落地** | 新增 `docs/15_DECISIONS/PRD_VS_FREEZE_BASELINE_DRIFT.md` |
+
+### 5.3 ADR 状态翻转
+
+- `ADR-M80-RC`、`ADR-M80-MAP`：`Proposed` → **`Accepted`**（2026-08-14，M80 Gate B 收口）。
+
+### 5.4 透明度项（不阻断决策收口，打 tag 前需 triage）
+
+- **测试套件非全绿**：HEAD=`369bcc0` 全量后端 **7 failed / 438 passed**。其中 5 项（`test_ai_gateway_grounding_claim`×2、`test_data_breadth`、`test_interconnected`、`test_validation` health）疑似 369bcc0 数据治理改写（`evidence_claims.json` +3668 / 示例 JSON 重写）引入的回归，属 M80「data governance」自身范畴；2 项 `test_m82_*` 为分支独有（master 无）、M82 范畴既有债，与 M80 无关。
+- **Release 拓扑未就绪**：HEAD 在 `chore/cleanup-2026-08-12`（feature 分支），与 `master` 已分叉（master 9 / HEAD 36 commit 互不包含）；无 tag；upstream `origin/chore/cleanup-2026-08-12` 为 `[gone]`。
+
+### 5.5 结论
+
+M80 Gate B 四项架构决策均已落地、两份 M80 契约 ADR 已 Accepted，"Gate B 决策层"收口完成。但同事 369bcc0 提交信息声称的 "M80 CLOSED" **尚不成立**：① 5 项数据治理测试回归待 triage；② release 分支集成与 tag 待 PO 发"发布"。建议路径：triage 5 项回归 → 定 release 分支 → 打 annotated tag → 双 push。

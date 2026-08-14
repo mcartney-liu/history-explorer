@@ -4,6 +4,7 @@ import {
   PROMPT_MODES,
   type AIResponse,
 } from '../data/aiClient'
+import { exampleQuestions, withAngle } from '../data/ai/questionTemplates'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
 import GroundingBadge from './ui/GroundingBadge'
@@ -17,6 +18,8 @@ export type AIExplanationPanelProps = {
   /** M36.0: prompt mode (pass-through to backend PromptService). */
   mode?: string
   onCitationClick?: (global_id: string) => void
+  /** 2026-08-13 (PO)：当前实体名，用于副标题与示例问题。 */
+  entityName?: string
 }
 
 // Container: owns the request lifecycle (status + abort + mode). All rendering
@@ -27,6 +30,7 @@ export default function AIExplanationPanel({
   contextGlobalIds,
   mode = 'explain',
   onCitationClick,
+  entityName = '',
 }: AIExplanationPanelProps) {
   const [question, setQuestion] = useState('')
   const [status, setStatus] = useState<AIExplanationStatus>('idle')
@@ -52,8 +56,14 @@ export default function AIExplanationPanel({
     setError('')
     setResponse(null)
     try {
+      // 2026-08-13 (PO)：把「分析角度」拼进问题，让模式在前端问题层也生效
+      // （系统层 Focus 保留不动，这里增强用户感知）。
+      const activeMode = PROMPT_MODES.find((m) => m.key === promptMode)
+      const asked = activeMode
+        ? withAngle(activeMode.key, trimmed, activeMode.angle)
+        : trimmed
       const res = await explainAI(
-        trimmed,
+        asked,
         contextGlobalIds,
         controller.signal,
         promptMode,
@@ -75,6 +85,7 @@ export default function AIExplanationPanel({
       error={error}
       contextCount={contextGlobalIds.length}
       promptMode={promptMode}
+      entityName={entityName}
       onQuestionChange={setQuestion}
       onAsk={ask}
       onModeChange={setPromptMode}
@@ -91,6 +102,8 @@ export type AIExplanationViewProps = {
   contextCount: number
   /** M36.0: active prompt mode key. */
   promptMode: string
+  /** 2026-08-13 (PO)：当前实体名（副标题 / 示例问题）。 */
+  entityName?: string
   onQuestionChange: (value: string) => void
   onAsk: (question: string) => void
   onModeChange: (mode: string) => void
@@ -106,11 +119,13 @@ export function AIExplanationView({
   error,
   contextCount,
   promptMode,
+  entityName = '',
   onQuestionChange,
   onAsk,
   onModeChange,
   onCitationClick,
 }: AIExplanationViewProps) {
+  const examples = exampleQuestions(promptMode, entityName)
   return (
     <section className="ai-explanation" aria-label="AI 事实溯源解读">
       <div className="ae-header-row">
@@ -121,10 +136,11 @@ export function AIExplanationView({
         />
       </div>
       <p className="ae-context-note">
-        基于当前探索上下文（{contextCount} 个实体）提供可被知识图谱验证的解读。
+        用知识图谱里真实可查的事实，回答你关于{entityName ? `《${entityName}》` : '这个实体'}的问题。
       </p>
 
-      {/* M36.0 Mode Chips — choose a prompt mode before asking */}
+      {/* 2026-08-13 (PO)：选一个解读角度（必选） */}
+      <div className="ae-mode-label">选一个角度（必选）</div>
       <div className="ae-mode-chips" role="group" aria-label="解读模式">
         {PROMPT_MODES.map((m) => (
           <button
@@ -140,12 +156,28 @@ export function AIExplanationView({
         ))}
       </div>
 
+      {/* 2026-08-13 (PO)：示例问题——解决「不知道问什么」 */}
+      <div className="ae-examples">
+        <span className="ae-examples-label">试试问：</span>
+        {examples.map((q) => (
+          <button
+            key={q}
+            type="button"
+            className="ae-example-chip"
+            disabled={status === 'loading'}
+            onClick={() => onQuestionChange(q)}
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+
       <div className="ae-input-row">
         <input
           className="ae-input"
           type="text"
           value={question}
-          placeholder="向 AI 提问，例如：这个文明为何衰落？"
+          placeholder="例如「这个文明为何衰落？」"
           aria-label="向 AI 提问"
           disabled={status === 'loading'}
           onChange={(e) => onQuestionChange(e.target.value)}
@@ -163,9 +195,9 @@ export function AIExplanationView({
         </button>
       </div>
 
-      {/* M36.0 Permanent disclaimer — always visible */}
+      {/* 2026-08-13 (PO)：合并底部两段 hint 为一句 */}
       <p className="ae-disclaimer">
-        AI 解读由知识图谱中的事实事实驱动，可溯源验证。答案可能有限或存在偏差，建议结合历史资料交叉参考。
+        AI 解读由知识图谱中的事实驱动、可溯源验证。答案可能有限或存在偏差，建议结合历史资料交叉参考。
       </p>
 
       {status === 'idle' && (

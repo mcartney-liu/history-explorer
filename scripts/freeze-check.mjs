@@ -165,6 +165,17 @@ function getChangedFiles() {
 //   backend/app/core/global_graph.py, backend/app/core/registry.py,
 //   data/examples/*, frontend/* (except entries listed below).
 export const SCOPE_ALLOWLIST = [
+  // Env template (chore, 2026-08-12, PO-approved): frontend/.env.example is a
+  // Vite env TEMPLATE (config, not business logic). It was previously gitignored
+  // by the overly-broad ".env.*" rule and never committed. Added so the template
+  // is trackable. Does NOT change runtime defaults (still 8000).
+  "frontend/.env.example",
+  // P1-① (Engineering Health, 2026-08-14, PO-approved): single source of truth
+  // for the backend API base URL. All data modules import API_BASE from here
+  // instead of re-declaring the VITE_API_BASE literal (fixes 8000/8001 drift).
+  // Directory-style entry: git reports the new untracked dir as "frontend/src/config/"
+  // (trailing slash), so an exact-file entry would not match the scope check.
+  "frontend/src/config/",
   // M24 (Data Foundation) — Freeze Revision Gate
   "backend/app/core/dataset.py",
   "backend/tests/test_dataset_metadata.py",
@@ -218,6 +229,13 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/RelationshipEvidence.test.tsx",
   "frontend/src/components/ExplorationFlowGuide.tsx",
   "frontend/src/components/ExplorationFlowGuide.test.tsx",
+  // P1-③ (Engineering Health, 2026-08-14, PO-approved): dead-code removal.
+  // ResearchSuite / TimelineStrip are orphan modules — no file imports them
+  // (confirmed via full-repo export-usage scan: 0 external references), no
+  // co-located test, not mounted by any route. Removing them does not change
+  // runtime behaviour. Listed so the deletion passes the scope guard.
+  "frontend/src/components/ResearchSuite.tsx",
+  "frontend/src/components/TimelineStrip.tsx",
   // M31 Pilot (Knowledge Model Expansion) — DATA-LEVEL Freeze Gate (M31-G0).
   // Pilot validates the Knowledge Model Expansion on a single high-density
   // dataset (ancient_india) WITHOUT touching schema/runtime/enum/API. This is
@@ -247,6 +265,34 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/lib/graphLayout.test.ts",
   "frontend/src/App.tsx",
   "frontend/src/App.css",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): App render smoke test —
+  // the regression net that must stay green before/after every App.tsx slice
+  // extraction. Purely additive; jsdom env (already a dependency) for window.*.
+  "frontend/src/App.test.tsx",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): runtime state hook —
+  // the module useExplorerRuntime() lives in. Pure relocation of App.tsx logic.
+  "frontend/src/runtime/explorerRuntime.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): view-derived maps +
+  // node-open helpers — the module buildExplorationDerived() lives in. Pure
+  // relocation of App.tsx logic; same inputs/outputs, call sites unchanged.
+  "frontend/src/runtime/explorationDerived.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): projection → state →
+  // policy effect — the hook useExplorationProjection() lives in. Pure
+  // relocation of App.tsx logic; same deps/setters, call sites unchanged.
+  "frontend/src/runtime/explorationProjection.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): pure-derived
+  // causal-object maps + featured-topic filter — buildCausalObjectMaps() /
+  // buildFeaturedTopics() live here. Pure relocation of App.tsx logic; call
+  // sites unchanged.
+  "frontend/src/runtime/causalObjectMaps.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): navigation / package
+  // adapter functions — useExplorationNavigation() lives here. Pure
+  // relocation of App.tsx logic (447–571); call sites unchanged.
+  "frontend/src/runtime/explorationNavigation.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): search behavior
+  // cluster — useExplorationSearch() lives here (returns the searchSlot JSX).
+  // Pure relocation of App.tsx logic; call sites unchanged.
+  "frontend/src/runtime/explorationSearch.tsx",
   // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
   // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
   // frontend change: Discover landing page, static narrative layer
@@ -634,6 +680,7 @@ export const SCOPE_ALLOWLIST = [
   // Least Privilege: no backend / dependency / schema / enum / runtime change.
   // backend diff = 0; runtime 0.13.0 unchanged. No AI/LLM runtime (future AI steps are
   // contract-only placeholders, never executed). data/ JSON is out of scope-check by design.
+  "frontend/src/data/DataSource.ts",
   "frontend/src/data/explorationPackages.ts",
   "frontend/src/data/explorationPackages.test.ts",
   "frontend/src/data/userPackage.ts",
@@ -859,6 +906,14 @@ export const SCOPE_ALLOWLIST = [
   // 同 ADR-0018 research 范式——stdlib sqlite3、payload-opaque、.db gitignored）。
   // insight_store.py 只做存储；生成逻辑在 main.py handler（已 allowlisted）。
   "backend/app/ai_gateway/insight_store.py",
+  // P2 认知闭环 (2026-08-14, PO 动工): Gap-state ledger — gap_ledger.py is the
+  // stdlib-sqlite3 store (ADR-0018 cognitive-loop extension, same family as
+  // research_store / insight_store); research_router.py already allowlisted
+  // above gains the /api/v1/research/gap sub-routes. test_gap_ledger.py covers
+  // the store; frontend/src/pages/ (allowlisted) consumes it via GapLedger.ts.
+  "backend/app/ai_gateway/gap_ledger.py",
+  "backend/tests/test_gap_ledger.py",
+  "frontend/src/data/GapLedger.ts",
 
   // Wave2-#135 (Test-drift alignment) — Freeze Revision Gate (PO-approved
   // 2026-08-08, "按你推荐的来"). Backend test suite had drifted 13 failures
@@ -931,6 +986,11 @@ export const SCOPE_ALLOWLIST = [
   //    deps). Defaults reproduce current behaviour exactly; callers unchanged.
   // No schema / enum / dependency / API-contract / runtime change.
   "frontend/src/pages/m89/UnderstandingWorkspace.tsx",
+  // P2 认知闭环 (2026-08-14, PO 动工): ExplorationPolicy 升级读 GapState —
+  // evaluateExploration() 加可选 gapState 第三参数（Rule 0 优先对准用户标记缺口）。
+  "frontend/src/next/exploration/ExplorationPolicy.ts",
+  // P2 认知闭环 (2026-08-14, PO 动工): ExplorationPolicy Rule 0 测试（用户标记 Gap 优先）。
+  "frontend/src/next/exploration/__tests__/ExplorationPolicy.test.ts",
   "frontend/src/pages/m89/m89.css",
   "frontend/src/__tests__/App.smoke.test.tsx",
   // Wave2-#141(3) — shell cleanup (PO-approved 2026-08-08): ExplorationShell

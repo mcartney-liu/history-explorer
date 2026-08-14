@@ -21,6 +21,7 @@
 //      * NOT in static table   → raw name + generic type-based fallback
 
 import { useEffect, useState, useMemo } from 'react'
+import { API_BASE } from '../config/api'
 import FirstExplorationGuide from './FirstExplorationGuide'
 import { resolveStarters, type StarterItem } from '../data/explorationStarters'
 import type { NavNode } from './navigation'
@@ -31,8 +32,6 @@ type TopicExploreStartersProps = {
   onStarterClick: (target: NavNode) => void
 }
 
-const env = (import.meta as { env?: Record<string, string> }).env
-const API_BASE = (env?.VITE_API_BASE || 'http://localhost:8001').replace(/\/$/, '')
 
 type EntryPoint = {
   global_id: string

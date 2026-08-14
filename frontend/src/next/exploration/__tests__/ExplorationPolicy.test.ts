@@ -37,6 +37,11 @@ function makeState(overrides?: Partial<ExplorationState>): ExplorationState {
     coverageRatio: 0.5,
     coveredDimensions: ['military', 'politics'],
     missingDimensions: ['economy', 'culture'],
+    // P-U08: 维度实体映射（真实可达实体；Rule 1 目标不再是中文标签）
+    dimensionMapping: {
+      economy: ['entity:port-of-ostia'],
+      culture: ['entity:roman-art'],
+    },
     missingConnections: [
       {
         fromRef: 'entity:rome',
@@ -114,15 +119,47 @@ describe('ExplorationPolicy (M88.2)', () => {
       expect(decision.trace[0].ruleId).toBe('exploration-open-dimension')
     })
 
-    it('选择第一个 missingDimension', () => {
+    it('选择第一个 missingDimension（映射实体作目标，P-U08）', () => {
       const state = makeState({
         missingDimensions: ['economy', 'culture'],
         missingConnections: [],
       })
       const decision = evaluateExploration(state, defaultPolicyContext)
 
-      expect(decision.output.targetRef).toContain('经济维度')
+      // P-U08：目标是真实可达实体 id，不是中文维度标签（标签点击 404）
+      expect(decision.output.targetRef).toBe('entity:port-of-ostia')
       expect(decision.output.reason).toContain('economy')
+    })
+
+    it('missingDimension 无映射实体时跳过该维度（P-U08）', () => {
+      const state = makeState({
+        missingDimensions: ['economy', 'culture'],
+        dimensionMapping: {
+          // 只有 culture 有映射；economy 无 → 应选中 culture 的实体
+          culture: ['entity:roman-art'],
+        },
+        missingConnections: [],
+      })
+      const decision = evaluateExploration(state, defaultPolicyContext)
+
+      expect(decision.output.type).toBe('open_dimension')
+      expect(decision.output.targetRef).toBe('entity:roman-art')
+    })
+
+    it('缺失维度全部已探索 / 无映射 → 不产出中文标签目标，落到后续规则（P-U08）', () => {
+      const state = makeState({
+        missingDimensions: ['economy'],
+        dimensionMapping: {
+          economy: ['entity:port-of-ostia'],
+        },
+        exploredAnchors: ['entity:port-of-ostia', 'entity:rome', 'entity:gaul'],
+        missingConnections: [],
+      })
+      const decision = evaluateExploration(state, defaultPolicyContext)
+
+      // Rule 1 放弃（目标已探索）→ 不应产出 open_dimension，也不应产出中文标签
+      expect(decision.output.type).not.toBe('open_dimension')
+      expect(decision.output.targetRef).not.toMatch(/历史|经济|文化|文明/)
     })
 
     it('叙事钩子提到主题和缺失维度', () => {
@@ -303,18 +340,17 @@ describe('ExplorationPolicy (M88.2)', () => {
   // ── 测试 8: 去重逻辑 ──
   describe('Deduplication', () => {
     it('targetRef 已在 exploredAnchors 中 → 跳过当前规则', () => {
-      // missingDimensions → resolveDimensionTarget 映射为维度名（economy→经济维度）
-      // 如果该维度名已在 exploredAnchors 中，应跳过 open_dimension
+      // P-U08：missingDimensions → resolveDimensionTarget 映射为该维度的代表实体
+      // 如果该实体已在 exploredAnchors 中，应跳过 open_dimension，落到后续规则
       const state = makeState({
         missingDimensions: ['economy'],
         missingConnections: [],
-        exploredAnchors: ['entity:rome', 'entity:gaul', '经济维度'],
+        exploredAnchors: ['entity:rome', 'entity:gaul', 'entity:port-of-ostia'],
       })
       const decision = evaluateExploration(state, defaultPolicyContext)
 
-      // open_dimension 被跳过（target 已探索），进入 Rule 5 默认
+      // open_dimension 被跳过（target 已探索），进入后续规则
       expect(decision.output.type).toBe('deep_continue')
-      expect(decision.trace[0].ruleId).toBe('exploration-default')
     })
   })
 
@@ -385,6 +421,47 @@ describe('ExplorationPolicy (M88.2)', () => {
 
       expect(decision.output.confidence).toBeGreaterThan(0)
       expect(decision.output.confidence).toBeLessThanOrEqual(1)
+    })
+  })
+
+  // ── 测试 11: Rule 0 — 用户标记的开放缺口（认知闭环） ──
+  describe('Rule 0: User-marked Gap (认知闭环)', () => {
+    it('openGaps 优先于 Rule 1 missingDimensions', () => {
+      const state = makeState({
+        missingDimensions: ['economy', 'culture'],
+        missingConnections: [],
+      })
+      const gapState = { entity_id: 'french-revolution', openGaps: ['culture'] }
+      const decision = evaluateExploration(state, defaultPolicyContext, gapState)
+
+      expect(decision.output.type).toBe('open_dimension')
+      expect(decision.output.targetRef).toBe('entity:roman-art')
+      expect(decision.trace[0].ruleId).toBe('exploration-gap-priority')
+    })
+
+    it('openGaps 为空 → 回落 Rule 1（行为不变，守只增不改红线）', () => {
+      const state = makeState({
+        missingDimensions: ['economy'],
+        missingConnections: [],
+      })
+      const gapState = { entity_id: 'french-revolution', openGaps: [] }
+      const decision = evaluateExploration(state, defaultPolicyContext, gapState)
+
+      expect(decision.trace[0].ruleId).toBe('exploration-open-dimension')
+      expect(decision.output.targetRef).toBe('entity:port-of-ostia')
+    })
+
+    it('openGaps 中维度无映射实体 → 跳过该 gap，回落 Rule 1', () => {
+      const state = makeState({
+        missingDimensions: ['economy'],
+        dimensionMapping: { economy: ['entity:port-of-ostia'] },
+        missingConnections: [],
+      })
+      const gapState = { entity_id: 'french-revolution', openGaps: ['culture'] }
+      const decision = evaluateExploration(state, defaultPolicyContext, gapState)
+
+      expect(decision.trace[0].ruleId).toBe('exploration-open-dimension')
+      expect(decision.output.targetRef).toBe('entity:port-of-ostia')
     })
   })
 })

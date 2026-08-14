@@ -47,7 +47,8 @@ describe('MultiEntityContextView (M13/M14)', () => {
     // Selected chips render in the top bar with aria-pressed=true.
     expect(html).toContain('aria-pressed="true"')
     // The inner AIExplanationPanel renders an idle panel scoped to 2 entities.
-    expect(html).toContain('基于当前探索上下文（2 个实体）')
+    expect(html).toContain('选一个角度（必选）')
+    expect(html).toContain('多实体联合解读')
   })
 
   it('disables unselected chips once the selection cap is reached (MAX_N is UI-only)', () => {

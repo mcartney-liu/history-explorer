@@ -1,16 +1,20 @@
-import registry from "../../../data/exploration_packages.json";
-import exampleRaw from "../../../data/examples/china_civilization_v1_example.json";
-import silkRoadRaw from "../../../data/examples/silk_road_example.json";
-import romanEmpireRaw from "../../../data/examples/roman_empire_example.json";
-import ancientIndiaRaw from "../../../data/examples/ancient_india_example.json";
-import earlyChristianityRaw from "../../../data/examples/early_christianity_example.json";
-import egyptTechRaw from "../../../data/examples/egypt_technology_religion_example.json";
-import greekPhilosophyRaw from "../../../data/examples/greek_philosophy_example.json";
-import hellenisticRaw from "../../../data/examples/hellenistic_world_example.json";
-import persianEmpireRaw from "../../../data/examples/persian_empire_example.json";
-import textbookRaw from "../../../data/examples/textbook_cn_history_v1_example.json";
-import evidenceClaimsRaw from "../../../data/evidence_claims.json";
-import sourcesRaw from "../../../data/sources.json";
+// P1-⑤: all package/reference JSON imports live in ./DataSource (single source
+// of truth). Import the raw values from there instead of the JSON files.
+import {
+  registry,
+  exampleRaw,
+  silkRoadRaw,
+  romanEmpireRaw,
+  ancientIndiaRaw,
+  earlyChristianityRaw,
+  egyptTechRaw,
+  greekPhilosophyRaw,
+  hellenisticRaw,
+  persianEmpireRaw,
+  textbookRaw,
+  evidenceClaimsRaw,
+  sourcesRaw,
+} from "./DataSource";
 
 // ============================================================================
 // M69 — Exploration Package Layer (core product object)

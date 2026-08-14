@@ -11,10 +11,17 @@
 // PO Condition 1/2: deterministic output is explicitly NOT presented as
 // "AI-generated" — the title reads "基于知识库证据的探索建议" and an engine
 // badge distinguishes deterministic vs AI output.
+import { useState } from 'react'
 import { useLocale } from '../../data/locale'
 import type { AIConfidence, AIEngine, AIEvidence, AINextExploration } from '../../data/aiClient'
 import { Badge, type BadgeTone } from '../ui/Badge'
-import { getRelationshipLabel, formatSourceId, translateEvidenceText } from '../../data/entity/entityLabels'
+import {
+  getRelationshipLabel,
+  getRelationshipCategory,
+  RELATIONSHIP_CATEGORY_CLASS,
+  formatSourceId,
+  translateEvidenceText,
+} from '../../data/entity/entityLabels'
 import { getEntityDisplayName } from '../../data/explorationPackages'
 
 interface TrustDisplayProps {
@@ -102,6 +109,19 @@ export function TrustDisplay({
   const { t, locale } = useLocale()
   const evidenceList = evidence ?? []
   const nextList = nextExploration ?? []
+  // 信息层级降维（PO 2026-08-11）：默认折叠详情、只展主干 3 条，
+  // 其余点"查看更多"展开；每条详情默认收起，点"展开"才显示。
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const [showAll, setShowAll] = useState(false)
+  const VISIBLE_LIMIT = 3
+  const toggleExpand = (gid: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev)
+      if (next.has(gid)) next.delete(gid)
+      else next.add(gid)
+      return next
+    })
+  }
   // 引擎徽标：调用方显式覆盖时以覆盖为准（推荐列表确定性产物标"知识库推荐"），
   // 否则按 engine 推断（AI 回答场景保持"AI 生成"）。
   const badge =
@@ -134,60 +154,92 @@ export function TrustDisplay({
       {nextList.length > 0 && (
         <div className="trust-display-section">
           <p className="trust-display-label">{t('ai.trust_next_label')}</p>
-          <ul className="trust-display-next">
-            {nextList.map((item) => (
-              <li key={item.global_id} className="trust-display-next-item">
-                <div className="trust-display-next-head">
-                  {onNextClick ? (
+          <ol className="trust-display-chain">
+            {nextList.map((item, idx) => {
+              const isOpen = expanded.has(item.global_id)
+              const cat = getRelationshipCategory(item.relationship)
+              const isHidden = idx >= VISIBLE_LIMIT && !showAll
+              return (
+                <li
+                  key={item.global_id}
+                  className={`trust-display-link${isHidden ? ' is-hidden' : ''}`}
+                  data-rel-category={cat}
+                >
+                  {/* 叙事卡片链：节点名 + 关系彩色 Badge + 展开按钮 */}
+                  <div className="trust-display-node">
+                    {onNextClick ? (
+                      <button
+                        type="button"
+                        className="trust-display-node-btn"
+                        onClick={() => onNextClick(item.global_id)}
+                        aria-label={t('ai.trust_node_aria', { name: getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja') })}
+                      >
+                        <span className="trust-display-node-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+                      </button>
+                    ) : (
+                      <span className="trust-display-node-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+                    )}
+                    <Badge tone="neutral" className={`rel-badge ${RELATIONSHIP_CATEGORY_CLASS[cat]}`}>
+                      {getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}
+                    </Badge>
                     <button
                       type="button"
-                      className="trust-display-next-btn"
-                      onClick={() => onNextClick(item.global_id)}
+                      className="trust-display-toggle"
+                      aria-expanded={isOpen}
+                      onClick={() => toggleExpand(item.global_id)}
                     >
-                      <span className="trust-display-next-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
-                      <span className="trust-display-next-rel">{getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}</span>
+                      {isOpen ? t('ai.trust_collapse') : t('ai.trust_expand')}
                     </button>
-                  ) : (
-                  <span className="trust-display-next-name">
-                    {getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')} <span className="trust-display-next-rel">{getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}</span>
-                  </span>
-                  )}
-                </div>
-                {/* M74-004-002 (2B): Evidence Card detail — ALL fields come from
-                    the backend Planner (reason / claim_text / source_title /
-                    source_tier). Rendered as-is; never joined locally. */}
-                {item.reason && (
-                  <p className="trust-display-next-reason">
-                    <span className="trust-display-detail-label">{t('ai.evidence_reason')}：</span>
-                    {translateEvidenceText(item.reason)}
-                  </p>
-                )}
-                {item.claim_text && (
-                  <p className="trust-display-next-claim">
-                    <span className="trust-display-detail-label">{t('ai.evidence_claim')}：</span>
-                    {translateEvidenceText(item.claim_text)}
-                  </p>
-                )}
-                {(item.source_title || item.source_tier) && (
-                  <p className="trust-display-next-source">
-                    <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
-                    {item.source_title && <span className="trust-display-source-title">{item.source_title}</span>}
-                    {/* 2026-08-11 (PO)：来源书目信息（作者·出版社），增强可信度 */}
-                    {item.source_creator && <span className="trust-display-source-meta"> · {item.source_creator}</span>}
-                    {item.source_publisher && <span className="trust-display-source-meta"> · {item.source_publisher}</span>}
-                    {item.source_tier && (
-                      <Badge tone={tierTone(item.source_tier)}>{tierLabel(item.source_tier, t)}</Badge>
+                  </div>
+                  {/* M74-004-002 (2B): Evidence Card detail — 默认折叠(收起)，
+                      所有字段来自后端 Planner。DOM 中始终存在以满足可访问性/
+                      可审计；仅视觉上隐藏，展开才显示。 */}
+                  <div className={`trust-display-detail${isOpen ? ' is-open' : ''}`}>
+                    {item.reason && (
+                      <p className="trust-display-next-reason">
+                        <span className="trust-display-detail-label">{t('ai.evidence_reason')}：</span>
+                        {translateEvidenceText(item.reason)}
+                      </p>
                     )}
-                    {/* source_id always surfaces — auditable reference id */}
-                    <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
-                  </p>
-                )}
-                {!item.reason && !item.claim_text && !item.source_title && !item.source_tier && (
-                  <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
-                )}
-              </li>
-            ))}
-          </ul>
+                    {item.claim_text && (
+                      <p className="trust-display-next-claim">
+                        <span className="trust-display-detail-label">{t('ai.evidence_claim')}：</span>
+                        {translateEvidenceText(item.claim_text)}
+                      </p>
+                    )}
+                    {(item.source_title || item.source_tier) && (
+                      <p className="trust-display-next-source">
+                        <span className="trust-display-detail-label">{t('ai.evidence_source')}：</span>
+                        {item.source_title && <span className="trust-display-source-title">{item.source_title}</span>}
+                        {/* 2026-08-11 (PO)：来源书目信息（作者·出版社），增强可信度 */}
+                        {item.source_creator && <span className="trust-display-source-meta"> · {item.source_creator}</span>}
+                        {item.source_publisher && <span className="trust-display-source-meta"> · {item.source_publisher}</span>}
+                        {item.source_tier && (
+                          <Badge tone={tierTone(item.source_tier)}>{tierLabel(item.source_tier, t)}</Badge>
+                        )}
+                        {/* source_id always surfaces — auditable reference id */}
+                        <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
+                      </p>
+                    )}
+                    {!item.reason && !item.claim_text && !item.source_title && !item.source_tier && (
+                      <code className="trust-display-source">{formatSourceId(item.source_id)}</code>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
+          {nextList.length > VISIBLE_LIMIT && (
+            <button
+              type="button"
+              className="trust-display-more"
+              onClick={() => setShowAll((v) => !v)}
+            >
+              {showAll
+                ? t('ai.trust_show_less')
+                : t('ai.trust_show_more', { count: String(nextList.length - VISIBLE_LIMIT) })}
+            </button>
+          )}
         </div>
       )}
 

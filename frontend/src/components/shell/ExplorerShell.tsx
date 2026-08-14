@@ -54,6 +54,10 @@ interface ExplorerShellProps {
   contextRail?: ReactNode
   /** Companion Dock: AI historian */
   companionDock?: ReactNode
+  /** Companion Dock collapsed state (lifted to App for cross-component control) */
+  companionCollapsed?: boolean
+  /** Toggle Companion Dock collapsed */
+  onCompanionCollapseChange?: (collapsed: boolean) => void
 
   /** Main canvas content — the only region that changes by mode */
   children: ReactNode
@@ -66,12 +70,15 @@ export function ExplorerShell({
   navigationBar,
   contextRail,
   companionDock,
+  companionCollapsed,
+  onCompanionCollapseChange,
   children,
 }: ExplorerShellProps) {
   // 初始 COLLAPSED（PO 2026-08-09：界面初始化时左右抽屉收起来，
   // 由用户按需展开，主内容区最大化）。
   const [contextCollapsed, setContextCollapsed] = useState(true)
-  const [companionCollapsed, setCompanionCollapsed] = useState(true)
+  // companionCollapsed 提升到 App 层（理解视角的「直接发问」按钮需跨组件展开 dock）。
+  const cCollapsed = companionCollapsed ?? true
   // ADR-0021 R2: re-render the fallback brand when the operator edits it in #/admin.
   useContentRevision()
 
@@ -138,7 +145,7 @@ export function ExplorerShell({
         <main
           className="explorer-canvas"
           style={{
-            maxWidth: contextCollapsed && companionCollapsed ? 'none' : '720px',
+            maxWidth: contextCollapsed && cCollapsed ? 'none' : '720px',
           }}
         >
           {children}
@@ -147,15 +154,15 @@ export function ExplorerShell({
         {/* Companion Dock toggle */}
         <button
           type="button"
-          className={`explorer-companion-toggle${!companionCollapsed ? ' explorer-companion-toggle--inside' : ''}`}
-          onClick={() => setCompanionCollapsed(!companionCollapsed)}
-          aria-label={companionCollapsed ? '展开 AI 历史学家' : '收起 AI 历史学家'}
+          className={`explorer-companion-toggle${!cCollapsed ? ' explorer-companion-toggle--inside' : ''}`}
+          onClick={() => onCompanionCollapseChange?.(!cCollapsed)}
+          aria-label={cCollapsed ? '展开 AI 历史学家' : '收起 AI 历史学家'}
         >
           <Icon name="scholar" size={20} />
         </button>
 
         {/* 4c. Companion Dock — default collapsed */}
-        {!companionCollapsed && (
+        {!cCollapsed && (
           <aside className="explorer-companion-dock" aria-label="AI 历史学家">
             {companionDock ?? (
               <div className="explorer-companion-placeholder">

@@ -36,4 +36,10 @@ export default {
   // M74-004-002 (Commit 2A): Journey Trail — exploration path visualization.
   'ai.journey_trail_title': '探索足迹',
   'ai.trust_no_next': '暂无推荐探索路径——可基于上方证据继续探索，或打开相邻实体。',
+  // 2026-08-11 (PO): 叙事卡片链重构——关系彩色 Badge + 折叠详情 + 查看更多
+  'ai.trust_expand': '展开',
+  'ai.trust_collapse': '收起',
+  'ai.trust_show_more': '查看更多 {count} 条关系',
+  'ai.trust_show_less': '收起',
+  'ai.trust_node_aria': '探索 {name}',
 }

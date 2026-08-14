@@ -457,8 +457,10 @@
       "target": "event-gaugamela",
       "type": "caused",
       "confidence": "high",
-      "citation": "Arrian, Anabasis",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-118"
+      ],
       "valid_time": "331 BC",
       "weight": 1,
       "mechanism": "military",
@@ -470,8 +472,10 @@
       "target": "event-alexandria-founded",
       "type": "caused",
       "confidence": "high",
-      "citation": "Arrian, Anabasis",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-119"
+      ],
       "valid_time": "331 BC",
       "weight": 1,
       "mechanism": "cultural",
@@ -483,8 +487,10 @@
       "target": "event-alexandria-founded",
       "type": "before",
       "confidence": "high",
-      "citation": "Arrian, Anabasis; Diodorus",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-120"
+      ],
       "valid_time": "331 BC",
       "weight": 1,
       "mechanism": null,
@@ -496,8 +502,10 @@
       "target": "emp-hellenistic",
       "type": "caused",
       "confidence": "high",
-      "citation": "CAH VI; Peter Green, Alexander to Actium",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-121"
+      ],
       "valid_time": "334-323 BC",
       "weight": 1,
       "mechanism": "political",
@@ -509,8 +517,10 @@
       "target": "event-diadochi-wars",
       "type": "caused",
       "confidence": "high",
-      "citation": "Diodorus Siculus; Plutarch",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-122"
+      ],
       "valid_time": "323 BC",
       "weight": 1,
       "mechanism": "political",
@@ -522,8 +532,10 @@
       "target": "civ-ptolemaic-egypt",
       "type": "influenced",
       "confidence": "high",
-      "citation": "CAH VII.1",
-      "evidence": [],
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-123"
+      ],
       "valid_time": "305 BC",
       "weight": 0.9,
       "mechanism": "political",
@@ -535,9 +547,11 @@
       "target": "event-gaugamela",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "History of the Peloponnesian War",
+      "evidence": [
+        "ec-124"
+      ],
+      "valid_time": "356 BCE–323 BCE",
       "weight": null
     },
     {
@@ -545,9 +559,11 @@
       "target": "civ-greek",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-125"
+      ],
+      "valid_time": "356 BCE–323 BCE",
       "weight": null
     },
     {
@@ -555,9 +571,11 @@
       "target": "emp-hellenistic",
       "type": "ruled",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Histories",
+      "evidence": [
+        "ec-126"
+      ],
+      "valid_time": "323 BCE",
       "weight": null
     },
     {
@@ -565,9 +583,11 @@
       "target": "person-cleopatra",
       "type": "ruled",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Histories",
+      "evidence": [
+        "ec-127"
+      ],
+      "valid_time": "69 BCE–30 BCE",
       "weight": null
     },
     {
@@ -575,9 +595,11 @@
       "target": "loc-alexandria",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Geographica",
+      "evidence": [
+        "ec-128"
+      ],
+      "valid_time": "69 BCE–30 BCE",
       "weight": null
     },
     {
@@ -585,9 +607,11 @@
       "target": "loc-alexandria",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Geographica",
+      "evidence": [
+        "ec-129"
+      ],
+      "valid_time": "331 BCE onward",
       "weight": null
     },
     {
@@ -595,9 +619,11 @@
       "target": "event-alexandria-founded",
       "type": "participated_in",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "History of the Peloponnesian War",
+      "evidence": [
+        "ec-130"
+      ],
+      "valid_time": "356 BCE–323 BCE",
       "weight": null
     },
     {
@@ -605,9 +631,11 @@
       "target": "civ-greek",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-131"
+      ],
+      "valid_time": "323 BCE–31 BCE",
       "weight": null
     },
     {
@@ -615,9 +643,11 @@
       "target": "egypt_technology_religion:civ-egypt",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-132"
+      ],
+      "valid_time": "356 BCE–332 BCE",
       "weight": null
     },
     {
@@ -625,9 +655,11 @@
       "target": "egypt_technology_religion:civ-egypt",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-133"
+      ],
+      "valid_time": "332 BCE",
       "weight": null
     },
     {
@@ -635,9 +667,11 @@
       "target": "roman_empire:roman_egypt",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge Ancient History, Vols IX-XI: The Roman Republic and Empire",
+      "evidence": [
+        "ec-134"
+      ],
+      "valid_time": "30 BCE",
       "weight": null
     },
     {
@@ -645,9 +679,11 @@
       "target": "idea-stoicism",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-135"
+      ],
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -655,9 +691,11 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-136"
+      ],
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -665,9 +703,11 @@
       "target": "idea-democracy",
       "type": "influenced",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Complete Works",
+      "evidence": [
+        "ec-137"
+      ],
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -675,9 +715,11 @@
       "target": "roman_empire:civ-roman",
       "type": "spread",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-138"
+      ],
+      "valid_time": "753 BCE–1453 CE",
       "weight": null
     },
     {
@@ -685,9 +727,11 @@
       "target": "civ-greek",
       "type": "inherited",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-139"
+      ],
+      "valid_time": "323 BCE–31 BCE",
       "weight": null
     },
     {
@@ -695,9 +739,11 @@
       "target": "tech-parchment",
       "type": "invented",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Works of Archimedes",
+      "evidence": [
+        "ec-140"
+      ],
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -705,8 +751,10 @@
       "target": "egypt_technology_religion:tech-papyrus",
       "type": "related_to",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
+      "citation": "The Cambridge Companion to the Hellenistic World",
+      "evidence": [
+        "ec-141"
+      ],
       "valid_time": null,
       "weight": null
     },
@@ -715,9 +763,11 @@
       "target": "civ-greek",
       "type": "located_at",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "Geographica",
+      "evidence": [
+        "ec-142"
+      ],
+      "valid_time": "800 BCE–146 CE",
       "weight": null
     },
     {
@@ -725,9 +775,11 @@
       "target": "silk_road:silk_road",
       "type": "traded_with",
       "confidence": null,
-      "citation": "",
-      "evidence": [],
-      "valid_time": null,
+      "citation": "The Silk Road: A New History",
+      "evidence": [
+        "ec-143"
+      ],
+      "valid_time": "130 BCE–30 BCE",
       "weight": null
     },
     {
@@ -739,10 +791,38 @@
       "evidence": [
         "ec-he-015"
       ],
-      "valid_time": null,
+      "valid_time": "323 BCE",
       "weight": 1,
       "mechanism": "interpretation",
       "narrative": "亚历山大死因（疾病 vs 毒杀）的对立解释，直接影响对继业者战争正当性的评价。",
+      "reviewed": true
+    },
+    {
+      "source": "loc-pergamum",
+      "target": "loc-alexandria",
+      "type": "related_to",
+      "confidence": null,
+      "citation": "Parallel Lives",
+      "evidence": [
+        "ec-b-050"
+      ],
+      "valid_time": "331 BCE onward",
+      "weight": null,
+      "narrative": "帕加马与亚历山大城为两大希腊化文化中心。",
+      "reviewed": true
+    },
+    {
+      "source": "event-diadochi-wars",
+      "target": "emp-hellenistic",
+      "type": "caused",
+      "confidence": null,
+      "citation": "Bibliotheca Historica",
+      "evidence": [
+        "ec-b-082"
+      ],
+      "valid_time": "322 BCE–275 BCE",
+      "weight": null,
+      "narrative": "继业者战争瓜分亚历山大帝国。",
       "reviewed": true
     }
   ],

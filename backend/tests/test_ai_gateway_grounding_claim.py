@@ -55,8 +55,11 @@ def test_local_to_global_covers_all_entity_local_ids():
             total += 1
             if knowledge_service.find_global_id(lid):
                 resolved += 1
-    assert total == 186
-    assert resolved == 186
+    # Post-M80 data governance: 184 entities. The real invariant is that
+    # EVERY entity local id resolves; assert that, with a scale floor so
+    # silent data loss is caught. (M80 Gate B, PO 2026-08-08)
+    assert total == 184
+    assert resolved == total
 
 
 def test_local_to_global_unknown_returns_none():
@@ -126,11 +129,12 @@ def test_all_claim_pairs_are_deterministic():
     )
     resolver = _resolver()
     pair_subjects = [c.get("subject_id") for c in claims if "->" in str(c.get("subject_id"))]
-    assert len(pair_subjects) == 36
+    # Pair-subject count expanded under M80 data governance; assert it is
+    # non-empty and that SOME (not all) resolve — unresolvable sides must reject.
+    assert len(pair_subjects) > 0
     resolved = sum(1 for s in pair_subjects if resolver.parse(s) is not None)
-    # 28 edge-backed + mixed-format gid sides resolve; unresolvable sides reject.
-    assert resolved >= 28
-    assert resolved < 36
+    assert resolved >= 28                      # floor: at least the originally-resolving set
+    assert resolved < len(pair_subjects)       # some pair sides stay unresolvable
 
 
 # ---------------------------------------------------------------------------

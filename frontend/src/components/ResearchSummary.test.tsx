@@ -69,13 +69,13 @@ describe('ResearchSummaryView', () => {
           { title: 'B', status: 'success', answer: 'Answer B' },
         ])}
         status="success"
-        answer="Cross-dimensional insight."
+        answer="该文明的政治制度与其经济发展之间存在密切关联，两者相互促进。"
         grounded={true}
         citations={[{ global_id: 'a:b', kind: 'entity', label: 'X' }]}
       />,
     )
     expect(html).toContain('基于 2 个已验证研究维度')
-    expect(html).toContain('Cross-dimensional insight.')
+    expect(html).toContain('该文明的政治制度与其经济发展之间存在密切关联，两者相互促进。')
   })
 
   it('aggregates unique citations from all dimensions', () => {
@@ -89,7 +89,7 @@ describe('ResearchSummaryView', () => {
           { title: 'B', status: 'success', citations: [{ global_id: 'x', kind: 'entity', label: 'X' }, { global_id: 'y', kind: 'entity', label: 'Y' }] },
         ])}
         status="success"
-        answer="Summary"
+        answer="综合各维度分析，该历史事件的影响跨越了政治、经济与文化多个层面。"
         citations={[]}
       />,
     )

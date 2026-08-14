@@ -11,6 +11,7 @@
 // ============================================================
 
 import { useEffect, useState } from 'react'
+import { API_BASE } from '../config/api'
 
 type EntityRelatedListProps = {
   /** Global id of the current entity, e.g. "roman_empire:civ-roman". */
@@ -19,8 +20,6 @@ type EntityRelatedListProps = {
   onEntityClick: (gid: string, name?: string) => void
 }
 
-const env = (import.meta as { env?: Record<string, string> }).env
-const API_BASE = (env?.VITE_API_BASE || 'http://localhost:8001').replace(/\/$/, '')
 
 // Chinese labels for entity types. Covers both lowercase abbreviations
 // (person/civ/religion…) and PascalCase (Person/Civilization/Religion…) as

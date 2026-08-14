@@ -12,10 +12,11 @@
  *   ⑤ 下一步为什么？
  */
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import type { UnderstandingWorkspaceState } from '../../next/exploration/UnderstandingWorkspaceState'
 import { buildTopicUnderstandingState } from '../../next/exploration/topicUnderstandingState'
+import { loadGap, saveGap } from '../../data/GapLedger'
 
 // ============================================================================
 // Props
@@ -34,11 +35,48 @@ export const UnderstandingWorkspace: React.FC<UnderstandingWorkspaceProps> = ({
   topic,
 }) => {
   const [evidenceIndex, setEvidenceIndex] = useState(0)
+  // Cognitive loop (P2, 2026-08-14): dimensions the user explicitly marked
+  // "still want to understand" — the user-facing Knowledge Gap that
+  // ExplorationPolicy reads (Rule 0) to aim the next step at it.
+  const [markedGaps, setMarkedGaps] = useState<string[]>([])
+  const hydratedRef = useRef(false)
+
+  // Hydrate the persisted gap snapshot for this topic (cognitive loop, ADR-0018):
+  // lets the user's "what I still don't get" survive a page reload.
+  useEffect(() => {
+    if (!topic) return
+    let cancelled = false
+    loadGap(topic)
+      .then((g) => {
+        if (cancelled) return
+        const idx = g?.evidenceIndex
+        if (typeof idx === 'number') setEvidenceIndex(idx)
+        const gaps = g?.openGaps
+        if (Array.isArray(gaps)) setMarkedGaps(gaps as string[])
+        hydratedRef.current = true
+      })
+      .catch(() => {
+        hydratedRef.current = true
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [topic])
 
   const state = useMemo(
     () => buildTopicUnderstandingState(topic, evidenceIndex),
     [topic, evidenceIndex],
   )
+
+  // Persist progress whenever the user advances (refresh-safe gap ledger).
+  useEffect(() => {
+    if (!topic || !hydratedRef.current || !state) return
+    saveGap(topic, {
+      evidenceIndex,
+      total: state.understandingPath.totalNodes,
+      openGaps: markedGaps,
+    })
+  }, [topic, evidenceIndex, state, markedGaps])
 
   const handleContinue = useCallback(() => {
     setEvidenceIndex((i) => i + 1)
@@ -89,7 +127,15 @@ export const UnderstandingWorkspace: React.FC<UnderstandingWorkspaceProps> = ({
 
       {/* ④ 走到哪里了？ */}
       <section className="m89-section m89-path">
-        <PathArea state={state} />
+        <PathArea
+          state={state}
+          markedGaps={markedGaps}
+          onToggleGap={(dim) =>
+            setMarkedGaps((prev) =>
+              prev.includes(dim) ? prev.filter((d) => d !== dim) : [...prev, dim],
+            )
+          }
+        />
       </section>
 
       {/* ⑤ 下一步为什么？ */}
@@ -207,9 +253,11 @@ const EvidenceArea: React.FC<{
 // ④ Path Area
 // ============================================================================
 
-const PathArea: React.FC<{ state: UnderstandingWorkspaceState }> = ({
-  state,
-}) => {
+const PathArea: React.FC<{
+  state: UnderstandingWorkspaceState
+  markedGaps: string[]
+  onToggleGap: (dim: string) => void
+}> = ({ state, markedGaps, onToggleGap }) => {
   const { nodes, connections, currentNodeIndex, totalNodes } =
     state.understandingPath
 
@@ -248,6 +296,20 @@ const PathArea: React.FC<{ state: UnderstandingWorkspaceState }> = ({
                 <Icon name={node.completed ? 'check' : 'circle'} size={16} />
               </span>
               <span className="m89-path-dimension">{node.dimension}</span>
+              {!node.completed && (
+                <button
+                  type="button"
+                  className={
+                    markedGaps.includes(node.dimension)
+                      ? 'm89-gap-mark is-marked'
+                      : 'm89-gap-mark'
+                  }
+                  aria-pressed={markedGaps.includes(node.dimension)}
+                  onClick={() => onToggleGap(node.dimension)}
+                >
+                  {markedGaps.includes(node.dimension) ? '已标记想搞清楚' : '还想搞清楚'}
+                </button>
+              )}
             </div>
             {i < nodes.length - 1 && (
               <div

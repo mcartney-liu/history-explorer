@@ -3316,6 +3316,52 @@
     }
   },
   {
+    "id": "ec-rom-043",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-livy",
+    "claim": "Roman civilization is traditionally dated from the founding of Rome in 753 BCE (Varro's chronology, Ab urbe condita), beginning the regal period (753-509 BCE) of seven kings that preceded the Republic.",
+    "notes": "Regal period; traditional foundation date.",
+    "confidence": "medium",
+    "scholar_consensus": "moderate",
+    "controversy_level": "medium",
+    "interpretation_note": "753 BCE (Ab urbe condita) is an antiquarian tradition; archaeological evidence shows gradual Latin settlement growth in the 8th-7th c. BCE rather than a single founding event."
+  },
+  {
+    "id": "ec-rom-044",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-cah",
+    "claim": "The Roman Republic (509-27 BCE) was governed by the Senate and annually elected magistrates; the Law of the Twelve Tables (c. 450 BCE) codified Roman civil law.",
+    "notes": "Republican institutions and legal codification.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none"
+  },
+  {
+    "id": "ec-rom-045",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-cah",
+    "claim": "Rome's rise to Mediterranean hegemony culminated in the Punic Wars against Carthage (264-146 BCE), ending with the destruction of Carthage and Roman dominance of the western Mediterranean.",
+    "notes": "Punic Wars and western Mediterranean expansion.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none"
+  },
+  {
+    "id": "ec-rom-046",
+    "subject_type": "entity",
+    "subject_id": "civ-roman",
+    "source_id": "src-oxford-byzantium",
+    "claim": "Roman civilization continued in the East as the Byzantine Empire, conventionally dated from the foundation of Constantinople in 330 CE until the city's fall in 1453 CE, preserving Roman law in the Corpus Juris Civilis.",
+    "notes": "Eastern continuation (Byzantine period).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "none",
+    "interpretation_note": "Byzantine period is conventionally 330-1453 CE; the East preserved Roman legal and administrative traditions."
+  },
+  {
     "id": "ec-cn-015",
     "subject_type": "entity",
     "subject_id": "idea-lixue",
@@ -3398,5 +3444,3940 @@
       "controversy_level": "high",
       "interpretation_note": "福音书为信仰文本、成书晚于事件；历史学无法以超自然为解释变量，学界对同一文本给出神学与史学两套重释，属 reinterprets。"
     }
+  },
+  {
+    "id": "ec-025",
+    "subject_type": "relationship",
+    "subject_id": "silk_road->china_v1:tp-tang",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road",
+      "src-cn-jiu-tangshu"
+    ],
+    "claim": "The Tang dynasty (618-907) made Chang'an the eastern terminus of the Silk Road; Silk Road trade peaked under Tang rule.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-026",
+    "subject_type": "relationship",
+    "subject_id": "han_dynasty->china_v1:tp-tang",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge"
+    ],
+    "claim": "The Han dynasty (202 BCE-220 CE) preceded the Tang dynasty (618-907 CE) by several centuries.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-027",
+    "subject_type": "relationship",
+    "subject_id": "event-silk-road-opened->china_v1:tp-tang",
+    "source_id": "src-cn-hanshu",
+    "source_ids": [
+      "src-cn-hanshu",
+      "src-hansen-silk-road"
+    ],
+    "claim": "The Silk Road opened by Zhang Qian's missions (2nd c. BCE) reached its cultural and commercial zenith under the Tang.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-028",
+    "subject_type": "relationship",
+    "subject_id": "loc-chang-an->china_v1:loc-changan",
+    "source_id": "src-cn-jiu-tangshu",
+    "source_ids": [
+      "src-cn-jiu-tangshu",
+      "src-hansen-silk-road"
+    ],
+    "claim": "The 'Chang'an' in the Silk Road package (loc-chang-an) and Tang Chang'an (china_v1:loc-changan) denote the same city; this is a cross-package dedup link.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Modeling link between two packages referring to the same historical city; not a historical dispute."
+  },
+  {
+    "id": "ec-029",
+    "subject_type": "relationship",
+    "subject_id": "tech-paper->china_v1:tech-zaopi",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "The 'paper' in the Silk Road package (tech-paper) and Tang paper (china_v1:tech-zaopi) refer to the same Chinese invention; cross-package dedup link.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Cross-package dedup link for the same technology."
+  },
+  {
+    "id": "ec-030",
+    "subject_type": "relationship",
+    "subject_id": "tech-paper->china_v1:tp-tang",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Paper-making, perfected in the Tang period, spread westward along the Silk Road after the Battle of Talas (751).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-031",
+    "subject_type": "relationship",
+    "subject_id": "person-zhang-qian->china_v1:tp-tang",
+    "source_id": "src-cn-hanshu",
+    "source_ids": [
+      "src-cn-hanshu"
+    ],
+    "claim": "Zhang Qian (c. 164-114 BCE), who opened relations with the Western Regions, lived centuries before the Tang dynasty.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-032",
+    "subject_type": "relationship",
+    "subject_id": "rel-fojiao->ancient_india:religion-buddhism",
+    "source_id": "src-thapar-early-india",
+    "source_ids": [
+      "src-thapar-early-india",
+      "src-cn-houhanshu"
+    ],
+    "claim": "Buddhism spread from India to China around the 1st-2nd c. CE; the White Horse Temple at Luoyang marks an early center.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-033",
+    "subject_type": "relationship",
+    "subject_id": "tech-zaopi->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road",
+      "src-cn-cambridge"
+    ],
+    "claim": "Chinese paper-making travelled west along the Silk Road, reaching the Islamic world by the 8th c. and Europe by the 12th c.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-034",
+    "subject_type": "relationship",
+    "subject_id": "tech-yinshua->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Woodblock and movable-type printing spread westward via the Silk Road and maritime trade, informing later European printing.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "medium",
+    "interpretation_note": "The direct influence of Chinese printing on Gutenberg is debated; the westward transmission of the technology is well attested."
+  },
+  {
+    "id": "ec-035",
+    "subject_type": "relationship",
+    "subject_id": "tech-huoyao->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Gunpowder technology passed to the Islamic world and Europe in the 13th c. via the Mongol conquests and Silk Road exchange.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-036",
+    "subject_type": "relationship",
+    "subject_id": "tp-yuan->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran",
+      "src-cn-cambridge"
+    ],
+    "claim": "The Yuan dynasty (1271-1368) maintained close political and cultural ties with the Persian Ilkhanate (1256-1335) following the Mongol westward campaigns.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-037",
+    "subject_type": "relationship",
+    "subject_id": "person-zheng-he->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge"
+    ],
+    "claim": "Zheng He's seven maritime expeditions (1405-1433) extended the maritime Silk Road and the tributary trade network.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-038",
+    "subject_type": "relationship",
+    "subject_id": "loc-quanzhou->silk_road:silk_road",
+    "source_id": "src-cn-cambridge",
+    "source_ids": [
+      "src-cn-cambridge",
+      "src-hansen-silk-road"
+    ],
+    "claim": "Quanzhou was a major terminus and port of the Maritime Silk Road during the Song and Yuan periods.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-039",
+    "subject_type": "relationship",
+    "subject_id": "civ-zhonghua->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "The Chinese civilization (post-Qin unification) inherited the ethnicity, script, and ritual institutions of the pre-Qin Huaxia civilization.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-040",
+    "subject_type": "relationship",
+    "subject_id": "tp-tang->tb_cn_v1:tp-spring-autumn",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient",
+      "src-cn-qianmu"
+    ],
+    "claim": "The Tang dynasty (618-907 CE) came many centuries after the Spring and Autumn period (770-476 BCE).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-041",
+    "subject_type": "relationship",
+    "subject_id": "person-kongzi->greek_philosophy:person-socrates",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu",
+      "src-cah"
+    ],
+    "claim": "Confucius (551-479 BCE) and Socrates (470-399 BCE) were near-contemporaries, active in East Asia and the Mediterranean respectively.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-042",
+    "subject_type": "relationship",
+    "subject_id": "event-baijia-zhengming->greek_philosophy:person-socrates",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient",
+      "src-cah"
+    ],
+    "claim": "The Hundred Schools of Thought (c. 5th-3rd c. BCE) coincided broadly with the golden age of Greek philosophy (Socrates, Plato, Aristotle).",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-043",
+    "subject_type": "relationship",
+    "subject_id": "tp-warring-states->persian_empire:civ-persian",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient",
+      "src-cambridge-iran"
+    ],
+    "claim": "China's Warring States period (475-221 BCE) overlapped broadly with the Achaemenid Persian Empire (550-330 BCE) and successor Hellenistic kingdoms.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-044",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tp-song->china_v1:tp-yuan",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "宋 (960–1279) predates 元 (1271–1368).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-045",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tp-yuan->china_v1:tp-ming",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "元 (1271–1368) predates 明 (1368–1644).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-046",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tp-ming->china_v1:tp-qing",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "明 (1368–1644) predates 清 (1636–1912).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-047",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:idea-sanxing-liubu->china_v1:civ-zhonghua",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "三省六部 was part of 中华文明.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-048",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:idea-tudi->china_v1:civ-zhonghua",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "土地制度 was part of 中华文明.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-049",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:event-yitiaobian->china_v1:idea-tudi",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "一条鞭法 influenced 土地制度.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-050",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:person-li-bai->china_v1:idea-tangshi",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "李白 practiced 唐诗.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-051",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:person-du-fu->china_v1:idea-tangshi",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "杜甫 practiced 唐诗.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-052",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:person-su-shi->china_v1:idea-songci",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "苏轼 practiced 宋词.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-053",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:person-xin-qiji->china_v1:idea-songci",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "辛弃疾 practiced 宋词.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-054",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:person-cheng-yi->china_v1:idea-lixue",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "程颐 influenced 理学.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-055",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:loc-linan->china_v1:idea-shangye-chengshi",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "临安 was part of 商业城市文化.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-056",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tech-zaopi->china_v1:civ-zhonghua",
+    "source_id": "src-cn-shiji",
+    "source_ids": [
+      "src-cn-shiji"
+    ],
+    "claim": "造纸术 is credited with inventing 中华文明.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-057",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tech-huoyao->china_v1:civ-zhonghua",
+    "source_id": "src-cn-shiji",
+    "source_ids": [
+      "src-cn-shiji"
+    ],
+    "claim": "火药 is credited with inventing 中华文明.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-058",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tech-huoyao->china_v1:loc-quanzhou",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "火药 spread to 泉州.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-059",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:tp-yuan->china_v1:tp-ming",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "元 (1271–1368) was contemporary with 明 (1368–1644).",
+    "notes": "Curated link from dataset relationship (contemporary_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-060",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:loc-changan->china_v1:event-keju-established",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "长安 was located at 科举确立.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-061",
+    "subject_type": "relationship",
+    "subject_id": "china_v1:loc-dadu->china_v1:tp-yuan",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "大都 was part of 元 (1271–1368).",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-062",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-jesus->early_christianity:event-crucifixion",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Jesus of Nazareth participated in Crucifixion of Jesus.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-063",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:event-crucifixion->early_christianity:loc-jerusalem",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Crucifixion of Jesus was located at Jerusalem.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-064",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-paul->early_christianity:event-paul-mission",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Paul the Apostle participated in Paul's Missionary Journeys.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-065",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:event-paul-mission->early_christianity:loc-antioch",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Paul's Missionary Journeys was located at Antioch.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-066",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-jesus->early_christianity:idea-resurrection",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Jesus of Nazareth influenced Resurrection.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-067",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-paul->early_christianity:religion-early-church",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Paul the Apostle influenced Early Christian Church.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-068",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:religion-early-church->early_christianity:loc-jerusalem",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Early Christian Church was located at Jerusalem.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-069",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:religion-early-church->early_christianity:loc-antioch",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Early Christian Church was located at Antioch.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-070",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-jesus->early_christianity:loc-jerusalem",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Jesus of Nazareth was located at Jerusalem.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-071",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-jesus->roman_empire:religion-christianity",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Jesus of Nazareth influenced Christianity.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-072",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:religion-early-church->roman_empire:religion-christianity",
+    "source_id": "src-cah",
+    "source_ids": [
+      "src-cah"
+    ],
+    "claim": "Early Christian Church inherited from Christianity.",
+    "notes": "Curated link from dataset relationship (inherited).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-073",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:religion-early-church->roman_empire:civ-roman",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Early Christian Church spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-074",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:idea-resurrection->egypt_technology_religion:idea-monotheism",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Resurrection influenced Monotheism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-075",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-peter->early_christianity:event-crucifixion",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Saint Peter participated in Crucifixion of Jesus.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-076",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:religion-early-church->roman_empire:religion-christianity",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Early Christian Church spread to Christianity.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-077",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-paul->early_christianity:idea-koine-greek",
+    "source_id": "src-nt-greek",
+    "source_ids": [
+      "src-nt-greek"
+    ],
+    "claim": "Paul the Apostle spoke Koine Greek (Lingua Franca).",
+    "notes": "Curated link from dataset relationship (spoke).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-078",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:person-peter->roman_empire:loc-rome",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Saint Peter was located at Rome.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-079",
+    "subject_type": "relationship",
+    "subject_id": "early_christianity:event-pentecost->early_christianity:religion-early-church",
+    "source_id": "src-oxford-christianity",
+    "source_ids": [
+      "src-oxford-christianity"
+    ],
+    "claim": "Pentecost contributed to Early Christian Church.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-080",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:tech-papyrus",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Ancient Egyptian Civilization is credited with inventing Papyrus Papermaking.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-081",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:religion-ancient-egyptian",
+    "source_id": "src-book-of-dead",
+    "source_ids": [
+      "src-book-of-dead"
+    ],
+    "claim": "Ancient Egyptian Civilization practiced Ancient Egyptian Religion.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-082",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:event-great-pyramid-built->egypt_technology_religion:loc-ancient-egypt",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Great Pyramid of Giza Built was located at Ancient Egypt (Nile Valley).",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-083",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:tech-papyrus->egypt_technology_religion:religion-ancient-egyptian",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Papyrus Papermaking influenced Ancient Egyptian Religion.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-084",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:civ-mesopotamia",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Ancient Egyptian Civilization was contemporary with Mesopotamian Civilization.",
+    "notes": "Curated link from dataset relationship (contemporary_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-085",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:idea-monotheism",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Ancient Egyptian Civilization influenced Monotheism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-086",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:tech-papyrus->hellenistic_world:civ-greek",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Papyrus Papermaking spread to Ancient Greek Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-087",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:tech-papyrus->roman_empire:civ-roman",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Papyrus Papermaking spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-088",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:idea-monotheism->hellenistic_world:civ-ptolemaic-egypt",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Monotheism spread to Ptolemaic Egypt.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-089",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:tech-hieroglyph",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Ancient Egyptian Civilization is credited with inventing Hieroglyphic Writing.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-090",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:tech-mummification",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Ancient Egyptian Civilization is credited with inventing Mummification.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-091",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:person-imhotep->egypt_technology_religion:event-great-pyramid-built",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Imhotep participated in Great Pyramid of Giza Built.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-092",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:religion-osiris->egypt_technology_religion:religion-ancient-egyptian",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Osiris Cult is related to Ancient Egyptian Religion.",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-093",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:tp-old-kingdom->egypt_technology_religion:tp-new-kingdom",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Egyptian Old Kingdom predates Egyptian New Kingdom.",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-094",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:tp-old-kingdom->persian_empire:tp-achaemenid",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Egyptian Old Kingdom predates Achaemenid Era.",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-095",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:tp-old-kingdom->roman_empire:event-roman-empire-established",
+    "source_id": "src-res-gestae",
+    "source_ids": [
+      "src-res-gestae"
+    ],
+    "claim": "Egyptian Old Kingdom predates Roman Empire Established.",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-096",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:religion-ancient-egyptian->egypt_technology_religion:idea-monotheism",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Ancient Egyptian Religion influenced Monotheism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-097",
+    "subject_type": "relationship",
+    "subject_id": "egypt_technology_religion:event-great-pyramid-built->egypt_technology_religion:loc-ancient-egypt",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "Great Pyramid of Giza Built was located at Ancient Egypt (Nile Valley).",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-098",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-socrates->greek_philosophy:loc-athens",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Socrates was located at Athens.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-099",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-plato->greek_philosophy:loc-athens",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Plato was located at Athens.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-100",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:loc-athens",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Aristotle was located at Athens.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-101",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-socrates->greek_philosophy:person-plato",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Socrates influenced Plato.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-102",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-plato->greek_philosophy:person-aristotle",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Plato influenced Aristotle.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-103",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-plato->greek_philosophy:event-academy-founded",
+    "source_id": "src-thucydides-peloponnesian",
+    "source_ids": [
+      "src-thucydides-peloponnesian"
+    ],
+    "claim": "Plato participated in Plato's Academy Founded.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-104",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:event-academy-founded->greek_philosophy:loc-athens",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Plato's Academy Founded was located at Athens.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-105",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-plato->greek_philosophy:idea-theory-forms",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Plato influenced Theory of Forms.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-106",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:idea-logic",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Aristotle influenced Logic and Syllogism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-107",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-pythagoras->greek_philosophy:idea-theory-forms",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Pythagoras influenced Theory of Forms.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-108",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:loc-lyceum",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Aristotle was located at Lyceum.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-109",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-aristotle->hellenistic_world:person-alexander",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Aristotle influenced Alexander the Great.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-110",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-socrates->hellenistic_world:idea-democracy",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Socrates influenced Democracy.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-111",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:idea-theory-forms->hellenistic_world:idea-stoicism",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Theory of Forms influenced Stoicism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-112",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:idea-logic->roman_empire:civ-roman",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Logic and Syllogism spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-113",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-archimedes->greek_philosophy:tech-archimedes-screw",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Archimedes is associated with Archimedes' Screw.",
+    "notes": "Curated link from dataset relationship (discovered).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-114",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-archimedes->early_christianity:idea-koine-greek",
+    "source_id": "src-diogenes-laertius",
+    "source_ids": [
+      "src-diogenes-laertius"
+    ],
+    "claim": "Archimedes spoke Koine Greek (Lingua Franca).",
+    "notes": "Curated link from dataset relationship (spoke).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-115",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:idea-atomism->greek_philosophy:idea-theory-forms",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Atomism influenced Theory of Forms.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-116",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-pythagoras->greek_philosophy:idea-theory-forms",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Pythagoras influenced Theory of Forms.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-117",
+    "subject_type": "relationship",
+    "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:idea-logic",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Aristotle influenced Logic and Syllogism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-118",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:event-gaugamela",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Alexander's Conquest of Persia contributed to Battle of Gaugamela.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-119",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:event-alexandria-founded",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Alexander's Conquest of Persia contributed to Founding of Alexandria.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-120",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-gaugamela->hellenistic_world:event-alexandria-founded",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Battle of Gaugamela predates Founding of Alexandria.",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-121",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:emp-hellenistic",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Alexander's Conquest of Persia contributed to Hellenistic Empire.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-122",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:event-diadochi-wars",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Alexander's Conquest of Persia contributed to Wars of the Diadochi.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-123",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-diadochi-wars->hellenistic_world:civ-ptolemaic-egypt",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Wars of the Diadochi influenced Ptolemaic Egypt.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-124",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:person-alexander->hellenistic_world:event-gaugamela",
+    "source_id": "src-thucydides-peloponnesian",
+    "source_ids": [
+      "src-thucydides-peloponnesian"
+    ],
+    "claim": "Alexander the Great participated in Battle of Gaugamela.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-125",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:person-alexander->hellenistic_world:civ-greek",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Alexander the Great is related to Ancient Greek Civilization.",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-126",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:person-alexander->hellenistic_world:emp-hellenistic",
+    "source_id": "src-polybius",
+    "source_ids": [
+      "src-polybius"
+    ],
+    "claim": "Alexander the Great ruled Hellenistic Empire.",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-127",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-ptolemaic-egypt->hellenistic_world:person-cleopatra",
+    "source_id": "src-polybius",
+    "source_ids": [
+      "src-polybius"
+    ],
+    "claim": "Ptolemaic Egypt ruled Cleopatra VII.",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-128",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:person-cleopatra->hellenistic_world:loc-alexandria",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Cleopatra VII was located at Alexandria.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-129",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:event-alexandria-founded->hellenistic_world:loc-alexandria",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Founding of Alexandria was located at Alexandria.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-130",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:person-alexander->hellenistic_world:event-alexandria-founded",
+    "source_id": "src-thucydides-peloponnesian",
+    "source_ids": [
+      "src-thucydides-peloponnesian"
+    ],
+    "claim": "Alexander the Great participated in Founding of Alexandria.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-131",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:emp-hellenistic->hellenistic_world:civ-greek",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Hellenistic Empire influenced Ancient Greek Civilization.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-132",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:person-alexander->egypt_technology_religion:civ-egypt",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Alexander the Great influenced Ancient Egyptian Civilization.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-133",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-ptolemaic-egypt->egypt_technology_religion:civ-egypt",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Ptolemaic Egypt is related to Ancient Egyptian Civilization.",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-134",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-ptolemaic-egypt->roman_empire:roman_egypt",
+    "source_id": "src-cah",
+    "source_ids": [
+      "src-cah"
+    ],
+    "claim": "Ptolemaic Egypt is related to Roman Egypt (Aegyptus).",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-135",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-greek->hellenistic_world:idea-stoicism",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Ancient Greek Civilization influenced Stoicism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-136",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:idea-stoicism->roman_empire:civ-roman",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Stoicism spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-137",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-greek->hellenistic_world:idea-democracy",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Ancient Greek Civilization influenced Democracy.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-138",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:idea-democracy->roman_empire:civ-roman",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Democracy spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-139",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:emp-hellenistic->hellenistic_world:civ-greek",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Hellenistic Empire inherited from Ancient Greek Civilization.",
+    "notes": "Curated link from dataset relationship (inherited).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-140",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-greek->hellenistic_world:tech-parchment",
+    "source_id": "src-archimedes-works",
+    "source_ids": [
+      "src-archimedes-works"
+    ],
+    "claim": "Ancient Greek Civilization is credited with inventing Parchment.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-141",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:tech-parchment->egypt_technology_religion:tech-papyrus",
+    "source_id": "src-cambridge-hellenistic",
+    "source_ids": [
+      "src-cambridge-hellenistic"
+    ],
+    "claim": "Parchment is related to Papyrus Papermaking.",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-142",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:loc-pergamum->hellenistic_world:civ-greek",
+    "source_id": "src-strabo-geography",
+    "source_ids": [
+      "src-strabo-geography"
+    ],
+    "claim": "Pergamon was located at Ancient Greek Civilization.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-143",
+    "subject_type": "relationship",
+    "subject_id": "hellenistic_world:civ-ptolemaic-egypt->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Ptolemaic Egypt traded with Silk Road.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-144",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:person-cyrus->persian_empire:event-cyrus-conquests",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Cyrus the Great participated in Cyrus's Conquests.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-145",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:event-cyrus-conquests->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Cyrus's Conquests contributed to Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-146",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:person-cyrus->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Cyrus the Great ruled Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-147",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:person-darius->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Darius I ruled Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-148",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:person-xerxes->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Xerxes I ruled Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-149",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->persian_empire:loc-persepolis",
+    "source_id": "src-behistun",
+    "source_ids": [
+      "src-behistun"
+    ],
+    "claim": "Achaemenid Persian Empire was located at Persepolis.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-150",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->persian_empire:religion-zoroastrianism",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Achaemenid Persian Empire practiced Zoroastrianism.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-151",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:person-zarathustra->persian_empire:religion-zoroastrianism",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Zarathustra (Zoroaster) influenced Zoroastrianism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-152",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->persian_empire:tech-royal-road",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Achaemenid Persian Empire is credited with inventing Royal Road.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-153",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->persian_empire:tp-achaemenid",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Achaemenid Persian Empire is related to Achaemenid Era.",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-154",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:religion-zoroastrianism->persian_empire:loc-persepolis",
+    "source_id": "src-behistun",
+    "source_ids": [
+      "src-behistun"
+    ],
+    "claim": "Zoroastrianism was located at Persepolis.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-155",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->hellenistic_world:person-alexander",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Achaemenid Persian Empire conquered Alexander the Great.",
+    "notes": "Curated link from dataset relationship (conquered).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-156",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->hellenistic_world:civ-greek",
+    "source_id": "src-plato-dialogues",
+    "source_ids": [
+      "src-plato-dialogues"
+    ],
+    "claim": "Achaemenid Persian Empire influenced Ancient Greek Civilization.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-157",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Achaemenid Persian Empire traded with Silk Road.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-158",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:civ-persian->egypt_technology_religion:civ-egypt",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Achaemenid Persian Empire conquered Ancient Egyptian Civilization.",
+    "notes": "Curated link from dataset relationship (conquered).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-159",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:religion-zoroastrianism->egypt_technology_religion:idea-monotheism",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Zoroastrianism influenced Monotheism.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-160",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:loc-susa->persian_empire:civ-persian",
+    "source_id": "src-behistun",
+    "source_ids": [
+      "src-behistun"
+    ],
+    "claim": "Susa was located at Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-161",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:religion-mithra->persian_empire:civ-persian",
+    "source_id": "src-cambridge-iran",
+    "source_ids": [
+      "src-cambridge-iran"
+    ],
+    "claim": "Mithraism practiced Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-162",
+    "subject_type": "relationship",
+    "subject_id": "persian_empire:tech-royal-road->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Royal Road traded with Silk Road.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-163",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:han_dynasty->silk_road:tech-paper",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Han Dynasty is credited with inventing Papermaking.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-164",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:person-zhang-qian->silk_road:event-silk-road-opened",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Zhang Qian participated in Silk Road Opened.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-165",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:event-silk-road-opened->silk_road:loc-chang-an",
+    "source_id": "src-richthofen-1877",
+    "source_ids": [
+      "src-richthofen-1877"
+    ],
+    "claim": "Silk Road Opened was located at Chang'an.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-166",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:silk_road->silk_road:han_dynasty",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Silk Road traded with Han Dynasty.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-167",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:person-zhang-qian->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Zhang Qian is related to Silk Road.",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-168",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:silk_road->roman_empire:civ-roman",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Silk Road traded with Roman Civilization.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-169",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:han_dynasty->silk_road:tech-silk",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Han Dynasty is credited with inventing Silk Production.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-170",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:tech-silk->roman_empire:civ-roman",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Silk Production spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-171",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:tech-paper->roman_empire:civ-roman",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Papermaking spread to Roman Civilization.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-172",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:silk_road->roman_empire:civ-roman",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Silk Road traded with Roman Civilization.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-173",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:silk_road->persian_empire:civ-persian",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Silk Road traded with Achaemenid Persian Empire.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-174",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:tech-silk->roman_empire:civ-roman",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Silk Production traded with Roman Civilization.",
+    "notes": "Curated link from dataset relationship (traded_with).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-175",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:loc-samarkand->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Samarkand was part of Silk Road.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-176",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:loc-kashgar->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Kashgar was part of Silk Road.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-177",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:person-ban-chao->silk_road:event-silk-road-opened",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Ban Chao participated in Silk Road Opened.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-178",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:person-zhang-qian->silk_road:event-silk-road-opened",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Zhang Qian participated in Silk Road Opened.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-179",
+    "subject_type": "relationship",
+    "subject_id": "ancient_india:religion-buddhism->silk_road:silk_road",
+    "source_id": "src-tipitaka",
+    "source_ids": [
+      "src-tipitaka"
+    ],
+    "claim": "Buddhism spread to Silk Road.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-180",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:person-zhang-qian->silk_road:idea-chinese-language",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Zhang Qian spoke Chinese Language (Hanyu).",
+    "notes": "Curated link from dataset relationship (spoke).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-181",
+    "subject_type": "relationship",
+    "subject_id": "silk_road:tech-glass->silk_road:silk_road",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "Glassmaking spread to Silk Road.",
+    "notes": "Curated link from dataset relationship (spread).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-182",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-prehistory->tb_cn_v1:tp-xia",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "史前时期 predates 夏朝 (约前2070–前1600).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-183",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-xia->tb_cn_v1:tp-shang",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "夏朝 (约前2070–前1600) predates 商朝 (约前1600–前1046).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-184",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tp-zhou-west",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "商朝 (约前1600–前1046) predates 西周 (前1046–前771).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-185",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-zhou-west->tb_cn_v1:tp-spring-autumn",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "西周 (前1046–前771) predates 春秋 (前770–前476).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-186",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-spring-autumn->tb_cn_v1:tp-warring-states",
+    "source_id": "src-cn-xsz-project",
+    "source_ids": [
+      "src-cn-xsz-project"
+    ],
+    "claim": "春秋 (前770–前476) predates 战国 (前475–前221).",
+    "notes": "Curated link from dataset relationship (before).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-187",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-yu->tb_cn_v1:tp-xia",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "禹 ruled 夏朝 (约前2070–前1600).",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-188",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-qi->tb_cn_v1:tp-xia",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "启 ruled 夏朝 (约前2070–前1600).",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-189",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-tang->tb_cn_v1:tp-shang",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "商汤 ruled 商朝 (约前1600–前1046).",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-190",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-wuwang->tb_cn_v1:tp-zhou-west",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "周武王 ruled 西周 (前1046–前771).",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-191",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tech-jiaguwen",
+    "source_id": "src-cn-shiji",
+    "source_ids": [
+      "src-cn-shiji"
+    ],
+    "claim": "商朝 (约前1600–前1046) is credited with inventing 甲骨文.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-192",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tech-qingtong",
+    "source_id": "src-cn-shiji",
+    "source_ids": [
+      "src-cn-shiji"
+    ],
+    "claim": "商朝 (约前1600–前1046) is credited with inventing 青铜铸造.",
+    "notes": "Curated link from dataset relationship (invented).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-193",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-zhou-west->tb_cn_v1:idea-fengjian",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "西周 (前1046–前771) practiced 分封制.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-194",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-kongzi->tb_cn_v1:idea-rujia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "孔子 influenced 儒家.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-195",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-laozi->tb_cn_v1:idea-daojia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "老子 influenced 道家.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-196",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-warring-states->tb_cn_v1:event-baijia-zhengming",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "战国 (前475–前221) contributed to 百家争鸣.",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-197",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:event-shangyang-bianfa->tb_cn_v1:tp-warring-states",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "商鞅变法 is related to 战国 (前475–前221).",
+    "notes": "Curated link from dataset relationship (related_to).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-198",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:loc-huanghe->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "黄河流域 was part of 华夏文明.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-199",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:loc-changjiang->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "长江流域 was part of 华夏文明.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-200",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-wuwang->tb_cn_v1:loc-haojing",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "周武王 was located at 镐京.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-201",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-kongzi->tb_cn_v1:loc-qufu",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "孔子 was located at 曲阜.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-202",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-pangeng->tb_cn_v1:loc-yin",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "盘庚 was located at 殷.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-203",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tp-xia->tb_cn_v1:loc-erlitou",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "夏朝 (约前2070–前1600) was located at 二里头.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-204",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-yandi->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "炎帝 influenced 华夏文明.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-205",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-huangdi->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "黄帝 influenced 华夏文明.",
+    "notes": "Curated link from dataset relationship (influenced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-206",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-yao->tb_cn_v1:idea-shanrang",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "尧 practiced 禅让制.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-207",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-shun->tb_cn_v1:idea-shanrang",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "舜 practiced 禅让制.",
+    "notes": "Curated link from dataset relationship (practiced).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-208",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-youwang->tb_cn_v1:tp-zhou-west",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "周幽王 ruled 西周 (前1046–前771).",
+    "notes": "Curated link from dataset relationship (ruled).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-209",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-wuwang->tb_cn_v1:event-wuwang-fazhou",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "周武王 participated in 武王伐纣.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-210",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:event-pangeng-qian-yin->tb_cn_v1:loc-yin",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "盘庚迁殷 was located at 殷.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-211",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:person-yu->tb_cn_v1:event-dayu-zhishui",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "禹 participated in 大禹治水.",
+    "notes": "Curated link from dataset relationship (participated_in).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-212",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:loc-zhoukoudian->tb_cn_v1:civ-huaxia",
+    "source_id": "src-cn-cambridge-ancient",
+    "source_ids": [
+      "src-cn-cambridge-ancient"
+    ],
+    "claim": "周口店 was part of 华夏文明.",
+    "notes": "Curated link from dataset relationship (part_of).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-213",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tech-daogeng->tb_cn_v1:loc-changjiang",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "水稻栽培 was located at 长江流域.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-214",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tech-su->tb_cn_v1:loc-huanghe",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "粟栽培 was located at 黄河流域.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-215",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:tech-ganlan->tb_cn_v1:loc-changjiang",
+    "source_id": "src-cn-museum",
+    "source_ids": [
+      "src-cn-museum"
+    ],
+    "claim": "干栏式建筑 was located at 长江流域.",
+    "notes": "Curated link from dataset relationship (located_at).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  },
+  {
+    "id": "ec-216",
+    "subject_type": "relationship",
+    "subject_id": "tb_cn_v1:idea-baijia->tb_cn_v1:tp-warring-states",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "诸子百家 contributed to 战国 (前475–前221).",
+    "notes": "Curated link from dataset relationship (caused).",
+    "confidence": "medium",
+    "scholar_consensus": "mixed",
+    "controversy_level": "low"
+  }
+,
+  {
+    "id": "ec-b-001",
+    "subject_type": "relationship",
+    "subject_id": "tp-qing->civ-zhonghua",
+    "source_id": "src-cn-qingshigao",
+    "source_ids": [
+      "src-cn-qingshigao"
+    ],
+    "claim": "清朝是中华文明后期的大一统王朝。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-002",
+    "subject_type": "relationship",
+    "subject_id": "idea-sanxing-liubu->tp-tang",
+    "source_id": "src-cn-jiu-tangshu",
+    "source_ids": [
+      "src-cn-jiu-tangshu"
+    ],
+    "claim": "三省六部制于唐代确立并完善。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-003",
+    "subject_type": "relationship",
+    "subject_id": "person-li-bai->tp-tang",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "李白为盛唐代表诗人。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-004",
+    "subject_type": "relationship",
+    "subject_id": "person-du-fu->tp-tang",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "杜甫为盛唐转中唐代表诗人。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-005",
+    "subject_type": "relationship",
+    "subject_id": "person-su-shi->tp-song",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "苏轼为北宋文豪。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-006",
+    "subject_type": "relationship",
+    "subject_id": "person-xin-qiji->tp-song",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "辛弃疾为南宋豪放派词人。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-007",
+    "subject_type": "relationship",
+    "subject_id": "person-cheng-yi->tp-song",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "程颐为北宋理学家。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-008",
+    "subject_type": "relationship",
+    "subject_id": "person-tang-taizong->tp-tang",
+    "source_id": "src-cn-jiu-tangshu",
+    "source_ids": [
+      "src-cn-jiu-tangshu"
+    ],
+    "claim": "唐太宗为唐朝皇帝。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-009",
+    "subject_type": "relationship",
+    "subject_id": "person-song-taizu->tp-song",
+    "source_id": "src-cn-songshi",
+    "source_ids": [
+      "src-cn-songshi"
+    ],
+    "claim": "宋太祖建立宋朝。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-010",
+    "subject_type": "relationship",
+    "subject_id": "event-jingnan->tp-ming",
+    "source_id": "src-cn-mingshi",
+    "source_ids": [
+      "src-cn-mingshi"
+    ],
+    "claim": "靖难之役为明初内战。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-011",
+    "subject_type": "relationship",
+    "subject_id": "event-yitiaobian->tp-ming",
+    "source_id": "src-cn-mingshi",
+    "source_ids": [
+      "src-cn-mingshi"
+    ],
+    "claim": "一条鞭法为明万历财政改革。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-012",
+    "subject_type": "relationship",
+    "subject_id": "event-zheng-he->tp-ming",
+    "source_id": "src-cn-yingya-shenglan",
+    "source_ids": [
+      "src-cn-yingya-shenglan"
+    ],
+    "claim": "郑和下西洋在明初。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-013",
+    "subject_type": "relationship",
+    "subject_id": "loc-linan->tp-song",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "临安为南宋都城。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-014",
+    "subject_type": "relationship",
+    "subject_id": "loc-dadu->civ-zhonghua",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "大都为元大都，属中华文明一环。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-015",
+    "subject_type": "relationship",
+    "subject_id": "tp-prehistory->loc-zhoukoudian",
+    "source_id": "src-cn-zhoukoudian",
+    "source_ids": [
+      "src-cn-zhoukoudian"
+    ],
+    "claim": "史前人类活动于周口店。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-016",
+    "subject_type": "relationship",
+    "subject_id": "person-yandi->person-huangdi",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "炎黄并尊为华夏人文初祖。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-017",
+    "subject_type": "relationship",
+    "subject_id": "person-huangdi->person-yandi",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "黄帝与炎帝并称。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-018",
+    "subject_type": "relationship",
+    "subject_id": "person-yao->person-shun",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "尧舜相继，禅让相传。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-019",
+    "subject_type": "relationship",
+    "subject_id": "person-shun->person-yao",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "舜受尧禅。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-020",
+    "subject_type": "relationship",
+    "subject_id": "person-qi->person-yu",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "启为禹之子，世袭之始。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-021",
+    "subject_type": "relationship",
+    "subject_id": "person-tang->tp-xia",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "商汤灭夏，商代夏而立。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-022",
+    "subject_type": "relationship",
+    "subject_id": "person-pangeng->tp-shang",
+    "source_id": "src-cn-yinxu",
+    "source_ids": [
+      "src-cn-yinxu"
+    ],
+    "claim": "盘庚为商王，迁都于殷。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-023",
+    "subject_type": "relationship",
+    "subject_id": "person-youwang->civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "周幽王属西周，华夏一系。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-024",
+    "subject_type": "relationship",
+    "subject_id": "person-laozi->person-kongzi",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "老孔大致同时代。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-025",
+    "subject_type": "relationship",
+    "subject_id": "event-wuwang-fazhou->tp-zhou-west",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "武王伐纣建西周。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-026",
+    "subject_type": "relationship",
+    "subject_id": "event-pangeng-qian-yin->tp-shang",
+    "source_id": "src-cn-yinxu",
+    "source_ids": [
+      "src-cn-yinxu"
+    ],
+    "claim": "盘庚迁殷在商代。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-027",
+    "subject_type": "relationship",
+    "subject_id": "event-shangyang-bianfa->civ-huaxia",
+    "source_id": "src-cn-zhanguoce",
+    "source_ids": [
+      "src-cn-zhanguoce"
+    ],
+    "claim": "商鞅变法属华夏史。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-028",
+    "subject_type": "relationship",
+    "subject_id": "event-dayu-zhishui->person-qi",
+    "source_id": "src-cn-shangshu",
+    "source_ids": [
+      "src-cn-shangshu"
+    ],
+    "claim": "大禹治水，子启继之。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-029",
+    "subject_type": "relationship",
+    "subject_id": "loc-zhoukoudian->tp-prehistory",
+    "source_id": "src-cn-zhoukoudian",
+    "source_ids": [
+      "src-cn-zhoukoudian"
+    ],
+    "claim": "周口店北京猿人属史前。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-030",
+    "subject_type": "relationship",
+    "subject_id": "loc-erlitou->civ-huaxia",
+    "source_id": "src-cn-erlitou",
+    "source_ids": [
+      "src-cn-erlitou"
+    ],
+    "claim": "二里头为华夏早期都邑。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-031",
+    "subject_type": "relationship",
+    "subject_id": "loc-haojing->tp-zhou-west",
+    "source_id": "src-cn-zizhitongjian",
+    "source_ids": [
+      "src-cn-zizhitongjian"
+    ],
+    "claim": "镐京为西周都城。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-032",
+    "subject_type": "relationship",
+    "subject_id": "loc-qufu->tp-zhou-west",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "曲阜为西周鲁国封地。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-033",
+    "subject_type": "relationship",
+    "subject_id": "tech-jiaguwen->loc-yin",
+    "source_id": "src-cn-jiaguwen",
+    "source_ids": [
+      "src-cn-jiaguwen"
+    ],
+    "claim": "甲骨文主要出于殷墟。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-034",
+    "subject_type": "relationship",
+    "subject_id": "tech-qingtong->loc-yin",
+    "source_id": "src-cn-yinxu",
+    "source_ids": [
+      "src-cn-yinxu"
+    ],
+    "claim": "青铜礼器多出于殷墟。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-035",
+    "subject_type": "relationship",
+    "subject_id": "tech-daogeng->civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "稻作汇入华夏农业。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-036",
+    "subject_type": "relationship",
+    "subject_id": "tech-su->civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "粟作属华夏早期农业。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-037",
+    "subject_type": "relationship",
+    "subject_id": "tech-ganlan->civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "干栏建筑属华夏南方民居。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-038",
+    "subject_type": "relationship",
+    "subject_id": "idea-fengjian->civ-huaxia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "分封制为华夏早期制度。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-039",
+    "subject_type": "relationship",
+    "subject_id": "idea-rujia->tp-spring-autumn",
+    "source_id": "src-cn-lunyu",
+    "source_ids": [
+      "src-cn-lunyu"
+    ],
+    "claim": "儒家起于春秋。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-040",
+    "subject_type": "relationship",
+    "subject_id": "idea-daojia->tp-spring-autumn",
+    "source_id": "src-cn-daodejing",
+    "source_ids": [
+      "src-cn-daodejing"
+    ],
+    "claim": "道家起于春秋。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-041",
+    "subject_type": "relationship",
+    "subject_id": "idea-baijia->tp-spring-autumn",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "百家争鸣盛于春秋战国。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-042",
+    "subject_type": "relationship",
+    "subject_id": "person-chandragupta->tp-maurya",
+    "source_id": "src-arthashastra",
+    "source_ids": [
+      "src-arthashastra"
+    ],
+    "claim": "旃陀罗笈多建立孔雀王朝。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-043",
+    "subject_type": "relationship",
+    "subject_id": "loc-indus-valley->civ-maurya",
+    "source_id": "src-thapar-early-india",
+    "source_ids": [
+      "src-thapar-early-india"
+    ],
+    "claim": "印度河流域文明与孔雀王朝同属印度文明脉络。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-044",
+    "subject_type": "relationship",
+    "subject_id": "tp-guupta->person-kalidasa",
+    "source_id": "src-thapar-early-india",
+    "source_ids": [
+      "src-thapar-early-india"
+    ],
+    "claim": "迦梨陀娑主要活跃于笈多时期。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-045",
+    "subject_type": "relationship",
+    "subject_id": "person-kalidasa->tp-guupta",
+    "source_id": "src-thapar-early-india",
+    "source_ids": [
+      "src-thapar-early-india"
+    ],
+    "claim": "迦梨陀娑为笈多时期诗人。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-046",
+    "subject_type": "relationship",
+    "subject_id": "tech-zero->tp-guupta",
+    "source_id": "src-aryabhatiya",
+    "source_ids": [
+      "src-aryabhatiya"
+    ],
+    "claim": "零与十进制在笈多黄金时代成熟。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-047",
+    "subject_type": "relationship",
+    "subject_id": "loc-lyceum->loc-athens",
+    "source_id": "src-diogenes-laertius",
+    "source_ids": [
+      "src-diogenes-laertius"
+    ],
+    "claim": "吕克昂学园位于雅典。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-048",
+    "subject_type": "relationship",
+    "subject_id": "tech-archimedes-screw->person-archimedes",
+    "source_id": "src-archimedes-works",
+    "source_ids": [
+      "src-archimedes-works"
+    ],
+    "claim": "阿基米德螺旋泵出自阿基米德。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-049",
+    "subject_type": "relationship",
+    "subject_id": "idea-atomism->person-pythagoras",
+    "source_id": "src-diogenes-laertius",
+    "source_ids": [
+      "src-diogenes-laertius"
+    ],
+    "claim": "原子论承希腊自然哲学传统。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-050",
+    "subject_type": "relationship",
+    "subject_id": "loc-pergamum->loc-alexandria",
+    "source_id": "src-plutarch-lives",
+    "source_ids": [
+      "src-plutarch-lives"
+    ],
+    "claim": "帕加马与亚历山大城为两大希腊化文化中心。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-051",
+    "subject_type": "relationship",
+    "subject_id": "loc-constantinople->civ-byzantine",
+    "source_id": "src-cambridge-roman-empire",
+    "source_ids": [
+      "src-cambridge-roman-empire"
+    ],
+    "claim": "君士坦丁堡为拜占庭帝国首都。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-052",
+    "subject_type": "relationship",
+    "subject_id": "event-republic-end->tp-republic",
+    "source_id": "src-livy",
+    "source_ids": [
+      "src-livy"
+    ],
+    "claim": "共和国终结处罗马共和国末期。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-053",
+    "subject_type": "relationship",
+    "subject_id": "person-xerxes->person-cyrus",
+    "source_id": "src-xenophon-cyropaedia",
+    "source_ids": [
+      "src-xenophon-cyropaedia"
+    ],
+    "claim": "薛西斯为阿契美尼德王系，居鲁士之孙。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-054",
+    "subject_type": "relationship",
+    "subject_id": "person-zarathustra->religion-mithra",
+    "source_id": "src-avesta",
+    "source_ids": [
+      "src-avesta"
+    ],
+    "claim": "密特拉信仰与琐罗亚斯德教同源。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-055",
+    "subject_type": "relationship",
+    "subject_id": "loc-susa->loc-persepolis",
+    "source_id": "src-persepolis-tablets",
+    "source_ids": [
+      "src-persepolis-tablets"
+    ],
+    "claim": "苏萨与波斯波利斯为波斯两大都城。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-056",
+    "subject_type": "relationship",
+    "subject_id": "religion-mithra->religion-zoroastrianism",
+    "source_id": "src-avesta",
+    "source_ids": [
+      "src-avesta"
+    ],
+    "claim": "密特拉信仰源于琐罗亚斯德教。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-057",
+    "subject_type": "relationship",
+    "subject_id": "civ-mesopotamia->idea-monotheism",
+    "source_id": "src-oxford-egypt",
+    "source_ids": [
+      "src-oxford-egypt"
+    ],
+    "claim": "美索不达米亚与一神论观念有观念史联系。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-058",
+    "subject_type": "relationship",
+    "subject_id": "tp-new-kingdom->civ-egypt",
+    "source_id": "src-manetho",
+    "source_ids": [
+      "src-manetho"
+    ],
+    "claim": "新王国时期属古埃及文明。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-059",
+    "subject_type": "relationship",
+    "subject_id": "religion-osiris->civ-egypt",
+    "source_id": "src-book-of-dead",
+    "source_ids": [
+      "src-book-of-dead"
+    ],
+    "claim": "奥西里斯崇拜为古埃及文明宗教。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-060",
+    "subject_type": "relationship",
+    "subject_id": "tech-hieroglyph->tech-papyrus",
+    "source_id": "src-rosetta",
+    "source_ids": [
+      "src-rosetta"
+    ],
+    "claim": "象形文字书写于莎草纸。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-061",
+    "subject_type": "relationship",
+    "subject_id": "tech-mummification->religion-ancient-egyptian",
+    "source_id": "src-book-of-dead",
+    "source_ids": [
+      "src-book-of-dead"
+    ],
+    "claim": "木乃伊制作术与来世信仰相连。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-062",
+    "subject_type": "relationship",
+    "subject_id": "person-imhotep->civ-egypt",
+    "source_id": "src-manetho",
+    "source_ids": [
+      "src-manetho"
+    ],
+    "claim": "伊姆霍特普为古埃及重臣。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-063",
+    "subject_type": "relationship",
+    "subject_id": "event-pentecost->loc-jerusalem",
+    "source_id": "src-nt-gospels",
+    "source_ids": [
+      "src-nt-gospels"
+    ],
+    "claim": "五旬节事件发生于耶路撒冷。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-064",
+    "subject_type": "relationship",
+    "subject_id": "loc-samarkand->loc-chang-an",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "撒马尔罕与长安为丝路东西重镇。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-065",
+    "subject_type": "relationship",
+    "subject_id": "loc-kashgar->loc-samarkand",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "喀什与撒马尔罕为西域重镇。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-066",
+    "subject_type": "relationship",
+    "subject_id": "person-ban-chao->han_dynasty",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "班超为东汉经营西域。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-067",
+    "subject_type": "relationship",
+    "subject_id": "tech-glass->tech-silk",
+    "source_id": "src-silk-road-archives",
+    "source_ids": [
+      "src-silk-road-archives"
+    ],
+    "claim": "玻璃与丝织皆为丝路重要商品。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-068",
+    "subject_type": "relationship",
+    "subject_id": "idea-chinese-language->han_dynasty",
+    "source_id": "src-hansen-silk-road",
+    "source_ids": [
+      "src-hansen-silk-road"
+    ],
+    "claim": "汉语为汉朝通用语言。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-069",
+    "subject_type": "relationship",
+    "subject_id": "event-baijia-zhengming->idea-baijia",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "百家争鸣催生诸子百家。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-070",
+    "subject_type": "relationship",
+    "subject_id": "event-keju-established->idea-wenguan",
+    "source_id": "src-cn-qianmu",
+    "source_ids": [
+      "src-cn-qianmu"
+    ],
+    "claim": "科举制度催生文官体系。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-071",
+    "subject_type": "relationship",
+    "subject_id": "tech-hanghai->event-zheng-he",
+    "source_id": "src-cn-yingya-shenglan",
+    "source_ids": [
+      "src-cn-yingya-shenglan"
+    ],
+    "claim": "航海技术使下西洋成为可能。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-072",
+    "subject_type": "relationship",
+    "subject_id": "event-kalinga-war->person-ashoka",
+    "source_id": "src-ashoka-edicts",
+    "source_ids": [
+      "src-ashoka-edicts"
+    ],
+    "claim": "羯陵伽之战促使阿育王转变。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-073",
+    "subject_type": "relationship",
+    "subject_id": "person-ashoka->religion-buddhism",
+    "source_id": "src-ashoka-edicts",
+    "source_ids": [
+      "src-ashoka-edicts"
+    ],
+    "claim": "阿育王弘扬佛教。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-074",
+    "subject_type": "relationship",
+    "subject_id": "religion-zoroastrianism->religion-mithra",
+    "source_id": "src-avesta",
+    "source_ids": [
+      "src-avesta"
+    ],
+    "claim": "密特拉信仰源于琐罗亚斯德教。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-075",
+    "subject_type": "relationship",
+    "subject_id": "idea-monotheism->religion-ancient-egyptian",
+    "source_id": "src-amarna-letters",
+    "source_ids": [
+      "src-amarna-letters"
+    ],
+    "claim": "阿肯那顿一神论冲击古埃及传统宗教。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-076",
+    "subject_type": "relationship",
+    "subject_id": "person-constantine->religion-christianity",
+    "source_id": "src-edict-milan",
+    "source_ids": [
+      "src-edict-milan"
+    ],
+    "claim": "君士坦丁合法化基督教。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-077",
+    "subject_type": "relationship",
+    "subject_id": "person-jesus->religion-early-church",
+    "source_id": "src-nt-gospels",
+    "source_ids": [
+      "src-nt-gospels"
+    ],
+    "claim": "耶稣创立早期教会。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-078",
+    "subject_type": "relationship",
+    "subject_id": "event-crucifixion->religion-early-church",
+    "source_id": "src-eusebius-he",
+    "source_ids": [
+      "src-eusebius-he"
+    ],
+    "claim": "耶稣受难成为早期教会的起点。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-079",
+    "subject_type": "relationship",
+    "subject_id": "tech-zaopi->tech-yinshua",
+    "source_id": "src-cn-textbook",
+    "source_ids": [
+      "src-cn-textbook"
+    ],
+    "claim": "造纸术为印刷术的载体前提。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-080",
+    "subject_type": "relationship",
+    "subject_id": "person-julius-caesar->event-republic-end",
+    "source_id": "src-caesar-commentarii",
+    "source_ids": [
+      "src-caesar-commentarii"
+    ],
+    "claim": "凯撒跨越卢比孔，加速共和国终结。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-081",
+    "subject_type": "relationship",
+    "subject_id": "person-peter->religion-early-church",
+    "source_id": "src-nt-gospels",
+    "source_ids": [
+      "src-nt-gospels"
+    ],
+    "claim": "彼得被尊为早期教会柱石。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-082",
+    "subject_type": "relationship",
+    "subject_id": "event-diadochi-wars->emp-hellenistic",
+    "source_id": "src-diodorus",
+    "source_ids": [
+      "src-diodorus"
+    ],
+    "claim": "继业者战争瓜分亚历山大帝国。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
+  },
+  {
+    "id": "ec-b-083",
+    "subject_type": "relationship",
+    "subject_id": "person-augustus->tp-27bc",
+    "source_id": "src-suetonius",
+    "source_ids": [
+      "src-suetonius"
+    ],
+    "claim": "奥古斯都于前27年确立元首制。",
+    "notes": "B-layer curated link; real source from sources.json.",
+    "confidence": "high",
+    "scholar_consensus": "strong",
+    "controversy_level": "low",
+    "interpretation_note": "Curated seed relationship with a real primary/secondary source; not an auto-inference."
   }
 ]

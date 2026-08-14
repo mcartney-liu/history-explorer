@@ -7,7 +7,7 @@
 
 import { useState, type SyntheticEvent } from 'react'
 import { useLocale } from '../../data/locale'
-import { slotGuidedQuestions, slotImageName, slotSummaryI18n, slotTitleI18n, useContentRevision } from '../../data/contentRuntime'
+import { slotGuidedQuestions, slotImageName, slotImageFocus, slotSummaryI18n, slotTitleI18n, useContentRevision } from '../../data/contentRuntime'
 import { mediaUrl } from '../../data/contentApi'
 
 export interface TopicCardData {
@@ -35,6 +35,7 @@ export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps
   // Admin-configured cover (slot `explore_topics.<slug>`) wins when set;
   // otherwise fall back to the drop-in folder convention (webp→png→jpg→jpeg).
   const configuredName = slotImageName(`explore_topics.${card.slug}`)
+  const focus = slotImageFocus(`explore_topics.${card.slug}`)
 
   const handleArtError = (e: SyntheticEvent<HTMLImageElement>) => {
     const el = e.currentTarget
@@ -64,6 +65,7 @@ export function TopicCard({ card, onClick, variant = 'default' }: TopicCardProps
           src={artSrc}
           alt=""
           loading="lazy"
+          style={focus ? { objectPosition: focus } : undefined}
           onLoad={() => setArtOk(true)}
           onError={handleArtError}
         />

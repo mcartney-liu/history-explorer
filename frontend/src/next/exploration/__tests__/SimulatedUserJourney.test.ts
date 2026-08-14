@@ -36,6 +36,13 @@ function makeSessionInput(
     explorationId: sessionId,
     currentTopic: '罗马帝国',
     currentAnchorRef: exploredAnchors[exploredAnchors.length - 1] ?? 'entity:rome',
+    // P-U08: 维度实体映射（Rule 1 目标必须是真实实体）
+    dimensionMapping: {
+      military: ['entity:military-1'],
+      economy: ['entity:trade-network'],
+      politics: ['entity:senate'],
+      culture: ['entity:roman-art'],
+    },
     understandingProjection: {
       stage: coveredDimensions.length >= 3 ? 'UNDERSTANDING' : 'CONNECTION',
       coverageState: {

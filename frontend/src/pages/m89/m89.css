@@ -289,6 +289,33 @@
   font-weight: 600;
 }
 
+/* Cognitive loop (P2, 2026-08-14): "还想搞清楚" toggle on each not-yet-done
+   understanding dimension — the user-facing Knowledge Gap marker. */
+.m89-gap-mark {
+  margin-left: 10px;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1;
+  padding: 3px 10px;
+  border: 1px solid currentColor;
+  border-radius: var(--r-lg);
+  background: transparent;
+  color: var(--color-ink-500);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.m89-gap-mark:hover {
+  opacity: 1;
+}
+
+.m89-gap-mark.is-marked {
+  color: var(--color-truth-strong);
+  opacity: 1;
+  font-weight: 600;
+}
+
 .m89-path-connector {
   padding: 4px 0 4px 36px;
   min-height: 28px;
