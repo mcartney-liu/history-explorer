@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigationHistory } from './hooks/useNavigationHistory'
 import { usePackageContext } from './hooks/usePackageContext'
-import EntitySearchBox from './components/EntitySearchBox'
 import SummaryPanel from './components/SummaryPanel'
 import MainEntityCard, { MainEntity } from './components/MainEntityCard'
 import RelatedEntityList, { RelatedEntity } from './components/RelatedEntityList'
@@ -25,14 +24,9 @@ import type { JourneyWhyPayload } from './components/ExplorationJourney'
 import { loadReasons, saveReasons } from './utils/explorationPersistence'
 import TopicComparisonPanel from './components/TopicComparisonPanel'
 import { RelatedTopic, CrossTopicRelated } from './components/crossTopic'
-import SearchResults, {
-  SearchResultItem,
-  orderSearchResults,
-  resolveSearchResultTarget,
-} from './components/SearchResults'
+import type { SearchResultItem } from './components/SearchResults'
 import EntityPage, { EntityDetail, EntityRelationship } from './components/EntityPage'
 import { ConnectionExplained } from './components/ConnectionsExplainedPanel'
-import { nextSelectionIndex } from './components/searchNav'
 import {
   NavNode,
   canBack,
@@ -49,7 +43,6 @@ import { useSiteConfigRevision } from './data/siteConfig'
 import LandingPage, { TopicSummary } from './components/LandingPage'
 import TopicExploreStarters from './components/TopicExploreStarters'
 import { resolveEntityStarters } from './data/explorationStarters'
-import { resolveNarrativeKey } from './data/narrative'
 import { toInterpretationViewModels } from './data/interpretationFormatter'
 import { buildUnderstandingsFromConnectionsExplained } from './data/understandingRules'
 import { useLocale } from './data/locale'
@@ -104,6 +97,7 @@ import { buildCausalObjectMaps, buildFeaturedTopics } from './runtime/causalObje
 // functions relocated into useExplorationNavigation() — pure relocation,
 // same `nav` / `pkg` / setters passed, call sites unchanged.
 import { useExplorationNavigation } from './runtime/explorationNavigation'
+import { useExplorationSearch } from './runtime/explorationSearch'
 
 // M69 — Exploration Package page
 import ExplorationPackagePage from './pages/ExplorationPackagePage'
@@ -512,55 +506,24 @@ function App() {
     }
   }
 
-  function handleResultSelect(item: SearchResultItem) {
-    const target = resolveSearchResultTarget(item)
-    if (!target) return
-    if (target.kind === 'topic') {
-      navigateTo({
-        type: 'topic',
-        topic: target.topic,
-        title: item.name || prettifyTopic(target.topic),
-      })
-    } else {
-      // M35.1: reconstruct the entity global_id (the /search response strips
-      // global_id, leaving only topic + id) so StorySection / WhyImportantPanel
-      // inside EntityPage can match the curated narrative.
-      openEntity(resolveNarrativeKey(item), item.name)
-    }
-  }
-
-  // M4-004: the unified list is rendered Topics-first, so keyboard navigation
-  // must index against the same ordered view the UI renders.
-  const orderedSearchResults = orderSearchResults(searchResults)
-
-  // M2-002.5 keyboard navigation handlers (wired to the search box).
-  function handleSearchNav(direction: 'up' | 'down') {
-    if (orderedSearchResults.length === 0) return
-    setSearchSelected((cur) =>
-      nextSelectionIndex(
-        cur,
-        direction === 'down' ? 1 : -1,
-        orderedSearchResults.length,
-      ),
-    )
-  }
-
-  function handleSearchEnterSelect() {
-    if (orderedSearchResults.length === 0) return
-    const idx = searchSelected >= 0 ? searchSelected : 0
-    handleResultSelect(orderedSearchResults[idx])
-  }
-
-  function handleSearchEscape() {
-    clearSearch()
-    setSearchSelected(-1)
-  }
-
-  function clearSearch() {
-    setSearchResults(null)
-    setSearchQuery('')
-    setSearchSelected(-1)
-  }
+  // P1-② (Engineering Health, 2026-08-14): search behavior cluster relocated
+  // into useExplorationSearch() — pure relocation, same state/setters passed,
+  // call site (searchSlot) unchanged. handleSearch (async fetch + view-state
+  // reset) stays in App and is forwarded in.
+  const { searchSlot } = useExplorationSearch({
+    searchQuery,
+    searchResults,
+    searchLoading,
+    searchError,
+    searchSelected,
+    setSearchResults,
+    setSearchQuery,
+    setSearchSelected,
+    handleSearch,
+    navigateTo,
+    openEntity,
+    prettifyTopic,
+  })
 
   // P1-② (Engineering Health, 2026-08-14): view-derived maps + node-open
   // helpers relocated into buildExplorationDerived() — pure relocation, logic
@@ -582,33 +545,6 @@ function App() {
     seenGlobalIds,
   } = buildExplorationDerived({ result, entityData, recent, history, cursor, t, locale, openEntity })
 
-  // M34-A1: the search cluster and the navigation cluster are hoisted into
-  // AppShell slots. AppShell wraps the nav cluster in a semantic <nav
-  // class="nav-shell"> (fixes TD-nav) and renders the same hero + .explorer
-  // chrome the monolith rendered, so the smoke tests stay green.
-  const searchSlot = (
-    <>
-      <EntitySearchBox
-        onSearch={handleSearch}
-        loading={searchLoading}
-        error={searchError}
-        resultsActive={!!searchResults && searchResults.length > 0}
-        onArrow={handleSearchNav}
-        onEnterSelect={handleSearchEnterSelect}
-        onEscape={handleSearchEscape}
-      />
-
-      {searchResults && (
-        <SearchResults
-          query={searchQuery}
-          results={orderedSearchResults}
-          onSelectItem={handleResultSelect}
-          onClear={clearSearch}
-          selectedIndex={searchSelected}
-        />
-      )}
-    </>
-  )
 
   const navSlot = current ? (
     <>

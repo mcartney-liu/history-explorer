@@ -289,6 +289,10 @@ export const SCOPE_ALLOWLIST = [
   // adapter functions — useExplorationNavigation() lives here. Pure
   // relocation of App.tsx logic (447–571); call sites unchanged.
   "frontend/src/runtime/explorationNavigation.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): search behavior
+  // cluster — useExplorationSearch() lives here (returns the searchSlot JSX).
+  // Pure relocation of App.tsx logic; call sites unchanged.
+  "frontend/src/runtime/explorationSearch.tsx",
   // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
   // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
   // frontend change: Discover landing page, static narrative layer
