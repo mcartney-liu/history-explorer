@@ -847,6 +847,8 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/relationshipLabels.ts",
   "frontend/src/data/transition.ts",
   "frontend/src/runtime/originEntity.ts",
+  // Transition Function v2 多跳路径桥 (2026-08-15)：实体邻居会话缓存。
+  "frontend/src/runtime/entityCache.ts",
   // INFO_FOLDING UX SPEC (2026-08-15, PO): 统一折叠组件 + 长文截断批量落地。
   // 目录前缀（精确到 causal/ 与 exploration/ 子目录，非宽泛 frontend/*）。
   "frontend/src/components/causal/",

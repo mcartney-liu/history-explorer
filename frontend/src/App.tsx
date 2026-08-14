@@ -81,6 +81,7 @@ import { ExplorerRuntimeContext } from './next/ExplorerRuntimeContext'
 
 // P1-② (Engineering Health, 2026-08-14): runtime state relocated into useExplorerRuntime()
 import { useExplorerRuntime } from './runtime/explorerRuntime'
+import { cacheEntityNeighbors } from './runtime/entityCache'
 
 // P1-② (Engineering Health, 2026-08-14): view-derived maps + node-open helpers
 // relocated into buildExplorationDerived() — pure relocation, call sites unchanged.
@@ -467,6 +468,15 @@ function App() {
         if (!resp.ok) throw new Error(`status:${resp.status}`)
         data = await resp.json()
         setEntityData(data as EntityDetail)
+        // Transition Function v2：缓存实体邻居，供多跳路径桥（共同邻居）
+        // 零网络请求查找。只存邻居引用（gid+name）。
+        cacheEntityNeighbors(
+          node.id,
+          (data as EntityDetail).relationships.map((r) => ({
+            gid: r.other.global_id ?? r.other.id,
+            name: r.other.name,
+          })),
+        )
         setResult(null)
         setHistory((h) =>
           h.map((n, i) => (i === targetCursor && n.type === 'entity' ? { ...n, name: (data as EntityDetail).name } : n)),
