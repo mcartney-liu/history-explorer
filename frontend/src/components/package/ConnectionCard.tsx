@@ -94,6 +94,24 @@ export default function ConnectionCard({
     onEntityClick?.(gid)
   }
 
+  // 站间衔接 (2026-08-15, PO 方案A)：相邻站与本站有直接关系边时，把这条边作为
+  // "为什么从上一站来到这一站"的桥讲给用户（真实关系句）；无直接边时诚实降级为
+  // "同属本探索线"，不编造关系。数据零新增，纯展示现有 relationship_paths。
+  const edgeBetween = (a: string, b: string) =>
+    pkg.relationship_paths.find(
+      (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
+    ) ?? null
+  const relSentence = (fromGid: string, toGid: string) => {
+    const edge = edgeBetween(fromGid, toGid)
+    if (!edge) return null
+    if (edge.from === fromGid) {
+      return `${getEntityDisplayName(fromGid)} ${relLabel(edge.type)} ${getEntityDisplayName(toGid)}`
+    }
+    return `${getEntityDisplayName(toGid)} ${relLabel(edge.type)} ${getEntityDisplayName(fromGid)}`
+  }
+  const prevHint = prev ? relSentence(prev.gid, entityGlobalId) ?? '同属本探索线' : null
+  const nextHint = next ? relSentence(entityGlobalId, next.gid) ?? '同属本探索线' : null
+
   return (
     <aside className="connection-card" aria-label="你为什么在这里">
       <div className="connection-card-head">
@@ -123,6 +141,7 @@ export default function ConnectionCard({
               <button type="button" className="connection-card-nav-btn" onClick={() => jump(prev.gid)}>
                 <span className="connection-card-nav-dir">← 上一站</span>
                 <span className="connection-card-nav-name">{prev.name}</span>
+                {prevHint && <span className="connection-card-nav-hint">{prevHint}</span>}
               </button>
             ) : (
               <span className="connection-card-nav-btn is-disabled" aria-disabled="true">
@@ -133,6 +152,7 @@ export default function ConnectionCard({
               <button type="button" className="connection-card-nav-btn" onClick={() => jump(next.gid)}>
                 <span className="connection-card-nav-dir">下一站 →</span>
                 <span className="connection-card-nav-name">{next.name}</span>
+                {nextHint && <span className="connection-card-nav-hint">{nextHint}</span>}
               </button>
             ) : (
               <span className="connection-card-nav-btn is-disabled" aria-disabled="true">
