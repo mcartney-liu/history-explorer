@@ -38,7 +38,7 @@ import type { EntityTab } from './EntityPageShell'
 import { useLocale } from '../data/locale'
 import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
 import { takeOriginEntity } from '../runtime/originEntity'
-import { relLabel } from '../data/relationshipLabels'
+import { describeTransition } from '../data/transition'
 
 export type EntityRelationship = {
   type: string
@@ -153,10 +153,12 @@ function EntityPage({
   // fallback. Target-side dates remain a documented Future Scope item.
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
-  // 入口桥 (2026-08-15, PO)：从实体 A 跳入本实体 B 时，显示 A↔B 的真实关系边
-  // （有直接边，如"唐 早于 宋"）或降级来源（无直接边，如"从「唐」的探索延续
-  // 而来"）。来源由 openEntity 按目标实体暂存（keyed），同一 B 从不同 A 进入
-  // 读到的是最近来源 → 桥随入口变化。无来源（直达/主题列表进入）不渲染。
+  // 入口桥 (2026-08-15, PO)：从实体 A 跳入本实体 B 时，显示 A↔B 的过渡承接。
+  // 三层逻辑统一走 Transition Function（describeTransition）：①中文 claim 叙述
+  // ②关系短句 ③无直接边 → bridge=null → 降级来源。来源由 openEntity 按目标
+  // 实体暂存（keyed），同一 B 从不同 A 进入读到最近来源 → 桥随入口变化。
+  // 注：实体关系数据当前不含 evidence claim ids，故入口桥先落第二层关系短句；
+  // 未来数据补 evidence 后自动升级第一层 claim 叙述（共享函数无需改）。
   const [originGid] = useState(() => takeOriginEntity(entityGlobalId))
   const originBridge = useMemo(() => {
     if (!originGid) return null
@@ -165,7 +167,7 @@ function EntityPage({
     )
     const fromName = rel?.other.name ?? originGid
     if (rel) {
-      return { fromName, bridge: `${fromName} ${relLabel(rel.type)} ${entity.name}` }
+      return { fromName, bridge: describeTransition(fromName, entity.name, { type: rel.type }).text }
     }
     return { fromName, bridge: null }
   }, [originGid, entity])
