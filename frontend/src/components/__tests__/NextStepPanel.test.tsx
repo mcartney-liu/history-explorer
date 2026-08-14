@@ -52,7 +52,7 @@ describe('NextStepPanelView (Phase 5 A3 presentational)', () => {
     expect(html.toLowerCase()).not.toContain('recommend')
   })
 
-  it('maps every cognitive-action type to its Chinese label', () => {
+  it('maps every cognitive-action type to its Chinese label (folding: 4 visible + 查看全部)', () => {
     const all: ExplorationActionType[] = [
       'open_dimension',
       'follow_cause',
@@ -62,11 +62,15 @@ describe('NextStepPanelView (Phase 5 A3 presentational)', () => {
     ]
     const actions = all.map((t, i) => action(t, `t:${i}`, `reason-${i}`, `hook-${i}`))
     const html = render(<NextStepPanelView actions={actions} />)
+    // INFO_FOLDING UX SPEC (2026-08-15): 列表默认 4 条可见，第 5 条折叠在
+    // 「查看全部 N 条 →」之后——前 4 个中文标签直接可见，第 5 个在折叠态
+    // 不可见但总数按钮给出出口（截断必有出路）。
     expect(html).toContain('展开维度')
     expect(html).toContain('追因')
     expect(html).toContain('深入延续')
     expect(html).toContain('比较语境')
-    expect(html).toContain('反思')
+    expect(html).not.toContain('反思')
+    expect(html).toContain('查看全部 5 条')
   })
 
   it('preserves the policy action order and does NOT re-rank', () => {
