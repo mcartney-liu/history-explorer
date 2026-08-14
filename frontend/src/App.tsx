@@ -888,10 +888,14 @@ function App() {
           />
         ) : null}
         productIntro={!current && !packageSlug ? <ProductIntro /> : null}
-        understandingMode={null}
+        understandingMode={
+          router.route?.mode === 'understanding' ? (
+            <UnderstandingWorkspace topic={router.route?.topic ?? null} />
+          ) : null
+        }
         devCatalog={null}
         isDevCatalog={false}
-        isUnderstandingRoute={false}
+        isUnderstandingRoute={router.route?.mode === 'understanding'}
         hasPackage={!!packageSlug}
       />
     </ExplorerShell>
