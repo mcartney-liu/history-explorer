@@ -94,7 +94,7 @@ export interface ContentDocument {
  * Only the landing module is mirrored here: it is the one surface whose copy
  * has no other home in the source tree. Every other module keeps its shipped
  * copy in the component that already owned it (`EntityTabGuidance`,
- * `ExplorationFlowGuide`, `AICapabilities`), so this layer never becomes a
+ * `AICapabilities`), so this layer never becomes a
  * second source of truth for text that already exists.
  *
  * MUST stay in sync with the `landing.*` entries of `CONTENT_SLOTS`.

@@ -229,6 +229,13 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/RelationshipEvidence.test.tsx",
   "frontend/src/components/ExplorationFlowGuide.tsx",
   "frontend/src/components/ExplorationFlowGuide.test.tsx",
+  // P1-③ (Engineering Health, 2026-08-14, PO-approved): dead-code removal.
+  // ResearchSuite / TimelineStrip are orphan modules — no file imports them
+  // (confirmed via full-repo export-usage scan: 0 external references), no
+  // co-located test, not mounted by any route. Removing them does not change
+  // runtime behaviour. Listed so the deletion passes the scope guard.
+  "frontend/src/components/ResearchSuite.tsx",
+  "frontend/src/components/TimelineStrip.tsx",
   // M31 Pilot (Knowledge Model Expansion) — DATA-LEVEL Freeze Gate (M31-G0).
   // Pilot validates the Knowledge Model Expansion on a single high-density
   // dataset (ancient_india) WITHOUT touching schema/runtime/enum/API. This is
