@@ -83,28 +83,17 @@ import FeedbackWidget from './components/FeedbackWidget'
 // M86.1 — Explorer Runtime Context（Experience Runtime 单一语义核心）
 import { ExplorerRuntimeContext, type Anchor } from './next/ExplorerRuntimeContext'
 
-  // M86.1 Batch 3 — Understanding Projection Runtime
-import {
-  computeUnderstandingProjection,
-  EMPTY_PROJECTION,
-  type ContextSnapshot,
-  type UnderstandingTemplate,
-} from './next/UnderstandingProjection'
-
-// M90.3 Stage E — ExplorationPolicy wiring (previously backend-only, now UI-visible)
-import { evaluateExploration } from './next/exploration/ExplorationPolicy'
-import { buildExplorationState, EMPTY_EXPLORATION_STATE } from './next/exploration/ExplorationState'
-import type { PolicyContext } from './runtime/evaluation/Decision'
-
-// M90.3 Stage E-3 — ExplorationMetrics + Memory wiring
-import { computeExplorationMetrics } from './next/exploration/ExplorationMetrics'
-
 // P1-② (Engineering Health, 2026-08-14): runtime state relocated into useExplorerRuntime()
 import { useExplorerRuntime } from './runtime/explorerRuntime'
 
 // P1-② (Engineering Health, 2026-08-14): view-derived maps + node-open helpers
 // relocated into buildExplorationDerived() — pure relocation, call sites unchanged.
 import { buildExplorationDerived } from './runtime/explorationDerived'
+
+// P1-② (Engineering Health, 2026-08-14): projection → state → policy effect
+// relocated into useExplorationProjection() — pure relocation, deps & logic
+// unchanged. App passes the same inputs + setters it previously closed over.
+import { useExplorationProjection } from './runtime/explorationProjection'
 
 // M69 — Exploration Package page
 import ExplorationPackagePage from './pages/ExplorationPackagePage'
@@ -376,164 +365,23 @@ function App() {
   const currentTopic = current?.type === 'topic' ? current.topic : ''
   const currentRef = current?.type === 'entity' ? current.id : ''
 
-  // =========================================================================
-  // M90.3 Stage E — Projection → ExplorationState → ExplorationPolicy
-  // Re-compute when anchorChain or relationChain changes. Moved after
-  // `current` declaration to avoid TDZ.
-  // =========================================================================
-  useEffect(() => {
-    console.log('[Projection useEffect] TRIGGERED', {
-      hasResult: !!result,
-      entityCount: result?.entities?.length,
-      anchorChainLen: runtimeContext.anchorChain?.length,
-    })
-    // Compute projection for ALL topics as soon as data is available.
-    const hasTopicData = result && result.entities && result.entities.length > 0
-    const hasEntityData = !!(
-      entityData &&
-      (entityData.relationships?.length || entityData.exploration?.related_entities?.length)
-    )
-    if (!hasTopicData && !hasEntityData && runtimeContext.anchorChain.length === 0) {
-      console.log('[Projection useEffect] SKIPPED — no topic data, no entity data, no anchor chain')
-      setProjection(EMPTY_PROJECTION)
-      return
-    }
-
-    const effectiveExplorationId = runtimeContext.explorationId || 'exploration-default'
-
-    const snapshot: ContextSnapshot = {
-      explorationId: effectiveExplorationId,
-      anchorChain: runtimeContext.anchorChain,
-      relationChain: runtimeContext.relationChain,
-    }
-
-    // Build UnderstandingTemplate. Entity-dimension source prefers topic
-    // `result.entities`; on a bare entity page (result cleared by fetchNode)
-    // it falls back to the current entity's `exploration.related_entities`
-    // (neighbor entity types), so the projection still has dimensions to cover.
-    const dimensionEntities: Array<{ id: string; type?: string }> = result?.entities
-      ? result.entities.map((e) => ({ id: e.id, type: e.type }))
-      : (entityData?.exploration?.related_entities ?? []).map((e) => ({ id: e.id ?? e.name, type: e.type }))
-    const entityTypes = [...new Set(dimensionEntities.map((e) => e.type).filter((t): t is string => Boolean(t)))]
-    // P-U08: local id → global_id ("topic:localid") map. Entity pages carry
-    // global_ids in `relationships[].other`; topic results carry them on each
-    // entity. Used so open_dimension next-steps point at real, clickable
-    // entities instead of Chinese dimension labels (which 404).
-    const shortToGlobal: Record<string, string> = {}
-    for (const r of entityData?.relationships ?? []) {
-      if (r.other?.global_id && r.other?.id) shortToGlobal[r.other.id] = r.other.global_id
-    }
-    for (const e of result?.entities ?? []) {
-      if (e.global_id && e.id) shortToGlobal[e.id] = e.global_id
-    }
-    const dimensionMapping: Record<string, string[]> = {}
-    for (const e of dimensionEntities) {
-      if (!e.type) continue
-      if (!dimensionMapping[e.type]) dimensionMapping[e.type] = []
-      const gid = shortToGlobal[e.id] ?? e.id
-      if (!dimensionMapping[e.type].includes(gid)) dimensionMapping[e.type].push(gid)
-    }
-    // Relation source prefers topic `result.relationships`, falls back to the
-    // current entity's `relationships` (clean source/target/type triples) so the
-    // policy can generate a meaningful next-step action anchored on this entity.
-    const relationSource: any[] =
-      result?.relationships ||
-      entityData?.relationships ||
-      result?.exploration?.related_entities ||
-      entityData?.exploration?.related_entities ||
-      []
-    const template: UnderstandingTemplate = {
-      templateId: 'auto-generated-from-topic-data',
-      version: '1.0',
-      topic: runtimeContext.userQuestion ?? currentTopic ?? entityData?.name ?? '',
-      goal: runtimeContext.understandingGoal ?? '',
-      requiredDimensions: entityTypes,
-      dimensionMapping,
-      expectedRelations: relationSource.map((r: any) => ({
-        from: r.source || r.from_entity_id || '',
-        to: r.target || r.to_entity_id || '',
-        type: r.relation_type || r.relationship || r.type || 'related_to',
-      })),
-    }
-
-    const newProjection = computeUnderstandingProjection(snapshot, template)
-    console.log('[Understanding] Projection computed:', {
-      stage: newProjection.stage,
-      coverageRatio: newProjection.coverageState?.coverageRatio,
-      requiredDimensions: newProjection.coverageState?.requiredDimensions,
-      coveredDimensions: newProjection.coverageState?.coveredDimensions,
-      missingLinks: newProjection.missingLinks?.length,
-      templateDims: template.requiredDimensions,
-      entityCount: result?.entities?.length,
-    })
-    setProjection(newProjection)
-
-    // Projection → Context (stage + primaryGap)
-    setRuntimeContext((prev) => ({
-      ...prev,
-      cognitiveStage: newProjection.stage,
-      unresolvedGap: newProjection.missingLinks.length > 0
-        ? `Missing connection: ${newProjection.missingLinks[0].fromRef} → ${newProjection.missingLinks[0].toRef}`
-        : null,
-    }))
-
-    // Build ExplorationState → run ExplorationPolicy
-    const eState = buildExplorationState({
-      explorationId: runtimeContext.explorationId || '',
-      currentTopic: currentTopic,
-      currentAnchorRef: currentRef,
-      understandingProjection: {
-        stage: newProjection.stage,
-        coverageState: {
-          requiredDimensions: newProjection.coverageState.requiredDimensions || [],
-          coveredDimensions: newProjection.coverageState.coveredDimensions || [],
-          coverageRatio: newProjection.coverageState.coverageRatio || 0,
-        },
-        missingLinks: newProjection.missingLinks,
-        basedOn: newProjection.basedOn || { projectionVersion: '1.0' },
-      },
-      dimensionMapping, // P-U08: Policy Rule 1 用真实实体作 open_dimension 目标
-      memoryProjection: {
-        totalNodes: history.length,
-        daysSinceStart: 0,
-        activeBranches: [],
-      },
-      sessionHistory: {
-        exploredAnchors: runtimeContext.anchorChain.map((a) => a.entityId),
-        exploredRelations: runtimeContext.relationChain.map((r) => r.relationId),
-        activeQuestions: runtimeContext.userQuestion ? [runtimeContext.userQuestion] : [],
-      },
-    })
-    setExplorationState(eState)
-
-    // M90.3 Stage E-3 — Compute ExplorationMetrics (before → after delta)
-    const prev = previousExplorationState.current
-    if (prev.explorationId && prev.explorationId !== eState.explorationId) {
-      // Topic changed — treat as new session, metrics show growth from empty
-      const metrics = computeExplorationMetrics(EMPTY_EXPLORATION_STATE, eState, prev.missingDimensions)
-      setExplorationMetrics(metrics)
-    } else if (prev.coverageRatio !== eState.coverageRatio || prev.missingDimensions.length !== eState.missingDimensions.length) {
-      // Same topic, cognitive state changed — compute delta
-      const metrics = computeExplorationMetrics(prev, eState, prev.missingDimensions)
-      setExplorationMetrics(metrics)
-    }
-    previousExplorationState.current = eState
-
-    const policyContext: PolicyContext = {
-      policyVersion: '1.0',
-      timestamp: Date.now(),
-      engineProtocolVersion: '1.0',
-    }
-    const decision = evaluateExploration(eState, policyContext)
-    console.log('[ExplorationPolicy] Decision:', {
-      actionType: decision.output?.type,
-      reason: decision.output?.reason,
-      coverageRatio: eState.coverageRatio,
-      missingDimensions: eState.missingDimensions,
-    })
-    setPolicyAction(decision.output)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [runtimeContext.explorationId, runtimeContext.anchorChain, runtimeContext.relationChain, currentTopic, currentRef, entityData])
+  // P1-② (Engineering Health, 2026-08-14): projection → state → policy effect
+  // relocated into useExplorationProjection() — pure relocation, deps & logic
+  // unchanged. App passes the same inputs + setters it previously closed over.
+  useExplorationProjection({
+    result,
+    entityData,
+    runtimeContext,
+    currentTopic,
+    currentRef,
+    history,
+    setProjection,
+    setRuntimeContext,
+    setExplorationState,
+    setExplorationMetrics,
+    previousExplorationState,
+    setPolicyAction,
+  })
 
   // Fetch a node's data and update view state. Pure I/O; history navigation
   // decides *which* node, this decides *how* to load it.
