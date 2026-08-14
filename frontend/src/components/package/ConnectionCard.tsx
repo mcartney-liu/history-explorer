@@ -94,13 +94,18 @@ export default function ConnectionCard({
     onEntityClick?.(gid)
   }
 
-  // 站间衔接 (2026-08-15, PO 方案A)：相邻站与本站有直接关系边时，把这条边作为
-  // "为什么从上一站来到这一站"的桥讲给用户（真实关系句）；无直接边时诚实降级为
-  // "同属本探索线"，不编造关系。数据零新增，纯展示现有 relationship_paths。
+  // 站间衔接 (2026-08-15, PO 三层策略 A)：行程区一行「衔接叙述」，回答
+  // "为什么从上一站来到这一站"——
+  //   ① 第一层（有意义）：相邻边有 evidence claim 且为中文 → 直接讲 claim 叙述；
+  //   ② 第二层（准确）：无中文 claim 但有直接边 → 关系短句（如"宋 早于 元"）；
+  //   ③ 第三层（诚实）：无直接边 → 留白不渲染，绝不编造关系。
+  // 英文 claim（其他包）在中文界面降级为第二层，英文长句不进中文 UI。
+  // 数据零新增，纯展示现有 relationship_paths + evidence_claims。
   const edgeBetween = (a: string, b: string) =>
     pkg.relationship_paths.find(
       (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
     ) ?? null
+  const hasCJK = (s: string) => /[\u4e00-\u9fff]/.test(s)
   const relSentence = (fromGid: string, toGid: string) => {
     const edge = edgeBetween(fromGid, toGid)
     if (!edge) return null
@@ -109,8 +114,18 @@ export default function ConnectionCard({
     }
     return `${getEntityDisplayName(toGid)} ${relLabel(edge.type)} ${getEntityDisplayName(fromGid)}`
   }
-  const prevHint = prev ? relSentence(prev.gid, entityGlobalId) ?? '同属本探索线' : null
-  const nextHint = next ? relSentence(entityGlobalId, next.gid) ?? '同属本探索线' : null
+  // 从上一站到本站的衔接叙述；无素材时为 null（第三层留白）。
+  const prevTransition = prev
+    ? (() => {
+        const edge = edgeBetween(prev.gid, entityGlobalId)
+        if (!edge) return null
+        const zhClaims = getEvidenceWithSources(edge.evidence ?? [])
+          .map((e) => e.claim)
+          .filter((c) => c && hasCJK(c))
+        if (zhClaims.length > 0) return zhClaims[0]
+        return relSentence(prev.gid, entityGlobalId)
+      })()
+    : null
 
   return (
     <aside className="connection-card" aria-label="你为什么在这里">
@@ -136,12 +151,19 @@ export default function ConnectionCard({
               </button>
             )}
           </div>
+          {prevTransition && prev && (
+            <div className="connection-card-transition">
+              <span className="connection-card-transition-kicker">
+                从上一站「{prev.name}」来
+              </span>
+              <p className="connection-card-transition-text">{prevTransition}</p>
+            </div>
+          )}
           <div className="connection-card-nav">
             {prev ? (
               <button type="button" className="connection-card-nav-btn" onClick={() => jump(prev.gid)}>
                 <span className="connection-card-nav-dir">← 上一站</span>
                 <span className="connection-card-nav-name">{prev.name}</span>
-                {prevHint && <span className="connection-card-nav-hint">{prevHint}</span>}
               </button>
             ) : (
               <span className="connection-card-nav-btn is-disabled" aria-disabled="true">
@@ -152,7 +174,6 @@ export default function ConnectionCard({
               <button type="button" className="connection-card-nav-btn" onClick={() => jump(next.gid)}>
                 <span className="connection-card-nav-dir">下一站 →</span>
                 <span className="connection-card-nav-name">{next.name}</span>
-                {nextHint && <span className="connection-card-nav-hint">{nextHint}</span>}
               </button>
             ) : (
               <span className="connection-card-nav-btn is-disabled" aria-disabled="true">
