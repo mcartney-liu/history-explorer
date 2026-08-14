@@ -6,6 +6,9 @@ import {
 } from '../../data/explorationPackages'
 import { takePackageOrigin, setPackageOrigin } from './packageOrigin'
 import { buildStations } from './JourneyRail'
+import CollapsibleList from '../ui/CollapsibleList'
+import { relLabel } from '../../data/relationshipLabels'
+import { describeTransition } from '../../data/transition'
 
 interface ConnectionCardProps {
   /** global id of the entity currently shown on the page (may be absent). */
@@ -16,36 +19,6 @@ interface ConnectionCardProps {
   onEntityClick?: (gid: string) => void
   /** return to the originating exploration package page (full JourneyRail). */
   onOpenPackage?: (slug: string) => void
-}
-
-// Frozen relationship-type enum → Chinese label. Falls back to the raw token
-// (via formatRelationship-style prettify) for any type not listed here, so the
-// UI never shows a bare snake_case token and never invents a meaning.
-const REL_LABELS: Record<string, string> = {
-  before: '早于',
-  after: '晚于',
-  caused: '导致',
-  resulted_in: '促成',
-  participated_in: '参与',
-  related_to: '关联于',
-  practiced: '信奉',
-  influenced: '影响',
-  influenced_by: '受……影响',
-  inherited: '继承',
-  traded_with: '贸易往来',
-  ruled: '统治',
-  founded: '创立',
-  succeeded: '继任',
-  part_of: '属于',
-  located_in: '位于',
-  born_in: '生于',
-  died_in: '卒于',
-  wrote: '著述',
-  spread_to: '传播至',
-}
-
-function relLabel(type: string): string {
-  return REL_LABELS[type] ?? type.replace(/_/g, ' ')
 }
 
 // 探索剧本化 ③（治 D3）：实体页顶部"你为什么在这里"——
@@ -94,37 +67,19 @@ export default function ConnectionCard({
     onEntityClick?.(gid)
   }
 
-  // 站间衔接 (2026-08-15, PO 三层策略 A)：行程区一行「衔接叙述」，回答
-  // "为什么从上一站来到这一站"——
-  //   ① 第一层（有意义）：相邻边有 evidence claim 且为中文 → 直接讲 claim 叙述；
-  //   ② 第二层（准确）：无中文 claim 但有直接边 → 关系短句（如"宋 早于 元"）；
-  //   ③ 第三层（诚实）：无直接边 → 留白不渲染，绝不编造关系。
-  // 英文 claim（其他包）在中文界面降级为第二层，英文长句不进中文 UI。
-  // 数据零新增，纯展示现有 relationship_paths + evidence_claims。
+  // 站间衔接 (Transition Function v1, 2026-08-15 PO 课题)：行程区一行
+  // 「衔接叙述」，回答"为什么从上一站来到这一站"。三层逻辑统一走
+  // describeTransition（共享核心能力）：①中文 claim 叙述 ②关系短句
+  // ③无直接边 → text=null → 不渲染（留白）。数据零新增。
   const edgeBetween = (a: string, b: string) =>
     pkg.relationship_paths.find(
       (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
     ) ?? null
-  const hasCJK = (s: string) => /[\u4e00-\u9fff]/.test(s)
-  const relSentence = (fromGid: string, toGid: string) => {
-    const edge = edgeBetween(fromGid, toGid)
-    if (!edge) return null
-    if (edge.from === fromGid) {
-      return `${getEntityDisplayName(fromGid)} ${relLabel(edge.type)} ${getEntityDisplayName(toGid)}`
-    }
-    return `${getEntityDisplayName(toGid)} ${relLabel(edge.type)} ${getEntityDisplayName(fromGid)}`
-  }
-  // 从上一站到本站的衔接叙述；无素材时为 null（第三层留白）。
+  const prevEdge = prev ? edgeBetween(prev.gid, entityGlobalId) : null
   const prevTransition = prev
-    ? (() => {
-        const edge = edgeBetween(prev.gid, entityGlobalId)
-        if (!edge) return null
-        const zhClaims = getEvidenceWithSources(edge.evidence ?? [])
-          .map((e) => e.claim)
-          .filter((c) => c && hasCJK(c))
-        if (zhClaims.length > 0) return zhClaims[0]
-        return relSentence(prev.gid, entityGlobalId)
-      })()
+    ? describeTransition(prev.name, entityName, prevEdge
+        ? { type: prevEdge.type, evidence: prevEdge.evidence }
+        : null).text
     : null
 
   return (
@@ -194,7 +149,7 @@ export default function ConnectionCard({
       </div>
 
       {rels.length > 0 && (
-        <ul className="connection-card-rels">
+        <CollapsibleList className="connection-card-rels" visible={3}>
           {rels.map((r, i) => {
             const isFrom = r.from === entityGlobalId
             const other = isFrom ? r.to : r.from
@@ -212,17 +167,19 @@ export default function ConnectionCard({
               </li>
             )
           })}
-        </ul>
+        </CollapsibleList>
       )}
 
       {evidence.length > 0 && (
         <div className="connection-card-evidence">
           <span className="connection-card-evidence-label">依据</span>
-          {evidence.slice(0, 2).map((e) => (
-            <p key={e.claimId} className="connection-card-evidence-text">
-              {e.claim}
-            </p>
-          ))}
+          <CollapsibleList visible={2}>
+            {evidence.map((e) => (
+              <p key={e.claimId} className="connection-card-evidence-text">
+                {e.claim}
+              </p>
+            ))}
+          </CollapsibleList>
         </div>
       )}
     </aside>

@@ -841,6 +841,16 @@ export const SCOPE_ALLOWLIST = [
   // NO broad prefix for data/ next/ routing/ primitives/).
   "frontend/src/components/primitives/EvidenceBlock.tsx",
   "frontend/src/data/causalStatement.ts",
+  // Transition Function 核心能力 (2026-08-15, PO 课题 OD-12) + 入口桥：
+  // describeTransition 共享函数 / relationshipLabels 公共映射 / originEntity
+  // 来源握手。精确文件（data/ runtime/ 不扩宽前缀）。
+  "frontend/src/data/relationshipLabels.ts",
+  "frontend/src/data/transition.ts",
+  "frontend/src/runtime/originEntity.ts",
+  // INFO_FOLDING UX SPEC (2026-08-15, PO): 统一折叠组件 + 长文截断批量落地。
+  // 目录前缀（精确到 causal/ 与 exploration/ 子目录，非宽泛 frontend/*）。
+  "frontend/src/components/causal/",
+  "frontend/src/components/exploration/",
   "frontend/src/next/companion/ExplanationReplay.ts",
   "frontend/src/next/memory/MemoryPolicy.ts",
   "frontend/src/next/memory/MemoryProjection.ts",

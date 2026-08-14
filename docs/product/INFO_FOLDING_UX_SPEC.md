@@ -105,6 +105,23 @@
 
 ## 5. 待 PO 拍板项
 
-- [ ] 默认参数（3.3 表）是否采纳
-- [ ] 试点范围：仅 EntityHero 证据 / 或 P0 全部一起
-- [ ] 统一组件命名与位置（建议 `frontend/src/components/ui/Collapsible*`）
+- [x] 默认参数（3.3 表）——PO 2026-08-15 采纳建议值
+- [x] 试点范围——PO 选"先改证据一处"（EvidenceList，vM13-4 已发）
+- [x] 统一组件命名与位置——`frontend/src/components/ui/CollapsibleList|CollapsibleText`
+
+---
+
+## 6. 实施进度（2026-08-15 第二批）
+
+### 已完成（待发版）
+- **统一折叠组件**：`CollapsibleList`（列表默认 N 条 + 查看全部 N 条 → / 收起）、`CollapsibleText`（长文默认 N 行 + 展开全文 / 收起全文），通用文案 key（common.view_all/collapse/expand_text/collapse_text，zh/en/ja）。
+- **P0 列表类 5 处**：ConnectionCard rels（3 条）、EntityRelatedList（5 条）、NextStepPanel（4 条）、ProvenancePanel 论断（3 条）、InterpretationPanel understandings（3 条）。
+- **P0 长文类 3 处**：CausalStatementCard mechanism/consequence（3 行）、StorySection（4 行）、WhyImportantPanel（4 行）。
+- **P1 补出口 1 处**：ConnectionCard 依据（2 条 + 查看全部）。
+
+### 保持布局型截断（不强行折叠，判断说明）
+- ConnectionExplorer graph 节点网格 / edges 标签流（5）/ timeline 时间轴（8）、EntityHero KeyFacts 卡片横排（3）——**结构化布局**，折叠按钮会破坏布局语义；且当前数据上限内"截断=全量"，不构成信息不可达。若未来数据超限，再单独加适配布局的展开。
+- Event 三组件关系链、JourneyRail 行程——链式/旅程结构化视图，保持全量。
+
+### 状态
+- tsc + freeze-check 全绿。改动 12 文件（2 新组件 + 3 locale + 1 样式 + 7 组件）。

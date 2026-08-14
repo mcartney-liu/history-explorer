@@ -24,5 +24,8 @@ export default {
   'entity.tabNavAria': '实体页面导航',
   'entity.guidanceSuffix': '说明',
   'entity.narrativeEmpty': '该实体的编辑叙事整理中，将逐步补齐。',
+  // 入口桥 (2026-08-15, PO)：实体跳转的来源承接
+  'entity.origin_bridge_from': '从「%{name}」来',
+  'entity.origin_bridge_fallback': '从「%{name}」的探索延续而来',
   'insight.intro': '%{name} 是历史上重要的%{type}。',
 }

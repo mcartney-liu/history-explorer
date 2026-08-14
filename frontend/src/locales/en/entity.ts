@@ -10,5 +10,8 @@ export default {
   'entity.research': 'Research',
   'entity.compare': 'Compare',
   'entity.narrativeEmpty': 'Editorial narrative for this entity is being prepared.',
+  // Origin bridge (2026-08-15, PO): entity-jump source carry-over
+  'entity.origin_bridge_from': 'From 「%{name}」',
+  'entity.origin_bridge_fallback': 'Continuing the exploration from 「%{name}」',
   'insight.intro': '%{name} is a historically significant %{type}.',
 }

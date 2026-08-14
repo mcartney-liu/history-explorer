@@ -14,6 +14,7 @@ import { recordVisit } from '../data/ExplorerPath'
 import { saveRecent } from '../components/recentStore'
 import type { NavNode } from '../components/navigation'
 import { setPackageOrigin } from '../components/package/packageOrigin'
+import { setOriginEntity } from './originEntity'
 import type { NavigationApi } from '../hooks/useNavigationHistory'
 import type { PackageContextApi } from '../hooks/usePackageContext'
 import type {
@@ -88,6 +89,15 @@ export function useExplorationNavigation(input: UseExplorationNavigationInput): 
     // 暂存一瞬（keyed 到实体 id），供实体页连接卡回答"这一站跟包有啥关系"。
     // 红线照常执行，不推翻。
     const originSlug = pkg.packageSlug
+    // 入口桥 (2026-08-15, PO)：跳转前把来源实体暂存（keyed 到目标实体），
+    // 实体页「入口桥」承接块据此显示"A ↔ B 的真实关系边"或降级来源。
+    // 仅当来源节点携带实体 id（entity / causal_object）时捕获，避免 topic
+    // 等非实体来源产生伪桥；每次跳转覆盖 → 同一目标从不同来源进入时
+    // 桥随入口变化。
+    const cur = nav.current
+    const originGid =
+      cur?.type === 'entity' ? cur.id : cur?.type === 'causal_object' ? cur.objectId : null
+    if (originGid) setOriginEntity(originGid, id)
     if (pkg.packageSlug) closePackage()
     if (originSlug) setPackageOrigin(originSlug, id)
     const displayName = name || id

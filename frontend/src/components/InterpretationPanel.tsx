@@ -18,6 +18,7 @@ import { useLocale, type Locale } from '../data/locale'
 import { InterpretationViewModel } from '../data/interpretationFormatter'
 import type { UnderstandingViewModel } from '../data/understandingRules'
 import { UnderstandingCard } from './primitives/UnderstandingCard'
+import CollapsibleList from './ui/CollapsibleList'
 
 type EntityTypeKey =
   | 'civilization'
@@ -141,25 +142,27 @@ function InterpretationPanel({
           <h4 style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)', fontWeight: 600 }}>
             {meaningTitle}
           </h4>
-          {understandings!.map((u, idx) => (
-            <UnderstandingCard
-              key={idx}
-              before={`${u.actor} 与 ${u.target}`}
-              evidence={
-                <>
-                  <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>
-                    {u.perspective}
-                  </span>
-                  {u.timeContext && (
-                    <span className="he-meaning-time" style={{ marginLeft: 8, fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>
-                      · {t('discover.timeLabel')} {u.timeContext}
+          <CollapsibleList visible={3}>
+            {understandings!.map((u, idx) => (
+              <UnderstandingCard
+                key={idx}
+                before={`${u.actor} 与 ${u.target}`}
+                evidence={
+                  <>
+                    <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>
+                      {u.perspective}
                     </span>
-                  )}
-                </>
-              }
-              after={u.meaning}
-            />
-          ))}
+                    {u.timeContext && (
+                      <span className="he-meaning-time" style={{ marginLeft: 8, fontSize: '0.75rem', color: 'var(--color-ink-500)' }}>
+                        · {t('discover.timeLabel')} {u.timeContext}
+                      </span>
+                    )}
+                  </>
+                }
+                after={u.meaning}
+              />
+            ))}
+          </CollapsibleList>
         </div>
       )}
     </div>

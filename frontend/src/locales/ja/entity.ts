@@ -24,5 +24,8 @@ export default {
   'entity.tabExtensionsAria': '拡張機能',
   'entity.tabNavAria': 'エンティティページのナビゲーション',
   'entity.guidanceSuffix': '説明',
+  // 入口ブリッジ (2026-08-15, PO): エンティティ遷移の出所引き継ぎ
+  'entity.origin_bridge_from': '「%{name}」から来た',
+  'entity.origin_bridge_fallback': '「%{name}」の探索から続けています',
   'insight.intro': '%{name} は歴史上重要な%{type}です。',
 }

@@ -7,6 +7,7 @@
 // mount on any entity without changing layout.
 
 import { getNarrative } from '../../data/narrative'
+import CollapsibleText from '../ui/CollapsibleText'
 
 type StorySectionProps = {
   // Global id (entity) or topic slug — must match a key in NARRATIVE.
@@ -20,7 +21,7 @@ export function StorySection({ narrativeKey }: StorySectionProps) {
   return (
     <section className="story-section" data-narrative-key={narrativeKey} aria-label="Story">
       <h3 className="story-section-heading">故事 · Story</h3>
-      <p className="story-section-body">{block.story}</p>
+      <CollapsibleText text={block.story} lines={4} className="story-section-body" />
     </section>
   )
 }
