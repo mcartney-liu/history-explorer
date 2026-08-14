@@ -24,6 +24,7 @@ from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
 from .research_store import delete_research, list_research, save_research
+from .gap_ledger import get_gap, list_gaps, upsert_gap
 
 router = APIRouter(tags=["research"])
 
@@ -93,4 +94,67 @@ router.add_api_route(
     remove_research,
     methods=["DELETE"],
     operation_id="v1_research_delete",
+)
+
+
+# ---------------------------------------------------------------------------
+# Gap-state ledger (cognitive loop, ADR-0018 extension). Same anonymous
+# session ownership as /research (X-Session-Id); the snapshot payload is opaque
+# JSON decided by the frontend. Storage lives entirely in ``gap_ledger``; no AI
+# logic, no graph access, no business rules here. Endpoint family stays
+# /api/v1/research per P2_COGNITIVE_LOOP_DESIGN.md §4 (single approved
+# persistence point).
+# ---------------------------------------------------------------------------
+
+
+class GapPayload(BaseModel):
+    """Wire contract for one entity's gap snapshot (snake_case)."""
+
+    entity_id: str
+    snapshot: dict[str, Any] = Field(default_factory=dict)
+
+
+def upsert_gap_handler(
+    body: GapPayload,
+    x_session_id: Optional[str] = Header(default=None, alias="X-Session-Id"),
+):
+    """Persist (insert or replace) the gap snapshot for one entity + session."""
+    return upsert_gap(_session(x_session_id), body.entity_id, body.snapshot)
+
+
+def read_gap_handler(
+    entity_id: str,
+    x_session_id: Optional[str] = Header(default=None, alias="X-Session-Id"),
+):
+    """Return one entity's gap snapshot, or an empty marker if none yet."""
+    record = get_gap(entity_id, _session(x_session_id))
+    if record is None:
+        return {"entity_id": entity_id, "snapshot": None}
+    return record
+
+
+def list_gap_handler(
+    x_session_id: Optional[str] = Header(default=None, alias="X-Session-Id"),
+):
+    """Return this session's gap snapshots, newest first."""
+    return {"items": list_gaps(_session(x_session_id))}
+
+
+router.add_api_route(
+    "/research/gap",
+    upsert_gap_handler,
+    methods=["PUT"],
+    operation_id="v1_research_gap_upsert",
+)
+router.add_api_route(
+    "/research/gap",
+    read_gap_handler,
+    methods=["GET"],
+    operation_id="v1_research_gap_get",
+)
+router.add_api_route(
+    "/research/gap/list",
+    list_gap_handler,
+    methods=["GET"],
+    operation_id="v1_research_gap_list",
 )

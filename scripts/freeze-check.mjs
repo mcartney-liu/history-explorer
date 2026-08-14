@@ -906,6 +906,14 @@ export const SCOPE_ALLOWLIST = [
   // 同 ADR-0018 research 范式——stdlib sqlite3、payload-opaque、.db gitignored）。
   // insight_store.py 只做存储；生成逻辑在 main.py handler（已 allowlisted）。
   "backend/app/ai_gateway/insight_store.py",
+  // P2 认知闭环 (2026-08-14, PO 动工): Gap-state ledger — gap_ledger.py is the
+  // stdlib-sqlite3 store (ADR-0018 cognitive-loop extension, same family as
+  // research_store / insight_store); research_router.py already allowlisted
+  // above gains the /api/v1/research/gap sub-routes. test_gap_ledger.py covers
+  // the store; frontend/src/pages/ (allowlisted) consumes it via GapLedger.ts.
+  "backend/app/ai_gateway/gap_ledger.py",
+  "backend/tests/test_gap_ledger.py",
+  "frontend/src/data/GapLedger.ts",
 
   // Wave2-#135 (Test-drift alignment) — Freeze Revision Gate (PO-approved
   // 2026-08-08, "按你推荐的来"). Backend test suite had drifted 13 failures

@@ -58,6 +58,11 @@ backend/data/research.db
 backend/data/research.db-journal
 backend/data/research.db-wal
 backend/data/research.db-shm
+# P2 认知闭环 (2026-08-14): gap ledger（同 ADR-0018 research 范式，stdlib sqlite3）
+backend/data/gap.db
+backend/data/gap.db-journal
+backend/data/gap.db-wal
+backend/data/gap.db-shm
 # M90.x: entity insight store（历史见解固化，同 research 范式）
 backend/data/entity_insights.db
 backend/data/entity_insights.db-journal

@@ -12,10 +12,11 @@
  *   ⑤ 下一步为什么？
  */
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import type { UnderstandingWorkspaceState } from '../../next/exploration/UnderstandingWorkspaceState'
 import { buildTopicUnderstandingState } from '../../next/exploration/topicUnderstandingState'
+import { loadGap, saveGap } from '../../data/GapLedger'
 
 // ============================================================================
 // Props
@@ -34,11 +35,41 @@ export const UnderstandingWorkspace: React.FC<UnderstandingWorkspaceProps> = ({
   topic,
 }) => {
   const [evidenceIndex, setEvidenceIndex] = useState(0)
+  const hydratedRef = useRef(false)
+
+  // Hydrate the persisted gap snapshot for this topic (cognitive loop, ADR-0018):
+  // lets the user's "what I still don't get" survive a page reload.
+  useEffect(() => {
+    if (!topic) return
+    let cancelled = false
+    loadGap(topic)
+      .then((g) => {
+        if (cancelled) return
+        const idx = g?.evidenceIndex
+        if (typeof idx === 'number') setEvidenceIndex(idx)
+        hydratedRef.current = true
+      })
+      .catch(() => {
+        hydratedRef.current = true
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [topic])
 
   const state = useMemo(
     () => buildTopicUnderstandingState(topic, evidenceIndex),
     [topic, evidenceIndex],
   )
+
+  // Persist progress whenever the user advances (refresh-safe gap ledger).
+  useEffect(() => {
+    if (!topic || !hydratedRef.current || !state) return
+    saveGap(topic, {
+      evidenceIndex,
+      total: state.understandingPath.totalNodes,
+    })
+  }, [topic, evidenceIndex, state])
 
   const handleContinue = useCallback(() => {
     setEvidenceIndex((i) => i + 1)
