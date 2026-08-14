@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocale } from '../../data/locale'
 import {
   getPackageBySlug,
   getEntityDisplayName,
@@ -9,6 +10,7 @@ import { buildStations } from './JourneyRail'
 import CollapsibleList from '../ui/CollapsibleList'
 import { relLabel } from '../../data/relationshipLabels'
 import { describeTransition } from '../../data/transition'
+import { getEntityNeighbors } from '../../runtime/entityCache'
 
 interface ConnectionCardProps {
   /** global id of the entity currently shown on the page (may be absent). */
@@ -36,6 +38,7 @@ export default function ConnectionCard({
   onOpenPackage,
 }: ConnectionCardProps) {
   // 一次性消费来源包：仅当暂存的实体与当前实体匹配时才显示，避免跨站串卡。
+  const { t } = useLocale()
   const [originSlug] = useState(() => takePackageOrigin(entityGlobalId))
   if (!originSlug || !entityGlobalId) return null
 
@@ -67,19 +70,32 @@ export default function ConnectionCard({
     onEntityClick?.(gid)
   }
 
-  // 站间衔接 (Transition Function v1, 2026-08-15 PO 课题)：行程区一行
-  // 「衔接叙述」，回答"为什么从上一站来到这一站"。三层逻辑统一走
+  // 站间衔接 (Transition Function v1+v2, 2026-08-15 PO 课题)：行程区一行
+  // 「衔接叙述」，回答"为什么从上一站来到这一站"。过渡逻辑统一走
   // describeTransition（共享核心能力）：①中文 claim 叙述 ②关系短句
-  // ③无直接边 → text=null → 不渲染（留白）。数据零新增。
+  // ③v2 共同邻居路径桥（无直接边但有共同邻居）④无边 → 不渲染（留白）。
+  // 数据零新增。
   const edgeBetween = (a: string, b: string) =>
     pkg.relationship_paths.find(
       (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
     ) ?? null
   const prevEdge = prev ? edgeBetween(prev.gid, entityGlobalId) : null
+  // v2 多跳路径桥：无直接边时找共同邻居（上一站缓存邻居 ∩ 本站包内邻居）。
+  const prevCommon = prev && !prevEdge
+    ? (() => {
+        const aN = getEntityNeighbors(prev.gid) ?? []
+        const bGids = new Set(
+          pkg.relationship_paths
+            .filter((p) => p.from === entityGlobalId || p.to === entityGlobalId)
+            .map((p) => (p.from === entityGlobalId ? p.to : p.from)),
+        )
+        return aN.find((n) => bGids.has(n.gid)) ?? null
+      })()
+    : null
   const prevTransition = prev
     ? describeTransition(prev.name, entityName, prevEdge
         ? { type: prevEdge.type, evidence: prevEdge.evidence }
-        : null).text
+        : null, prevCommon)
     : null
 
   return (
@@ -106,12 +122,19 @@ export default function ConnectionCard({
               </button>
             )}
           </div>
-          {prevTransition && prev && (
+          {prevTransition?.text && prev && (
             <div className="connection-card-transition">
               <span className="connection-card-transition-kicker">
                 从上一站「{prev.name}」来
               </span>
-              <p className="connection-card-transition-text">{prevTransition}</p>
+              <p className="connection-card-transition-text">
+                {prevTransition.text}
+                {prevTransition.confidence && (
+                  <span className={`transition-confidence transition-confidence--${prevTransition.confidence}`}>
+                    {t(`transition.confidence_${prevTransition.confidence}`)}
+                  </span>
+                )}
+              </p>
             </div>
           )}
           <div className="connection-card-nav">

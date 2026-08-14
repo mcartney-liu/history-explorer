@@ -164,6 +164,30 @@
   color: var(--color-ink-900);
   line-height: 1.6;
 }
+/* Transition Function v3 证据分级徽标 (2026-08-15, P09 真值层) */
+.transition-confidence {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: var(--radius);
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.transition-confidence--strong {
+  color: var(--color-truth-strong);
+  background: var(--color-truth-strong-soft);
+}
+.transition-confidence--moderate {
+  color: var(--color-truth-moderate);
+  background: var(--color-truth-moderate-soft);
+}
+.transition-confidence--weak {
+  color: var(--color-truth-weak);
+  background: var(--color-truth-weak-soft);
+}
 /* 推荐探索：叙事卡片链（2026-08-11 PO 重构，替代原平铺列表） */
 .trust-display-chain {
   list-style: none;

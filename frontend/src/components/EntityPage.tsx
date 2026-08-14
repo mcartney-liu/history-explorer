@@ -38,6 +38,7 @@ import type { EntityTab } from './EntityPageShell'
 import { useLocale } from '../data/locale'
 import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
 import { takeOriginEntity } from '../runtime/originEntity'
+import { getEntityNeighbors } from '../runtime/entityCache'
 import { describeTransition } from '../data/transition'
 
 export type EntityRelationship = {
@@ -154,9 +155,10 @@ function EntityPage({
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
   // 入口桥 (2026-08-15, PO)：从实体 A 跳入本实体 B 时，显示 A↔B 的过渡承接。
-  // 三层逻辑统一走 Transition Function（describeTransition）：①中文 claim 叙述
-  // ②关系短句 ③无直接边 → bridge=null → 降级来源。来源由 openEntity 按目标
-  // 实体暂存（keyed），同一 B 从不同 A 进入读到最近来源 → 桥随入口变化。
+  // 过渡逻辑统一走 Transition Function（describeTransition）：①中文 claim 叙述
+  // ②关系短句 ③v2 共同邻居路径桥（无直接边但有共同邻居 C →"A 与 B 通过 C 相关联"）
+  // ④无边且无共同邻居 → bridge=null → 降级来源。来源由 openEntity 按目标实体
+  // 暂存（keyed），同一 B 从不同 A 进入读到最近来源 → 桥随入口变化。
   // 注：实体关系数据当前不含 evidence claim ids，故入口桥先落第二层关系短句；
   // 未来数据补 evidence 后自动升级第一层 claim 叙述（共享函数无需改）。
   const [originGid] = useState(() => takeOriginEntity(entityGlobalId))
@@ -166,10 +168,12 @@ function EntityPage({
       (r) => r.other.global_id === originGid || r.other.id === originGid,
     )
     const fromName = rel?.other.name ?? originGid
-    if (rel) {
-      return { fromName, bridge: describeTransition(fromName, entity.name, { type: rel.type }).text }
-    }
-    return { fromName, bridge: null }
+    // v2 多跳路径桥：无直接边时找共同邻居（A 的缓存邻居 ∩ B 的邻居，纯内存）。
+    const aNeighbors = getEntityNeighbors(originGid) ?? []
+    const bGids = new Set(entity.relationships.map((r) => r.other.global_id ?? r.other.id))
+    const common = aNeighbors.find((n) => bGids.has(n.gid)) ?? null
+    const res = describeTransition(fromName, entity.name, rel ? { type: rel.type } : null, common)
+    return { fromName, bridge: res.text, confidence: res.confidence }
   }, [originGid, entity])
 
   // 2026-08-11 (PO 方案B): 消费「我的」tab 写入的 pending restore ——
@@ -211,7 +215,14 @@ function EntityPage({
               : t('entity.origin_bridge_fallback', { name: originBridge.fromName })}
           </span>
           {originBridge.bridge && (
-            <p className="origin-bridge-text">{originBridge.bridge}</p>
+            <p className="origin-bridge-text">
+              {originBridge.bridge}
+              {originBridge.confidence && (
+                <span className={`transition-confidence transition-confidence--${originBridge.confidence}`}>
+                  {t(`transition.confidence_${originBridge.confidence}`)}
+                </span>
+              )}
+            </p>
           )}
         </div>
       )}

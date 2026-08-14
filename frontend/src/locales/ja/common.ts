@@ -162,4 +162,8 @@ export default {
   'common.collapse': '閉じる',
   'common.expand_text': '全文を展開',
   'common.collapse_text': '全文を折りたたむ',
+  // Transition Function v3 証拠グレーディング (2026-08-15, P09 真実層)
+  'transition.confidence_strong': '証拠が強い',
+  'transition.confidence_moderate': '議論あり',
+  'transition.confidence_weak': '間接的な関連',
 }
