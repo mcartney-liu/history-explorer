@@ -265,6 +265,13 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/lib/graphLayout.test.ts",
   "frontend/src/App.tsx",
   "frontend/src/App.css",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): App render smoke test —
+  // the regression net that must stay green before/after every App.tsx slice
+  // extraction. Purely additive; jsdom env (already a dependency) for window.*.
+  "frontend/src/App.test.tsx",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): runtime state hook —
+  // the module useExplorerRuntime() lives in. Pure relocation of App.tsx logic.
+  "frontend/src/runtime/explorerRuntime.ts",
   // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
   // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
   // frontend change: Discover landing page, static narrative layer
