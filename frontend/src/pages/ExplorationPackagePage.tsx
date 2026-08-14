@@ -4,6 +4,7 @@ import { getPackageBySlug, type ExplorationPackage } from '../data/explorationPa
 import { visitedFromEvents } from '../data/explorationGuide'
 import { getEvents, recordEvent } from '../data/UserBehaviorEvent'
 import PackageJourney from '../components/package/PackageJourney'
+import JourneyRail from '../components/package/JourneyRail'
 import GuidePanel from '../components/guide/GuidePanel'
 import ExplorationSuggestions from '../components/ai/ExplorationSuggestions'
 import { AI_SUGGESTIONS_ENABLED } from '../data/aiFeatureFlag'
@@ -113,11 +114,21 @@ export default function ExplorationPackagePage({
 
   return (
     <section className="package-page" aria-label={`探索包 ${title}`}>
-      <Button variant="ghost" className="package-back" onClick={onBack}>
-        ← 返回探索
-      </Button>
+      <div className="package-layout">
+        {/* 探索剧本化 ② 行程条：左侧常驻"剧本骨架"——全程站点 + 进度 + 当前位置。
+            仅编排现有包数据（时间旅程 + 关系旅程），不新增字段、不碰红线。 */}
+        <JourneyRail
+          pkg={pkg}
+          locale={locale}
+          visited={visited}
+          onEntityClick={onEntityClick}
+        />
+        <div className="package-content">
+          <Button variant="ghost" className="package-back" onClick={onBack}>
+            ← 返回探索
+          </Button>
 
-      <header className="package-hero">
+          <header className="package-hero">
         <span className="package-badge">{typeLabel}</span>
         <h1 className="package-title">{title}</h1>
         <p className="package-summary">{summary}</p>
@@ -167,7 +178,9 @@ export default function ExplorationPackagePage({
           }
           causalStatements={pkg.slug === 'china-civilization-v1' ? CHINA_CAUSAL_STATEMENTS : undefined}
         />
+        </div>
       </div>
+    </div>
     </section>
   )
 }

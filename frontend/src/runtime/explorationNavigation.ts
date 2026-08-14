@@ -13,6 +13,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { recordVisit } from '../data/ExplorerPath'
 import { saveRecent } from '../components/recentStore'
 import type { NavNode } from '../components/navigation'
+import { setPackageOrigin } from '../components/package/packageOrigin'
 import type { NavigationApi } from '../hooks/useNavigationHistory'
 import type { PackageContextApi } from '../hooks/usePackageContext'
 import type {
@@ -83,7 +84,12 @@ export function useExplorationNavigation(input: UseExplorationNavigationInput): 
   ) {
     // 2026-08-11 (PO): 从探索包/因果对象页点实体——先退出包上下文。
     // entityDetail 渲染条件带 !packageSlug，不关则实体页被挡住跳不过去。
+    // 探索剧本化 ③：在 closePackage() 清掉 packageSlug 之前，把来源包 slug
+    // 暂存一瞬（keyed 到实体 id），供实体页连接卡回答"这一站跟包有啥关系"。
+    // 红线照常执行，不推翻。
+    const originSlug = pkg.packageSlug
     if (pkg.packageSlug) closePackage()
+    if (originSlug) setPackageOrigin(originSlug, id)
     const displayName = name || id
     setEntityInitialTab(tab)
     // 只有当 Context 已创建时才更新锚点（用户在一条 Exploration 内）

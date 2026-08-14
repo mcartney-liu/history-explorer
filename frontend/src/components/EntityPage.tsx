@@ -17,6 +17,7 @@ import RelationshipInsight from './ai/RelationshipInsight'
 import JourneyTrail from './ai/JourneyTrail'
 import { AI_SUGGESTIONS_ENABLED } from '../data/aiFeatureFlag'
 import EntityHeader from './EntityHeader'
+import ConnectionCard from './package/ConnectionCard'
 import EventCausalChain from './EventCausalChain'
 import EventImpactPanel from './EventImpactPanel'
 import EventNarrativeCard from './EventNarrativeCard'
@@ -176,6 +177,10 @@ function EntityPage({
     <div className="result">
       <EntityHeader type={entity.type} />
 
+      {/* 探索剧本化 ③（治 D3）：从探索包点进来的实体，顶部常驻"你为什么在这里"，
+          回答这一站与包主题/关系链的关系。非包内进入时 originSlug 为空，自动不渲染。 */}
+      <ConnectionCard entityGlobalId={entityGlobalId} entityName={entity.name} />
+
       <SummaryPanel title={entity.name} summary={description} />
 
       {/* M5-A-5: 实体级探索引导——始终渲染（有数据列起点，无数据显空态），
@@ -255,6 +260,22 @@ function EntityPage({
                       <EmptyState message={t('entity.narrativeEmpty')} />
                     )
                   )}
+
+                  {/* 探索剧本化 ⑤（治 D3 配套）：把"它意味着什么"语义解释从 research tab
+                      上提到 info tab 默认可见——实体页一打开就呈现与该实体相关的理解叙事，
+                      无需点进 research tab。组件无常数据/无理解时自渲染 null，不增加视觉噪音。
+                      纯图/关系驱动、无 AI；AI 解释仍留在 research tab 门控（冻结基线）。 */}
+                  <InterpretationPanel
+                    interpretations={toInterpretationViewModels(entity.connections_explained)}
+                    understandings={buildUnderstandingsFromRelationships(
+                      entity.relationships,
+                      entity.name,
+                      centerTimeMap,
+                      locale,
+                    )}
+                    onNodeClick={onNodeClick}
+                    entityName={entity.name}
+                  />
 
                   {/* M74-003 (C3-2) — Relationship Insight (T2): evidence-bound AI
                       exploration touchpoint. Flag-gated at the parent so OFF =
@@ -381,17 +402,6 @@ function EntityPage({
                   {/* 解读与 AI 区：基于关系的理解 + AI 溯源解释 */}
                   <section className="entity-research-group">
                     <h3 className="entity-research-group__title">解读与 AI</h3>
-                    <InterpretationPanel
-                      interpretations={toInterpretationViewModels(entity.connections_explained)}
-                      understandings={buildUnderstandingsFromRelationships(
-                        entity.relationships,
-                        entity.name,
-                        centerTimeMap,
-                        locale,
-                      )}
-                      onNodeClick={onNodeClick}
-                      entityName={entity.name}
-                    />
                     {entityGlobalId ? (
                       <AIExplanationPanel
                         contextGlobalIds={entityContext(entityGlobalId)}

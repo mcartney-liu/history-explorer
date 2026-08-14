@@ -6,7 +6,7 @@
    ============================================================ */
 
 .package-page {
-  max-width: 960px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: var(--space-6) var(--space-5) var(--space-12);
 }
@@ -816,4 +816,250 @@
 }
 .pkg-card-art-img {
   transition: transform var(--animation-fast);
+}
+
+/* ============================================================
+   M86 — Guided Journey Rail (探索剧本化 ② 行程条)
+   左侧常驻"剧本骨架"：全程站点 + 进度 + 当前位置。
+   守红线：仅 CSS 变量、无 emoji / 渐变 / 硬编码色 / 弹跳缓动。
+   ============================================================ */
+.package-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+.package-content {
+  min-width: 0;
+}
+.journey-rail {
+  position: sticky;
+  top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius-xl);
+  background: var(--color-paper-100);
+  padding: var(--space-5);
+  max-height: calc(100vh - var(--space-10));
+  overflow-y: auto;
+}
+.journey-rail-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.journey-rail-kicker {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.journey-rail-title {
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--color-ink-900);
+  margin: 0;
+}
+.journey-rail-goal {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+  margin: 0;
+}
+.journey-rail-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.journey-rail-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-paper-300);
+  overflow: hidden;
+}
+.journey-rail-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-accent);
+  transition: width var(--animation-fast);
+}
+.journey-rail-progress-text {
+  font-size: 12px;
+  color: var(--color-ink-500);
+}
+.journey-rail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.journey-rail-item {
+  position: relative;
+}
+.journey-rail-node {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  padding: 8px 6px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: var(--radius);
+  transition: background var(--animation-fast);
+}
+.journey-rail-node:hover {
+  background: var(--color-paper-200);
+}
+.journey-rail-dot {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--color-paper-300);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--color-ink-500);
+  background: var(--color-paper-100);
+}
+.journey-rail-item.is-done .journey-rail-dot {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-ink-900);
+}
+.journey-rail-name {
+  font-size: 14px;
+  color: var(--color-ink-900);
+  line-height: 1.4;
+}
+.journey-rail-item.is-done .journey-rail-name {
+  color: var(--color-accent);
+}
+@media (max-width: 860px) {
+  .package-layout {
+    grid-template-columns: 1fr;
+  }
+  .journey-rail {
+    position: static;
+    max-height: none;
+  }
+}
+
+/* ============================================================
+   探索剧本化 ③ 连接卡（Connection Card）— 实体页顶部"为什么在这里"
+   治 D3：回答"这一站跟我的探索包有啥关系"。
+   视觉语言与 JourneyRail 对齐（kicker 用 --color-accent、纸面卡片、
+   左侧强调边）；守红线：仅 CSS 变量、无 emoji / 渐变 / 硬编码色 / 弹跳。
+   ============================================================ */
+.connection-card {
+  border: 1px solid var(--color-accent-soft);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  background: var(--color-paper-100);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.connection-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.connection-card-kicker {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.connection-card-title {
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--color-ink-900);
+  margin: 0;
+}
+.connection-card-goal {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-ink-500);
+  margin: 0;
+}
+.connection-card-role {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-ink-900);
+}
+.connection-card-role strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.connection-card-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+.connection-card-rels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.connection-card-rel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-paper-200);
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+}
+.connection-card-rel-type {
+  flex: none;
+  font-size: 12px;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-soft);
+  border-radius: 999px;
+  padding: 1px 10px;
+}
+.connection-card-rel-text {
+  font-size: 14px;
+  color: var(--color-ink-900);
+  line-height: 1.5;
+}
+.connection-card-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px dashed var(--color-paper-300);
+  padding-top: var(--space-3);
+}
+.connection-card-evidence-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-500);
+}
+.connection-card-evidence-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-ink-500);
+  margin: 0;
+  font-style: italic;
 }

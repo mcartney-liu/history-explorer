@@ -12,17 +12,31 @@
 // Stage E will add: global search, topic switcher dropdown.
 // ============================================================
 
-import { useMemo } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 import type { ExperienceMode } from '../../routing'
 import LanguageSwitcher from '../LanguageSwitcher'
 import { Icon } from '../ui/Icon'
 import { useContentRevision, siteBrandName, siteSubtitle } from '../../data/contentRuntime'
+import { usePackageContext } from '../../hooks/usePackageContext'
+import { getPackageBySlug } from '../../data/explorationPackages'
 
 const MODE_LABELS: Record<ExperienceMode, string> = {
   exploration: '探索',
   explanation: '解释',
   relationship: '关系',
   understanding: '理解',
+}
+
+// 顶部胶囊（模式 / 探索包）共用样式，守 P0 红线：仅用 CSS 变量，无 emoji / 渐变 / 硬编码色。
+const CHIP_STYLE: CSSProperties = {
+  fontSize: '0.75rem',
+  fontWeight: 600,
+  padding: '2px 8px',
+  borderRadius: '999px',
+  color: 'var(--color-accent)',
+  background: 'var(--color-accent-soft)',
+  border: '1px solid var(--color-accent-soft)',
+  whiteSpace: 'nowrap',
 }
 
 interface GlobalBarProps {
@@ -38,6 +52,16 @@ interface GlobalBarProps {
 }
 
 export function GlobalBar({ topic, mode, topicTitles }: GlobalBarProps) {
+  // D1 定位修复（探索剧本化 ①）：进探索包时顶部不塌成只剩品牌。
+  // 直接读 URL hash 里的 packageSlug，解析出包名常驻显示。
+  const { packageSlug } = usePackageContext()
+  const packageName = useMemo(() => {
+    if (!packageSlug) return null
+    const pkg = getPackageBySlug(packageSlug)
+    if (!pkg) return null
+    return pkg.title?.zh || packageSlug
+  }, [packageSlug])
+
   const title = useMemo(() => {
     if (!topic) return null
     return topicTitles?.[topic] ?? topic.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
@@ -62,27 +86,17 @@ export function GlobalBar({ topic, mode, topicTitles }: GlobalBarProps) {
           <span style={{ fontSize: '0.7rem', color: 'var(--color-ink-500)' }}>{subtitle}</span>
         )}
       </span>
-      {title && (
+      {(title || packageName) && (
         <>
           <span style={{ color: 'var(--color-accent-soft)', fontSize: '0.9rem' }}>›</span>
-          <span style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)' }}>{title}</span>
+          <span style={{ fontSize: '0.9rem', color: 'var(--color-ink-500)' }}>{title ?? packageName}</span>
         </>
       )}
-      {mode && (
-        <span
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            padding: '2px 8px',
-            borderRadius: '999px',
-            color: 'var(--color-accent)',
-            background: 'var(--color-accent-soft)',
-            border: '1px solid var(--color-accent-soft)',
-          }}
-        >
-          {MODE_LABELS[mode]}
-        </span>
-      )}
+      {packageName ? (
+        <span style={CHIP_STYLE}>探索包</span>
+      ) : mode ? (
+        <span style={CHIP_STYLE}>{MODE_LABELS[mode]}</span>
+      ) : null}
       <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
         {/* M90.x: 内容配置后台入口（历史见解生成/编辑等），新窗口打开 #/admin */}
         <a

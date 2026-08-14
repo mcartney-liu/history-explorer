@@ -65,6 +65,9 @@ import { CompanionShell } from './components/ai/CompanionShell'
 import RelationshipContext from './components/RelationshipContext'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import { getCausalObjectName } from './data/causalObjectNames'
+import { getPackageBySlug } from './data/explorationPackages'
+import { peekPackageOrigin } from './components/package/packageOrigin'
+import type { ExplorationAction, ExplorationActionType } from './next/exploration/ExplorationPolicy'
 import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
@@ -353,6 +356,55 @@ function App() {
   // behaviour (undefined → '' fallback).
   const currentTopic = current?.type === 'topic' ? current.topic : ''
   const currentRef = current?.type === 'entity' ? current.id : ''
+
+  // ④ 探索剧本化 — 下一步常驻（治 D4）：包内进入的实体优先展示该包剧本的
+  // "下一站"候选（取自 relationship_paths 中 from === 当前实体的边），引擎单条
+  // 兜底排在后面。仍守 NextStepPanel 唯一出口、无推荐语汇（FRW P3 红线）。
+  const nextStepActions = useMemo<ExplorationAction[]>(() => {
+    const out: ExplorationAction[] = []
+    const gid = current?.type === 'entity' ? current.id : null
+    if (gid) {
+      const originSlug = peekPackageOrigin(gid)
+      if (originSlug) {
+        const pkg = getPackageBySlug(originSlug)
+        if (pkg) {
+          for (const p of pkg.relationship_paths) {
+            if (p.from === gid && p.to !== gid) {
+              out.push({
+                type: scriptedActionType(p.type),
+                targetRef: p.to,
+                reason: `剧本下一站 · ${relationshipTypeLabel(p.type)}`,
+                narrativeHook: '',
+                expectedGrowth: { dimension: 'causality', relationType: 'influenced' },
+                confidence: 0.9,
+              })
+              if (out.length >= 2) break
+            }
+          }
+        }
+      }
+    }
+    if (policyAction && !out.some((a) => a.targetRef === policyAction.targetRef)) {
+      out.push(policyAction)
+    }
+    return out
+  }, [current?.type === 'entity' ? current.id : null, policyAction])
+
+  // 关系类型 → 中文标签 / 认知动作类型（④ 剧本下一步使用）
+  function relationshipTypeLabel(type: string): string {
+    const LABELS: Record<string, string> = {
+      caused: '导致', influenced: '影响', part_of: '属于',
+      led_to: '促成', succeeded: '继承', preceded: '早于',
+      followed: '晚于', related_to: '关联',
+    }
+    return LABELS[type] ?? type
+  }
+  function scriptedActionType(type: string): ExplorationActionType {
+    const t = type.toLowerCase()
+    if (t.includes('cause') || t.includes('lead') || t.includes('influ')) return 'follow_cause'
+    if (t.includes('part') || t.includes('member')) return 'open_dimension'
+    return 'deep_continue'
+  }
 
   // P1-② (Engineering Health, 2026-08-14): projection → state → policy effect
   // relocated into useExplorationProjection() — pure relocation, deps & logic
@@ -846,7 +898,7 @@ function App() {
             <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityName={entityData.name} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} />
             <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
             <div className="entity-exploration-footer">
-              <NextStepPanel actions={policyAction ? [policyAction] : []} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
+              <NextStepPanel actions={nextStepActions} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
               <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
             </div>
           </>
