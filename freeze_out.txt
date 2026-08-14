@@ -1,1 +1,0 @@
-﻿System.Management.Automation.RemoteException [M3.5 Freeze Guard] FAILED 鈥?1 D-class violation(s):   - SCOPE: backend/frontend change outside approved allowlist not allowed -> backend/app/core/exploration.py System.Management.Automation.RemoteException Fix the violation or escalate to Product Owner before merge.

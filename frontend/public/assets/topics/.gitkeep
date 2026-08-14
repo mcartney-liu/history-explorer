@@ -1,5 +1,0 @@
-# Drop-in background artwork for Explore-theme cards (DiscoverPage theme grid).
-# Name a file by the topic slug, e.g. roman_empire.jpg / punic_wars.png.
-# Supported formats resolve in this order: webp -> png -> jpg -> jpeg.
-# The card shows the image as a background only when present; without it the
-# card keeps its plain paper style. Keep this file so the (empty) directory is tracked.
