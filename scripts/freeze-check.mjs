@@ -280,6 +280,11 @@ export const SCOPE_ALLOWLIST = [
   // policy effect — the hook useExplorationProjection() lives in. Pure
   // relocation of App.tsx logic; same deps/setters, call sites unchanged.
   "frontend/src/runtime/explorationProjection.ts",
+  // P1-② (Engineering Health, 2026-08-14, PO-approved): pure-derived
+  // causal-object maps + featured-topic filter — buildCausalObjectMaps() /
+  // buildFeaturedTopics() live here. Pure relocation of App.tsx logic; call
+  // sites unchanged.
+  "frontend/src/runtime/causalObjectMaps.ts",
   // M35 (User Exploration Experience MVP) — Frontend Freeze Revision Gate
   // (lightweight ADR; same mechanism as M30-A/M30-B/M34). Purely additive
   // frontend change: Discover landing page, static narrative layer

@@ -45,7 +45,7 @@ import { analyzeProductUsage } from './data/ProductUsageAnalysis'
 import type { ExplorationContextIntelligence } from './components/ai/CompanionContext'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorCard, { ErrorKind } from './components/ErrorCard'
-import { featuredSlugs, useSiteConfigRevision } from './data/siteConfig'
+import { useSiteConfigRevision } from './data/siteConfig'
 import LandingPage, { TopicSummary } from './components/LandingPage'
 import TopicExploreStarters from './components/TopicExploreStarters'
 import { resolveEntityStarters } from './data/explorationStarters'
@@ -94,6 +94,11 @@ import { buildExplorationDerived } from './runtime/explorationDerived'
 // relocated into useExplorationProjection() — pure relocation, deps & logic
 // unchanged. App passes the same inputs + setters it previously closed over.
 import { useExplorationProjection } from './runtime/explorationProjection'
+
+// P1-② (Engineering Health, 2026-08-14): pure-derived causal-object maps +
+// featured-topic filter relocated into buildCausalObjectMaps() /
+// buildFeaturedTopics() — pure relocation, call sites unchanged.
+import { buildCausalObjectMaps, buildFeaturedTopics } from './runtime/causalObjectMaps'
 
 // M69 — Exploration Package page
 import ExplorationPackagePage from './pages/ExplorationPackagePage'
@@ -258,21 +263,8 @@ function App() {
 
   // M85.8 — CausalObject Explorer Experience
   const causalObjects = causalObjectsRaw as CausalObjectData[]
-  const causalObjectsById = useMemo(
-    () => Object.fromEntries(causalObjects.map((o) => [o.id, o])),
-    [],
-  )
-  const causalObjectTitleMap = useMemo(
-    () =>
-      Object.fromEntries(
-        causalObjects.map((o) => {
-          // Derive a human-readable title from cause_id + effect_id
-          // TODO M85.8+: resolve Entity GID → display name from KG data
-          const causeLabel = o.cause_id.includes(':') ? o.cause_id.split(':').pop() ?? o.cause_id : o.cause_id
-          const effectLabel = o.effect_id.includes(':') ? o.effect_id.split(':').pop() ?? o.effect_id : o.effect_id
-          return [o.id, `${causeLabel} → ${effectLabel}`]
-        }),
-      ),
+  const { causalObjectsById, causalObjectTitleMap } = useMemo(
+    () => buildCausalObjectMaps(causalObjects),
     [],
   )
   const [causalObjectData, setCausalObjectData] = useState<CausalObjectData | null>(null)
@@ -315,9 +307,7 @@ function App() {
   // No extra fetch / API / state — purely a filtered, order-preserving view of
   // `topics` keyed by the runtime `featuredSlugs()` (site-config topic_ordering,
   // falling back to the compiled default). Empty until the catalog loads.
-  const featuredTopics: TopicSummary[] = featuredSlugs()
-    .map((slug) => topics.find((t) => t.topic === slug))
-    .filter((t): t is TopicSummary => Boolean(t))
+  const featuredTopics: TopicSummary[] = buildFeaturedTopics(topics)
 
   useEffect(() => {
     let cancelled = false
