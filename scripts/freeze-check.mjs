@@ -1010,6 +1010,19 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/next/exploration/ExplorationPolicy.ts",
   // P2 认知闭环 (2026-08-14, PO 动工): ExplorationPolicy Rule 0 测试（用户标记 Gap 优先）。
   "frontend/src/next/exploration/__tests__/ExplorationPolicy.test.ts",
+  // Phase C 动态探索方向 (ADR-0024 Accepted 2026-08-16, PO 拍板 D1-D23):
+  // candidateGeneration → candidateContext → candidateRanking → candidateAction
+  // → candidateDecision 五模块 + 测试（PC1-PC8 红线，Release gate）。
+  "frontend/src/next/exploration/candidateGeneration.ts",
+  "frontend/src/next/exploration/candidateContext.ts",
+  "frontend/src/next/exploration/candidateRanking.ts",
+  "frontend/src/next/exploration/candidateAction.ts",
+  "frontend/src/next/exploration/candidateDecision.ts",
+  "frontend/src/next/exploration/__tests__/candidateGeneration.test.ts",
+  "frontend/src/next/exploration/__tests__/candidateContext.test.ts",
+  "frontend/src/next/exploration/__tests__/candidateRanking.test.ts",
+  "frontend/src/next/exploration/__tests__/candidateAction.test.ts",
+  "frontend/src/next/exploration/__tests__/candidateDecision.test.ts",
   "frontend/src/pages/m89/m89.css",
   "frontend/src/__tests__/App.smoke.test.tsx",
   // Wave2-#141(3) — shell cleanup (PO-approved 2026-08-08): ExplorationShell
