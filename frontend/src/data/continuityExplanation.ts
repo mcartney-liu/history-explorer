@@ -35,6 +35,9 @@ export interface HonestStatement {
   /** 只给知识事实："当前知识中，没有找到「A」与「B」之间足够可靠的直接联系。"
    *  v2 契约：Phase B 不加"这是一次探索方向的切换"（那是 C 的边界）。 */
   text: string
+  /** 用户此刻可以做什么（知识事实层操作提示，非导航决策、不越界 C）。
+   *  可选——入口桥等精简场景可为空。 */
+  actionHint?: string
 }
 
 /** 证据 → 解释素材集合（C2：返回数组，不选定唯一解释）。
@@ -112,9 +115,12 @@ export function selectBestExplanation(
 }
 
 /** C6 核心：NONE → 诚实陈述（知识事实层，不暴露内部实现）。
- *  文本固定为知识事实句；不含"探索包/作者/顺序/方向切换"等内部语义。 */
+ *  text 固定为知识事实句；actionHint 给用户"可以做什么"的落点
+ *  （仍是知识事实层，不涉及"系统为什么带你来"的导航解释——那是 C 层）。
+ *  不含"探索包/作者/顺序/方向切换"等内部语义。 */
 export function expressHonestNone(fromName: string, toName: string): HonestStatement {
   return {
     text: `当前知识中，没有找到「${fromName}」与「${toName}」之间足够可靠的直接联系。`,
+    actionHint: `你可以继续深入任意一方的资料，或返回上一站从其他路径继续探索。`,
   }
 }

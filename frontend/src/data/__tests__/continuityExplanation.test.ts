@@ -63,6 +63,12 @@ describe('C6 — 无关系诚实表达', () => {
     expect(s.text).toContain('B')
   })
 
+  it('expressHonestNone 带"可以做什么"操作提示（actionHint，PO 2026-08-15 反馈）', () => {
+    const s = expressHonestNone('A', 'B')
+    expect(s.actionHint).toBeTruthy()
+    expect(s.actionHint).toContain('继续深入')
+  })
+
   it('诚实陈述不含内部实现泄漏（探索包/作者/顺序/方向切换）', () => {
     const s = expressHonestNone('A', 'B')
     const banned = ['探索包', '作者', '顺序', '方向切换', '探索方向', '编排', 'package']
