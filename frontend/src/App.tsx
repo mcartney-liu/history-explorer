@@ -75,6 +75,7 @@ import DiscoverPage from './pages/DiscoverPage'
 import { MyExplorationPanel } from './components/discover/MyExplorationPanel'
 import { addJourneyEntry, entryFromNode } from './lib/journey'
 import FeedbackWidget from './components/FeedbackWidget'
+import WelcomeModal from './components/WelcomeModal'
 
 // M86.1 — Explorer Runtime Context（Experience Runtime 单一语义核心）
 import { ExplorerRuntimeContext } from './next/ExplorerRuntimeContext'
@@ -197,6 +198,8 @@ function App() {
   // P5-S4: 首屏 LandingTabs 激活态（受控）。初始化默认「了解」
   //（PO 2026-08-09：系统初始化从了解界面开始）。
   const [landingTab, setLandingTab] = useState<'mine' | 'understand' | 'research' | 'expand'>('understand')
+  // M81a：首页友好提示框。默认弹出一次；关闭后本次访问（同一次 SPA 会话）不再弹。
+  const [showWelcome, setShowWelcome] = useState(true)
   // T1: which EntityPage tab to land on. Set when navigation originates from a
   // research bookmark so the user arrives directly in the research tab.
   const [entityInitialTab, setEntityInitialTab] = useState<'info' | 'research' | 'extensions'>('info')
@@ -960,6 +963,9 @@ function App() {
         isUnderstandingRoute={router.route?.mode === 'understanding'}
         hasPackage={!!packageSlug}
       />
+      {showWelcome && !current && !packageSlug && (
+        <WelcomeModal onClose={() => setShowWelcome(false)} />
+      )}
     </ExplorerShell>
     </ExplorerRuntimeContext.Provider>
   )

@@ -14,6 +14,7 @@ node_modules/
 
 # Build outputs
 dist/
+dist-tunnel/
 build/
 
 # Logs
@@ -68,6 +69,9 @@ backend/data/entity_insights.db
 backend/data/entity_insights.db-journal
 backend/data/entity_insights.db-wal
 backend/data/entity_insights.db-shm
+# 2026-08-15 (PO): friend-trial feedback store（同 ADR-0018 运行时状态范式，
+# 纯文件无 DB；朋友留言属运行时数据，不入仓库）
+backend/data/feedback.jsonl
 
 # === ADR-0021: Content Configuration Layer runtime data ===
 # Editable display copy + uploaded artwork are OPERATOR data, not project
@@ -79,3 +83,8 @@ data/content/
 .git-broken-*/
 _freshclone/
 _he_legacy_orphan_bak/
+
+# === 2026-08-15 (PO): 根目录审计/卸载残留（一次性工具产出，非项目源码，永不入库） ===
+_audit_*.txt
+_uninstall_*.txt
+scripts/_tmp_freeze_gb.mjs

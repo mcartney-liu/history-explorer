@@ -45,6 +45,9 @@ from .ai_gateway import insight_store
 # `content` module; this file only mounts the router (freeze boundary §5).
 from .content import router as content_router
 from .content import site_config_router
+# Friend-trial feedback collection (M35 FeedbackWidget backend sink).
+# Logic lives entirely in feedback.py; this file only mounts the routers.
+from .feedback import router as feedback_router, admin_router as feedback_admin_router
 
 # --- Configuration (env-driven, M3-002) -----------------------------------
 settings = get_settings()
@@ -689,6 +692,13 @@ app.include_router(research_router, prefix=settings.api_v1_prefix)
 app.include_router(content_router, prefix=settings.api_v1_prefix)
 # ADR-0021 sibling: site configuration (feature flags / topic ordering / …).
 app.include_router(site_config_router, prefix=settings.api_v1_prefix)
+# Friend-trial feedback collection — v1-only (new surface, no legacy compat).
+app.include_router(feedback_router, prefix=settings.api_v1_prefix)
+# Friend-trial feedback ADMIN surface (localhost-only management page + token
+# protected reply). Mounted WITHOUT the /api/v1 prefix so the public tunnel's
+# serve.js (which does not proxy /admin) can never reach it — PO opens it
+# directly at http://localhost:8002/admin/feedback.
+app.include_router(feedback_admin_router)
 
 
 # --- Startup: build the in-memory Knowledge Core once ---------------------
