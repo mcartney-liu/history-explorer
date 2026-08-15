@@ -1,14 +1,16 @@
 # ADR-0024 动态探索方向（Phase C）架构评审
 
-> 状态：**Proposed（待 PO 逐条拍板）** · 修订：v4（吸收 PO 2026-08-16 第五轮：L1–L5 每层输入/值域/null 语义形式化 + D7 GapPriority 离散化 + PC5 收紧 source 不参与 L1–L4 + confidence 离散决策级别 + design principle"非推荐引擎"）
+> 状态：**Conditional Accept（PO 2026-08-16 五轮评审；待 3 个 Blocking Clarifications 补齐后 Accepted）**
+> · 修订：v5（吸收 PO 第六轮：GapPriority 推导契约 + L2/L3 离散化责任边界 + L5 非业务属性 + Design Principle 顶层化 + 数据生命周期图 + PC8 pure-function 断言）
 > **Phase C 一句话定义（PO 定稿）**：**From authored sequence to context-aware exploration choice.**
 > 中文：从固定路线探索，演进为基于当前上下文、候选空间与 Continuity Evidence 的动态探索方向选择。
 > 范围：替换 `stations[idx+1]` 写死路线，让"下一步去哪"由 **候选生成 + Evidence + Context + Ranking → ExplorationAction** 驱动。
 > 关联：ADR-0023（Phase B，**Accepted 已施工 550ad11**，B=Evidence Producer）、
 >       `docs/product/PHASE_C_REALITY_AUDIT.md`（**已完成，事实基线**）、
->       `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（Draft，本 ADR 拍板后对齐）。
+>       `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（**v5 对齐版**）。
 > 触发基线变更：是（新增 C 层候选生成/排序模块）。
-> **流程**：PO 2026-08-15/16 双轮意见：先架构评审再施工设计 → 先 Reality Audit 再写 ADR → 都已执行，本 ADR 事实全部来自审计实证。
+> **流程**：PO 五轮意见（架构评审先行 → Reality Audit 先行 → Ranking Contract → 机器级形式化 → Conditional Accept）全部执行。
+> **评审结论**：架构成熟度 ~90%；无架构红项；3 个 Blocking Clarifications 补齐后 Accepted，其余进入施工设计不再 ADR 争论。
 
 ---
 
@@ -19,21 +21,39 @@ PO 实机查看 Phase B 诚实表达后提出灵魂拷问：**"用户看不懂'�
 诊断（PO 认可）："没有找到联系"（B 层）解决**不撒谎**；"为什么用户此刻在这里"（C 层）才是让用户"看懂"的根治。
 **B 是 C 的地基**：C 判断"哪个候选值得去"必须消费 B 的 `collectRelationEvidence` 产出的证据。
 
+**Phase C Design Principle（PO 定稿，提升为 ADR 顶层原则，非 3.3.5 局部说明）**：
+
+> **Phase C is a context-aware deterministic decision system, not a recommendation engine.**
+
+```text
+No AI
+No LLM
+No learned preference
+No personalization model
+No probabilistic ranking
+No hidden weighting
+No user preference inference
+No feedback-loop optimization
+```
+
+- 与 History Explorer 的 Runtime Freeze / AI Trust Boundary 一致。
+- 若未来有人提议"用 LLM 帮 C 选第一名" → **直接违反本 ADR，须走 Freeze Revision Gate**。
+
 **能力链（PO 定稿，不是三个独立模块）**：
 
 ```
-Phase B         Phase C          Phase D
-Why is A→B      Given A, what    Did this exploration
-meaningful?     should we        actually improve
-                explore next?    understanding?
-   │                │                 │
-   ▼                ▼                 ▼
-Continuity      ExplorationAction   Cognition
-Evidence            │                 │
-   └────── Evidence → Decision → Cognition ──┘
+Phase A          Phase B          Phase C          Phase D
+Authored         Evidence /       Context-aware    Understanding /
+Exploration      Continuity       Deterministic    Cognitive
+                 Truth            Decision         Feedback
+   │                 │                │                │
+   ▼                 ▼                ▼                ▼
+作者安排什么    它们之间真实        基于当前上下文      用户是否真的
+               有什么联系          下一步去哪里        理解了
+   └────────── Evidence → Decision → Cognition ──────┘
 ```
 
-**B = Evidence Producer；C = Decision Consumer。** ADR-0023 的 Evidence 中间层设计在此兑现价值。
+**B = Evidence Producer；C = Decision Consumer；D = Understanding（C 不侵入）。** ADR-0023 的 Evidence 中间层设计在此兑现价值。
 
 ---
 
@@ -55,40 +75,70 @@ Evidence            │                 │
 
 ---
 
-## 2. C 的最终架构（PO 定稿）
+## 2. C 的最终架构 + 数据生命周期图（PO 定稿）
+
+### 2.1 数据生命周期（PO v5 新增，施工 Agent 不跑偏的锚点）
 
 ```
-Current Exploration Context
-        │
-        ▼
-Candidate Generation
- ├─ relationship_neighbor
- ├─ cross_topic_bridge
- ├─ dimension_target
- └─ package_next        ← 候选，无特权（PC5）
-        │
-        ▼
-ContinuityEngine (B，只产 Evidence/Features，PC2)
- ├─ RelationEvidence[]
- └─ ContinuityFeatures
-        │
-        ▼
-C Context Layer
- ├─ Gap relevance
- ├─ Explored state
- ├─ Path context
- ├─ Topic context
- └─ Novelty / diversity
-        │
-        ▼
-Candidate Ranking (C 决策层)
-        │
-        ▼
-ExplorationAction
-        │
-        ▼
-Navigation
+                    ┌──────────────────────┐
+                    │ Exploration Context  │
+                    │ current/topic/gaps   │
+                    │ history/dimension    │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+┌──────────────┐      ┌─────────────────────┐
+│ Candidate    │      │ Context Feature     │
+│ Sources      │─────▶│ Derivation          │
+│ 4 sources    │      │ CandidateContext... │
+└──────┬───────┘      └──────────┬──────────┘
+       │                         │
+       ▼                         │
+┌────────────────┐               │
+│ Dedup +        │               │
+│ provenance     │               │
+│ sources[]      │               │
+└───────┬────────┘               │
+        │                        │
+        ▼                        ▼
+       ┌──────────────────────────────┐
+       │ Candidate + Context Features │
+       └──────────────┬───────────────┘
+                      │
+          ┌───────────┴───────────┐
+          │                       │
+          ▼                       ▼
+┌───────────────────┐   ┌────────────────────┐
+│ B Evidence        │   │ Ranking Contract   │
+│ RelationEvidence  │──▶│ L1 → L2 → L3 → L4 │
+│ ContinuityFeatures│   │ → L5               │
+└───────────────────┘   └─────────┬──────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │ ExplorationAction│
+                         └──────────────────┘
 ```
+
+**禁入红线（同一张图旁）**：
+
+```
+JCS ───────────────X──────────────▶ Ranking
+LLM ───────────────X──────────────▶ C
+D / Understanding ─X──────────────▶ C
+```
+
+### 2.2 职责边界表（PO v5 定稿）
+
+| 层 | 可以做什么 | 不能做什么 |
+|---|---|---|
+| Candidate Generation | 找候选、去重、保留 provenance（sources[]） | 不能决定去哪（PC1） |
+| ContinuityEngine（B） | 提供 Evidence / Features | 不能排序、不能导航（PC2） |
+| Context Layer | 描述用户当前上下文 | 不能决定最终动作 |
+| Ranking | 按 L1→L5 选择候选 | 不能复制关系判断、不能用 JCS（PC3/PC5） |
+| ExplorationPolicy | 把结果转成 Action / fallback | 不能做 D（PC6） |
+| B Explanation | 解释关系和推荐理由 | 不能决定导航 |
+| D | 理解/认知闭环 | Phase C 不碰（PC6） |
 
 **关键：B 是 Evidence Producer；C 是 Decision Consumer。** C 不碰引擎内部关系判断（PC2）。
 
@@ -150,6 +200,24 @@ export interface CandidateContextFeatures {
 - **数据来源全部真实上下文**（PC4）：currentTopic / openGaps / exploredAnchors / history / dimensionState。
 - **没有数据就是没有数据**：任何特征缺失 → `null`（不是 0、不编默认值），与 B 期 null 语义铁律一致。
 - 未来 D / 实验系统可回答"为什么候选 A 排第一"——因为特征可审计。
+
+#### 3.2.1 L1 GapPriority 推导契约（PO v5 Blocking Clarification #1）
+
+**GapPriority MUST be derived deterministically from the candidate's explicit relationship to the current `openGaps`; C MUST NOT infer or invent gap relevance from semantic similarity or free-form heuristics.**
+
+- **候选 → openGap 的显式关联**：候选 `targetRef` 必须是某个 openGap 的**显式目标实体**（GapLedger.openGaps 中记录的 gap 实体 id），才计为"命中该 gap"。
+- **候选 → 0..N 个 openGaps**：一个候选可能命中多个 gap，`GapPriority = max(命中的各 gap 优先级)`（确定性取最大）。
+- **禁止**：语义相似度推断（"这个实体看起来像那个 gap 相关"）、自由启发式（"部分满足就算"）——除非在施工设计中另定义**离散的部分满足规则**并经 PO 确认，否则一律按"未命中"处理。
+- **L1 无 gap 数据按 NONE 的例外（PO v5 确认）**：这是**产品语义**（"没有用户标记的开放缺口，就没有缺口优先级"），不是技术 default；Implementation Design 必须区分 `absence of gap record → product semantic → NONE` 与 `missing data → default 0`，且**该例外不得扩展到 L2/L3/L4**。
+
+#### 3.2.2 L2/L3 离散化责任边界（PO v5 Blocking Clarification #2）
+
+**B = relationship/evidence truth；C = decision-level interpretation（机械映射，不得重新判断关系）。**
+
+- B 负责产出**事实/evidence/underlying features**（`RelationEvidence[]`、`ContinuityFeatures` 的连续底层值）。
+- C 负责把**已有结构化事实机械映射成 C 自己的产品决策等级**（NONE/LOW/MEDIUM/HIGH）——映射规则在施工设计中**逐条列出**（如 RS ≥ 0.8 → HIGH 等），**纯机械映射、无阈值外的重新判断**。
+- **禁止**：C 内写 `if (relationStrength > 0.7) HIGH ...` 之类的**关系解释逻辑**（违反 PC2）——映射函数必须是查表式，不重算关系语义。
+- 施工设计需明确：离散化发生在 **C Context/Ranking adapter**（C 内部），B 输出的 ContinuityFeatures 保持连续值不动。
 
 ### 3.3 Candidate Ranking —— Ranking Contract（PC7，PO v3/v4 Blocking Issue 定死）
 
@@ -239,6 +307,11 @@ Action.confidence:
 **Ranking 必须 deterministic**：同一输入（同一候选集 + 同一上下文）永远产出同一第一名。
 - **L5 稳定 tie-breaker**：当 L1–L4 全部 tie 时，按 `candidate source precedence（dimension_target → relationship_neighbor → cross_topic_bridge → package_next）→ stable target id 排序`。
 - **PC5 收紧（PO v4 钉死）**：`Candidate source MUST NOT independently contribute to L1–L4 ranking value`——候选来源（含 package_next）**不得**独立贡献任何 L1–L4 层的排序值；source 只存在于 **L5 tie-breaker**。堵死"L3 里细分 package continuity 让 package_next 偷加权"的路子。
+- **L5 source precedence 的非业务属性（PO v5 Blocking Clarification #3）**：
+  `source precedence = deterministic final tie-break ONLY`——
+  **NOT** ranking value / exploration value / UI reason / confidence input。
+  - 不得被解释、暴露或复用作"探索价值/排序理由"（禁止 UI 显示"因为这个候选来自 dimension，所以优先"）。
+  - L5 是纯确定性保证（与 ADR-0023 "default ordering 仅作 tie-breaker" 同一设计哲学），产生**隐性产品偏好**是可接受的确定性副作用（大量 L1–L4 tie 时 dimension_target 系统性靠前），但**不得把它当业务理由**。
 - 注意：**source precedence 是确定性保证，不是业务权重**（与 ADR-0023 "default ordering 仅作 tie-breaker" 同一设计哲学）。
 - 防"第一次→A / 刷新→B / 再→A"的随机跳转，维护"探索方向是有意识选择的"产品感。
 
@@ -283,7 +356,7 @@ Action.confidence:
 
 ---
 
-## 5. 红线总表（PC1–PC7，Phase C 专属；区别于 ADR-0023 的 B 层 C1–C9）
+## 5. 红线总表（PC1–PC8，Phase C 专属；区别于 ADR-0023 的 B 层 C1–C9）
 
 | # | 硬约束 | 审计硬判定 |
 |---|--------|-----------|
@@ -294,6 +367,7 @@ Action.confidence:
 | **PC5** | **`package_next` 没有特权**：只是四类候选源之一，同一打分公式 | 测试断言：同一输入下 package_next 与其它候选同公式计算，无保底加分 |
 | **PC6** | **C 不做 D**：C 只答 "Where next?"，不做 "Did the user understand?"（无认知完成度/理解判断/反馈闭环） | C 模块无 understanding 判定、无认知闭环逻辑；D 的职责不进 C |
 | **PC7** | **Deterministic Ranking Contract**：分层/词典序（L1 GapPriority → L2 Context → L3 Continuity → L4 Novelty → L5 tie）；每层离散值域 + 三态比较（胜/负/tie）；**null=未知≠0≠负面证据，不可判定层视为 tie 进下一层**；无证据候选只能高层胜出、禁 L4 上位；`Action.confidence` = 离散决策级别（HIGH/MEDIUM/LOW，≠关系证据置信度）；source 不独立贡献 L1–L4；tie-breaker 确定性 | 测试断言：①两次运行同输入同第一名（M7）；②`null` 层不按 0 比较（构造 null vs HIGH 用例，断言进下一层）；③无证据候选 L4 永不超有证据候选；④`same RelationEvidence.confidence, different ranking separation → different Action.confidence`；⑤JCS 引用 = 0（PC3 延续） |
+| **PC8** | **Ranking 是 declared inputs 的纯函数（PO v5 新增）**：`rank(candidates, context, evidence)` 不得读取任何隐藏运行时状态（global state / Date.now() / random() / LLM / 用户偏好 / 隐藏排序 / 网络响应顺序） | 测试断言：注入不同全局状态/时间/mock random，同输入同输出；源码扫描无 `Date.now`/`Math.random`/global refs |
 
 > 一句话总纲：**B 是 Evidence Producer，C 是 Decision Consumer，JCS 永远只在诊断层，Ranking 永远 deterministic。**
 
@@ -321,15 +395,20 @@ Action.confidence:
 | **D16** | **Ranking null 语义：未知≠0≠负面证据，不可判定层=tie 进下一层（唯一例外 L1 无 gap 数据按 NONE）** | ✅ 是（PO v4 钉死） |
 | **D17** | **D7 离散化：GapPriority NONE/LOW/MEDIUM/HIGH/CRITICAL 机器可执行，替换自然语言"显著占优"** | ✅ 是（PO v4 钉死） |
 | **D18** | **PC5 收紧：Candidate source 不独立贡献 L1–L4，仅存在于 L5 tie-breaker** | ✅ 是（PO v4 钉死） |
-| **D19** | **设计原则写入：Phase C = Context-aware deterministic decision system（非 recommendation engine），不引 AI/LLM** | ✅ 是（PO v4 钉死） |
+| **D19** | **设计原则写入：Phase C = Context-aware deterministic decision system（非 recommendation engine），不引 AI/LLM** | ✅ 是（PO v4 钉死，v5 提升为顶层原则） |
+| **D20** | **Blocking #1：GapPriority 由候选与 openGaps 的显式关联确定性推导；禁语义推断/自由启发式** | ✅ 是（PO v5 钉死） |
+| **D21** | **Blocking #2：L2/L3 离散化 = C 的机械查表映射（B 出连续事实，C 出决策等级），禁 C 重判关系（PC2）** | ✅ 是（PO v5 钉死） |
+| **D22** | **Blocking #3：L5 source precedence = 纯确定性 tie-break，非 ranking value / UI reason / confidence 输入** | ✅ 是（PO v5 钉死） |
+| **D23** | **PC8：Ranking = declared inputs 的纯函数，禁隐藏运行时状态** | ✅ 是（PO v5 钉死） |
 
 ---
 
 ## 7. 与施工设计的关系
 
 - `docs/product/PHASE_C_REALITY_AUDIT.md` = 事实基线（已完成）。
-- `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（Draft）以本 ADR 拍板为准修订（含 CandidateContextFeatures 类型、ExplorationCandidate.sources[] provenance、分层 Ranking Contract、PC1–PC7 审计断言落测试、M1 金标独立 fixture）。
-- ADR Accepted → 施工设计对齐 → TDD 施工（C-S1..C-S8）。
+- `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（**v5 对齐版**）以本 ADR 为准：含 CandidateContextFeatures 类型、ExplorationCandidate.sources[] 冻结枚举、GapPriority 推导契约（D20）、L2/L3 机械映射表（D21）、L5 非业务属性（D22）、分层 Ranking Contract + PC1–PC8 审计断言落测试、M1a/M1b 独立 fixture。
+- **Contract Compliance（PC1–PC8）= release gate（架构正确性门禁），不是产品 metric**（PO v5 钉死：两套体系不混）——M 系列是产品观察，PC 系列是门禁。
+- ADR Conditional Accept → 3 Blocking 已补齐 → **PO 拍板 Accepted 后立即 TDD 施工（C-S1..C-S8）**。
 
 ---
 
