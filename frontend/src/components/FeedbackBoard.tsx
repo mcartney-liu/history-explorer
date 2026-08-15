@@ -20,16 +20,14 @@ interface BoardEntry {
   reply_at: string | null
 }
 
-// ISO 时间戳 → YYYY-MM-DD（按访客本地时区，与「我的反馈」面板一致）。
+// ISO 时间戳 → YYYY-MM-DD HH:mm:ss（按访客本地时区，与「我的反馈」面板一致）。
 function formatDate(ts?: string | null): string {
   if (!ts) return ''
   try {
     const d = new Date(ts)
     if (isNaN(d.getTime())) return String(ts)
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
+    const p = (n: number) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`
   } catch {
     return String(ts)
   }
