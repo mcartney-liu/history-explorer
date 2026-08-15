@@ -1145,6 +1145,18 @@
   border-radius: var(--radius);
   padding: 8px 12px;
 }
+/* Phase B C6：无关系诚实陈述（knowledge-fact tone，非错误红、非静默留白） */
+.connection-card-transition--honest {
+  background: var(--color-truth-weak-soft);
+  border-color: var(--color-truth-weak-line, var(--color-truth-moderate-line));
+}
+.connection-card-transition--honest .connection-card-transition-kicker {
+  color: var(--color-truth-moderate);
+}
+.connection-card-transition--honest .connection-card-transition-text {
+  color: var(--color-ink-700);
+  -webkit-line-clamp: unset;
+}
 .connection-card-transition-kicker {
   font-size: 11px;
   letter-spacing: 0.08em;

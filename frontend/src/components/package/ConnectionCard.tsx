@@ -9,7 +9,12 @@ import { takePackageOrigin, setPackageOrigin } from './packageOrigin'
 import { buildStations } from './JourneyRail'
 import CollapsibleList from '../ui/CollapsibleList'
 import { relLabel } from '../../data/relationshipLabels'
-import { describeTransition } from '../../data/transition'
+import { collectRelationEvidence } from '../../data/continuityEngine'
+import {
+  buildExplanationCandidates,
+  selectBestExplanation,
+  expressHonestNone,
+} from '../../data/continuityExplanation'
 import { getEntityNeighbors } from '../../runtime/entityCache'
 
 interface ConnectionCardProps {
@@ -70,17 +75,17 @@ export default function ConnectionCard({
     onEntityClick?.(gid)
   }
 
-  // 站间衔接 (Transition Function v1+v2, 2026-08-15 PO 课题)：行程区一行
-  // 「衔接叙述」，回答"为什么从上一站来到这一站"。过渡逻辑统一走
-  // describeTransition（共享核心能力）：①中文 claim 叙述 ②关系短句
-  // ③v2 共同邻居路径桥（无直接边但有共同邻居）④无边 → 不渲染（留白）。
-  // 数据零新增。
+  // 站间衔接 (Phase B ContinuityEngine, 2026-08-15)：行程区一行「衔接叙述」，
+  // 回答"为什么从上一站来到这一站"。统一走 ContinuityEngine + B 解释层：
+  //   collectRelationEvidence（证据集合，不裁决）→ buildExplanationCandidates
+  //   （素材数组）→ selectBestExplanation（B 选择器）→ 渲染；
+  //   无关系（NONE）→ expressHonestNone 诚实陈述（C6：不静默、不编造）。
   const edgeBetween = (a: string, b: string) =>
     pkg.relationship_paths.find(
       (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
     ) ?? null
   const prevEdge = prev ? edgeBetween(prev.gid, entityGlobalId) : null
-  // v2 多跳路径桥：无直接边时找共同邻居（上一站缓存邻居 ∩ 本站包内邻居）。
+  // 多跳路径桥：无直接边时找共同邻居（上一站缓存邻居 ∩ 本站包内邻居）。
   const prevCommon = prev && !prevEdge
     ? (() => {
         const aN = getEntityNeighbors(prev.gid) ?? []
@@ -92,10 +97,24 @@ export default function ConnectionCard({
         return aN.find((n) => bGids.has(n.gid)) ?? null
       })()
     : null
-  const prevTransition = prev
-    ? describeTransition(prev.name, entityName, prevEdge
-        ? { type: prevEdge.type, evidence: prevEdge.evidence }
-        : null, prevCommon)
+  const prevEvidence = prev
+    ? collectRelationEvidence(
+        { gid: prev.gid, name: prev.name },
+        { gid: entityGlobalId, name: entityName },
+        {
+          edge: prevEdge
+            ? { type: prevEdge.type, evidence: prevEdge.evidence }
+            : null,
+          commonNeighbor: prevCommon,
+        },
+      )
+    : []
+  const prevCandidates = prev
+    ? buildExplanationCandidates(prevEvidence, prev.name, entityName)
+    : []
+  const prevExplanation = selectBestExplanation(prevCandidates)
+  const prevHonest = prev && prevEvidence.some((e) => e.kind === 'NONE')
+    ? expressHonestNone(prev.name, entityName)
     : null
 
   return (
@@ -122,18 +141,28 @@ export default function ConnectionCard({
               </button>
             )}
           </div>
-          {prevTransition?.text && prev && (
+          {prevExplanation && prev && (
             <div className="connection-card-transition">
               <span className="connection-card-transition-kicker">
                 从上一站「{prev.name}」来
               </span>
               <p className="connection-card-transition-text">
-                {prevTransition.text}
-                {prevTransition.confidence && (
-                  <span className={`transition-confidence transition-confidence--${prevTransition.confidence}`}>
-                    {t(`transition.confidence_${prevTransition.confidence}`)}
+                {prevExplanation.fact}
+                {prevExplanation.confidence && (
+                  <span className={`transition-confidence transition-confidence--${prevExplanation.confidence}`}>
+                    {t(`transition.confidence_${prevExplanation.confidence}`)}
                   </span>
                 )}
+              </p>
+            </div>
+          )}
+          {prevHonest && (
+            <div className="connection-card-transition connection-card-transition--honest">
+              <span className="connection-card-transition-kicker">
+                从上一站「{prev?.name}」来
+              </span>
+              <p className="connection-card-transition-text">
+                {prevHonest.text}
               </p>
             </div>
           )}

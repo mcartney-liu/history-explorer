@@ -39,7 +39,12 @@ import { useLocale } from '../data/locale'
 import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
 import { takeOriginEntity } from '../runtime/originEntity'
 import { getEntityNeighbors } from '../runtime/entityCache'
-import { describeTransition } from '../data/transition'
+import { collectRelationEvidence } from '../data/continuityEngine'
+import {
+  buildExplanationCandidates,
+  selectBestExplanation,
+  expressHonestNone,
+} from '../data/continuityExplanation'
 
 export type EntityRelationship = {
   type: string
@@ -154,27 +159,36 @@ function EntityPage({
   // fallback. Target-side dates remain a documented Future Scope item.
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
-  // 入口桥 (2026-08-15, PO)：从实体 A 跳入本实体 B 时，显示 A↔B 的过渡承接。
-  // 过渡逻辑统一走 Transition Function（describeTransition）：①中文 claim 叙述
-  // ②关系短句 ③v2 共同邻居路径桥（无直接边但有共同邻居 C →"A 与 B 通过 C 相关联"）
-  // ④无边且无共同邻居 → bridge=null → 降级来源。来源由 openEntity 按目标实体
-  // 暂存（keyed），同一 B 从不同 A 进入读到最近来源 → 桥随入口变化。
-  // 注：实体关系数据当前不含 evidence claim ids，故入口桥先落第二层关系短句；
-  // 未来数据补 evidence 后自动升级第一层 claim 叙述（共享函数无需改）。
+  // 入口桥 (2026-08-15, PO → Phase B)：从实体 A 跳入本实体 B 时，显示 A↔B 的过渡承接。
+  // 过渡逻辑统一走 ContinuityEngine + B 解释层（与 ConnectionCard 共用同一引擎，C5）：
+  //   collectRelationEvidence（证据集合）→ buildExplanationCandidates（素材数组）
+  //   → selectBestExplanation（B 选择器）→ bridge；NONE → expressHonestNone 诚实陈述。
+  // 来源由 openEntity 按目标实体暂存（keyed），同一 B 从不同 A 进入读到最近来源 → 桥随入口变化。
+  // 注：实体关系数据当前不含 evidence claim ids，故入口桥素材以关系短句为主；
+  // 未来数据补 evidence 后自动升级 claim 叙述（引擎共享，调用方无需改）。
   const [originGid] = useState(() => takeOriginEntity(entityGlobalId))
   const originBridge = useMemo(() => {
-    if (!originGid) return null
+    if (!originGid || !entityGlobalId) return null
     const rel = entity.relationships.find(
       (r) => r.other.global_id === originGid || r.other.id === originGid,
     )
     const fromName = rel?.other.name ?? originGid
-    // v2 多跳路径桥：无直接边时找共同邻居（A 的缓存邻居 ∩ B 的邻居，纯内存）。
+    // 多跳路径桥：无直接边时找共同邻居（A 的缓存邻居 ∩ B 的邻居，纯内存）。
     const aNeighbors = getEntityNeighbors(originGid) ?? []
     const bGids = new Set(entity.relationships.map((r) => r.other.global_id ?? r.other.id))
     const common = aNeighbors.find((n) => bGids.has(n.gid)) ?? null
-    const res = describeTransition(fromName, entity.name, rel ? { type: rel.type } : null, common)
-    return { fromName, bridge: res.text, confidence: res.confidence }
-  }, [originGid, entity])
+    const evidence = collectRelationEvidence(
+      { gid: originGid, name: fromName },
+      { gid: entityGlobalId, name: entity.name },
+      { edge: rel ? { type: rel.type } : null, commonNeighbor: common },
+    )
+    const candidates = buildExplanationCandidates(evidence, fromName, entity.name)
+    const selected = selectBestExplanation(candidates)
+    const honest = evidence.some((e) => e.kind === 'NONE')
+      ? expressHonestNone(fromName, entity.name)
+      : null
+    return { fromName, bridge: selected?.fact ?? honest?.text ?? null, confidence: selected?.confidence ?? null }
+  }, [originGid, entity, entityGlobalId])
 
   // 2026-08-11 (PO 方案B): 消费「我的」tab 写入的 pending restore ——
   // 从收藏/最近点进来时，自动恢复对应研究（复用 ResearchLibrary 的打开链路）。
