@@ -213,6 +213,20 @@
   gap: 6px;
 }
 
+.feedback-error {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-status-danger);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-status-danger);
+  border-radius: var(--radius);
+  background: var(--color-status-danger-soft, var(--color-paper-50));
+}
+
 /* ── "我的反馈" panel — visitor-local list of own feedback + PO replies ── */
 .feedback-my {
   margin-top: 14px;
