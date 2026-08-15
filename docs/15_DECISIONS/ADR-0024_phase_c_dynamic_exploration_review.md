@@ -1,6 +1,6 @@
 # ADR-0024 动态探索方向（Phase C）架构评审
 
-> 状态：**Proposed（待 PO 逐条拍板）** · 修订：v3（吸收 PO 2026-08-16 第四轮：Ranking Contract 分层决策模型 + PC7 + Candidate provenance + D7 层间规则 + confidence 语义 + 指标修正）
+> 状态：**Proposed（待 PO 逐条拍板）** · 修订：v4（吸收 PO 2026-08-16 第五轮：L1–L5 每层输入/值域/null 语义形式化 + D7 GapPriority 离散化 + PC5 收紧 source 不参与 L1–L4 + confidence 离散决策级别 + design principle"非推荐引擎"）
 > **Phase C 一句话定义（PO 定稿）**：**From authored sequence to context-aware exploration choice.**
 > 中文：从固定路线探索，演进为基于当前上下文、候选空间与 Continuity Evidence 的动态探索方向选择。
 > 范围：替换 `stations[idx+1]` 写死路线，让"下一步去哪"由 **候选生成 + Evidence + Context + Ranking → ExplorationAction** 驱动。
@@ -111,6 +111,7 @@ Navigation
     sources: CandidateSource[]   // 该候选的全部来源（可审计）
     hint?: string           // 来源说明（trace 用）
   }
+  /** 冻结枚举（PO v4 钉死，防 schema 漂移：禁止 "neighbor"/"relationship"/"graph_neighbor" 等随手字符串）。 */
   export type CandidateSource =
     | 'relationship_neighbor'
     | 'cross_topic_bridge'
@@ -150,55 +151,113 @@ export interface CandidateContextFeatures {
 - **没有数据就是没有数据**：任何特征缺失 → `null`（不是 0、不编默认值），与 B 期 null 语义铁律一致。
 - 未来 D / 实验系统可回答"为什么候选 A 排第一"——因为特征可审计。
 
-### 3.3 Candidate Ranking —— Ranking Contract（PC7，PO v3 Blocking Issue 定死）
+### 3.3 Candidate Ranking —— Ranking Contract（PC7，PO v3/v4 Blocking Issue 定死）
 
 **硬句（PO 定稿，代码审查直接照抄）**：
 
 > **C may consume the underlying `ContinuityFeatures`; C MUST NOT consume `JourneyContinuityScore`.**
+> **Phase C 是 Context-aware deterministic decision system，不是 recommendation engine——无 AI/LLM。**
+
+#### 3.3.0 全局 null 语义（PO v4 钉死，适用于每一层）
+
+```
+For every ranking layer:
+- value     = known evidence / context
+- null      = insufficient data to evaluate this layer（数据不足以评估该层）
+- null MUST NOT be interpreted as negative evidence（未知 ≠ 负面证据）
+- null MUST NOT be converted to 0（未知 ≠ 0，防伪精确回潮）
+- null MUST NOT automatically outrank / underrank a candidate（未知 ≠ 自动高于/低于）
+- 当某层对候选不可判定（null）时，该层视为 tie，继续比较下一层
+```
+
+> 例：A.gap=null、B.gap=HIGH → **不能**因 "null < HIGH" 判 B 胜；
+> L1 对 A 不可判定 → 视为 tie，进入 L2 继续比较。**null 只是"不知道"，不是分数。**
 
 #### 3.3.1 决策模型选型：分层 / 词典序（Lexicographic），非加权评分（PO v3 定案）
 
 **不做加权评分**（`score = context*0.35 + continuity*0.30 + ...`）——权重必被拍脑袋、不可回归、且是"神秘 0.83"的翻版。
-**采用分层 / 词典序决策**：从高到低逐层比较，**先满足高层的候选胜出**；某一层打平才进入下一层。
+**采用分层 / 词典序决策**：从高到低逐层比较，**先满足高层的候选胜出**；某一层打平（含 null 不可判定）才进入下一层。
 
-```
-L1  用户缺口命中（openGaps）：命中缺口的候选最高
-L2  Context relevance（gapRelevance → topicRelevance → dimensionRelevance → pathRelevance）
-L3  Continuity（RS → EQ；TC/SC=null 不参与）
-L4  Novelty / diversity
-L5  Deterministic tie-breaker（candidate source precedence → stable target id 排序）
-```
+**每层输入与值域（PO v4 形式化，机器可执行）**：
 
-**为什么分层而非加权（PO v3 认可）**：
+| 层 | 比较什么 | 值域（离散） | null 语义 |
+|---|---|---|---|
+| **L1** | `GapPriority`（见 D7 离散等级） | NONE / LOW / MEDIUM / HIGH / CRITICAL | 无 gap 数据 → 按 NONE 处理（gap 是唯一"缺数据=最低"的层，因产品语义"无缺口记录"即不优先）——**唯一例外，其余层 null 一律 tie** |
+| **L2** | Context relevance（dimensionRelevance → topicRelevance → pathRelevance 逐子层） | 子层各为离散等级（NONE/LOW/MEDIUM/HIGH） | 子层 null → 该子层 tie，进下一子层 |
+| **L3** | Continuity（RS → EQ 逐子层） | 子层各为离散等级（NONE/LOW/MEDIUM/HIGH） | TC/SC 恒 null 不参与；RS/EQ null → 该子层 tie |
+| **L4** | Novelty / diversity | NONE / LOW / MEDIUM / HIGH | null → tie |
+| **L5** | Deterministic tie-breaker（source precedence → stable target id） | 见 3.3.4 | 恒可判定 |
+
+> **子层规则**：L2/L3 内部按列出的子层顺序逐项比较（如 L2 先比 dimension、平则比 topic、再平则比 path）；每子层 null → tie 进下一子层。
+> **全局**：任一层的比较只产生三态——胜 / 负 / tie；tie 才进入下一层；L5 保证终局分出胜负（deterministic）。
+
+**为什么分层而非加权（PO v3/v4 认可）**：
 - 每层有明确业务理由 → 天然回答"为什么排第一"（可解释、可审计、可回归）。
-- 无权重争议 → 不依赖拍脑袋数字。
+- 无权重争议 → 不依赖拍脑袋数字；值域离散 → 无 0.73/0.68 伪精确。
 - "连续 ≠ 值得探索"自然落地：缺口层（L1/L2）最高，强关系 trivial 在 L3 才出现，天然被压后。
 - 每层是 if 判定 → 测试好写、行为确定（同一输入永远同一输出）。
 
-#### 3.3.2 D7 层间规则（PO v3 关键定案：无证据候选的跨层语义）
+#### 3.3.2 D7 层间规则（PO v4 离散化，替换自然语言"显著占优"）
 
 **无证据候选没有"通用最低"特权，但它只能在"高层"胜出，永远不能仅因 Novelty（L4）超过有证据候选。**
 
-- `无证据 + 极高缺口` **可以**压过 `有证据 + 低缺口`（L1/L2 层胜出）——产品上合理：用户标记想搞懂 X，X 虽无直接联系但正是用户要的；推荐它并诚实说明"无直接联系，但填补你标记的缺口"（reason 走诚实表达口径）。
-- `无证据` 在 L3（Continuity）天然垫底（RS=0），在 L4 永远不能超过任何有证据候选（L4 只在 L1–L3 全平后才比较）。
-- **即**：无证据候选允许超过有证据候选，**当且仅当**它在 L1/L2 显著占优；仅靠"新颖"不可能上位。
+**GapPriority 离散等级（D7 机器可执行契约）**：
 
-#### 3.3.3 `ExplorationAction.confidence` 语义（PO v3 钉死）
+```
+GapPriority:
+  NONE      = 候选不命中任何 openGap
+  LOW       = 命中 openGap 但缺口维度已部分覆盖
+  MEDIUM    = 命中 openGap 且缺口维度未覆盖
+  HIGH      = 命中 openGap 且该缺口是用户最近标记的
+  CRITICAL  = 命中 openGap 且该缺口是用户最近标记 + 未覆盖
+```
 
-**`confidence` = "系统认为这是当前最值得探索方向的置信度"（决策置信度），不是关系证据置信度。**
+**D7 判定（无需权重，纯离散比较）**：
+- `NONE-evidence + CRITICAL-gap` **>** `evidence + LOW-gap`（L1 层直接分出，产品上合理：用户标记想搞懂 X，X 虽无直接联系但正是用户要的；reason 走诚实表达"无直接联系，但填补你标记的缺口"）。
+- `NONE-evidence + LOW-gap` **<** `evidence + MEDIUM-gap`（L1 层直接分出，无证据 + 低缺口无法胜过有证据 + 中缺口）。
+- `NONE-evidence` 在 L3（Continuity）天然垫底（RS=NONE 等级），在 L4 永不参与（L4 只在 L1–L3 全 tie 后才比较，此时 NONE-evidence 的 L3 已输）。
+
+#### 3.3.3 `ExplorationAction.confidence` 语义（PO v4 离散化）
+
+**`confidence` = 决策置信度（"这是当前最值得探索方向"的把握），不是关系证据置信度。**
 
 - **禁止** `Action.confidence = RelationEvidence.confidence`（关系成立的置信度 ≠ 推荐该候选的置信度）。
-- 来源：由 C 决策层按"该候选胜出的层数 / 与次名的差距"派生（第一版简单规则即可），供 UI 展示"推荐的把握"。
+- **第一版 = 离散决策级别映射（PO v4 钉死，不伪装连续数学分数）**：
+
+```
+Action.confidence:
+  HIGH     = 候选在 L1 或 L2 层胜出（高层决策，最稳）
+  MEDIUM   = 候选在 L3 层胜出（中层决策）
+  LOW      = 候选在 L4 或仅靠 L5 tie-breaker 胜出（低层/最弱决策）
+```
+
+- **关键测试（PO v4 钉死）**：`same RelationEvidence.confidence, different ranking separation → different Action.confidence`——证明两个 confidence 未混用。
 - 关系证据的置信度仍在 `RelationEvidence.confidence` / `ContinuityFeatures` 里，不混用。
 
-#### 3.3.4 确定性（Determinism，PO v3 钉死）
+#### 3.3.4 确定性（Determinism，PO v3/v4 钉死）
 
 **Ranking 必须 deterministic**：同一输入（同一候选集 + 同一上下文）永远产出同一第一名。
-- **稳定 tie-breaker（L5）**：当业务层无法区分时，按 `candidate source precedence（dimension_target → relationship_neighbor → cross_topic_bridge → package_next）→ stable target id 排序`。
-- 注意：**这是确定性保证，不是业务权重**（与 ADR-0023 "default ordering 仅作 tie-breaker" 同一设计哲学）。
+- **L5 稳定 tie-breaker**：当 L1–L4 全部 tie 时，按 `candidate source precedence（dimension_target → relationship_neighbor → cross_topic_bridge → package_next）→ stable target id 排序`。
+- **PC5 收紧（PO v4 钉死）**：`Candidate source MUST NOT independently contribute to L1–L4 ranking value`——候选来源（含 package_next）**不得**独立贡献任何 L1–L4 层的排序值；source 只存在于 **L5 tie-breaker**。堵死"L3 里细分 package continuity 让 package_next 偷加权"的路子。
+- 注意：**source precedence 是确定性保证，不是业务权重**（与 ADR-0023 "default ordering 仅作 tie-breaker" 同一设计哲学）。
 - 防"第一次→A / 刷新→B / 再→A"的随机跳转，维护"探索方向是有意识选择的"产品感。
 
 **连续 ≠ 值得探索**（PO 核心原则）：强关系 trivial transition 可被"补当前最大缺口"的中等关系候选压过（L1/L2 层实现）。
+
+#### 3.3.5 设计原则（PO v4 钉死，写入 ADR 而非仅讨论）
+
+**Phase C 是 Context-aware deterministic decision system，不是 recommendation engine：**
+
+```
+现有可达空间（候选四源）
+      + 用户真实上下文（gap/维度/路径/主题）
+      + 已有历史关系证据（B 引擎）
+      + 明确的产品优先级（L1–L5 离散规则）
+      ↓
+确定性地选择下一探索方向（无 AI/LLM）
+```
+
+与 Runtime Freeze / AI Trust Boundary 演进高度一致：**不引 AI/LLM、不猜用户偏好、不学习**。
 
 ### 3.4 `ExplorationAction` 暂不扩张（PO 钉死）
 
@@ -212,7 +271,8 @@ L5  Deterministic tie-breaker（candidate source precedence → stable target id
 
 | 指标 | 定义 | 定位 / 目标 |
 |---|---|---|
-| M1 候选覆盖 | 候选集覆盖"真实可达且有证据支持"实体的比例 | **金标集须独立于候选生成器**（人工构造的可达候选集合，或独立审计 fixture），防"候选源定义分母、自己证明自己"（PO v3 钉死）；目标 ≥ 90% |
+| M1a 候选覆盖 | 系统找到的候选数 / 金标"真实可达"候选数（**金标独立于生成器**：人工构造/独立 fixture，防自己证明自己） | ≥ 90% |
+| M1b 证据覆盖 | 找到的候选中有 `RelationEvidence` 支持的比例（**与 M1a 分开统计**（PO v4 钉死）：Coverage ≠ Evidence availability，合一个指标难诊断） | 观察指标 |
 | M2 决策可解释率 | 用户/审查者能否答出"为什么推荐这个"（分层理由可审计） | 显式上升 |
 | M3 无关系跳发生率 | 实际"下一步"中 NONE 证据占比 | **降级为观察指标（非成功 KPI）**（PO v3 钉死）：NONE rate ↓ ≠ C better（B 期 BROKEN≠Bug 原则延续；C 更诚实也可能使 NONE 出现更透明）。真正 KPI = 推荐有可靠依据 + 用户理解为什么 |
 | M3b 探索价值命中率 | 命中"补当前缺口"而非"强关系 trivial"的比例 | 上升（观察指标） |
@@ -233,7 +293,7 @@ L5  Deterministic tie-breaker（candidate source precedence → stable target id
 | **PC4** | **ContextRelevance 必须来自真实上下文**：特征缺失 → `null`（不是 0、不编默认值） | 测试断言：无 gap 数据 → gapRelevance=null 非 0；无 time/space → 不出现 |
 | **PC5** | **`package_next` 没有特权**：只是四类候选源之一，同一打分公式 | 测试断言：同一输入下 package_next 与其它候选同公式计算，无保底加分 |
 | **PC6** | **C 不做 D**：C 只答 "Where next?"，不做 "Did the user understand?"（无认知完成度/理解判断/反馈闭环） | C 模块无 understanding 判定、无认知闭环逻辑；D 的职责不进 C |
-| **PC7** | **Deterministic Ranking Contract**：分层/词典序决策；同一输入同一输出；无证据候选只能高层胜出、禁 Novelty 上位；`Action.confidence` = 决策置信度（≠关系证据置信度）；tie-breaker 确定性 | 测试断言：①两次运行同输入同第一名（M7）；②无证据候选在 L4 永不超有证据候选；③`Action.confidence` 不直接等于 `RelationEvidence.confidence`；④JCS 引用 = 0（PC3 延续） |
+| **PC7** | **Deterministic Ranking Contract**：分层/词典序（L1 GapPriority → L2 Context → L3 Continuity → L4 Novelty → L5 tie）；每层离散值域 + 三态比较（胜/负/tie）；**null=未知≠0≠负面证据，不可判定层视为 tie 进下一层**；无证据候选只能高层胜出、禁 L4 上位；`Action.confidence` = 离散决策级别（HIGH/MEDIUM/LOW，≠关系证据置信度）；source 不独立贡献 L1–L4；tie-breaker 确定性 | 测试断言：①两次运行同输入同第一名（M7）；②`null` 层不按 0 比较（构造 null vs HIGH 用例，断言进下一层）；③无证据候选 L4 永不超有证据候选；④`same RelationEvidence.confidence, different ranking separation → different Action.confidence`；⑤JCS 引用 = 0（PC3 延续） |
 
 > 一句话总纲：**B 是 Evidence Producer，C 是 Decision Consumer，JCS 永远只在诊断层，Ranking 永远 deterministic。**
 
@@ -255,9 +315,13 @@ L5  Deterministic tie-breaker（candidate source precedence → stable target id
 | **D10** | **红线 PC2/PC6：C 不复制关系逻辑；C 不做 D** | ✅ 是 |
 | D11 | `stations` 保留为回退兜底 | ✅ 是 |
 | D12 | `ExplorationAction` 暂不扩张（行为证明不足再扩） | ✅ 是（PO 钉死） |
-| **D13** | **`Action.confidence` = 决策置信度（"最值得探索"的把握），≠ 关系证据置信度；禁直接赋值** | ✅ 是（PO v3 钉死） |
-| **D14** | **候选去重保留 sources[] provenance（去重键=gid，来源不丢）** | ✅ 是（PO v3 钉死） |
-| **D15** | **M3（NONE 跳发生率）降级为观察指标；M4（回退率）标 provisional target；M1 金标独立于生成器** | ✅ 是（PO v3 钉死） |
+| **D13** | **`Action.confidence` = 离散决策级别（HIGH/MEDIUM/LOW），≠ 关系证据置信度；禁直接赋值** | ✅ 是（PO v4 钉死） |
+| **D14** | **候选去重保留 sources[] provenance（冻结枚举，去重键=gid，来源不丢）** | ✅ 是（PO v3/v4 钉死） |
+| **D15** | **M3（NONE 跳发生率）降级观察指标；M4（回退率）provisional target；M1 拆 M1a 覆盖 + M1b 证据覆盖两维，金标独立** | ✅ 是（PO v3/v4 钉死） |
+| **D16** | **Ranking null 语义：未知≠0≠负面证据，不可判定层=tie 进下一层（唯一例外 L1 无 gap 数据按 NONE）** | ✅ 是（PO v4 钉死） |
+| **D17** | **D7 离散化：GapPriority NONE/LOW/MEDIUM/HIGH/CRITICAL 机器可执行，替换自然语言"显著占优"** | ✅ 是（PO v4 钉死） |
+| **D18** | **PC5 收紧：Candidate source 不独立贡献 L1–L4，仅存在于 L5 tie-breaker** | ✅ 是（PO v4 钉死） |
+| **D19** | **设计原则写入：Phase C = Context-aware deterministic decision system（非 recommendation engine），不引 AI/LLM** | ✅ 是（PO v4 钉死） |
 
 ---
 
