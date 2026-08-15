@@ -31,6 +31,7 @@ import {
   NavNode,
   canBack,
   canForward,
+  nodeKey,
 } from './components/navigation'
 import { loadRecent, pushRecent } from './components/recentStore'
 import Breadcrumb from './components/Breadcrumb'
@@ -68,6 +69,10 @@ import { getCausalObjectName } from './data/causalObjectNames'
 import { getPackageBySlug } from './data/explorationPackages'
 import { peekPackageOrigin } from './components/package/packageOrigin'
 import type { ExplorationAction, ExplorationActionType } from './next/exploration/ExplorationPolicy'
+import { decideNextCandidate } from './next/exploration/candidateDecision'
+import { collectRelationEvidence, composeFeatures } from './data/continuityEngine'
+import { getEntityNeighbors } from './runtime/entityCache'
+import type { CandidateDecisionInputs } from './next/exploration/candidateDecision'
 import GraphViewPanel from './components/GraphViewPanel'
 import StorySection from './components/exploration/StorySection'
 import WhyImportantPanel from './components/exploration/WhyImportantPanel'
@@ -361,29 +366,42 @@ function App() {
   const currentTopic = current?.type === 'topic' ? current.topic : ''
   const currentRef = current?.type === 'entity' ? current.id : ''
 
-  // ④ 探索剧本化 — 下一步常驻（治 D4）：包内进入的实体优先展示该包剧本的
-  // "下一站"候选（取自 relationship_paths 中 from === 当前实体的边），引擎单条
-  // 兜底排在后面。仍守 NextStepPanel 唯一出口、无推荐语汇（FRW P3 红线）。
+  // ④ 探索剧本化 — 下一步常驻（治 D4）+ Phase C 候选决策（ADR-0024 Accepted）：
+  //    无显式用户意图时，C 候选决策（候选生成 → B 证据 → 分层排序）成为主推，
+  //    剧本下一站降级为 C 空时的兜底（D11 回退链；package_next 无特权，PC5）。
+  //    Rule 0（用户显式标记缺口）命中时 C 不介入（C3：用户说了去哪，系统别自作聪明）。
+  //    仍守 NextStepPanel 唯一出口、无推荐语汇（FRW P3 红线）。
   const nextStepActions = useMemo<ExplorationAction[]>(() => {
     const out: ExplorationAction[] = []
     const gid = current?.type === 'entity' ? current.id : null
     if (gid) {
       const originSlug = peekPackageOrigin(gid)
-      if (originSlug) {
-        const pkg = getPackageBySlug(originSlug)
-        if (pkg) {
-          for (const p of pkg.relationship_paths) {
-            if (p.from === gid && p.to !== gid) {
-              out.push({
-                type: scriptedActionType(p.type),
-                targetRef: p.to,
-                reason: `剧本下一站 · ${relationshipTypeLabel(p.type)}`,
-                narrativeHook: '',
-                expectedGrowth: { dimension: 'causality', relationType: 'influenced' },
-                confidence: 0.9,
-              })
-              if (out.length >= 2) break
-            }
+      const pkg = originSlug ? getPackageBySlug(originSlug) : null
+
+      // Phase C 候选决策（C3：显式意图由 policyAction Rule 0 处理，C 不介入。
+      // policyAction 为裸 Action（trace 在 Decision 层已消费），Rule 0 以其
+      // 固定 reason 前缀识别——模板单一来源，变更须同步测试）
+      const isExplicitGap = policyAction?.reason?.startsWith('你标记了')
+      if (!isExplicitGap) {
+        const cDecision = buildCandidateDecision(gid, pkg)
+        if (cDecision && !out.some((a) => a.targetRef === cDecision.output.targetRef)) {
+          out.push(cDecision.output)
+        }
+      }
+
+      // 剧本下一站：C 未产出时兜底（D11 回退链）
+      if (pkg && out.length === 0) {
+        for (const p of pkg.relationship_paths) {
+          if (p.from === gid && p.to !== gid) {
+            out.push({
+              type: scriptedActionType(p.type),
+              targetRef: p.to,
+              reason: `剧本下一站 · ${relationshipTypeLabel(p.type)}`,
+              narrativeHook: '',
+              expectedGrowth: { dimension: 'causality', relationType: 'influenced' },
+              confidence: 0.9,
+            })
+            if (out.length >= 2) break
           }
         }
       }
@@ -392,7 +410,8 @@ function App() {
       out.push(policyAction)
     }
     return out
-  }, [current?.type === 'entity' ? current.id : null, policyAction])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current?.type === 'entity' ? current.id : null, policyAction, explorationState, result, entityData])
 
   // 关系类型 → 中文标签 / 认知动作类型（④ 剧本下一步使用）
   function relationshipTypeLabel(type: string): string {
@@ -408,6 +427,98 @@ function App() {
     if (t.includes('cause') || t.includes('lead') || t.includes('influ')) return 'follow_cause'
     if (t.includes('part') || t.includes('member')) return 'open_dimension'
     return 'deep_continue'
+  }
+
+  // ── Phase C：候选决策组装（ADR-0024 Accepted；C-S6 接入） ──
+  // 四源候选（包内下一站 / 图邻居 / 跨主题桥 / 维度目标）→ 注入 B 引擎证据
+  // （collectRelationEvidence，PC2 单引擎复用）→ decideNextCandidate 流水线。
+  // 候选空 → null（调用方回退剧本下一站 / policyAction，D11）。
+  function buildCandidateDecision(
+    gid: string,
+    pkg: ReturnType<typeof getPackageBySlug> | null,
+  ): ReturnType<typeof decideNextCandidate> {
+    const currentName = entityData?.name ?? gid
+
+    // ① 包内下一站（package_next 候选源，PC5 无特权）
+    const pkgNext =
+      pkg?.relationship_paths.find((p) => p.from === gid && p.to !== gid) ?? null
+
+    // ② 图邻居（entityCache，打开实体时已缓存）
+    const neighbors = (getEntityNeighbors(gid) ?? []).map((n) => ({ gid: n.gid, name: n.name }))
+
+    // ③ 跨主题桥（/explore 响应 cross_topic_related，保留 topic 供候选元数据）
+    const bridges = (result?.exploration?.cross_topic_related ?? [])
+      .filter((b): b is typeof b & { global_id: string } => Boolean(b.global_id))
+      .map((b) => ({ gid: b.global_id, name: b.name ?? b.global_id, topic: b.topic ?? null }))
+
+    // ④ 维度目标（missingDimensions → dimensionMapping 可达实体，P-U08 口径）
+    const dimensionTargets = (explorationState?.missingDimensions ?? [])
+      .map((dim) => {
+        const mapped = explorationState?.dimensionMapping?.[dim]
+        return mapped && mapped.length > 0 ? { gid: mapped[0], name: dim } : null
+      })
+      .filter((x): x is { gid: string; name: string } => x !== null)
+
+    // 候选元数据（决策层只做机械映射；bridge 带主题、dimension 带维度）
+    const meta: NonNullable<CandidateDecisionInputs['meta']> = {}
+    for (const b of bridges) meta[b.gid] = { topic: b.topic ?? null, bridged: true }
+    for (const d of dimensionTargets) meta[d.gid] = { ...(meta[d.gid] ?? {}), dimension: d.name }
+
+    // B 引擎注入：包内边 → 直接证据；无直接边 → 共同邻居桥；全无 → NONE（诚实表达）
+    const collectEvidence = (c: { targetRef: string; name: string }) => {
+      const edge =
+        pkg?.relationship_paths.find(
+          (r) =>
+            (r.from === gid && r.to === c.targetRef) ||
+            (r.from === c.targetRef && r.to === gid),
+        ) ?? null
+      const common = edge ? null : findCommonNeighbor(gid, c.targetRef, pkg)
+      const evidence = collectRelationEvidence(
+        { gid, name: currentName },
+        { gid: c.targetRef, name: c.name },
+        {
+          edge: edge ? { type: edge.type, evidence: edge.evidence } : null,
+          commonNeighbor: common,
+        },
+      )
+      return { evidence, features: composeFeatures(evidence) }
+    }
+
+    return decideNextCandidate({
+      current: { gid, name: currentName },
+      packageNext: pkgNext ? { gid: pkgNext.to, name: pkgNext.to } : null,
+      neighbors,
+      bridges,
+      dimensionTargets,
+      explored: [...seenGlobalIds],
+      // 显式缺口由 Rule 0（policyAction）处理（C3 职责边界），C 只做隐式上下文缺口
+      openGaps: [],
+      dimensionState: explorationState
+        ? {
+            missing: explorationState.missingDimensions ?? [],
+            covered: explorationState.coveredDimensions ?? [],
+          }
+        : null,
+      currentTopic: currentTopic || null,
+      history: history.length > 0 ? history.map(nodeKey) : null,
+      meta,
+      collectEvidence,
+    })
+  }
+
+  // 共同邻居桥：当前实体缓存邻居 ∩ 候选实体的包内邻居（纯内存，v2 桥语义）
+  function findCommonNeighbor(
+    aGid: string,
+    bGid: string,
+    pkg: ReturnType<typeof getPackageBySlug> | null,
+  ): { gid: string; name: string } | null {
+    const aNeighbors = getEntityNeighbors(aGid) ?? []
+    const bNeighbors = new Set(
+      (pkg?.relationship_paths ?? [])
+        .filter((p) => p.from === bGid || p.to === bGid)
+        .map((p) => (p.from === bGid ? p.to : p.from)),
+    )
+    return aNeighbors.find((n) => bNeighbors.has(n.gid)) ?? null
   }
 
   // P1-② (Engineering Health, 2026-08-14): projection → state → policy effect
