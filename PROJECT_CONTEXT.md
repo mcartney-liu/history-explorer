@@ -1,15 +1,19 @@
 # History Explorer - Project Context (Current Reality)
 
-Version: 1.1
+Version: 1.2（定位章节按 Article 0 / ADR-0013 同步，2026-08-15；工程基线内容未动）
 Status: Active
 
 > **Team Operating Specification:** `Team Operating Specification v1.2 (Frozen)` is the single team norm. All development follows [`docs/TEAM_OPERATING_SPEC_v1.2.md`](docs/TEAM_OPERATING_SPEC_v1.2.md). Changes via its Section 14 Versioning.
 
 # 1. Project Identity
 
-History Explorer（历史探索）- an AI-powered global history exploration platform.
+History Explorer（历史探索）— a cognitive-structure exploration system（帮助人类形成认知结构的探索系统）.
+History is the current carrier and validation scenario; the product body is domain-agnostic
+（ADR-0013 Article 0 / D2 / D5.1）.
 
-It combines Knowledge Graph, Timeline, Spatial Exploration, and AI interpretation to help users explore, connect, and understand human history.
+It combines Knowledge Graph, Timeline, Spatial Exploration, and AI interpretation to help
+users form cognitive structures, discover their own interests and learning methods, and
+get closer to the truth.
 
 # 2. Product Position
 
@@ -19,20 +23,32 @@ History Explorer is NOT:
 - A digital history book.
 - A simple search engine.
 - A general AI chatbot.
+- A recommendation system（不基于用户轨迹投喂内容；Cognitive Mirror 只反射、不投喂）.
 
 History Explorer IS:
 
-An exploration engine for historical knowledge.
+A cognitive-structure exploration system whose current carrier is history.
 
 The core experience is:
 
 Explore -> Connect -> Understand -> Discover
 
+and the ultimate positioning (Article 0) is three layers, all required:
+
+- **Object（对象层）**：form cognitive structures（用户脑中长出认知结构）.
+- **Subject（主体层）**：discover one's own interests and learning methods（找到自己的兴趣与学习方法，via Cognitive Mirror — reflect, never feed）.
+- **Truth（真值层）**：get closer to the truth（无限逼近真相；证据分级 / 来源分级 / 异议叙述前台可见，P09）.
+
+可证伪判据（最高判据）：用户离场时能否回答「你觉得自己变聪明了吗」。
+（历史 = 当前唯一载体与验证场景，见 ADR-0013 D2；跨学科学原子化 = 未来愿景，本期不扩张。）
+
 # 3. Mission
 
 The mission of History Explorer is:
 
-To transform history learning from passive information searching into active exploration and discovery.
+To help users leave smarter than they came in — forming cognitive structures, discovering
+their own interests and ways of learning, and getting closer to the truth — with history
+as the current carrier.
 
 The product helps users understand:
 
@@ -40,6 +56,8 @@ The product helps users understand:
 - Why did it happen?
 - What happened elsewhere at the same time?
 - How are historical events connected?
+- **How reliable is each conclusion?（证据强度 / 来源分级 / 异议叙述）**
+- **What do I keep returning to, and how do I tend to explore?（Cognitive Mirror）**
 
 # 4. Core Principles
 
@@ -148,6 +166,7 @@ AI Agents working on this project must follow:
 
 - Vision (mirror): `PRD.md` (source: `History_Explorer_PRD_完整版_v1.0.docx`)
 - `Product_DNA.md` (L2) - `Product_Constitution.md` (L3)
+- Ultimate Positioning (Article 0): `docs/15_DECISIONS/ADR-0013_product_ultimate_positioning.md`
 - `PROJECT_ROADMAP.md` (L5) - `docs/INDEX.md` (Documentation Map)
 - Freeze Baseline: `docs/M3.5-000_Schema_Freeze_Review.md`
 - Team Spec: `docs/TEAM_OPERATING_SPEC_v1.2.md`
