@@ -396,3 +396,14 @@
   background: var(--color-paper-200);
   border-color: var(--color-paper-300);
 }
+
+/* ============================================================
+   P1 收口：m89 5 个 section 容器补齐（2026-08-15）
+   JSX 引用（m89-section m89-{nav,transition,evidence,path,action}）但无定义的
+   区块容器；VS-01 token；纯视觉。
+   ============================================================ */
+.m89-navigation{display:flex;flex-direction:column;gap:12px}
+.m89-transition{display:flex;flex-direction:column;gap:12px}
+.m89-evidence{display:flex;flex-direction:column;gap:12px}
+.m89-path{display:flex;flex-direction:column;gap:12px}
+.m89-action{display:flex;flex-direction:column;gap:12px}
