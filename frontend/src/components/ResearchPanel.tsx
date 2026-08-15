@@ -4,7 +4,6 @@ import { recordEvent } from '../data/UserBehaviorEvent'
 import ResearchDimensionCard, { type ResearchDimension, type DimensionStatus } from './ResearchDimensionCard'
 import ResearchReport, { ResearchReportView } from './ResearchReport'
 import ResearchSummary, { ResearchSummaryView } from './ResearchSummary'
-import ResearchBookmarkView from './ResearchBookmarkButton'
 import MultiEntitySelector, { type SelectableEntity } from './MultiEntitySelector'
 import DimensionReportModal from './DimensionReportModal'
 import { saveResearchRemote, type SavedResearch } from '../data/ResearchHistory'
@@ -168,7 +167,6 @@ export function ResearchPanelView({
   onSelectEntities = (_entities: SelectableEntity[]) => {},
   saveState = { status: 'idle' } as SaveState,
   onSave = () => {},
-  onBookmarkUpdate = () => {},
   // 2026-08-11 (PO 方案①)：恢复的研究记录（横幅显示实体名 + 摘要）。
   restoreData = null as SavedResearch | null,
   // 2026-08-13 (PO 方案①)：三阶段自主触发状态。
@@ -195,7 +193,6 @@ export function ResearchPanelView({
   onSelectEntities?: (entities: SelectableEntity[]) => void
   saveState?: SaveState
   onSave?: () => void
-  onBookmarkUpdate?: () => void
   restoreData?: SavedResearch | null
   aiAvailable?: boolean
   summaryStarted?: boolean
@@ -231,7 +228,7 @@ export function ResearchPanelView({
       {/* 2026-08-13 (P-U07)：本会话已完成但尚未保存的维度提示（刷新即丢，提醒先保存）。 */}
       {pendingSaveCount > 0 && (
         <p className="rp-pending-save" role="status">
-          本会话有 {pendingSaveCount} 个维度尚未保存，记得点「保存」进入收藏
+          本会话有 {pendingSaveCount} 个维度尚未保存，记得点「保存」存入研究库
         </p>
       )}
 
@@ -396,12 +393,6 @@ export function ResearchPanelView({
                       已保存到「研究库」
                       {saveState.remote ? '' : '（当前离线，已存在本机，联网后可再次保存同步）'}
                     </span>
-                    <ResearchBookmarkView
-                      researchId={saveState.research.id}
-                      bookmarked={saveState.research.bookmarked}
-                      labels={saveState.research.labels}
-                      onUpdate={onBookmarkUpdate}
-                    />
                   </div>
                 ) : (
                   <button
@@ -791,16 +782,6 @@ export default function ResearchPanel(props: ResearchPanelProps) {
       saveState={saveState}
       onSave={handleSave}
       restoreData={restoreResearchData}
-      onBookmarkUpdate={() => {
-        // ResearchBookmarkButton already persisted the flip; mirror it so the
-        // button reflects the new state without a remount.
-        setSaveState((prev) =>
-          prev.status === 'saved'
-            ? { ...prev, research: { ...prev.research, bookmarked: !prev.research.bookmarked } }
-            : prev,
-        )
-        if (saveState.status === 'saved') props.onSaved?.(saveState.research)
-      }}
       aiAvailable={aiAvailable}
       allSuccess={allSuccess}
       onResearch={onResearchSingle}

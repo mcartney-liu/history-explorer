@@ -51,11 +51,19 @@ describe('ResearchLibraryView', () => {
     expect(html).toContain('8 条引用')
   })
 
-  it('shows bookmark star', () => {
-    const html = renderToStaticMarkup(
+  it('renders a clickable bookmark star on every card', () => {
+    const unmarked = renderToStaticMarkup(
+      <ResearchLibraryView items={[mkItem({ bookmarked: false })]} />,
+    )
+    expect(unmarked).toContain('rlib-card-star')
+    expect(unmarked).toContain('aria-pressed="false"')
+    expect(unmarked).toContain('rlib-card-star--off')
+
+    const marked = renderToStaticMarkup(
       <ResearchLibraryView items={[mkItem({ bookmarked: true })]} />,
     )
-    expect(html).toContain('rlib-card-star')
+    expect(marked).toContain('aria-pressed="true"')
+    expect(marked).toContain('rlib-card-star--on')
   })
 
   it('renders open and delete buttons', () => {

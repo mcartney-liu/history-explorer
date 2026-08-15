@@ -1052,6 +1052,19 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/data/contentRuntime.ts",
   "frontend/src/data/ai/AICapabilities.ts",
   "frontend/src/data/ai/AIRegistry.ts",
+  // Feedback backend sink (PO-approved 2026-08-15, "按你的建议来"): lets the
+  // M35 FeedbackWidget persist friend-trial feedback so the PO can read it.
+  // ZERO new dependency (stdlib json/os/uuid only) — NO sqlite/DB/ORM. Pure
+  // file append to backend/data/feedback.jsonl (gitignored runtime state);
+  // no AI / graph / business logic. main.py only mounts the router (already
+  // allowlisted). Same red-line family as ADR-0018 (local-file persistence,
+  // no external DB process).
+  "backend/app/feedback.py",
+  "frontend/src/components/FeedbackBoard.tsx",
+  // M81a — 首页友好提示框（PO 2026-08-15）：美化文案 + 10s 倒计时自动关 +
+  // 手动关（× / 开始探索 / 遮罩 / Esc）。纯前端、零新依赖、零后端/DB 改动；
+  // 样式 100% 走 VS-01 Design Token（P0 合规：零 emoji / 零硬编码色 / 零弹跳）。
+  "frontend/src/components/WelcomeModal.tsx",
 ];
 
 function _scopeAllowed(file) {
