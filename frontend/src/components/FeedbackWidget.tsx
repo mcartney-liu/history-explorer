@@ -94,6 +94,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
   const [message, setMessage] = useState('')
   const [sentiment, setSentiment] = useState<Sentiment | null>(null)
   const [sent, setSent] = useState(false)
+  const [failed, setFailed] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
   // "我的反馈" panel state
@@ -139,6 +140,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
   }, [])
 
   const submit = async () => {
+    if (submitting) return
     if (!sentiment && !message.trim()) return
     const payload: FeedbackEntry = {
       sentiment: sentiment ?? undefined,
@@ -147,6 +149,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
       ts: Date.now(),
     }
     setSubmitting(true)
+    setFailed(false)
     try {
       const resp = await fetch(`${API_BASE}/api/v1/feedback`, {
         method: 'POST',
@@ -156,20 +159,23 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
       if (!resp.ok) throw new Error(`feedback POST failed (${resp.status})`)
       const data = (await resp.json().catch(() => ({}))) as { id?: string }
       if (data && data.id) saveMyId(data.id)
+      setSent(true)
+      setMyOpen(true)
+      // give the backend a moment to persist, then refresh the panel
+      setTimeout(fetchMy, 300)
     } catch {
-      // offline / backend unreachable — degrade to localStorage (best-effort)
+      // offline / backend unreachable — degrade to localStorage (best-effort),
+      // but DO NOT claim success: surface a retry affordance instead so the
+      // visitor knows the submission did not reach us.
       saveFeedback({
         sentiment: sentiment ?? undefined,
         message: message.trim() || undefined,
         ts: Date.now(),
         page,
       })
+      setFailed(true)
     } finally {
       setSubmitting(false)
-      setSent(true)
-      setMyOpen(true)
-      // give the backend a moment to persist, then refresh the panel
-      setTimeout(fetchMy, 300)
     }
   }
 
@@ -179,6 +185,11 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
     <section className="feedback-widget" aria-label="Feedback">
       {!sent && (
         <>
+          {failed && (
+            <p className="feedback-error" role="alert">
+              <Icon name="warning" size={16} /> 提交未送达，上面的内容已为你保留，点“重试提交”再发一次。
+            </p>
+          )}
           <span className="feedback-prompt">这个探索有用吗？</span>
           <div className="feedback-actions">
             <button
@@ -215,7 +226,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
             disabled={submitting || (!sentiment && !message.trim())}
             onClick={submit}
           >
-            {submitting ? '提交中…' : '提交反馈'}
+            {submitting ? '提交中…' : failed ? '重试提交' : '提交反馈'}
           </button>
         </>
       )}
