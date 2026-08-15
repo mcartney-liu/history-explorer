@@ -163,6 +163,11 @@ export default function ConnectionCard({
               </span>
               <p className="connection-card-transition-text">
                 {prevHonest.text}
+                {prevHonest.actionHint && (
+                  <span className="connection-card-transition-hint">
+                    {prevHonest.actionHint}
+                  </span>
+                )}
               </p>
             </div>
           )}
