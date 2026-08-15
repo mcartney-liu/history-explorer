@@ -82,10 +82,8 @@ function formatDate(ts?: string | null): string {
   try {
     const d = new Date(ts)
     if (isNaN(d.getTime())) return String(ts)
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
+    const p = (n: number) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`
   } catch {
     return String(ts)
   }
