@@ -1,16 +1,16 @@
 # ADR-0024 动态探索方向（Phase C）架构评审
 
-> 状态：**Conditional Accept（PO 2026-08-16 五轮评审；待 3 个 Blocking Clarifications 补齐后 Accepted）**
-> · 修订：v5（吸收 PO 第六轮：GapPriority 推导契约 + L2/L3 离散化责任边界 + L5 非业务属性 + Design Principle 顶层化 + 数据生命周期图 + PC8 pure-function 断言）
+> 状态：**Accepted（PO 2026-08-16 拍板 D1–D23 全部按推荐 Accept；3 个 Blocking Clarifications 已补齐，进入施工阶段）**
+> · 修订：v5 → v6（Accepted 定稿：状态更新 + 决策记录，内容不变）
 > **Phase C 一句话定义（PO 定稿）**：**From authored sequence to context-aware exploration choice.**
 > 中文：从固定路线探索，演进为基于当前上下文、候选空间与 Continuity Evidence 的动态探索方向选择。
 > 范围：替换 `stations[idx+1]` 写死路线，让"下一步去哪"由 **候选生成 + Evidence + Context + Ranking → ExplorationAction** 驱动。
 > 关联：ADR-0023（Phase B，**Accepted 已施工 550ad11**，B=Evidence Producer）、
 >       `docs/product/PHASE_C_REALITY_AUDIT.md`（**已完成，事实基线**）、
->       `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（**v5 对齐版**）。
+>       `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（**v5/v6 对齐版**）。
 > 触发基线变更：是（新增 C 层候选生成/排序模块）。
-> **流程**：PO 五轮意见（架构评审先行 → Reality Audit 先行 → Ranking Contract → 机器级形式化 → Conditional Accept）全部执行。
-> **评审结论**：架构成熟度 ~90%；无架构红项；3 个 Blocking Clarifications 补齐后 Accepted，其余进入施工设计不再 ADR 争论。
+> **流程**：PO 六轮评审（架构评审先行 → Reality Audit 先行 → Ranking Contract → 机器级形式化 → Conditional Accept → **Accepted 拍板**）全部执行。
+> **评审结论**：架构成熟度 ~90% → 3 个 Blocking Clarifications 补齐 → **PO 拍板 Accepted（2026-08-16 05:59）**，进入施工设计对齐 + TDD。
 
 ---
 
@@ -408,8 +408,19 @@ Action.confidence:
 - `docs/product/PHASE_C_REALITY_AUDIT.md` = 事实基线（已完成）。
 - `docs/product/PHASE_C_IMPLEMENTATION_DESIGN.md`（**v5 对齐版**）以本 ADR 为准：含 CandidateContextFeatures 类型、ExplorationCandidate.sources[] 冻结枚举、GapPriority 推导契约（D20）、L2/L3 机械映射表（D21）、L5 非业务属性（D22）、分层 Ranking Contract + PC1–PC8 审计断言落测试、M1a/M1b 独立 fixture。
 - **Contract Compliance（PC1–PC8）= release gate（架构正确性门禁），不是产品 metric**（PO v5 钉死：两套体系不混）——M 系列是产品观察，PC 系列是门禁。
-- ADR Conditional Accept → 3 Blocking 已补齐 → **PO 拍板 Accepted 后立即 TDD 施工（C-S1..C-S8）**。
+- ADR Accepted（2026-08-16 05:59，PO 拍板 D1–D23 全 Accept）→ 施工设计对齐（v6）→ TDD 施工（C-S1..C-S8）。
 
 ---
 
-> 状态：**Proposed**。PO 逐条拍板 D1–D12 后转 Accepted，再启动 C 施工。
+## 8. 决策记录（PO 2026-08-16 拍板）
+
+| 决策点 | 结果 |
+|---|---|
+| D1 立项 / D2 四源 / D3 跨包 | ✅ Accept |
+| D4 分层词典序 / D5 Context 结构化 / D6 连续≠值得 / D7 无证据跨层 | ✅ Accept |
+| D8 增强不推翻 / D9 JCS 隔离 / D10 不复制逻辑不做 D / D11 stations 回退 / D12 Action 不扩 | ✅ Accept |
+| D13 confidence 三档 / D14 sources[] / D15 指标修正 | ✅ Accept |
+| D16 null 语义 / D17 GapPriority 五档 / D18 PC5 收紧 / D19 非推荐引擎原则 | ✅ Accept |
+| D20 GapPriority 推导契约 / D21 离散化边界 / D22 L5 非业务 / D23 PC8 纯函数 | ✅ Accept |
+
+> 状态：**Accepted**。C 施工前置条件全部满足，进入 `PHASE_C_IMPLEMENTATION_DESIGN.md` 对齐 + C-S1 TDD。
