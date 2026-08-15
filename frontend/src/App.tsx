@@ -490,7 +490,10 @@ function App() {
       neighbors,
       bridges,
       dimensionTargets,
-      explored: [...seenGlobalIds],
+      // explored 用 explorationState.exploredAnchors（在 useMemo 之前已声明；
+      // 不能用 seenGlobalIds——它在 buildExplorationDerived 解构（组件后段）才声明，
+      // useMemo 回调访问会产生 TDZ ReferenceError（2026-08-16 线上白屏根因）。）
+      explored: explorationState?.exploredAnchors ?? [],
       // 显式缺口由 Rule 0（policyAction）处理（C3 职责边界），C 只做隐式上下文缺口
       openGaps: [],
       dimensionState: explorationState
