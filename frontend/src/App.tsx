@@ -66,7 +66,7 @@ import { CompanionShell } from './components/ai/CompanionShell'
 import RelationshipContext from './components/RelationshipContext'
 import { WorkspacePanel, type WorkspaceItem } from './components/workspace/WorkspacePanel'
 import { getCausalObjectName } from './data/causalObjectNames'
-import { getPackageBySlug } from './data/explorationPackages'
+import { getPackageBySlug, getEntityDisplayName } from './data/explorationPackages'
 import { peekPackageOrigin } from './components/package/packageOrigin'
 import type { ExplorationAction, ExplorationActionType } from './next/exploration/ExplorationPolicy'
 import { decideNextCandidate } from './next/exploration/candidateDecision'
@@ -443,26 +443,36 @@ function App() {
     const pkgNext =
       pkg?.relationship_paths.find((p) => p.from === gid && p.to !== gid) ?? null
 
-    // ② 图邻居（entityCache，打开实体时已缓存）
-    const neighbors = (getEntityNeighbors(gid) ?? []).map((n) => ({ gid: n.gid, name: n.name }))
+    // ② 图邻居（entityCache，打开实体时已缓存；name 统一走 gid→中文名，防英文 gid 进 UI）
+    const neighbors = (getEntityNeighbors(gid) ?? []).map((n) => ({
+      gid: n.gid,
+      name: getEntityDisplayName(n.gid),
+    }))
 
     // ③ 跨主题桥（/explore 响应 cross_topic_related，保留 topic 供候选元数据）
     const bridges = (result?.exploration?.cross_topic_related ?? [])
       .filter((b): b is typeof b & { global_id: string } => Boolean(b.global_id))
-      .map((b) => ({ gid: b.global_id, name: b.name ?? b.global_id, topic: b.topic ?? null }))
+      .map((b) => ({
+        gid: b.global_id,
+        name: getEntityDisplayName(b.global_id),
+        topic: b.topic ?? null,
+      }))
 
-    // ④ 维度目标（missingDimensions → dimensionMapping 可达实体，P-U08 口径）
+    // ④ 维度目标（missingDimensions → dimensionMapping 可达实体，P-U08 口径；
+    //    保留 dim 供候选元数据——dimensionRelevance 需要的是维度名）
     const dimensionTargets = (explorationState?.missingDimensions ?? [])
       .map((dim) => {
         const mapped = explorationState?.dimensionMapping?.[dim]
-        return mapped && mapped.length > 0 ? { gid: mapped[0], name: dim } : null
+        return mapped && mapped.length > 0
+          ? { gid: mapped[0], name: getEntityDisplayName(mapped[0]), dim }
+          : null
       })
-      .filter((x): x is { gid: string; name: string } => x !== null)
+      .filter((x): x is { gid: string; name: string; dim: string } => x !== null)
 
-    // 候选元数据（决策层只做机械映射；bridge 带主题、dimension 带维度）
+    // 候选元数据（决策层只做机械映射；bridge 带主题、dimension 带维度名）
     const meta: NonNullable<CandidateDecisionInputs['meta']> = {}
     for (const b of bridges) meta[b.gid] = { topic: b.topic ?? null, bridged: true }
-    for (const d of dimensionTargets) meta[d.gid] = { ...(meta[d.gid] ?? {}), dimension: d.name }
+    for (const d of dimensionTargets) meta[d.gid] = { ...(meta[d.gid] ?? {}), dimension: d.dim }
 
     // B 引擎注入：包内边 → 直接证据；无直接边 → 共同邻居桥；全无 → NONE（诚实表达）
     const collectEvidence = (c: { targetRef: string; name: string }) => {
@@ -486,7 +496,7 @@ function App() {
 
     return decideNextCandidate({
       current: { gid, name: currentName },
-      packageNext: pkgNext ? { gid: pkgNext.to, name: pkgNext.to } : null,
+      packageNext: pkgNext ? { gid: pkgNext.to, name: getEntityDisplayName(pkgNext.to) } : null,
       neighbors,
       bridges,
       dimensionTargets,

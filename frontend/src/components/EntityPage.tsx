@@ -106,6 +106,7 @@ import { buildInsight } from '../data/entity/EntityInsightModel'
 import { ConnectionExplorer } from './entity/ConnectionExplorer'
 import { ExplorationGuide } from './entity/ExplorationGuide'
 import { EntityExperienceHeader } from './entity/EntityExperienceHeader'
+import { getEntityDisplayName } from '../data/explorationPackages'
 
 function EntityPage({
   entity,
@@ -172,7 +173,7 @@ function EntityPage({
     const rel = entity.relationships.find(
       (r) => r.other.global_id === originGid || r.other.id === originGid,
     )
-    const fromName = rel?.other.name ?? originGid
+    const fromName = rel?.other.name ?? getEntityDisplayName(originGid)
     // 多跳路径桥：无直接边时找共同邻居（A 的缓存邻居 ∩ B 的邻居，纯内存）。
     const aNeighbors = getEntityNeighbors(originGid) ?? []
     const bGids = new Set(entity.relationships.map((r) => r.other.global_id ?? r.other.id))
