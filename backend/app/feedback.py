@@ -187,15 +187,19 @@ def get_feedback(limit: int = 200):
 
 class BoardItem(BaseModel):
     message: str
+    received_at: str
     reply: Optional[str] = None
     reply_by: Optional[str] = None
+    reply_at: Optional[str] = None
 
 
 @router.get("/feedback/board")
 def get_feedback_board():
     """Public, anonymous feedback wall. Returns every feedback message plus
-    any PO reply, with all identifying metadata stripped (no id, received_at,
-    client_ts, page, or sentiment). Order: newest first by received_at.
+    any PO reply, with identifying metadata stripped (no id, client_ts, page,
+    or sentiment). The submit date (`received_at`) and reply date
+    (`reply_at`) ARE kept so the wall can show "建议于 YYYY-MM-DD" / "History
+    Explorer · YYYY-MM-DD". Order: newest first by received_at.
     Reachable on the public tunnel (serve.js proxies /api/v1)."""
     rows = _read_all()
     rows.sort(key=lambda r: r.received_at or "", reverse=True)
@@ -204,7 +208,13 @@ def get_feedback_board():
         if not r.message:
             continue
         items.append(
-            BoardItem(message=r.message, reply=r.reply, reply_by=r.reply_by)
+            BoardItem(
+                message=r.message,
+                received_at=r.received_at,
+                reply=r.reply,
+                reply_by=r.reply_by,
+                reply_at=r.reply_at,
+            )
         )
     return {"count": len(items), "items": items}
 

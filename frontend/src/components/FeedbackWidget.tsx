@@ -76,11 +76,16 @@ function saveMyId(id: string): string[] {
   }
 }
 
-function formatTs(ts?: string | null): string {
+// ISO 时间戳 → YYYY-MM-DD（按访客本地时区，与公开墙一致）。
+function formatDate(ts?: string | null): string {
   if (!ts) return ''
   try {
     const d = new Date(ts)
-    return isNaN(d.getTime()) ? String(ts) : d.toLocaleString('zh-CN')
+    if (isNaN(d.getTime())) return String(ts)
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${day}`
   } catch {
     return String(ts)
   }
@@ -266,7 +271,7 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
                           ? '没用'
                           : '未评分'}
                       {item.page ? ` · ${item.page}` : ''}
-                      {item.received_at ? ` · ${formatTs(item.received_at)}` : ''}
+                      {item.received_at ? ` · ${formatDate(item.received_at)}` : ''}
                     </div>
                     <p className="feedback-my-msg">
                       {item.message || '（无文字）'}
@@ -277,8 +282,8 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
                         <p className="feedback-reply-text">{item.reply}</p>
                         {item.reply_by || item.reply_at ? (
                           <div className="feedback-reply-by">
-                            — {item.reply_by || 'PO'}
-                            {item.reply_at ? ` · ${formatTs(item.reply_at)}` : ''}
+                            {item.reply_by || 'History Explorer'}
+                            {item.reply_at ? ` · ${formatDate(item.reply_at)}` : ''}
                           </div>
                         ) : null}
                       </div>
