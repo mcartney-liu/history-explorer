@@ -846,6 +846,13 @@ export const SCOPE_ALLOWLIST = [
   // 来源握手。精确文件（data/ runtime/ 不扩宽前缀）。
   "frontend/src/data/relationshipLabels.ts",
   "frontend/src/data/transition.ts",
+  // Phase B 探索连续性引擎 (ADR-0023 v3.1 Accepted, 2026-08-15 PO 拍板)：
+  // ContinuityEngine（证据收集+特征）/ continuityExplanation（B 解释层）/
+  // 两套测试（C1–C9 审计断言）。transition.ts 已降级为 Legacy Adapter。
+  "frontend/src/data/continuityEngine.ts",
+  "frontend/src/data/continuityExplanation.ts",
+  "frontend/src/data/__tests__/continuityEngine.test.ts",
+  "frontend/src/data/__tests__/continuityExplanation.test.ts",
   "frontend/src/runtime/originEntity.ts",
   // Transition Function v2 多跳路径桥 (2026-08-15)：实体邻居会话缓存。
   "frontend/src/runtime/entityCache.ts",
