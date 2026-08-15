@@ -89,6 +89,15 @@ class FeedbackIn(BaseModel):
     ts: Optional[int] = Field(default=None, description="client timestamp (epoch ms)")
 
 
+class ReplyItem(BaseModel):
+    """A single reply in a feedback's accumulating reply thread. Replaces the
+    old single `reply` slot so PO replies are cumulative (never overwrite) and
+    each carries its own timestamp, satisfying "每条回复都带时间" + "回复连贯"."""
+    text: str
+    at: Optional[str] = None
+    by: Optional[str] = None
+
+
 class FeedbackEntry(BaseModel):
     id: str
     sentiment: Optional[str] = None
@@ -101,6 +110,10 @@ class FeedbackEntry(BaseModel):
     reply: Optional[str] = None
     reply_at: Optional[str] = None
     reply_by: Optional[str] = None
+    # Accumulating reply thread (replies are never overwritten — each PO reply
+    # is appended). `reply`/`reply_at`/`reply_by` stay in sync with the latest
+    # entry so legacy single-reply consumers keep working.
+    replies: list[ReplyItem] = []
 
 
 class FeedbackReply(BaseModel):
@@ -191,15 +204,29 @@ class BoardItem(BaseModel):
     reply: Optional[str] = None
     reply_by: Optional[str] = None
     reply_at: Optional[str] = None
+    replies: list[ReplyItem] = []
+
+
+def _build_replies(r: "FeedbackEntry") -> list[ReplyItem]:
+    """Return the reply thread for the board. Entries that predate the
+    `replies` field fall back to the legacy single `reply` (so the three
+    older stored lines still render their one reply)."""
+    if r.replies:
+        return r.replies
+    if r.reply:
+        return [ReplyItem(text=r.reply, at=r.reply_at, by=r.reply_by)]
+    return []
 
 
 @router.get("/feedback/board")
 def get_feedback_board():
     """Public, anonymous feedback wall. Returns every feedback message plus
-    any PO reply, with identifying metadata stripped (no id, client_ts, page,
-    or sentiment). The submit date (`received_at`) and reply date
-    (`reply_at`) ARE kept so the wall can show "建议于 YYYY-MM-DD" / "History
-    Explorer · YYYY-MM-DD". Order: newest first by received_at.
+    the PO's reply thread, with identifying metadata stripped (no id,
+    client_ts, page, or sentiment). The submit date (`received_at`) and each
+    reply date (`replies[].at`) ARE kept so the wall can show
+    "建议于 YYYY-MM-DD" / "History Explorer · YYYY-MM-DD HH:mm:ss" per reply.
+    Replies are cumulative (a thread), never a single overwritten blob.
+    Order: newest first by received_at.
     Reachable on the public tunnel (serve.js proxies /api/v1)."""
     rows = _read_all()
     rows.sort(key=lambda r: r.received_at or "", reverse=True)
@@ -214,6 +241,7 @@ def get_feedback_board():
                 reply=r.reply,
                 reply_by=r.reply_by,
                 reply_at=r.reply_at,
+                replies=_build_replies(r),
             )
         )
     return {"count": len(items), "items": items}
@@ -259,9 +287,14 @@ def reply_feedback(feedback_id: str, payload: FeedbackReply):
         target = next((r for r in records if r.id == feedback_id), None)
         if target is None:
             raise HTTPException(status_code=404, detail="未找到该反馈")
+        now = datetime.now(timezone.utc).isoformat()
+        by = (payload.by or "PO").strip() or "PO"
+        # APPEND a new reply to the thread (never overwrite prior replies).
+        target.replies.append(ReplyItem(text=text, at=now, by=by))
+        # keep legacy single-reply fields in sync with the latest reply
         target.reply = text
-        target.reply_at = datetime.now(timezone.utc).isoformat()
-        target.reply_by = (payload.by or "PO").strip() or "PO"
+        target.reply_at = now
+        target.reply_by = by
         _write_all(records)
         return target.model_dump()
 
@@ -296,6 +329,8 @@ _ADMIN_PAGE_HTML = """<!doctype html>
   .reply-done { margin-top: 10px; padding: 10px 12px; background: #eef6ef;
                 border: 1px solid #cfe3d2; border-radius: 8px; font-size: 13px; line-height: 1.6; }
   .reply-done .by { color: #2f6b3a; font-size: 12px; }
+  .reply-line { margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2d9cb; }
+  .reply-line:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
   .status { font-size: 13px; margin: 8px 0; min-height: 18px; }
   .status.err { color: #b23b2e; }
   .status.ok { color: #2f6b3a; }
@@ -347,10 +382,17 @@ function render(items) {
                + " · 提交: " + fmt(it.received_at);
     let html = '<div class="meta">' + escapeHtml(meta) + '</div>';
     html += '<div class="msg">' + escapeHtml(it.message || "(无文字)") + '</div>';
-    if (it.reply) {
-      html += '<div class="reply-done"><div>' + escapeHtml(it.reply) + '</div>'
-            + '<div class="by">— ' + escapeHtml(it.reply_by || "PO")
-            + ' 回复于 ' + escapeHtml(fmt(it.reply_at)) + '</div></div>';
+    const replies = (it.replies && it.replies.length)
+      ? it.replies
+      : (it.reply ? [{ text: it.reply, at: it.reply_at, by: it.reply_by }] : []);
+    if (replies.length) {
+      let repHtml = "";
+      for (const rep of replies) {
+        repHtml += '<div class="reply-line"><div>' + escapeHtml(rep.text || "")
+                + '</div><div class="by">— ' + escapeHtml(rep.by || "PO")
+                + ' 回复于 ' + escapeHtml(fmt(rep.at)) + '</div></div>';
+      }
+      html += '<div class="reply-done">' + repHtml + '</div>';
     } else {
       html += '<div class="reply-box">'
             + '<textarea data-id="' + escapeHtml(it.id) + '" placeholder="写回复…"></textarea>'

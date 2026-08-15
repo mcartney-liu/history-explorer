@@ -12,12 +12,19 @@ import { useEffect, useState } from 'react'
 import { Icon } from './ui/Icon'
 import { API_BASE } from '../config/api'
 
+interface ReplyNode {
+  text: string
+  at: string | null
+  by: string | null
+}
+
 interface BoardEntry {
   message: string
   received_at: string
   reply: string | null
   reply_by: string | null
   reply_at: string | null
+  replies?: ReplyNode[]
 }
 
 // ISO 时间戳 → YYYY-MM-DD HH:mm:ss（按访客本地时区，与「我的反馈」面板一致）。
@@ -31,6 +38,20 @@ function formatDate(ts?: string | null): string {
   } catch {
     return String(ts)
   }
+}
+
+// 把回复文本里的 http(s) 链接渲染成可点击链接（仅匹配 http(s)，避免 XSS）。
+function renderReply(text: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g)
+  return parts.map((part, i) =>
+    /^https?:\/\//.test(part) ? (
+      <a key={i} href={part} target="_blank" rel="noopener noreferrer">
+        {part}
+      </a>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  )
 }
 
 export function FeedbackBoard() {
@@ -87,13 +108,18 @@ export function FeedbackBoard() {
                   建议于 {formatDate(it.received_at)}
                 </p>
               )}
-              {it.reply ? (
+              {it.replies && it.replies.length > 0 ? (
                 <div className="feedback-board-a">
-                  <div className="feedback-board-a-head">
-                    {it.reply_by || 'History Explorer'} ·{' '}
-                    {formatDate(it.reply_at)}
-                  </div>
-                  <p className="feedback-board-a-text">{it.reply}</p>
+                  {it.replies.map((rep, ri) => (
+                    <div className="feedback-board-a-item" key={ri}>
+                      <div className="feedback-board-a-head">
+                        {rep.by || 'History Explorer'} · {formatDate(rep.at)}
+                      </div>
+                      <p className="feedback-board-a-text">
+                        {renderReply(rep.text)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="feedback-board-pending">等待回复…</p>
