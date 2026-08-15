@@ -36,6 +36,7 @@ interface FeedbackRecord {
   reply: string | null
   reply_at: string | null
   reply_by: string | null
+  replies?: { text: string; at: string | null; by: string | null }[]
 }
 
 function saveFeedback(entry: FeedbackEntry): void {
@@ -76,7 +77,7 @@ function saveMyId(id: string): string[] {
   }
 }
 
-// ISO 时间戳 → YYYY-MM-DD（按访客本地时区，与公开墙一致）。
+// ISO 时间戳 → YYYY-MM-DD HH:mm:ss（按访客本地时区，与公开墙一致）。
 function formatDate(ts?: string | null): string {
   if (!ts) return ''
   try {
@@ -87,6 +88,20 @@ function formatDate(ts?: string | null): string {
   } catch {
     return String(ts)
   }
+}
+
+// 把回复文本里的 http(s) 链接渲染成可点击链接（仅匹配 http(s)，避免 XSS）。
+function renderReply(text: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g)
+  return parts.map((part, i) =>
+    /^https?:\/\//.test(part) ? (
+      <a key={i} href={part} target="_blank" rel="noopener noreferrer">
+        {part}
+      </a>
+    ) : (
+      <span key={i}>{part}</span> 
+    )
+  )
 }
 
 type FeedbackWidgetProps = {
@@ -274,16 +289,20 @@ export function FeedbackWidget({ page }: FeedbackWidgetProps) {
                     <p className="feedback-my-msg">
                       {item.message || '（无文字）'}
                     </p>
-                    {item.reply ? (
+                    {item.replies && item.replies.length > 0 ? (
                       <div className="feedback-reply">
                         <div className="feedback-reply-head">官方回复</div>
-                        <p className="feedback-reply-text">{item.reply}</p>
-                        {item.reply_by || item.reply_at ? (
-                          <div className="feedback-reply-by">
-                            {item.reply_by || 'History Explorer'}
-                            {item.reply_at ? ` · ${formatDate(item.reply_at)}` : ''}
+                        {item.replies.map((rep, ri) => (
+                          <div className="feedback-reply-item" key={ri}>
+                            <p className="feedback-reply-text">
+                              {renderReply(rep.text)}
+                            </p>
+                            <div className="feedback-reply-by">
+                              {rep.by || 'History Explorer'}
+                              {rep.at ? ` · ${formatDate(rep.at)}` : ''}
+                            </div>
                           </div>
-                        ) : null}
+                        ))}
                       </div>
                     ) : (
                       <p className="feedback-my-pending">等待回复…</p>
