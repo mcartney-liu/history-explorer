@@ -1,7 +1,7 @@
 // 公开反馈墙「大家的声音」——匿名展示所有人的提问 + PO 的回复。
 //
-// 数据来自 GET /api/v1/feedback/board（后端已剥离 id / received_at /
-// client_ts / page / sentiment 等一切身份字段，只回传 message + reply）。
+// 数据来自 GET /api/v1/feedback/board（后端已剥离 id / client_ts / page /
+// sentiment 等身份字段；保留 received_at / reply_at 用于显示日期）。
 //
 // 与 FeedbackWidget 的「我的反馈」互补：本墙可见他人的问题与回复，符合
 // PO 拍板的"允许看到别人的问题以及别人的回复"。文案硬编码中文，与
@@ -14,8 +14,25 @@ import { API_BASE } from '../config/api'
 
 interface BoardEntry {
   message: string
+  received_at: string
   reply: string | null
   reply_by: string | null
+  reply_at: string | null
+}
+
+// ISO 时间戳 → YYYY-MM-DD（按访客本地时区，与「我的反馈」面板一致）。
+function formatDate(ts?: string | null): string {
+  if (!ts) return ''
+  try {
+    const d = new Date(ts)
+    if (isNaN(d.getTime())) return String(ts)
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${day}`
+  } catch {
+    return String(ts)
+  }
 }
 
 export function FeedbackBoard() {
@@ -67,9 +84,17 @@ export function FeedbackBoard() {
           {items.map((it, idx) => (
             <div className="feedback-board-item" key={idx}>
               <p className="feedback-board-q">{it.message}</p>
+              {it.received_at && (
+                <p className="feedback-board-q-date">
+                  建议于 {formatDate(it.received_at)}
+                </p>
+              )}
               {it.reply ? (
                 <div className="feedback-board-a">
-                  <div className="feedback-board-a-head">官方回复</div>
+                  <div className="feedback-board-a-head">
+                    {it.reply_by || 'History Explorer'} ·{' '}
+                    {formatDate(it.reply_at)}
+                  </div>
                   <p className="feedback-board-a-text">{it.reply}</p>
                 </div>
               ) : (
