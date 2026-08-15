@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   listResearch,
   listResearchMerged,
+  updateResearch,
   deleteResearchRemote,
   type SavedResearch,
 } from '../data/ResearchHistory'
@@ -52,9 +53,11 @@ export function ResearchLibraryView({
   // Stateful props for testability
   items = [] as SavedResearch[],
   onDelete = (_id: string) => {},
+  onToggleBookmark = (_id: string, _next: boolean) => {},
 }: ResearchLibraryProps & {
   items?: SavedResearch[]
   onDelete?: (id: string) => void
+  onToggleBookmark?: (id: string, next: boolean) => void
 }) {
   return (
     <div className="rlib">
@@ -67,7 +70,7 @@ export function ResearchLibraryView({
       {items.length === 0 ? (
         <div className="rlib-empty">
           <Icon name="scroll" size={24} className="rlib-empty-icon" />
-          <p>暂无保存的研究。完成一次研究后，点击"收藏"即可保存到这里。</p>
+          <p>暂无保存的研究。完成一次研究后，点击「保存研究」即可存到这里；卡片上的星星可收藏 / 取消收藏。</p>
         </div>
       ) : (
         <div className="rlib-grid">
@@ -80,9 +83,15 @@ export function ResearchLibraryView({
               <div className="rlib-card-body">
                 <div className="rlib-card-header">
                   <span className="rlib-card-type">{r.entityType}</span>
-                  {r.bookmarked && (
-                    <Icon name="star" size={16} className="rlib-card-star" filled />
-                  )}
+                  <button
+                    type="button"
+                    className={`rlib-card-star ${r.bookmarked ? 'rlib-card-star--on' : 'rlib-card-star--off'}`}
+                    aria-label={r.bookmarked ? '取消收藏' : '收藏'}
+                    aria-pressed={r.bookmarked}
+                    onClick={() => onToggleBookmark?.(r.id, !r.bookmarked)}
+                  >
+                    <Icon name="star" size={16} filled={r.bookmarked} />
+                  </button>
                 </div>
                 <h4 className="rlib-card-name">{r.entityName}</h4>
                 {r.comparedNames.length > 0 && (
@@ -149,11 +158,17 @@ export default function ResearchLibrary(props: ResearchLibraryProps) {
     setItems(await listResearchMerged())
   }
 
+  async function handleToggleBookmark(id: string, next: boolean) {
+    updateResearch(id, { bookmarked: next })
+    setItems(await listResearchMerged())
+  }
+
   return (
     <ResearchLibraryView
       {...props}
       items={items}
       onDelete={handleDelete}
+      onToggleBookmark={handleToggleBookmark}
     />
   )
 }

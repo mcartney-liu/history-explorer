@@ -138,7 +138,7 @@ function ResearchLibraryEntry({
       <div className="discover-library discover-library--empty">
         <h3 className="discover-section-heading">{t('discover.libraryHeading')}</h3>
         <p className="discover-empty-text">
-          还没有收藏的研究。研究完成后点「收藏研究」，即可把结果保存到这里。
+          还没有收藏的研究。研究完成后点「保存研究」即可存入研究库；卡片上的星星可收藏 / 取消收藏。
         </p>
       </div>
     )
