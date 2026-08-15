@@ -32,6 +32,7 @@ import hashlib
 import json
 import os
 import tempfile
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -141,6 +142,7 @@ _PACKS = "探索 · 探索包"
 _TOPICS = "首页 · 精选主题"
 _RESEARCH = "研究 · 维度配图"
 _SITE = "站点 · 品牌"
+_ENTITY_IDENTITY = "实体 · 身份图"
 
 
 #: Research-dimension artwork slots, derived from the front-end's
@@ -445,6 +447,28 @@ CONTENT_SLOTS: tuple[ContentSlot, ...] = (
         title="History Explorer",
         desc="在史料与关系之间，重建你自己的历史认知。",
     ),
+    # -- 首页 Hero 主视觉（2026-08-15 PO：B/C 类图位后台可配）------------
+    ContentSlot(
+        id="landing.hero",
+        module="landing",
+        module_label=_LANDING,
+        label="首页主视觉",
+        where="首页顶部 Hero 区背景图（品牌声明区）",
+        supports_image=True,
+        title="首页主视觉",
+        desc="首页顶部品牌声明区的背景图，可选；无图时保持现有纯色底。",
+    ),
+    # -- AI 历史学家形象（2026-08-15 PO：B/C 类图位后台可配）------------
+    ContentSlot(
+        id="ai.historian",
+        module="ai",
+        module_label="AI 历史学家",
+        label="AI 历史学家形象",
+        where="右侧 AI 历史学家对话窗的形象图（头像/肖像）",
+        supports_image=True,
+        title="AI 历史学家形象",
+        desc="AI 历史学家对话窗的形象图，可选；无图时保持现有纯 UI。",
+    ),
 )
 
 # --------------------------------------------------------------------------
@@ -508,6 +532,38 @@ def _topic_slugs() -> list[str]:
     return list(_DEFAULT_TOPIC_SLUGS)
 
 
+def _entity_global_ids() -> list[str]:
+    """Entity identity-artwork global ids.
+
+    2026-08-15 (PO, B-class image slots): each entity page's identity card
+    gets its own configurable artwork, keyed by the entity's ``global_id``
+    (e.g. ``roman_empire:civ-roman``). The slot set is derived at import time
+    by reading every ``data/examples/*_example.json`` — the same file-read
+    convention as ``_pack_slugs`` (no import edge, no circular import).
+    """
+    examples_dir = _REPO_ROOT / "data" / "examples"
+    if not examples_dir.is_dir():
+        return []
+    ids: list[str] = []
+    seen: set[str] = set()
+    for path in sorted(examples_dir.glob("*_example.json")):
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        entities = raw.get("entities") if isinstance(raw, dict) else None
+        if not isinstance(entities, list):
+            continue
+        for ent in entities:
+            if not isinstance(ent, dict):
+                continue
+            gid = ent.get("global_id")
+            if isinstance(gid, str) and gid and gid not in seen:
+                seen.add(gid)
+                ids.append(gid)
+    return ids
+
+
 def _dynamic_slots() -> list[ContentSlot]:
     """Slots for explore_packs + explore_topics + research_dims."""
     slots: list[ContentSlot] = []
@@ -550,6 +606,22 @@ def _dynamic_slots() -> list[ContentSlot]:
                 where=f"实体研究维度卡片封面（{key}）",
                 supports_image=True,
                 title=key,
+                desc="",
+            )
+        )
+    # Entity identity artwork — one slot per entity (PO 2026-08-15, B-class).
+    # Keyed by global_id so the admin console can give every entity its own
+    # identity-card image without touching the entity JSON itself.
+    for gid in _entity_global_ids():
+        slots.append(
+            ContentSlot(
+                id=f"entity_identity.{gid}",
+                module="entity_identity",
+                module_label=_ENTITY_IDENTITY,
+                label=f"身份图 · {gid}",
+                where=f"实体页身份卡主图（{gid}）",
+                supports_image=True,
+                title=gid,
                 desc="",
             )
         )
@@ -831,20 +903,38 @@ def reset_content() -> dict[str, Any]:
     return default_document()
 
 
-def _atomic_write_json(target: Path, payload: dict[str, Any]) -> None:
-    """Write via temp file + os.replace so readers never see a half-written doc."""
+def _atomic_write_json(target: Path, payload: dict[str, Any], *, _max_retries: int = 8) -> None:
+    """Write via temp file + os.replace so readers never see a half-written doc.
+
+    On Windows, ``os.replace`` can transiently fail with ``WinError 5`` when an
+    anti-virus / sync agent (Defender, Sangfor, OneDrive…) briefly locks the
+    target during a scan. Retry with exponential back-off (capped at 1s) so a
+    momentary lock never surfaces as a 500 to the admin console.
+    """
     fd, tmp_name = tempfile.mkstemp(dir=str(target.parent), suffix=".tmp")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
             json.dump(payload, handle, ensure_ascii=False, indent=2)
             handle.write("\n")
-        os.replace(tmp_name, target)
-    except BaseException:
+        last_exc: BaseException | None = None
+        for attempt in range(_max_retries):
+            try:
+                os.replace(tmp_name, target)
+                return
+            except OSError as exc:  # e.g. WinError 5 — transient lock on Windows
+                last_exc = exc
+                if attempt < _max_retries - 1:
+                    time.sleep(min(0.05 * (2 ** attempt), 1.0))  # 50ms → 1s (capped)
+        if last_exc is not None:
+            raise last_exc
+    finally:
+        # Best-effort cleanup of the temp file: already gone on the success path,
+        # and still present (so removable) on the all-retries-failed path.
         try:
-            os.unlink(tmp_name)
+            if os.path.exists(tmp_name):
+                os.unlink(tmp_name)
         except OSError:
             pass
-        raise
 
 
 # --------------------------------------------------------------------------
