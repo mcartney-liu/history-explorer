@@ -2841,3 +2841,174 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 .rp-restored-reports{
   display:flex;flex-direction:column;gap:18px;margin-top:4px;
   padding-top:18px;border-top:1px solid var(--color-border-secondary)}
+
+/* ============================================================
+   P1 收口：21 组件裸奔样式补齐（2026-08-15，PO 拍板 A 批量补）
+   补全 JSX 引用但 css 无定义的类名；VS-01 token；纯视觉。
+   ============================================================ */
+
+/* ---- EmptyState ---- */
+.he-empty{color:var(--color-ink-500);font-size:0.9rem;line-height:1.6}
+
+/* ---- EntityHeader ---- */
+.entity-page-head{display:flex;flex-direction:column;gap:6px}
+
+/* ---- EntityPage: explore-hint ---- */
+.explore-hint{font-size:0.8rem;color:var(--color-ink-500);margin:4px 0 0;line-height:1.5}
+
+/* ---- EntityPickerPanel ---- */
+.entity-picker{display:flex;flex-direction:column;gap:12px}
+
+/* ---- EntityRelatedList ---- */
+.he-related-item{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-bottom:1px solid var(--color-border-subtle)}
+.he-related-item:last-child{border-bottom:none}
+
+/* ---- EntitySearchBox ---- */
+.explorer-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.explorer-error{color:var(--color-status-danger);font-size:0.85rem;margin:6px 0 0}
+
+/* ---- ErrorCard ---- */
+.he-error-card{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:24px;border:1px solid var(--color-status-danger-soft);border-radius:var(--radius-lg);background:var(--color-paper-100)}
+.he-error-title{margin:0;font-size:1.05rem;color:var(--color-status-danger)}
+.he-error-message{margin:0;font-size:0.9rem;color:var(--color-ink-500);line-height:1.6}
+.he-error-retry{margin-top:4px}
+
+/* ---- ExplorationJourney 缺漏子类（外壳见 App.css 2731+） ---- */
+.he-journey-label{font-size:0.85rem;color:var(--color-ink-700)}
+.he-journey-hook{margin:4px 0 0;font-size:0.8rem;color:var(--color-ink-500);line-height:1.5}
+.he-journey-reasons{margin:2px 0 0;padding-left:16px;font-size:0.78rem;color:var(--color-ink-500)}
+.he-journey-why-from{font-size:0.75rem;color:var(--color-ink-300)}
+
+/* ---- ExplorationPathTree 缺漏子类（外壳见 App.css 2755+） ---- */
+.he-pathtree-label{font-size:0.85rem;color:var(--color-ink-700)}
+.he-pathtree-reasons{margin:2px 0 0;padding-left:16px;font-size:0.78rem;color:var(--color-ink-500)}
+.he-pathtree-why-from{font-size:0.75rem;color:var(--color-ink-300)}
+
+/* ---- FeaturedTopics（首页「从这里开始」） ---- */
+.he-featured{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.he-featured-heading{margin:0;font-size:0.85rem;font-weight:600;color:var(--color-ink-500);letter-spacing:0.04em}
+.he-featured-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.he-featured-card{display:flex;flex-direction:column;gap:6px;text-align:left;padding:14px 16px;border:1px solid var(--color-border-subtle);border-radius:var(--radius-md);background:var(--color-paper-100);color:var(--color-ink-900);cursor:pointer;transition:border-color var(--motion-duration-fast) var(--motion-ease-standard)}
+.he-featured-card:hover{border-color:var(--color-accent);box-shadow:var(--shadow-card)}
+.he-topic-title{font-size:0.95rem;font-weight:600}
+.he-topic-summary{font-size:0.8rem;color:var(--color-ink-500);line-height:1.5}
+
+/* ---- GroundedAnswer ---- */
+.grounded-answer{padding:14px 16px;border:1px solid var(--color-border-subtle);border-radius:var(--radius-md);background:var(--color-paper-100);font-size:0.9rem;line-height:1.7;color:var(--color-ink-700)}
+
+/* ---- InterpretationPanel ---- */
+.interpretation-panel{display:flex;flex-direction:column;gap:10px}
+.he-meaning-time{margin-left:8px;font-size:0.75rem;color:var(--color-ink-500)}
+
+/* ---- JourneyCard ---- */
+.journey-card{display:flex;flex-direction:column;gap:12px}
+
+/* ---- RecentExplorations（首页「最近探索」） ---- */
+.he-recent{display:flex;flex-direction:column;gap:12px}
+.he-recent-list{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.he-recent-chip{display:inline-flex;align-items:baseline;gap:6px;padding:6px 12px;border:1px solid var(--color-border-subtle);border-radius:999px;background:var(--color-paper-100);color:var(--color-ink-700);cursor:pointer;font-size:0.82rem;transition:border-color var(--motion-duration-fast) var(--motion-ease-standard)}
+.he-recent-chip:hover{border-color:var(--color-accent)}
+.he-recent-kind{font-size:0.68rem;color:var(--color-ink-300)}
+.he-recent-label{color:var(--color-ink-900)}
+
+/* ---- RelationshipInsightPanel ---- */
+.relationship-insight-panel{display:flex;flex-direction:column;gap:10px}
+
+/* ---- ResearchPanel 外壳与缺漏 ---- */
+.research-panel{display:flex;flex-direction:column;gap:14px}
+.rp-title{margin:0;font-size:1.1rem;color:var(--color-ink-900)}
+.rp-subtitle{margin:0;font-size:0.85rem;color:var(--color-ink-500);line-height:1.6}
+.rp-context-badge{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border-subtle);border-radius:999px;background:var(--color-paper-100);font-size:0.82rem}
+.rp-context-label{color:var(--color-ink-500)}
+.rp-context-type{color:var(--color-accent);font-weight:600}
+.rp-context-name{color:var(--color-ink-900);font-weight:600}
+.rp-plan{display:flex;flex-direction:column;gap:12px}
+.rp-plan-label{margin:0;font-size:0.82rem;color:var(--color-ink-500)}
+.rp-progress-text{font-size:0.82rem;color:var(--color-ink-500)}
+.rp-completion-guidance{padding:10px 12px;border:1px solid var(--color-truth-strong-line);border-radius:var(--radius-md);background:var(--color-truth-strong-soft);font-size:0.85rem;color:var(--color-ink-700);line-height:1.6}
+.rp-save-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:4px}
+.rp-save-btn{padding:8px 16px;border:1px solid var(--color-accent);border-radius:var(--radius);background:var(--color-accent);color:var(--color-accent-ink);font-weight:500;cursor:pointer;transition:background var(--motion-duration-fast) var(--motion-ease-standard)}
+.rp-save-btn:hover{background:var(--color-accent-hover)}
+.rp-save-done{display:inline-flex;align-items:center;gap:6px;color:var(--color-truth-strong);font-size:0.85rem}
+.rp-save-done-text{color:var(--color-truth-strong)}
+.rp-save-error{color:var(--color-status-danger);font-size:0.82rem;margin:0}
+.rp-reset-btn{padding:8px 16px;border:1px solid var(--color-border-default);border-radius:var(--radius);background:transparent;color:var(--color-ink-500);cursor:pointer;font-size:0.85rem;transition:border-color var(--motion-duration-fast) var(--motion-ease-standard)}
+.rp-reset-btn:hover{border-color:var(--color-ink-300)}
+.rp-reset-btn--secondary{color:var(--color-ink-300)}
+.rp-error{color:var(--color-status-danger);font-size:0.85rem;padding:10px 12px;border:1px solid var(--color-status-danger-soft);border-radius:var(--radius-md);background:var(--color-status-danger-soft)}
+.rp-restored-banner-text{font-size:0.9rem;color:var(--color-ink-700)}
+
+/* ---- TimelinePanel（实体页时间线流） ---- */
+.timeline-flow{display:flex;flex-direction:column;gap:10px;position:relative}
+.timeline-node{display:flex;flex-direction:column;gap:2px}
+.timeline-period{font-size:0.78rem;font-weight:600;color:var(--color-accent);letter-spacing:0.03em}
+.timeline-connector{width:2px;height:12px;background:var(--color-border-default);margin-left:4px}
+.timeline-link{cursor:pointer;transition:background var(--motion-duration-fast) var(--motion-ease-standard)}
+.timeline-link:hover{background:var(--color-accent)}
+.timeline-bucket-header{font-size:0.85rem;font-weight:600;color:var(--color-ink-700);margin:8px 0 4px}
+
+/* ---- TopicComparisonPanel（主题对比面板） ---- */
+.he-comparison{display:flex;flex-direction:column;gap:12px}
+.he-comparison-title{margin:0;font-size:1rem;color:var(--color-ink-900)}
+.he-comparison-empty{font-size:0.85rem;color:var(--color-ink-500);line-height:1.6}
+.he-comparison-targets{display:flex;flex-wrap:wrap;gap:8px}
+.he-comparison-target{padding:6px 14px;border:1px solid var(--color-border-subtle);border-radius:999px;background:var(--color-paper-100);color:var(--color-ink-500);cursor:pointer;font-size:0.82rem;transition:all var(--motion-duration-fast) var(--motion-ease-standard)}
+.he-comparison-target:hover{border-color:var(--color-accent);color:var(--color-accent)}
+.he-comparison-target.is-active{border-color:var(--color-accent);background:var(--color-accent-soft);color:var(--color-accent);font-weight:600}
+.he-comparison-body{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+.he-comparison-actions{display:flex;gap:8px}
+.he-comparison-explore{padding:7px 14px;border:1px solid var(--color-accent);border-radius:var(--radius);background:var(--color-accent-soft);color:var(--color-accent);font-weight:500;cursor:pointer;font-size:0.82rem;transition:background var(--motion-duration-fast) var(--motion-ease-standard)}
+.he-comparison-explore:hover{background:var(--color-accent);color:var(--color-accent-ink)}
+.he-comparison-subtitle{margin:4px 0 0;font-size:0.82rem;color:var(--color-ink-500)}
+.he-comparison-bridges{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.he-comparison-bridge-item{display:flex;align-items:center;gap:10px}
+.he-comparison-bridge{background:none;border:none;padding:0;color:var(--color-accent);font-size:0.88rem;cursor:pointer;text-align:left}
+.he-comparison-bridge:hover{text-decoration:underline}
+.he-comparison-rel{font-size:0.78rem;color:var(--color-ink-300)}
+
+/* ---- ai/ExplorationInsightPanel ---- */
+.exploration-insight-panel{display:flex;flex-direction:column;gap:10px}
+
+/* ---- ai/ExplorationSuggestions ---- */
+.exploration-suggestions{display:flex;flex-direction:column;gap:10px}
+
+/* ---- ai/RelationshipInsight: loading ---- */
+.relationship-insight--loading{opacity:0.7}
+
+/* ---- discover/MyExplorationPanel ---- */
+.my-exploration-panel{display:flex;flex-direction:column;gap:14px}
+.discover-recent--empty{color:var(--color-ink-500);font-size:0.9rem;padding:16px 0}
+.discover-recent-type{font-size:0.72rem;color:var(--color-ink-300);text-transform:uppercase;letter-spacing:0.03em}
+.discover-recent-name{font-size:0.92rem;color:var(--color-ink-900)}
+.discover-recent-star{color:var(--color-accent)}
+.discover-user-space-card{display:flex;flex-direction:column;gap:8px;padding:14px 16px;border:1px solid var(--color-border-subtle);border-radius:var(--radius-md);background:var(--color-paper-100)}
+
+/* ---- guide/GuidePanel: next item ---- */
+.guide-next-item{display:flex;flex-direction:column;gap:4px}
+
+/* ---- journey/JourneyPanel ---- */
+.journey-panel{display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--color-border-subtle);border-radius:var(--radius-lg);background:var(--color-paper-100)}
+.journey-panel--empty{opacity:0.8}
+.journey-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.journey-heading{margin:0;font-size:0.95rem;color:var(--color-ink-900)}
+.journey-clear{background:none;border:none;padding:0;color:var(--color-ink-300);font-size:0.78rem;cursor:pointer}
+.journey-clear:hover{color:var(--color-status-danger)}
+.journey-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.journey-item{display:flex}
+.journey-item-btn{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border:1px solid var(--color-border-subtle);border-radius:var(--radius-md);background:var(--color-paper-50);text-align:left;cursor:pointer;transition:border-color var(--motion-duration-fast) var(--motion-ease-standard)}
+.journey-item-btn:hover{border-color:var(--color-accent)}
+.journey-kind{font-size:0.68rem;color:var(--color-ink-300);text-transform:uppercase;letter-spacing:0.03em}
+.journey-label{font-size:0.88rem;color:var(--color-ink-900)}
+.journey-time{font-size:0.72rem;color:var(--color-ink-300)}
+.journey-empty{font-size:0.85rem;color:var(--color-ink-500);line-height:1.6}
+
+/* ---- package/RecommendedNext ---- */
+.recommended-next{display:flex;flex-direction:column;gap:10px}
+
+/* ---- package chains modifiers ---- */
+.journey-chain--relationship{margin-top:4px}
+.journey-chain--timeline{margin-top:4px}
+
+/* ---- pages/DiscoverPage ---- */
+.discover-packages{display:flex;flex-direction:column;gap:14px}
+.discover-starter-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
