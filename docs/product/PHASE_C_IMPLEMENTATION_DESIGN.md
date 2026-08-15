@@ -1,226 +1,239 @@
-# Phase C 动态探索方向 —— Implementation Design（施工设计）
+# Phase C 动态探索方向 —— Implementation Design v2（对齐 ADR-0024 v6 Accepted）
 
-> 状态：**Draft（待 PO 评审）** · 承接：ADR-0023 v3.1 + Phase B（已施工，commit 550ad11）
-> 一句话：把"下一步去哪"从 `stations[idx+1]`（写死路线）换成 **候选生成 → 证据打分 → C 决策层排序 → 最值得理解的那一个**。
-> 复用：Phase B 的 `collectRelationEvidence`（C5 单引擎复用，C 不另造关系逻辑）+ `ComposeFeatures`。
-> 红线：**C 不消费 JCS 作决策**（C3）；**AI 不决定探索方向**（M88.0）；**Engine 不产生"下一步"**（C1）。
-
----
-
-## 0. 为什么现在做 C（PO 2026-08-15 实地反馈的根因）
-
-PO 实机查看 Phase B 诚实表达后提出灵魂拷问：**"用户看不懂'为什么带我到这里'——那我们做这一大堆意义在哪？"**
-
-根因诊断：
-- "没有找到联系"这句（B 层诚实表达）解决的是**不撒谎**，解决不了**"为什么用户此刻在这里"**。
-- 后者正是 **C 层的核心命题**：用户被带到的下一站，应该是**当前理解状态下最值得去的那一个**，而不是写死路线的下一个。
-- B 层的工作没有白做：**C 要判断"哪个候选值得去"，必须知道候选与当前节点的关系证据**——这正是 `collectRelationEvidence` 的产出。**B 是 C 的地基**（PO 已认可该判断）。
+> 状态：**Ready for Implementation**（ADR-0024 v6 Accepted，commit a842344）
+> 承接：ADR-0023（Phase B 已施工 550ad11）+ ADR-0024 v6（**Accepted**，D1–D23 全 Accept）+ Phase C Reality Audit（事实基线）
+> 一句话：把"下一步去哪"从 `stations[idx+1]` 换成 **候选生成 → B 证据 → Context 特征 → 分层词典序 Ranking → ExplorationAction**。
+> 红线总纲（PC1–PC8）：**B=Evidence Producer；C=Decision Consumer；JCS 永远只在诊断层；Ranking 永远 deterministic；不引 AI/LLM。**
 
 ---
 
-## 1. 现状实证（已读代码）
+## 0. 前置事实（Reality Audit 实证，不臆测）
 
-| 事实 | 现状 |
-|---|---|
-| 写死路线 | 包内站间衔接走 `stations[idx±1]`（`JourneyRail.buildStations`），"下一站"= 数组下一个，无任何实时判断 |
-| C 层种子 | `ExplorationPolicy.evaluateExploration`（M88.2）：基于**预写 ExplorationState**（missingDimensions/missingConnections/coverageRatio）的**规则选择器**，**不访问实时图数据**、不生成候选集 |
-| 关系证据 | Phase B 已建 `collectRelationEvidence(from, to, context) → RelationEvidence[]`（B/C 共用入口，C5） |
-| 特征 | Phase B 已建 `composeFeatures(evidence) → ContinuityFeatures`（RS/EQ/TC/SC/CR=null） |
-| 决策产物 | `ExplorationAction { type, targetRef, reason, narrativeHook, expectedGrowth, confidence }`（M88.2 已定型，C 直接复用） |
-| JCS | Phase B 的 `deriveJourneyContinuityScore` 已标注**诊断启发式**，C 不消费（C3 已由测试锁定） |
-
-**关键差距**：`evaluateExploration` 现在读的是**预写状态**（维度缺口等），不是"当前实体 + 实时候选"。C 施工 = 在它前面加一层**候选生成器 + 证据打分**，让"去哪"由证据驱动。
+- **候选四源全现成、零新后端**：`relationship_neighbor`（entityCache）/ `cross_topic_bridge`（/explore 响应）/ `dimension_target`（dimensionMapping）/ `package_next`（buildStations）。
+- **上下文全现成**：currentTopic / openGaps（GapLedger）/ exploredAnchors / history / dimensionState。
+- **限制**：时间仅中心实体级、空间不可得 → TC/SC 保持 null，C 不假装时间/空间语义。
+- **复用**：B 引擎 `collectRelationEvidence` / `composeFeatures` / B 解释层 `buildExplanationCandidates` / `selectBestExplanation` / `expressHonestNone`。
 
 ---
 
-## 2. 施工范围（做什么 / 不做什么）
+## 1. 文件面与模块（C-S1..C-S8）
 
-### 做
-1. 新建 `frontend/src/next/exploration/candidateGeneration.ts` —— **候选生成器**（从当前实体出发，生成候选目标集）。
-2. 新建 `frontend/src/next/exploration/candidateRanking.ts` —— **C 决策层**（证据打分 + 排序 + 选最值得理解的）。
-3. `ExplorationPolicy.evaluateExploration` 接入候选层（新规则前置：有证据支持的候选 > 无证据的预写目标）。
-4. 调用方：`NextStepPanel` / `RecommendedNext` 的"下一站"从 `stations[idx+1]` 切到 C 产出。
-5. 测试：C 层审计断言（C1/C3/C5/C7 复用） + 功能（候选生成/排序/回退）。
-6. 文档同步 ima（PO 拍板后）。
-
-### 不做（红线/边界，锁死）
-- ❌ 引擎不新增任何排序函数（排序在 C 决策层，C1）。
-- ❌ C 不消费 JCS（C3）：排序输入 = `RelationEvidence[]` + `ContinuityFeatures`，**绝不出现 JCS 阈值**。
-- ❌ AI/LLM 不参与候选生成或排序（M88.0：禁止 AI 决定探索方向；纯规则 + 图数据）。
-- ❌ 不引新依赖、不碰 backend、不动 Phase B 引擎接口。
-- ❌ 不删 `stations`（保留为**回退兜底**：候选集为空/全被探索时回退原路线）。
-
----
-
-## 3. 架构（定型）
-
-```
-             当前实体 (currentEntity)
-                    │
-                    ▼
-      ┌─────────────────────────────┐
-      │  候选生成器 (C, 新)          │
-      │  candidateGeneration.ts     │
-      │  ─ 图数据/邻居/同包/跨包     │
-      │  ─ 产出 CandidateSet[]      │
-      └────────────┬────────────────┘
-                   │ 每个候选
-                   ▼
-      ┌─────────────────────────────┐
-      │  ContinuityEngine (B, 复用)  │  ← C5：不另造
-      │  collectRelationEvidence     │
-      │  → RelationEvidence[]        │
-      └────────────┬────────────────┘
-                   ▼
-      ┌─────────────────────────────┐
-      │  C 决策层 (C, 新)            │
-      │  candidateRanking.ts         │
-      │  ─ composeFeatures          │
-      │  ─ 按上下文规则加权          │
-      │  ─ 排序 → 最值得理解的       │
-      │  → ExplorationAction         │  ← M88.2 已定型结构
-      └────────────┬────────────────┘
-                   ▼
-        NextStepPanel / RecommendedNext
-```
-
-**边界一句话**：引擎（B）只交"当前知识能证明什么"；C 决策层消费证据，决定"现在最值得理解哪个"。**JCS 永远不进入 C**。
-
----
-
-## 4. 模块设计
-
-### 4.1 候选生成器 `candidateGeneration.ts`
-
-```ts
-export interface ExplorationCandidate {
-  /** 目标实体 global_id。 */
-  gid: string
-  /** 展示名。 */
-  name: string
-  /** 候选来源（可审计）。 */
-  origin: 'package_next' | 'relationship_neighbor' | 'cross_topic_bridge' | 'dimension_target'
-  /** 来源说明（trace 用）。 */
-  hint?: string
-}
-
-export function generateCandidates(
-  current: { gid: string; name: string },
-  ctx: {
-    /** 同包后续站（原写死路线的候选之一，不再自动是"下一站"）。 */
-    packageNext?: { gid: string; name: string } | null
-    /** 实时图邻居（来自 entityCache / entity relationships）。 */
-    neighbors?: { gid: string; name: string }[]
-    /** 跨主题桥接实体。 */
-    bridges?: { gid: string; name: string }[]
-    /** 预写维度目标（ExplorationState.dimensionMapping 解析后）。 */
-    dimensionTargets?: { gid: string; name: string }[]
-    /** 已探索锚点（去重）。 */
-    explored?: string[]
-  },
-): ExplorationCandidate[]
-```
-
-- **候选来源优先级（只是生成顺序，非最终排序）**：dimension_target（用户缺口最值得）→ package_next（原有下一站）→ relationship_neighbor（图邻居）→ cross_topic_bridge。
-- **去重**：`explored` 中已访问的 gid 直接排除。
-- 空候选（全部被探索/无数据）→ 返回 `[]` → 调用方回退原路线（不崩溃、不瞎指）。
-
-### 4.2 C 决策层 `candidateRanking.ts`
-
-```ts
-export interface RankedCandidate {
-  candidate: ExplorationCandidate
-  /** 该候选与当前实体的关系证据（B 产出，可审计）。 */
-  evidence: RelationEvidence[]
-  /** 连续性特征（B 产出）。 */
-  features: ContinuityFeatures
-  /** C 决策层的"值得理解度"——按上下文规则计算，非引擎分数。 */
-  worthiness: number
-  /** 为什么它最值得（供 reason/narrativeHook）。 */
-  topReason: string
-}
-
-export function rankCandidates(
-  current: { gid: string; name: string },
-  candidates: ExplorationCandidate[],
-  ctx: {
-    /** 用户缺口维度（GapLedger / ExplorationState）——最高优先级信号。 */
-    openGaps?: string[]
-    /** 当前主题覆盖情况。 */
-    coverage?: { ratio: number; missing: string[] }
-  },
-): RankedCandidate[]
-```
-
-**排序规则（C 决策层的上下文规则，不进引擎）**：
-1. **用户缺口优先**：候选命中 `openGaps` 对应维度 → `worthiness` 最高（0.9–1.0）。
-2. **证据强度**：`composeFeatures(evidence).relationshipStrength`（有可靠关系 > 弱桥 > 无关系）。
-3. **解释可理解**：`explanationQuality`（有 claim 可讲 > 短句 > 诚实陈述）。
-4. **已覆盖惩罚**：与已探索维度重叠 → 降权。
-5. **无证据候选**：`worthiness` 压到最低（但仍保留，避免死路——此时 reason 走诚实表达口径）。
-
-> ⚠️ 注意：**排序输入是 `RelationEvidence[]` 与 `ContinuityFeatures`，绝不含 JCS**（C3）。`deriveJourneyContinuityScore` 不出现在本模块任何位置——测试锁定。
-
-### 4.3 `ExplorationPolicy` 接入
-
-- 在 `evaluateExploration` 的 Rule 0（用户缺口）之后、Rule 1 之前插入 **C 候选决策**：
-  - 调 `generateCandidates` → `rankCandidates` → 取第一名 → 产出 `ExplorationAction`（type 按候选性质映射：dimension_target→open_dimension / 图邻居→follow_cause / 包下一站→deep_continue）。
-  - `reason` / `narrativeHook` 用 `topReason` + 候选 evidence 的 B 层解释素材（复用 `buildExplanationCandidates`，让"为什么去这里"可解释——直接回应 PO 的"用户看不懂"）。
-- **回退链**：候选为空 → 现有 Rule 1–5 原样兜底（不动旧逻辑，只增不改）。
-
----
-
-## 5. 测试计划（C 层审计 + 功能）
-
-| 项 | 断言 |
-|---|---|
-| **C1** | `candidateRanking.ts` / `candidateGeneration.ts` 不含 `nextStep`/`selectDestination`（引擎白名单语义继续）——排序函数在 C 层属**合法**（C1 禁的是引擎），但需断言它们不 import `continuityEngine` 之外的关系逻辑 |
-| **C3** | `candidateRanking.ts` 无 `deriveJourneyContinuityScore` / `JCS` 引用（读源码断言，延续 B 期测试） |
-| **C5** | `candidateRanking` import 的是 `continuityEngine` 的 `collectRelationEvidence`（读源码断言，单引擎复用率 100%） |
-| **C7** | 多证据候选：同一候选存在 CAUSAL+TEMPORAL 等多条证据时全部保留、不折叠 |
-| 功能 | 候选生成：dimension_target 命中 openGaps → 排第一；package_next 保留为候选之一；explored 去重生效 |
-| 功能 | 排序：证据强 > 弱桥 > 无证据；无证据候选仍返回（不死路） |
-| 功能 | 回退：候选空 → 调用方回退 `stations[idx+1]` |
-| 回归 | 旧 Rule 1–5 测试全绿（只增不改） |
-
----
-
-## 6. 施工步骤（TDD）
-
-| 步骤 | 动作 |
-|---|---|
-| C-S1 | 新建 `candidateGeneration.ts` 类型 + 测试（红）→ 实现（绿） |
-| C-S2 | 新建 `candidateRanking.ts` 类型 + 测试（红）→ 实现（绿） |
-| C-S3 | `ExplorationPolicy` 接入候选层（Rule 0 后插入）+ 回退链 |
-| C-S4 | 调用方切换：`NextStepPanel` / `RecommendedNext` 的"下一站"来源改 C 产出（stations 保留为回退） |
-| C-S5 | 样式：候选 reason/narrativeHook 展示（复用 B 层解释素材） |
-| C-S6 | 全量回归：tsc + vitest + freeze-check（新文件进 allowlist） |
-| C-S7 | build_tunnel 重建 + 隧道验证：找一个"下一站"看 reason 是否可解释 |
-| C-S8 | commit + push |
-
----
-
-## 7. 文件面预估
-
-| 文件 | 动作 |
-|---|---|
-| `frontend/src/next/exploration/candidateGeneration.ts` | 新增 |
-| `frontend/src/next/exploration/candidateRanking.ts` | 新增 |
-| `frontend/src/next/exploration/ExplorationPolicy.ts` | 修改（接入候选层） |
-| `frontend/src/components/NextStepPanel.tsx` / `RecommendedNext.tsx` | 修改（下一站来源） |
-| 测试 2–3 个文件 | 新增 |
-| `scripts/freeze-check.mjs` | allowlist +新文件 |
+| 文件 | 动作 | 内容 |
+|---|---|---|
+| `frontend/src/next/exploration/candidateGeneration.ts` | 新增 | 候选生成器（四源 + 去重 + sources[] provenance，PC1） |
+| `frontend/src/next/exploration/candidateContext.ts` | 新增 | Context 特征派生（CandidateContextFeatures + GapPriority，PC4/D20） |
+| `frontend/src/next/exploration/candidateRanking.ts` | 新增 | 分层词典序 Ranking（L1–L5，PC7/PC8）+ confidence 离散映射 |
+| `frontend/src/next/exploration/ExplorationPolicy.ts` | 修改 | Rule 0 后插入 C 候选决策 + 回退链（D8，只增不改） |
+| `frontend/src/components/NextStepPanel.tsx` / `RecommendedNext.tsx` | 修改 | "下一站"来源改 C 产出（stations 保留回退，D11） |
+| 测试 3 个新文件 | 新增 | candidateGeneration.test / candidateContext.test / candidateRanking.test（PC1–PC8 断言） |
+| `scripts/freeze-check.mjs` | 修改 | allowlist + 新文件 |
 
 全部在 freeze 白名单内（`frontend/src`），不碰 backend、不引依赖、不碰 AI。
 
 ---
 
-## 8. 待 PO 确认
+## 2. 模块设计
 
-| # | 决策 | 推荐 |
+### 2.1 候选生成器 `candidateGeneration.ts`（PC1）
+
+```ts
+/** 冻结枚举（D14，防 schema 漂移）。 */
+export type CandidateSource =
+  | 'relationship_neighbor'
+  | 'cross_topic_bridge'
+  | 'dimension_target'
+  | 'package_next'
+
+export interface ExplorationCandidate {
+  /** 目标实体 gid（去重键）。 */
+  targetRef: string
+  /** 展示名。 */
+  name: string
+  /** 该候选的全部来源（去重后保留，provenance 不丢，D14）。 */
+  sources: CandidateSource[]
+  /** 来源说明（trace 用）。 */
+  hint?: string
+}
+
+/** PC1：只产候选集合，绝不构造/返回 ExplorationAction。 */
+export function generateCandidates(
+  current: { gid: string; name: string },
+  ctx: {
+    packageNext?: { gid: string; name: string } | null
+    neighbors?: { gid: string; name: string }[]
+    bridges?: { gid: string; name: string }[]
+    dimensionTargets?: { gid: string; name: string }[]
+    explored?: string[]      // 已访问 gid（去重）
+  },
+): ExplorationCandidate[]
+```
+
+- **去重**：以 `targetRef` 为键合并多来源（`sources[]` 保留全部）；`explored` 直接排除。
+- **空候选** → `[]` → 调用方回退 `stations[idx+1]`（D11，不崩溃）。
+- **PC1 断言**：本模块无 `ExplorationAction` 构造/返回。
+
+### 2.2 Context 特征派生 `candidateContext.ts`（PC4 + D20）
+
+```ts
+/** 缺口优先级离散等级（D17，PO v4 离散化）。 */
+export type GapPriority = 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
+
+/** 离散等级（L2/L3 通用）。 */
+export type DiscreteLevel = 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH'
+
+export interface CandidateContextFeatures {
+  /** 候选命中用户缺口（GapPriority；D17 五档）。 */
+  gapPriority: GapPriority
+  /** 候选覆盖缺失维度程度（离散等级）。 */
+  dimensionRelevance: DiscreteLevel
+  /** 候选与当前主题相关度（离散等级）。 */
+  topicRelevance: DiscreteLevel
+  /** 候选与当前探索路径延续度（离散等级）。 */
+  pathRelevance: DiscreteLevel
+  /** 新颖度（与已探索方向重叠的反向，离散等级）。 */
+  novelty: DiscreteLevel
+  /** 是否已在 exploredAnchors（0/1 惩罚项）。 */
+  alreadyExploredPenalty: number
+}
+
+/** D20（Blocking #1）：GapPriority 必须由候选与 openGaps 的【显式关联】确定性推导。
+ *  - 候选 targetRef 必须是某 openGap 的显式目标实体 → 才算命中；
+ *  - 候选 → 0..N gaps → 取 max；
+ *  - 禁止语义相似度推断 / 自由启发式；
+ *  - L1 无 gap 数据按 NONE（产品语义例外：无缺口记录即不优先；不得扩展 L2–L4）。 */
+export function deriveGapPriority(
+  candidate: ExplorationCandidate,
+  openGaps: { entityGid: string; priority: GapPriority }[],
+): GapPriority
+
+/** PC4：特征缺失 → null（不是 0、不编默认值）。 */
+export function deriveCandidateContext(
+  candidate: ExplorationCandidate,
+  ctx: {
+    openGaps: { entityGid: string; priority: GapPriority }[]
+    dimensionState?: { missing: string[]; covered: string[] } | null
+    currentTopic?: string | null
+    history?: string[] | null
+    explored?: string[] | null
+  },
+): CandidateContextFeatures
+```
+
+### 2.3 分层词典序 Ranking `candidateRanking.ts`（PC7 + PC8 + D21/D22/D23）
+
+```ts
+export interface RankedCandidate {
+  candidate: ExplorationCandidate
+  /** B 产出：该候选与当前实体的关系证据（可审计）。 */
+  evidence: RelationEvidence[]
+  /** B 产出：连续性特征（TC/SC=null 不参与）。 */
+  features: ContinuityFeatures
+  /** C 产出：上下文特征。 */
+  context: CandidateContextFeatures
+  /** 胜出层（trace 用：1..5）。 */
+  winningLayer: 1 | 2 | 3 | 4 | 5
+  /** 决策置信度（离散三档，D13）。 */
+  confidence: 'HIGH' | 'MEDIUM' | 'LOW'
+  /** 为什么它最值得（供 reason/narrativeHook）。 */
+  topReason: string
+}
+
+/** PC7 分层契约：L1 GapPriority → L2 Context → L3 Continuity → L4 Novelty → L5 tie。
+ *  PC8：纯函数——只读 declared inputs，禁 Date.now/random/global/LLM/网络顺序。
+ *  D21：离散化由本模块【机械查表】完成（B 出连续事实，C 出决策等级，禁重判关系）。
+ *  D22：source precedence 只在 L5，非业务理由。
+ *  D23：同输入必须同输出。 */
+export function rankCandidates(
+  current: { gid: string; name: string },
+  candidates: ExplorationCandidate[],
+  ctx: {
+    openGaps: { entityGid: string; priority: GapPriority }[]
+    dimensionState?: { missing: string[]; covered: string[] } | null
+    currentTopic?: string | null
+    history?: string[] | null
+    explored?: string[] | null
+    /** 候选 → 关系证据的查询函数（注入 B 引擎，保证单引擎复用 + 可测）。 */
+    collectEvidence: (c: ExplorationCandidate) => { evidence: RelationEvidence[]; features: ContinuityFeatures }
+  },
+): RankedCandidate[]
+```
+
+**L1–L5 分层比较契约（机器无法误解，对应 ADR §3.3.1）**：
+
+| 层 | 比较 | 值域 | null 处理 |
+|---|---|---|---|
+| L1 | GapPriority | NONE<LOW<MEDIUM<HIGH<CRITICAL | 无 gap 数据 → NONE（唯一例外） |
+| L2 | dimension → topic → path 子层 | NONE<LOW<MEDIUM<HIGH | null → 子层 tie，进下一子层 |
+| L3 | RS → EQ 子层（机械查表，D21） | NONE<LOW<MEDIUM<HIGH | null → 子层 tie |
+| L4 | Novelty | NONE<LOW<MEDIUM<HIGH | null → tie |
+| L5 | source precedence（dimension_target→relationship_neighbor→cross_topic_bridge→package_next）→ stable targetRef | 恒可判定 | — |
+
+**D7 跨层规则（机器可执行）**：
+- `NONE-evidence + CRITICAL-gap` > `evidence + LOW-gap`（L1 分出）。
+- `NONE-evidence + LOW-gap` < `evidence + MEDIUM-gap`（L1 分出）。
+- 无证据候选 L3 天然垫底（RS=NONE）；L4 永不参与（L1–L3 全 tie 才比较，此时 L3 已输）。
+
+**confidence 离散映射（D13）**：
+- L1/L2 胜出 → `HIGH`；L3 胜出 → `MEDIUM`；L4/L5 胜出 → `LOW`。
+- **禁止** `Action.confidence = RelationEvidence.confidence`；测试锁定 `same evidence confidence, different separation → different Action.confidence`。
+
+**L2/L3 机械查表（D21，禁止 C 重判关系）**：
+```ts
+// 例（施工时逐条列出，纯查表）：
+const RS_TO_LEVEL: Record<number, DiscreteLevel> = { 1: 'HIGH', 0.7: 'MEDIUM', 0.5: 'LOW', 0: 'NONE' }
+const EQ_TO_LEVEL: Record<number, DiscreteLevel> = { 0.85: 'HIGH', 0.6: 'MEDIUM', 0.45: 'LOW', 0: 'NONE' }
+```
+
+### 2.4 `ExplorationPolicy` 接入（D8：只增不改）
+
+- Rule 0（用户缺口）之后、Rule 1 之前插入 C 候选决策：
+  `generateCandidates` → `deriveCandidateContext` → `rankCandidates` → 取第一 → 产出 `ExplorationAction`。
+- type 映射：dimension_target→`open_dimension` / relationship_neighbor→`follow_cause` / package_next→`deep_continue` / cross_topic_bridge→`compare_context`。
+- `reason`/`narrativeHook`：`topReason` + B 层 `buildExplanationCandidates` 素材（"为什么去这里"可解释）。
+- **回退链**：候选空 → 现有 Rule 1–5 原样兜底（旧逻辑一行不动）。
+
+---
+
+## 3. 测试计划（PC1–PC8 审计断言 + 功能）
+
+| 项 | 断言 |
+|---|---|
+| **PC1** | `candidateGeneration.ts` 无 `ExplorationAction` 构造/返回（读源码断言） |
+| **PC2** | `candidateRanking.ts` 无 `RELATION_KIND_MAP` 导入/复制、无自写关系判定（读源码断言）；证据查询走注入的 `collectEvidence`（B 引擎） |
+| **PC3** | `candidateRanking.ts` / `candidateContext.ts` 无 `deriveJourneyContinuityScore` / `JCS` 引用（读源码断言 = 0） |
+| **PC4** | 无 dimensionState → dimensionRelevance=null 非 0；无 history → pathRelevance=null（断言） |
+| **PC5** | package_next 与其它候选同公式：构造 L1–L4 全 tie 场景，L5 才区分；无 L1–L4 保底（断言） |
+| **PC6** | C 模块无 understanding 判定、无认知闭环逻辑（读源码断言） |
+| **PC7** | ①同输入两次运行同第一名（M7）；②null 层不按 0 比较（null vs HIGH → 进下一层）；③无证据候选 L4 永不超有证据候选；④same evidence confidence + different separation → different Action.confidence；⑤JCS=0 |
+| **PC8** | 注入不同全局状态/时间/mock random → 同输入同输出；源码无 `Date.now`/`Math.random`/global refs |
+| D20 | 候选非 gap 显式目标 → GapPriority=NONE（即使语义"像"相关）；多 gap 取 max |
+| D21 | RS 查表映射正确；C 模块无 `if (relationStrength > 0.7)` 式关系判断 |
+| D22 | L5 结果不进入 topReason/UI reason（断言 topReason 不含来源描述） |
+| 功能 | 四源生成 + 去重合并 sources[] + explored 排除 + 空候选回退 |
+
+---
+
+## 4. 施工步骤（TDD，测试先行）
+
+| 步骤 | 动作 | 验证 |
 |---|---|---|
-| C-P1 | 候选排序是否引入"用户缺口优先"（openGaps 最高权重） | ✅ 是（认知闭环 Phase D 的前置，M88.2 Rule 0 已埋点） |
-| C-P2 | 无证据候选是否仍展示（worthiness 最低）还是直接过滤 | ✅ 仍展示（避免死路；reason 走诚实表达） |
-| C-P3 | `stations` 是否保留为回退兜底 | ✅ 保留（候选空时回退，绝不崩溃） |
+| C-S1 | `candidateGeneration.ts` 类型 + 测试（红）→ 实现（绿） | vitest 绿 + PC1 断言 |
+| C-S2 | `candidateContext.ts` 类型 + 测试（红）→ 实现（绿） | PC4 + D20 断言 |
+| C-S3 | `candidateRanking.ts` 类型 + 测试（红）→ 实现（绿） | PC7/PC8/D21/D22/D13 断言 |
+| C-S4 | `ExplorationPolicy` 接入（Rule 0 后）+ 回退链 | 旧 Rule 1–5 测试全绿（只增不改） |
+| C-S5 | `NextStepPanel` / `RecommendedNext` 切 C 产出 | 组件渲染检查 |
+| C-S6 | 全量回归：tsc + vitest + freeze-check（allowlist + 新文件） | 全绿 |
+| C-S7 | build_tunnel 重建 + 隧道验证（找"下一站"看 reason 可解释） | 公网可见 |
+| C-S8 | commit + push 共享分支 | git show --stat 复核 |
 
-> 无异议则按推荐施工；有异议随时叫停。
+---
+
+## 5. 与 ADR 的关系（Contract Compliance = release gate）
+
+- **PC1–PC8 = release gate**（架构正确性门禁）：C-S6 全绿才算过门禁。
+- **M1a/M1b/M2/M3/M3b/M4 = 产品观察指标**（M1a 候选覆盖 / M1b 证据覆盖 / M2 可解释率 / M3 NONE 率观察 / M3b 探索价值命中 / M4 回退率 provisional）——**不与 PC 混为一谈**。
+- M1a 金标集 = 独立于生成器的人工构造 fixture（防"自己证明自己"）。
+
+---
+
+> 状态：**Ready for Implementation**。ADR-0024 v6 Accepted + 本设计对齐完成，C-S1 TDD 可开工。
