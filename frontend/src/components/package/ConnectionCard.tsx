@@ -16,6 +16,8 @@ import {
   expressHonestNone,
 } from '../../data/continuityExplanation'
 import { getEntityNeighbors } from '../../runtime/entityCache'
+import { takeOriginEntity } from '../../runtime/originEntity'
+import type { EntityRelationship } from '../EntityPage'
 
 interface ConnectionCardProps {
   /** global id of the entity currently shown on the page (may be absent). */
@@ -26,6 +28,8 @@ interface ConnectionCardProps {
   onEntityClick?: (gid: string) => void
   /** return to the originating exploration package page (full JourneyRail). */
   onOpenPackage?: (slug: string) => void
+  /** 实体直接来源（A→B 跳入）：只读，用于"从哪里来"区（无包上下文时整卡形态）。 */
+  relationships?: EntityRelationship[]
 }
 
 // 探索剧本化 ③（治 D3）：实体页顶部"你为什么在这里"——
@@ -41,32 +45,37 @@ export default function ConnectionCard({
   entityName,
   onEntityClick,
   onOpenPackage,
+  relationships,
 }: ConnectionCardProps) {
   // 一次性消费来源包：仅当暂存的实体与当前实体匹配时才显示，避免跨站串卡。
   const { t } = useLocale()
   const [originSlug] = useState(() => takePackageOrigin(entityGlobalId))
-  if (!originSlug || !entityGlobalId) return null
+  const [originGid] = useState(() => takeOriginEntity(entityGlobalId))
+  if (!entityGlobalId) return null
+  const pkg = originSlug ? getPackageBySlug(originSlug) : null
+  // A1 来源优先级 Package→Direct→None：包与实体来源皆无则整卡不渲染（P4 渐进式呈现）
+  if (!pkg && !originGid) return null
 
-  const pkg = getPackageBySlug(originSlug)
-  if (!pkg) return null
+  const pkgTitle = pkg?.title.zh ?? ''
+  const pkgGoal = pkg?.exploration_goals.zh ?? ''
 
-  const pkgTitle = pkg.title.zh
-  const pkgGoal = pkg.exploration_goals.zh
-
-  const inTimeline = pkg.timeline_slices.some((s) => s.entity === entityGlobalId)
-  const rels = pkg.relationship_paths.filter(
-    (p) => p.from === entityGlobalId || p.to === entityGlobalId,
-  )
+  const inTimeline = pkg
+    ? pkg.timeline_slices.some((s) => s.entity === entityGlobalId)
+    : false
+  const rels = pkg
+    ? pkg.relationship_paths.filter(
+        (p) => p.from === entityGlobalId || p.to === entityGlobalId,
+      )
+    : []
 
   // 收集把本实体"锚"在包里的证据叙述（真实 claim 文本，非生成）。
   const evidenceIds = Array.from(new Set(rels.flatMap((r) => r.evidence ?? [])))
   const evidence = getEvidenceWithSources(evidenceIds).filter((e) => e.claim)
 
   // 探索剧本化 续：本实体在包行程中的位置（同一份 buildStations 里程）。
-  const stations = buildStations(pkg)
+  const stations = pkg ? buildStations(pkg) : []
   const idx = stations.findIndex((s) => s.gid === entityGlobalId)
   const prev = idx > 0 ? stations[idx - 1] : null
-  const next = idx >= 0 && idx < stations.length - 1 ? stations[idx + 1] : null
   // 跳转同包下一站：先把来源包顺延给目标实体，再走既有 onEntityClick → openEntity。
   // 单一来源、零新状态，banner 在包内前后跳时不丢。
   const jump = (gid: string) => {
@@ -81,12 +90,14 @@ export default function ConnectionCard({
   //   （素材数组）→ selectBestExplanation（B 选择器）→ 渲染；
   //   无关系（NONE）→ expressHonestNone 诚实陈述（C6：不静默、不编造）。
   const edgeBetween = (a: string, b: string) =>
-    pkg.relationship_paths.find(
-      (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
-    ) ?? null
+    pkg
+      ? pkg.relationship_paths.find(
+          (r) => (r.from === a && r.to === b) || (r.from === b && r.to === a),
+        ) ?? null
+      : null
   const prevEdge = prev ? edgeBetween(prev.gid, entityGlobalId) : null
   // 多跳路径桥：无直接边时找共同邻居（上一站缓存邻居 ∩ 本站包内邻居）。
-  const prevCommon = prev && !prevEdge
+  const prevCommon = prev && !prevEdge && pkg
     ? (() => {
         const aN = getEntityNeighbors(prev.gid) ?? []
         const bGids = new Set(
@@ -117,9 +128,40 @@ export default function ConnectionCard({
     ? expressHonestNone(prev.name, entityName)
     : null
 
+  // A1 站间衔接合一：实体直接来源（A→B 跳入）"从哪里来"——复用同一套
+  // ContinuityEngine 解释链（C5），便于与包上下文统一承接；禁另写 transition（防第三套逻辑）。
+  const originFrom = (() => {
+    if (!originGid || !entityGlobalId) return null
+    const rels2 = relationships ?? []
+    const rel = rels2.find(
+      (r) => r.other.global_id === originGid || r.other.id === originGid,
+    )
+    const fromName = rel?.other.name ?? getEntityDisplayName(originGid)
+    const aNeighbors = getEntityNeighbors(originGid) ?? []
+    const bGids = new Set(rels2.map((r) => r.other.global_id ?? r.other.id))
+    const common = aNeighbors.find((n) => bGids.has(n.gid)) ?? null
+    const evidence = collectRelationEvidence(
+      { gid: originGid, name: fromName },
+      { gid: entityGlobalId, name: entityName },
+      { edge: rel ? { type: rel.type } : null, commonNeighbor: common },
+    )
+    const candidates = buildExplanationCandidates(evidence, fromName, entityName)
+    const selected = selectBestExplanation(candidates)
+    const honest = evidence.some((e) => e.kind === 'NONE')
+      ? expressHonestNone(fromName, entityName)
+      : null
+    return {
+      fromName,
+      bridge: selected?.fact ?? honest?.text ?? null,
+      confidence: selected?.confidence ?? null,
+    }
+  })()
+
   return (
     <aside className="connection-card" aria-label="你为什么在这里">
-      <div className="connection-card-head">
+      {pkg ? (
+        <>
+          <div className="connection-card-head">
         <span className="connection-card-kicker">来自探索包</span>
         <h2 className="connection-card-title">{pkgTitle}</h2>
       </div>
@@ -135,7 +177,7 @@ export default function ConnectionCard({
               <button
                 type="button"
                 className="connection-card-return"
-                onClick={() => onOpenPackage(originSlug)}
+                onClick={() => originSlug && onOpenPackage(originSlug)}
               >
                 查看完整行程 →
               </button>
@@ -171,28 +213,48 @@ export default function ConnectionCard({
               </p>
             </div>
           )}
-          <div className="connection-card-nav">
-            {prev ? (
-              <button type="button" className="connection-card-nav-btn" onClick={() => jump(prev.gid)}>
-                <span className="connection-card-nav-dir">← 上一站</span>
-                <span className="connection-card-nav-name">{prev.name}</span>
+          {/* A6：极简 ①→②→③ 行程轨（点击站跳转，jump 保留；"查看完整行程"在 head 区） */}
+          <div className="connection-card-steps" role="list" aria-label="探索行程">
+            {stations.map((s, i) => (
+              <button
+                key={s.gid}
+                type="button"
+                role="listitem"
+                className={
+                  'connection-card-step' +
+                  (i === idx ? ' is-current' : i < idx ? ' is-past' : '')
+                }
+                aria-current={i === idx ? 'step' : undefined}
+                title={s.name}
+                onClick={() => i !== idx && jump(s.gid)}
+                disabled={i === idx}
+              >
+                {i + 1}
               </button>
-            ) : (
-              <span className="connection-card-nav-btn is-disabled" aria-disabled="true">
-                ← 上一站
-              </span>
-            )}
-            {next ? (
-              <button type="button" className="connection-card-nav-btn" onClick={() => jump(next.gid)}>
-                <span className="connection-card-nav-dir">下一站 →</span>
-                <span className="connection-card-nav-name">{next.name}</span>
-              </button>
-            ) : (
-              <span className="connection-card-nav-btn is-disabled" aria-disabled="true">
-                下一站 →
-              </span>
-            )}
+            ))}
           </div>
+        </div>
+      )}
+
+      {/* A1 从哪里来（站间解释）：仅当实体直接来源与包 prev 站不同源时补一行，
+          避免"上一站"与"从哪里来"重复叙述（防超级衔接卡）。 */}
+      {originFrom && originFrom.fromName !== prev?.name && (
+        <div className="connection-card-transition">
+          <span className="connection-card-transition-kicker">
+            {originFrom.bridge
+              ? t('entity.origin_bridge_from', { name: originFrom.fromName })
+              : t('entity.origin_bridge_fallback', { name: originFrom.fromName })}
+          </span>
+          {originFrom.bridge && (
+            <p className="connection-card-transition-text">
+              {originFrom.bridge}
+              {originFrom.confidence && (
+                <span className={`transition-confidence transition-confidence--${originFrom.confidence}`}>
+                  {t(`transition.confidence_${originFrom.confidence}`)}
+                </span>
+              )}
+            </p>
+          )}
         </div>
       )}
 
@@ -237,6 +299,30 @@ export default function ConnectionCard({
               </p>
             ))}
           </CollapsibleList>
+        </div>
+      )}
+        </>
+      ) : (
+        <div className="connection-card-from">
+          {originFrom && (
+            <div className="connection-card-transition">
+              <span className="connection-card-transition-kicker">
+                {originFrom.bridge
+                  ? t('entity.origin_bridge_from', { name: originFrom.fromName })
+                  : t('entity.origin_bridge_fallback', { name: originFrom.fromName })}
+              </span>
+              {originFrom.bridge && (
+                <p className="connection-card-transition-text">
+                  {originFrom.bridge}
+                  {originFrom.confidence && (
+                    <span className={`transition-confidence transition-confidence--${originFrom.confidence}`}>
+                      {t(`transition.confidence_${originFrom.confidence}`)}
+                    </span>
+                  )}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
     </aside>
