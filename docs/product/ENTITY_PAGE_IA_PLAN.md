@@ -1,10 +1,12 @@
-# 实体页认知层级重构方案（Entity Page IA Plan v2）
+# 实体页认知层级重构方案（Entity Page IA Plan v2.1 · 施工基线冻结）
 
-> 版本：v2（2026-08-16，吸收 PO 架构评审后修订；v1 结论"方向正确"升级为**有条件通过**）
+> 版本：**v2.1（2026-08-16，PO 冻结评审后定稿）**。v1="方向正确"，v2="有条件通过"，v2.1=**施工基线，可以进入实现**。
 > 触发：PO 实机反馈「用户点进去，信息很杂乱」——不同认知职责的信息被同权平铺。
 > 定位：**不是"实体页减负方案"，而是"实体页认知层级重构方案"**——给 Phase D 提前建立正确的"认知界面骨架"。
 > 核心原则（PO 定稿）：**不是减少信息，而是让系统替用户决定「现在该看什么、接下来该做什么、什么需要主动调用」。**
-> 红线：不动 backend / 不引新依赖 / 不改探索决策逻辑（Phase B/C 引擎原样）；只动呈现层（EntityPage / EntityPageShell / ConnectionCard / 相关子组件 / 样式 / 文案词典）。
+> 最高成果（PO 定稿）：实体页已经建立 **Cognitive Contract（认知契约）**——任何新能力要进实体页，必须先回答"它属于认知链的哪一步"；回答不了就不能直接往 info 主体里塞。
+> 红线：不动 backend / 不引新依赖 / 不改探索决策逻辑（Phase B/C 引擎原样）；只动呈现层（EntityPage / EntityPageShell / ConnectionCard / 相关子组件 / 样式 / 文案词典）。**不再开 v3。**
+> 下一步：施工前代码映射 / 变更清单见 `ENTITY_PAGE_IA_IMPLEMENTATION_MAP.md`（同目录）。
 
 ---
 
@@ -166,3 +168,60 @@ ENTITY PAGE
 - 不碰：backend / `next/exploration/*`（Phase C 引擎）/ `data/continuityEngine*` / 决策逻辑。
 - 施工顺序建议：A1（去重，影响面最清晰）→ A6（行程收敛）→ A4（探索提示）→ A3（证据折叠）→ A2 + D7（tab 体系）→ A5 + InterpretationPanel 叙事区（最后，涉及组件编排）。
 - 验证：无头浏览器实测第一屏视觉焦点数 + 认知顺序走通 + 全部能力可达（tab/折叠打开）+ 重复消除；tsc / 相关组件测试 / freeze-check / 隧道重建。
+
+---
+
+## 8. PO 冻结评审（2026-08-16）—— P1–P5 补入条款
+
+> PO 结论：**v2：原则上通过，进入施工前冻结。** 只需补 5 条，不再开 v3。补完后定性为：
+> **Entity Page IA v2.1：施工基线，可以进入实现。**
+
+### P1 — 层级不是组件层级（认知约束）
+L1/L2/L3 是**用户认知层级 + 视觉编排规则**，不是 React 组件层级。
+- 不要求"一层 = 一个组件"，也不要求"每个组件拥有独立 Card 容器"。
+- 尤其 L1：EntityHero + Story + WhyImportant + Interpretation 应是**一个连续的主体叙事体验**（Narrative Surface），不是四个独立卡片堆叠。
+
+### P2 — 强推荐只消费，不决策（A4 工程约束）
+- 本次 IA **不定义推荐算法**。
+- UI 层只消费已有的 recommendation / next-step decision result：
+  `有结果 → 展示轻量提示；无结果 → 不渲染`。
+- EntityPage 内**禁止新增** `if (...) recommend(...)` 之类决策逻辑。
+- 与红线"不改探索决策逻辑"直接相关；防止施工时把 Phase C 决策逻辑偷偷带进前端。
+
+### P3 — Research tab 不是垃圾桶（D7 工程约束）
+- Research tab 必须保持**明确且稳定的研究任务定义**，不作为"剩余能力容器"。
+- 现状的 research 已装：研究主区（ResearchPanel/ResearchLibrary/相关实体）+ 事件专属区（仅 Event）+ 解读与 AI 区（AIExplanationPanel）——这是既有研究任务结构，**本轮保持不动**，不得往里面追加"不属于主体的东西"。
+- 后续新能力进 research tab 的准入条件：它必须能回答"这项研究任务是什么"。
+
+### P4 — 缺失态原则：Progressive Presence（产品约束）
+- 无数据 / 无强推荐 / 无关系 / 无决策 / 无证据时：**不渲染空模块**；缺失**不破坏认知主线**。
+- 各能力按数据/决策置信度出现，而不是固定占位。示例：
+  - 无强推荐 → L1→L2 桥直接消失；
+  - 无关系数据 → 不出现空的 Connection Explorer 卡；
+  - 无下一站决策 → 不显示"暂无推荐"、不抢占页面；
+  - 无证据 → Evidence 区显示诚实状态。
+- **不要为了页面结构完整给用户大量"暂无数据"的空组件**（信息过载→操作过载）。
+- 注：本条与 M35 旧决策（无叙事时渲染 EmptyState 占位）存在冲突，以本条为准（PO 最新定稿），施工映射已标注。
+
+### P5 — 施工红线（工程约束）
+- 本次是 **IA / presentation refactor**，**不是 component architecture refactor**。
+- **不做**：组件职责重构 / 状态模型重构 / 数据流重构 / 探索决策逻辑改动。
+- 哪怕看到 EntityPage.tsx 内部很乱，也不借机重构——那是另一个任务。
+- 施工范围上限：`EntityPage.tsx` / `EntityPageShell.tsx` / `ConnectionCard.tsx` / `EntityExperienceHeader`（调用） / `EntityExplorationGuide` / `ProvenancePanel`（折叠包装） / `ContinueExploringPanel`（收"更多"） / `App.tsx`（仅 footer 编排与传参）/ 样式 / 文案词典。
+
+---
+
+## 9. 最终拍板状态（D1–D8 全部冻结）
+
+| # | 决策 | 状态 |
+|---|---|---|
+| D1 | A1 站间衔接合一（入口桥并入 ConnectionCard，信息去重） | ✅ 冻结 |
+| D2 | A2 AI 收进独立 tab（按需唤起；命名用「AI/问史」而非「扩展」） | ✅ 冻结 |
+| D3 | A3 证据直接可见折叠（不塞"更多"） | ✅ 冻结 |
+| D4 | A4 ExplorationGuide → 轻量认知提示（L1→L2 桥，有结果才渲染） | ✅ 冻结（P2 约束生效） |
+| D5 | A5 下一站探索（C 决策）L2 主位；继续探索收 L3「更多」 | ✅ 冻结 |
+| D6 | A6 JourneyTrail 极简 secondary nav 嵌入衔接卡（防超级卡片） | ✅ 冻结 |
+| D7 | tab 体系选型：**甲「概览/研究/AI」** | ✅ 冻结（P3 约束生效） |
+| D8 | InterpretationPanel 进 L1 主体叙事区（连续成段，组件仍在） | ✅ 冻结 |
+
+**PO 评级记录**：产品方向 A ｜ 信息架构 A-（research 职责+缺失态已由 P3/P4 补上）｜ Phase B/C/D 对齐 A ｜ 前端架构边界 A-（P5 补上）｜ 验收 B+（viewport/缺失态/强推荐消费/功能寻址已由 §5 + 映射清单补上）。
