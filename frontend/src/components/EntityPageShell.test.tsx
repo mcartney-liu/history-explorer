@@ -7,7 +7,7 @@ const TEST_TABS: TabConfig[] = [
   { id: 'explore', label: '探索', ariaLabel: '探索标签' },
   { id: 'research', label: '研究', ariaLabel: '研究标签' },
   { id: 'analyze', label: '分析', ariaLabel: '分析标签' },
-  { id: 'extensions', label: '扩展', ariaLabel: '扩展标签' },
+  { id: 'ai', label: 'AI', ariaLabel: 'AI标签' },
 ]
 
 describe('EntityPageShellView', () => {
@@ -19,7 +19,7 @@ describe('EntityPageShellView', () => {
     expect(html).toContain('探索')
     expect(html).toContain('研究')
     expect(html).toContain('分析')
-    expect(html).toContain('扩展')
+    expect(html).toContain('AI')
   })
 
   it('marks active tab as selected', () => {
@@ -62,14 +62,14 @@ describe('EntityPageShellView', () => {
 
   it('renders all five tabs with correct labels', () => {
     const html = renderToStaticMarkup(
-      <EntityPageShellView activeTab="extensions" tabs={TEST_TABS} />,
+      <EntityPageShellView activeTab="ai" tabs={TEST_TABS} />,
     )
     // Verify all labels are present
     expect(html).toContain('了解')
     expect(html).toContain('探索')
     expect(html).toContain('研究')
     expect(html).toContain('分析')
-    expect(html).toContain('扩展')
+    expect(html).toContain('AI')
   })
 
   // M44 Tab Guidance

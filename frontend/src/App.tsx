@@ -207,7 +207,7 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(true)
   // T1: which EntityPage tab to land on. Set when navigation originates from a
   // research bookmark so the user arrives directly in the research tab.
-  const [entityInitialTab, setEntityInitialTab] = useState<'info' | 'research' | 'extensions'>('info')
+  const [entityInitialTab, setEntityInitialTab] = useState<'info' | 'research' | 'ai'>('info')
 
   // M2-002: cross-dataset entity search.
   const [searchQuery, setSearchQuery] = useState('')

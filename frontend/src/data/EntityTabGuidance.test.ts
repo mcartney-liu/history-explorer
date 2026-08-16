@@ -8,7 +8,7 @@ describe('EntityTabGuidance', () => {
     expect(TAB_GUIDANCE.explore).toBeTruthy()
     expect(TAB_GUIDANCE.research).toBeTruthy()
     expect(TAB_GUIDANCE.analyze).toBeTruthy()
-    expect(TAB_GUIDANCE.extensions).toBeTruthy()
+    expect(TAB_GUIDANCE.ai).toBeTruthy()
   })
 
   it('every guidance has title and description', () => {

@@ -14,4 +14,6 @@ export default {
   'entity.origin_bridge_from': 'From 「%{name}」',
   'entity.origin_bridge_fallback': 'Continuing the exploration from 「%{name}」',
   'insight.intro': '%{name} is a historically significant %{type}.',
+  'entity.tabAi': 'AI',
+  'entity.tabAiAria': 'Talk with the AI historian',
 }
