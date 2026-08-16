@@ -13,6 +13,9 @@ import { useMemo } from 'react'
 import { useLocale } from '../../data/locale'
 import { visitedFromEvents } from '../../data/explorationGuide'
 import { getEvents } from '../../data/UserBehaviorEvent'
+import { getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
+import { Icon } from '../../components/ui/Icon'
+import type { IconName } from '../../components/ui/Icon'
 
 interface JourneyTrailProps {
   /** Most recent N steps to render (default 5). */
@@ -46,10 +49,22 @@ export function JourneyTrail({ maxSteps = 5, onEntityClick }: JourneyTrailProps)
                 className="journey-trail-link"
                 onClick={() => onEntityClick(gid)}
               >
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName}
+                  size={16}
+                  className="journey-trail-gid-icon"
+                />
                 {gid}
               </button>
             ) : (
-              <span className="journey-trail-gid">{gid}</span>
+              <span className="journey-trail-gid">
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName}
+                  size={16}
+                  className="journey-trail-gid-icon"
+                />
+                {gid}
+              </span>
             )}
           </li>
         ))}

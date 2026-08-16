@@ -7,6 +7,8 @@ import {
   type SavedResearch,
 } from '../data/ResearchHistory'
 import Icon from './ui/Icon'
+import type { IconName } from './ui/Icon'
+import { getEntityIcon } from '../data/entity/entityLabels'
 
 export type ResearchLibraryProps = {
   onSelect?: (research: SavedResearch) => void
@@ -93,7 +95,14 @@ export function ResearchLibraryView({
                     <Icon name="star" size={16} filled={r.bookmarked} />
                   </button>
                 </div>
-                <h4 className="rlib-card-name">{r.entityName}</h4>
+                <h4 className="rlib-card-name">
+                  <Icon
+                    name={getEntityIcon(r.entityType) as IconName}
+                    size={16}
+                    className="rlib-card-name-icon"
+                  />
+                  {r.entityName}
+                </h4>
                 {r.comparedNames.length > 0 && (
                   <p className="rlib-card-compare">
                     <Icon name="compare" size={16} className="rlib-card-compare-icon" />

@@ -3,7 +3,9 @@ import AIExplanationPanel from './AIExplanationPanel'
 import { useLocale } from '../data/locale'
 import { multiEntityContext } from '../data/aiContext'
 import type { Candidate } from '../data/candidateUtils'
-import { getEntityDisplayName, getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityDisplayName, getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 // M13 (Multi Entity Reasoning Foundation): the user explicitly picks N real
 // entity global_ids and asks ONE grounded question across all of them, reusing
@@ -252,7 +254,14 @@ export function MultiEntityContextView({
               title={`取消选择 ${display.name}`}
             >
               <span className="mec-chip-type">{getEntityLabel(display.type, locale)}</span>
-              <span className="mec-chip-name">{display.name}</span>
+              <span className="mec-chip-name">
+                <Icon
+                  name={getEntityIcon(display.type) as IconName}
+                  size={16}
+                  className="mec-chip-name-icon"
+                />
+                {display.name}
+              </span>
               <span className="mec-chip-remove" aria-hidden="true">×</span>
             </button>
           ))}
@@ -278,7 +287,14 @@ export function MultiEntityContextView({
                       onClick={() => onToggle(candidate.gid)}
                       title={disabled ? `最多选择 ${maxSelectable} 个实体` : `${display.name} (${candidate.gid})`}
                     >
-                      <span className="mec-chip-name">{display.name}</span>
+                      <span className="mec-chip-name">
+                        <Icon
+                          name={getEntityIcon(display.type) as IconName}
+                          size={16}
+                          className="mec-chip-name-icon"
+                        />
+                        {display.name}
+                      </span>
                     </button>
                   )
                 })}

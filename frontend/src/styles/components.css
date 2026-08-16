@@ -148,6 +148,11 @@
 .rel-pill-icon{margin-right:4px}
 .ep-node-icon{margin-right:4px}
 
+/* 新增实体类型图标统一基础样式（通配所有 *-icon 类）：对齐 + 间距 */
+[class$="-icon"]{flex:none;margin-right:5px;vertical-align:middle}
+/* 旧 StarterChips 图标靠 flex gap 定位，重置 margin 避免双间距 */
+.discover-starter-icon{margin-right:0}
+
 /* ── FeedbackWidget — override the shared de-bright rule above so the
    buttons are clearly visible in light & dark themes, and give the widget
    a proper card container, input box and explicit submit button. ──────── */

@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import type { ExplorationPackage, Locale } from '../../data/explorationPackages'
 import { getEntityDisplayName } from '../../data/explorationPackages'
+import { getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 
 interface JourneyRailProps {
   pkg: ExplorationPackage
@@ -86,7 +89,14 @@ export default function JourneyRail({
                 onClick={() => onEntityClick?.(s.gid)}
               >
                 <span className="journey-rail-dot" aria-hidden="true">{isDone ? '' : s.index}</span>
-                <span className="journey-rail-name">{s.name}</span>
+                <span className="journey-rail-name">
+                  <Icon
+                    name={getEntityIcon(entityTypeFromGlobalId(s.gid)) as IconName}
+                    size={16}
+                    className="journey-rail-name-icon"
+                  />
+                  {s.name}
+                </span>
               </button>
             </li>
           )

@@ -5,6 +5,9 @@ import {
   getEntityDisplayName,
   getEvidenceWithSources,
 } from '../../data/explorationPackages'
+import { getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 import { takePackageOrigin, setPackageOrigin } from './packageOrigin'
 import { buildStations } from './JourneyRail'
 import CollapsibleList from '../ui/CollapsibleList'
@@ -186,6 +189,11 @@ export default function ConnectionCard({
           {prevExplanation && prev && (
             <div className="connection-card-transition">
               <span className="connection-card-transition-kicker">
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(prev.gid)) as IconName}
+                  size={16}
+                  className="connection-prev-icon"
+                />
                 从上一站「{prev.name}」来
               </span>
               <p className="connection-card-transition-text">
@@ -201,6 +209,11 @@ export default function ConnectionCard({
           {prevHonest && (
             <div className="connection-card-transition connection-card-transition--honest">
               <span className="connection-card-transition-kicker">
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(prev?.gid ?? '')) as IconName}
+                  size={16}
+                  className="connection-prev-icon"
+                />
                 从上一站「{prev?.name}」来
               </span>
               <p className="connection-card-transition-text">
@@ -261,7 +274,13 @@ export default function ConnectionCard({
       <div className="connection-card-role">
         <span className="connection-card-dot" aria-hidden="true" />
         <span>
-          这一站 <strong>{entityName}</strong>
+          这一站{' '}
+          <Icon
+            name={getEntityIcon(entityTypeFromGlobalId(entityGlobalId)) as IconName}
+            size={16}
+            className="connection-this-icon"
+          />
+          <strong>{entityName}</strong>
           {inTimeline ? ' 是这条时间旅程上的一个节点' : ' 在这条探索线里'}
           {rels.length > 0 ? '，通过下面的关系串进整段旅程：' : '。'}
         </span>
@@ -279,6 +298,11 @@ export default function ConnectionCard({
               >
                 <span className="connection-card-rel-type">{relLabel(r.type)}</span>
                 <span className="connection-card-rel-text">
+                  <Icon
+                    name={getEntityIcon(entityTypeFromGlobalId(other)) as IconName}
+                    size={16}
+                    className="connection-other-icon"
+                  />
                   {isFrom
                     ? `${entityName} → ${getEntityDisplayName(other)}`
                     : `${getEntityDisplayName(other)} → ${entityName}`}

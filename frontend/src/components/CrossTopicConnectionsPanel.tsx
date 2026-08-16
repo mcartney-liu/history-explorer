@@ -4,7 +4,9 @@ import {
   formatTopicLabel,
 } from './crossTopic'
 import { useLocale } from '../data/locale'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 type CrossTopicConnectionsPanelProps = {
   // Direct cross-topic neighbors of the Explore centered entity. ONLY present
@@ -59,7 +61,14 @@ function CrossTopicConnectionsPanel({
                 }
               }}
             >
-              <span className="re-name">{item.name ?? item.id ?? 'Unknown'}</span>
+              <span className="re-name">
+                <Icon
+                  name={getEntityIcon(item.type ?? 'entity') as IconName}
+                  size={16}
+                  className="re-name-icon"
+                />
+                {item.name ?? item.id ?? 'Unknown'}
+              </span>
               <span className="re-type">{getEntityLabel(item.type ?? 'entity', locale)}</span>
               <span className="re-rel">
                 {formatTopicLabel(item.topic ?? '')} ·{' '}

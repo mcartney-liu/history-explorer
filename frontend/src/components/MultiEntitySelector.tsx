@@ -1,6 +1,7 @@
 import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 import { useLocale } from '../data/locale'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
 
 export type SelectableEntity = {
   id: string
@@ -40,6 +41,11 @@ export function MultiEntitySelectorView({
       {selected.map((e) => (
         <span key={e.id} className="mes-tag">
           <span className="mes-tag-type">{getEntityLabel(e.type, locale)}</span>
+          <Icon
+            name={getEntityIcon(e.type) as IconName}
+            size={16}
+            className="multi-entity-sel-icon"
+          />
           {e.name}
           <button
             type="button"

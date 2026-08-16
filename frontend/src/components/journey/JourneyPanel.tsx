@@ -6,6 +6,9 @@
 
 import { useState } from 'react'
 import { getJourney, clearJourney, type JourneyEntry } from '../../lib/journey'
+import { getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
+import { Icon } from '../../components/ui/Icon'
+import type { IconName } from '../../components/ui/Icon'
 
 type JourneyPanelProps = {
   onNavigate?: (entry: JourneyEntry) => void
@@ -54,6 +57,11 @@ export function JourneyPanel({ onNavigate, onClearComplete }: JourneyPanelProps)
               onClick={() => onNavigate?.(e)}
             >
               <span className="journey-kind">{e.kind === 'topic' ? '主题' : e.kind === 'causal_object' ? '理解' : '实体'}</span>
+              <Icon
+                name={getEntityIcon(entityTypeFromGlobalId(e.globalId)) as IconName}
+                size={16}
+                className="journey-label-icon"
+              />
               <span className="journey-label">{e.label}</span>
               <span className="journey-time">{formatTs(e.ts)}</span>
             </button>

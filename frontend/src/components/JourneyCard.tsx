@@ -1,5 +1,8 @@
 import type { EntityRelationship } from './EntityPage'
 import { recordEvent } from '../data/UserBehaviorEvent'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 export type JourneyCardProps = {
   /** All relationships from the /entity response. */
@@ -145,7 +148,14 @@ export function JourneyCardView({
                 </span>
                 <span className="jc-entity-type">{rec.otherType}</span>
               </div>
-              <span className="jc-entity-name">{displayName}</span>
+              <span className="jc-entity-name">
+                <Icon
+                  name={getEntityIcon(rec.otherType) as IconName}
+                  size={16}
+                  className="jc-entity-name-icon"
+                />
+                {displayName}
+              </span>
               <p className="jc-reason">{rec.reason}</p>
             </button>
           )

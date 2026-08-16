@@ -1,8 +1,13 @@
 import { EvidenceBlock } from './primitives/EvidenceBlock'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 type SummaryPanelProps = {
   title: string
   summary: string
+  /** Optional entity type — when present, a type icon is shown before the title. */
+  entityType?: string
 }
 
 /**
@@ -17,11 +22,16 @@ type SummaryPanelProps = {
  * all 26 Panels: keep the public API, replace internals with
  * Explorer Primitives.
  */
-function SummaryPanel({ title, summary }: SummaryPanelProps) {
+function SummaryPanel({ title, summary, entityType }: SummaryPanelProps) {
   return (
-    <EvidenceBlock type="curator" title={title}>
-      {summary}
-    </EvidenceBlock>
+    <>
+      {entityType && (
+        <Icon name={getEntityIcon(entityType) as IconName} size={16} className="summary-panel-title-icon" />
+      )}
+      <EvidenceBlock type="curator" title={title}>
+        {summary}
+      </EvidenceBlock>
+    </>
   )
 }
 

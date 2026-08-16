@@ -19,6 +19,9 @@ import { InterpretationViewModel } from '../data/interpretationFormatter'
 import type { UnderstandingViewModel } from '../data/understandingRules'
 import { UnderstandingCard } from './primitives/UnderstandingCard'
 import CollapsibleList from './ui/CollapsibleList'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 type EntityTypeKey =
   | 'civilization'
@@ -116,7 +119,14 @@ function InterpretationPanel({
                       {item.localName}
                     </button>
                   ) : (
-                    <span className="he-interpret-name">{item.localName}</span>
+                    <span className="he-interpret-name">
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(item.global_id)) as IconName}
+                        size={16}
+                        className="he-interpret-name-icon"
+                      />
+                      {item.localName}
+                    </span>
                   )}
                   <span className="he-interpret-strength" title={t('common.scoreLabel', { n: String(item.score) })}>
                     <span className="he-strength-track">

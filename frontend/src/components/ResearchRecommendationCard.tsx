@@ -2,6 +2,9 @@ import type {
   ResearchRecommendation,
   RecommendationReason,
 } from '../data/ResearchPlanner'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 export type ResearchRecommendationCardProps = {
   recommendation: ResearchRecommendation
@@ -52,7 +55,14 @@ export function ResearchRecommendationCardView({
         <span className="rrc-reason-label">{reasonLabel(reason)}</span>
       </div>
 
-      <h4 className="rrc-entity-name">{entityName}</h4>
+      <h4 className="rrc-entity-name">
+        <Icon
+          name={getEntityIcon(entityType) as IconName}
+          size={16}
+          className="rrc-entity-name-icon"
+        />
+        {entityName}
+      </h4>
       <span className="rrc-entity-type">{entityType}</span>
 
       {/* Reason explanation */}

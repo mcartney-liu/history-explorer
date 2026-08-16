@@ -1,6 +1,8 @@
 import type { EntityRelationship } from './EntityPage'
 import { useLocale } from '../data/locale'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
 
 export type EventCausalChainProps = {
   /** All relationships from the /entity response. Filtered internally. */
@@ -80,6 +82,11 @@ export function EventCausalChainView({
                     onClick={() => onEntityClick?.(r.other.id)}
                   >
                     <span className="ecc-node-type">{getEntityLabel(r.other.type, locale)}</span>
+                    <Icon
+                      name={getEntityIcon(r.other.type) as IconName}
+                      size={16}
+                      className="ecc-node-name-icon"
+                    />
                     <span className="ecc-node-name">{name}</span>
                   </button>
                   <span className={`ecc-arrow ${badge(r.type)}`}>
@@ -95,6 +102,11 @@ export function EventCausalChainView({
       <div className="ecc-center">
         <span className="ecc-node ecc-node--center">
           <span className="ecc-node-type">{getEntityLabel('Event', locale)}</span>
+          <Icon
+            name={getEntityIcon('Event') as IconName}
+            size={16}
+            className="ecc-node-name-icon"
+          />
           <span className="ecc-node-name">{centerEntityName}</span>
         </span>
       </div>
@@ -116,6 +128,11 @@ export function EventCausalChainView({
                     onClick={() => onEntityClick?.(r.other.id)}
                   >
                     <span className="ecc-node-type">{getEntityLabel(r.other.type, locale)}</span>
+                    <Icon
+                      name={getEntityIcon(r.other.type) as IconName}
+                      size={16}
+                      className="ecc-node-name-icon"
+                    />
                     <span className="ecc-node-name">{name}</span>
                   </button>
                 </li>

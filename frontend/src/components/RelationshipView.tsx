@@ -7,8 +7,10 @@ import RelationshipEvidence from './RelationshipEvidence'
 import { relationshipContext } from '../data/aiContext'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getRelationshipLabel, getEntityIcon } from '../data/entity/entityLabels'
 import { RELATIONSHIP_TYPES } from '../data/relationshipUtils'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 type RelationshipViewProps = {
   mainEntity: MainEntity
@@ -82,6 +84,7 @@ function RelationshipView({
       </div>
       <div className="rel-network">
         <div className="rel-root">
+          <Icon name={getEntityIcon(mainEntity.type) as IconName} size={16} className="rel-root-name-icon" />
           <span className="rel-root-name">{getDisplayName(mainEntity.name, locale, prefs.properNameMode)}</span>
           <span className="rel-root-type">{getEntityLabel(mainEntity.type, locale)}</span>
         </div>
@@ -101,6 +104,7 @@ function RelationshipView({
                 `rel-branch${clickable ? ' is-clickable' : ''}${isFocused ? ' is-focused' : ''}`
               const content = (
                 <>
+                  <Icon name={getEntityIcon(item.type) as IconName} size={16} className="rel-target-name-icon" />
                   <span className="rel-target-name">{displayName}</span>
                   <span className="rel-target-type">{getEntityLabel(item.type, locale)}</span>
                   <span className="rel-edge">{getRelationshipLabel(item.relationship, locale)}</span>

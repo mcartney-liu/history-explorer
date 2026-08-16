@@ -11,6 +11,9 @@
 import { Fragment } from 'react'
 import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import { useLocale } from '../data/locale'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 type PathStep = {
   from_global_id: string
@@ -64,6 +67,7 @@ function ExplorationPathsPanel({ connections, onNodeClick }: ExplorationPathsPan
                         aria-label={t('discover.openAria', { name: localName(node) })}
                         onClick={() => onNodeClick?.(node)}
                       >
+                        <Icon name={getEntityIcon(entityTypeFromGlobalId(node)) as IconName} size={16} className="exploration-path-node-icon" />
                         {localName(node)}
                       </button>
                       {i < path.length - 1 && (

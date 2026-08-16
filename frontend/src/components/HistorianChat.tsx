@@ -3,6 +3,9 @@ import { explainAI, type AIResponse } from '../data/aiClient'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 import type { EntityRelationship } from './EntityPage'
 
 export type ChatMessage = {
@@ -115,7 +118,14 @@ export function HistorianChatView({
       <div className="hc-context-badge">
         <span className="hc-context-label">当前探索：</span>
         <span className="hc-context-type">{entityType}</span>
-        <span className="hc-context-name">{entityName}</span>
+        <span className="hc-context-name">
+          <Icon
+            name={getEntityIcon(entityType) as IconName}
+            size={16}
+            className="hc-context-name-icon"
+          />
+          {entityName}
+        </span>
       </div>
 
       <p className="hc-subtitle">

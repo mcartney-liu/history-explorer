@@ -20,7 +20,7 @@ import type { Candidate } from '../data/candidateUtils'
 import type { EntityRelationship } from './EntityPage'
 import type { GeoPoint } from '../data/relationshipUtils'
 import { useLocale } from '../data/locale'
-import { getRelationshipLabel } from '../data/entity/entityLabels'
+import { getRelationshipLabel, getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
 import {
   pairEntities,
   findExistingRelationships,
@@ -49,6 +49,8 @@ import {
   type InsightReportInput,
 } from '../data/insightExport'
 import RelationshipPathGraph from './RelationshipPathGraph'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 export type RelationshipInsightPanelProps = {
   candidates: Candidate[]
@@ -523,7 +525,14 @@ export default function RelationshipInsightPanel({
               <tbody>
                 {centralityEntries.map(([gid, count]) => (
                   <tr key={gid}>
-                    <td>{nameByGlobalId[gid] ?? gid}</td>
+                    <td>
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName}
+                        size={16}
+                        className="rip-node-icon"
+                      />
+                      {nameByGlobalId[gid] ?? gid}
+                    </td>
                     <td className="rip-type">{gid}</td>
                     <td>{count}</td>
                   </tr>
@@ -586,7 +595,11 @@ export default function RelationshipInsightPanel({
                 >
                   {distinctGids.map((g) => (
                     <option key={g} value={g}>
-                      {nameByGlobalId[g] ?? g}
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(g)) as IconName}
+                        size={16}
+                        className="rip-node-icon"
+                      />{nameByGlobalId[g] ?? g}
                     </option>
                   ))}
                 </select>
@@ -600,7 +613,11 @@ export default function RelationshipInsightPanel({
                 >
                   {distinctGids.map((g) => (
                     <option key={g} value={g}>
-                      {nameByGlobalId[g] ?? g}
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(g)) as IconName}
+                        size={16}
+                        className="rip-node-icon"
+                      />{nameByGlobalId[g] ?? g}
                     </option>
                   ))}
                 </select>
@@ -618,8 +635,18 @@ export default function RelationshipInsightPanel({
                     >
                       <span className="rip-rel-type">{row.relationType}</span>
                       <span className="rip-rel-label">
+                        <Icon
+                          name={getEntityIcon(entityTypeFromGlobalId(row.sourceGlobalId ?? '')) as IconName}
+                          size={16}
+                          className="rip-node-icon"
+                        />
                         {(nameByGlobalId[row.sourceGlobalId ?? ''] ?? row.source)} →{' '}
                         {row.relationType} →{' '}
+                        <Icon
+                          name={getEntityIcon(entityTypeFromGlobalId(row.targetGlobalId ?? '')) as IconName}
+                          size={16}
+                          className="rip-node-icon"
+                        />
                         {(nameByGlobalId[row.targetGlobalId ?? ''] ?? row.target)}
                       </span>
                     </li>
@@ -652,7 +679,11 @@ export default function RelationshipInsightPanel({
                 >
                   {connGids.map((g) => (
                     <option key={g} value={g}>
-                      {nameByGlobalId[g] ?? g}
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(g)) as IconName}
+                        size={16}
+                        className="rip-node-icon"
+                      />{nameByGlobalId[g] ?? g}
                     </option>
                   ))}
                 </select>
@@ -666,7 +697,11 @@ export default function RelationshipInsightPanel({
                 >
                   {connGids.map((g) => (
                     <option key={g} value={g}>
-                      {nameByGlobalId[g] ?? g}
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(g)) as IconName}
+                        size={16}
+                        className="rip-node-icon"
+                      />{nameByGlobalId[g] ?? g}
                     </option>
                   ))}
                 </select>
@@ -702,7 +737,14 @@ export default function RelationshipInsightPanel({
                     <li className="rip-path" key={`${p.nodes.join('>')}-${i}`}>
                       {p.nodes.map((n, j) => (
                         <span key={j}>
-                          <span className="rip-path-node">{nameByGlobalId[n] ?? n}</span>
+                          <span className="rip-path-node">
+                            <Icon
+                              name={getEntityIcon(entityTypeFromGlobalId(n)) as IconName}
+                              size={16}
+                              className="rip-node-icon"
+                            />
+                            {nameByGlobalId[n] ?? n}
+                          </span>
                           {j < p.edges.length && (
                             <span className="rip-path-edge">
                               {' —'}

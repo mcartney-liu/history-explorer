@@ -1,7 +1,8 @@
 import type { EntityRelationship } from './EntityPage'
 import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 import { useLocale } from '../data/locale'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
 
 export type EventNarrativeJourneyProps = {
   /** All relationships from the /entity response. */
@@ -102,6 +103,11 @@ export function EventNarrativeJourneyView({
         onClick={() => onEntityClick?.(clickTarget(r))}
       >
         <span className="enj-node-type">{getEntityLabel(r.other.type, locale)}</span>
+        <Icon
+          name={getEntityIcon(r.other.type) as IconName}
+          size={16}
+          className="enj-node-name-icon"
+        />
         <span className="enj-node-name">{name}</span>
         {cross && (
           <span className="enj-topic-badge" title={`来自 ${topicBadge(r)}`}>
@@ -139,6 +145,11 @@ export function EventNarrativeJourneyView({
         <div className="enj-center">
           <span className="enj-node enj-node--center">
             <span className="enj-node-type">{getEntityLabel('Event', locale)}</span>
+            <Icon
+              name={getEntityIcon('Event') as IconName}
+              size={16}
+              className="enj-node-center-icon"
+            />
             <span className="enj-node-name">{centerEntityName}</span>
           </span>
           <span className="enj-center-marker"><Icon name="circle" filled size={16} /> 当前</span>

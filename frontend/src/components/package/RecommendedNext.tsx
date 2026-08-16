@@ -3,7 +3,10 @@ import {
   type ExplorationPackage,
   type Locale,
 } from '../../data/explorationPackages'
+import { getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
 import { Button } from '../ui/Button'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 
 interface RecommendedNextProps {
   pkg: ExplorationPackage
@@ -54,6 +57,11 @@ export default function RecommendedNext({
                 onClick={() => onEntityClick?.(rec.ref)}
               >
                 <span className="recommended-next-kind">实体</span>
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(rec.ref)) as IconName}
+                  size={16}
+                  className="recommended-next-icon"
+                />
                 {label} →
               </Button>
             </li>

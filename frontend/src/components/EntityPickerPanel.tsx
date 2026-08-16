@@ -11,7 +11,9 @@ import {
   clearCandidates,
 } from '../data/pickerUtils'
 import { useLocale } from '../data/locale'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 // M14 (Cross Topic Selection Picker): search ANY topic, then hand-pick N real
 // entities across different topics into a friendly candidate list. The picked
@@ -275,7 +277,14 @@ export function EntityPickerView({
                     ↓
                   </button>
                 )}
-                <span className="ep-chip-name">{c.name}</span>
+                <span className="ep-chip-name">
+                  <Icon
+                    name={getEntityIcon(c.type ?? '') as IconName}
+                    size={16}
+                    className="ep-chip-name-icon"
+                  />
+                  {c.name}
+                </span>
                 {c.type && <span className="ep-chip-type">{getEntityLabel(c.type, locale)}</span>}
                 <button
                   type="button"
@@ -343,7 +352,14 @@ export function EntityPickerView({
           const isSelected = selectedGids.has(c.gid)
           return (
             <li key={c.gid} className="ep-result">
-              <span className="ep-result-name">{c.name}</span>
+              <span className="ep-result-name">
+                <Icon
+                  name={getEntityIcon(c.type ?? '') as IconName}
+                  size={16}
+                  className="ep-result-name-icon"
+                />
+                {c.name}
+              </span>
               {c.type && <span className="ep-result-type">{getEntityLabel(c.type, locale)}</span>}
               {c.topic && <span className="ep-result-topic">{c.topic}</span>}
               <button

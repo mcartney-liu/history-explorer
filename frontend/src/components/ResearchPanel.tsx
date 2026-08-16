@@ -11,6 +11,9 @@ import { saveGap } from '../data/GapLedger'
 import type { EntityRelationship } from './EntityPage'
 import { slotImageName, slotImageFocus, useContentRevision } from '../data/contentRuntime'
 import { mediaUrl } from '../data/contentApi'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 /** T1: an explicit restore request raised by the parent (ResearchLibrary). */
 export type RestoreRequest = {
@@ -236,7 +239,14 @@ export function ResearchPanelView({
       <div className="rp-context-badge">
         <span className="rp-context-label">研究对象：</span>
         <span className="rp-context-type">{entityType}</span>
-        <span className="rp-context-name">{entityName}</span>
+        <span className="rp-context-name">
+          <Icon
+            name={getEntityIcon(entityType) as IconName}
+            size={16}
+            className="rp-context-name-icon"
+          />
+          {entityName}
+        </span>
       </div>
 
       <p className="rp-subtitle">

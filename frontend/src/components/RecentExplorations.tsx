@@ -7,6 +7,9 @@ import { NavNode } from './navigation'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
 import { getCausalObjectName } from '../data/causalObjectNames'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 type RecentExplorationsProps = {
   items: NavNode[]
@@ -40,6 +43,9 @@ function RecentExplorations({ items, onSelect, onClear }: RecentExplorationsProp
                 {node.type === 'topic' ? t('common.kindTopic') : node.type === 'causal_object' ? '理解' : t('common.kindEntity')}
               </span>
               <span className="he-recent-label">
+                {node.type === 'entity' && (
+                  <Icon name={getEntityIcon(entityTypeFromGlobalId(node.id)) as IconName} size={16} className="he-recent-label-icon" />
+                )}
                 {getDisplayName(
                   node.type === 'topic' ? node.title : node.type === 'causal_object' ? getCausalObjectName(node.objectId) : node.name,
                   locale,
