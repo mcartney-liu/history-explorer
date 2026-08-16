@@ -123,6 +123,15 @@
   .ae-mode-chip:hover {
     background: var(--glass-navy-panel, var(--color-paper-200));
   }
+/* 探索起始线索 chips：圆角药丸 + 内边距 + 类型图标（StarterChips 图标化） */
+.discover-starter{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:999px;
+  border:1px solid var(--color-paper-300,currentColor);
+  font-size:14px;font-weight:500;line-height:1.2;
+  cursor:pointer;transition:background var(--animation-fast),transform var(--animation-fast)}
+.discover-starter-icon{flex:none;font-size:15px;opacity:.85}
+.discover-starter:hover{transform:translateY(-1px)}
 
 /* ── FeedbackWidget — override the shared de-bright rule above so the
    buttons are clearly visible in light & dark themes, and give the widget

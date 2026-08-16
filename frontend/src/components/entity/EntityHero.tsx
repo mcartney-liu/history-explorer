@@ -15,6 +15,8 @@ import { getEntityInsight, type AIEvidence } from '../../data/aiClient'
 import { EvidenceList } from '../ai/TrustDisplay'
 import { Icon } from '../ui/Icon'
 import type { IconName } from '../ui/Icon'
+import { slotImageName, slotImageFocus, useContentRevision } from '../../data/contentRuntime'
+import { mediaUrl } from '../../data/contentApi'
 
 interface EntityHeroProps {
   identity: EntityViewModel['identity']
@@ -36,6 +38,14 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
   const { name, type, timeLabel, locationLabel, keyFacts } = identity
   const label = getEntityLabel(type)
   const icon = getEntityIcon(type)
+
+  // 实体身份图（后台 entity_identity.{globalId} slot，PO 2026-08-15 B 类）：
+  // 后台配的图优先渲染到身份卡顶部；未配则整块不渲染，回退到上方类型图标。
+  // useContentRevision 订阅后台改动，配图后无需刷新整页即更新。
+  useContentRevision()
+  const artName = globalId ? slotImageName(`entity_identity.${globalId}`) : null
+  const artSrc = artName ? mediaUrl(artName) : null
+  const artFocus = globalId ? slotImageFocus(`entity_identity.${globalId}`) : null
 
   // M90.x: 历史见解 = 后台固化的内容（AI 基于证据生成一次后存储，前端只读）。
   // 挂载读 GET /api/v1/insights/{globalId}；无固化内容 → 占位"待后台生成"。
@@ -74,6 +84,13 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
 
   return (
     <section className="eh surf-card" aria-label={`${name} — ${label}`}>
+      {/* 身份图（后台 entity_identity.{globalId} 配置；未配则不渲染） */}
+      {artSrc && (
+        <div className="eh-art">
+          <img src={artSrc} alt={`${name} 身份图`} style={{ objectPosition: artFocus ?? '50% 50%' }} />
+        </div>
+      )}
+
       {/* Badge */}
       <div className="eh-badge">
         <Icon name={icon as IconName} size={20} className="eh-badge-icon" />
