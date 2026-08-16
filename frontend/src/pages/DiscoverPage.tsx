@@ -29,6 +29,7 @@ import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
 import { getPackagesByPlacement, type ExplorationPackage } from '../data/explorationPackages'
 import PackageCard from '../components/package/PackageCard'
+import { EntityNetBackground } from '../components/visual/EntityNetBackground'
 
 // Fixed hero copy — Design Freeze §2. Do NOT reword or generate.
 export const DISCOVER_HERO = lookup('zh', 'discover.hero')
@@ -111,6 +112,13 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
   const { t } = useLocale()
   const featuredStarters = TOPIC_STARTERS[FEATURED_TOPIC] ?? []
 
+  // 大标题区背后实体点阵氛围层：点=真实实体名（主题标题 + 所有探索起点实体），无连线，探照灯式交互。
+  const bgNames = useMemo(() => {
+    const fromTopics = topics.map((tp) => tp.title)
+    const fromStarters = Object.values(TOPIC_STARTERS).flatMap((group) => group.map((s) => s.label))
+    return Array.from(new Set([...fromTopics, ...fromStarters].filter(Boolean)))
+  }, [topics])
+
   // P5-S4: 当前激活的主题分类（null = 展示主题卡片墙）。
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
@@ -166,8 +174,12 @@ function DiscoverPage({ topics = [], onTopicClick, onStarterClick, onPackageClic
   return (
     <section className="discover-page" aria-label="Discover history explorations">
       <div className="discover-hero">
-        <h2 className="discover-hero-title">{t('discover.hero')}</h2>
-        <p className="discover-hero-sub">{t('discover.heroSub')}</p>
+        {/* 背后实体点阵氛围层：纯视觉、不挡操作（pointer-events:none） */}
+        <EntityNetBackground names={bgNames} className="discover-hero-net" />
+        <div className="discover-hero-text">
+          <h2 className="discover-hero-title">{t('discover.hero')}</h2>
+          <p className="discover-hero-sub">{t('discover.heroSub')}</p>
+        </div>
       </div>
 
       {/* 下半区：探索主题与官方探索包 */}
