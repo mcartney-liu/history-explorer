@@ -22,25 +22,25 @@ const records: ProvenanceRecord[] = [
 ]
 
 describe('ProvenancePanelView', () => {
-  it('renders loading skeleton', () => {
+  it('renders nothing while loading (silent per A3 / P4)', () => {
     const html = renderToStaticMarkup(
       <ProvenancePanelView status="loading" records={[]} />,
     )
-    expect(html).toContain('读取事实溯源')
+    expect(html).toBe('')
   })
 
-  it('renders empty state', () => {
+  it('renders nothing when empty (silent per A3 / P4)', () => {
     const html = renderToStaticMarkup(
       <ProvenancePanelView status="empty" records={[]} />,
     )
-    expect(html).toContain('暂无策展的事实溯源记录')
+    expect(html).toBe('')
   })
 
-  it('renders disabled state', () => {
+  it('renders nothing when disabled (silent per A3 / P4)', () => {
     const html = renderToStaticMarkup(
       <ProvenancePanelView status="disabled" records={[]} />,
     )
-    expect(html).toContain('PROVENANCE_PROJECTION=false')
+    expect(html).toBe('')
   })
 
   it('renders error card with retry', () => {

@@ -162,3 +162,29 @@
     justify-self: start;
   }
 }
+
+/* A3 (Phase 5): success 折叠行——默认收起，点击摘要展开看来源 + 论断 */
+.provenance-fold {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+}
+.provenance-fold__summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+}
+.provenance-fold__summary::-webkit-details-marker {
+  display: none;
+}
+.provenance-fold__summary::after {
+  content: "\25BE"; /* ▾ */
+  font-size: 0.8rem;
+  color: var(--color-ink-500);
+  transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+.provenance-fold[open] .provenance-fold__summary::after {
+  content: "\25B4"; /* ▴ */
+}

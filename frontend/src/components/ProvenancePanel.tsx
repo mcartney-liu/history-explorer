@@ -4,9 +4,7 @@ import {
   ProvenanceDisabledError,
   type ProvenanceRecord,
 } from '../data/provenanceApi'
-import EmptyState from './EmptyState'
 import ErrorCard, { type ErrorKind } from './ErrorCard'
-import LoadingSkeleton from './LoadingSkeleton'
 import CollapsibleList from './ui/CollapsibleList'
 import './ProvenancePanel.css'
 
@@ -101,72 +99,74 @@ export function ProvenancePanelView({
   errorKind,
   onRetry,
 }: ProvenancePanelViewProps) {
-  const groups = status === 'success' ? groupBySource(records) : []
+  // A3 (Phase 5): 状态规则（写死）——loading/empty/disabled 不显示（P4 缺失态 silent），
+  // error 可见可重试，success 折叠行默认收起。标题仅在 success/error 呈现。
+  if (status === 'loading' || status === 'empty' || status === 'disabled') {
+    return null
+  }
+
+  if (status === 'error') {
+    return (
+      <section className="provenance-panel" aria-label="实体证据与溯源">
+        <h3 className="provenance-title">证据与溯源</h3>
+        <ErrorCard kind={errorKind ?? 'network'} onRetry={onRetry} />
+      </section>
+    )
+  }
+
+  // status === 'success'：折叠行（默认收起），展开看来源 + 论断
+  const groups = groupBySource(records)
   const sourceCount = groups.length
   const claimCount = records.length
 
   return (
     <section className="provenance-panel" aria-label="实体证据与溯源">
-      <h3 className="provenance-title">证据与溯源</h3>
-      <p className="provenance-perspective">关于它，哪些事实可证、依据什么</p>
+      <details className="provenance-fold">
+        <summary className="provenance-title provenance-fold__summary">证据与溯源</summary>
+        <p className="provenance-perspective">关于它，哪些事实可证、依据什么</p>
+        <p className="provenance-summary">
+          本实体的事实由 <strong>{sourceCount}</strong> 个来源、
+          <strong>{claimCount}</strong> 条论断支撑。
+        </p>
+        <div className="provenance-sources">
+          {groups.map(([sourceId, recs]) => {
+            const reference = recs[0]?.reference ?? ''
+            return (
+              <article className="prov-source" key={sourceId}>
+                <header className="prov-source__head">
+                  <span className="prov-source__label">来源</span>
+                  <span className="prov-source__id" title="来源编号">
+                    {sourceId}
+                  </span>
+                </header>
 
-      {status === 'loading' && <LoadingSkeleton label="读取事实溯源…" />}
-      {status === 'disabled' && (
-        <EmptyState message="事实溯源投影未启用（PROVENANCE_PROJECTION=false）。" />
-      )}
-      {status === 'empty' && (
-        <EmptyState message="该实体暂无策展的事实溯源记录。" />
-      )}
-      {status === 'error' && (
-        <ErrorCard kind={errorKind ?? 'network'} onRetry={onRetry} />
-      )}
+                <p className="prov-source__cite">
+                  {reference || '（出处未标注）'}
+                </p>
 
-      {status === 'success' && (
-        <>
-          <p className="provenance-summary">
-            本实体的事实由 <strong>{sourceCount}</strong> 个来源、
-            <strong>{claimCount}</strong> 条论断支撑。
-          </p>
-          <div className="provenance-sources">
-            {groups.map(([sourceId, recs]) => {
-              const reference = recs[0]?.reference ?? ''
-              return (
-                <article className="prov-source" key={sourceId}>
-                  <header className="prov-source__head">
-                    <span className="prov-source__label">来源</span>
-                    <span className="prov-source__id" title="来源编号">
-                      {sourceId}
-                    </span>
-                  </header>
-
-                  <p className="prov-source__cite">
-                    {reference || '（出处未标注）'}
-                  </p>
-
-                  <div className="prov-source__claims-block">
-                    <h4 className="prov-claims__label">论断</h4>
-                    <CollapsibleList className="prov-source__claims" visible={3}>
-                      {recs.map((r, i) => (
-                        <li className="prov-claim" key={r.claim_id}>
-                          <span className="prov-claim__index" aria-hidden="true">
-                            {ordinalLabel(i)}
-                          </span>
-                          <span className="prov-claim__text">
-                            {r.claim_text || reference || '（未提供论断文本）'}
-                          </span>
-                          <span className="prov-claim__id" title="证据编号">
-                            {r.claim_id}
-                          </span>
-                        </li>
-                      ))}
-                    </CollapsibleList>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        </>
-      )}
+                <div className="prov-source__claims-block">
+                  <h4 className="prov-claims__label">论断</h4>
+                  <CollapsibleList className="prov-source__claims" visible={3}>
+                    {recs.map((r, i) => (
+                      <li className="prov-claim" key={r.claim_id}>
+                        <span className="prov-claim__index" aria-hidden="true">
+                          {ordinalLabel(i)}
+                        </span>
+                        <span className="prov-claim__text">
+                          {r.claim_text || reference || '（未提供论断文本）'}
+                        </span>
+                        <span className="prov-claim__id" title="证据编号">
+                          {r.claim_id}
+                        </span>
+                      </li>
+                    ))}
+                  </CollapsibleList>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      </details>
     </section>
   )
 }
