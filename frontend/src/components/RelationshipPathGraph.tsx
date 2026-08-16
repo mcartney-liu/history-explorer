@@ -19,6 +19,9 @@
 import { useState } from 'react'
 import type { RelationshipPath } from '../data/relationshipUtils'
 import { useLocale } from '../data/locale'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
 
 export type RelationshipPathGraphProps = {
   /** Pre-computed paths (nodes + edges) over EXISTING relationship edges. */
@@ -200,6 +203,13 @@ export default function RelationshipPathGraph({
                       style={{ fill: NODE_FILL, stroke: NODE_STROKE }}
                       strokeWidth={1.5}
                     />
+                    <g transform={`translate(${x + 4}, ${nodeCenterY - 8})`}>
+                      <Icon
+                        name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName}
+                        size={16}
+                        className="rpg-node-label-icon"
+                      />
+                    </g>
                     <text
                       className="rpg-node-label"
                       x={nodeCenterX}

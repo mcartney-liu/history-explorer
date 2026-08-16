@@ -1,6 +1,8 @@
 import type { EntityRelationship } from './EntityPage'
 import { useLocale } from '../data/locale'
-import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
+import { getEntityLabel, getRelationshipLabel, getEntityIcon } from '../data/entity/entityLabels'
 
 export type EventImpactPanelProps = {
   relationships: EntityRelationship[]
@@ -83,6 +85,11 @@ export function EventImpactPanelView({
                     onClick={() => onEntityClick?.(r.other.id)}
                   >
                     <span className="eip-node-type">{getEntityLabel(r.other.type, locale)}</span>
+                    <Icon
+                      name={getEntityIcon(r.other.type) as IconName}
+                      size={16}
+                      className="eip-node-name-icon"
+                    />
                     <span className="eip-node-name">{name}</span>
                   </button>
                   <span className="eip-rel-badge">{getRelationshipLabel(r.type, locale)}</span>

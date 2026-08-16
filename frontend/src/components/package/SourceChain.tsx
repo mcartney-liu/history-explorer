@@ -5,8 +5,14 @@ import {
   type ExplorationPackage,
   type Locale,
 } from '../../data/explorationPackages'
-import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import {
+  getRelationshipLabel,
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../../data/entity/entityLabels'
 import { Badge, type BadgeTone } from '../ui/Badge'
+import { Icon } from '../../components/ui/Icon'
+import type { IconName } from '../../components/ui/Icon'
 
 interface SourceChainProps {
   pkg: ExplorationPackage
@@ -45,13 +51,25 @@ export default function SourceChain({ pkg, locale = 'zh', onSourceClick }: Sourc
     <div className="source-chain" data-testid="source-chain">
       {edgesWithEvidence.map((p) => {
         const evs = getEvidenceWithSources(p.evidence!)
-        const relLabel = `${getEntityDisplayName(p.from, locale)} ${getRelationshipLabel(
-          p.type,
-          locale,
-        )} ${getEntityDisplayName(p.to, locale)}`
         return (
           <section className="source-group" key={`${p.from}-${p.to}-${p.type}`}>
-            <h4 className="source-group-rel">{relLabel}</h4>
+            <h4 className="source-group-rel">
+              <Icon
+                name={getEntityIcon(entityTypeFromGlobalId(p.from)) as IconName}
+                size={16}
+                className="source-chain-from-icon"
+              />
+              {getEntityDisplayName(p.from, locale)}
+              {' '}
+              {getRelationshipLabel(p.type, locale)}
+              {' '}
+              <Icon
+                name={getEntityIcon(entityTypeFromGlobalId(p.to)) as IconName}
+                size={16}
+                className="source-chain-to-icon"
+              />
+              {getEntityDisplayName(p.to, locale)}
+            </h4>
             {evs.map((ev) => (
               <div className="source-claim" key={ev.claimId}>
                 <p className="source-claim-text">{ev.claim}</p>

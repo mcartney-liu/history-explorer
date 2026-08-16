@@ -13,6 +13,9 @@
 import { useEffect, useState } from 'react'
 import { API_BASE } from '../config/api'
 import CollapsibleList from './ui/CollapsibleList'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 type EntityRelatedListProps = {
   /** Global id of the current entity, e.g. "roman_empire:civ-roman". */
@@ -132,6 +135,7 @@ export function EntityRelatedList({ gid, onEntityClick }: EntityRelatedListProps
                 onClick={() => onEntityClick(it.global_id, it.name)}
               >
                 <span className="he-related-type">{typeLabel(it.type)}</span>
+                <Icon name={getEntityIcon(it.type) as IconName} size={16} className="he-related-name-icon" />
                 <span className="he-related-name">{it.name}</span>
                 {it.reason ? (
                   <span className="he-related-reason">{it.reason}</span>

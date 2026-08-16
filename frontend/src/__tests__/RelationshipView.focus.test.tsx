@@ -73,7 +73,7 @@ describe('M10-2 RelationshipView — cross-panel focus PRODUCER', () => {
       />,
     )
     const m = html.match(
-      /<li class="rel-branch is-focused">\s*<span class="rel-target-name">([^<]+)<\/span>/,
+      /<li class="rel-branch is-focused">[\s\S]*?<span class="rel-target-name">([^<]+)<\/span>/,
     )
     // Exactly one branch is focused, and it is the Tiberius branch whose local
     // id rel-1 resolved to the matching global_id.
@@ -91,7 +91,7 @@ describe('M10-2 RelationshipView — cross-panel focus PRODUCER', () => {
       />,
     )
     const m = html.match(
-      /<li class="rel-branch is-focused">\s*<span class="rel-target-name">([^<]+)<\/span>/,
+      /<li class="rel-branch is-focused">[\s\S]*?<span class="rel-target-name">([^<]+)<\/span>/,
     )
     expect(m).not.toBeNull()
     expect(m![1]).toBe('Livia')

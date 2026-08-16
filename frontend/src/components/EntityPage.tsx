@@ -212,7 +212,7 @@ function EntityPage({
         relationships={entity.relationships}
       />
 
-      <SummaryPanel title={entity.name} summary={description} />
+      <SummaryPanel title={entity.name} summary={description} entityType={entity.type} />
 
       {/* M5-A-5 (A4 重构): 实体级探索引导——压成一行轻量认知提示；
           无 starters 整卡不渲染（silent，P4 / ADR-0025），避免空态大卡占位。 */}

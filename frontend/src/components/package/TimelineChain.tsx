@@ -4,7 +4,13 @@ import {
   type ExplorationPackage,
   type Locale,
 } from '../../data/explorationPackages'
-import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import {
+  getRelationshipLabel,
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../../data/entity/entityLabels'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 
 interface TimelineChainProps {
   pkg: ExplorationPackage
@@ -33,7 +39,14 @@ export default function TimelineChain({ pkg, locale = 'zh', onEntityClick }: Tim
               data-gid={gid}
               {...(onEntityClick ? { onClick: () => onEntityClick(gid) } : {})}
             >
-              <span className="journey-node-name">{name}</span>
+              <span className="journey-node-name">
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName}
+                  size={16}
+                  className="journey-node-name-icon"
+                />
+                {name}
+              </span>
               {year != null && <span className="journey-node-meta">{year} 年</span>}
             </button>
             {!isLast && (

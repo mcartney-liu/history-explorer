@@ -4,7 +4,13 @@ import {
   type Locale,
   type RelationshipPathRef,
 } from '../../data/explorationPackages'
-import { getRelationshipLabel } from '../../data/entity/entityLabels'
+import {
+  getRelationshipLabel,
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../../data/entity/entityLabels'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 import { resolveCausalForEdge } from '../../data/explorationGuide'
 import { recordEvent } from '../../data/UserBehaviorEvent'
 import CausalStatementCard from '../causal/CausalStatementCard'
@@ -91,7 +97,14 @@ export default function RelationshipChain({
                     }
                   : {})}
               >
-                <span className="journey-node-name">{name}</span>
+                <span className="journey-node-name">
+                  <Icon
+                    name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName}
+                    size={16}
+                    className="journey-node-name-icon"
+                  />
+                  {name}
+                </span>
               </button>
               {!isLast && edge && (
                 <>
@@ -119,6 +132,11 @@ export default function RelationshipChain({
                   className="journey-side-from"
                   {...(onEntityClick ? { onClick: () => onEntityClick(p.from) } : {})}
                 >
+                  <Icon
+                    name={getEntityIcon(entityTypeFromGlobalId(p.from)) as IconName}
+                    size={16}
+                    className="journey-side-from-icon"
+                  />
                   {getEntityDisplayName(p.from, locale)}
                 </button>
                 <span className="journey-side-rel">{getRelationshipLabel(p.type, locale)}</span>
@@ -127,6 +145,11 @@ export default function RelationshipChain({
                   className="journey-side-to"
                   {...(onEntityClick ? { onClick: () => onEntityClick(p.to) } : {})}
                 >
+                  <Icon
+                    name={getEntityIcon(entityTypeFromGlobalId(p.to)) as IconName}
+                    size={16}
+                    className="journey-side-to-icon"
+                  />
                   {getEntityDisplayName(p.to, locale)}
                 </button>
               </li>
