@@ -55,12 +55,12 @@ export const TAB_GUIDANCE: Record<EntityTab, TabGuidance> = {
     userGoal: '我想知道为什么',
     recommendedActions: ['查看因果链', '使用 AI 解释', '阅读事件叙事'],
   },
-  extensions: {
-    id: 'extensions',
-    title: '扩展功能',
-    description: '更多功能即将推出。包括 AI 内容创作、教育模块和社交探索。',
-    userGoal: '探索更多可能',
-    recommendedActions: ['敬请期待'],
+  ai: {
+    id: 'ai',
+    title: '与 AI 历史学家对话',
+    description: '向对话式历史学家自由提问——每个回答都带有事实溯源，帮你从任意角度深入理解这个实体。',
+    userGoal: '我想自由追问',
+    recommendedActions: ['向历史学家提问', '要求引用来源', '追问为什么'],
   },
 }
 

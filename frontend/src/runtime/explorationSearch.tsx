@@ -33,7 +33,7 @@ export interface UseExplorationSearchInput {
   /** Async fetch, owned by App (also resets entity/result view state). */
   handleSearch: (q: string) => void | Promise<void>
   navigateTo: (node: NavNode) => void
-  openEntity: (id: string, name?: string, tab?: 'info' | 'research' | 'extensions') => void
+  openEntity: (id: string, name?: string, tab?: 'info' | 'research' | 'ai') => void
   prettifyTopic: (t: string) => string
 }
 

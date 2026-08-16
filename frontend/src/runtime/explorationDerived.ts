@@ -19,7 +19,7 @@ export interface ExplorationDerivedInput {
   cursor: number
   t: (key: string) => string
   locale: string
-  openEntity: (id: string, name?: string, tab?: 'info' | 'research' | 'extensions') => void
+  openEntity: (id: string, name?: string, tab?: 'info' | 'research' | 'ai') => void
 }
 
 export interface ExplorationDerived {

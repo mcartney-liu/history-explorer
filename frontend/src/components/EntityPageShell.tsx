@@ -8,7 +8,7 @@ import { useLocale } from '../data/locale'
 // Types
 // ============================================================
 
-export type EntityTab = 'info' | 'explore' | 'research' | 'analyze' | 'extensions'
+export type EntityTab = 'info' | 'explore' | 'research' | 'analyze' | 'ai'
 
 export interface TabConfig {
   id: EntityTab
@@ -19,7 +19,7 @@ export interface TabConfig {
 const TABS: TabConfig[] = [
   { id: 'info', label: 'entity.tabInfo', ariaLabel: 'entity.tabInfoAria' },
   { id: 'research', label: 'entity.tabResearch', ariaLabel: 'entity.tabResearchAria' },
-  { id: 'extensions', label: 'entity.tabExtensions', ariaLabel: 'entity.tabExtensionsAria' },
+  { id: 'ai', label: 'entity.tabAi', ariaLabel: 'entity.tabAiAria' },
 ]
 
 // ============================================================

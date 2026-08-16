@@ -322,20 +322,7 @@ function EntityPage({
                     onNodeClick={onNextStepClick}
                   />
 
-                  {/* M60-001: AI conversation — from old 'explore' tab */}
-                  <p className="explore-hint">
-                    {t('entity.exploreHint')}
-                  </p>
-                  {entityGlobalId ? (
-                    <HistorianChat
-                      entityGlobalId={entityGlobalId}
-                      entityName={entity.name}
-                      entityType={entity.type}
-                      relationships={entity.relationships}
-                    />
-                  ) : (
-                    <EmptyState message="该实体缺少全局 ID，AI 对话暂不可用。" />
-                  )}
+                  {/* A2 (Phase 6): HistorianChat 已移至 AI tab（case 'ai'），info tab 不再内联对话。 */}
 
                   {/* M59-016: RelationshipView/TimelinePanel/GraphViewPanel removed from info tab.
                       Covered by ConnectionExplorer (Graph | Timeline | Map views).
@@ -442,12 +429,24 @@ function EntityPage({
                 </>
               )
 
-            // ---- EXTENSIONS TAB ----
-            case 'extensions':
+            // ---- AI TAB (D7 甲案): 对话式历史学家 HistorianChat ----
+            case 'ai':
               return (
-                <div className="result">
-                  <p>{t('entity.extensionsComing')}</p>
-                </div>
+                <>
+                  <p className="explore-hint">
+                    {t('entity.exploreHint')}
+                  </p>
+                  {entityGlobalId ? (
+                    <HistorianChat
+                      entityGlobalId={entityGlobalId}
+                      entityName={entity.name}
+                      entityType={entity.type}
+                      relationships={entity.relationships}
+                    />
+                  ) : (
+                    <EmptyState message="该实体缺少全局 ID，AI 对话暂不可用。" />
+                  )}
+                </>
               )
 
             default:

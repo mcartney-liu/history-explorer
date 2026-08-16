@@ -30,14 +30,14 @@ export interface UseExplorationNavigationInput {
   runtimeContext: ExplorerRuntimeContextValue
   createContext: (input: CreateContextInput) => void
   updateAnchor: (input: UpdateAnchorInput) => void
-  setEntityInitialTab: Dispatch<SetStateAction<'info' | 'research' | 'extensions'>>
+  setEntityInitialTab: Dispatch<SetStateAction<'info' | 'research' | 'ai'>>
   prettifyTopic: (t: string) => string
 }
 
 export function useExplorationNavigation(input: UseExplorationNavigationInput): {
   navigateTo: (node: NavNode) => void
   openCausalObject: (objectId: string) => void
-  openEntity: (id: string, name?: string, tab?: 'info' | 'research' | 'extensions') => void
+  openEntity: (id: string, name?: string, tab?: 'info' | 'research' | 'ai') => void
   goTo: (newCursor: number) => void
   goBack: () => void
   goForward: () => void
@@ -81,7 +81,7 @@ export function useExplorationNavigation(input: UseExplorationNavigationInput): 
     id: string,
     name?: string,
     // T1: which EntityPage tab to land on (research bookmarks open 'research').
-    tab: 'info' | 'research' | 'extensions' = 'info',
+    tab: 'info' | 'research' | 'ai' = 'info',
   ) {
     // 2026-08-11 (PO): 从探索包/因果对象页点实体——先退出包上下文。
     // entityDetail 渲染条件带 !packageSlug，不关则实体页被挡住跳不过去。
