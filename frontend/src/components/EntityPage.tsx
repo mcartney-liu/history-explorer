@@ -163,7 +163,8 @@ function EntityPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps — only consume once per entity visit.
   }, [entityGlobalId])
 
-  // M35 curated narrative: 板块始终可见（PO 判定），无叙事数据时渲染空态占位。
+  // D8 / P4 (ADR-0025): M35「叙事板块始终可见」已退役 → 无叙事按 Progressive Presence 不渲染空态（silent）。
+  // hasNarrative 仅用于门控 StorySection / WhyImportantPanel（有数据才渲染）。
   const narrativeKey = entityId ?? entity.exploration.main_entity.global_id ?? ''
   const narrativeBlock = getNarrative(narrativeKey)
   const hasNarrative = !!(narrativeBlock && (narrativeBlock.story || narrativeBlock.whyImportant))
@@ -175,6 +176,17 @@ function EntityPage({
       end_date: entity.summary.end_date as TimeValue | undefined,
     },
   ], locale)
+
+  // D8 (L1 Narrative): 预计算"它意味着什么"面板内容，用于叙事面显隐判定（P4：无内容不渲染空壳）。
+  const narrativeInterpretations = toInterpretationViewModels(entity.connections_explained)
+  const narrativeUnderstandings = buildUnderstandingsFromRelationships(
+    entity.relationships,
+    entity.name,
+    centerTimeMap,
+    locale,
+  )
+  const hasInterpretation =
+    narrativeInterpretations.length > 0 || narrativeUnderstandings.length > 0
 
   return (
     <div className="result">
@@ -255,36 +267,26 @@ function EntityPage({
                     }
                   />
 
-                  {/* M35 Feature C: curated narrative (StorySection / WhyImportantPanel).
-                      narrativeKey carries the GLOBAL id so narrative.ts lookup matches
-                      its global_id keys. No AI — copy is hand-authored.
-                      无叙事数据时渲染空态占位（板块始终可见，PO 判定）。 */}
-                  {entitySectionVisible('why_important') && (
-                    hasNarrative ? (
-                      <>
-                        <StorySection narrativeKey={narrativeKey} />
-                        <WhyImportantPanel narrativeKey={narrativeKey} />
-                      </>
-                    ) : (
-                      <EmptyState message={t('entity.narrativeEmpty')} />
-                    )
-                  )}
-
-                  {/* 探索剧本化 ⑤（治 D3 配套）：把"它意味着什么"语义解释从 research tab
-                      上提到 info tab 默认可见——实体页一打开就呈现与该实体相关的理解叙事，
-                      无需点进 research tab。组件无常数据/无理解时自渲染 null，不增加视觉噪音。
-                      纯图/关系驱动、无 AI；AI 解释仍留在 research tab 门控（冻结基线）。 */}
-                  <InterpretationPanel
-                    interpretations={toInterpretationViewModels(entity.connections_explained)}
-                    understandings={buildUnderstandingsFromRelationships(
-                      entity.relationships,
-                      entity.name,
-                      centerTimeMap,
-                      locale,
-                    )}
-                    onNodeClick={onNodeClick}
-                    entityName={entity.name}
-                  />
+                  {/* D8 (L1 Narrative): 历史叙事 → 为什么重要 → 它意味着什么，
+                      合并为连续主体叙事面（Surface ≠ Card）。
+                      无叙事不渲染空态（P4 / ADR-0025）；各子组件自带无数据 null，
+                      InterpretationPanel 独立判定自身内容。Q3「为什么值得继续看」在此回答。 */}
+                  {(entitySectionVisible('why_important') && hasNarrative) || hasInterpretation ? (
+                    <section className="entity-narrative-surface" aria-label="叙事与意义">
+                      {entitySectionVisible('why_important') && hasNarrative && (
+                        <>
+                          <StorySection narrativeKey={narrativeKey} />
+                          <WhyImportantPanel narrativeKey={narrativeKey} />
+                        </>
+                      )}
+                      <InterpretationPanel
+                        interpretations={narrativeInterpretations}
+                        understandings={narrativeUnderstandings}
+                        onNodeClick={onNodeClick}
+                        entityName={entity.name}
+                      />
+                    </section>
+                  ) : null}
 
                   {/* M74-003 (C3-2) — Relationship Insight (T2): evidence-bound AI
                       exploration touchpoint. Flag-gated at the parent so OFF =

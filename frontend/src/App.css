@@ -2574,6 +2574,55 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
   margin: 0;
 }
 
+/* D8 (L1 Narrative): 连续主体叙事面 —— Surface ≠ Card。
+   历史叙事 / 为什么重要 / 它意味着什么 合并为一个连续阅读面，
+   消灭三块的视觉权重离散化（InterpretationPanel 自带 .result-section 卡片外壳，在此面内中和）。 */
+.entity-narrative-surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5, 20px);
+  background: var(--color-paper-100, #faf8f3);
+  border: 1px solid var(--color-accent-soft, rgba(138, 108, 64, 0.3));
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-6, 24px);
+}
+/* 面内子块去卡片外壳，保持连续阅读 */
+.entity-narrative-surface .story-section,
+.entity-narrative-surface .why-important-panel,
+.entity-narrative-surface .interpretation-panel {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+}
+.entity-narrative-surface .interpretation-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* 子段落正文统一可读性 */
+.entity-narrative-surface .story-section-body,
+.entity-narrative-surface .why-important-body {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--color-ink-700, #3a342c);
+  margin: 0;
+}
+/* 子标题统一为连续叙事的小节标签（serif + 左侧 accent 引导线） */
+.entity-narrative-surface .story-section-heading,
+.entity-narrative-surface .why-important-heading,
+.entity-narrative-surface .interpretation-panel > h3 {
+  font-family: var(--serif, serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-ink-900, #1a1712);
+  margin: 0 0 10px;
+  padding-left: 12px;
+  border-left: 3px solid var(--color-accent, #8a6c40);
+  letter-spacing: 0.04em;
+}
+
 /* 卡片微交互：导语/为什么重要（EvidenceBlock） + 探索卡 hover 抬升 */
 .explore-a .evidence-block,
 .explore-a .he-guide-card {
