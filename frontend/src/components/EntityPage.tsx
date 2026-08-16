@@ -37,14 +37,6 @@ import EntityPageShell from './EntityPageShell'
 import type { EntityTab } from './EntityPageShell'
 import { useLocale } from '../data/locale'
 import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
-import { takeOriginEntity } from '../runtime/originEntity'
-import { getEntityNeighbors } from '../runtime/entityCache'
-import { collectRelationEvidence } from '../data/continuityEngine'
-import {
-  buildExplanationCandidates,
-  selectBestExplanation,
-  expressHonestNone,
-} from '../data/continuityExplanation'
 
 export type EntityRelationship = {
   type: string
@@ -106,7 +98,6 @@ import { buildInsight } from '../data/entity/EntityInsightModel'
 import { ConnectionExplorer } from './entity/ConnectionExplorer'
 import { ExplorationGuide } from './entity/ExplorationGuide'
 import { EntityExperienceHeader } from './entity/EntityExperienceHeader'
-import { getEntityDisplayName } from '../data/explorationPackages'
 
 function EntityPage({
   entity,
@@ -160,37 +151,6 @@ function EntityPage({
   // fallback. Target-side dates remain a documented Future Scope item.
   const entityGlobalId = entity.exploration.main_entity.global_id ?? entityId
 
-  // 入口桥 (2026-08-15, PO → Phase B)：从实体 A 跳入本实体 B 时，显示 A↔B 的过渡承接。
-  // 过渡逻辑统一走 ContinuityEngine + B 解释层（与 ConnectionCard 共用同一引擎，C5）：
-  //   collectRelationEvidence（证据集合）→ buildExplanationCandidates（素材数组）
-  //   → selectBestExplanation（B 选择器）→ bridge；NONE → expressHonestNone 诚实陈述。
-  // 来源由 openEntity 按目标实体暂存（keyed），同一 B 从不同 A 进入读到最近来源 → 桥随入口变化。
-  // 注：实体关系数据当前不含 evidence claim ids，故入口桥素材以关系短句为主；
-  // 未来数据补 evidence 后自动升级 claim 叙述（引擎共享，调用方无需改）。
-  const [originGid] = useState(() => takeOriginEntity(entityGlobalId))
-  const originBridge = useMemo(() => {
-    if (!originGid || !entityGlobalId) return null
-    const rel = entity.relationships.find(
-      (r) => r.other.global_id === originGid || r.other.id === originGid,
-    )
-    const fromName = rel?.other.name ?? getEntityDisplayName(originGid)
-    // 多跳路径桥：无直接边时找共同邻居（A 的缓存邻居 ∩ B 的邻居，纯内存）。
-    const aNeighbors = getEntityNeighbors(originGid) ?? []
-    const bGids = new Set(entity.relationships.map((r) => r.other.global_id ?? r.other.id))
-    const common = aNeighbors.find((n) => bGids.has(n.gid)) ?? null
-    const evidence = collectRelationEvidence(
-      { gid: originGid, name: fromName },
-      { gid: entityGlobalId, name: entity.name },
-      { edge: rel ? { type: rel.type } : null, commonNeighbor: common },
-    )
-    const candidates = buildExplanationCandidates(evidence, fromName, entity.name)
-    const selected = selectBestExplanation(candidates)
-    const honest = evidence.some((e) => e.kind === 'NONE')
-      ? expressHonestNone(fromName, entity.name)
-      : null
-    return { fromName, bridge: selected?.fact ?? honest?.text ?? null, confidence: selected?.confidence ?? null }
-  }, [originGid, entity, entityGlobalId])
-
   // 2026-08-11 (PO 方案B): 消费「我的」tab 写入的 pending restore ——
   // 从收藏/最近点进来时，自动恢复对应研究（复用 ResearchLibrary 的打开链路）。
   useEffect(() => {
@@ -220,28 +180,6 @@ function EntityPage({
     <div className="result">
       <EntityHeader type={entity.type} />
 
-      {/* 入口桥 (2026-08-15, PO)：从实体 A 跳入时显示"A↔B 的关系承接"，
-          无边时降级来源；无来源（直达）不渲染。 */}
-      {originBridge && (
-        <div className="origin-bridge" aria-label="入口承接">
-          <span className="origin-bridge-kicker">
-            {originBridge.bridge
-              ? t('entity.origin_bridge_from', { name: originBridge.fromName })
-              : t('entity.origin_bridge_fallback', { name: originBridge.fromName })}
-          </span>
-          {originBridge.bridge && (
-            <p className="origin-bridge-text">
-              {originBridge.bridge}
-              {originBridge.confidence && (
-                <span className={`transition-confidence transition-confidence--${originBridge.confidence}`}>
-                  {t(`transition.confidence_${originBridge.confidence}`)}
-                </span>
-              )}
-            </p>
-          )}
-        </div>
-      )}
-
       {/* 探索剧本化 ③（治 D3）：从探索包点进来的实体，顶部常驻"你为什么在这里"，
           回答这一站与包主题/关系链的关系。非包内进入时 originSlug 为空，自动不渲染。 */}
       <ConnectionCard
@@ -249,6 +187,7 @@ function EntityPage({
         entityName={entity.name}
         onEntityClick={onEntityClick}
         onOpenPackage={onOpenPackage}
+        relationships={entity.relationships}
       />
 
       <SummaryPanel title={entity.name} summary={description} />
