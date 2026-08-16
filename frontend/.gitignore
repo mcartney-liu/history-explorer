@@ -6,6 +6,8 @@ package-lock.json
 
 # Production build output
 dist
+# Phase 1 build / preview output (vite build --outDir; contains index.html + assets/)
+.phase1-build/
 
 # Logs
 npm-debug.log*
