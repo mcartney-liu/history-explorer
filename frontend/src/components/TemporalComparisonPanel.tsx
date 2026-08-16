@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import EmptyState from './EmptyState'
 import { useLocale } from '../data/locale'
+import {
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 import { formatDateRange, type TimeValue } from '../data/temporalUtils'
 import {
   compareTemporalRanges,
@@ -28,13 +34,16 @@ export interface TemporalEntity {
 
 interface TemporalComparisonPanelProps {
   entities: TemporalEntity[]
+  // Optional name -> global_id map used to infer each entity's type icon.
+  // When omitted, the bare entity name (local_id) is used as a fallback.
+  globalIdByName?: Record<string, string>
 }
 
 function hasDate(e: TemporalEntity): boolean {
   return !!(e.start_date || e.end_date)
 }
 
-function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
+function TemporalComparisonPanel({ entities, globalIdByName }: TemporalComparisonPanelProps) {
   const { t, locale } = useLocale()
   // 1. Keep named entities only, dedupe by name, preserve input order.
   //    No sorting — avoids any hidden ranking / similarity behavior.
@@ -141,13 +150,27 @@ function TemporalComparisonPanel({ entities }: TemporalComparisonPanelProps) {
 
         <div className="temporal-comparison-entities">
           <div className="temporal-comparison-entity">
-            <div className="temporal-comparison-entity-name">{entityA.name}</div>
+            <div className="temporal-comparison-entity-name">
+              <Icon
+                name={getEntityIcon(entityTypeFromGlobalId(globalIdByName?.[entityA.name] ?? entityA.name)) as IconName}
+                size={16}
+                className="temporal-comparison-entity-icon"
+              />
+              {entityA.name}
+            </div>
             <div className="temporal-comparison-entity-range">
               {rangeText(entityA)}
             </div>
           </div>
           <div className="temporal-comparison-entity">
-            <div className="temporal-comparison-entity-name">{entityB.name}</div>
+            <div className="temporal-comparison-entity-name">
+              <Icon
+                name={getEntityIcon(entityTypeFromGlobalId(globalIdByName?.[entityB.name] ?? entityB.name)) as IconName}
+                size={16}
+                className="temporal-comparison-entity-icon"
+              />
+              {entityB.name}
+            </div>
             <div className="temporal-comparison-entity-range">
               {rangeText(entityB)}
             </div>

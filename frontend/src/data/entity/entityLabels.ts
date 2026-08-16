@@ -71,7 +71,11 @@ export function getEntityIcon(type: string): string {
 // ============================================================
 
 export function entityTypeFromGlobalId(gid: string): string {
-  const local = gid.split(':')[1] ?? ''
+  // Accept both full global_ids ("topic:loc-rome") and bare local_ids
+  // ("loc-rome"). A bare id has no topic namespace, so fall back to the whole
+  // string before matching prefixes — otherwise the prefix gets dropped and the
+  // type mis-resolves to Civilization.
+  const local = gid.includes(':') ? gid.split(':').slice(1).join(':') : gid
   if (local.startsWith('person-')) return 'Person'
   if (local.startsWith('religion-')) return 'Religion'
   if (local.startsWith('tech-')) return 'Technology'

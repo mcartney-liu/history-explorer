@@ -6,6 +6,12 @@ import AIExplanationPanel from './AIExplanationPanel'
 import { entityContext } from '../data/aiContext'
 import { useLocale } from '../data/locale'
 import { getTermLabel } from '../locales/terminology'
+import {
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 export type TimelineItem = {
   period: string
@@ -94,10 +100,22 @@ function TimelinePanel({
                     aria-label={t('timeline.openAria', { event: item.event })}
                     onClick={() => onEventClick!(entityId!)}
                   >
+                    <Icon
+                      name={getEntityIcon(entityTypeFromGlobalId(eventGlobalId ?? item.event)) as IconName}
+                      size={16}
+                      className="timeline-event-icon"
+                    />
                     {item.event}
                   </button>
                 ) : (
-                  <div className={`timeline-event${focusCls}`}>{item.event}</div>
+                  <div className={`timeline-event${focusCls}`}>
+                    <Icon
+                      name={getEntityIcon(entityTypeFromGlobalId(eventGlobalId ?? item.event)) as IconName}
+                      size={16}
+                      className="timeline-event-icon"
+                    />
+                    {item.event}
+                  </div>
                 )}
               </div>
             )

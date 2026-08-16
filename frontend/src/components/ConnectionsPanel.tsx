@@ -1,6 +1,13 @@
 import { useMemo } from 'react'
 import { useLocale } from '../data/locale'
-import { getRelationshipLabel, getEntityDisplayName } from '../data/entity/entityLabels'
+import {
+  getRelationshipLabel,
+  getEntityDisplayName,
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 export type ConnectionItem = {
   type: string
@@ -86,6 +93,9 @@ type ConnRow = {
   target: string
   post: string
   plain?: string
+  // Raw target identifier (pre-humanization) used to infer the entity type
+  // icon; falls back to globe for display-only names (e.g. Chinese names).
+  raw: string
 }
 
 function ConnectionsPanel({ connections, subject }: ConnectionsPanelProps) {
@@ -108,19 +118,19 @@ function ConnectionsPanel({ connections, subject }: ConnectionsPanelProps) {
           const sentenceKey = pre + target + rawPost
           if (seen.has(sentenceKey)) continue
           seen.add(sentenceKey)
-          out.push({ key: sentenceKey, verb, gloss, pre, target, post: rawPost })
+          out.push({ key: sentenceKey, verb, gloss, pre, target, post: rawPost, raw: item.name })
         } else {
           // 未知关系类型兜底：主语 + 动词 + 宾语
           const plain = `${subject} ${verb} ${target}`
           if (seen.has(plain)) continue
           seen.add(plain)
-          out.push({ key: plain, verb, gloss, pre: '', target: '', post: '', plain })
+          out.push({ key: plain, verb, gloss, pre: '', target: '', post: '', plain, raw: item.name })
         }
       } else {
         const plain = `${verb}：${target}`
         if (seen.has(plain)) continue
         seen.add(plain)
-        out.push({ key: plain, verb, gloss, pre: '', target: '', post: '', plain })
+        out.push({ key: plain, verb, gloss, pre: '', target: '', post: '', plain, raw: item.name })
       }
     }
     return out
@@ -141,6 +151,11 @@ function ConnectionsPanel({ connections, subject }: ConnectionsPanelProps) {
               ) : (
                 <span className="conn-sentence">
                   {r.pre}
+                  <Icon
+                    name={getEntityIcon(entityTypeFromGlobalId(r.raw)) as IconName}
+                    size={16}
+                    className="conn-target-icon"
+                  />
                   <b>{r.target}</b>
                   {r.post}
                 </span>

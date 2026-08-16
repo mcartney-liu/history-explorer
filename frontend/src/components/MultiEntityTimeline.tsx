@@ -12,6 +12,12 @@ import {
   buildTemporalComparisonText,
 } from '../data/compareTemporal'
 import { useLocale } from '../data/locale'
+import {
+  getEntityIcon,
+  entityTypeFromGlobalId,
+} from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 
 // M8-P1: Multi-Entity Temporal Timeline (Explore page).
 //
@@ -29,9 +35,12 @@ import { useLocale } from '../data/locale'
 
 interface MultiEntityTimelineProps {
   entities: TemporalBar[]
+  // Optional name -> global_id map used to infer each entity's type icon.
+  // When omitted, the bare entity name (local_id) is used as a fallback.
+  globalIdByName?: Record<string, string>
 }
 
-function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
+function MultiEntityTimeline({ entities, globalIdByName }: MultiEntityTimelineProps) {
   const { t, locale } = useLocale()
   // Keep named entities, dedupe by name, preserve input order (no sorting).
   const seen = new Set<string>()
@@ -96,6 +105,11 @@ function MultiEntityTimeline({ entities }: MultiEntityTimelineProps) {
           {laid.map((bar, i) => (
             <div className="multi-entity-row" key={bar.name}>
               <div className="multi-entity-label">
+                <Icon
+                  name={getEntityIcon(entityTypeFromGlobalId(globalIdByName?.[bar.name] ?? bar.name)) as IconName}
+                  size={16}
+                  className="multi-entity-name-icon"
+                />
                 <span className="multi-entity-name">{bar.name}</span>
                 <span className="multi-entity-range">{rangeText(bars[i])}</span>
               </div>
