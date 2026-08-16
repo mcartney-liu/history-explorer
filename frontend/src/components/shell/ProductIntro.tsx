@@ -65,36 +65,38 @@ export function ProductIntro() {
 
   return (
     <div className="discover-intro">
-      <h3 className="discover-section-heading">History Explorer 能做什么</h3>
-      <div className="discover-intro-grid">
-        {cards.map((cap) => {
-          const theme = cardTheme(cap.id)
-          // Slot ids are namespaced (`landing.story`); the stylesheet hooks
-          // predate that and use the bare key — a dot here would split the
-          // class in two.
-          const key = slotKey(cap.id)
-          const focus = slotImageFocus(cap.id)
-          return (
-            <Card key={cap.id} variant="default" className={`discover-intro-card intro-theme-${theme} intro-card-${key}`}>
-              {/* Photo IS the card: configured artwork, else the drop-in default
-                  `public/assets/cards/card-<id>.jpg`, fills the whole card; copy
-                  floats on it. No paper panel, no icon medallion — the artwork
-                  already carries the label. */}
-              <div className="discover-intro-art" aria-hidden="true">
-                <img
-                  className="discover-intro-art-img"
-                  src={cardImageSrc(cap)}
-                  alt=""
-                  loading="lazy"
-                  style={focus ? { objectPosition: focus } : undefined}
-                  onError={(e) => { e.currentTarget.style.display = 'none' }}
-                />
-              </div>
-              <h4 className="discover-intro-title">{cap.title}</h4>
-              <p className="discover-intro-desc">{cap.desc}</p>
-            </Card>
-          )
-        })}
+      <div className="discover-intro-content">
+        <h3 className="discover-section-heading">History Explorer 能做什么</h3>
+        <div className="discover-intro-grid">
+          {cards.map((cap) => {
+            const theme = cardTheme(cap.id)
+            // Slot ids are namespaced (`landing.story`); the stylesheet hooks
+            // predate that and use the bare key — a dot here would split the
+            // class in two.
+            const key = slotKey(cap.id)
+            const focus = slotImageFocus(cap.id)
+            return (
+              <Card key={cap.id} variant="default" className={`discover-intro-card intro-theme-${theme} intro-card-${key}`}>
+                {/* Photo IS the card: configured artwork, else the drop-in default
+                    `public/assets/cards/card-<id>.jpg`, fills the whole card; copy
+                    floats on it. No paper panel, no icon medallion — the artwork
+                    already carries the label. */}
+                <div className="discover-intro-art" aria-hidden="true">
+                  <img
+                    className="discover-intro-art-img"
+                    src={cardImageSrc(cap)}
+                    alt=""
+                    loading="lazy"
+                    style={focus ? { objectPosition: focus } : undefined}
+                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                  />
+                </div>
+                <h4 className="discover-intro-title">{cap.title}</h4>
+                <p className="discover-intro-desc">{cap.desc}</p>
+              </Card>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

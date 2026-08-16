@@ -1100,7 +1100,7 @@ function App() {
             }
           />
         ) : null}
-        productIntro={!current && !packageSlug ? <ProductIntro topics={topics} /> : null}
+        productIntro={!current && !packageSlug ? <ProductIntro /> : null}
         understandingMode={
           router.route?.mode === 'understanding' ? (
             <UnderstandingWorkspace topic={router.route?.topic ?? null} />

@@ -183,7 +183,10 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 
 /* ========== HOME PAGE ========== */
 .discover-page{padding:50px 56px 40px;position:relative;z-index:1}
-.discover-hero{margin-bottom:40px}
+.discover-hero{position:relative;padding-top:80px;text-align:center}
+/* 大标题区背后实体点阵氛围层：铺满区块、不挡操作、文案浮其上 */
+.discover-hero-net{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.discover-hero-text{position:relative;z-index:1}
 /* TP-26 首屏承担者 — P5-S2 VS-01 tokens: ink-900 主标题/ink-500 副标题 */
 .discover-hero-title{
   font-family:var(--serif);font-weight:900;font-size:56px;line-height:1.12;
@@ -352,6 +355,7 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
    copy floats on it. Straight/arc corners only, no slate clip-path,
    no paper panel, no icon medallion. */
 .discover-intro{margin:40px 0}
+.discover-intro-content{position:relative;z-index:1}
 .discover-intro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .discover-intro-card{
   position:relative;overflow:hidden;
