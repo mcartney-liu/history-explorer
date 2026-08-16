@@ -225,3 +225,20 @@ L1/L2/L3 是**用户认知层级 + 视觉编排规则**，不是 React 组件层
 | D8 | InterpretationPanel 进 L1 主体叙事区（连续成段，组件仍在） | ✅ 冻结 |
 
 **PO 评级记录**：产品方向 A ｜ 信息架构 A-（research 职责+缺失态已由 P3/P4 补上）｜ Phase B/C/D 对齐 A ｜ 前端架构边界 A-（P5 补上）｜ 验收 B+（viewport/缺失态/强推荐消费/功能寻址已由 §5 + 映射清单补上）。
+
+---
+
+## 10. PO 二次审核（2026-08-16）—— 有条件通过，暂缓开工
+
+> PO 结论：**8.5/10。产品结构已基本冻结；进入"认知架构冻结 → 工程映射冻结 → 施工"阶段。**
+> 状态：**可进入施工准备，但暂缓开工**——需先封死 4 个「文档冻结 ≠ 真实组件语义」的缝。
+> 修复全部落于 `ENTITY_PAGE_IA_IMPLEMENTATION_MAP.md` v2（施工契约版）：
+
+| # | 缝 | 封死动作 |
+|---|---|---|
+| 🔴 A4 | 真实代码 `ExplorationGuide.tsx:47-49` 仍自算 `nextNode`（first unvisited） | **禁止组件内计算推荐**；只消费上游 entityStarters 只读 prop（方案 B）；删 eg 推荐卡 |
+| 🔴 A5 | NextStepPanel 物理在 EntityPage 外 footer → IA 正确但呈现不实现 IA | **方向 2 定案**：App→EntityPage 只读 props 透传，NextStep 移入 L2 紧跟 ConnectionExplorer；**允许搬运结果、禁止改变结果** |
+| ⚠ A1 | 两来源并存无优先级 | 来源优先级冻结：**Package > Direct Origin > 不渲染**；合并宿主不复制解释链（防第三套 transition） |
+| ⚠ A3 | ProvenancePanel 状态未与折叠规则对齐 | 状态规则写死：loading/empty/disabled 不显示；**success 折叠；error 可见可重试** |
+
+**核心边界（PO 定稿）：**「谁决定下一步」必须始终是 Phase C；「谁决定现在怎么展示」才是 EntityPage。守住这条，本次重构 = Phase D 认知闭环的第一块界面基础设施。
