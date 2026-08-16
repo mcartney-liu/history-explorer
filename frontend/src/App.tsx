@@ -1005,10 +1005,10 @@ function App() {
                 {timeView === 'single' ? (
                 <>
                 <TimelinePanel timeline={result.timeline} nameToId={exploreNameToId} onEventClick={(id) => openEntity(id, exploreNameById[id])} globalIdById={exploreEntityGlobalById} focusedId={focusedEntityId ?? undefined} />
-                <TemporalComparisonPanel entities={result.entities} />
+                <TemporalComparisonPanel entities={result.entities} globalIdByName={Object.fromEntries((result.entities ?? []).map((e) => [e.name, e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`]))} />
                 </>
                 ) : (
-                <MultiEntityTimeline entities={result.entities} />
+                <MultiEntityTimeline entities={result.entities} globalIdByName={Object.fromEntries((result.entities ?? []).map((e) => [e.name, e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`]))} />
                 )}
                 <InterpretationPanel interpretations={toInterpretationViewModels(result.connections_explained)} understandings={buildUnderstandingsFromConnectionsExplained(result.connections_explained, result.exploration.main_entity.name, Object.fromEntries((result.entities ?? []).map((e) => [e.global_id ?? exploreEntityGlobalById[e.id] ?? `${exploreTopic}:${e.id}`, e.name])), exploreEntityTimeByName, locale)} onNodeClick={openNodeNamed} />
                 <DisputesPanel
@@ -1100,7 +1100,7 @@ function App() {
             }
           />
         ) : null}
-        productIntro={!current && !packageSlug ? <ProductIntro /> : null}
+        productIntro={!current && !packageSlug ? <ProductIntro topics={topics} /> : null}
         understandingMode={
           router.route?.mode === 'understanding' ? (
             <UnderstandingWorkspace topic={router.route?.topic ?? null} />
