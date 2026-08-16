@@ -14,6 +14,7 @@ export default {
   'discover.dismissAria': 'このガイドを閉じる',
   'discover.firstGuideIntro': '以下の糸から探索を始めましょう —— 人物・思想・出来事を時間を通して追っていきます。',
   'discover.entityGuideIntro': '%{name} に関連する人物・思想・出来事を糸にして、さらに探索を続けましょう。',
+  'discover.nextCanExplore': '次に探索できる',
   'discover.crossTopicEdges': 'クロステーマ関連',
   'discover.crossTopicConnectionsHeading': 'クロステーマ関連',
   'discover.journeyHeading': 'あなたの探索の旅',

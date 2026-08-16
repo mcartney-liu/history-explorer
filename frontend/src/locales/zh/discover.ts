@@ -13,6 +13,7 @@ export default {
   'discover.dismissAria': '关闭引导',
   'discover.firstGuideIntro': '从下面的线索开始探索 —— 顺着人物、思想与事件穿越时间。',
   'discover.entityGuideIntro': '从下面的线索继续探索 %{name} —— 顺着与之相连的人物、思想与事件深入。',
+  'discover.nextCanExplore': '接下来可以了解',
   'discover.themesHeading': '主题',
   'discover.threadsByType': '按类型分类',
   'discover.nextStepHeading': '下一站探索',

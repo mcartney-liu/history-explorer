@@ -2,12 +2,13 @@
 // M59-017 — ExplorationGuide (P-U17 重写)
 // 知识概览区：展示实体关联数据 + 可点击入口。
 // 用户语言替代技术术语，统计标签可跳转到对应面板。
+// A4 (ADR-0025): 移除组件内 nextNode 自算与"推荐探索"卡（禁 UI 自算推荐）；
+//   组件只消费上游传入结果，展示层零决策。
 // ============================================================
 
 import type { GraphNode, GraphEdge } from '../../data/entity/entityTypes'
 import { Icon } from '../ui/Icon'
 import { useLocale } from '../../data/locale'
-import { getEntityLabel } from '../../data/entity/entityLabels'
 
 interface ExplorationGuideProps {
   /** Current entity name */
@@ -20,8 +21,6 @@ interface ExplorationGuideProps {
   visitedIds?: string[]
   /** Total timeline events */
   timelineCount: number
-  /** On click next recommended entity */
-  onExploreNode?: (id: string) => void
   /** 点击"关联实体/条关系"入口 */
   onViewRelations?: () => void
   /** 点击"时间节点"入口 */
@@ -34,19 +33,13 @@ export function ExplorationGuide({
   edges,
   visitedIds = [],
   timelineCount,
-  onExploreNode,
   onViewRelations,
   onViewTimeline,
 }: ExplorationGuideProps) {
-  const { t, locale } = useLocale()
+  const { t } = useLocale()
   const totalRelations = edges.length
   const totalRelated = nodes.filter((n) => n.id !== entityName && n.name !== entityName).length
   const visitedCount = visitedIds.length
-
-  // Find recommended next entity: first unvisited related node
-  const nextNode = nodes.find(
-    (n) => n.name !== entityName && n.id !== entityName && !visitedIds.includes(n.id),
-  )
 
   // Exploration depth: 0–4 based on visited + connections
   const depth = Math.min(4, visitedCount + (totalRelated > 0 ? 1 : 0))
@@ -87,37 +80,6 @@ export function ExplorationGuide({
             <span className="eg-stat-label">{t('entity.timeline_count')}</span>
           </button>
         </div>
-
-        {/* Recommended next */}
-        {nextNode && (
-          <div className="eg-next">
-            <span className="eg-next-label">推荐探索</span>
-            <button
-              type="button"
-              className="eg-next-card"
-              onClick={() => onExploreNode?.(nextNode.id)}
-            >
-              <Icon
-                name={
-                  nextNode.type === 'Person'
-                    ? 'person'
-                    : nextNode.type === 'Civilization'
-                      ? 'civilization'
-                      : nextNode.type === 'Event'
-                        ? 'event'
-                        : 'globe'
-                }
-                size={20}
-                className="eg-next-icon"
-              />
-              <div>
-                <span className="eg-next-name">{nextNode.name}</span>
-                <span className="eg-next-type">{getEntityLabel(nextNode.type, locale)}</span>
-              </div>
-              <span className="eg-next-arrow">→</span>
-            </button>
-          </div>
-        )}
 
         {/* Exploration path */}
         {visitedIds.length > 0 && (

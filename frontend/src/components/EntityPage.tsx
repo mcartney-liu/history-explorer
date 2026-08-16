@@ -75,7 +75,6 @@ type EntityPageProps = {
   // resolved by App from data/explorationStarters.ts; `onStarterClick` is
   // wired by App to the SAME navigateTo used everywhere.
   entityId?: string
-  entityName?: string
   entityStarters?: StarterItem[]
   onStarterClick?: (target: NavNode) => void
   /** T1: land directly on a tab (e.g. 'research' from a Discover bookmark). */
@@ -104,7 +103,6 @@ function EntityPage({
   onEntityClick,
   onNodeClick,
   entityId,
-  entityName,
   entityStarters,
   onStarterClick,
   initialTab,
@@ -204,12 +202,11 @@ function EntityPage({
 
       <SummaryPanel title={entity.name} summary={description} />
 
-      {/* M5-A-5: 实体级探索引导——始终渲染（有数据列起点，无数据显空态），
-          避免"没数据显示→整块消失"造成"功能不存在"的误解（PO 判定）。 */}
+      {/* M5-A-5 (A4 重构): 实体级探索引导——压成一行轻量认知提示；
+          无 starters 整卡不渲染（silent，P4 / ADR-0025），避免空态大卡占位。 */}
       {onStarterClick && entityStarters ? (
         <EntityExplorationGuide
           entityId={entityId ?? entity.id}
-          entityName={entityName ?? entity.name}
           starters={entityStarters}
           onStarterClick={onStarterClick}
         />
@@ -259,7 +256,6 @@ function EntityPage({
                           nodes={viewModel.connections.graphNodes}
                           edges={viewModel.connections.graphEdges}
                           timelineCount={viewModel.connections.timeline.length}
-                          onExploreNode={(id) => onEntityClick(id)}
                           onViewRelations={() => document.querySelector('.ce')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                           onViewTimeline={() => document.querySelector('.ce-timeline')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                         />

@@ -8,41 +8,31 @@ import { resolveEntityStarters, DEFAULT_ENTITY_STARTERS } from '../data/explorat
 const render = (el: ReactElement) =>
   renderToStaticMarkup(<LocaleProvider>{el}</LocaleProvider>)
 
-// M5-A-5 Entity Exploration Guide tests.
+// M5-A-5 Entity Exploration Guide tests (A4 重构: 一行轻量认知提示).
 // No new test dependency: render with renderToStaticMarkup and assert on the
-// static markup, matching the project's M2-002 / M5-A-3 / M5-A-4 convention
-// (FeaturedTopics, LandingPage, FirstExplorationGuide prove click surfaces the
-// same way). Clickability is verified structurally (a real <button> carrying
-// the target global_id via data-starter + aria-label) — actual click dispatch
-// is covered end-to-end by the backend integration tests.
+// static markup, matching the project's M2-002 / M5-A-3 / M5-A-4 convention.
+// Clickability is verified structurally (a real <button> carrying the target
+// global_id via data-starter + aria-label) — actual click dispatch is covered
+// end-to-end by the backend integration tests.
 
-describe('EntityExplorationGuide — presentational entity first-explore nudge', () => {
+describe('EntityExplorationGuide — one-line lightweight cognitive hint (A4)', () => {
   const starters = resolveEntityStarters('roman_empire:civ-roman')
 
-  it('renders the guide heading + intro for the given entity', () => {
+  it('renders a one-line hint with one inline chip per starter (no big card)', () => {
     const html = render(
       <EntityExplorationGuide
         entityId="roman_empire:civ-roman"
-        entityName="Roman Civilization"
         starters={starters}
         onStarterClick={() => {}}
       />,
     )
-    expect(html).toContain('he-guide')
-    expect(html).toContain('探索 Roman Civilization')
-    expect(html).toContain('he-guide-intro')
-  })
-
-  it('renders one button per starter carrying the real global_id + label', () => {
-    const html = render(
-      <EntityExplorationGuide
-        entityId="roman_empire:civ-roman"
-        entityName="Roman Civilization"
-        starters={starters}
-        onStarterClick={() => {}}
-      />,
-    )
-    // Three REAL entity starters (global_ids from data/examples)
+    expect(html).toContain('he-guide') // root present
+    expect(html).toContain('he-guide--lite') // A4 one-line variant
+    expect(html).toContain('接下来可以了解') // A4 hint copy (discover.nextCanExplore)
+    expect(html).toContain('he-guide-lite-chip') // inline chip, not .he-guide-card
+    expect(html).not.toContain('he-guide-intro') // A4: no more big intro block
+    expect(html).not.toContain('he-guide-heading') // A4: no more heading
+    // Three REAL entity starters as clickable chips
     expect(html).toContain('data-starter="roman_empire:event-roman-empire-established"')
     expect(html).toContain('data-starter="roman_empire:loc-rome"')
     expect(html).toContain('data-starter="hellenistic_world:civ-greek"')
@@ -53,11 +43,10 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
     expect(html).toContain('罗马')
   })
 
-  it('renders the dismiss control', () => {
+  it('renders the dismiss control inside the one-line hint', () => {
     const html = render(
       <EntityExplorationGuide
         entityId="roman_empire:civ-roman"
-        entityName="Roman Civilization"
         starters={starters}
         onStarterClick={() => {}}
       />,
@@ -66,17 +55,15 @@ describe('EntityExplorationGuide — presentational entity first-explore nudge',
     expect(html).toContain('aria-label="关闭引导"')
   })
 
-  it('renders the guide copy but no starter buttons when starters is empty', () => {
+  it('renders NOTHING when starters is empty (silent per P4 / ADR-0025)', () => {
     const html = render(
       <EntityExplorationGuide
         entityId="some:unknown-entity"
-        entityName="Unknown Entity"
         starters={[]}
         onStarterClick={() => {}}
       />,
     )
-    expect(html).toContain('he-guide')
-    expect(html).not.toContain('data-starter=')
+    expect(html).toBe('') // A4: 无 starters 整卡不渲染
   })
 
   it('resolveEntityStarters returns the curated list for a mapped entity and the empty default for an unmapped one', () => {
