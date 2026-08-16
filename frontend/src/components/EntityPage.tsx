@@ -37,6 +37,10 @@ import EntityPageShell from './EntityPageShell'
 import type { EntityTab } from './EntityPageShell'
 import { useLocale } from '../data/locale'
 import { entitySectionVisible, flagEnabled, useSiteConfigRevision } from '../data/siteConfig'
+// A5 (Phase 4): NextStepPanel 只读移入 L2——仅消费 App 经 props 透传的已算结果，不重算/不决策（HARD REDLINE，ADR-0025 A5）。
+import NextStepPanel from './NextStepPanel'
+import type { NextStepContext } from './NextStepPanel'
+import type { ExplorationAction } from '../next/exploration/ExplorationPolicy'
 
 export type EntityRelationship = {
   type: string
@@ -81,6 +85,11 @@ type EntityPageProps = {
   initialTab?: EntityTab
   /** 2026-08-15 (PO): 实体页 ConnectionCard 的「查看完整行程」→ 返回来源探索包。 */
   onOpenPackage?: (slug: string) => void
+  /** A5 (Phase 4): 只读透传——NextStepPanel 的已算结果由 App 经 props 搬运，
+   *  EntityPage 不重算/不筛选/不排序/不决策（HARD REDLINE，ADR-0025 A5）。 */
+  nextStepActions?: ExplorationAction[]
+  seenGlobalIds?: Set<string>
+  onNextStepClick?: (globalId: string, context?: NextStepContext) => void
 }
 
 // M2-002 entity page: renders the four sections the backend returns for
@@ -107,6 +116,9 @@ function EntityPage({
   onStarterClick,
   initialTab,
   onOpenPackage,
+  nextStepActions,
+  seenGlobalIds,
+  onNextStepClick,
 }: EntityPageProps) {
   const { t, locale } = useLocale()
   // Subscribe to runtime site-config so feature-flag gates re-render when the
@@ -300,6 +312,14 @@ function EntityPage({
                     graphEdges={viewModel.connections.graphEdges}
                     timeline={viewModel.connections.timeline}
                     onEntityClick={onEntityClick}
+                  />
+
+                  {/* A5 (Phase 4): NextStepPanel 移入 L2 紧跟 ConnectionExplorer（只读搬运，HARD REDLINE 禁重算/筛选/排序/决策；
+                      结果由 App 经 props 透传，呈现实现 IA「关系 → 下一步」顺序）。 */}
+                  <NextStepPanel
+                    actions={nextStepActions ?? []}
+                    seenGlobalIds={seenGlobalIds}
+                    onNodeClick={onNextStepClick}
                   />
 
                   {/* M60-001: AI conversation — from old 'explore' tab */}

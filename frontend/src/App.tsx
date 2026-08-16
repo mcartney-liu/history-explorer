@@ -14,7 +14,7 @@ import TemporalComparisonPanel from './components/TemporalComparisonPanel'
 import MultiEntityTimeline from './components/MultiEntityTimeline'
 import CrossTopicView from './components/CrossTopicView'
 import ContinueExploringPanel from './components/ContinueExploringPanel'
-import NextStepPanel from './components/NextStepPanel'
+import type { NextStepContext } from './components/NextStepPanel'
 import AIExplanationPanel from './components/AIExplanationPanel'
 import MultiEntityContextPanel from './components/MultiEntityContextPanel'
 import EntityPickerPanel from './components/EntityPickerPanel'
@@ -412,6 +412,31 @@ function App() {
     return out
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current?.type === 'entity' ? current.id : null, policyAction, explorationState, result, entityData])
+
+  // A5 (Phase 4): NextStep 点击回调——仅 App 层持有（捕获 journeyReasons / saveReasons / openNode），
+  // 以只读 prop 透传给 EntityPage → NextStepPanel；EntityPage 不重算/不决策（HARD REDLINE）。
+  const handleNextStepClick = (gid: string, ctx?: NextStepContext) => {
+    // current 在调用点必为 entity 变体（nextStepActions 非空仅当 current 为 entity），
+    // 但此处无 JSX 收窄上下文，显式按类型分支取 id 以通过严格类型检查。
+    const fromId = current?.type === 'entity' ? current.id : ''
+    if (ctx) {
+      setJourneyReasons((prev) => {
+        const next = new Map(prev)
+        next.set(gid, {
+          fromGlobalId: fromId,
+          fromName: entityData?.name ?? fromId,
+          reasons: ctx.reason ? [ctx.reason] : [],
+          actionType: ctx.actionType,
+          narrativeHook: ctx.narrativeHook,
+          confidence: ctx.confidence,
+          capturedAt: new Date().toISOString(),
+        })
+        saveReasons(next)
+        return next
+      })
+    }
+    openNode(gid)
+  }
 
   // 关系类型 → 中文标签 / 认知动作类型（④ 剧本下一步使用）
   function relationshipTypeLabel(type: string): string {
@@ -1032,10 +1057,9 @@ function App() {
         ) : null}
         entityDetail={!loading && !errorKind && current?.type === 'entity' && entityData && !packageSlug ? (
           <>
-            <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} onOpenPackage={(s) => openPackage(s)} />
+            <EntityPage key={`${current.id}:${entityInitialTab}`} entity={entityData} entityId={current.id} entityStarters={resolveEntityStarters(current.id)} onStarterClick={(t) => navigateTo(t)} onEntityClick={(id) => openEntity(entityGlobalIdById[id] ?? id, entityNameById[id])} onNodeClick={openNode} onTopicClick={handleTopicClick} initialTab={entityInitialTab} onOpenPackage={(s) => openPackage(s)} nextStepActions={nextStepActions} seenGlobalIds={seenGlobalIds} onNextStepClick={handleNextStepClick} />
             <ExplorationPath view="journey" history={history} cursor={cursor} journeyReasons={journeyReasons} onStepClick={goTo} />
             <div className="entity-exploration-footer">
-              <NextStepPanel actions={nextStepActions} seenGlobalIds={seenGlobalIds} onNodeClick={(gid, ctx) => { if (ctx) { setJourneyReasons((prev) => { const next = new Map(prev); next.set(gid, { fromGlobalId: current.id, fromName: entityData?.name ?? current.id, reasons: ctx.reason ? [ctx.reason] : [], actionType: ctx.actionType, narrativeHook: ctx.narrativeHook, confidence: ctx.confidence, capturedAt: new Date().toISOString() }); saveReasons(next); return next }) } openNode(gid) }} />
               <ContinueExploringPanel connections={entityData.connections_explained} relatedTopics={entityData.related_topics} seenGlobalIds={seenGlobalIds} onNodeClick={openNode} onTopicClick={handleTopicClick} />
             </div>
           </>
