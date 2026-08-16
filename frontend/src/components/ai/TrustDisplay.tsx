@@ -21,8 +21,12 @@ import {
   RELATIONSHIP_CATEGORY_CLASS,
   formatSourceId,
   translateEvidenceText,
+  getEntityIcon,
+  entityTypeFromGlobalId,
 } from '../../data/entity/entityLabels'
 import { getEntityDisplayName } from '../../data/explorationPackages'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 
 interface TrustDisplayProps {
   evidence?: AIEvidence[]
@@ -174,10 +178,10 @@ export function TrustDisplay({
                         onClick={() => onNextClick(item.global_id)}
                         aria-label={t('ai.trust_node_aria', { name: getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja') })}
                       >
-                        <span className="trust-display-node-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+                        <span className="trust-display-node-name"><Icon name={getEntityIcon(entityTypeFromGlobalId(item.global_id)) as IconName} size={16} className="trust-display-node-icon" />{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
                       </button>
                     ) : (
-                      <span className="trust-display-node-name">{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
+                      <span className="trust-display-node-name"><Icon name={getEntityIcon(entityTypeFromGlobalId(item.global_id)) as IconName} size={16} className="trust-display-node-icon" />{getEntityDisplayName(item.global_id, locale as 'zh' | 'en' | 'ja')}</span>
                     )}
                     <Badge tone="neutral" className={`rel-badge ${RELATIONSHIP_CATEGORY_CLASS[cat]}`}>
                       {getRelationshipLabel(item.relationship, locale as 'zh' | 'en' | 'ja')}

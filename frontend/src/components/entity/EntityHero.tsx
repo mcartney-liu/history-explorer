@@ -10,7 +10,7 @@
 import { useEffect, useState } from 'react'
 import type { EntityViewModel } from '../../data/entity/entityTypes'
 import { type EntityInsight, stripMarkdown } from '../../data/entity/EntityInsightModel'
-import { getEntityLabel, getEntityIcon } from '../../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
 import { getEntityInsight, type AIEvidence } from '../../data/aiClient'
 import { EvidenceList } from '../ai/TrustDisplay'
 import { Icon } from '../ui/Icon'
@@ -118,6 +118,7 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
                   onClick={() => onEntityClick?.(k.id)}
                   title={`查看 ${k.name}`}
                 >
+                  <Icon name={getEntityIcon(entityTypeFromGlobalId(k.id)) as IconName} size={16} className="eic-badge-icon" />
                   {k.name}
                 </button>
               ))}

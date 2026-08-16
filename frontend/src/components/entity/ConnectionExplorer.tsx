@@ -11,7 +11,9 @@ import { ViewSwitcher } from './ViewSwitcher'
 import type { GraphNode, GraphEdge } from '../../data/entity/entityTypes'
 import type { TimelineEvent } from '../../data/entity/entityTypes'
 import { useLocale } from '../../data/locale'
-import { getEntityLabel } from '../../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon } from '../../data/entity/entityLabels'
+import { Icon } from '../ui/Icon'
+import type { IconName } from '../ui/Icon'
 import { formatTimeValue, type TimeValue } from '../../data/temporalUtils'
 
 interface ConnectionExplorerProps {
@@ -65,7 +67,7 @@ export function ConnectionExplorer({
                     tabIndex={0}
                     onClick={() => onEntityClick?.(node.id)}
                   >
-                    <span className="ce-graph-node-name">{node.name}</span>
+                    <span className="ce-graph-node-name"><Icon name={getEntityIcon(node.type) as IconName} size={16} className="ce-graph-node-icon" />{node.name}</span>
                     <span className="ce-graph-node-type">{getEntityLabel(node.type, locale)}</span>
                   </div>
                 ))}

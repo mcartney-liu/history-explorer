@@ -133,6 +133,21 @@
 .discover-starter-icon{flex:none;font-size:15px;opacity:.85}
 .discover-starter:hover{transform:translateY(-1px)}
 
+/* ── Entity type icons (global pattern: small icon before entity name) ── */
+.re-icon,.ce-graph-node-icon,.eic-badge-icon,.he-guide-lite-icon,
+.he-guide-icon,.he-continue-icon,.he-nextstep-icon,.trust-display-node-icon,
+.rel-pill-icon,.ep-node-icon{flex:none;opacity:.75;vertical-align:middle}
+.re-icon{margin-right:4px}
+.ce-graph-node-icon{margin-right:4px}
+.eic-badge-icon{margin-right:4px}
+.he-guide-lite-icon{margin-right:4px}
+.he-guide-icon{margin-right:6px}
+.he-continue-icon{margin-right:5px}
+.he-nextstep-icon{margin-right:5px}
+.trust-display-node-icon{margin-right:4px}
+.rel-pill-icon{margin-right:4px}
+.ep-node-icon{margin-right:4px}
+
 /* ── FeedbackWidget — override the shared de-bright rule above so the
    buttons are clearly visible in light & dark themes, and give the widget
    a proper card container, input box and explicit submit button. ──────── */

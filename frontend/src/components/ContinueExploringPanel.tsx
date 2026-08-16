@@ -17,8 +17,11 @@ import { ConnectionExplained } from './ConnectionsExplainedPanel'
 import { CrossTopicRelated, RelatedTopic, formatTopicLabel } from './crossTopic'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
 import { getEntityDisplayName } from '../data/explorationPackages'
 import { formatConnectionZh } from '../data/ai/connectionZhFormatter'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 const DEFAULT_MAX = 5
 
@@ -102,7 +105,7 @@ function ContinueExploringPanel({
                   aria-label={t('discover.continueToAria', { name: displayName(gid, locale) })}
                   onClick={() => onNodeClick?.(gid)}
                 >
-                  <span className="he-continue-name">{displayName(gid, locale)}</span>
+                  <span className="he-continue-name"><Icon name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName} size={16} className="he-continue-icon" />{displayName(gid, locale)}</span>
                   {seen && (
                     <span className="he-continue-seen" aria-hidden="true">
                       {t('discover.continueSeen')}
@@ -137,6 +140,7 @@ function ContinueExploringPanel({
                   onClick={() => onNodeClick?.(gid)}
                 >
                   <span className="he-continue-name">
+                    <Icon name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName} size={16} className="he-continue-icon" />
                     {getDisplayName(name, locale, prefs.properNameMode)}
                   </span>
                   {c.topic && (

@@ -59,6 +59,29 @@ export function getEntityIcon(type: string): string {
 }
 
 // ============================================================
+// Global ID → Entity Type inference
+//
+// Infers the display entity type from a global_id string.
+// global_id format: <topic>:<local_id>
+// local_id prefix mapping:
+//   person- → Person | religion- → Religion | tech- → Technology
+//   event-  → Event | loc-     → Location | idea-    → Idea
+//   civ- or bare → Civilization (default)
+// Used by any component that has a global_id but no explicit type field.
+// ============================================================
+
+export function entityTypeFromGlobalId(gid: string): string {
+  const local = gid.split(':')[1] ?? ''
+  if (local.startsWith('person-')) return 'Person'
+  if (local.startsWith('religion-')) return 'Religion'
+  if (local.startsWith('tech-')) return 'Technology'
+  if (local.startsWith('event-')) return 'Event'
+  if (local.startsWith('loc-')) return 'Location'
+  if (local.startsWith('idea-')) return 'Idea'
+  return 'Civilization' // civ- prefix or bare = default
+}
+
+// ============================================================
 // Relationship type → Chinese business labels (single source of truth)
 // Mirrors the entity-label pattern above. Keys are the 18 frozen
 // relationship types (lowercase slugs from the schema). Display guarantees:

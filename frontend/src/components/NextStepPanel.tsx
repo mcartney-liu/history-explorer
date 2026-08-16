@@ -17,8 +17,11 @@
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
 import CollapsibleList from './ui/CollapsibleList'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
 import { getEntityDisplayName } from '../data/explorationPackages'
 import LayerBadge from './common/LayerBadge'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 import type { ExplorationAction, ExplorationActionType } from '../next/exploration/ExplorationPolicy'
 
 // Re-exported for backward-compatible type imports (ExplorationJourney).
@@ -101,7 +104,7 @@ export function NextStepPanelView({
                   })
                 }
               >
-                <span className="he-nextstep-name">{displayName}</span>
+                <span className="he-nextstep-name"><Icon name={getEntityIcon(entityTypeFromGlobalId(gid)) as IconName} size={16} className="he-nextstep-icon" />{displayName}</span>
                 <span className="he-nextstep-action">{ACTION_LABELS[action.type]}</span>
               </button>
 

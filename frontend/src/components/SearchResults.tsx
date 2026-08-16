@@ -1,6 +1,8 @@
 import EmptyState from './EmptyState'
 import { useLocale } from '../data/locale'
-import { getEntityLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 export type SearchResultItem = {
   // M4-004 (additive): unified results[] — every row carries a `result_type`.
@@ -115,7 +117,7 @@ function SearchResults({
           }
         }}
       >
-        <span className="re-name">{item.name}</span>
+        <span className="re-name"><Icon name={getEntityIcon(item.type ?? '') as IconName} size={16} className="re-icon" />{item.name}</span>
         <span className="re-type">
           {isTopic ? t('common.kindTopic') : getEntityLabel(item.type ?? '', locale)}
         </span>
