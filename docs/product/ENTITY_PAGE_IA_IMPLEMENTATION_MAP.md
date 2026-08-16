@@ -1,8 +1,8 @@
 # 实体页 IA 施工前代码映射 / 变更清单 v2（施工契约版）
 
-> 版本：v2（2026-08-16，PO 二次审核：**有条件通过，可进入施工准备，但暂缓开工**）。
+> 版本：v2.1（2026-08-16，PO 二次审核**通过 + Gate 推进解封**：**G0 代码事实核查 PASS / P5 边界清楚 → 契约 READY TO BUILD**）。
 > 配套 `ENTITY_PAGE_IA_PLAN.md`（v2.1 冻结基线）。
-> v2 变更：封死 PO 二次审核卡住的 **4 个缝**（A4 禁自算推荐 / A5 NextStep 归 L2 / A1 来源优先级 / A3 状态规则），并把 A6 写死、D7 语义边界、D8 呈现原则、验收认知任务测试、P5 可以/不可以清单全部精确化。
+> v2.1 变更（Gate 推进）：M35「叙事板块始终可见」旧规则**正式退役**（见 ADR-0025，由 P4 Progressive Presence 取代，缺失叙事不渲染 EmptyState）；G0-6 澄清为施工后 G1 验收闸门（非代码契约验证）；**首屏三问升格为 G1 主验收**（≤3 焦点降为次级）；**A5 props plumbing 锁死为 HARD REDLINE**（禁止在 EntityPage 重算/筛选/排序/决策）。v2 原有 4 缝封死、A6 写死、D7/D8、P5 清单全部保留。
 > 全部"当前行为"来自 2026-08-16 代码核对（行号以当日 HEAD 为准）。
 
 ---
@@ -173,6 +173,10 @@ AI（问史）       = direct conversational historian（直接对话式历史�
 
 ## A5 下一站探索归位 L2（D5 ✅ 冻结 · 🔴 方向 2 定案）
 
+> 🔴🔴 **HARD REDLINE（施工 Agent 提示词级，v2.1 锁死）**：A5 仅允许 **App → EntityPage → NextStepPanel 的只读 prop 搬运**。G0-3 已证明 `nextStepActions` / `seenGlobalIds` / `onNodeClick` 链路干净（无在 EntityPage 内重算）。
+> **施工 Agent 不可讨论、不可顺手"顺便整理 NextStep 逻辑"**——那会越界触碰 Phase C 决策层。
+> 禁止项：在 EntityPage 内重算 / 筛选 / 排序 / 决策 `nextStepActions`；修改 decision engine / `journeyReasons` 产生逻辑；修改状态模型。仅允许：把 App 已算好的结果原样透传到 L2 末尾渲染。
+
 **🔴 v2 关键决策（PO 倾向方向 2，定案）：**
 
 > 认知顺序「关系 → 下一步」必须在页面呈现上成立。NextStepPanel 不能永远卡在 EntityPage 外部 footer——否则 **IA 正确但呈现不实现 IA**，Phase C 的结果无法成为 Phase D 的界面输入。
@@ -205,7 +209,7 @@ AI（问史）       = direct conversational historian（直接对话式历史�
 - **Surface ≠ Card。** 目标是：`历史叙事 → 为什么重要 → 它意味着什么` 三个**语义连续的段落**，消灭**视觉权重的离散化**——不是"3 个 Card 套 1 个 Card"。
 - 施工验收：不按"有几个卡片容器"判断，按"视觉上是否是一个连续主体叙事"判断。
 - 组件保持：StorySection / WhyImportantPanel / InterpretationPanel 仍在，容器与视觉合并。
-- 冲突处理：`hasNarrative ? <Story+Why/> : <EmptyState/>`（L323-332）——M35 空态 vs P4 → **按 P4 执行**（无叙事不渲染空态），留痕。
+- 冲突处理：`hasNarrative ? <Story+Why+Meaning/> : null`（L323-332）——M35「板块始终可见」**已退役（ADR-0025）**，现行 = P4 Progressive Presence → **无叙事不渲染空态（silent）**，不补占位。
 
 ---
 
@@ -227,15 +231,15 @@ AI（问史）       = direct conversational historian（直接对话式历史�
 
 **1. 首屏 = 固定 1440 × 900 viewport**（无头浏览器固定尺寸实测）。
 
-**2. 视觉焦点**：第一屏 ≤3 个主要视觉焦点（① 站间上下文 ② 实体/核心意义 ③ ——）。
+**2. 视觉焦点（次级标准）**：第一屏 ≤3 个主要视觉焦点（① 站间上下文 ② 实体/核心意义 ③ ——）。注：本项为**次级**；是否放行以「首屏三问」为准，不可仅凭"≤3 焦点"通过。
 
-**3. 首屏认知任务测试（v2 新增，PO 要求）：**
-> 用户看完首屏，**不用点击**能否回答三个问题：
-- **Q1 我为什么来到这里？** → ConnectionCard
+**3. 🔴 G1 主验收 = 首屏三问（PO 升格，高于 ≤3 焦点）：**
+> 用户看完首屏，**不用点击**能否回答三个问题（对应 Context → Identity → Meaning 认知流）：
+- **Q1 我为什么来到这里？** → ConnectionCard（站间上下文）
 - **Q2 这个东西是什么？** → EntityHero / Summary
 - **Q3 为什么值得继续看？** → Narrative / Meaning
 >
-> 三问答不出 = 失败（即使 ≤3 个视觉焦点）。因为要解决的是**认知结构**，不是视觉密度。
+> **🔴 Agent 汇报硬要求**：必须逐条说明「三个问题**分别在首屏的哪个位置 / 哪个组件**得到回答」，并附首屏截图标注。**不接受"首屏只有三个 section 所以通过"这类表面论证**——要证明的是认知流成立，不是 section 数量。三问答不出 = 失败（即使 ≤3 个视觉焦点）。
 
 **4. 功能寻址/可发现性：**
 | 能力 | 正常状态 | 用户能否预测入口 |
