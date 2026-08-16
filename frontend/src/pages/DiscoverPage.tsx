@@ -21,6 +21,9 @@ import { lookup } from '../locales'
 import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
+import { getEntityIcon } from '../data/entity/entityLabels'
+import { Icon } from '../components/ui/Icon'
+import type { IconName } from '../components/ui/Icon'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import { TopicCardGrid } from '../components/discover/TopicCardGrid'
 import type { TopicCardData } from '../components/discover/TopicCard'
@@ -62,6 +65,20 @@ type DiscoverPageProps = {
   onPackageClick?: (slug: string) => void
 }
 
+// 从 global_id 推断实体子类型 → 取对应类型图标（StarterChips 图标化用）。
+// global_id 形如 <topic>:<local>，local 前缀 person-/religion-/tech-/event-/loc-/idea-，
+// 裸或 civ- 前缀归为 Civilization（与 EntityType 枚举一致）。
+function entityTypeFromGlobalId(gid: string): string {
+  const local = gid.split(':')[1] ?? ''
+  if (local.startsWith('person-')) return 'Person'
+  if (local.startsWith('religion-')) return 'Religion'
+  if (local.startsWith('tech-')) return 'Technology'
+  if (local.startsWith('event-')) return 'Event'
+  if (local.startsWith('loc-')) return 'Location'
+  if (local.startsWith('idea-')) return 'Idea'
+  return 'Civilization'
+}
+
 function StarterChips({
   starters,
   onStarterClick,
@@ -72,19 +89,24 @@ function StarterChips({
   if (starters.length === 0) return null
   return (
     <ul className="discover-starter-list">
-      {starters.map((s) => (
-        <li key={s.id}>
-          <button
-            type="button"
-            className="discover-starter"
-            data-starter={s.id}
-            aria-label={`Explore ${s.label}`}
-            onClick={() => onStarterClick?.(s.target)}
-          >
-            {s.label}
-          </button>
-        </li>
-      ))}
+      {starters.map((s) => {
+        const gid = s.target.type === 'entity' ? s.target.id : ''
+        const stype = entityTypeFromGlobalId(gid)
+        return (
+          <li key={s.id}>
+            <button
+              type="button"
+              className="discover-starter"
+              data-starter={s.id}
+              aria-label={`Explore ${s.label}`}
+              onClick={() => onStarterClick?.(s.target)}
+            >
+              <Icon name={getEntityIcon(stype) as IconName} size={16} className="discover-starter-icon" />
+              {s.label}
+            </button>
+          </li>
+        )
+      })}
     </ul>
   )
 }
