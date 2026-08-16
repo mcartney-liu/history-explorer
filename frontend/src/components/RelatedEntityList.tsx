@@ -1,7 +1,9 @@
 import EmptyState from './EmptyState'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel, getRelationshipLabel } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon, getRelationshipLabel } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 
 export type RelatedEntity = {
   id: string
@@ -57,7 +59,7 @@ function RelatedEntityList({
                 }
               }}
             >
-              <span className="re-name">{displayName}</span>
+              <span className="re-name"><Icon name={getEntityIcon(item.type) as IconName} size={16} className="re-icon" />{displayName}</span>
               <span className="re-type">{getEntityLabel(item.type, locale)}</span>
               <span className="re-rel">
                 {mainEntityName

@@ -21,7 +21,7 @@ import { lookup } from '../locales'
 import type { NavNode } from '../components/navigation'
 import { TOPIC_STARTERS } from '../data/explorationStarters'
 import type { StarterItem } from '../data/explorationStarters'
-import { getEntityIcon } from '../data/entity/entityLabels'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
 import { Icon } from '../components/ui/Icon'
 import type { IconName } from '../components/ui/Icon'
 import { recordEvent } from '../data/UserBehaviorEvent'
@@ -63,20 +63,6 @@ type DiscoverPageProps = {
   onTopicClick: (topic: string) => void
   onStarterClick?: (target: NavNode) => void
   onPackageClick?: (slug: string) => void
-}
-
-// 从 global_id 推断实体子类型 → 取对应类型图标（StarterChips 图标化用）。
-// global_id 形如 <topic>:<local>，local 前缀 person-/religion-/tech-/event-/loc-/idea-，
-// 裸或 civ- 前缀归为 Civilization（与 EntityType 枚举一致）。
-function entityTypeFromGlobalId(gid: string): string {
-  const local = gid.split(':')[1] ?? ''
-  if (local.startsWith('person-')) return 'Person'
-  if (local.startsWith('religion-')) return 'Religion'
-  if (local.startsWith('tech-')) return 'Technology'
-  if (local.startsWith('event-')) return 'Event'
-  if (local.startsWith('loc-')) return 'Location'
-  if (local.startsWith('idea-')) return 'Idea'
-  return 'Civilization'
 }
 
 function StarterChips({

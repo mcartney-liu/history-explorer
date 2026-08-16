@@ -16,6 +16,9 @@
 import { Fragment, useState } from 'react'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 import type { NavNode } from './navigation'
 import type { StarterItem } from '../data/explorationStarters'
 
@@ -54,6 +57,7 @@ function EntityExplorationGuide({
               })}
               onClick={() => onStarterClick(s.target)}
             >
+              <Icon name={getEntityIcon(entityTypeFromGlobalId(s.target.type === 'entity' ? s.target.id : '')) as IconName} size={16} className="he-guide-lite-icon" />
               {getDisplayName(s.label, locale, prefs.properNameMode)}
             </button>
           </Fragment>

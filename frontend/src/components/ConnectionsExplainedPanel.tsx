@@ -18,6 +18,9 @@
 import { Fragment, useState } from 'react'
 import { useLocale } from '../data/locale'
 import { getEntityDisplayName } from '../data/explorationPackages'
+import { getEntityIcon, entityTypeFromGlobalId } from '../data/entity/entityLabels'
+import { Icon } from './ui/Icon'
+import type { IconName } from './ui/Icon'
 import { getRelationshipLabel } from '../data/entity/entityLabels'
 
 export type ConnectionExplained = {
@@ -101,6 +104,7 @@ function RelationshipChainView({
                     aria-label={displayName(node)}
                     onClick={() => onNodeClick && onNodeClick(node)}
                   >
+                    <Icon name={getEntityIcon(entityTypeFromGlobalId(node)) as IconName} size={16} className="rel-pill-icon" />
                     {shorten(displayName(node))}
                   </button>
                   {i < path.length - 1 && (
@@ -177,7 +181,7 @@ function ConnectionsExplainedPanel({
             {connections.map((item, idx) => (
               <div className="main-entity ce-item" key={idx}>
                 <div className="ce-head">
-                  <span className="re-name">{displayName(item.global_id)}</span>
+                  <span className="re-name"><Icon name={getEntityIcon(entityTypeFromGlobalId(item.global_id)) as IconName} size={16} className="re-icon" />{displayName(item.global_id)}</span>
                   {item.depth != null && (
                     <span className="me-type">{t('common.depthLabel', { n: String(item.depth) })}</span>
                   )}
@@ -219,6 +223,7 @@ function ConnectionsExplainedPanel({
                               aria-label={t('common.openLabel', { name: displayName(node) })}
                               onClick={() => onNodeClick(node)}
                             >
+                              <Icon name={getEntityIcon(entityTypeFromGlobalId(node)) as IconName} size={16} className="ep-node-icon" />
                               {displayName(node)}
                             </button>
                             {i < path.length - 1 && (
