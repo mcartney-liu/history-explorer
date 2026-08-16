@@ -13,6 +13,7 @@ export default {
   'discover.dismissAria': 'Dismiss this guide',
   'discover.firstGuideIntro': 'Pick a thread below to start exploring — follow people, ideas, and events through time.',
   'discover.entityGuideIntro': 'Pick a thread below to keep exploring %{name} — follow people, ideas, and events connected to it.',
+  'discover.nextCanExplore': 'Next you can explore',
   'discover.themesHeading': 'Themes',
   'discover.threadsByType': 'Threads by Type',
   'discover.nextStepHeading': 'Next Steps',
