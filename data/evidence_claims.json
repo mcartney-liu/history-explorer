@@ -2,7 +2,7 @@
     {
         "id": "ec-001",
         "subject_type": "entity",
-        "subject_id": "empire-roman",
+        "subject_id": "civ-roman",
         "source_id": "src-rosenberg-1999",
         "claim": "The Roman Empire is conventionally dated from 27 BCE (principate of Augustus).",
         "notes": "Standard periodization; see Rosenberg ch. 2."
@@ -274,7 +274,7 @@
     {
         "id": "ec-023",
         "subject_type": "relationship",
-        "subject_id": "religion-buddhism->silk_road:silk_road",
+        "subject_id": "religion-buddhism->silk_road",
         "source_id": "src-thapar-early-india",
         "claim": "佛教自公元前2世纪起沿丝绸之路从印度传入中亚与汉地，由僧人与商旅携行。",
         "confidence": "high",
@@ -289,7 +289,7 @@
     {
         "id": "ec-024",
         "subject_type": "relationship",
-        "subject_id": "civ-maurya->persian_empire:civ-persian",
+        "subject_id": "civ-maurya->civ-persian",
         "source_id": "src-strabo-geography",
         "claim": "The Maurya polity had indirect awareness of Persian (Achaemenid) administration via the Arthashastra's references; direct contemporaneity was limited (Achaemenid fell 330 BCE).",
         "confidence": "low",
@@ -680,7 +680,7 @@
     {
         "id": "ec-rom-026",
         "subject_type": "relationship",
-        "subject_id": "civ-roman->hellenistic_world:civ-greek",
+        "subject_id": "civ-roman->civ-greek",
         "source_id": "src-cah",
         "claim": "Roman culture was deeply influenced by Hellenistic Greek art, literature, and philosophy.",
         "notes": "",
@@ -695,7 +695,7 @@
     {
         "id": "ec-rom-027",
         "subject_type": "relationship",
-        "subject_id": "civ-roman->silk_road:silk_road",
+        "subject_id": "civ-roman->silk_road",
         "source_id": "src-iranica-rome",
         "claim": "The Roman Empire traded indirectly with the eastern Silk Road networks, importing silk and spices via Parthian and later Sassanian intermediaries.",
         "notes": "",
@@ -711,7 +711,7 @@
     {
         "id": "ec-rom-028",
         "subject_type": "relationship",
-        "subject_id": "civ-roman->hellenistic_world:civ-greek",
+        "subject_id": "civ-roman->civ-greek",
         "source_id": "src-cah",
         "claim": "Rome conquered the Hellenistic Greek world in the Macedonian Wars (ending 146 BCE).",
         "notes": "",
@@ -755,7 +755,7 @@
     {
         "id": "ec-rom-031",
         "subject_type": "relationship",
-        "subject_id": "religion-christianity->egypt_technology_religion:idea-monotheism",
+        "subject_id": "religion-christianity->idea-monotheism",
         "source_id": "src-oxford-christianity",
         "claim": "Roman/early Christianity carried forward monotheistic tradition rooted in Jewish and Egyptian monotheistic ideas.",
         "notes": "",
@@ -856,7 +856,7 @@
     {
         "id": "ec-rom-038",
         "subject_type": "relationship",
-        "subject_id": "religion-christianity->early_christianity:religion-early-church",
+        "subject_id": "religion-christianity->religion-early-church",
         "source_id": "src-oxford-christianity",
         "claim": "Christianity spread from its Judean origins into a broader early church across the Roman world.",
         "notes": "",
@@ -1787,7 +1787,7 @@
     {
         "id": "ec-sr-004",
         "subject_type": "entity",
-        "subject_id": "loc-chang-an",
+        "subject_id": "loc-changan",
         "source_id": "src-cn-hanshu",
         "claim": "汉长安城遗址已经系统发掘，城垣、未央宫与东西市布局清晰，是汉代与西域往来的东端起点。",
         "notes": "人工策划（human-curated），非自动生成。Wave2-#136 真相层证据覆盖扩充。",
@@ -1802,7 +1802,7 @@
     {
         "id": "ec-sr-005",
         "subject_type": "entity",
-        "subject_id": "tech-paper",
+        "subject_id": "tech-zaopi",
         "source_id": "src-cn-houhanshu",
         "claim": "《后汉书·蔡伦传》记蔡伦于元兴元年（105年）改进造纸；但甘肃放马滩、悬泉置等地出土的西汉麻纸表明纸的出现早于蔡伦。",
         "notes": "人工策划（human-curated），非自动生成。Wave2-#136 真相层证据覆盖扩充。",
@@ -3448,7 +3448,7 @@
     {
         "id": "ec-025",
         "subject_type": "relationship",
-        "subject_id": "silk_road->china_v1:tp-tang",
+        "subject_id": "silk_road->tp-tang",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road",
@@ -3462,7 +3462,7 @@
     {
         "id": "ec-026",
         "subject_type": "relationship",
-        "subject_id": "han_dynasty->china_v1:tp-tang",
+        "subject_id": "han_dynasty->tp-tang",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu",
@@ -3476,7 +3476,7 @@
     {
         "id": "ec-027",
         "subject_type": "relationship",
-        "subject_id": "event-silk-road-opened->china_v1:tp-tang",
+        "subject_id": "event-silk-road-opened->tp-tang",
         "source_id": "src-cn-hanshu",
         "source_ids": [
             "src-cn-hanshu",
@@ -3490,7 +3490,7 @@
     {
         "id": "ec-028",
         "subject_type": "relationship",
-        "subject_id": "loc-chang-an->china_v1:loc-changan",
+        "subject_id": "loc-changan->loc-changan",
         "source_id": "src-cn-jiu-tangshu",
         "source_ids": [
             "src-cn-jiu-tangshu",
@@ -3505,7 +3505,7 @@
     {
         "id": "ec-029",
         "subject_type": "relationship",
-        "subject_id": "tech-paper->china_v1:tech-zaopi",
+        "subject_id": "tech-zaopi->tech-zaopi",
         "source_id": "src-cn-cambridge",
         "source_ids": [
             "src-cn-cambridge",
@@ -3520,7 +3520,7 @@
     {
         "id": "ec-030",
         "subject_type": "relationship",
-        "subject_id": "tech-paper->china_v1:tp-tang",
+        "subject_id": "tech-zaopi->tp-tang",
         "source_id": "src-cn-cambridge",
         "source_ids": [
             "src-cn-cambridge",
@@ -3534,7 +3534,7 @@
     {
         "id": "ec-031",
         "subject_type": "relationship",
-        "subject_id": "person-zhang-qian->china_v1:tp-tang",
+        "subject_id": "person-zhang-qian->tp-tang",
         "source_id": "src-cn-hanshu",
         "source_ids": [
             "src-cn-hanshu"
@@ -3547,7 +3547,7 @@
     {
         "id": "ec-032",
         "subject_type": "relationship",
-        "subject_id": "rel-fojiao->ancient_india:religion-buddhism",
+        "subject_id": "rel-fojiao->religion-buddhism",
         "source_id": "src-thapar-early-india",
         "source_ids": [
             "src-thapar-early-india",
@@ -3561,7 +3561,7 @@
     {
         "id": "ec-033",
         "subject_type": "relationship",
-        "subject_id": "tech-zaopi->silk_road:silk_road",
+        "subject_id": "tech-zaopi->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road",
@@ -3575,7 +3575,7 @@
     {
         "id": "ec-034",
         "subject_type": "relationship",
-        "subject_id": "tech-yinshua->silk_road:silk_road",
+        "subject_id": "tech-yinshua->silk_road",
         "source_id": "src-cn-cambridge",
         "source_ids": [
             "src-cn-cambridge",
@@ -3590,7 +3590,7 @@
     {
         "id": "ec-035",
         "subject_type": "relationship",
-        "subject_id": "tech-huoyao->silk_road:silk_road",
+        "subject_id": "tech-huoyao->silk_road",
         "source_id": "src-cn-cambridge",
         "source_ids": [
             "src-cn-cambridge",
@@ -3604,7 +3604,7 @@
     {
         "id": "ec-036",
         "subject_type": "relationship",
-        "subject_id": "tp-yuan->persian_empire:civ-persian",
+        "subject_id": "tp-yuan->civ-persian",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran",
@@ -3618,7 +3618,7 @@
     {
         "id": "ec-037",
         "subject_type": "relationship",
-        "subject_id": "person-zheng-he->silk_road:silk_road",
+        "subject_id": "person-zheng-he->silk_road",
         "source_id": "src-cn-cambridge",
         "source_ids": [
             "src-cn-cambridge"
@@ -3631,7 +3631,7 @@
     {
         "id": "ec-038",
         "subject_type": "relationship",
-        "subject_id": "loc-quanzhou->silk_road:silk_road",
+        "subject_id": "loc-quanzhou->silk_road",
         "source_id": "src-cn-cambridge",
         "source_ids": [
             "src-cn-cambridge",
@@ -3645,7 +3645,7 @@
     {
         "id": "ec-039",
         "subject_type": "relationship",
-        "subject_id": "civ-zhonghua->tb_cn_v1:civ-huaxia",
+        "subject_id": "civ-zhonghua->civ-huaxia",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu",
@@ -3659,7 +3659,7 @@
     {
         "id": "ec-040",
         "subject_type": "relationship",
-        "subject_id": "tp-tang->tb_cn_v1:tp-spring-autumn",
+        "subject_id": "tp-tang->tp-spring-autumn",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient",
@@ -3673,7 +3673,7 @@
     {
         "id": "ec-041",
         "subject_type": "relationship",
-        "subject_id": "person-kongzi->greek_philosophy:person-socrates",
+        "subject_id": "person-kongzi->person-socrates",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu",
@@ -3687,7 +3687,7 @@
     {
         "id": "ec-042",
         "subject_type": "relationship",
-        "subject_id": "event-baijia-zhengming->greek_philosophy:person-socrates",
+        "subject_id": "event-baijia-zhengming->person-socrates",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient",
@@ -3701,7 +3701,7 @@
     {
         "id": "ec-043",
         "subject_type": "relationship",
-        "subject_id": "tp-warring-states->persian_empire:civ-persian",
+        "subject_id": "tp-warring-states->civ-persian",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient",
@@ -3715,7 +3715,7 @@
     {
         "id": "ec-044",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-song->china_v1:tp-yuan",
+        "subject_id": "tp-song->tp-yuan",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -3729,7 +3729,7 @@
     {
         "id": "ec-045",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-yuan->china_v1:tp-ming",
+        "subject_id": "tp-yuan->tp-ming",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -3743,7 +3743,7 @@
     {
         "id": "ec-046",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-ming->china_v1:tp-qing",
+        "subject_id": "tp-ming->tp-qing",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -3757,7 +3757,7 @@
     {
         "id": "ec-047",
         "subject_type": "relationship",
-        "subject_id": "china_v1:idea-sanxing-liubu->china_v1:civ-zhonghua",
+        "subject_id": "idea-sanxing-liubu->civ-zhonghua",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -3771,7 +3771,7 @@
     {
         "id": "ec-048",
         "subject_type": "relationship",
-        "subject_id": "china_v1:idea-tudi->china_v1:civ-zhonghua",
+        "subject_id": "idea-tudi->civ-zhonghua",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -3785,7 +3785,7 @@
     {
         "id": "ec-049",
         "subject_type": "relationship",
-        "subject_id": "china_v1:event-yitiaobian->china_v1:idea-tudi",
+        "subject_id": "event-yitiaobian->idea-tudi",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -3799,7 +3799,7 @@
     {
         "id": "ec-050",
         "subject_type": "relationship",
-        "subject_id": "china_v1:person-li-bai->china_v1:idea-tangshi",
+        "subject_id": "person-li-bai->idea-tangshi",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -3813,7 +3813,7 @@
     {
         "id": "ec-051",
         "subject_type": "relationship",
-        "subject_id": "china_v1:person-du-fu->china_v1:idea-tangshi",
+        "subject_id": "person-du-fu->idea-tangshi",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -3827,7 +3827,7 @@
     {
         "id": "ec-052",
         "subject_type": "relationship",
-        "subject_id": "china_v1:person-su-shi->china_v1:idea-songci",
+        "subject_id": "person-su-shi->idea-songci",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -3841,7 +3841,7 @@
     {
         "id": "ec-053",
         "subject_type": "relationship",
-        "subject_id": "china_v1:person-xin-qiji->china_v1:idea-songci",
+        "subject_id": "person-xin-qiji->idea-songci",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -3855,7 +3855,7 @@
     {
         "id": "ec-054",
         "subject_type": "relationship",
-        "subject_id": "china_v1:person-cheng-yi->china_v1:idea-lixue",
+        "subject_id": "person-cheng-yi->idea-lixue",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -3869,7 +3869,7 @@
     {
         "id": "ec-055",
         "subject_type": "relationship",
-        "subject_id": "china_v1:loc-linan->china_v1:idea-shangye-chengshi",
+        "subject_id": "loc-linan->idea-shangye-chengshi",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -3883,7 +3883,7 @@
     {
         "id": "ec-056",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tech-zaopi->china_v1:civ-zhonghua",
+        "subject_id": "tech-zaopi->civ-zhonghua",
         "source_id": "src-cn-shiji",
         "source_ids": [
             "src-cn-shiji"
@@ -3897,7 +3897,7 @@
     {
         "id": "ec-057",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tech-huoyao->china_v1:civ-zhonghua",
+        "subject_id": "tech-huoyao->civ-zhonghua",
         "source_id": "src-cn-shiji",
         "source_ids": [
             "src-cn-shiji"
@@ -3911,7 +3911,7 @@
     {
         "id": "ec-058",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tech-huoyao->china_v1:loc-quanzhou",
+        "subject_id": "tech-huoyao->loc-quanzhou",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -3925,7 +3925,7 @@
     {
         "id": "ec-059",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-yuan->china_v1:tp-ming",
+        "subject_id": "tp-yuan->tp-ming",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -3939,7 +3939,7 @@
     {
         "id": "ec-060",
         "subject_type": "relationship",
-        "subject_id": "china_v1:loc-changan->china_v1:event-keju-established",
+        "subject_id": "loc-changan->event-keju-established",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -3953,7 +3953,7 @@
     {
         "id": "ec-061",
         "subject_type": "relationship",
-        "subject_id": "china_v1:loc-dadu->china_v1:tp-yuan",
+        "subject_id": "loc-dadu->tp-yuan",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -3967,7 +3967,7 @@
     {
         "id": "ec-062",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-jesus->early_christianity:event-crucifixion",
+        "subject_id": "person-jesus->event-crucifixion",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -3981,7 +3981,7 @@
     {
         "id": "ec-063",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:event-crucifixion->early_christianity:loc-jerusalem",
+        "subject_id": "event-crucifixion->loc-jerusalem",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -3995,7 +3995,7 @@
     {
         "id": "ec-064",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-paul->early_christianity:event-paul-mission",
+        "subject_id": "person-paul->event-paul-mission",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4009,7 +4009,7 @@
     {
         "id": "ec-065",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:event-paul-mission->early_christianity:loc-antioch",
+        "subject_id": "event-paul-mission->loc-antioch",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4023,7 +4023,7 @@
     {
         "id": "ec-066",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-jesus->early_christianity:idea-resurrection",
+        "subject_id": "person-jesus->idea-resurrection",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4037,7 +4037,7 @@
     {
         "id": "ec-067",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-paul->early_christianity:religion-early-church",
+        "subject_id": "person-paul->religion-early-church",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4051,7 +4051,7 @@
     {
         "id": "ec-068",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:religion-early-church->early_christianity:loc-jerusalem",
+        "subject_id": "religion-early-church->loc-jerusalem",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4065,7 +4065,7 @@
     {
         "id": "ec-069",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:religion-early-church->early_christianity:loc-antioch",
+        "subject_id": "religion-early-church->loc-antioch",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4079,7 +4079,7 @@
     {
         "id": "ec-070",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-jesus->early_christianity:loc-jerusalem",
+        "subject_id": "person-jesus->loc-jerusalem",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4093,7 +4093,7 @@
     {
         "id": "ec-071",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-jesus->roman_empire:religion-christianity",
+        "subject_id": "person-jesus->religion-christianity",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4107,7 +4107,7 @@
     {
         "id": "ec-072",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:religion-early-church->roman_empire:religion-christianity",
+        "subject_id": "religion-early-church->religion-christianity",
         "source_id": "src-cah",
         "source_ids": [
             "src-cah"
@@ -4121,7 +4121,7 @@
     {
         "id": "ec-073",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:religion-early-church->roman_empire:civ-roman",
+        "subject_id": "religion-early-church->civ-roman",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4135,7 +4135,7 @@
     {
         "id": "ec-074",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:idea-resurrection->egypt_technology_religion:idea-monotheism",
+        "subject_id": "idea-resurrection->idea-monotheism",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4149,7 +4149,7 @@
     {
         "id": "ec-075",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-peter->early_christianity:event-crucifixion",
+        "subject_id": "person-peter->event-crucifixion",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4163,7 +4163,7 @@
     {
         "id": "ec-076",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:religion-early-church->roman_empire:religion-christianity",
+        "subject_id": "religion-early-church->religion-christianity",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4177,7 +4177,7 @@
     {
         "id": "ec-077",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-paul->early_christianity:idea-koine-greek",
+        "subject_id": "person-paul->idea-koine-greek",
         "source_id": "src-nt-greek",
         "source_ids": [
             "src-nt-greek"
@@ -4191,7 +4191,7 @@
     {
         "id": "ec-078",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:person-peter->roman_empire:loc-rome",
+        "subject_id": "person-peter->loc-rome",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4205,7 +4205,7 @@
     {
         "id": "ec-079",
         "subject_type": "relationship",
-        "subject_id": "early_christianity:event-pentecost->early_christianity:religion-early-church",
+        "subject_id": "event-pentecost->religion-early-church",
         "source_id": "src-oxford-christianity",
         "source_ids": [
             "src-oxford-christianity"
@@ -4219,7 +4219,7 @@
     {
         "id": "ec-080",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:tech-papyrus",
+        "subject_id": "civ-egypt->tech-papyrus",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4233,7 +4233,7 @@
     {
         "id": "ec-081",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:religion-ancient-egyptian",
+        "subject_id": "civ-egypt->religion-ancient-egyptian",
         "source_id": "src-book-of-dead",
         "source_ids": [
             "src-book-of-dead"
@@ -4247,7 +4247,7 @@
     {
         "id": "ec-082",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:event-great-pyramid-built->egypt_technology_religion:loc-ancient-egypt",
+        "subject_id": "event-great-pyramid-built->loc-ancient-egypt",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4261,7 +4261,7 @@
     {
         "id": "ec-083",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:tech-papyrus->egypt_technology_religion:religion-ancient-egyptian",
+        "subject_id": "tech-papyrus->religion-ancient-egyptian",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4275,7 +4275,7 @@
     {
         "id": "ec-084",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:civ-mesopotamia",
+        "subject_id": "civ-egypt->civ-mesopotamia",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4289,7 +4289,7 @@
     {
         "id": "ec-085",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:idea-monotheism",
+        "subject_id": "civ-egypt->idea-monotheism",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4303,7 +4303,7 @@
     {
         "id": "ec-086",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:tech-papyrus->hellenistic_world:civ-greek",
+        "subject_id": "tech-papyrus->civ-greek",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4317,7 +4317,7 @@
     {
         "id": "ec-087",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:tech-papyrus->roman_empire:civ-roman",
+        "subject_id": "tech-papyrus->civ-roman",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4331,7 +4331,7 @@
     {
         "id": "ec-088",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:idea-monotheism->hellenistic_world:civ-ptolemaic-egypt",
+        "subject_id": "idea-monotheism->civ-ptolemaic-egypt",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4345,7 +4345,7 @@
     {
         "id": "ec-089",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:tech-hieroglyph",
+        "subject_id": "civ-egypt->tech-hieroglyph",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4359,7 +4359,7 @@
     {
         "id": "ec-090",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:civ-egypt->egypt_technology_religion:tech-mummification",
+        "subject_id": "civ-egypt->tech-mummification",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4373,7 +4373,7 @@
     {
         "id": "ec-091",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:person-imhotep->egypt_technology_religion:event-great-pyramid-built",
+        "subject_id": "person-imhotep->event-great-pyramid-built",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4387,7 +4387,7 @@
     {
         "id": "ec-092",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:religion-osiris->egypt_technology_religion:religion-ancient-egyptian",
+        "subject_id": "religion-osiris->religion-ancient-egyptian",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4401,7 +4401,7 @@
     {
         "id": "ec-093",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:tp-old-kingdom->egypt_technology_religion:tp-new-kingdom",
+        "subject_id": "tp-old-kingdom->tp-new-kingdom",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4415,7 +4415,7 @@
     {
         "id": "ec-094",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:tp-old-kingdom->persian_empire:tp-achaemenid",
+        "subject_id": "tp-old-kingdom->tp-achaemenid",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4429,7 +4429,7 @@
     {
         "id": "ec-095",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:tp-old-kingdom->roman_empire:event-roman-empire-established",
+        "subject_id": "tp-old-kingdom->event-roman-empire-established",
         "source_id": "src-res-gestae",
         "source_ids": [
             "src-res-gestae"
@@ -4443,7 +4443,7 @@
     {
         "id": "ec-096",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:religion-ancient-egyptian->egypt_technology_religion:idea-monotheism",
+        "subject_id": "religion-ancient-egyptian->idea-monotheism",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4457,7 +4457,7 @@
     {
         "id": "ec-097",
         "subject_type": "relationship",
-        "subject_id": "egypt_technology_religion:event-great-pyramid-built->egypt_technology_religion:loc-ancient-egypt",
+        "subject_id": "event-great-pyramid-built->loc-ancient-egypt",
         "source_id": "src-oxford-egypt",
         "source_ids": [
             "src-oxford-egypt"
@@ -4471,7 +4471,7 @@
     {
         "id": "ec-098",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-socrates->greek_philosophy:loc-athens",
+        "subject_id": "person-socrates->loc-athens",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4485,7 +4485,7 @@
     {
         "id": "ec-099",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-plato->greek_philosophy:loc-athens",
+        "subject_id": "person-plato->loc-athens",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4499,7 +4499,7 @@
     {
         "id": "ec-100",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:loc-athens",
+        "subject_id": "person-aristotle->loc-athens",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4513,7 +4513,7 @@
     {
         "id": "ec-101",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-socrates->greek_philosophy:person-plato",
+        "subject_id": "person-socrates->person-plato",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4527,7 +4527,7 @@
     {
         "id": "ec-102",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-plato->greek_philosophy:person-aristotle",
+        "subject_id": "person-plato->person-aristotle",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4541,7 +4541,7 @@
     {
         "id": "ec-103",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-plato->greek_philosophy:event-academy-founded",
+        "subject_id": "person-plato->event-academy-founded",
         "source_id": "src-thucydides-peloponnesian",
         "source_ids": [
             "src-thucydides-peloponnesian"
@@ -4555,7 +4555,7 @@
     {
         "id": "ec-104",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:event-academy-founded->greek_philosophy:loc-athens",
+        "subject_id": "event-academy-founded->loc-athens",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4569,7 +4569,7 @@
     {
         "id": "ec-105",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-plato->greek_philosophy:idea-theory-forms",
+        "subject_id": "person-plato->idea-theory-forms",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4583,7 +4583,7 @@
     {
         "id": "ec-106",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:idea-logic",
+        "subject_id": "person-aristotle->idea-logic",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4597,7 +4597,7 @@
     {
         "id": "ec-107",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-pythagoras->greek_philosophy:idea-theory-forms",
+        "subject_id": "person-pythagoras->idea-theory-forms",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4611,7 +4611,7 @@
     {
         "id": "ec-108",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:loc-lyceum",
+        "subject_id": "person-aristotle->loc-lyceum",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4625,7 +4625,7 @@
     {
         "id": "ec-109",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-aristotle->hellenistic_world:person-alexander",
+        "subject_id": "person-aristotle->person-alexander",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4639,7 +4639,7 @@
     {
         "id": "ec-110",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-socrates->hellenistic_world:idea-democracy",
+        "subject_id": "person-socrates->idea-democracy",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4653,7 +4653,7 @@
     {
         "id": "ec-111",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:idea-theory-forms->hellenistic_world:idea-stoicism",
+        "subject_id": "idea-theory-forms->idea-stoicism",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4667,7 +4667,7 @@
     {
         "id": "ec-112",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:idea-logic->roman_empire:civ-roman",
+        "subject_id": "idea-logic->civ-roman",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4681,7 +4681,7 @@
     {
         "id": "ec-113",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-archimedes->greek_philosophy:tech-archimedes-screw",
+        "subject_id": "person-archimedes->tech-archimedes-screw",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4695,7 +4695,7 @@
     {
         "id": "ec-114",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-archimedes->early_christianity:idea-koine-greek",
+        "subject_id": "person-archimedes->idea-koine-greek",
         "source_id": "src-diogenes-laertius",
         "source_ids": [
             "src-diogenes-laertius"
@@ -4709,7 +4709,7 @@
     {
         "id": "ec-115",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:idea-atomism->greek_philosophy:idea-theory-forms",
+        "subject_id": "idea-atomism->idea-theory-forms",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4723,7 +4723,7 @@
     {
         "id": "ec-116",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-pythagoras->greek_philosophy:idea-theory-forms",
+        "subject_id": "person-pythagoras->idea-theory-forms",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4737,7 +4737,7 @@
     {
         "id": "ec-117",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:idea-logic",
+        "subject_id": "person-aristotle->idea-logic",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4751,7 +4751,7 @@
     {
         "id": "ec-118",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:event-gaugamela",
+        "subject_id": "event-alexander-conquest->event-gaugamela",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4765,7 +4765,7 @@
     {
         "id": "ec-119",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:event-alexandria-founded",
+        "subject_id": "event-alexander-conquest->event-alexandria-founded",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4779,7 +4779,7 @@
     {
         "id": "ec-120",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-gaugamela->hellenistic_world:event-alexandria-founded",
+        "subject_id": "event-gaugamela->event-alexandria-founded",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4793,7 +4793,7 @@
     {
         "id": "ec-121",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:emp-hellenistic",
+        "subject_id": "event-alexander-conquest->emp-hellenistic",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4807,7 +4807,7 @@
     {
         "id": "ec-122",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-alexander-conquest->hellenistic_world:event-diadochi-wars",
+        "subject_id": "event-alexander-conquest->event-diadochi-wars",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4821,7 +4821,7 @@
     {
         "id": "ec-123",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-diadochi-wars->hellenistic_world:civ-ptolemaic-egypt",
+        "subject_id": "event-diadochi-wars->civ-ptolemaic-egypt",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4835,7 +4835,7 @@
     {
         "id": "ec-124",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:person-alexander->hellenistic_world:event-gaugamela",
+        "subject_id": "person-alexander->event-gaugamela",
         "source_id": "src-thucydides-peloponnesian",
         "source_ids": [
             "src-thucydides-peloponnesian"
@@ -4849,7 +4849,7 @@
     {
         "id": "ec-125",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:person-alexander->hellenistic_world:civ-greek",
+        "subject_id": "person-alexander->civ-greek",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4863,7 +4863,7 @@
     {
         "id": "ec-126",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:person-alexander->hellenistic_world:emp-hellenistic",
+        "subject_id": "person-alexander->emp-hellenistic",
         "source_id": "src-polybius",
         "source_ids": [
             "src-polybius"
@@ -4877,7 +4877,7 @@
     {
         "id": "ec-127",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-ptolemaic-egypt->hellenistic_world:person-cleopatra",
+        "subject_id": "civ-ptolemaic-egypt->person-cleopatra",
         "source_id": "src-polybius",
         "source_ids": [
             "src-polybius"
@@ -4891,7 +4891,7 @@
     {
         "id": "ec-128",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:person-cleopatra->hellenistic_world:loc-alexandria",
+        "subject_id": "person-cleopatra->loc-alexandria",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4905,7 +4905,7 @@
     {
         "id": "ec-129",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:event-alexandria-founded->hellenistic_world:loc-alexandria",
+        "subject_id": "event-alexandria-founded->loc-alexandria",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -4919,7 +4919,7 @@
     {
         "id": "ec-130",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:person-alexander->hellenistic_world:event-alexandria-founded",
+        "subject_id": "person-alexander->event-alexandria-founded",
         "source_id": "src-thucydides-peloponnesian",
         "source_ids": [
             "src-thucydides-peloponnesian"
@@ -4933,7 +4933,7 @@
     {
         "id": "ec-131",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:emp-hellenistic->hellenistic_world:civ-greek",
+        "subject_id": "emp-hellenistic->civ-greek",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4947,7 +4947,7 @@
     {
         "id": "ec-132",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:person-alexander->egypt_technology_religion:civ-egypt",
+        "subject_id": "person-alexander->civ-egypt",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -4961,7 +4961,7 @@
     {
         "id": "ec-133",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-ptolemaic-egypt->egypt_technology_religion:civ-egypt",
+        "subject_id": "civ-ptolemaic-egypt->civ-egypt",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -4975,7 +4975,7 @@
     {
         "id": "ec-134",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-ptolemaic-egypt->roman_empire:roman_egypt",
+        "subject_id": "civ-ptolemaic-egypt->roman_egypt",
         "source_id": "src-cah",
         "source_ids": [
             "src-cah"
@@ -4989,7 +4989,7 @@
     {
         "id": "ec-135",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-greek->hellenistic_world:idea-stoicism",
+        "subject_id": "civ-greek->idea-stoicism",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -5003,7 +5003,7 @@
     {
         "id": "ec-136",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:idea-stoicism->roman_empire:civ-roman",
+        "subject_id": "idea-stoicism->civ-roman",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -5017,7 +5017,7 @@
     {
         "id": "ec-137",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-greek->hellenistic_world:idea-democracy",
+        "subject_id": "civ-greek->idea-democracy",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -5031,7 +5031,7 @@
     {
         "id": "ec-138",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:idea-democracy->roman_empire:civ-roman",
+        "subject_id": "idea-democracy->civ-roman",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -5045,7 +5045,7 @@
     {
         "id": "ec-139",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:emp-hellenistic->hellenistic_world:civ-greek",
+        "subject_id": "emp-hellenistic->civ-greek",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -5059,7 +5059,7 @@
     {
         "id": "ec-140",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-greek->hellenistic_world:tech-parchment",
+        "subject_id": "civ-greek->tech-parchment",
         "source_id": "src-archimedes-works",
         "source_ids": [
             "src-archimedes-works"
@@ -5073,7 +5073,7 @@
     {
         "id": "ec-141",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:tech-parchment->egypt_technology_religion:tech-papyrus",
+        "subject_id": "tech-parchment->tech-papyrus",
         "source_id": "src-cambridge-hellenistic",
         "source_ids": [
             "src-cambridge-hellenistic"
@@ -5087,7 +5087,7 @@
     {
         "id": "ec-142",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:loc-pergamum->hellenistic_world:civ-greek",
+        "subject_id": "loc-pergamum->civ-greek",
         "source_id": "src-strabo-geography",
         "source_ids": [
             "src-strabo-geography"
@@ -5101,7 +5101,7 @@
     {
         "id": "ec-143",
         "subject_type": "relationship",
-        "subject_id": "hellenistic_world:civ-ptolemaic-egypt->silk_road:silk_road",
+        "subject_id": "civ-ptolemaic-egypt->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5115,7 +5115,7 @@
     {
         "id": "ec-144",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:person-cyrus->persian_empire:event-cyrus-conquests",
+        "subject_id": "person-cyrus->event-cyrus-conquests",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5129,7 +5129,7 @@
     {
         "id": "ec-145",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:event-cyrus-conquests->persian_empire:civ-persian",
+        "subject_id": "event-cyrus-conquests->civ-persian",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5143,7 +5143,7 @@
     {
         "id": "ec-146",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:person-cyrus->persian_empire:civ-persian",
+        "subject_id": "person-cyrus->civ-persian",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5157,7 +5157,7 @@
     {
         "id": "ec-147",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:person-darius->persian_empire:civ-persian",
+        "subject_id": "person-darius->civ-persian",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5171,7 +5171,7 @@
     {
         "id": "ec-148",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:person-xerxes->persian_empire:civ-persian",
+        "subject_id": "person-xerxes->civ-persian",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5185,7 +5185,7 @@
     {
         "id": "ec-149",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->persian_empire:loc-persepolis",
+        "subject_id": "civ-persian->loc-persepolis",
         "source_id": "src-behistun",
         "source_ids": [
             "src-behistun"
@@ -5199,7 +5199,7 @@
     {
         "id": "ec-150",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->persian_empire:religion-zoroastrianism",
+        "subject_id": "civ-persian->religion-zoroastrianism",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5213,7 +5213,7 @@
     {
         "id": "ec-151",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:person-zarathustra->persian_empire:religion-zoroastrianism",
+        "subject_id": "person-zarathustra->religion-zoroastrianism",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5227,7 +5227,7 @@
     {
         "id": "ec-152",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->persian_empire:tech-royal-road",
+        "subject_id": "civ-persian->tech-royal-road",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5241,7 +5241,7 @@
     {
         "id": "ec-153",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->persian_empire:tp-achaemenid",
+        "subject_id": "civ-persian->tp-achaemenid",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5255,7 +5255,7 @@
     {
         "id": "ec-154",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:religion-zoroastrianism->persian_empire:loc-persepolis",
+        "subject_id": "religion-zoroastrianism->loc-persepolis",
         "source_id": "src-behistun",
         "source_ids": [
             "src-behistun"
@@ -5269,7 +5269,7 @@
     {
         "id": "ec-155",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->hellenistic_world:person-alexander",
+        "subject_id": "civ-persian->person-alexander",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5283,7 +5283,7 @@
     {
         "id": "ec-156",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->hellenistic_world:civ-greek",
+        "subject_id": "civ-persian->civ-greek",
         "source_id": "src-plato-dialogues",
         "source_ids": [
             "src-plato-dialogues"
@@ -5297,7 +5297,7 @@
     {
         "id": "ec-157",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->silk_road:silk_road",
+        "subject_id": "civ-persian->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5311,7 +5311,7 @@
     {
         "id": "ec-158",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:civ-persian->egypt_technology_religion:civ-egypt",
+        "subject_id": "civ-persian->civ-egypt",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5325,7 +5325,7 @@
     {
         "id": "ec-159",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:religion-zoroastrianism->egypt_technology_religion:idea-monotheism",
+        "subject_id": "religion-zoroastrianism->idea-monotheism",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5339,7 +5339,7 @@
     {
         "id": "ec-160",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:loc-susa->persian_empire:civ-persian",
+        "subject_id": "loc-susa->civ-persian",
         "source_id": "src-behistun",
         "source_ids": [
             "src-behistun"
@@ -5353,7 +5353,7 @@
     {
         "id": "ec-161",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:religion-mithra->persian_empire:civ-persian",
+        "subject_id": "religion-mithra->civ-persian",
         "source_id": "src-cambridge-iran",
         "source_ids": [
             "src-cambridge-iran"
@@ -5367,7 +5367,7 @@
     {
         "id": "ec-162",
         "subject_type": "relationship",
-        "subject_id": "persian_empire:tech-royal-road->silk_road:silk_road",
+        "subject_id": "tech-royal-road->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5381,7 +5381,7 @@
     {
         "id": "ec-163",
         "subject_type": "relationship",
-        "subject_id": "silk_road:han_dynasty->silk_road:tech-paper",
+        "subject_id": "han_dynasty->tech-zaopi",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5395,7 +5395,7 @@
     {
         "id": "ec-164",
         "subject_type": "relationship",
-        "subject_id": "silk_road:person-zhang-qian->silk_road:event-silk-road-opened",
+        "subject_id": "person-zhang-qian->event-silk-road-opened",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5409,7 +5409,7 @@
     {
         "id": "ec-165",
         "subject_type": "relationship",
-        "subject_id": "silk_road:event-silk-road-opened->silk_road:loc-chang-an",
+        "subject_id": "event-silk-road-opened->loc-changan",
         "source_id": "src-richthofen-1877",
         "source_ids": [
             "src-richthofen-1877"
@@ -5423,7 +5423,7 @@
     {
         "id": "ec-166",
         "subject_type": "relationship",
-        "subject_id": "silk_road:silk_road->silk_road:han_dynasty",
+        "subject_id": "silk_road->han_dynasty",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5437,7 +5437,7 @@
     {
         "id": "ec-167",
         "subject_type": "relationship",
-        "subject_id": "silk_road:person-zhang-qian->silk_road:silk_road",
+        "subject_id": "person-zhang-qian->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5451,7 +5451,7 @@
     {
         "id": "ec-168",
         "subject_type": "relationship",
-        "subject_id": "silk_road:silk_road->roman_empire:civ-roman",
+        "subject_id": "silk_road->civ-roman",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5465,7 +5465,7 @@
     {
         "id": "ec-169",
         "subject_type": "relationship",
-        "subject_id": "silk_road:han_dynasty->silk_road:tech-silk",
+        "subject_id": "han_dynasty->tech-silk",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5479,7 +5479,7 @@
     {
         "id": "ec-170",
         "subject_type": "relationship",
-        "subject_id": "silk_road:tech-silk->roman_empire:civ-roman",
+        "subject_id": "tech-silk->civ-roman",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5493,7 +5493,7 @@
     {
         "id": "ec-171",
         "subject_type": "relationship",
-        "subject_id": "silk_road:tech-paper->roman_empire:civ-roman",
+        "subject_id": "tech-zaopi->civ-roman",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5507,7 +5507,7 @@
     {
         "id": "ec-172",
         "subject_type": "relationship",
-        "subject_id": "silk_road:silk_road->roman_empire:civ-roman",
+        "subject_id": "silk_road->civ-roman",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5521,7 +5521,7 @@
     {
         "id": "ec-173",
         "subject_type": "relationship",
-        "subject_id": "silk_road:silk_road->persian_empire:civ-persian",
+        "subject_id": "silk_road->civ-persian",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5535,7 +5535,7 @@
     {
         "id": "ec-174",
         "subject_type": "relationship",
-        "subject_id": "silk_road:tech-silk->roman_empire:civ-roman",
+        "subject_id": "tech-silk->civ-roman",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5549,7 +5549,7 @@
     {
         "id": "ec-175",
         "subject_type": "relationship",
-        "subject_id": "silk_road:loc-samarkand->silk_road:silk_road",
+        "subject_id": "loc-samarkand->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5563,7 +5563,7 @@
     {
         "id": "ec-176",
         "subject_type": "relationship",
-        "subject_id": "silk_road:loc-kashgar->silk_road:silk_road",
+        "subject_id": "loc-kashgar->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5577,7 +5577,7 @@
     {
         "id": "ec-177",
         "subject_type": "relationship",
-        "subject_id": "silk_road:person-ban-chao->silk_road:event-silk-road-opened",
+        "subject_id": "person-ban-chao->event-silk-road-opened",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5591,7 +5591,7 @@
     {
         "id": "ec-178",
         "subject_type": "relationship",
-        "subject_id": "silk_road:person-zhang-qian->silk_road:event-silk-road-opened",
+        "subject_id": "person-zhang-qian->event-silk-road-opened",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5605,7 +5605,7 @@
     {
         "id": "ec-179",
         "subject_type": "relationship",
-        "subject_id": "ancient_india:religion-buddhism->silk_road:silk_road",
+        "subject_id": "religion-buddhism->silk_road",
         "source_id": "src-tipitaka",
         "source_ids": [
             "src-tipitaka"
@@ -5619,7 +5619,7 @@
     {
         "id": "ec-180",
         "subject_type": "relationship",
-        "subject_id": "silk_road:person-zhang-qian->silk_road:idea-chinese-language",
+        "subject_id": "person-zhang-qian->idea-chinese-language",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5633,7 +5633,7 @@
     {
         "id": "ec-181",
         "subject_type": "relationship",
-        "subject_id": "silk_road:tech-glass->silk_road:silk_road",
+        "subject_id": "tech-glass->silk_road",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -5647,7 +5647,7 @@
     {
         "id": "ec-182",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-prehistory->tb_cn_v1:tp-xia",
+        "subject_id": "tp-prehistory->tp-xia",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -5661,7 +5661,7 @@
     {
         "id": "ec-183",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-xia->tb_cn_v1:tp-shang",
+        "subject_id": "tp-xia->tp-shang",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -5675,7 +5675,7 @@
     {
         "id": "ec-184",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tp-zhou-west",
+        "subject_id": "tp-shang->tp-zhou-west",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -5689,7 +5689,7 @@
     {
         "id": "ec-185",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-zhou-west->tb_cn_v1:tp-spring-autumn",
+        "subject_id": "tp-zhou-west->tp-spring-autumn",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -5703,7 +5703,7 @@
     {
         "id": "ec-186",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-spring-autumn->tb_cn_v1:tp-warring-states",
+        "subject_id": "tp-spring-autumn->tp-warring-states",
         "source_id": "src-cn-xsz-project",
         "source_ids": [
             "src-cn-xsz-project"
@@ -5717,7 +5717,7 @@
     {
         "id": "ec-187",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-yu->tb_cn_v1:tp-xia",
+        "subject_id": "person-yu->tp-xia",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -5731,7 +5731,7 @@
     {
         "id": "ec-188",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-qi->tb_cn_v1:tp-xia",
+        "subject_id": "person-qi->tp-xia",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -5745,7 +5745,7 @@
     {
         "id": "ec-189",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-tang->tb_cn_v1:tp-shang",
+        "subject_id": "person-tang->tp-shang",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -5759,7 +5759,7 @@
     {
         "id": "ec-190",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-wuwang->tb_cn_v1:tp-zhou-west",
+        "subject_id": "person-wuwang->tp-zhou-west",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -5773,7 +5773,7 @@
     {
         "id": "ec-191",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tech-jiaguwen",
+        "subject_id": "tp-shang->tech-jiaguwen",
         "source_id": "src-cn-shiji",
         "source_ids": [
             "src-cn-shiji"
@@ -5787,7 +5787,7 @@
     {
         "id": "ec-192",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tech-qingtong",
+        "subject_id": "tp-shang->tech-qingtong",
         "source_id": "src-cn-shiji",
         "source_ids": [
             "src-cn-shiji"
@@ -5801,7 +5801,7 @@
     {
         "id": "ec-193",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-zhou-west->tb_cn_v1:idea-fengjian",
+        "subject_id": "tp-zhou-west->idea-fengjian",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -5815,7 +5815,7 @@
     {
         "id": "ec-194",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-kongzi->tb_cn_v1:idea-rujia",
+        "subject_id": "person-kongzi->idea-rujia",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -5829,7 +5829,7 @@
     {
         "id": "ec-195",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-laozi->tb_cn_v1:idea-daojia",
+        "subject_id": "person-laozi->idea-daojia",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -5843,7 +5843,7 @@
     {
         "id": "ec-196",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-warring-states->tb_cn_v1:event-baijia-zhengming",
+        "subject_id": "tp-warring-states->event-baijia-zhengming",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -5857,7 +5857,7 @@
     {
         "id": "ec-197",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:event-shangyang-bianfa->tb_cn_v1:tp-warring-states",
+        "subject_id": "event-shangyang-bianfa->tp-warring-states",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -5871,7 +5871,7 @@
     {
         "id": "ec-198",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:loc-huanghe->tb_cn_v1:civ-huaxia",
+        "subject_id": "loc-huanghe->civ-huaxia",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -5885,7 +5885,7 @@
     {
         "id": "ec-199",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:loc-changjiang->tb_cn_v1:civ-huaxia",
+        "subject_id": "loc-changjiang->civ-huaxia",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -5899,7 +5899,7 @@
     {
         "id": "ec-200",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-wuwang->tb_cn_v1:loc-haojing",
+        "subject_id": "person-wuwang->loc-haojing",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -5913,7 +5913,7 @@
     {
         "id": "ec-201",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-kongzi->tb_cn_v1:loc-qufu",
+        "subject_id": "person-kongzi->loc-qufu",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -5927,7 +5927,7 @@
     {
         "id": "ec-202",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-pangeng->tb_cn_v1:loc-yin",
+        "subject_id": "person-pangeng->loc-yin",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -5941,7 +5941,7 @@
     {
         "id": "ec-203",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-xia->tb_cn_v1:loc-erlitou",
+        "subject_id": "tp-xia->loc-erlitou",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -5955,7 +5955,7 @@
     {
         "id": "ec-204",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-yandi->tb_cn_v1:civ-huaxia",
+        "subject_id": "person-yandi->civ-huaxia",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -5969,7 +5969,7 @@
     {
         "id": "ec-205",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-huangdi->tb_cn_v1:civ-huaxia",
+        "subject_id": "person-huangdi->civ-huaxia",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -5983,7 +5983,7 @@
     {
         "id": "ec-206",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-yao->tb_cn_v1:idea-shanrang",
+        "subject_id": "person-yao->idea-shanrang",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -5997,7 +5997,7 @@
     {
         "id": "ec-207",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-shun->tb_cn_v1:idea-shanrang",
+        "subject_id": "person-shun->idea-shanrang",
         "source_id": "src-cn-lunyu",
         "source_ids": [
             "src-cn-lunyu"
@@ -6011,7 +6011,7 @@
     {
         "id": "ec-208",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-youwang->tb_cn_v1:tp-zhou-west",
+        "subject_id": "person-youwang->tp-zhou-west",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -6025,7 +6025,7 @@
     {
         "id": "ec-209",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-wuwang->tb_cn_v1:event-wuwang-fazhou",
+        "subject_id": "person-wuwang->event-wuwang-fazhou",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -6039,7 +6039,7 @@
     {
         "id": "ec-210",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:event-pangeng-qian-yin->tb_cn_v1:loc-yin",
+        "subject_id": "event-pangeng-qian-yin->loc-yin",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -6053,7 +6053,7 @@
     {
         "id": "ec-211",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-yu->tb_cn_v1:event-dayu-zhishui",
+        "subject_id": "person-yu->event-dayu-zhishui",
         "source_id": "src-cn-zizhitongjian",
         "source_ids": [
             "src-cn-zizhitongjian"
@@ -6067,7 +6067,7 @@
     {
         "id": "ec-212",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:loc-zhoukoudian->tb_cn_v1:civ-huaxia",
+        "subject_id": "loc-zhoukoudian->civ-huaxia",
         "source_id": "src-cn-cambridge-ancient",
         "source_ids": [
             "src-cn-cambridge-ancient"
@@ -6081,7 +6081,7 @@
     {
         "id": "ec-213",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tech-daogeng->tb_cn_v1:loc-changjiang",
+        "subject_id": "tech-daogeng->loc-changjiang",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -6095,7 +6095,7 @@
     {
         "id": "ec-214",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tech-su->tb_cn_v1:loc-huanghe",
+        "subject_id": "tech-su->loc-huanghe",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -6109,7 +6109,7 @@
     {
         "id": "ec-215",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tech-ganlan->tb_cn_v1:loc-changjiang",
+        "subject_id": "tech-ganlan->loc-changjiang",
         "source_id": "src-cn-museum",
         "source_ids": [
             "src-cn-museum"
@@ -6123,7 +6123,7 @@
     {
         "id": "ec-216",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:idea-baijia->tb_cn_v1:tp-warring-states",
+        "subject_id": "idea-baijia->tp-warring-states",
         "source_id": "src-cn-qianmu",
         "source_ids": [
             "src-cn-qianmu"
@@ -7082,7 +7082,7 @@
     {
         "id": "ec-b-064",
         "subject_type": "relationship",
-        "subject_id": "loc-samarkand->loc-chang-an",
+        "subject_id": "loc-samarkand->loc-changan",
         "source_id": "src-hansen-silk-road",
         "source_ids": [
             "src-hansen-silk-road"
@@ -7382,7 +7382,7 @@
     {
         "id": "ec-zh-001",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-song->china_v1:tp-yuan",
+        "subject_id": "tp-song->tp-yuan",
         "claim": "宋朝（960–1279）之后，蒙古建立的元朝（1271–1368）结束了南北对峙，成为首个由游牧民族建立的大一统王朝。",
         "confidence": "high",
         "source_ids": [
@@ -7393,7 +7393,7 @@
     {
         "id": "ec-zh-002",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-yuan->china_v1:tp-ming",
+        "subject_id": "tp-yuan->tp-ming",
         "claim": "元朝末年的民变中，朱元璋建立明朝（1368–1644），重建汉族主导的中央集权王朝。",
         "confidence": "high",
         "source_ids": [
@@ -7403,7 +7403,7 @@
     {
         "id": "ec-zh-003",
         "subject_type": "relationship",
-        "subject_id": "china_v1:tp-ming->china_v1:tp-qing",
+        "subject_id": "tp-ming->tp-qing",
         "claim": "明朝（1368–1644）亡于内外交困，满洲入关建立清朝（1636–1912），再度由北方民族完成对中原的统一。",
         "confidence": "high",
         "source_ids": [
@@ -7413,7 +7413,7 @@
     {
         "id": "ec-zh-004",
         "subject_type": "relationship",
-        "subject_id": "silk_road:person-zhang-qian->silk_road:event-silk-road-opened",
+        "subject_id": "person-zhang-qian->event-silk-road-opened",
         "claim": "西汉张骞于公元前2世纪两度出使西域，打通中原通往中亚、西亚的道路，为丝绸之路的开辟奠定基石。",
         "confidence": "high",
         "source_ids": [
@@ -7424,7 +7424,7 @@
     {
         "id": "ec-zh-005",
         "subject_type": "relationship",
-        "subject_id": "roman_empire:civ-roman->silk_road:tech-silk",
+        "subject_id": "civ-roman->tech-silk",
         "claim": "中国的丝织品沿丝绸之路西传，成为罗马贵族追逐的奢侈品，罗马人因而称中国为“赛里斯”（丝国）。",
         "confidence": "medium",
         "source_ids": [
@@ -7435,7 +7435,7 @@
     {
         "id": "ec-zh-006",
         "subject_type": "relationship",
-        "subject_id": "roman_empire:event-roman-empire-established->roman_empire:event-empire-fall",
+        "subject_id": "event-roman-empire-established->event-empire-fall",
         "claim": "西罗马帝国于公元476年终结，标志着古代世界与西欧中世纪的转折。",
         "confidence": "high",
         "source_ids": [
@@ -7446,7 +7446,7 @@
     {
         "id": "ec-zh-007",
         "subject_type": "relationship",
-        "subject_id": "ancient_india:person-chandragupta->ancient_india:civ-maurya",
+        "subject_id": "person-chandragupta->civ-maurya",
         "claim": "旃陀罗笈多·孔雀约公元前322年创立孔雀王朝，统一恒河流域，奠定印度首个大一统帝国。",
         "confidence": "medium",
         "source_ids": [
@@ -7457,7 +7457,7 @@
     {
         "id": "ec-zh-008",
         "subject_type": "relationship",
-        "subject_id": "ancient_india:civ-maurya->ancient_india:person-ashoka",
+        "subject_id": "civ-maurya->person-ashoka",
         "claim": "阿育王（约前268–前232年在位）继承旃陀罗笈多缔造的孔雀王朝，将帝国版图推向全印。",
         "confidence": "high",
         "source_ids": [
@@ -7468,7 +7468,7 @@
     {
         "id": "ec-zh-009",
         "subject_type": "relationship",
-        "subject_id": "ancient_india:religion-buddhism->ancient_india:person-siddhartha",
+        "subject_id": "religion-buddhism->person-siddhartha",
         "claim": "佛教由释迦牟尼（乔达摩·悉达多）于公元前6至前5世纪创立，其觉悟与教法构成佛教的根本源头。",
         "confidence": "high",
         "source_ids": [
@@ -7478,7 +7478,7 @@
     {
         "id": "ec-zh-010",
         "subject_type": "relationship",
-        "subject_id": "ancient_india:person-siddhartha->ancient_india:idea-dharma",
+        "subject_id": "person-siddhartha->idea-dharma",
         "claim": "释迦牟尼宣说“正法”（达摩），即关于苦、集、灭、道的根本教义，是佛弟子修行的依归。",
         "confidence": "high",
         "source_ids": [
@@ -7488,7 +7488,7 @@
     {
         "id": "ec-zh-011",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-xia->tb_cn_v1:tp-shang",
+        "subject_id": "tp-xia->tp-shang",
         "claim": "商朝（约前1600–前1046）取代夏朝而立，以甲骨文与青铜礼器著称，是迄今信史可考的早期王朝。",
         "confidence": "medium",
         "source_ids": [
@@ -7499,7 +7499,7 @@
     {
         "id": "ec-zh-012",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:tp-shang->tb_cn_v1:tp-zhou-west",
+        "subject_id": "tp-shang->tp-zhou-west",
         "claim": "周人于公元前1046年伐纣灭商，建立西周，推行分封制与礼乐制度。",
         "confidence": "high",
         "source_ids": [
@@ -7510,7 +7510,7 @@
     {
         "id": "ec-zh-013",
         "subject_type": "relationship",
-        "subject_id": "tb_cn_v1:person-kongzi->tb_cn_v1:idea-rujia",
+        "subject_id": "person-kongzi->idea-rujia",
         "claim": "孔子（前551–前479）以仁与礼为核心开创学说，其思想经后世阐发成为儒家。",
         "confidence": "high",
         "source_ids": [
@@ -7520,7 +7520,7 @@
     {
         "id": "ec-zh-014",
         "subject_type": "relationship",
-        "subject_id": "greek_philosophy:person-aristotle->greek_philosophy:person-plato",
+        "subject_id": "person-aristotle->person-plato",
         "claim": "亚里士多德十七岁入柏拉图学园，受业近二十年，早期思想深受其师影响，而后自成体系。",
         "confidence": "high",
         "source_ids": [
