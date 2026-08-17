@@ -335,3 +335,51 @@ class TestM361FreezeInvariants:
             for r in d["relationships"]:
                 assert r["type"] in RELATIONSHIP_TYPES, \
                     f"Rel type '{r['type']}' not in RELATIONSHIP_TYPES"
+
+
+# ---------------------------------------------------------------------------
+# AI Historian (§33/§34) — exploration-context builder + JSON contract unity
+# ---------------------------------------------------------------------------
+
+from app.ai_gateway.answer_service import _build_exploration_context  # noqa: E402
+
+
+class TestExplorationContextBuilder:
+    def test_empty_returns_empty_string(self):
+        assert _build_exploration_context([]) == ""
+        assert _build_exploration_context(None) == ""
+
+    def test_formats_candidates(self):
+        ne = [
+            {"global_id": "ancient_india:civ-maurya", "relationship": "influenced",
+             "reason": "shared trade routes"},
+            {"global_id": "ancient_india:person-ashoka", "relationship": "caused",
+             "reason": ""},
+        ]
+        out = _build_exploration_context(ne)
+        assert "[EXPLORATION CANDIDATES]" in out
+        assert "ancient_india:civ-maurya" in out
+        assert "influenced" in out
+        assert "shared trade routes" in out
+        assert "ancient_india:person-ashoka" in out
+
+    def test_does_not_invent(self):
+        ne = [{"global_id": "g:1", "relationship": "before"}]
+        out = _build_exploration_context(ne)
+        assert "g:1" in out and "before" in out
+
+
+class TestJsonContractUnified:
+    def test_system_prompt_uses_json_contract(self):
+        ps = PromptService()
+        sp = ps.system_prompt("explain")
+        assert '"answer"' in sp and '"citations"' in sp
+        # The contradictory instruction must be gone
+        assert "Do NOT wrap it in JSON" not in sp
+        for mode in ("why_important", "why_happened", "historical_impact",
+                     "multi_civilization_view", "timeline_explanation"):
+            assert '"answer"' in ps.system_prompt(mode)
+
+    def test_grounding_not_weakened(self):
+        sp = PromptService().system_prompt("explain")
+        assert "Use ONLY the facts provided in the [ALLOWED FACTS]" in sp

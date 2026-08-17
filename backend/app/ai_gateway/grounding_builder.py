@@ -16,9 +16,15 @@ Hard invariants (ADR-0003 + freeze):
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Sequence
+from typing import List, Optional, Sequence
 
 from .citation_model import Citation, RelationshipPair
+from .config import GroundingTuningConfig
+from .temporal_gate import (
+    DECISION_REJECT,
+    RELATION_TEMPORAL_CLASS,
+    decide,
+)
 
 # M36.0: hard cap on how many NEW second-hop entities expand_context() may add.
 # Prevents context explosion on dense hubs (e.g. an empire node with dozens of
@@ -132,20 +138,47 @@ class GroundingResult:
     # 2-hop entities (root -> bridge -> second-hop) resolve, because the
     # validator accepts context ∪ its 1-hop neighbors.
     expanded_global_ids: List[str] = field(default_factory=list)
+    # ADR-0028 (P2, additive): provenance for relations the temporal gate
+    # REJECTED when gating is active (tol configured). Dormant (empty) in
+    # production — filled only when an operator opts in via GroundingTuningConfig.
+    # Carries enough context for auditing without leaking internal machinery.
+    temporal_rejects: List[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
             "facts": list(self.facts),
             "citations": [c.to_dict() for c in self.citations],
             "expanded_global_ids": list(self.expanded_global_ids),
+            "temporal_rejects": list(self.temporal_rejects),
         }
 
 
 class GroundingBuilder:
     """Assemble grounded facts + citations from the deterministic graph."""
 
-    def __init__(self, knowledge_service):
+    def __init__(self, knowledge_service, tuning=None):
         self._ks = knowledge_service
+        # ADR-0028 (P2): dormant-by-default temporal coherence gating. The gate
+        # only activates when an explicit tolerance is configured; with
+        # `tol=None` (the production / legacy default) it is a pure passthrough
+        # and the builder behaves exactly as before. This keeps all existing
+        # tests green and adds zero behaviour change at runtime until an
+        # operator opts in via GroundingTuningConfig.
+        self._tuning = (
+            tuning if tuning is not None else GroundingTuningConfig.legacy_default()
+        )
+
+    def _entity_dict(self, global_id):
+        """Resolve a global_id to its raw entity dict (index 2 of the
+        KnowledgeService (topic, local_id, entity) 3-tuple), or None when
+        unknown. Read-only; used by the temporal gate to read intervals.
+        """
+        if not isinstance(global_id, str) or not global_id:
+            return None
+        res = self._ks.find_by_global_id(global_id)
+        if not res:
+            return None
+        return res[2] if len(res) >= 3 else None
 
     def expand_context(self, roots: Sequence[str]) -> dict:
         """M36.0: read-only 2-hop context expansion.
@@ -256,6 +289,34 @@ class GroundingBuilder:
                 rel_type = nbr.get("relationship", "related_to")
                 other_name = nbr.get("name") or other_gid
                 direction = nbr.get("direction", "both")
+
+                # --- ADR-0028 (P2) temporal coherence gate (dormant default) ---
+                # Only the 18 Contract §3 temporal-taxonomy relation types are
+                # gated. `disputes` / `reinterprets` (ADR-0019) and any other
+                # non-taxonomy type are intentionally absent from
+                # RELATION_TEMPORAL_CLASS and therefore pass through untouched
+                # (D1: pre-filtered at the grounding layer, never handed to the
+                # gate to be rejected). When tol is unset the whole block is
+                # skipped -> zero behaviour change in production.
+                if self._tuning.tol is not None and rel_type in RELATION_TEMPORAL_CLASS:
+                    decision = decide(
+                        rel_type,
+                        entity,
+                        self._entity_dict(other_gid) or {},
+                        self._tuning.tol,
+                    )
+                    if decision.decision == DECISION_REJECT:
+                        result.temporal_rejects.append(
+                            {
+                                "source_global_id": gid,
+                                "target_global_id": other_gid,
+                                "relationship": rel_type,
+                                "temporal_state": decision.temporal_state,
+                                "reason": decision.reason,
+                            }
+                        )
+                        continue  # drop this fact + citation; do not ground it
+
                 if direction == "outgoing":
                     fact = "%s —[%s]→ %s" % (name, rel_type, other_name)
                 elif direction == "incoming":
@@ -276,6 +337,30 @@ class GroundingBuilder:
         expansion = self.expand_context(roots)
         for item in expansion["second_hop"]:
             rel_type = item["relationship"]
+
+            # --- ADR-0028 (P2) temporal coherence gate (dormant default) ---
+            # Symmetric to the neighbor loop: only the 18-taxonomy types are
+            # gated, and only when tol is configured. `bridge` -> `target` is
+            # the relation being evaluated for temporal coherence.
+            if self._tuning.tol is not None and rel_type in RELATION_TEMPORAL_CLASS:
+                decision = decide(
+                    rel_type,
+                    self._entity_dict(item["bridge_global_id"]) or {},
+                    self._entity_dict(item["global_id"]) or {},
+                    self._tuning.tol,
+                )
+                if decision.decision == DECISION_REJECT:
+                    result.temporal_rejects.append(
+                        {
+                            "source_global_id": item["bridge_global_id"],
+                            "target_global_id": item["global_id"],
+                            "relationship": rel_type,
+                            "temporal_state": decision.temporal_state,
+                            "reason": decision.reason,
+                        }
+                    )
+                    continue
+
             if item["direction"] == "outgoing":
                 fact = "%s —[%s]→ %s (2-hop via context)" % (
                     item["bridge_name"], rel_type, item["name"],

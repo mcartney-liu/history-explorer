@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react'
 import { explainAI, type AIResponse } from '../data/aiClient'
+import { TrustDisplay } from './ai/TrustDisplay'
+import type { AINextExploration } from '../data/aiClient'
 import { recordEvent } from '../data/UserBehaviorEvent'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
@@ -18,6 +20,7 @@ export type ChatMessage = {
   perspectives?: string[]
   evidence?: AIResponse['evidence']
   confidence?: AIResponse['confidence']
+  next_exploration?: AINextExploration[]
 }
 
 export type HistorianChatProps = {
@@ -29,6 +32,10 @@ export type HistorianChatProps = {
   entityType: string
   /** Relationships for context hints (optional). */
   relationships?: EntityRelationship[]
+  /** Pass-through navigation: fired with an entity global_id when a
+   *  next-exploration suggestion is clicked. Wires to the EXISTING
+   *  onEntityClick path — no new navigation logic. */
+  onEntityClick?: (globalId: string) => void
 }
 
 type ChatStatus = 'idle' | 'loading' | 'error'
@@ -90,12 +97,14 @@ export function HistorianChatView({
   error = '',
   onAsk = (_q: string) => {},
   onClear = () => {},
+  onEntityClick,
 }: HistorianChatProps & {
   status?: ChatStatus
   messages?: ChatMessage[]
   error?: string
   onAsk?: (question: string) => void
   onClear?: () => void
+  onEntityClick?: (globalId: string) => void
 }) {
   const suggestions = questionsFor(entityType, entityName)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -163,6 +172,13 @@ export function HistorianChatView({
                     <CitationList
                       citations={msg.citations}
                       rejected_citations={msg.rejected_citations}
+                    />
+                  )}
+                  {msg.next_exploration && msg.next_exploration.length > 0 && (
+                    <TrustDisplay
+                      nextExploration={msg.next_exploration}
+                      engine={msg.engine}
+                      onNextClick={onEntityClick}
                     />
                   )}
                 </div>
@@ -275,6 +291,7 @@ export default function HistorianChat(props: HistorianChatProps) {
         perspectives: res.perspectives,
         evidence: res.evidence,
         confidence: res.confidence,
+        next_exploration: res.next_exploration,
       }
       setMessages((prev) => [...prev, assistantMsg])
       setStatus('idle')
@@ -292,6 +309,7 @@ export default function HistorianChat(props: HistorianChatProps) {
       error={error}
       onAsk={onAsk}
       onClear={() => { setMessages([]); setStatus('idle') }}
+      onEntityClick={props.onEntityClick}
     />
   )
 }

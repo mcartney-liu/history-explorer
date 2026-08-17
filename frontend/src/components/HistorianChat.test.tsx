@@ -1,8 +1,17 @@
-import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
+// @vitest-environment jsdom
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { HistorianChatView, type ChatMessage } from './HistorianChat'
+import { act } from 'react'
+import { createRoot, type Root } from 'react-dom/client'
+import { LocaleProvider } from '../data/locale'
+import HistorianChat, { HistorianChatView, type ChatMessage } from './HistorianChat'
+import { explainAI } from '../data/aiClient'
+import type { AINextExploration, AIResponse } from '../data/aiClient'
 
 // localStorage polyfill for event storage
+vi.mock('../data/aiClient', () => ({ explainAI: vi.fn() }))
+;(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+
 const store = new Map<string, string>()
 beforeAll(() => {
   const mock: Storage = {
@@ -13,7 +22,9 @@ beforeAll(() => {
     get length() { return store.size },
     key: (index: number) => Array.from(store.keys())[index] ?? null,
   }
-  Object.defineProperty(globalThis, 'localStorage', { value: mock, writable: true })
+  if (!('localStorage' in globalThis)) {
+    Object.defineProperty(globalThis, 'localStorage', { value: mock, writable: true })
+  }
 })
 
 beforeEach(() => {
@@ -253,3 +264,90 @@ describe('HistorianChat (M46 start_chat)', () => {
     expect(getEventCount()).toBe(0)
   })
 })
+
+// ============================================================
+// AI Response Layer — next_exploration → TrustDisplay 闭环
+// 所有探索候选均来自后端 res.next_exploration（证据绑定），前端不自创。
+// ============================================================
+
+const NEXT: AINextExploration[] = [
+  {
+    global_id: 'roman_empire:event-punic-wars',
+    label: 'Punic Wars',
+    relationship: 'related_to',
+    source_id: 'src-polybius',
+    claim_ids: ['c1'],
+  },
+]
+
+function mockResponse(): AIResponse {
+  return {
+    answer: '该事件源于共和晚期的结构性危机。',
+    citations: [],
+    rejected_citations: [],
+    grounded: true,
+    engine: 'ai',
+    question: '',
+    context_global_ids: [],
+    mode: 'explain',
+    next_exploration: NEXT,
+  }
+}
+
+describe('HistorianChat (next_exploration → TrustDisplay)', () => {
+  let container: HTMLDivElement
+  let root: Root
+
+  beforeEach(() => {
+    container = document.createElement('div')
+    document.body.appendChild(container)
+    root = createRoot(container)
+    vi.mocked(explainAI).mockResolvedValue(mockResponse())
+  })
+
+  afterEach(() => {
+    act(() => root.unmount())
+    container.remove()
+    vi.clearAllMocks()
+  })
+
+  it('renders the exploration card from backend next_exploration and fires onEntityClick on node click', async () => {
+    const onEntityClick = vi.fn()
+
+    await act(async () => {
+      root.render(
+        <LocaleProvider>
+          <HistorianChat
+            entityGlobalId="roman_empire:event-1"
+            entityName="Roman Republic"
+            entityType="Event"
+            onEntityClick={onEntityClick}
+          />
+        </LocaleProvider>,
+      )
+    })
+
+    // idle state shows suggested questions — click one to trigger onAsk → explainAI
+    const suggestBtn = container.querySelector('.hc-suggest-btn') as HTMLButtonElement | null
+    expect(suggestBtn).not.toBeNull()
+
+    await act(async () => {
+      suggestBtn!.click()
+      await new Promise((r) => setTimeout(r, 10))
+    })
+
+    // assistant message should now render an evidence-bound exploration card
+    const trust = container.querySelector('[data-testid="trust-display"]')
+    expect(trust).not.toBeNull()
+    const nodeBtn = container.querySelector('.trust-display-node-btn') as HTMLButtonElement | null
+    expect(nodeBtn).not.toBeNull()
+
+    // clicking the suggestion node must pass the backend global_id straight through
+    await act(async () => {
+      nodeBtn!.click()
+    })
+    expect(onEntityClick).toHaveBeenCalledTimes(1)
+    expect(onEntityClick).toHaveBeenCalledWith('roman_empire:event-punic-wars')
+  })
+})
+

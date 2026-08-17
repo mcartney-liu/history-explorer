@@ -60,6 +60,7 @@ export function CompanionRouter({ onNavigateEntity, actions }: { onNavigateEntit
           error={error}
           onAsk={(q: string) => sendChat(q)}
           onClear={clearChat}
+          onEntityClick={onNavigateEntity}
         />
       )
 
