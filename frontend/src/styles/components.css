@@ -437,6 +437,85 @@
   color: var(--color-ink-400);
   font-style: italic;
 }
+/* 访客回复：每条反馈下可展开的输入窗口，使会话能持续上下回复 */
+.feedback-board-reply {
+  margin-top: 10px;
+}
+.feedback-board-reply-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-accent-hover);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.feedback-board-reply-toggle:hover {
+  border-color: var(--color-accent);
+}
+.feedback-board-reply-form {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.feedback-board-reply-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius);
+  background: var(--color-paper-50);
+  color: var(--color-ink-800);
+  font-size: 13px;
+  line-height: 1.6;
+  font-family: inherit;
+  resize: vertical;
+}
+.feedback-board-reply-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.feedback-board-reply-actions {
+  display: flex;
+  gap: 8px;
+}
+.feedback-board-reply-send {
+  padding: 6px 16px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-accent-ink, #fff);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.feedback-board-reply-send:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.feedback-board-reply-cancel {
+  padding: 6px 16px;
+  border: 1px solid var(--color-paper-300);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-ink-500);
+  font-size: 13px;
+  cursor: pointer;
+}
+.feedback-board-reply-cancel:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.feedback-board-reply-err {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-status-danger);
+}
 
 /* ── AI 事实溯源解读（AIExplanationPanel）────────────── */
 .ai-explanation {

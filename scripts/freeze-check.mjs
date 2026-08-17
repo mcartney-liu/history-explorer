@@ -307,6 +307,12 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/discover/",
   "frontend/src/components/exploration/",
   "frontend/src/components/journey/",
+  // ADR-0026 (Freeze Revision Gate, PO-approved 2026-08-16): 首页 hero 实体点阵氛围层
+  // — EntityNetBackground.tsx。纯 canvas 视觉组件，零依赖；点=真实实体名、无连线、
+  // 探照灯式点亮、pointer-events:none 不挡操作；仅作氛围、不参与业务逻辑/导航/数据。
+  // 守红线：零新依赖 / Relationship Layer 仅可视化（无建边无推理）/ 真实实体名不造假 /
+  // 不碰 forbidden tech。目录前缀覆盖 visual/ 下全部（含未来同类视觉组件）。
+  "frontend/src/components/visual/",
   "frontend/src/components/FeedbackWidget.tsx",
   // M62.5 / ADR-0020 — LandingPage UI 文案双语化（接 useLocale/t，文案迁 locales）
   "frontend/src/components/LandingPage.tsx",
@@ -338,6 +344,12 @@ export const SCOPE_ALLOWLIST = [
   "backend/app/ai_gateway/prompt_service.py",
   "backend/app/ai_gateway/answer_service.py",
   "backend/app/ai_gateway/config.py",
+  // ADR-0028 P1 (Temporal Core) — Freeze Revision Gate, PO-approved 2026-08-17
+  // ("按你推荐的来"). Adds the standalone temporal rule gate (pure function,
+  // Contract §3 Temporal Rule Matrix) + its L1-L4 unit tests. Additive, exact
+  // file entries; no deny-list / Contract / M4-002 / validation.py / G1 touched.
+  "backend/app/ai_gateway/temporal_gate.py",
+  "backend/tests/test_temporal_gate.py",
   // ADR-0017 (PO-approved 2026-08-08): domestic OpenAI-compatible provider support.
   // provider.py gains base_url + model passthrough (redirects the whitelisted
   // openai SDK to DeepSeek/通义/智谱). Zero new dependency; grounding + fallback
@@ -359,6 +371,7 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/GroundedAnswer.tsx",
   "frontend/src/components/CitationList.tsx",
   "backend/tests/test_ai_gateway.py",
+  "backend/tests/test_ai_historian_regression.py",  // AI Historian 回归测试（#522/#524, PO-approved 2026-08-17）：causal/grounding 3 轮变异自证网；纯 additive 测试，无 backend 业务逻辑/依赖/枚举变更
   "frontend/src/components/AIExplanationPanel.test.tsx",
   "frontend/src/components/GroundedAnswer.test.tsx",
   "frontend/src/components/CitationList.test.tsx",

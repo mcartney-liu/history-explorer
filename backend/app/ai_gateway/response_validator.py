@@ -23,6 +23,7 @@ from typing import List, Sequence, Set
 
 from .citation_model import ALLOWED_KINDS, Citation
 from .grounding_builder import timeline_citation_id
+from .temporal_gate import DECISION_REJECT, RELATION_TEMPORAL_CLASS, decide
 
 
 @dataclass
@@ -30,20 +31,31 @@ class ValidationResult:
     valid_citations: List[Citation] = field(default_factory=list)
     rejected_citations: List[Citation] = field(default_factory=list)
     grounded: bool = False
+    # ADR-0028 (P3, additive): provenance for relationship citations the
+    # temporal coherence re-check REJECTED when gating is active (tol
+    # configured). Dormant (empty) in production. Audit surface only.
+    temporal_rejects: List[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
             "grounded": self.grounded,
             "valid_citations": [c.to_dict() for c in self.valid_citations],
             "rejected_citations": [c.to_dict() for c in self.rejected_citations],
+            "temporal_rejects": list(self.temporal_rejects),
         }
 
 
 class ResponseValidator:
     """Verify AI citations against the deterministic knowledge graph."""
 
-    def __init__(self, knowledge_service):
+    def __init__(self, knowledge_service, tuning=None):
         self._ks = knowledge_service
+        # ADR-0028 (P3): dormant-by-default temporal coherence re-check. The
+        # validator independently re-verifies relationship citations against the
+        # Contract §3 gate. Activation requires an explicit `tuning` carrying a
+        # configured `tol`; with `tuning=None` (the production default) the check
+        # is skipped entirely and validation behaves exactly as before.
+        self._tuning = tuning
 
     def validate(
         self,
@@ -89,15 +101,46 @@ class ResponseValidator:
             except Exception:
                 continue
 
+        temporal_rejects: List[dict] = []
+
         for c in citations:
-            if self._is_valid(c, covered_entity_ids, neighbor_ids, timeline_ids):
-                valid.append(c)
-            else:
+            if not self._is_valid(c, covered_entity_ids, neighbor_ids, timeline_ids):
                 rejected.append(c)
+                continue
+            # --- ADR-0028 (P3) temporal coherence re-check (dormant default) ---
+            # Defense-in-depth: grounding already filters temporally-incoherent
+            # relations, but the validator re-verifies each relationship citation
+            # independently. Only the 18 Contract §3 taxonomy types are gated;
+            # disputes/reinterprets (ADR-0019) and other non-taxonomy types pass
+            # through (D1 pre-filter). Inactive when no tuning/tol is configured.
+            if (
+                self._tuning is not None
+                and self._tuning.tol is not None
+                and c.kind == "relationship"
+                and c.label in RELATION_TEMPORAL_CLASS
+            ):
+                if not self._temporally_coherent(c, context):
+                    rejected.append(c)
+                    temporal_rejects.append(
+                        {
+                            "global_id": c.global_id,
+                            "relationship": c.label,
+                            "reason": (
+                                "temporal coherence re-check rejected this "
+                                "relationship citation (Contract §3 HARD / "
+                                "BEFORE_AFTER cross-generation)"
+                            ),
+                        }
+                    )
+                    continue
+            valid.append(c)
 
         grounded = len(valid) > 0 and len(citations) > 0
         return ValidationResult(
-            valid_citations=valid, rejected_citations=rejected, grounded=grounded
+            valid_citations=valid,
+            rejected_citations=rejected,
+            grounded=grounded,
+            temporal_rejects=temporal_rejects,
         )
 
     def _is_valid(
@@ -124,6 +167,39 @@ class ResponseValidator:
             # Check #1 + #2: an entity node actually present in the facts.
             return gid in covered_entity_ids
 
+        return False
+
+    def _entity_dict(self, global_id):
+        """Resolve a global_id to its raw entity dict (index 2 of the
+        KnowledgeService (topic, local_id, entity) 3-tuple), or None when
+        unknown. Read-only; used by the temporal gate to read intervals.
+        """
+        if not isinstance(global_id, str) or not global_id:
+            return None
+        res = self._ks.find_by_global_id(global_id)
+        if not res:
+            return None
+        return res[2] if len(res) >= 3 else None
+
+    def _temporally_coherent(self, c: Citation, context: Sequence[str]) -> bool:
+        """True if the citation's relation is temporally coherent with at least
+        one context entity. Conservative: a single coherent (source, target)
+        pair keeps the citation. Non-taxonomy relations return True (D1
+        pre-filter: not gated). Missing entity data never triggers a reject.
+        """
+        rel_type = c.label
+        if rel_type not in RELATION_TEMPORAL_CLASS:
+            return True
+        target = self._entity_dict(c.global_id)
+        if target is None:
+            return True
+        for src in context:
+            src_entity = self._entity_dict(src)
+            if src_entity is None:
+                continue
+            decision = decide(rel_type, src_entity, target, self._tuning.tol)
+            if decision.decision != DECISION_REJECT:
+                return True
         return False
 
 

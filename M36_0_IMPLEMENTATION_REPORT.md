@@ -217,3 +217,17 @@ PO review + approval → commit + annotated tag + push + consistency check per s
 ### Rollback
 
 `git checkout .` restores baseline `vM35.1.1` (`a5daf00`). No merge/commit created.
+
+---
+
+## 11. 方案修订 (ADR-0027, 2026-08-17)
+
+Phase 2 的 2-hop 扩展被发现存在方案缺陷：只约束"跳数上限 + 去重"，**无时间/空间相干性约束**，
+导致跨时代实体（战国→波斯→丝绸之路、元、唐）涌入 `[ALLOWED FACTS]`，模型忠实使用时把
+丝绸之路写进战国报告（实测 39 facts 中第 13 条 = `Achaemenid Persian Empire —[traded_with]→
+Silk Road (2-hop via context)`）。
+
+修订方案见 `docs/15_DECISIONS/ADR-0027_grounding_temporal_coherence_gate.md`：在
+`expand_context()` 2 跳候选上增加时间相干性闸门（重叠或相邻 ≤10 年；无日期不拦截；1 跳策展边
+不动；通过闸门的 2 跳实体并入 `expanded_global_ids` 关闭"可看不可引"矛盾）。本报告 Phase 2
+的原始描述保留作为历史记录，实现以 ADR-0027 为准。

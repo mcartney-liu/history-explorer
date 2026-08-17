@@ -442,6 +442,7 @@ function EntityPage({
                       entityName={entity.name}
                       entityType={entity.type}
                       relationships={entity.relationships}
+                      onEntityClick={onEntityClick}
                     />
                   ) : (
                     <EmptyState message="该实体缺少全局 ID，AI 对话暂不可用。" />

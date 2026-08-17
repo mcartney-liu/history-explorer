@@ -122,6 +122,16 @@ class FeedbackReply(BaseModel):
     by: Optional[str] = Field(default=None, description="who replied (defaults to 'PO')")
 
 
+class VisitorReply(BaseModel):
+    """Public, anonymous reply appended to a feedback thread on the wall.
+    No token — anyone on the tunnel can reply, enabling a multi-turn
+    visitor<->PO conversation under the same feedback. Light validation
+    only (non-empty + length cap); NO auth (would pull in the forbidden
+    login/permission/identity stack)."""
+    message: str = Field(description="reply text")
+    by: Optional[str] = Field(default=None, description="display name, defaults to '访客'")
+
+
 def _ensure_store() -> None:
     _STORE_DIR.mkdir(parents=True, exist_ok=True)
     if not _STORE_PATH.exists():
@@ -199,6 +209,7 @@ def get_feedback(limit: int = 200):
 
 
 class BoardItem(BaseModel):
+    id: str
     message: str
     received_at: str
     reply: Optional[str] = None
@@ -221,11 +232,15 @@ def _build_replies(r: "FeedbackEntry") -> list[ReplyItem]:
 @router.get("/feedback/board")
 def get_feedback_board():
     """Public, anonymous feedback wall. Returns every feedback message plus
-    the PO's reply thread, with identifying metadata stripped (no id,
-    client_ts, page, or sentiment). The submit date (`received_at`) and each
-    reply date (`replies[].at`) ARE kept so the wall can show
+    the PO's reply thread, with identifying metadata stripped (no
+    client_ts, page, or sentiment). The feedback `id` IS returned (it is an
+    opaque 12-char random anchor with no identity semantics) so visitors can
+    target replies. The submit date (`received_at`) and each reply date
+    (`replies[].at`) ARE kept so the wall can show
     "建议于 YYYY-MM-DD" / "History Explorer · YYYY-MM-DD HH:mm:ss" per reply.
     Replies are cumulative (a thread), never a single overwritten blob.
+    Visitors may append their own replies via POST /feedback/{id}/reply
+    (anonymous, no token), turning each entry into a multi-turn thread.
     Order: newest first by received_at.
     Reachable on the public tunnel (serve.js proxies /api/v1)."""
     rows = _read_all()
@@ -236,6 +251,7 @@ def get_feedback_board():
             continue
         items.append(
             BoardItem(
+                id=r.id,
                 message=r.message,
                 received_at=r.received_at,
                 reply=r.reply,
@@ -255,6 +271,43 @@ def get_feedback_by_id(feedback_id: str):
         if r.id == feedback_id:
             return r
     raise HTTPException(status_code=404, detail="未找到该反馈")
+
+
+# --- Public, anonymous visitor reply (no token, lightweight validation) -----
+
+_VISITOR_REPLY_MAX = 1000
+
+
+@router.post("/feedback/{feedback_id}/reply")
+def visitor_reply(feedback_id: str, payload: VisitorReply):
+    """Public, ANONYMOUS reply to a feedback thread on the wall. No token —
+    anyone reaching the public tunnel can append a reply, so a visitor and the
+    PO can keep a multi-turn conversation under the same feedback. Light
+    validation only (non-empty + length cap); NO auth (would pull in the
+    forbidden login/permission/identity stack). `by` defaults to '访客'."""
+    text = (payload.message or "").strip()
+    if not text:
+        raise HTTPException(status_code=422, detail="回复内容不能为空")
+    if len(text) > _VISITOR_REPLY_MAX:
+        raise HTTPException(
+            status_code=422,
+            detail=f"回复内容过长，最多 {_VISITOR_REPLY_MAX} 字",
+        )
+    by = (payload.by or "访客").strip() or "访客"
+    now = datetime.now(timezone.utc).isoformat()
+    with _STORE_LOCK:
+        records = _read_all()
+        target = next((r for r in records if r.id == feedback_id), None)
+        if target is None:
+            raise HTTPException(status_code=404, detail="未找到该反馈")
+        # APPEND a new reply to the thread (never overwrite prior replies).
+        target.replies.append(ReplyItem(text=text, at=now, by=by))
+        # keep legacy single-reply fields in sync with the latest reply
+        target.reply = text
+        target.reply_at = now
+        target.reply_by = by
+        _write_all(records)
+        return {"ok": True, "id": feedback_id}
 
 
 # --- Localhost-only admin surface (NOT proxied by the public tunnel) -------

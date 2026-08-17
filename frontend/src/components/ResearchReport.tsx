@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
 import type { ResearchDimension } from './ResearchDimensionCard'
-import type { AICitation, AIEngine } from '../data/aiClient'
+import type { AICitation, AIEngine, AINextExploration } from '../data/aiClient'
 import Icon from './ui/Icon'
 import GroundedAnswer from './GroundedAnswer'
 import { humanizeAnswer } from './GroundedAnswer'
 import { explainAI } from '../data/aiClient'
 import { isResearchFallback } from './ResearchSummary'
+import { TrustDisplay } from './ai/TrustDisplay'
 
 export type ResearchReportProps = {
   /** Entity being researched. */
@@ -18,6 +19,10 @@ export type ResearchReportProps = {
   dimensions: ResearchDimension[]
   /** Names of comparison entities (multi-entity research). */
   comparedNames?: string[]
+  /** Pass-through navigation: fired with an entity global_id when a
+   *  next-exploration suggestion is clicked. Wires to the EXISTING
+   *  onEntityClick path — no new navigation logic. */
+  onEntityClick?: (globalId: string) => void
 }
 
 function uniqueCitations(dims: ResearchDimension[]): AICitation[] {
@@ -94,6 +99,11 @@ export type ResearchReportViewProps = ResearchReportProps & {
   aiEngine?: AIEngine
   /** AI 综合报告加载状态（loading 时显示占位，不闪降级）。 */
   aiLoading?: boolean
+  /** Evidence-bound next-exploration (backend next_exploration) — rendered
+   *  as TrustDisplay suggestions. Never assembled on the frontend. */
+  nextExploration?: AINextExploration[]
+  /** Pass-through navigation for next-exploration suggestions. */
+  onEntityClick?: (globalId: string) => void
 }
 
 export function ResearchReportView({
@@ -107,6 +117,8 @@ export function ResearchReportView({
   aiGrounded = true,
   aiEngine = 'ai',
   aiLoading = false,
+  nextExploration = [],
+  onEntityClick,
 }: ResearchReportViewProps) {
   const completed = dimensions.filter((d) => d.status === 'success')
   const failed = dimensions.filter((d) => d.status === 'error')
@@ -178,6 +190,19 @@ export function ResearchReportView({
               context_global_ids: [],
               mode: 'explain',
             }}
+          />
+        </div>
+      )}
+
+      {/* 知识库推荐：证据绑定的 next_exploration（来自后端 res.next_exploration），
+          确定性产物，标"知识库推荐"而非"AI 生成"。所有候选皆来自后端，前端绝不自创。 */}
+      {!aiLoading && nextExploration.length > 0 && (
+        <div className="rreport-section">
+          <TrustDisplay
+            nextExploration={nextExploration}
+            engine={aiEngine}
+            onNextClick={onEntityClick}
+            engineBadgeLabel="知识库推荐"
           />
         </div>
       )}
@@ -260,6 +285,7 @@ export default function ResearchReport(props: ResearchReportProps) {
   const [aiGrounded, setAiGrounded] = useState(true)
   const [aiEngine, setAiEngine] = useState<AIEngine>('ai')
   const [aiLoading, setAiLoading] = useState(false)
+  const [aiNextExploration, setAiNextExploration] = useState<AINextExploration[]>([])
 
   useEffect(() => {
     const completed = props.dimensions.filter((d) => d.status === 'success')
@@ -274,7 +300,7 @@ export default function ResearchReport(props: ResearchReportProps) {
       `2. 维度关联：分析各维度发现之间的相互印证或张力；\n` +
       `3. 矛盾与未解：指出研究中出现的矛盾之处或尚待解答的问题（如有）；\n` +
       `4. 总体评价：对该历史主体的整体历史地位给出综合评述。\n\n` +
-      `请务必使用简体中文回答，直接输出连贯的中文段落，不要输出 JSON 或任何代码格式。\n\n` +
+      `请务必使用简体中文回答，按用户指令的 JSON 格式返回（answer 字段为连贯中文段落），不要在其中嵌套 JSON 或代码块。\n\n` +
       `【${props.entityName}】各维度研究内容如下：\n\n${context}`
 
     explainAI(question, props.entityGlobalId ? [props.entityGlobalId] : [])
@@ -284,6 +310,7 @@ export default function ResearchReport(props: ResearchReportProps) {
         setAiRejected(res.rejected_citations ?? [])
         setAiGrounded(res.grounded)
         setAiEngine(res.engine)
+        setAiNextExploration(res.next_exploration ?? [])
         setAiLoading(false)
       })
       .catch(() => {
@@ -304,6 +331,8 @@ export default function ResearchReport(props: ResearchReportProps) {
       aiGrounded={aiGrounded}
       aiEngine={aiEngine}
       aiLoading={aiLoading}
+      nextExploration={aiNextExploration}
+      onEntityClick={props.onEntityClick}
     />
   )
 }
