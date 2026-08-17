@@ -276,9 +276,9 @@ class GroundingBuilder:
             etype = entity.get("type", "")
             desc = entity.get("description") or ""
             if isinstance(desc, str) and desc:
-                result.facts.append("%s (%s) — %s" % (name, etype, desc))
+                result.facts.append("%s (%s) — %s  [id:%s]" % (name, etype, desc, gid))
             else:
-                result.facts.append("%s (%s)" % (name, etype))
+                result.facts.append("%s (%s)  [id:%s]" % (name, etype, gid))
             result.citations.append(Citation(global_id=gid, kind="entity", label=name))
 
             # --- REQUIRED READ #2: neighbors -> relationship facts ----------
@@ -318,11 +318,11 @@ class GroundingBuilder:
                         continue  # drop this fact + citation; do not ground it
 
                 if direction == "outgoing":
-                    fact = "%s —[%s]→ %s" % (name, rel_type, other_name)
+                    fact = "%s —[%s]→ %s  [id:%s]" % (name, rel_type, other_name, other_gid)
                 elif direction == "incoming":
-                    fact = "%s ←[%s]— %s" % (other_name, rel_type, name)
+                    fact = "%s ←[%s]— %s  [id:%s]" % (other_name, rel_type, name, other_gid)
                 else:
-                    fact = "%s —[%s]— %s" % (name, rel_type, other_name)
+                    fact = "%s —[%s]— %s  [id:%s]" % (name, rel_type, other_name, other_gid)
                 result.facts.append(fact)
                 # Relationship citation: provenance is the neighbor node; the
                 # label carries the exact relationship type so the validator can
@@ -362,16 +362,16 @@ class GroundingBuilder:
                     continue
 
             if item["direction"] == "outgoing":
-                fact = "%s —[%s]→ %s (2-hop via context)" % (
-                    item["bridge_name"], rel_type, item["name"],
+                fact = "%s —[%s]→ %s (2-hop via context)  [id:%s]" % (
+                    item["bridge_name"], rel_type, item["name"], item["global_id"],
                 )
             elif item["direction"] == "incoming":
-                fact = "%s ←[%s]— %s (2-hop via context)" % (
-                    item["name"], rel_type, item["bridge_name"],
+                fact = "%s ←[%s]— %s (2-hop via context)  [id:%s]" % (
+                    item["name"], rel_type, item["bridge_name"], item["global_id"],
                 )
             else:
-                fact = "%s —[%s]— %s (2-hop via context)" % (
-                    item["bridge_name"], rel_type, item["name"],
+                fact = "%s —[%s]— %s (2-hop via context)  [id:%s]" % (
+                    item["bridge_name"], rel_type, item["name"], item["global_id"],
                 )
             result.facts.append(fact)
             result.citations.append(
@@ -403,12 +403,13 @@ class GroundingBuilder:
                 if not period_label or period_label == "unknown":
                     continue
                 event = entry.get("event")
+                tl_id = timeline_citation_id(topic, period_label)
                 if event:
                     result.facts.append(
-                        "Timeline (%s): %s — %s" % (topic, period_label, event)
+                        "Timeline (%s): %s — %s  [id:%s]" % (topic, period_label, event, tl_id)
                     )
                 else:
-                    result.facts.append("Timeline (%s): %s" % (topic, period_label))
+                    result.facts.append("Timeline (%s): %s  [id:%s]" % (topic, period_label, tl_id))
                 label = (
                     "%s — %s" % (period_label, event) if event else period_label
                 )

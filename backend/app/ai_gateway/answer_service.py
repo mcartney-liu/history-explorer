@@ -40,8 +40,9 @@ _CITATION_INSTRUCTION = (
     '"citations": ['
     '{"global_id": "<id>", "kind": "entity|relationship|timeline", '
     '"label": "<short source label>"}]}\n'
-    "Every citation.global_id MUST be an entity/relationship/timeline id that "
-    "appears in [ALLOWED FACTS]. Do not cite anything absent from the facts."
+    "Every citation.global_id MUST be the exact id written as [id:...] next to "
+    "the fact you are citing in [ALLOWED FACTS]. Copy that id verbatim — do not "
+    "invent ids and do not cite anything absent from the facts."
 )
 
 # M36.0 AI Response Contract: server-computed confidence. Never trust the LLM
