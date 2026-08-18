@@ -74,6 +74,21 @@ def _compute_confidence(grounded: bool, valid: int, total: int) -> str:
     return "low"
 
 
+# D1 (truth-layer leak): curated *provenance* notes must never be rendered as
+# scholarly dissent. In data/evidence_claims.json 83 seed/curation records
+# carry an `interpretation_note` of the form "Curated seed relationship… not an
+# auto-inference." — internal English curation metadata, NOT a historiographical
+# dispute. They sit on low-controversy claims and would otherwise leak into the
+# UI as fake "多角度解读". Detect them by their fixed curation phrasing so genuine
+# (Chinese, contested) dissent is preserved untouched.
+_PROVENANCE_NOTE_MARKERS = ("not an auto-inference", "curated seed relationship")
+
+
+def _is_provenance_note(note: str) -> bool:
+    low = (note or "").lower()
+    return any(m in low for m in _PROVENANCE_NOTE_MARKERS)
+
+
 def _perspectives_from_claims(valid_claims: Sequence[Any], limit: int = 3) -> List[str]:
     """Grounded dissent: perspectives built from curated interpretation notes.
 
@@ -82,6 +97,11 @@ def _perspectives_from_claims(valid_claims: Sequence[Any], limit: int = 3) -> Li
     claims instead of asking the LLM for caveats. Contested claims
     (controversy_level medium/high) lead, so genuine scholarly disagreement is
     surfaced first. De-duplicated and bounded; empty when nothing is curated.
+
+    D1 fix: provenance/curation notes (e.g. "Curated seed relationship… not an
+    auto-inference.") are skipped — they are internal metadata, not dissent,
+    and rendering them would leak English and misrepresent provenance as a
+    dispute (truth-layer leak). Genuine curated dissent is preserved.
     """
     ranked: List[tuple] = []
     seen: set = set()
@@ -90,7 +110,7 @@ def _perspectives_from_claims(valid_claims: Sequence[Any], limit: int = 3) -> Li
         if not isinstance(truth, dict):
             continue
         note = (truth.get("interpretation_note") or "").strip()
-        if not note or note in seen:
+        if not note or note in seen or _is_provenance_note(note):
             continue
         seen.add(note)
         contested = 0 if truth.get("controversy_level") in ("medium", "high") else 1
@@ -124,7 +144,14 @@ def _claim_evidence(valid_claims: Sequence[Any], sources: Sequence[dict]) -> Lis
     not just the graph citations. Additive alongside `_build_evidence` items —
     same base shape (global_id / kind / label / status) plus the source title,
     tier and curated truth grading.
+
+    D1 fix: the returned `truth` carries only the *grading* fields
+    (confidence / scholar_consensus / controversy_level). `interpretation_note`
+    is deliberately excluded — it is the curated dissent text, not evidence
+    grading, and must not ride along in the evidence payload (truth-layer
+    leak channel B).
     """
+    _TRUTH_GRADING_FIELDS = ("confidence", "scholar_consensus", "controversy_level")
     by_id = {s.get("id"): s for s in sources if isinstance(s, dict) and s.get("id")}
     out: List[dict] = []
     for c in valid_claims:
@@ -132,6 +159,12 @@ def _claim_evidence(valid_claims: Sequence[Any], sources: Sequence[dict]) -> Lis
         if not text:
             continue
         source = by_id.get(c.source_id) or {}
+        truth = getattr(c, "truth", None)
+        truth_grading = (
+            {k: truth.get(k) for k in _TRUTH_GRADING_FIELDS}
+            if isinstance(truth, dict)
+            else None
+        )
         out.append(
             {
                 "global_id": c.subject_global_id or "",
@@ -142,7 +175,7 @@ def _claim_evidence(valid_claims: Sequence[Any], sources: Sequence[dict]) -> Lis
                 "source_id": c.source_id,
                 "source_title": source.get("title") or "",
                 "source_tier": source.get("tier") or "",
-                "truth": dict(c.truth) if getattr(c, "truth", None) else None,
+                "truth": truth_grading,
             }
         )
     return out

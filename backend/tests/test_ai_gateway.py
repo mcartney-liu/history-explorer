@@ -107,7 +107,9 @@ def test_no_forbidden_infra_tokens_in_source():
 
 from app.ai_gateway.answer_service import (  # noqa: E402
     _build_evidence,
+    _claim_evidence,
     _compute_confidence,
+    _is_provenance_note,
     _perspectives_from_claims,
 )
 from app.ai_gateway.citation_model import Citation, ClaimEntry  # noqa: E402
@@ -168,6 +170,59 @@ class TestPerspectivesFromClaims:
     def test_bounded(self):
         claims = [_claim("ec-%d" % i, "note %d" % i) for i in range(6)]
         assert len(_perspectives_from_claims(claims)) == 3
+
+
+class TestD1TruthLayerLeak:
+    """D1 (truth-layer leak): internal provenance notes must NOT surface as
+    scholarly dissent, and must NOT ride along in the evidence payload."""
+
+    PROVENANCE_NOTE = (
+        "Curated seed relationship with a real primary/secondary source; "
+        "not an auto-inference."
+    )
+
+    def test_is_provenance_note_detects_seed_marker(self):
+        assert _is_provenance_note(self.PROVENANCE_NOTE) is True
+
+    def test_is_provenance_note_ignores_genuine_dissent(self):
+        assert _is_provenance_note("不同史家对这段记载有争议") is False
+
+    def test_provenance_note_skipped_in_perspectives(self):
+        claims = [
+            _claim("ec-prov", self.PROVENANCE_NOTE, "low"),
+            _claim("ec-real", "不同史家对这段记载有争议", "medium"),
+        ]
+        assert _perspectives_from_claims(claims) == [
+            "不同史家对这段记载有争议"
+        ]
+
+    def test_only_provenance_yields_empty_perspectives(self):
+        claims = [_claim("ec-prov", self.PROVENANCE_NOTE, "low")]
+        assert _perspectives_from_claims(claims) == []
+
+
+class TestClaimEvidencePayload:
+    def test_truth_grading_only_excludes_interpretation_note(self):
+        claim = _claim("ec-real", "不同史家对这段记载有争议", "medium")
+        evidence = _claim_evidence([claim], [{"id": "src-a", "title": "T", "tier": "A"}])
+        assert len(evidence) == 1
+        truth = evidence[0]["truth"]
+        assert truth == {
+            "confidence": None,
+            "scholar_consensus": None,
+            "controversy_level": "medium",
+        }
+        assert "interpretation_note" not in truth
+
+    def test_provenance_note_not_in_evidence_truth(self):
+        claim = _claim(
+            "ec-prov",
+            "Curated seed relationship with a real primary/secondary source; "
+            "not an auto-inference.",
+            "low",
+        )
+        evidence = _claim_evidence([claim], [{"id": "src-a", "title": "T", "tier": "A"}])
+        assert "interpretation_note" not in evidence[0]["truth"]
 
 
 class TestBuildEvidence:
