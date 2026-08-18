@@ -110,11 +110,19 @@ def _to_evidence_claim(item) -> Optional[EvidenceClaim]:
     cid = item.get("id")
     if not cid:
         return None
+    # M26.1: accept both singular `source_id` and plural `source_ids`
+    # (curated records may cite several sources). When only the plural
+    # form is present, the first entry backs the required `source_id`.
+    _sid = item.get("source_id")
+    if not _sid:
+        _sids = item.get("source_ids")
+        if isinstance(_sids, list) and _sids:
+            _sid = _sids[0]
     return EvidenceClaim(
         id=str(cid),
         subject_type=str(item.get("subject_type", SUBJECT_TYPE_ENTITY)),
         subject_id=str(item.get("subject_id", "")),
-        source_id=str(item.get("source_id", "")),
+        source_id=str(_sid or ""),
         claim=str(item.get("claim", "")),
         notes=item.get("notes"),
         truth=build_truth(item),

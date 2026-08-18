@@ -664,10 +664,10 @@ class TestL5GroundingIntegration:
         assert result.temporal_rejects == []
         facts = result.facts
         # HARD cross-gen is NOT rejected while dormant.
-        assert "A —[ruled]→ B" in facts
-        assert "B —[ruled]→ F (2-hop via context)" in facts
+        assert "A —[ruled]→ B  [B]" in facts
+        assert "B —[ruled]→ F (2-hop via context)  [F]" in facts
         # D1 type passes through.
-        assert "A —[disputes]→ D" in facts
+        assert "A —[disputes]→ D  [D]" in facts
 
     def test_active_gating_rejects_hard_crossgen(self):
         """tol set -> HARD cross-generation relations are dropped + audited."""
@@ -687,12 +687,12 @@ class TestL5GroundingIntegration:
             assert r["temporal_state"] == "cross_gen"
             assert r["reason"]  # audit surface is populated
         facts = result.facts
-        assert "A —[ruled]→ B" not in facts
-        assert "B —[ruled]→ F (2-hop via context)" not in facts
+        assert "A —[ruled]→ B  [B]" not in facts
+        assert "B —[ruled]→ F (2-hop via context)  [F]" not in facts
         # ACCEPT (overlap), SOFT (propagation downgrade), D1 passthrough kept.
-        assert "A —[ruled]→ C" in facts
-        assert "A —[influenced]→ E" in facts
-        assert "A —[disputes]→ D" in facts
+        assert "A —[ruled]→ C  [C]" in facts
+        assert "A —[influenced]→ E  [E]" in facts
+        assert "A —[disputes]→ D  [D]" in facts
         # to_dict exposes the provenance for the runtime/validator to consume.
         assert result.to_dict()["temporal_rejects"] == rejects
 
@@ -704,7 +704,7 @@ class TestL5GroundingIntegration:
         )
         result = builder.build(["A"], "why?")
         # disputes edge is present as a fact and produces NO temporal reject.
-        assert "A —[disputes]→ D" in result.facts
+        assert "A —[disputes]→ D  [D]" in result.facts
         assert all(r["relationship"] != "disputes" for r in result.temporal_rejects)
 
 

@@ -191,6 +191,14 @@ export const SCOPE_ALLOWLIST = [
   "backend/tests/test_evidence_claim.py",
   "data/sources.json",
   "data/evidence_claims.json",
+  // D2 release prep (2026-08-18, PO-approved lightweight Freeze Revision Gate):
+  // two m82 exploration-engine test files carry pre-existing test debt
+  // (DEBT-001A — causal_statements key is intentionally omitted when empty).
+  // The fixes only make the assertions tolerate that; no business-logic /
+  // schema / enum change. Registered so the freeze guard stays green for the
+  // phase5 -> master release (PR #24).
+  "backend/tests/test_m82_p1_4_explain_path.py",
+  "backend/tests/test_m82_p1_8_final_validation.py",
   // M29.1-A (ProvenanceIndex module) — Freeze Revision Gate
   "backend/app/core/provenance_index.py",
   // Wave2-#149 follow-up — zh display-name resolution in build_exploration_view.

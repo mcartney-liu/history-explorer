@@ -998,7 +998,7 @@ function App() {
             }
             explainSection={
               <>
-                <div className="m62-view-toggle" role="group" aria-label="时间线视图切换">
+                <div className="m62-view-toggle" role="group" aria-label="时间线视图切换" data-tier="interpretation">
                   <button type="button" className={timeView === 'single' ? 'active' : ''} aria-pressed={timeView === 'single'} onClick={() => setTimeView('single')}>单线</button>
                   <button type="button" className={timeView === 'multi' ? 'active' : ''} aria-pressed={timeView === 'multi'} onClick={() => setTimeView('multi')}>多线</button>
                 </div>
@@ -1025,7 +1025,7 @@ function App() {
             }
             relateSection={
               <>
-                <div className="m62-view-toggle" role="group" aria-label="关系视图切换">
+                <div className="m62-view-toggle" role="group" aria-label="关系视图切换" data-tier="supporting">
                   <button type="button" className={relView === 'list' ? 'active' : ''} aria-pressed={relView === 'list'} onClick={() => setRelView('list')}>列表</button>
                   <button type="button" className={relView === 'spatial' ? 'active' : ''} aria-pressed={relView === 'spatial'} onClick={() => setRelView('spatial')}>图谱</button>
                 </div>

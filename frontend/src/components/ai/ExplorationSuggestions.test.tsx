@@ -105,7 +105,7 @@ describe('ExplorationSuggestions (T1)', () => {
     await act(async () => {
       await Promise.resolve()
     })
-    const btn = container.querySelector('.trust-display-next-btn') as HTMLButtonElement
+    const btn = container.querySelector('.trust-display-node-btn') as HTMLButtonElement
     expect(btn).not.toBeNull()
     act(() => {
       btn.click()
