@@ -57,7 +57,7 @@ class FakeProvider:
     """Deterministic stand-in for an LLM provider.
 
     `answer_service` calls `provider.complete(system_prompt, user_prompt,
-    max_tokens=800)`; this double honours that exact signature and records the
+    max_tokens=2000)`; this double honours that exact signature and records the
     prompts so tests can assert on what the model was actually shown.
     """
 

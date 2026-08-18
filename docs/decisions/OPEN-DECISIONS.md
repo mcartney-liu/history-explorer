@@ -1,0 +1,32 @@
+# OPEN-DECISIONS — 挂账登记册（History Explorer）
+
+> 机制：MvpDevExpertTeam 的「悬而未决登记册」。只追加 + 就地关闭（OPEN→RESOLVED 补 Resolution）。
+> 每次阶段开始时复现未决项到上下文最前，逐条判断能否关闭。
+> 当前汇总：**4 OPEN / 4 RESOLVED**（截至 2026-08-18 复验；D4 意图 J 已关闭；D3 L3 深度打磨已关闭；**D5 白名单行已于 2026-08-17 落地、D8 白名单行 2026-08-18 补入**——freeze-check 现已 0 D-class 违规）
+
+| # | Date | Source | Open Item | Slug | Related Constraints | Current Leaning | Blocked By | Resolves When | Status |
+|---|------|--------|-----------|------|---------------------|-----------------|------------|---------------|--------|
+| D1 | 2026-08-16 | 前端实测 | **truth-layer 泄漏**：`answer_service.py:_perspectives_from_claims`(67–89) 把 `interpretation_note` 当「学术观点/争议」渲染；但 `data/evidence_claims.json` 78 处该字段实为内部策展 provenance（如 "Curated seed relationship…not an auto-inference."）→ 内部英文泄漏到 UI，且语义错（provenance 伪装成异议）。第二泄漏通道：`_claim_evidence`(110+) 把含 interpretation_note 的 truth 也回传前端。 | `existing-design-boundary` | 红线禁项未触碰（纯 prompt/response 层） | 打 tag 前 fast-follow 修复（`_perspectives_from_claims` 不把 provenance 当 dissent；`_claim_evidence` 不回传 interpretation_note） | 用户此前选「先发布不修」 | 用户批准 fast-follow | OPEN |
+| D2 | 2026-08-16 | 发布纪律 | **merge master + annotated tag**：严格留待 PO 翔哥亲自拍板（ff-only + annotated tag）。当前 `phase5-journey-continuity` 分支 HEAD=`798678b`；工作树含未提交改动（ADR-0028 系列文档 untracked、M36.0 报告、运维手册）。 | `waiting-on-external-condition` | 红线禁项未触碰 | 不自行 merge/tag | PO 亲自操作 | PO 拍板发版时机 | OPEN |
+| D3 | 2026-08-17 | 知识回填 L3 | **L3 范围已拍板（Option A + 强制 P0 闸门，PO 原话修正）**：= Option A（聚焦中文主场景 `china_civilization_v1` + `textbook_cn_history_v1`）。**关键修正**：A 不是"补到 2–3 条 claim 就算完成"，而是"P0 覆盖率达标后，2–3 条只是最低结构要求"；强制 Acceptance = **「5 类 P0 问题抽测必须通过」**（5 类 = `questionTemplates.ts` 的 5 解读模式：why_important / why_happened / historical_impact / multi_civilization_view / timeline_explanation）。**数据面（已完成）**：两中文 topic 均 41/41 直接实体型 claim 覆盖（`evidence_claims.json` 536 条，含 wave2 补的 ec-cm-* 16 条）；grounding facts 14–43 全绿。**AI 层修复（PO 拍板方案 1 + 方案 A，2026-08-18）**：① prompt fact 展示 `[id:%s]`→`[%s]`；② `_CITATION_INSTRUCTION` 加 kind 三选一 + 反例 + "Cite at most 10"；③ grounding fact 去 `(etype)` 类型括号；④ `max_tokens=800`→2000（修复 JSON 截断）；⑤ **kind 语义归一化**（PO Decision A）：`Citation.from_dict` 解析边界把已知实体子类型→`entity`，global_id 精确匹配校验分毫不动、未知 kind 仍 reject；回归测试 `tests/test_kind_normalization.py` 12 项全过。**闸门终验（2026-08-18 01:5x）**：**55/55 全过**（第八轮 EXIT=0，报告 `artifacts/kb_audit/P0_GATE_RESULTS.md`；闸门脚本加 deterministic/ERROR 自动重试一次消除智谱 API 间歇性 4xx 抖动，通过标准不变）。**遗留（转 D8）**：`test_kind_normalization.py` 需进 freeze-check 白名单（PO 批准 additive 行）。 | `waiting-on-external-condition` | 纯 data/ 层 + AI 层允许区（backend/app/ai_gateway/ + 新测试），不碰冻结算法 | 无 | 无 | P0 闸门 55/55 全过（2026-08-18） | RESOLVED |
+| D4 | 2026-08-17 | 意图 J | **5174/5175 对比环境文档 + 推 IMA 知识库**：固化当前双链路对比环境（5174=新8001 / 5175=老8003 worktree），并把 L1/L2 硬核证据沉淀进 IMA「History Explorer」知识库(id=7494349772299699)。 | `waiting-on-external-condition` | 纯文档 + 既有 IMA 连接器（零安装 Node cos_upload.js） | 本轮回执行 | 无（本回合执行） | 文档落盘 + IMA 推送验证命中 | RESOLVED |
+| D5 | 2026-08-16 | freeze gate | **freeze-check D-class**：`backend/tests/test_ai_historian_regression.py` 未进 `scripts/freeze-check.mjs` 的 SCOPE_ALLOWLIST → freeze-check FAILED（仅 1 处 D-class）。改 freeze-check 须走 Freeze Revision Gate + PO 批准（additive 行）。 | `waiting-on-external-condition` | 红线禁项未触碰 | 加 1 行白名单（走 Gate） | PO 批准加白名单行 | 白名单行 374 已于 2026-08-17 落地（PO-approved），freeze-check 复验 0 违规（2026-08-18） | RESOLVED |
+| D6 | 2026-08-16 | 测试债务 | **6 个预存前端失败**（非本次引入）：aiClient×3（端口漂移）、explorationPackages×2（桩过期 M70/M73）、ExplorationSuggestions×1（类定义在 ui.css）。全量 vitest 仍 1592 passed / 6 failed。 | `existing-design-boundary` | 非红线；P1 跟踪不阻塞发版 | 记为已知债务，下个测试清理周期修 | 无（跟踪项） | 测试清理周期 | OPEN |
+| D7 | 2026-08-17 | 文档同步 | **ADR-0028 系列文档未提交**：`docs/15_DECISIONS/ADR-0028*`、`CONTRACT_vNext_1.2_research_context.md`、ADR-0027 参考 均为 untracked（PO 选「暂不提交」，freeze 在磁盘生效）。 | `waiting-on-external-condition` | 红线禁项未触碰 | 随发版一并提交 | PO 发版时机(D2) | 随 D2 一并处理 | OPEN |
+| D8 | 2026-08-18 | freeze gate | **`test_kind_normalization.py` 白名单**：PO Decision A 回归测试（12 项）未进 `scripts/freeze-check.mjs` SCOPE_ALLOWLIST → freeze-check 1 处 D-class。与 D5 同类（additive 测试行），须走 Freeze Revision Gate + PO 批准后加行。 | `waiting-on-external-condition` | 纯 additive 测试，无业务逻辑变更 | 加 1 行白名单（走 Gate） | PO 批准加白名单行 | 白名单行已加（紧跟 374 行，PO-approved 2026-08-18），freeze-check 0 违规 | RESOLVED |
+
+## 关闭记录（RESOLVED）
+
+| # | Date | Open Item | Resolution |
+|---|------|-----------|------------|
+| D4 | 2026-08-17 | 5174/5175 对比环境文档 + 推 IMA 知识库 | 本回合执行完成：① `docs/5174-vs-5175-comparison-env.md` 落盘（双链路架构/启动/踩坑/对比建议）；② `artifacts/kb_audit/L1_LIVE_EVIDENCE.md` 经零安装 Node cos_upload.js 路径推入 IMA「History Explorer」知识库(id=7494349772299699)，search_knowledge 验证命中（media_state=MEDIA_INIT 解析中） |
+| D3 | 2026-08-17 | L3 深度打磨（Option A + 强制 P0 闸门） | 数据面 41/41 覆盖 ×2 topic + 536 claims；AI 层四轮修复（prompt 裸 id / kind 三选一指令 / 去类型括号 / max_tokens 2000 / kind 语义归一化 Decision A）→ P0 闸门第八轮 **55/55 全过**（EXIT=0，报告 `artifacts/kb_audit/P0_GATE_RESULTS.md`）。遗留：`test_kind_normalization.py` 进 freeze-check 白名单待 PO 批准 → 转 D8 跟踪 |
+| D5 | 2026-08-18 | freeze-check D-class（`test_ai_historian_regression.py` 未进白名单） | 复验确认白名单行 374 已于 2026-08-17 由 PO 批准加（标注 #522/#524, PO-approved 2026-08-17）；此前登记册未翻状态。2026-08-18 freeze-check 复验 PASSED、0 D-class 违规 |
+| D8 | 2026-08-18 | `test_kind_normalization.py` 白名单（D3 遗留） | PO Decision A 回归测试 12 项已加白名单行（紧跟 374 行，标注 #528/D8, PO-approved 2026-08-18）；freeze-check 复验 0 D-class 违规。与 D5 一并清零 |
+
+## 附：本回合已落地（非挂账，备查）
+- L2 证据 id 规范化 `f9956d6`（已 push）；L1 引用契约修复 `798678b`（已 push）。
+- L1 浏览器实锤：奥古斯都 grounded False→True / citations 0→13；宋朝 grounded=True / citations=8。证据：`artifacts/kb_audit/L1_LIVE_EVIDENCE.md`。
+- 环境实时核验（2026-08-17 21:1x）：8001=200（新）、8003=200（老 worktree）、5174=200、5175=200，双链路对比可用。
+- **L3 中文回填落地（2026-08-17）**：`wave2-chinese-missing.mjs` 补 china_civ 16 条直接实体型 claim（ec-cm-*）；`evidence_claims.json` 536 条；两中文 topic 均 41/41 直接实体型覆盖（核验脚本 `_coverage_scan.py`）。P0 闸门脚本 `p0_gate.py` 就绪，待 AI 开启实例跑抽测。
+- **P0 闸门 55/55 全过（2026-08-18）**：AI 层四轮修复（详见 D3）+ kind 语义归一化（Decision A）→ 第八轮终验 EXIT=0。过程记录：首跑 40/55 → 52/55 → 53/55 → 54/55（2 次撞智谱 API 间歇 4xx，闸门加 deterministic 自动重试一次后 55/55，通过标准不变）。全部改动 dirty 未提交（遵守常令）。

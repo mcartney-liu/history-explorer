@@ -372,6 +372,7 @@ export const SCOPE_ALLOWLIST = [
   "frontend/src/components/CitationList.tsx",
   "backend/tests/test_ai_gateway.py",
   "backend/tests/test_ai_historian_regression.py",  // AI Historian 回归测试（#522/#524, PO-approved 2026-08-17）：causal/grounding 3 轮变异自证网；纯 additive 测试，无 backend 业务逻辑/依赖/枚举变更
+  "backend/tests/test_kind_normalization.py",  // kind 语义归一化回归测试（#528/D8, PO-approved 2026-08-18）：Citation.from_dict 已知子类型→entity 归一化 + global_id 精确匹配；纯 additive 测试，无 backend 业务逻辑/依赖/枚举变更
   "frontend/src/components/AIExplanationPanel.test.tsx",
   "frontend/src/components/GroundedAnswer.test.tsx",
   "frontend/src/components/CitationList.test.tsx",
