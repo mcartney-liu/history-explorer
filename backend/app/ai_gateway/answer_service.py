@@ -38,11 +38,20 @@ _CITATION_INSTRUCTION = (
     "\n\nReply ONLY with a JSON object of the form:\n"
     '{"answer": "<your grounded answer>", '
     '"citations": ['
-    '{"global_id": "<id>", "kind": "entity|relationship|timeline", '
+    '{"global_id": "<id>", "kind": "<kind>", '
     '"label": "<short source label>"}]}\n'
-    "Every citation.global_id MUST be the exact id written as [id:...] next to "
-    "the fact you are citing in [ALLOWED FACTS]. Copy that id verbatim — do not "
-    "invent ids and do not cite anything absent from the facts."
+    "Every citation.global_id MUST be the exact id inside the square brackets "
+    "[...] next to the fact you are citing in [ALLOWED FACTS]. The brackets "
+    "contain ONLY the id itself — e.g. a fact ending in `[china_v1:tp-song]` "
+    "means the global_id is `china_v1:tp-song` (never prefix it with "
+    "`id:`/`gid:` or anything else). Copy that id verbatim — do not invent "
+    "ids and do not cite anything absent from the facts. Cite at most 10 "
+    "facts — pick the most relevant ones.\n"
+    '"kind" MUST be exactly one literal value: "entity", "relationship", or '
+    '"timeline". Never use an entity type (e.g. "event", "tech", "person", '
+    '"loc", "civ", "tp") and never a pipe-combination such as '
+    '"entity|relationship". Example entry: {"global_id": '
+    '"china_v1:tp-song", "kind": "entity", "label": "宋朝"}'
 )
 
 # M36.0 AI Response Contract: server-computed confidence. Never trust the LLM
@@ -432,7 +441,7 @@ def grounded_answer(
 
     try:
         raw = provider.complete(
-            prompt_service.system_prompt(mode), user_prompt, max_tokens=800
+            prompt_service.system_prompt(mode), user_prompt, max_tokens=2000
         )
     except Exception:
         # Provider failure / timeout -> graceful deterministic fallback.

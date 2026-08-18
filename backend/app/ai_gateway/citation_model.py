@@ -20,6 +20,42 @@ from typing import Any, Optional
 # The complete, closed set of citation kinds the validator will accept.
 ALLOWED_KINDS = ("entity", "relationship", "timeline")
 
+# PO-approved output-contract compatibility fix (2026-08-18, Decision A):
+# the LLM sometimes fills citation.kind with an ENTITY SUB-TYPE (e.g. "event",
+# "tech", "person", "loc", "civ", "tp") inferred from the global_id prefix,
+# instead of the closed set above. Semantically those ARE entity citations —
+# the global_id still undergoes the exact-match grounding validation unchanged
+# (see response_validator). Mapping them to "entity" at the PARSE boundary is
+# a contract-compat fix, NOT a relaxation: unknown kinds are left untouched
+# and are still rejected by the validator. "relationship"/"timeline"/"entity"
+# keep their original logic. The set mirrors the entity `type` enum found in
+# data/examples/*_example.json (Person/Location/Event/Idea/Time Period/
+# Technology/Civilization/Religion) plus the short id-prefix forms the model
+# has been observed to emit.
+ENTITY_SUBTYPE_KINDS = frozenset({
+    "person", "people", "location", "loc", "event", "idea",
+    "time period", "time_period", "tp", "technology", "tech",
+    "civilization", "civ", "religion", "rel",
+})
+
+
+def normalize_kind(kind: str) -> str:
+    """Output-contract compatibility: map known entity sub-types to "entity".
+
+    Returns the kind unchanged when it is already a legal kind or when it is
+    NOT a known entity sub-type (unknown/illegal kinds must still be rejected
+    by the validator, never silently accepted).
+    """
+    if not kind:
+        return kind
+    k = kind.strip()
+    if k in ALLOWED_KINDS:
+        return k
+    lowered = k.lower()
+    if lowered in ENTITY_SUBTYPE_KINDS:
+        return "entity"
+    return k
+
 
 @dataclass
 class Citation:
@@ -39,6 +75,13 @@ class Citation:
         Pure marshalling only — NO I/O, NO graph lookup, NO validation against
         the knowledge graph (that is the validator's job). Raises ValueError on
         structurally invalid input so callers can drop malformed citations.
+
+        The `kind` field passes through `normalize_kind()` (PO Decision A,
+        2026-08-18): known entity sub-types emitted by the LLM (e.g. "event",
+        "tech") are mapped to "entity" as an output-contract compatibility
+        fix. `global_id` is NEVER rewritten here — it keeps its exact value
+        for the validator's precise match. Unknown kinds are preserved and
+        still rejected downstream.
         """
         if not isinstance(data, dict):
             raise ValueError("citation must be a dict")
@@ -51,7 +94,7 @@ class Citation:
             raise ValueError("citation.kind is required and must be a string")
         return cls(
             global_id=gid.strip(),
-            kind=kind.strip(),
+            kind=normalize_kind(kind),
             label="" if label is None else str(label),
         )
 
