@@ -5,6 +5,7 @@ import {
   type AIResponse,
 } from '../data/aiClient'
 import { exampleQuestions, withAngle } from '../data/ai/questionTemplates'
+import { useLocale } from '../data/locale'
 import GroundedAnswer from './GroundedAnswer'
 import CitationList from './CitationList'
 import GroundingBadge from './ui/GroundingBadge'
@@ -32,6 +33,7 @@ export default function AIExplanationPanel({
   onCitationClick,
   entityName = '',
 }: AIExplanationPanelProps) {
+  const { t } = useLocale()
   const [question, setQuestion] = useState('')
   const [status, setStatus] = useState<AIExplanationStatus>('idle')
   const [response, setResponse] = useState<AIResponse | null>(null)
@@ -125,6 +127,7 @@ export function AIExplanationView({
   onModeChange,
   onCitationClick,
 }: AIExplanationViewProps) {
+  const { t } = useLocale()
   const examples = exampleQuestions(promptMode, entityName)
   return (
     <section className="ai-explanation" aria-label="AI 事实溯源解读">
@@ -223,7 +226,7 @@ export function AIExplanationView({
         <div className="ae-result ae-result--fallback">
           <div className="ae-fallback">
             <p className="ae-fallback-text">
-              {response.answer}
+              {t('ai.fallback_unavailable')}
             </p>
             {response.reason && (
               <span className="ae-fallback-reason">原因：{response.reason}</span>

@@ -45,4 +45,6 @@ export default {
   'ai.trust_show_more': '查看更多 {count} 条关系',
   'ai.trust_show_less': '收起',
   'ai.trust_node_aria': '探索 {name}',
+  // M36.0 deterministic fallback（AI 引擎不可用时前端本地化文案）
+  'ai.fallback_unavailable': 'AI 解读引擎暂时不可用。你可以继续浏览确定性知识图谱。',
 }

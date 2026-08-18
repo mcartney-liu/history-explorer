@@ -39,4 +39,6 @@ export default {
   // M74-004-002 (Commit 2A): Journey Trail — exploration path visualization.
   'ai.journey_trail_title': 'Exploration trail',
   'ai.trust_no_next': 'No recommended next steps — continue from the evidence above, or open a related entity.',
+  // M36.0 deterministic fallback（localized frontend copy when AI engine is down）
+  'ai.fallback_unavailable': 'The AI interpretation layer is currently unavailable. You can continue exploring the deterministic knowledge graph.',
 }

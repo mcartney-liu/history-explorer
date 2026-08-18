@@ -9,6 +9,7 @@ import {
   deriveBridgedEntities,
   extractTopicFromGlobalId,
 } from '../data/comparison'
+import { useLocale } from '../data/locale'
 
 type TopicComparisonPanelProps = {
   crossTopicRelated: CrossTopicRelated[] | undefined
@@ -29,6 +30,7 @@ export default function TopicComparisonPanel({
   onNodeClick,
   onTopicClick,
 }: TopicComparisonPanelProps) {
+  const { t } = useLocale()
   const targets = pickComparisonTargets(crossTopicRelated)
   const [selected, setSelected] = useState<string | null>(null)
 
@@ -47,11 +49,11 @@ export default function TopicComparisonPanel({
       <section
         className="he-comparison"
         data-panel="topic-comparison"
-        aria-label="Cross-topic comparison"
+        aria-label={t('discover.compareAria')}
       >
-        <h2 className="he-comparison-title">Compare Across Topics</h2>
+        <h2 className="he-comparison-title">{t('discover.compareTitle')}</h2>
         <p className="he-comparison-empty">
-          This topic has no cross-topic connections yet.
+          {t('discover.compareEmpty')}
         </p>
       </section>
     )
@@ -63,11 +65,11 @@ export default function TopicComparisonPanel({
     <section
       className="he-comparison"
       data-panel="topic-comparison"
-      aria-label="Cross-topic comparison"
+      aria-label={t('discover.compareAria')}
     >
-      <h2 className="he-comparison-title">Compare With</h2>
+      <h2 className="he-comparison-title">{t('discover.compareWith')}</h2>
 
-      <div className="he-comparison-targets" role="group" aria-label="Comparison targets">
+      <div className="he-comparison-targets" role="group" aria-label={t('discover.comparisonTargetsAria')}>
         {targets.map((t) => (
           <button
             key={t}
@@ -91,16 +93,16 @@ export default function TopicComparisonPanel({
               data-node={`explore:${activeTarget}`}
               onClick={() => onTopicClick(activeTarget)}
             >
-              Explore {formatTopicLabel(activeTarget)}
+              {t('discover.exploreTopicAction', { topic: formatTopicLabel(activeTarget) })}
             </button>
           </div>
 
           <h3 className="he-comparison-subtitle">
-            Bridging entities ({bridges.length})
+            {t('discover.bridgingEntities', { n: String(bridges.length) })}
           </h3>
           {bridges.length === 0 ? (
             <p className="he-comparison-empty">
-              No bridging entities with {formatTopicLabel(activeTarget)}.
+              {t('discover.noBridgingEntities', { topic: formatTopicLabel(activeTarget) })}
             </p>
           ) : (
             <ul className="he-comparison-bridges">
@@ -113,7 +115,10 @@ export default function TopicComparisonPanel({
                       type="button"
                       className="he-comparison-bridge"
                       data-node={gid}
-                      aria-label={`Open ${b.name ?? gid} in ${formatTopicLabel(ownerTopic)}`}
+                      aria-label={t('discover.openEntityInTopicAria', {
+                        name: b.name ?? gid,
+                        topic: formatTopicLabel(ownerTopic),
+                      })}
                       onClick={() => gid && onNodeClick(gid)}
                     >
                       {b.name ?? gid}

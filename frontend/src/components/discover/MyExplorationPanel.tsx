@@ -366,7 +366,7 @@ export function MyExplorationPanel({
           <div className="dash-exhibit-card">
             {/* Left: historical exhibit card */}
             <div className="dash-exhibit">
-              <span className="dash-exhibit-label">Historical Exhibit</span>
+              <span className="dash-exhibit-label">{t('discover.exhibitLabel')}</span>
               <span className="dash-exhibit-type">{focusType}: {focusName}</span>
               <span className="dash-exhibit-id">{focusId}</span>
               <div className="dash-exhibit-portrait">

@@ -2,6 +2,17 @@ import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { AIExplanationView } from './AIExplanationPanel'
 import type { AIResponse } from '../data/aiClient'
+import { LocaleProvider } from '../data/locale'
+
+// Deterministic-fallback tests assert localized copy, so render inside the
+// default zh LocaleProvider (component reads the string through t()).
+function renderView(props: React.ComponentProps<typeof AIExplanationView>) {
+  return renderToStaticMarkup(
+    <LocaleProvider>
+      <AIExplanationView {...props} />
+    </LocaleProvider>,
+  )
+}
 
 function makeResponse(overrides: Partial<AIResponse> = {}): AIResponse {
   return {
@@ -95,26 +106,24 @@ describe('AIExplanationView', () => {
   })
 
   it('renders the deterministic fallback on success without faking a fact', () => {
-    const html = renderToStaticMarkup(
-      <AIExplanationView
-        status="success"
-        question="q"
-        response={makeResponse({
-          grounded: false,
-          engine: 'deterministic',
-          answer: 'AI 解读层当前不可用。',
-        })}
-        error=""
-        contextCount={3}
-        promptMode="explain"
-        onQuestionChange={() => {}}
-        onAsk={() => {}}
-        onModeChange={() => {}}
-      />,
-    )
+    const html = renderView({
+      status: 'success',
+      question: 'q',
+      response: makeResponse({
+        grounded: false,
+        engine: 'deterministic',
+        answer: 'AI 解读层当前不可用。',
+      }),
+      error: '',
+      contextCount: 3,
+      promptMode: 'explain',
+      onQuestionChange: () => {},
+      onAsk: () => {},
+      onModeChange: () => {},
+    })
     // M36.0: deterministic fallback renders in its own block, not via GroundedAnswer
     expect(html).toContain('ae-result--fallback')
-    expect(html).toContain('AI 解读层当前不可用。')
+    expect(html).toContain('AI 解读引擎暂时不可用')
     expect(html).not.toContain('ga-engine-badge')
   })
 
@@ -159,25 +168,24 @@ describe('AIExplanationView', () => {
 
   // --- M36.0 Deterministic fallback UI ---
   it('shows fallback block for engine=deterministic with reason', () => {
-    const html = renderToStaticMarkup(
-      <AIExplanationView
-        status="success"
-        question="q"
-        response={makeResponse({
-          grounded: false,
-          engine: 'deterministic',
-          answer: 'AI 不可用',
-          reason: 'provider_error',
-        })}
-        error=""
-        contextCount={3}
-        promptMode="explain"
-        onQuestionChange={() => {}}
-        onAsk={() => {}}
-        onModeChange={() => {}}
-      />,
-    )
+    const html = renderView({
+      status: 'success',
+      question: 'q',
+      response: makeResponse({
+        grounded: false,
+        engine: 'deterministic',
+        answer: 'AI 不可用',
+        reason: 'provider_error',
+      }),
+      error: '',
+      contextCount: 3,
+      promptMode: 'explain',
+      onQuestionChange: () => {},
+      onAsk: () => {},
+      onModeChange: () => {},
+    })
     expect(html).toContain('ae-result--fallback')
+    expect(html).toContain('AI 解读引擎暂时不可用')
     expect(html).toContain('provider_error')
   })
 

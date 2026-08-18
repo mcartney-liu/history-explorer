@@ -712,7 +712,7 @@ function App() {
       } else if (status === '404') {
         setSearchError('搜索接口不存在（404），请检查后端版本')
       } else {
-        setSearchError('Unable to search. Is the backend running?')
+        setSearchError(t('picker.searchError'))
       }
       setSearchResults([])
     } finally {

@@ -127,4 +127,16 @@ export default {
   'discover.continueToAria': '%{name} の探索を続ける',
   'discover.connectedTopicsHeading': '関連テーマ',
   'discover.crossTopicEdge': 'テーマ横断的な関連',
+  // クロステーマ比較パネル（TopicComparisonPanel, M5-C）
+  'discover.compareTitle': 'トピックを比較',
+  'discover.compareEmpty': 'このトピックにはまだクロステーマ関連がありません。',
+  'discover.compareWith': '比較する',
+  'discover.compareAria': 'クロステーマ比較',
+  'discover.comparisonTargetsAria': '比較対象',
+  'discover.exploreTopicAction': '%{topic} を探索',
+  'discover.bridgingEntities': '橋渡しエンティティ（%{n}）',
+  'discover.noBridgingEntities': '%{topic} との橋渡しエンティティはありません。',
+  'discover.openEntityInTopicAria': '%{topic} で %{name} を開く',
+  // マイ探索スペース（MyExplorationPanel, M90.5）
+  'discover.exhibitLabel': '歴史の足跡',
 }

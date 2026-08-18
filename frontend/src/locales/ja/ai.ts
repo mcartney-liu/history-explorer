@@ -31,4 +31,6 @@ export default {
   'ai.tier_unknown': '出典レベル不明',
   'ai.journey_trail_title': '探索の足跡',
   'ai.trust_no_next': '推奨の次の探索はありません——上記の根拠から探索を続けるか、関連エンティティを開いてください。',
+  // M36.0 deterministic fallback（AI エンジン停止時のローカライズ文案）
+  'ai.fallback_unavailable': 'AI 解釈エンジンは現在利用できません。決定論的な知識グラフの探索を続けてください。',
 }

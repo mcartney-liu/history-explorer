@@ -128,4 +128,16 @@ export default {
   'understand.prefTitle': 'Your exploration preferences',
   'understand.deepResearch': 'Deep research on this topic',
   'understand.askCompanion': 'Ask about this topic',
+  // Cross-topic comparison panel (TopicComparisonPanel, M5-C)
+  'discover.compareTitle': 'Compare Across Topics',
+  'discover.compareEmpty': 'This topic has no cross-topic connections yet.',
+  'discover.compareWith': 'Compare With',
+  'discover.compareAria': 'Cross-topic comparison',
+  'discover.comparisonTargetsAria': 'Comparison targets',
+  'discover.exploreTopicAction': 'Explore %{topic}',
+  'discover.bridgingEntities': 'Bridging entities (%{n})',
+  'discover.noBridgingEntities': 'No bridging entities with %{topic}.',
+  'discover.openEntityInTopicAria': 'Open %{name} in %{topic}',
+  // My Exploration space (MyExplorationPanel, M90.5)
+  'discover.exhibitLabel': 'Historical Exhibit',
 }

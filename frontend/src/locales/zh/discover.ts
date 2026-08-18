@@ -128,4 +128,16 @@ export default {
   'understand.prefTitle': '你的探索偏好',
   'understand.deepResearch': '深度研究此主题',
   'understand.askCompanion': '对此主题直接发问',
+  // 跨主题对比面板（TopicComparisonPanel, M5-C）
+  'discover.compareTitle': '跨主题对比',
+  'discover.compareEmpty': '该主题暂无跨主题关联。',
+  'discover.compareWith': '与…对比',
+  'discover.compareAria': '跨主题对比',
+  'discover.comparisonTargetsAria': '对比目标',
+  'discover.exploreTopicAction': '探索 %{topic}',
+  'discover.bridgingEntities': '桥接实体（%{n}）',
+  'discover.noBridgingEntities': '与 %{topic} 暂无桥接实体。',
+  'discover.openEntityInTopicAria': '在 %{topic} 中打开 %{name}',
+  // 我的探索空间（MyExplorationPanel, M90.5）
+  'discover.exhibitLabel': '历史足迹',
 }

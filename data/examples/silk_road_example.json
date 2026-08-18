@@ -45,7 +45,7 @@
       "id": "han_dynasty",
       "type": "Civilization",
       "name": "Han Dynasty",
-      "description": "The Chinese imperial dynasty (206 BC–220 CE) that expanded westward and produced the silk and paper traded along the routes.",
+      "description": "中国大一统王朝（公元前 206 – 公元 220 年），向西扩张，丝绸与纸张经由丝绸之路贸易传播。",
       "global_id": "silk_road:han_dynasty",
       "aliases": [
         "Han China",
@@ -79,7 +79,7 @@
       "id": "person-zhang-qian",
       "type": "Person",
       "name": "Zhang Qian",
-      "description": "Han envoy whose westward missions (138–126 BC) opened diplomatic and trade contact between China and the Hellenistic west.",
+      "description": "汉代使节，其西行使命（公元前 138–126 年）打开了中国与希腊化西方之间的外交与贸易往来。",
       "global_id": "silk_road:person-zhang-qian",
       "aliases": [],
       "labels": {
