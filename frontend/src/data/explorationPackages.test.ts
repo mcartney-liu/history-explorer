@@ -133,7 +133,7 @@ describe("M70 cross-dataset packages (silk-road / roman-empire)", () => {
     expect(silkRoad().timeline_slices.map((s) => s.entity)).toEqual([
       "silk_road:person-zhang-qian",
       "silk_road:event-silk-road-opened",
-      "silk_road:tech-paper",
+      "china_v1:tech-zaopi",
     ]);
     expect(romanEmpire().timeline_slices.map((s) => s.entity)).toEqual([
       "roman_empire:tp-republic",
@@ -233,7 +233,7 @@ describe("M73 Phase2-A entity display name localization (labels.zh)", () => {
       "roman_empire:loc-constantinople", "roman_empire:event-edict-milan",
       "roman_empire:event-republic-end", "roman_empire:event-pax-romana",
       "roman_empire:event-empire-fall", "silk_road:silk_road", "silk_road:han_dynasty",
-      "silk_road:person-zhang-qian", "silk_road:loc-chang-an", "silk_road:tech-paper",
+      "silk_road:person-zhang-qian", "china_v1:loc-changan", "china_v1:tech-zaopi",
       "silk_road:event-silk-road-opened", "silk_road:tech-silk", "silk_road:loc-samarkand",
       "silk_road:loc-kashgar", "silk_road:person-ban-chao", "silk_road:tech-glass",
       "silk_road:idea-chinese-language", "ancient_india:civ-maurya", "ancient_india:person-chandragupta",
