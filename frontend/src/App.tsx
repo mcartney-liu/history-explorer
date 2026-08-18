@@ -982,7 +982,7 @@ function App() {
             cognitiveStage={runtimeContext.cognitiveStage}
             explorationState={explorationState}
             exploreSection={
-              <div className="explore-a">
+              <div className="explore-a" data-tier="narrative">
                 <div className="explore-page-head">
                   <h1 className="explore-page-title">{result.title}</h1>
                   <p className="explore-page-sub">探索 · 主要信息</p>
