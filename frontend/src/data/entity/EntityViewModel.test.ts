@@ -47,6 +47,26 @@ describe('EntityViewModel', () => {
     expect(vm.identity.keyFacts.length).toBeGreaterThan(0)
   })
 
+  // Regression (2026-08-18): summary.birth/death are structured objects
+  // ({ value, label, ... }) in real API data. Interpolating them raw used to
+  // render "[object Object] – [object Object]" in EntityHero meta/facts.
+  it('normalizes object-typed birth/death into readable time labels', () => {
+    const entity = makeEntity({
+      summary: {
+        time_range: '',
+        birth: { value: -428, precision: 'year', certainty: 'approximate', label: 'c. 428 BC' },
+        death: { value: -348, precision: 'year', certainty: 'approximate', label: 'c. 348 BC' },
+      },
+    })
+    const vm = buildEntityViewModel(entity)
+    expect(vm.identity.timeLabel).toBe('c. 428 BC – c. 348 BC')
+    expect(vm.identity.timeLabel).not.toContain('[object Object]')
+    // keyFacts embeds the same normalized time (no raw object leak).
+    for (const fact of vm.identity.keyFacts) {
+      expect(fact).not.toContain('[object Object]')
+    }
+  })
+
   it('builds understanding from summary', () => {
     const entity = makeEntity()
     const vm = buildEntityViewModel(entity)

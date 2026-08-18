@@ -494,6 +494,8 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 .ec:hover .ec-cta{color:var(--color-accent)}
 .ec-arrow{transition:transform var(--animation-fast)}
 .ec:hover .ec-arrow{transform:translateX(3px)}
+/* M59-006 EntityHero 主容器：统一内边距，身份卡内文字不再贴卡边（2026-08-18 PO） */
+.eh{display:flex;flex-direction:column;gap:var(--space-2,8px);padding:var(--space-5) var(--space-6)}
 .eh-badge{display:inline-flex;align-items:center;gap:8px;margin-bottom:var(--space-4);
   background:var(--color-accent-soft);border:1px solid var(--color-accent-soft);
   border-radius:20px;padding:4px 16px 4px 8px}

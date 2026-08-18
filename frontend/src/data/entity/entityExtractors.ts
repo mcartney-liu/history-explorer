@@ -41,6 +41,27 @@ export function translateRelationType(type: string): string {
 }
 
 // ---- Time Extraction ----
+
+/**
+ * Normalize a summary field value to a displayable string.
+ * Summary fields like `birth` / `death` may carry either a plain string /
+ * number OR a structured object ({ value, precision, label, ... }) from the
+ * API. Interpolating the raw object would render "[object Object]".
+ */
+function toDisplayValue(val: unknown): string | null {
+  if (val == null) return null
+  if (typeof val === 'string') return val.length > 0 ? val : null
+  if (typeof val === 'number') return String(val)
+  if (typeof val === 'object') {
+    const obj = val as Record<string, unknown>
+    if (typeof obj.label === 'string' && obj.label.length > 0) return obj.label
+    if (typeof obj.value === 'number') return String(obj.value)
+    if (typeof obj.year === 'number') return String(obj.year)
+    return null
+  }
+  return null
+}
+
 export function extractTime(entity: EntityDetail): string {
   const summary = entity.summary
   const candidates = ['time_range', 'timeRange', 'period', 'date', 'years', 'year',
@@ -52,9 +73,9 @@ export function extractTime(entity: EntityDetail): string {
     if (typeof val === 'number') return String(val)
   }
 
-  // Composite: start_year-end_year
-  const start = summary['start_year'] ?? summary['birth'] ?? summary['birth_year']
-  const end = summary['end_year'] ?? summary['death'] ?? summary['death_year']
+  // Composite: start_year-end_year (start/end may be objects like {value, label})
+  const start = toDisplayValue(summary['start_year'] ?? summary['birth'] ?? summary['birth_year'])
+  const end = toDisplayValue(summary['end_year'] ?? summary['death'] ?? summary['death_year'])
   if (start != null && end != null) return `${start} – ${end}`
   if (start != null) return `${start}`
   if (end != null) return `– ${end}`
