@@ -206,7 +206,9 @@ export const SCOPE_ALLOWLIST = [
   // already present in build_exploration_response. Resolves the pre-existing
   // D-class freeze flag on backend/app/core/exploration.py.
   "backend/app/core/exploration.py",
-  // M29.1-B (Runtime Projection Activation) — Freeze Revision Gate (ADR-005)
+  // M29.1-B (Runtime Projection Activation) — Freeze Revision Gate (ADR-005).
+  // Also hosts the additive M86.2 CausalObject read-only mount (two add_api_route
+  // calls on v1 + legacy routers) — no business-logic / schema change, same gate.
   "backend/app/main.py",
   // M29.1-C / M29.2 (Provenance API + tests) — Freeze Revision Gate (ADR-005)
   // Endpoint is additive (no new router file, mounts on v1 + legacy). These two
@@ -214,6 +216,16 @@ export const SCOPE_ALLOWLIST = [
   // change beyond what the gate already approved for M29.1-A/B.
   "backend/tests/test_provenance_index.py",
   "backend/tests/test_provenance_api.py",
+  // M86.2 (Semantic Layer Backend-ization, Plan A) — Freeze Revision Gate.
+  // Read-only CausalObject API. A NEW backend module `backend/app/causal_objects.py`
+  // exposes the curated data/causal_objects.json over GET /api/v1/causal-objects
+  // (+ /{id}), mounted on BOTH v1 and legacy routers in main.py to preserve the
+  // v1 == legacy invariant (mirrors M29.1-C provenance). Red lines honored: no
+  // graph mutation, no AI, no traversal/ranking, no new dependency. The frozen
+  // `backend/app/core/causal/*` package is NOT modified — the new module only
+  // imports its (frozen) dataclasses and constructs them. Loader test co-located.
+  "backend/app/causal_objects.py",
+  "backend/tests/test_causal_object_loader.py",
   // M30-A (Frontend Provenance UI) — Frontend Freeze Revision Gate (lightweight
   // ADR). Consumes the existing M29.1 provenance projection endpoint; purely
   // additive frontend change — no backend / schema / enum change; runtime stays 0.13.0.

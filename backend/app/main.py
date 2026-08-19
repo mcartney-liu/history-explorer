@@ -49,6 +49,17 @@ from .content import site_config_router
 # Logic lives entirely in feedback.py; this file only mounts the routers.
 from .feedback import router as feedback_router, admin_router as feedback_admin_router
 
+# M86.2 (Freeze Revision Gate): read-only CausalObject API (semantic layer
+# backend-ization, Plan A). This file only imports the handlers and mounts them;
+# all logic lives in backend/app/causal_objects.py (freeze boundary §5). The
+# handlers are mounted on BOTH v1 and legacy routers below to preserve the
+# v1 == legacy invariant.
+from .causal_objects import (
+    get_causal_object,
+    init_causal_objects,
+    list_causal_objects,
+)
+
 # --- Configuration (env-driven, M3-002) -----------------------------------
 settings = get_settings()
 logger = configure_logging(settings.log_level)
@@ -637,6 +648,19 @@ v1_router.add_api_route(
     methods=["GET"],
     operation_id="v1_related_entities",
 )
+# M86.2 (Plan A): read-only CausalObject list + single-object endpoints.
+v1_router.add_api_route(
+    "/causal-objects",
+    list_causal_objects,
+    methods=["GET"],
+    operation_id="v1_causal_objects",
+)
+v1_router.add_api_route(
+    "/causal-objects/{object_id}",
+    get_causal_object,
+    methods=["GET"],
+    operation_id="v1_causal_object",
+)
 
 legacy_router = APIRouter()
 legacy_router.add_api_route(
@@ -682,6 +706,20 @@ legacy_router.add_api_route(
     methods=["GET"],
     operation_id="related_entities",
 )
+# M86.2 (Plan A): read-only CausalObject endpoints on legacy (no /api/v1 prefix)
+# to preserve the v1 == legacy invariant.
+legacy_router.add_api_route(
+    "/causal-objects",
+    list_causal_objects,
+    methods=["GET"],
+    operation_id="causal_objects",
+)
+legacy_router.add_api_route(
+    "/causal-objects/{object_id}",
+    get_causal_object,
+    methods=["GET"],
+    operation_id="causal_object",
+)
 
 app.include_router(v1_router, prefix=settings.api_v1_prefix)
 app.include_router(legacy_router)
@@ -699,6 +737,15 @@ app.include_router(feedback_router, prefix=settings.api_v1_prefix)
 # serve.js (which does not proxy /admin) can never reach it — PO opens it
 # directly at http://localhost:8002/admin/feedback.
 app.include_router(feedback_admin_router)
+
+# M86.2 (Plan A): build the read-only CausalObject cache once at startup,
+# mirroring the Knowledge Core single-build pattern. Wrapped so a missing/future
+# data file degrades gracefully (endpoints return empty/404) instead of crashing
+# the entire app import — a defensive boundary at file I/O.
+try:
+    init_causal_objects()
+except (FileNotFoundError, ValueError, OSError) as exc:  # pragma: no cover - defensive
+    logger.warning("M86.2 CausalObject cache not built: %s", exc)
 
 
 # --- Startup: build the in-memory Knowledge Core once ---------------------
