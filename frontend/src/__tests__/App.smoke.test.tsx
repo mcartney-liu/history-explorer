@@ -12,9 +12,10 @@
 //  - P5-S4 (PO 2026-08-09): both rails are now COLLAPSED by default;
 //    toggles expose "展开" and the canvas gets full width.
 //
-// Coverage: default expanded rails, collapse toggles, and the
-// six-region skeleton (global bar / question header / mode bar /
-// context rail / canvas / companion dock).
+// Coverage: default collapsed rails, collapse toggles, and the
+// shell skeleton (global bar / context rail / canvas / companion dock).
+// Question + Mode 已收敛至 UnderstandingCanvas（L0 真问题行 + 四视角 tab），
+// 不再作为 ExplorerShell 的独立插槽。
 // Repo style: react-dom/server renderToStaticMarkup only — no jsdom,
 // no @testing-library (frozen deps), hence no click-driven assertions.
 // ============================================================
@@ -27,8 +28,6 @@ const shell = (props: Record<string, unknown> = {}) =>
   renderToStaticMarkup(
     <ExplorerShell
       globalBar={<div>brand</div>}
-      questionHeader={<div>question</div>}
-      modeBar={<div>modes</div>}
       contextRail={<div>rail</div>}
       companionDock={<div>companion</div>}
       {...props}
@@ -37,16 +36,12 @@ const shell = (props: Record<string, unknown> = {}) =>
     </ExplorerShell>,
   )
 
-describe('Explorer Shell — six-region skeleton (M90.3)', () => {
-  it('renders global bar, question header and mode bar slots', () => {
+describe('Explorer Shell — skeleton (M90.3)', () => {
+  it('renders global bar slot', () => {
     const html = shell()
     expect(html).toContain('explorer-shell')
     expect(html).toContain('explorer-global-bar')
     expect(html).toContain('brand')
-    expect(html).toContain('explorer-question-header')
-    expect(html).toContain('question')
-    expect(html).toContain('explorer-mode-bar')
-    expect(html).toContain('modes')
   })
 
   it('renders canvas full-width with both rails collapsed by default', () => {

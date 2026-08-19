@@ -42,10 +42,6 @@ interface ExplorerShellProps {
   // --- New slots (Stage B-2: real components; Stage E: semantic data) ---
   /** Global Bar: system identity + current topic */
   globalBar?: ReactNode
-  /** Question Header: user question + understanding goal */
-  questionHeader?: ReactNode
-  /** Mode Bar: 4-mode switcher */
-  modeBar?: ReactNode
   /** Navigation Contract Bar: From / Why / Value */
   navigationBar?: ReactNode
 
@@ -65,8 +61,6 @@ interface ExplorerShellProps {
 
 export function ExplorerShell({
   globalBar,
-  questionHeader,
-  modeBar,
   navigationBar,
   contextRail,
   companionDock,
@@ -97,25 +91,8 @@ export function ExplorerShell({
       </header>
 
       {/* ============================================================
-          2. Question Header — only visible when there's content
-          ============================================================ */}
-      {questionHeader && (
-        <div className="explorer-question-header" aria-label="探索问题">
-          {questionHeader}
-        </div>
-      )}
-
-      {/* ============================================================
-          3. Mode Bar — only visible when there's content
-          ============================================================ */}
-      {modeBar && (
-        <nav className="explorer-mode-bar" aria-label="理解模式">
-          {modeBar}
-        </nav>
-      )}
-
-      {/* ============================================================
-          4. Content area: Context Rail | Canvas | Companion Dock
+          2. Content area: Context Rail | Canvas | Companion Dock
+          (Question + Mode 已由 UnderstandingCanvas L0 行 + 四视角 tab 收敛承载)
           ============================================================ */}
       <div className="explorer-content-row">
         {/* 4a. Context Rail (Workspace / 探索工作台) — default collapsed */}

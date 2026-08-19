@@ -90,6 +90,29 @@
   margin: 0;
 }
 
+/* Driving question — fused from QuestionHeader, mirrors UnderstandingCanvas L0 row */
+.package-question {
+  border: 1px solid var(--color-accent);
+  background: var(--color-paper-100);
+  border-radius: var(--radius);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-5);
+}
+.package-question-label {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  margin: 0 0 var(--space-2);
+  text-transform: uppercase;
+}
+.package-question-text {
+  color: var(--color-ink-900);
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 0;
+}
+
 .package-start {
   background: var(--color-accent);
   color: #1a140a;

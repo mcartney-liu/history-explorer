@@ -105,6 +105,7 @@ export default function ExplorationPackagePage({
 
   const title = pkg.title[locale] ?? pkg.title.zh
   const summary = pkg.summary[locale] ?? pkg.summary.zh
+  const question = pkg.question ? (pkg.question[locale] ?? pkg.question.zh) : null
   const goals = pkg.exploration_goals[locale] ?? pkg.exploration_goals.zh
   const typeLabel = pkg.type === 'official' ? '官方探索包' : pkg.type
 
@@ -132,6 +133,13 @@ export default function ExplorationPackagePage({
         <span className="package-badge">{typeLabel}</span>
         <h1 className="package-title">{title}</h1>
         <p className="package-summary">{summary}</p>
+
+        {question && (
+          <div className="package-question">
+            <span className="package-question-label">你的问题</span>
+            <p className="package-question-text">{question}</p>
+          </div>
+        )}
 
         <div className="package-goals">
           <h2 className="package-goals-title">探索目标</h2>
