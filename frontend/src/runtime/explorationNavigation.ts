@@ -17,6 +17,7 @@ import { setPackageOrigin } from '../components/package/packageOrigin'
 import { setOriginEntity } from './originEntity'
 import type { NavigationApi } from '../hooks/useNavigationHistory'
 import type { PackageContextApi } from '../hooks/usePackageContext'
+import type { RouteState } from '../routing/routeSchema'
 import type {
   Anchor,
   CreateContextInput,
@@ -36,7 +37,7 @@ export interface UseExplorationNavigationInput {
    *  Router (single URL truth source) sees the topic. Without this, the old
    *  state machine updates `current` but router.route stays null and the
    *  QuestionHeader / ModeBar (gated on router.route.topic) never render. */
-  routerNavigate: (state: { topic: string; mode: string; focus?: string }) => void
+  routerNavigate: (state: RouteState) => void
 }
 
 export function useExplorationNavigation(input: UseExplorationNavigationInput): {

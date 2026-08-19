@@ -33,7 +33,6 @@ export default function AIExplanationPanel({
   onCitationClick,
   entityName = '',
 }: AIExplanationPanelProps) {
-  const { t } = useLocale()
   const [question, setQuestion] = useState('')
   const [status, setStatus] = useState<AIExplanationStatus>('idle')
   const [response, setResponse] = useState<AIResponse | null>(null)

@@ -5,6 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { explainAI, chatAI, exploreSuggestions, type AIResponse } from './aiClient'
+import { API_BASE } from '../config/api'
 
 const mockFetch = vi.fn()
 
@@ -34,7 +35,7 @@ describe('aiClient', () => {
     const result = await explainAI('q', ['e1'])
     expect(mockFetch).toHaveBeenCalledTimes(1)
     const [url, init] = mockFetch.mock.calls[0] as [string, RequestInit]
-    expect(url).toBe('http://localhost:8000/api/v1/ai/explain')
+    expect(url).toBe(`${API_BASE}/api/v1/ai/explain`)
     expect(init.method).toBe('POST')
     expect((init.headers as Record<string, string>)['Content-Type']).toBe('application/json')
     expect(JSON.parse(init.body as string)).toEqual({
@@ -49,7 +50,7 @@ describe('aiClient', () => {
     mockFetch.mockResolvedValue({ ok: true, json: async () => SAMPLE })
     const result = await chatAI('q', ['e1'])
     const [url, init] = mockFetch.mock.calls[0] as [string, RequestInit]
-    expect(url).toBe('http://localhost:8000/api/v1/ai/chat')
+    expect(url).toBe(`${API_BASE}/api/v1/ai/chat`)
     expect(JSON.parse(init.body as string)).toEqual({
       question: 'q',
       context_global_ids: ['e1'],
@@ -123,7 +124,7 @@ describe('exploreSuggestions (M74-003)', () => {
     mockFetch.mockResolvedValue({ ok: true, json: async () => WITH_NEXT })
     const res = await exploreSuggestions(['roman_empire:person-augustus'])
     const [url, init] = mockFetch.mock.calls[0] as [string, RequestInit]
-    expect(url).toBe('http://localhost:8000/api/v1/ai/explain')
+    expect(url).toBe(`${API_BASE}/api/v1/ai/explain`)
     const body = JSON.parse(init.body as string)
     expect(body.question).toBe('探索建议')
     expect(body.context_global_ids).toEqual(['roman_empire:person-augustus'])
