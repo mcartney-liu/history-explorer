@@ -23,6 +23,7 @@ if [ -x "/c/Users/haizhi/.workbuddy/binaries/node/versions/22.22.2/node.exe" ]; 
   NODE_BIN="/c/Users/haizhi/.workbuddy/binaries/node/versions/22.22.2/node.exe"
 fi
 
-echo "[build_tunnel] VITE_API_BASE=/ (相对路径) -> vite build --outDir dist"
-VITE_API_BASE=/ "$NODE_BIN" node_modules/vite/bin/vite.js build --outDir dist
+echo "[build_tunnel] VITE_API_BASE=/ (相对路径) -> vite build --outDir dist --emptyOutDir false"
+# --emptyOutDir false: 避开本机 safe-delete 垫片在清空 dist 时的超时拦截（详见运维手册 坑5）
+VITE_API_BASE=/ "$NODE_BIN" node_modules/vite/bin/vite.js build --outDir dist --emptyOutDir false
 echo "[build_tunnel] done. 刷新隧道页面(Ctrl+Shift+R)即可生效。"
