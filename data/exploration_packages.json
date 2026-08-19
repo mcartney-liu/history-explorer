@@ -10,6 +10,10 @@
                 "zh": "中国文明演化探索包 V1",
                 "en": "China Civilization Evolution Package V1"
             },
+            "question": {
+                "zh": "唐到清的制度、思想与技术，如何一脉相承地塑造出延续千年的中华文明？",
+                "en": "How did the institutions, ideas and technologies from Tang to Qing shape a Chinese civilization that endured for a millennium?"
+            },
             "summary": {
                 "zh": "聚焦唐→宋→元→明→清五个朝代的文化演化、制度演化与技术扩散三条探索链，验证『可探索、可追溯、时间空间锚定的历史知识网络』。",
                 "en": "Focuses on the three exploration chains — cultural, institutional, and technological diffusion — across the Tang, Song, Yuan, Ming, and Qing dynasties, demonstrating a traceable, time-and-space-anchored historical knowledge network."
@@ -167,6 +171,10 @@
                 "zh": "丝绸之路探索包 V1",
                 "en": "Silk Road Exploration Package V1"
             },
+            "question": {
+                "zh": "一条横贯欧亚的贸易通道，如何把宗教、技术与帝国命运编织在一起？",
+                "en": "How did a trade corridor across Eurasia weave together religion, technology and the fate of empires?"
+            },
             "summary": {
                 "zh": "从张骞凿空西域到汉朝与罗马的间接贸易：一条路如何连起汉、贵霜、波斯与罗马，运送丝绸、造纸术与佛教信仰。",
                 "en": "From Zhang Qian's westward missions to indirect Han–Rome trade: how one network linked Han China, Parthia, Persia and Rome, carrying silk, papermaking and Buddhism."
@@ -293,6 +301,10 @@
             "title": {
                 "zh": "罗马帝国探索包 V1",
                 "en": "Roman Empire Exploration Package V1"
+            },
+            "question": {
+                "zh": "罗马帝国凭什么能维持如此辽阔的疆域，又为何最终走向分裂与衰亡？",
+                "en": "What let the Roman Empire hold such vast territory together, and why did it ultimately fracture and fall?"
             },
             "summary": {
                 "zh": "从共和国终结到帝国建立、罗马和平、帝国衰亡与拜占庭继承：理解罗马如何塑造地中海世界，并接纳基督教与东方式丝绸贸易。",
@@ -472,6 +484,10 @@
                 "zh": "印度文明探索包 V1",
                 "en": "India Classical Civilization Package V1"
             },
+            "question": {
+                "zh": "印度如何在与波斯、希腊、罗马的同时代对话中，把佛教与零和十进制推向世界？",
+                "en": "How did India, in conversation with Persia, Greece and Rome, push Buddhism and zero-and-the-decimal-system out to the world?"
+            },
             "summary": {
                 "zh": "从孔雀王朝到笈多黄金时代：佛教如何从印度出发沿丝绸之路传向世界，零与十进制如何被体系化，印度又如何与波斯、希腊、罗马同时代对话。",
                 "en": "From the Maurya Empire to the Gupta Golden Age: how Buddhism set out from India along the Silk Road, how zero and the decimal system were formalized, and how India conversed with Persia, Greece and Rome."
@@ -636,6 +652,10 @@
                 "zh": "人教版《中国历史》抽样包 V1（史前—夏商周）",
                 "en": "PEP Chinese History Textbook Sample Package V1 (Prehistory–Zhou)"
             },
+            "question": {
+                "zh": "教科书里那些看似孤立的朝代与事件，背后藏着怎样一以贯之的文明脉络？",
+                "en": "What single civilizational thread runs through the seemingly isolated dynasties and events in the textbook?"
+            },
             "summary": {
                 "zh": "抽取人教社《中国历史》七年级上册第一、二单元（史前时期、夏商周时期）的核心事实，构建从早期人类、农耕起源到王朝更替、制度初创的可探索知识网络。",
                 "en": "Extracts the core facts of Units 1–2 (Prehistory; Xia–Shang–Zhou) from the PEP junior-high history textbook into an explorable knowledge network."
@@ -740,6 +760,10 @@
             "title": {
                 "zh": "波斯帝国探索包 V1",
                 "en": "Persian Empire Exploration Package V1"
+            },
+            "question": {
+                "zh": "人类历史上第一个横跨亚非欧的世界性帝国，是如何运转的，又为何倒在亚历山大面前？",
+                "en": "How did the first world-empire spanning Asia, Africa and Europe operate, and why did it fall before Alexander?"
             },
             "summary": {
                 "zh": "从居鲁士建国到大流士改革、薛西斯远征，沿着王室大道与琐罗亚斯德教的传播，理解第一个横跨亚非欧的世界性帝国如何运转、又为何在亚历山大大帝面前崩溃。",
@@ -899,6 +923,10 @@
             "title": {
                 "zh": "古希腊哲学探索包 V1",
                 "en": "Ancient Greek Philosophy Exploration Package V1"
+            },
+            "question": {
+                "zh": "苏格拉底、柏拉图与亚里士多德的师生分歧，如何奠定了西方理解世界的方式？",
+                "en": "How did the teacher–student disputes of Socrates, Plato and Aristotle lay the foundation for how the West understands the world?"
             },
             "summary": {
                 "zh": "从苏格拉底之问到柏拉图学园、亚里士多德学园与逻辑学奠基，沿着一条影响西方两千年的思想链，看哲学如何在雅典城邦中诞生并制度化。",
@@ -1065,6 +1093,10 @@
             "title": {
                 "zh": "希腊化世界探索包 V1",
                 "en": "Hellenistic World Exploration Package V1"
+            },
+            "question": {
+                "zh": "亚历山大的征服落幕之后，希腊文化是如何在地中海东岸生根、并塑造后世文明的？",
+                "en": "After Alexander's conquests ended, how did Greek culture take root across the eastern Mediterranean and shape later civilizations?"
             },
             "summary": {
                 "zh": "从高加米拉之战到亚历山大帝国、继业者战争与托勒密埃及，看希腊文化如何扩散至地中海东岸，又如何在亚历山大城与羊皮纸中留下文明的痕迹。",
@@ -1250,6 +1282,10 @@
                 "zh": "埃及技术与宗教探索包 V1",
                 "en": "Egyptian Technology and Religion Exploration Package V1"
             },
+            "question": {
+                "zh": "古埃及如何以金字塔、莎草纸与奥西里斯信仰，撑起三千年不曾中断的文明连续性？",
+                "en": "How did ancient Egypt sustain three unbroken millennia of civilization through pyramids, papyrus and the cult of Osiris?"
+            },
             "summary": {
                 "zh": "从吉萨大金字塔的建造、莎草纸与象形文字的技术奇迹，到奥西里斯信仰与一神论思想的酝酿，理解古埃及文明如何以技术与信仰支撑三千年的连续性。",
                 "en": "From the building of the Great Pyramid and the technical marvels of papyrus and hieroglyphs to the Osiris cult and the incubation of monotheism, understand how Egyptian civilisation sustained three millennia of continuity through technology and belief."
@@ -1429,6 +1465,10 @@
             "title": {
                 "zh": "早期基督教探索包 V1",
                 "en": "Early Christianity Exploration Package V1"
+            },
+            "question": {
+                "zh": "一个源自犹太教的边缘教派，如何在短短一代人之内成长为横跨地中海的普世宗教？",
+                "en": "How did a marginal Jewish sect grow into a universal Mediterranean religion within a single generation?"
             },
             "summary": {
                 "zh": "从耶稣的传道与受难、五旬节到保罗的外邦人宣教，沿着耶路撒冷—安提阿—罗马的路线，看一个犹太教派如何在一代人间成长为地中海的普世宗教。",

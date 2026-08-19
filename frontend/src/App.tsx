@@ -50,8 +50,6 @@ import { useLocale } from './data/locale'
 import { resolveEntryQuery } from './data/topicResolver'
 import { ExplorerShell } from './components/shell/ExplorerShell'
 import { GlobalBar } from './components/shell/GlobalBar'
-import { QuestionHeader } from './components/shell/QuestionHeader'
-import { ModeBar } from './components/shell/ModeBar'
 import { LandingTabs } from './components/shell/LandingTabs'
 import { ProductIntro } from './components/shell/ProductIntro'
 import { UnderstandingStatus } from './components/shell/UnderstandingStatus'
@@ -680,6 +678,7 @@ function App() {
     updateAnchor,
     setEntityInitialTab,
     prettifyTopic,
+    routerNavigate: router.navigate,
   })
 
   async function handleSearch(q: string) {
@@ -932,24 +931,6 @@ function App() {
       companionCollapsed={companionCollapsed}
       onCompanionCollapseChange={setCompanionCollapsed}
       globalBar={<GlobalBar topic={router.route?.topic ?? null} mode={router.route?.mode ?? null} />}
-      questionHeader={
-        router.route?.topic ? (
-          <QuestionHeader
-            question={runtimeContext.userQuestion}
-            goal={runtimeContext.understandingGoal}
-          />
-        ) : null
-      }
-      modeBar={
-        router.route?.topic ? (
-          <ModeBar
-            currentMode={router.route?.mode ?? null}
-            currentTopic={router.route?.topic ?? null}
-            currentFocus={router.route?.focus ?? null}
-            onModeChange={(state) => router.navigate(state)}
-          />
-        ) : null
-      }
       contextRail={
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <UnderstandingStatus
@@ -981,6 +962,8 @@ function App() {
           <UnderstandingCanvas
             cognitiveStage={runtimeContext.cognitiveStage}
             explorationState={explorationState}
+            question={runtimeContext.userQuestion}
+            goal={runtimeContext.understandingGoal}
             exploreSection={
               <div className="explore-a" data-tier="narrative">
                 <div className="explore-page-head">

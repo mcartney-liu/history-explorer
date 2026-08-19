@@ -24,6 +24,10 @@ interface UnderstandingCanvasProps {
   cognitiveStage: string | null
   /** Current exploration state */
   explorationState: ExplorationState | null
+  /** User's driving question (融合自原 QuestionHeader：这个探索包要解决的问题) */
+  question?: string | null
+  /** Understanding goal (融合自原 QuestionHeader：要达到什么效果) */
+  goal?: string | null
   /** All topic root panels (the original JSX from App.tsx) */
   children?: ReactNode
   /** 探索视角：这是什么 —— 概览叙事 / 为什么重要 / 主实体 */
@@ -39,6 +43,8 @@ interface UnderstandingCanvasProps {
 export function UnderstandingCanvas({
   cognitiveStage,
   explorationState,
+  question,
+  goal,
   exploreSection,
   explainSection,
   relateSection,
@@ -67,6 +73,29 @@ export function UnderstandingCanvas({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* L0: 真问题 + 理解目标（融合自原 QuestionHeader，最顶优先级） */}
+      {(question || goal) && (
+        <div style={{
+          padding: '14px 18px',
+          borderRadius: 'var(--radius-sm, 8px)',
+          border: '1px solid var(--color-accent)',
+          background: 'var(--color-paper-100)',
+        }}>
+          {question && (
+            <div style={{ display: 'flex', gap: 10, alignItems: 'baseline' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-accent)', letterSpacing: '0.04em', flexShrink: 0 }}>你的问题</span>
+              <span style={{ fontSize: '0.95rem', color: 'var(--color-ink-900)', lineHeight: 1.5 }}>{question}</span>
+            </div>
+          )}
+          {goal && (
+            <div style={{ display: 'flex', gap: 10, alignItems: 'baseline', marginTop: question ? 8 : 0 }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-accent)', letterSpacing: '0.04em', flexShrink: 0 }}>目标</span>
+              <span style={{ fontSize: '0.95rem', color: 'var(--color-ink-700)', lineHeight: 1.5 }}>{goal}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* L1: 认知定位条 — 始终可见，始终第一 */}
       <div style={{
         padding: '16px 20px',

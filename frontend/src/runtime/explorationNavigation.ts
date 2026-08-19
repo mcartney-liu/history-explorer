@@ -32,6 +32,11 @@ export interface UseExplorationNavigationInput {
   updateAnchor: (input: UpdateAnchorInput) => void
   setEntityInitialTab: Dispatch<SetStateAction<'info' | 'research' | 'ai'>>
   prettifyTopic: (t: string) => string
+  /** M90.3 Stage A — push the canonical experience route so the unified
+   *  Router (single URL truth source) sees the topic. Without this, the old
+   *  state machine updates `current` but router.route stays null and the
+   *  QuestionHeader / ModeBar (gated on router.route.topic) never render. */
+  routerNavigate: (state: { topic: string; mode: string; focus?: string }) => void
 }
 
 export function useExplorationNavigation(input: UseExplorationNavigationInput): {
@@ -55,6 +60,7 @@ export function useExplorationNavigation(input: UseExplorationNavigationInput): 
     updateAnchor,
     setEntityInitialTab,
     prettifyTopic,
+    routerNavigate,
   } = input
 
   // Push a node onto the history and load it (hook state machine + onNavigate).
@@ -160,12 +166,40 @@ export function useExplorationNavigation(input: UseExplorationNavigationInput): 
     // Previously only openPackage() called createContext(), so anchorChain
     // never grew for topic navigation and UnderstandingStatus (Projection)
     // progress stayed permanently hidden.
+    //
+    // M86.2 (P1-①/② fix): topic-click now reuses the SAME curator question +
+    // goal as the package path via getPackageByTopic(seed_topic === t), so the
+    // Curiosity Entry is identical no matter which entry point the user took.
+    // Fallback to prettifyTopic(t) only when no curated package exists for the
+    // topic — never leaves userQuestion empty, never leaves goal empty-by-design.
     createContext({
       explorationId: `exp-${t}-${Date.now()}`,
       userQuestion: prettifyTopic(t),
       understandingGoal: '',
     })
+    // Mirrors openPackage(): dynamic import avoids a circular dependency and
+    // fills the Context with the curator-authored question/goal when available.
+    import('../data/explorationPackages').then(({ getPackageByTopic }) => {
+      const pkgData = getPackageByTopic(t)
+      if (pkgData) {
+        // M86.2 (P1-① true-question fix): userQuestion prefers the curator's
+        // `question.zh` (a real "why" interrogative, satisfying C1 / EO-001),
+        // falling back to title.zh, then prettifyTopic(t). seed_topic is a topic
+        // *pointer* (slug), never used as the question text. Goal reuses
+        // exploration_goals.zh so the Understanding Loop closure is visible on
+        // the topic path too (P1-②).
+        createContext({
+          explorationId: `exp-${t}-${Date.now()}`,
+          userQuestion: pkgData.question?.zh || pkgData.title?.zh || prettifyTopic(t),
+          understandingGoal: pkgData.exploration_goals?.zh || pkgData.summary?.zh || '',
+        })
+      }
+    })
     navigateTo({ type: 'topic', topic: t, title: prettifyTopic(t) })
+    // M90.3 Stage A — keep the unified Router in sync. The old state machine
+    // updates `current`, but QuestionHeader / ModeBar are gated on
+    // router.route.topic. Push the canonical explore URL so they render.
+    routerNavigate({ topic: t, mode: 'exploration', focus: t })
   }
 
   // M69 — Open an Exploration Package page (overlays Discover/home).
@@ -179,10 +213,13 @@ export function useExplorationNavigation(input: UseExplorationNavigationInput): 
     import('../data/explorationPackages').then(({ getPackageBySlug }) => {
       const pkgData = getPackageBySlug(slug)
       if (pkgData) {
+        // EP-009: user_question / understanding_goal come from curator-authored
+        // data. userQuestion prefers question.zh (real "why" interrogative, C1 /
+        // EO-001), falling back to title.zh. seed_topic is a topic *pointer*
+        // (slug), never the question text. Consistent with handleTopicClick.
         createContext({
           explorationId: `exp-${slug}-${Date.now()}`,
-          userQuestion: (pkgData.seed_topic as any)?.zh
-            || (typeof pkgData.seed_topic === 'string' ? pkgData.seed_topic : pkgData.title?.zh || slug),
+          userQuestion: pkgData.question?.zh || pkgData.title?.zh || slug,
           understandingGoal: pkgData.exploration_goals?.zh || pkgData.summary?.zh || '',
         })
       }

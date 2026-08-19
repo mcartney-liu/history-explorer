@@ -74,6 +74,10 @@ export interface ExplorationPackage {
   title: LocalizedText;
   summary: LocalizedText;
   seed_topic: string;
+  /** M86.2 — the curator-authored "why" question shown in the Question Header
+   *  (C1 Curiosity Entry / EO-001). A real interrogative sentence, NOT a topic
+   *  pointer. Falls back to `title` when absent. */
+  question?: LocalizedText;
   exploration_goals: LocalizedText;
   entity_references: string[];
   relationship_paths: RelationshipPathRef[];
@@ -138,6 +142,14 @@ export function getPackagesByPlacement(placement: PackagePlacement): Exploration
 
 export function getPackageBySlug(slug: string): ExplorationPackage | undefined {
   return registryData.packages.find((p) => p.slug === slug);
+}
+
+// M86.2 — topic-click (Search/Catalog/CrossTopic) must reuse the SAME curator
+// question/goal as the package path, so Curiosity Entry is identical regardless
+// of entry point. Packages key their topic by `seed_topic` (== topic slug), not
+// by `slug` (which is the package's own id), so match on seed_topic.
+export function getPackageByTopic(topic: string): ExplorationPackage | undefined {
+  return registryData.packages.find((p) => p.seed_topic === topic);
 }
 
 function globalToLocal(globalId: string): string | null {
