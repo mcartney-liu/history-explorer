@@ -53,6 +53,8 @@ Current milestone:
 
 **M78 — Project Governance Closure (DB-B01 CI isolation + M79 ADR acceptance + documentation sync)**
 
+> **Active Development (unreleased):** work has continued past M78 on the `phase5-journey-continuity` branch and is **not yet reflected** in the release list below. Current focus: **M59 — Museum-grade dark-gold UI Transformation** (visual-only overhaul), **M86.2 / M90** (exploration-package semantics & `ExplorerShell` slot contract), the **Phase B/C exploration-continuity engine**, a **public tunnel deployment** of the existing History Explorer, and a **multi-wing portal prototype** (`lumina-demo`: History / Literature / Science / Psychology entry points, History deep-linking into the deployed Explorer). Runtime remains frozen at **v0.13.0**. This README was last formally updated at the M78 release (2026-08-02) and will be refreshed when `phase5` is merged to `master` and a new release is cut.
+
 Latest releases (dual-track versioning):
 
 - **Runtime Version: v0.13.0** (2026-07-22)
