@@ -46,7 +46,7 @@ def test_search_topic_result_shape():
     assert topic_rec["result_type"] == "Topic"
     assert topic_rec["topic"]
     assert topic_rec["name"]
-    assert topic_rec["match"] in ("exact", "alias", "contains")
+    assert topic_rec["match"] in ("exact", "alias", "name_within", "contains")
     # Entity-only fields are absent on a Topic result.
     assert "id" not in topic_rec
     assert "type" not in topic_rec

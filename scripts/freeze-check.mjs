@@ -1119,6 +1119,18 @@ export const SCOPE_ALLOWLIST = [
   // 手动关（× / 开始探索 / 遮罩 / Esc）。纯前端、零新依赖、零后端/DB 改动；
   // 样式 100% 走 VS-01 Design Token（P0 合规：零 emoji / 零硬编码色 / 零弹跳）。
   "frontend/src/components/WelcomeModal.tsx",
+  // Feedback-driven search fix (PO-approved 2026-08-20, "按你推荐来"): the
+  // search matcher was blind to localized (non-Latin) entity labels, so Chinese
+  // queries like "张骞" only returned the event that mentions it in its
+  // description, and "丝绸之路开辟" returned 0 results. search.py now also
+  // matches `labels` (localized names) and adds a name_within rank (full
+  // name/label embedded inside a longer query phrase). Additive ranking field
+  // only — no schema / enum / Runtime Freeze boundary change. Same red-line
+  // family as the existing label-aware i18n fixes already in the allowlist.
+  "backend/app/core/search.py",
+  "backend/tests/test_search_entity.py",
+  "backend/tests/test_search_v2.py",
+  "backend/tests/test_search_index.py",
 ];
 
 function _scopeAllowed(file) {

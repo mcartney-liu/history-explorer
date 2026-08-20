@@ -20,32 +20,61 @@ def _time_label(value: Any) -> Optional[str]:
     return None
 
 
-_RANK_NAME = {0: "exact", 1: "alias", 2: "contains"}
+_RANK_NAME = {0: "exact", 1: "alias", 2: "name_within", 3: "contains"}
+
+
+def _collect_labels(labels) -> list[str]:
+    """Flatten an entity's `labels` field (dict {locale: text} or a list of
+    strings) into a flat list of label strings. Missing/empty -> [].
+    """
+    if not labels:
+        return []
+    if isinstance(labels, dict):
+        return [str(v) for v in labels.values() if v]
+    if isinstance(labels, (list, tuple)):
+        return [str(v) for v in labels if v]
+    return [str(labels)]
 
 
 def _match_rank(entity: dict, q_norm: str) -> Optional[int]:
     """Score an entity against a normalized query.
 
-    0 = exact (id or name), 1 = alias exact, 2 = contains (id/name/alias/
-    description). Returns None when there is no match. Lower rank = better,
-    so results sort best-first deterministically. No AI / fuzzy logic.
+    0 = exact (id / name / localized label), 1 = alias exact,
+    2 = name_within (the full entity name or a localized label is contained
+    inside the (longer) query phrase — e.g. "丝绸之路开辟" surfaces the
+    "丝绸之路" label), 3 = contains (id / name / alias / label / description
+    contains the query fragment). Returns None when there is no match. Lower
+    rank = better, so results sort best-first deterministically. No AI / fuzzy
+    logic.
+
+    Labels are included so localized (non-Latin) names are searchable even
+    when the canonical `name` field is in another script (e.g. a Person whose
+    `name` is "Zhang Qian" but whose `labels.zh` is "张骞").
     """
     eid = (entity.get("id") or "").lower()
     name = (entity.get("name") or "").lower()
     aliases = [str(a).lower() for a in (entity.get("aliases") or [])]
+    labels = [str(l).lower() for l in (entity.get("labels") or [])]
     desc = (entity.get("description") or "").lower()
 
-    if eid == q_norm or name == q_norm:
+    if eid == q_norm or name == q_norm or any(q_norm == l for l in labels):
         return 0
     if q_norm in aliases:
         return 1
+    # The full entity name or a localized label appears inside the (longer)
+    # query phrase — a deliberate, broader match than a fragment landing in a
+    # field. Surfaces entities when the user types a longer phrase that embeds
+    # a known name/label (common with localized / non-Latin search).
+    if (name and name in q_norm) or any(lbl and lbl in q_norm for lbl in labels):
+        return 2
     if (
         q_norm in eid
         or q_norm in name
         or q_norm in desc
         or any(q_norm in a for a in aliases)
+        or any(q_norm in l for l in labels)
     ):
-        return 2
+        return 3
     return None
 
 
@@ -65,6 +94,7 @@ def build_search_index(registry) -> list[dict]:
                     "global_id": ent.get("global_id"),
                     "name": ent.get("name", ""),
                     "aliases": ent.get("aliases") or [],
+                    "labels": _collect_labels(ent.get("labels")),
                     "type": ent.get("type", ""),
                     "topic": topic,
                     "description": ent.get("description", ""),

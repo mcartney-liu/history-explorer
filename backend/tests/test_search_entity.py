@@ -75,6 +75,44 @@ def test_search_spans_multiple_topics():
     assert "egypt_technology_religion" in topics
 
 
+# --- Reported feedback bug (2026-08-20): localized (non-Latin) label search
+def test_search_localized_label_exact():
+    # "张骞" is the zh label of person-zhang-qian (whose canonical `name` is
+    # "Zhang Qian"). The search must match the localized label, not just the
+    # English name, so the Person surfaces — previously it was hidden and only
+    # the event mentioning 张骞 in its description came back.
+    res = client.get("/search?q=张骞")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["count"] >= 1
+    person = next((r for r in body["results"] if r["id"] == "person-zhang-qian"), None)
+    assert person is not None, "张骞 (localized label) must surface the Person entity"
+    assert person["result_type"] == "Entity"
+    assert person["match"] == "exact"
+    # The Person must outrank the event that only mentions 张骞 in its description.
+    event = next((r for r in body["results"] if r["id"] == "event-silk-road-opened"), None)
+    if event is not None:
+        assert body["results"].index(person) < body["results"].index(event)
+
+
+def test_search_phrase_contains_label():
+    # "丝绸之路开辟" previously returned 0 results: no entity had that exact
+    # name and the old matcher only did exact/alias/substring. The route entity
+    # "silk_road" (label "丝绸之路") is now surfaced via name_within, and the
+    # dedicated event (label "丝绸之路开辟") via exact label match.
+    res = client.get("/search?q=丝绸之路开辟")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["count"] >= 2
+    ids = {r["id"] for r in body["results"]}
+    assert "silk_road" in ids
+    assert "event-silk-road-opened" in ids
+    opened = next(r for r in body["results"] if r["id"] == "event-silk-road-opened")
+    assert opened["match"] == "exact"
+    route = next(r for r in body["results"] if r["id"] == "silk_road")
+    assert route["match"] == "name_within"
+
+
 # --- /entity -------------------------------------------------------------
 def test_entity_found_shape():
     res = client.get("/entity/person-augustus")

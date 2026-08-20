@@ -54,6 +54,28 @@
   margin-bottom: var(--space-4);
 }
 
+/* Eyebrow kicker — mirrors journey-rail-kicker / connection-card-kicker so the
+   page reads UNMISTAKABLY as a curated EXPLORATION PACKAGE, not an entity
+   detail page (which labels itself "实体"). Skin-only; no logic change. */
+.package-kicker {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+.package-kicker::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: var(--color-accent);
+}
+
 .package-title {
   font-size: 30px;
   line-height: 1.25;

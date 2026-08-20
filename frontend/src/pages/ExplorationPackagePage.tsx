@@ -130,6 +130,7 @@ export default function ExplorationPackagePage({
           </Button>
 
           <header className="package-hero">
+        <span className="package-kicker">探索包</span>
         <span className="package-badge">{typeLabel}</span>
         <h1 className="package-title">{title}</h1>
         <p className="package-summary">{summary}</p>
