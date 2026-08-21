@@ -305,6 +305,21 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // M90.3 Stage A+ — 深链/刷新恢复（修复 "GlobalBar 显示主题但主体停留首页"
+  // 的头身分离）：当 URL 携带合法 topic、本地导航栈为空、且非 understanding
+  // 专属模式时，自动走一次 handleTopicClick 把导航栈建起来，主体随即渲染
+  // 对应主题（Explorer Runtime Context + NavNode + router 同步 + fetchNode
+  // 全部由该路径触发）。understanding 模式有专属渲染、不依赖 nav.current，
+  // 无需此恢复。mount-only：仅在 URL 有 topic 且本地无历史时恢复一次，
+  // history 一旦非空便不再满足条件，正常导航不会重复触发。
+  useEffect(() => {
+    const r = router.route
+    if (r?.topic && r.mode && r.mode !== 'understanding' && history.length === 0) {
+      handleTopicClick(r.topic)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // M5-A-2: load the topic catalog from GET /topics to power the curated
   // landing page. Pure I/O; all loading / error state stays in App so the
   // LandingPage component stays presentational (and reusable / testable).
