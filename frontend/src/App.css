@@ -181,6 +181,464 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 }
 .tag:hover{color:var(--color-accent);border-color:var(--color-accent-soft);background:var(--color-accent-soft)}
 
+/* ========== M-modernization pilot — airier dark-gold (legacy-only, additive) ========== */
+/* Sidebar: gold hairline instead of hard navy border + soft frosted rail */
+[data-theme="legacy"] .sidebar{
+  padding:30px 20px;
+  border-right:1px solid var(--gold-line-legacy);
+  background:var(--glass-navy-rail);
+  backdrop-filter:var(--surface-glass-soft);
+}
+[data-theme="legacy"] .brand .name{letter-spacing:.4px}
+
+/* Nav buttons: rounder, lift on hover, softer active glow */
+[data-theme="legacy"] .nav-btn{
+  border-radius:14px;padding:12px 16px;
+  transition:transform var(--animation-normal), background var(--animation-fast),
+             color var(--animation-fast), box-shadow var(--animation-normal);
+}
+[data-theme="legacy"] .nav-btn:hover{transform:translateY(-1px)}
+[data-theme="legacy"] .nav-btn.active{
+  background:var(--color-accent-soft);color:var(--color-accent);
+  box-shadow:inset 2.5px 0 0 var(--color-accent), 0 6px 22px var(--gold-glow-legacy);
+}
+
+/* Topbar buttons: rounder, lift on hover */
+[data-theme="legacy"] .topbar-btn{border-radius:14px;padding:8px 16px;transition:transform var(--animation-fast), color var(--animation-fast), border-color var(--animation-fast)}
+[data-theme="legacy"] .topbar-btn:hover{transform:translateY(-1px)}
+
+/* Cards: gold hairline + frosted glass + soft depth */
+[data-theme="legacy"] .card,
+[data-theme="legacy"] .card-glass{
+  border-radius:20px;
+  border:1px solid var(--gold-line-legacy);
+  background:var(--glass-navy-panel);
+  backdrop-filter:var(--surface-glass);
+  box-shadow:var(--shadow-card);
+}
+[data-theme="legacy"] .card-featured{border-radius:22px;border-color:rgba(203, 161, 53, 0.34)}
+[data-theme="legacy"] .card-hover{transition:transform var(--animation-normal), border-color var(--animation-fast), box-shadow var(--animation-normal)}
+[data-theme="legacy"] .card-hover:hover{transform:translateY(-3px);box-shadow:0 18px 50px var(--gold-glow-legacy)}
+
+/* Buttons & tags: rounder */
+[data-theme="legacy"] .btn{border-radius:12px}
+[data-theme="legacy"] .tag{border-radius:30px}
+[data-theme="legacy"] .btn-gold{box-shadow:0 10px 26px var(--gold-glow-legacy)}
+
+/* ========== M-modernization 加码三连 — 内容区铺开 + 透出宇宙背景 + 微动效 ========== */
+/* ① 内容面半透明玻璃化：让 .earth-bg 深空背景透出来（“轻”的真正来源） */
+[data-theme="legacy"] .surf-card,
+[data-theme="legacy"] .surf-card-gold{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+}
+[data-theme="legacy"] .surf-card-high{
+  background: var(--glass-navy-panel);
+  border-color: rgba(203, 161, 53, 0.38);
+  backdrop-filter: var(--surface-glass-soft);
+}
+[data-theme="legacy"] .co-connection-card{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  border-radius: 16px;
+  backdrop-filter: var(--surface-glass-soft);
+  transition: border-color 0.2s, background 0.2s, transform 0.25s, box-shadow 0.25s;
+}
+[data-theme="legacy"] .co-connection-card:hover{
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px var(--gold-glow-legacy);
+}
+[data-theme="legacy"] .co-explore-entity-card{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  border-radius: 12px;
+  backdrop-filter: var(--surface-glass-soft);
+}
+[data-theme="legacy"] .co-explore-entity-card:hover{
+  transform: translateY(-1px);
+  border-color: var(--color-accent);
+}
+
+/* ② 微动效：卡片入场淡入上浮（无 fill，动画结束即交还 hover 状态） */
+@keyframes hep-rise-in{
+  from{opacity:0; transform:translateY(8px)}
+  to{opacity:1; transform:translateY(0)}
+}
+[data-theme="legacy"] .card,
+[data-theme="legacy"] .card-glass,
+[data-theme="legacy"] .surf-card,
+[data-theme="legacy"] .surf-card-high,
+[data-theme="legacy"] .surf-card-gold,
+[data-theme="legacy"] .co-connection-card{
+  animation: hep-rise-in 0.45s ease-in-out;
+}
+
+/* ========== ③ 门户/landing 页（discover + intro 四宫格）也现代化 ========== */
+/* 四宫格卡片：圆角放大、阴影加柔、悬停上浮+金光（保留各自主题色边框，hover 才统一金色） */
+[data-theme="legacy"] .discover-intro-card{
+  border-radius:22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.40);
+  transition: border-color 0.25s, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+[data-theme="legacy"] .discover-intro-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 22px 52px var(--gold-glow-legacy), 0 26px 64px rgba(0, 0, 0, 0.45);
+  border-color: var(--color-accent);
+}
+[data-theme="legacy"] .discover-intro-art::after{
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* 「穿越千年」精选卡：玻璃面 + 金发丝边 + 悬停上浮 */
+[data-theme="legacy"] .discover-featured-card{
+  border-radius:22px;
+  border:1px solid var(--gold-line-legacy);
+  background: var(--glass-navy-panel);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.38);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.25s;
+}
+[data-theme="legacy"] .discover-featured-card:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 24px 58px var(--gold-glow-legacy);
+  border-color: var(--color-accent);
+}
+
+/* 主题话题胶囊：圆胶囊 + 玻璃 + 悬停上浮 */
+[data-theme="legacy"] .discover-topic-card{
+  border-radius:24px;
+  border-color: var(--gold-line-legacy);
+  background: var(--glass-navy-panel);
+  backdrop-filter: var(--surface-glass-soft);
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.25s, box-shadow 0.25s;
+}
+[data-theme="legacy"] .discover-topic-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px var(--gold-glow-legacy);
+}
+
+/* 主题网格卡：玻璃 + 金发丝 */
+[data-theme="legacy"] .discover-theme-card{
+  border-radius:20px;
+  border-color: var(--gold-line-legacy);
+  background: var(--glass-navy-panel);
+  backdrop-filter: var(--surface-glass-soft);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.25s;
+}
+[data-theme="legacy"] .discover-theme-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 18px 46px var(--gold-glow-legacy);
+  border-color: var(--color-accent);
+}
+
+/* 「了解/研究」tab 容器：玻璃胶囊 */
+[data-theme="legacy"] .discover-tabs{
+  background: var(--glass-navy-rail);
+  border: 1px solid var(--gold-line-legacy);
+  border-radius: 14px;
+  padding: 4px;
+  backdrop-filter: var(--surface-glass-soft);
+}
+
+/* landing 卡片入场动效 */
+[data-theme="legacy"] .discover-intro-card,
+[data-theme="legacy"] .discover-featured-card,
+[data-theme="legacy"] .discover-theme-card{
+  animation: hep-rise-in 0.5s ease-in-out;
+}
+
+/* ========== ④ 补全战场：探索包行程栏 + 实体页连接卡/叙事面 + landing 搜索/顶栏 ========== */
+/* 探索包行程栏：玻璃 + 金发丝边 + 柔影 */
+[data-theme="legacy"] .journey-rail{
+  background: var(--glass-navy-rail);
+  border-color: var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+[data-theme="legacy"] .journey-rail-dot{
+  border-color: var(--gold-line-legacy);
+  background: rgba(203, 161, 53, 0.10);
+}
+[data-theme="legacy"] .journey-rail-node:hover{
+  background: var(--color-accent-soft);
+}
+
+/* 实体页顶部「为什么在这里」连接卡：玻璃（保留金色左强调边） */
+[data-theme="legacy"] .connection-card{
+  background: var(--glass-navy-panel);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.30);
+}
+
+/* 实体页主叙事面：玻璃 + 金发丝 + 更圆 */
+[data-theme="legacy"] .entity-narrative-surface{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  border-radius: 20px;
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
+}
+
+/* landing 搜索框：玻璃胶囊 */
+[data-theme="legacy"] .ep-search{
+  background: var(--glass-navy-rail);
+  border: 1px solid var(--gold-line-legacy);
+  border-radius: 16px;
+  backdrop-filter: var(--surface-glass-soft);
+}
+[data-theme="legacy"] .ep-search input,
+[data-theme="legacy"] .ep-search-btn{
+  border-radius: 12px;
+}
+
+/* 顶栏：金发丝底边 + 玻璃 */
+[data-theme="legacy"] .topbar{
+  border-bottom: 1px solid var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+}
+
+/* ========== ⑤ 精修：hero/品牌金色签名 + 全局细节 ========== */
+/* 大标题 + 副标：博物馆级金渐变（金主调，视觉明确的渐变金签名） */
+[data-theme="legacy"] .discover-section-heading,
+[data-theme="legacy"] .discover-hero-title{
+  background: linear-gradient(120deg, #C9A23C 0%, #E8C96A 30%, #DDB84A 60%, #B8892E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 2px 14px rgba(203, 161, 53, 0.35));
+  letter-spacing: 0.5px;
+}
+
+/* ========== ⑧ 可点击方块统一浮动（程度对齐首页话题胶囊 -3px）========== */
+/* 覆盖实体页/探索区所有可点卡：连接卡、实体芯片、行程站、研究库卡、指南卡、通用 surf 卡 */
+[data-theme="legacy"] .surf-card,
+[data-theme="legacy"] .surf-card-high,
+[data-theme="legacy"] .surf-card-gold,
+[data-theme="legacy"] .journey-rail-node,
+[data-theme="legacy"] .rlib-card,
+[data-theme="legacy"] .he-guide-card,
+[data-theme="legacy"] .co-connection-card,
+[data-theme="legacy"] .co-explore-entity-card{
+  transition: transform 0.28s ease-in-out, box-shadow 0.28s ease-in-out,
+              border-color 0.2s ease, background 0.2s ease;
+}
+[data-theme="legacy"] .surf-card:hover,
+[data-theme="legacy"] .surf-card-high:hover,
+[data-theme="legacy"] .surf-card-gold:hover,
+[data-theme="legacy"] .journey-rail-node:hover,
+[data-theme="legacy"] .rlib-card:hover,
+[data-theme="legacy"] .he-guide-card:hover,
+[data-theme="legacy"] .co-connection-card:hover,
+[data-theme="legacy"] .co-explore-entity-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px var(--gold-glow-legacy), 0 10px 24px rgba(0, 0, 0, 0.30);
+  border-color: var(--color-accent);
+}
+
+/* ========== ⑨ 一次性扫尾：剩余可见面板统一玻璃+金，按钮/标签轻浮动 ========== */
+[data-theme="legacy"] .discover-research-cta,
+[data-theme="legacy"] .entity-research-group{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.30);
+}
+[data-theme="legacy"] .discover-research-cta{ border-radius: 18px; }
+
+/* 实体页研究桥：玻璃 + 金发丝，保留金色左强调边 */
+[data-theme="legacy"] .entity-research-bridge{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  border-left-color: var(--color-accent);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.30);
+  border-radius: 14px;
+}
+
+/* 按钮 / 标签：轻浮动（-1px，克制） */
+[data-theme="legacy"] .btn:not(.btn-text):hover,
+[data-theme="legacy"] .tag:hover{
+  transform: translateY(-1px);
+}
+
+/* ========== ⑩ 关系解读 / 关系网络 / 继续探索 互动效果 ========== */
+/* 关系解读——可点节点：hover 金底 + 上浮 + 金辉 */
+/* 关系解读——推理链视图可点药丸 .rel-pill（默认视图，真可点） */
+[data-theme="legacy"] .rel-pill{
+  background: var(--glass-navy-panel);
+  border: 1px solid var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.28s ease-in-out, box-shadow 0.28s ease;
+}
+[data-theme="legacy"] .rel-pill:hover:not(:disabled){
+  transform: translateY(-3px);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  box-shadow: 0 14px 36px rgba(203,161,53,0.16);
+}
+[data-theme="legacy"] .rel-pill.is-main{
+  background: var(--color-accent);
+  color: #1a1206;
+  border-color: var(--color-accent);
+}
+
+/* 关系解读——列表视图可点节点 .ep-node.is-clickable */
+[data-theme="legacy"] .ep-node.is-clickable{
+  background: var(--glass-navy-panel);
+  border: 1px solid var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.28s ease-in-out, box-shadow 0.28s ease;
+}
+[data-theme="legacy"] .ep-node.is-clickable:hover{
+  transform: translateY(-3px);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  box-shadow: 0 14px 36px rgba(203,161,53,0.16);
+}
+
+/* 关系网络——可点节点卡片 .ce-graph-node（role=button） */
+[data-theme="legacy"] .ce-graph-node{
+  background: var(--glass-navy-panel);
+  border: 1px solid var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.28s ease-in-out, box-shadow 0.28s ease;
+}
+[data-theme="legacy"] .ce-graph-node:hover{
+  transform: translateY(-3px);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  box-shadow: 0 14px 36px rgba(203,161,53,0.16);
+}
+
+/* 继续探索——可点节点按钮 .he-continue-node */
+[data-theme="legacy"] .he-continue-node{
+  background: var(--glass-navy-panel);
+  border: 1px solid var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.28s ease-in-out, box-shadow 0.28s ease;
+}
+[data-theme="legacy"] .he-continue-node:hover{
+  transform: translateY(-3px);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  box-shadow: 0 14px 36px rgba(203,161,53,0.16);
+}
+
+/* 以下为其他视图（探索侧栏关系列表等）保留的 legacy hover，勿删 */
+[data-theme="legacy"] .ep-edge,
+[data-theme="legacy"] .rel-chain-row{
+  transition: background 0.2s ease, color 0.2s ease;
+  border-radius: 8px;
+}
+[data-theme="legacy"] .ep-edge:hover,
+[data-theme="legacy"] .rel-chain-row:hover{
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+[data-theme="legacy"] .conn-row{
+  padding: 5px 10px;
+  margin: 0 -10px;
+  border-radius: 10px;
+  border-left: 2px solid transparent;
+  transition: background 0.2s ease, transform 0.25s ease-in-out, border-color 0.2s ease, box-shadow 0.25s ease;
+}
+[data-theme="legacy"] .conn-row:hover{
+  background: var(--color-accent-soft);
+  border-left-color: var(--color-accent);
+  transform: translateX(3px);
+  box-shadow: 0 8px 22px rgba(203,161,53,0.16);
+}
+[data-theme="legacy"] .conn-tag:hover{
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+[data-theme="legacy"] .jc-title,
+[data-theme="legacy"] .co-explore-heading{
+  transition: color 0.2s ease, transform 0.25s ease-in-out, text-shadow 0.25s ease;
+}
+[data-theme="legacy"] .jc-title:hover,
+[data-theme="legacy"] .co-explore-heading:hover{
+  color: var(--color-accent);
+  transform: translateX(4px);
+  text-shadow: 0 0 18px rgba(203,161,53,0.16);
+}
+
+/* ========== ⑩b 实体解读（M89 工作台）卡片：玻璃 + 路径节点互动 ========== */
+/* 容器卡：玻璃 + 金发丝（box-sizing:border-box 全局在，加边不位移） */
+[data-theme="legacy"] .m89-nav-card,
+[data-theme="legacy"] .m89-transition-card,
+[data-theme="legacy"] .m89-evidence-card,
+[data-theme="legacy"] .m89-path-card,
+[data-theme="legacy"] .m89-action-card{
+  background: var(--glass-navy-panel);
+  border: 1px solid var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.32);
+}
+/* 理解路径「还想搞清楚」缺口标记按钮（真可点）：hover 点亮 */
+[data-theme="legacy"] .m89-gap-mark{
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+[data-theme="legacy"] .m89-gap-mark:hover{
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+/* 动作卡次按钮 hover 点亮 */
+[data-theme="legacy"] .m89-btn-secondary:hover{
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+/* 侧栏品牌名：实色金 + 微光 */
+[data-theme="legacy"] .brand .name{
+  color: #DDB84A;
+  text-shadow: 0 0 14px rgba(203, 161, 53, 0.30);
+}
+[data-theme="legacy"] .brand .name small{ color: var(--color-accent); }
+
+/* 滚动条：金色细调 */
+[data-theme="legacy"] ::-webkit-scrollbar{ width:8px; }
+[data-theme="legacy"] ::-webkit-scrollbar-thumb{
+  background: rgba(203, 161, 53, 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+[data-theme="legacy"] ::-webkit-scrollbar-thumb:hover{ background: rgba(203, 161, 53, 0.45); }
+
+/* 选中文字：金色 */
+[data-theme="legacy"] ::selection{ background: rgba(203, 161, 53, 0.30); color: var(--color-ink-900); }
+
+/* 输入焦点：金环 */
+[data-theme="legacy"] input:focus,
+[data-theme="legacy"] textarea:focus,
+[data-theme="legacy"] select:focus{
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--gold-glow-legacy);
+}
+
+/* 分割线：金发丝 */
+[data-theme="legacy"] hr{ border-color: var(--gold-line-legacy); }
+
+/* ========== ⑥ 打磨：探索包主面板玻璃化 + 四宫格照片卡底缘金辉 ========== */
+/* 探索包主面板：玻璃 + 金发丝 + 柔影（探索包页最大的一块） */
+[data-theme="legacy"] .package-hero{
+  background: var(--glass-navy-panel);
+  border-color: var(--gold-line-legacy);
+  backdrop-filter: var(--surface-glass-soft);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.35);
+}
+
+/* 四宫格照片卡：静态底缘金发丝（不盖照片，静止也能看见金色） */
+[data-theme="legacy"] .discover-intro-card{
+  box-shadow: inset 0 -1px 0 rgba(203, 161, 53, 0.35), 0 10px 30px rgba(0, 0, 0, 0.40);
+}
+
 /* ========== HOME PAGE ========== */
 .discover-page{padding:50px 56px 40px;position:relative;z-index:1}
 .discover-hero{position:relative;padding-top:80px;text-align:center}
