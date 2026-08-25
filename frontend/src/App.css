@@ -3536,3 +3536,314 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 /* ---- pages/DiscoverPage ---- */
 .discover-packages{display:flex;flex-direction:column;gap:14px}
 .discover-starter-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+
+/* ============================================================
+   文学板块（预览版）— 纯前端策展原型样式
+   作用域锁定 [data-theme="legacy"]，与 M59 皮肤隔离，可一键还原。
+   仅用 tokens.css 中既有设计令牌，不引入新依赖、不新增颜色。
+   ============================================================ */
+/* ============================================================
+   文学板块 · Working Volumes 编辑型书架（legacy 主题）
+   卷首标识区 → 卷首特写 hero → 完整卷宗目录 → 本卷关系/全景/继续探索
+   ============================================================ */
+[data-theme="legacy"] .lit-module {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+  width: 100%;
+}
+
+/* 卷首标识区 */
+[data-theme="legacy"] .lit-masthead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--gold-line-legacy);
+}
+[data-theme="legacy"] .lit-masthead-kicker {
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-300);
+}
+[data-theme="legacy"] .lit-masthead-title {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-900);
+}
+[data-theme="legacy"] .lit-masthead-sub {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-ink-500);
+}
+[data-theme="legacy"] .lit-masthead-edition {
+  margin-top: 4px;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  border-radius: 999px;
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+/* 卷首特写 hero：当前焦点即「翻开的一卷」 */
+[data-theme="legacy"] .lit-hero {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-6);
+  align-items: stretch;
+  padding: var(--space-6);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(158deg, rgba(20, 30, 56, 0.72), rgba(9, 14, 28, 0.84));
+  box-shadow: var(--shadow-card);
+}
+[data-theme="legacy"] .lit-hero-figure {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-right: 1px solid var(--gold-line-legacy);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(203, 161, 53, 0.10), rgba(203, 161, 53, 0.02));
+}
+[data-theme="legacy"] .lit-hero-pageno {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="legacy"] .lit-hero-spine {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-300);
+}
+[data-theme="legacy"] .lit-hero-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+[data-theme="legacy"] .lit-hero-volume {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-300);
+}
+[data-theme="legacy"] .lit-hero-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-ink-900);
+}
+[data-theme="legacy"] .lit-hero-tagline {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: var(--color-ink-700);
+}
+[data-theme="legacy"] .lit-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin: 0;
+}
+[data-theme="legacy"] .lit-hero-meta-item { display: flex; flex-direction: column; gap: 2px; }
+[data-theme="legacy"] .lit-hero-meta-item dt {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-300);
+}
+[data-theme="legacy"] .lit-hero-meta-item dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-ink-900);
+}
+[data-theme="legacy"] .lit-hero-facts {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+[data-theme="legacy"] .lit-hero-facts li {
+  font-size: 0.88rem;
+  color: var(--color-ink-500);
+  line-height: 1.6;
+}
+[data-theme="legacy"] .lit-hero-open {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 10px 20px;
+  border: 1px solid var(--gold-500);
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-ink-900);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    background var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+[data-theme="legacy"] .lit-hero-open:hover {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  transform: translateY(-2px);
+}
+
+/* 完整卷宗目录：六卷排放在书架上 */
+[data-theme="legacy"] .lit-toc { display: flex; flex-direction: column; gap: var(--space-4); }
+[data-theme="legacy"] .lit-toc-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+[data-theme="legacy"] .lit-toc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+[data-theme="legacy"] .lit-toc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-100);
+  cursor: pointer;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    background var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
+}
+[data-theme="legacy"] .lit-toc-card:hover {
+  border-color: var(--gold-line-legacy);
+  background: var(--color-paper-200);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="legacy"] .lit-toc-card.is-active {
+  border-left-color: var(--gold-500);
+  background: var(--color-accent-soft);
+  box-shadow: var(--shadow-glow);
+}
+[data-theme="legacy"] .lit-toc-vol {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-300);
+}
+[data-theme="legacy"] .lit-toc-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-ink-900);
+}
+[data-theme="legacy"] .lit-toc-blurb {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--color-ink-500);
+}
+
+/* 内容区包裹（本卷关系 / 全景脉络 / 继续探索） */
+[data-theme="legacy"] .lit-contents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  scroll-margin-top: var(--space-5);
+}
+
+[data-theme="legacy"] .lit-section { display: flex; flex-direction: column; gap: 8px; }
+[data-theme="legacy"] .lit-section-title { margin: 0; font-size: 1.05rem; font-weight: 600; color: var(--color-ink-900); }
+[data-theme="legacy"] .lit-section-hint { margin: 0; font-size: 0.84rem; color: var(--color-ink-500); line-height: 1.5; }
+
+[data-theme="legacy"] .lit-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+[data-theme="legacy"] .lit-chip {
+  padding: 8px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  background: var(--color-paper-100);
+  color: var(--color-ink-900);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease-standard), background var(--motion-duration-fast) var(--motion-ease-standard), transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+[data-theme="legacy"] .lit-chip:hover {
+  border-color: var(--gold-500);
+  background: var(--color-accent-soft);
+  transform: translateY(-2px);
+}
+
+/* 页脚声明 */
+[data-theme="legacy"] .lit-footer {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--gold-line-legacy);
+  font-size: 0.78rem;
+  color: var(--color-ink-300);
+  letter-spacing: 0.02em;
+}
+
+/* 响应式：窄屏单列堆叠 */
+@media (max-width: 900px) {
+  [data-theme="legacy"] .lit-hero { grid-template-columns: 1fr; }
+  [data-theme="legacy"] .lit-hero-figure {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-right: none;
+    border-bottom: 1px solid var(--gold-line-legacy);
+  }
+  [data-theme="legacy"] .lit-toc-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  [data-theme="legacy"] .lit-toc-grid { grid-template-columns: 1fr; }
+  [data-theme="legacy"] .lit-masthead-title { font-size: 1.9rem; }
+}
+
+/* 落地页文学入口卡片（与 Understanding 入口并列） */
+[data-theme="legacy"] .he-lit-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  padding: 18px 20px;
+  border: 1px solid var(--gold-line-legacy);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(158deg, rgba(20, 30, 56, 0.72), rgba(9, 14, 28, 0.84));
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: border-color var(--motion-duration-normal) var(--motion-ease-standard), box-shadow var(--motion-duration-normal) var(--motion-ease-standard), transform var(--motion-duration-normal) var(--motion-ease-standard);
+}
+[data-theme="legacy"] .he-lit-entry:hover {
+  border-color: var(--gold-500);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+[data-theme="legacy"] .he-lit-entry-badge {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+[data-theme="legacy"] .he-lit-entry-title { font-size: 1.1rem; font-weight: 700; color: var(--color-ink-900); }
+[data-theme="legacy"] .he-lit-entry-desc { font-size: 0.86rem; color: var(--color-ink-500); line-height: 1.55; }
+
