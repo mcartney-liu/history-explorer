@@ -26,6 +26,7 @@
   --r-military: #C07A5C;
   --r-thought: #94B085;
   --r-geo: #A390B6;
+  --r-economic: #6FAFA6;
   --serif: "Noto Serif SC","Songti SC","SimSun",serif;
   --sans: "Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
   --mono: "JetBrains Mono",ui-monospace,monospace;
@@ -937,6 +938,8 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
 .ec-icon{width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
   font-size:22px;background:var(--color-paper-100);border-radius:12px;
   border:1px solid var(--color-paper-300)}
+/* 探索卡静态肖像（/entity-logos；加载失败回退上方 Icon） */
+.ec-thumb{width:100%;height:100%;border-radius:11px;object-fit:cover;display:block}
 .ec-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--space-2)}
 .ec-header{display:flex;flex-direction:column;gap:2px}
 .ec-title{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--color-ink-900);line-height:1.3}
@@ -959,11 +962,35 @@ input:focus,textarea:focus{border-color:var(--color-accent-soft)}
   border-radius:20px;padding:4px 16px 4px 8px}
 .eh-badge-icon{font-size:18px}
 .eh-badge-label{font-size:12px;color:var(--color-accent);font-weight:500;letter-spacing:2px;text-transform:uppercase}
-/* 实体身份图（后台 entity_identity.{globalId} 配置；未配时组件整块不渲染） */
+/* 实体身份图：与长「历史见解」卡片并排置于其右侧（红框位置），
+   无长历史见解时回退为顶部通栏横幅；窄屏自动堆叠。 */
+.eh-insight-row{display:flex;gap:var(--space-5);align-items:flex-start;margin-top:var(--space-4)}
+/* 长历史见解卡片：固定宽度（非通栏），保持卡片感 */
+.eh-insight-row .eh-ai{flex:0 0 480px;max-width:480px;margin-top:0}
+/* 实体身份图：右侧自适应【正方形】区域（与 1024×1024 图片同比例 → 不裁切、铺满空白）。
+   flex 占满剩余宽度并设 max-width 上限，aspect-ratio:1/1 保证区域为正方形，
+   正方形图放进正方形区 → object-fit 无论 cover/contain 都零裁切、完整显示。 */
 .eh-art{width:100%;height:168px;border-radius:var(--radius-lg,16px);overflow:hidden;
   margin-bottom:var(--space-4);background:var(--color-surface-2,var(--color-bg));
   border:1px solid var(--color-paper-200,transparent)}
 .eh-art img{width:100%;height:100%;object-fit:cover;display:block}
+.eh-insight-row .eh-art{flex:1 1 240px;align-self:flex-start;max-width:420px;aspect-ratio:1/1;
+  height:auto;min-width:0;margin-bottom:0;min-height:0;
+  /* 博物馆双层裱框：金边 + 深色衬环 + 柔光投影，衬托肖像、与左侧文字拉开层次 */
+  border:1px solid var(--color-accent);
+  box-shadow:0 0 0 3px var(--color-surface-2,var(--color-bg)),0 0 0 4px var(--color-accent-soft,var(--color-accent)),0 10px 30px rgba(0,0,0,.30);
+  background:var(--color-surface-2,var(--color-bg))}
+.eh-insight-row .eh-art img{height:100%;min-height:0}
+/* 窄屏：并排区域改纵向堆叠，身份图回到居中正方形（仍完整不裁切） */
+@media (max-width: 720px){
+  .eh-insight-row{flex-direction:column;align-items:stretch}
+  .eh-insight-row .eh-art{flex:none;width:100%;max-width:320px;margin:0 auto;aspect-ratio:1/1;height:auto}
+  .eh-insight-row .eh-art img{height:100%}
+}
+/* 主实体块缩略肖像（/entity-logos；加载失败回退类型图标） */
+.me-thumb{display:inline-block;vertical-align:middle;width:36px;height:36px;flex-shrink:0;
+  border-radius:10px;object-fit:cover;border:1px solid var(--color-accent-soft,rgba(138,108,64,0.35));
+  background:var(--color-paper-100,#faf8f3)}
 .eh-name{font-family:var(--serif);font-weight:900;font-size:52px;line-height:1.08;
   letter-spacing:1.5px;color:var(--color-ink-900);
   text-shadow:0 2px 20px rgba(0,0,0,0.5)}
@@ -1265,7 +1292,28 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 .ce-timeline-content{display:flex;flex-direction:column;padding:var(--space-1) 0}
 .ce-timeline-year{font-family:var(--mono);font-size:12px;color:var(--color-accent);margin-bottom:2px}
 .ce-timeline-label{font-size:14px;color:var(--color-ink-900)}
-.ce-map{min-height:200px;display:flex;align-items:center;justify-content:center;background:var(--color-paper-100);border:1px solid var(--color-paper-300);border-radius:14px}
+/* ---- SpaceView: 知识星座 / 关系星图 (M59-020) ---- */
+.ce-map{min-height:200px;display:flex;flex-direction:column;gap:var(--space-4);background:var(--color-paper-100);border:1px solid var(--color-paper-300);border-radius:14px;padding:var(--space-4)}
+.ce-map-stage{width:100%;display:flex;justify-content:center}
+.ce-map-svg{width:100%;max-width:760px;height:auto;max-height:480px;display:block;user-select:none}
+.ce-map-orbit{fill:none;stroke:var(--gold-line);stroke-width:1;stroke-dasharray:2 6;opacity:.35}
+.ce-map-edge{fill:none;stroke-width:1.6;opacity:.42;transition:opacity var(--animation-fast), stroke-width var(--animation-fast)}
+.ce-map-edge.is-active{opacity:.95;stroke-width:2.6}
+.ce-map-edge.is-dim{opacity:.12}
+.ce-map-node{cursor:pointer;outline:none}
+.ce-map-node .ce-map-dot{stroke:var(--gold-line);stroke-width:1.2;transition:transform var(--animation-fast), filter var(--animation-fast)}
+.ce-map-node .ce-map-label{fill:var(--hi);font-family:var(--sans);font-size:11px;paint-order:stroke;stroke:var(--navy-deep);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:fill var(--animation-fast)}
+.ce-map-node--center .ce-map-dot{stroke:var(--gold-hi);stroke-width:1.6;filter:drop-shadow(0 0 10px var(--gold-glow))}
+.ce-map-node--center .ce-map-label{fill:var(--gold-hi);font-weight:700;font-size:12.5px}
+.ce-map-node:hover .ce-map-dot,
+.ce-map-node.is-active .ce-map-dot{filter:drop-shadow(0 0 8px var(--gold-glow));transform:scale(1.18);transform-box:fill-box;transform-origin:center}
+.ce-map-node:hover .ce-map-label,
+.ce-map-node.is-active .ce-map-label{fill:var(--gold-hi)}
+.ce-map-node.is-dim{opacity:.28}
+.ce-map-legend{display:flex;flex-wrap:wrap;gap:var(--space-3) var(--space-5);justify-content:center;padding-top:var(--space-2);border-top:1px solid var(--line-soft)}
+.ce-map-legend-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--color-ink-700);font-family:var(--sans)}
+.ce-map-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 6px rgba(0,0,0,.4)}
+.ce-map-hint{margin:0;text-align:center;font-size:11.5px;color:var(--color-ink-500);font-family:var(--sans);line-height:1.6}
 
 /* ========== WORKSPACE (M59-009) ========== */
 .ws{width:100%;height:100%;overflow-y:auto;
@@ -2811,6 +2859,36 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
   color: var(--color-ink-500);
 }
 
+/* 侧边栏"最近研究"紧凑列表式（方案 A）：单列条目 + 收紧 padding，匹配 300px 窄栏，
+   避免 minmax(320px,1fr) 把卡片撑满整行 / padding:20px 过肥。仅作用于侧边栏内。 */
+.discover-dashboard-sidebar .discover-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.discover-dashboard-sidebar .discover-recent-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+.discover-dashboard-sidebar .discover-recent-type {
+  flex: 0 0 auto;
+  font-size: 0.66rem;
+}
+.discover-dashboard-sidebar .discover-recent-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.discover-dashboard-sidebar .discover-recent-star {
+  flex: 0 0 auto;
+}
+
 /* ========== LOWER SECTION（文明理解入口与探索主题，单栏） ========== */
 .discover-lower {
   margin: 40px 0;
@@ -3388,8 +3466,32 @@ hr{border:none;border-top:1px solid var(--color-paper-300);margin:16px 0}
 .he-related-item:last-child{border-bottom:none}
 
 /* ---- EntitySearchBox ---- */
-.explorer-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.explorer-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
 .explorer-error{color:var(--color-status-danger);font-size:0.85rem;margin:6px 0 0}
+
+/* 搜索按钮：金色主 CTA（与 .btn-gold / 开始探索 同系） */
+.explorer-controls .explore-button{
+  flex:none;
+  padding:10px 22px;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.5;
+  font-family:var(--sans);
+  color:var(--color-accent-ink);
+  background:var(--color-accent);
+  border:0;
+  border-radius:var(--radius-md);
+  cursor:pointer;
+  box-shadow:0 8px 22px var(--color-accent-soft);
+  transition:background var(--animation-fast),transform var(--animation-fast),box-shadow var(--animation-fast);
+}
+.explorer-controls .explore-button:hover:not(:disabled){
+  background:var(--color-accent-hover);
+  transform:translateY(-1px);
+  box-shadow:0 12px 30px var(--color-accent-soft);
+}
+.explorer-controls .explore-button:active:not(:disabled){transform:translateY(0)}
+.explorer-controls .explore-button:disabled{opacity:.7;cursor:not-allowed}
 
 /* ---- ErrorCard ---- */
 .he-error-card{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:24px;border:1px solid var(--color-status-danger-soft);border-radius:var(--radius-lg);background:var(--color-paper-100)}

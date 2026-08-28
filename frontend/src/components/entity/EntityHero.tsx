@@ -10,7 +10,7 @@
 import { useEffect, useState } from 'react'
 import type { EntityViewModel } from '../../data/entity/entityTypes'
 import { type EntityInsight, stripMarkdown } from '../../data/entity/EntityInsightModel'
-import { getEntityLabel, getEntityIcon, entityTypeFromGlobalId } from '../../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon, entityTypeFromGlobalId, entityImageUrl } from '../../data/entity/entityLabels'
 import { getEntityInsight, type AIEvidence } from '../../data/aiClient'
 import { EvidenceList } from '../ai/TrustDisplay'
 import { Icon } from '../ui/Icon'
@@ -40,12 +40,16 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
   const icon = getEntityIcon(type)
 
   // 实体身份图（后台 entity_identity.{globalId} slot，PO 2026-08-15 B 类）：
-  // 后台配的图优先渲染到身份卡顶部；未配则整块不渲染，回退到上方类型图标。
+  // 后台配的图优先渲染；未配则回退到静态生成的 184 张实体肖像
+  // （/entity-logos/<globalId>.png，由 artifacts/entity_prompts 生成）。
   // useContentRevision 订阅后台改动，配图后无需刷新整页即更新。
+  // 静态图若缺失（404）则 onError 隐藏整块，回退到上方类型图标。
   useContentRevision()
   const artName = globalId ? slotImageName(`entity_identity.${globalId}`) : null
-  const artSrc = artName ? mediaUrl(artName) : null
+  const slotSrc = artName ? mediaUrl(artName) : null
+  const artSrc = slotSrc ?? entityImageUrl(globalId)
   const artFocus = globalId ? slotImageFocus(`entity_identity.${globalId}`) : null
+  const [artFailed, setArtFailed] = useState(false)
 
   // M90.x: 历史见解 = 后台固化的内容（AI 基于证据生成一次后存储，前端只读）。
   // 挂载读 GET /api/v1/insights/{globalId}；无固化内容 → 占位"待后台生成"。
@@ -82,15 +86,14 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
 
   const showInsight = globalId && loaded
 
+  const artFigure = artSrc && !artFailed && (
+    <div className="eh-art">
+      <img src={artSrc} alt={`${name} 身份图`} style={{ objectPosition: artFocus ?? '50% 50%' }} onError={() => setArtFailed(true)} />
+    </div>
+  )
+
   return (
     <section className="eh surf-card" aria-label={`${name} — ${label}`}>
-      {/* 身份图（后台 entity_identity.{globalId} 配置；未配则不渲染） */}
-      {artSrc && (
-        <div className="eh-art">
-          <img src={artSrc} alt={`${name} 身份图`} style={{ objectPosition: artFocus ?? '50% 50%' }} />
-        </div>
-      )}
-
       {/* Badge */}
       <div className="eh-badge">
         <Icon name={icon as IconName} size={20} className="eh-badge-icon" />
@@ -100,7 +103,7 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
       {/* Name */}
       <h1 className="eh-name">{name}</h1>
 
-      {/* 简版历史见解（总览）—— 并入身份卡、置于详细描述之上，形成先总后分 */}
+      {/* 简版历史见解（总览）：全宽展示，不再与身份图并排 */}
       {insightSummary && (
         <div className="eh-insight">
           <div className="eic-header">
@@ -150,9 +153,9 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
         )}
       </div>
 
-      {/* M90.x: 历史见解（后台固化内容，前端只读）+ 支撑证据（EvidenceList） */}
-      {showInsight && (
-        <>
+      {/* M90.x: 历史见解（后台固化内容，前端只读）+ 身份图并排置于右侧红框位置 */}
+      {showInsight ? (
+        <div className="eh-insight-row">
           <div className="eh-ai">
             {loading ? (
               <span className="eh-ai-label">加载中…</span>
@@ -162,9 +165,13 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
               <span className="eh-ai-label">历史见解待后台生成</span>
             )}
           </div>
-          {evidence.length > 0 && <EvidenceList items={evidence} />}
-        </>
+          {artFigure}
+        </div>
+      ) : (
+        /* 无长历史见解时，身份图回到顶部通栏横幅位置 */
+        artFigure
       )}
+      {showInsight && evidence.length > 0 && <EvidenceList items={evidence} />}
 
       {/* M59-016: Quick actions（深入研究/加入对比 为占位桩，标注"未开放"待规划） */}
       <div className="eh-actions">

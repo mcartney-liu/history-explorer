@@ -172,6 +172,14 @@ export function defaultImageSrc(slotId: string): string {
   if (slotId.startsWith('research_dims.')) {
     return `${import.meta.env.BASE_URL}assets/research/${key}.webp`
   }
+  // 实体身份图（PO 2026-08-15 B 类）：后台未上传自定义图时，
+  // 回退到前端 static 的 184 张静态肖像 /entity-logos/<global_id>.png
+  // （global_id 冒号转下划线，与 EntityHero 的 entityImageUrl 同源）。
+  if (slotId.startsWith('entity_identity.')) {
+    const gid = slotId.slice('entity_identity.'.length)
+    const fn = gid.replace(/:/g, '_')
+    return `${import.meta.env.BASE_URL}entity-logos/${fn}.png`
+  }
   return `${import.meta.env.BASE_URL}assets/cards/card-${key}.jpg`
 }
 

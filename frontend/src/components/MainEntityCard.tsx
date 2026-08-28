@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { useLocale } from '../data/locale'
 import { usePreferences, getDisplayName } from '../lib/preferences'
-import { getEntityLabel, getEntityIcon } from '../data/entity/entityLabels'
+import { getEntityLabel, getEntityIcon, entityImageUrl } from '../data/entity/entityLabels'
 import { Icon } from '../components/ui/Icon'
 import type { IconName } from '../components/ui/Icon'
 
@@ -22,12 +23,18 @@ function MainEntityCard({ mainEntity }: MainEntityCardProps) {
   }
   const { t, locale } = useLocale()
   const [prefs] = usePreferences()
+  const [imgFailed, setImgFailed] = useState(false)
+  const imgSrc = entityImageUrl(mainEntity.global_id)
 
   return (
     <div className="result-section">
       <h3>{t('entity.mainEntity')}</h3>
       <div className="main-entity">
-        <Icon name={getEntityIcon(mainEntity.type) as IconName} size={16} className="me-name-icon" />
+        {imgSrc && !imgFailed ? (
+          <img src={imgSrc} alt={mainEntity.name} className="me-thumb" onError={() => setImgFailed(true)} />
+        ) : (
+          <Icon name={getEntityIcon(mainEntity.type) as IconName} size={16} className="me-name-icon" />
+        )}
         <span className="me-name">{getDisplayName(mainEntity.name, locale, prefs.properNameMode)}</span>
         <span className="me-type">{getEntityLabel(mainEntity.type, locale)}</span>
         <p className="me-desc">{mainEntity.description}</p>

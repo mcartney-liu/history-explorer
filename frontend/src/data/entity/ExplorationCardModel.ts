@@ -29,6 +29,10 @@ export interface ExplorationCardModel {
   meta: Record<string, string>
   /** Thumbnail / avatar image URL (optional) */
   thumbnail?: string
+  /** Static generated entity portrait URL (optional) — e.g. /entity-logos/<globalId>.png.
+   *  When set, the card renders this image in the icon slot and falls back to the
+   *  type Icon on load error. Populated by callers that have a global_id. */
+  image?: string
   /** Click target — entity id, global id, topic slug */
   target: string
   /** Relationship context (if card represents a relation) */

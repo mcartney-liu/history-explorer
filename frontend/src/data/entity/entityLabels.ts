@@ -86,6 +86,22 @@ export function entityTypeFromGlobalId(gid: string): string {
 }
 
 // ============================================================
+// Entity static portrait URL — /entity-logos/
+//
+// 184 张博物馆级暗金肖像位于 frontend/public/entity-logos/，
+// 命名规则：global_id 的冒号 ':' 替换为下划线 '_' 后加 .png
+// （例 ancient_india:civ-maurya -> /entity-logos/ancient_india_civ-maurya.png）。
+// 由 artifacts/entity_prompts/ 的生图提示词生成（翔哥生图、小梦接线）。
+// 无 global_id 时返回 null，调用方据此回退到类型图标（getEntityIcon）。
+// ============================================================
+
+export function entityImageUrl(globalId?: string | null): string | null {
+  if (!globalId) return null
+  const fileName = `${globalId.replace(/:/g, '_')}.png`
+  return `/entity-logos/${fileName}`
+}
+
+// ============================================================
 // Relationship type → Chinese business labels (single source of truth)
 // Mirrors the entity-label pattern above. Keys are the 18 frozen
 // relationship types (lowercase slugs from the schema). Display guarantees:

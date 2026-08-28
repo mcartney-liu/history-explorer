@@ -5,6 +5,7 @@
 // Pure presentational. Consumes ExplorationCardModel.
 // ============================================================
 
+import { useState } from 'react'
 import type { ExplorationCardModel } from '../../data/entity/ExplorationCardModel'
 import { Icon } from '../ui/Icon'
 import type { IconName } from '../ui/Icon'
@@ -28,16 +29,21 @@ export function ExplorationCard({
   variant = 'default',
   onClick,
 }: ExplorationCardProps) {
-  const { title, subtitle, icon, summary, badges, target } = model
+  const { title, subtitle, icon, summary, badges, target, image } = model
   const cls = variantClass[variant]
+  const [imgFailed, setImgFailed] = useState(false)
 
   const handleClick = () => (onClick ? onClick(target) : undefined)
 
   return (
     <article className={cls} onClick={handleClick} role="button" tabIndex={0}>
-      {/* Icon — registry key rendered as inline SVG (no emoji) */}
+      {/* Icon — registry key rendered as inline SVG (no emoji); static portrait overrides when present */}
       <div className="ec-icon">
-        <Icon name={icon as IconName} size={20} />
+        {image && !imgFailed ? (
+          <img src={image} alt={title} className="ec-thumb" onError={() => setImgFailed(true)} />
+        ) : (
+          <Icon name={icon as IconName} size={20} />
+        )}
       </div>
 
       {/* Body */}
