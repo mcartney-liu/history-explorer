@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>History Explorer · 文明星图（闯关探索）</title>
+    <!-- 设计签名字体 Fraunces(展示衬线)/Inter(正文) + Noto Serif SC/Noto Sans SC(中文衬线)，
+         由 @fontsource npm 包经 Vite 打包为同源资源(见 main.ts 顶部 import)，不再依赖外部 CDN，
+         Safari/Firefox 的 Tracking Prevention 不再拦截，离线也可显示。字体栈见 style.css --serif/--sans。 -->
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div id="scene-fallback" aria-hidden="true"></div>
+
+    <!-- C：曲速俯冲辉光遮罩 —— 点星飞进节点时由 JS 驱动透明度(0→1)，介于星图(0)与实体面板(20)之间 -->
+    <div id="warp" aria-hidden="true"></div>
+
+    <!-- 左上品牌：始终独立浮在星图上，不参与任何抽屉/顶栏，默认完全通透 -->
+    <div class="hud-brand">
+      <div class="brand">History <b>Explorer</b></div>
+      <div class="hud-tag">文明星图 · 沉浸式探索</div>
+    </div>
+
+    <!-- 右侧 HUD 抽屉面板：只包含「理解度/已点亮/主线/下一步/音量」，默认缩到只剩小圆钮；点击滑出 -->
+    <div class="hud-drawer-panel" id="hudPanel" aria-hidden="false">
+      <button class="hud-toggle" id="hudToggle" type="button" aria-expanded="false" aria-label="收起 / 展开状态栏" title="收起或展开状态栏"><span class="ht-chev">▾</span></button>
+      <div class="hud-drawer" id="hudDrawer">
+        <div class="hud-deck">
+          <div class="cell cell-understand progress">
+            <span class="k">理解度</span>
+            <div class="progress-row">
+              <span class="dot"></span>
+              <b>0%</b><span class="rank">新手探索者</span>
+            </div>
+            <span class="meter"><i id="hudMeter"></i></span>
+          </div>
+          <div class="cell cell-lit" id="hudSub">已点亮 <b>0</b> / 0 颗星</div>
+          <div class="cell cell-quest"><span class="k">主线</span><span class="v" id="hudQuest"></span></div>
+          <div class="cell cell-next"><span class="k">下一步</span><span class="v next" id="hudNext"></span></div>
+          <button id="soundBtn" class="sound-btn" aria-label="音效开关" title="氛围音效已关闭（点击开启）">🔇</button>
+        </div>
+      </div>
+    </div>
+    <div class="hud-hint">拖拽旋转 · 两指捏合缩放 · 点击星辰 / 星云 / 行星 探索宇宙</div>
+
+    <div class="hover-card" id="hoverCard">
+      <div class="thumb" id="hcThumb"></div>
+      <div class="meta"><b id="hcName"></b><span id="hcCat"></span><span class="hc-truth" id="hcTruth"></span></div>
+    </div>
+
+    <div class="galaxy-badge" id="galaxyBadge">○ 连接后端中…</div>
+    <div class="toast" id="toast"></div>
+
+    <!-- 空域提示条：点中未开放星云 / 背景星辰时弹出，说明"用户开发的空域" -->
+    <div class="void-hint" id="voidHint" aria-live="polite">
+      <button class="vh-close" type="button" aria-label="关闭">×</button>
+      <b class="vh-title"></b>
+      <p class="vh-body"></p>
+      <button class="vh-back" type="button">返回星图总览</button>
+    </div>
+
+    <section class="entity-view" id="entityView" aria-hidden="true">
+      <div class="ev-cosmos" aria-hidden="true"></div>
+      <button class="ev-back" id="evBack">← 后退</button>
+      <button class="ev-fwd" id="evFwd" type="button" title="前进一步（重做被后退取消的导航）">前进 →</button>
+      <button class="ev-toroom" id="evToRoom" type="button" title="进入 3D 展厅（可拖动环视 / 第一人称走进去）">🏛️ 3D 展厅</button>
+      <div class="ev-inner">
+        <canvas id="evEmblem" class="ev-emblem" aria-hidden="true"></canvas>
+        <div class="ev-orbitcap" id="evOrbitCap"></div>
+        <div class="ev-reasons" id="evReasons"></div>
+        <div class="ev-neighbors" id="evNeighbors" hidden></div>
+        <div class="ev-cat" id="evCat"></div>
+        <h1 class="ev-name" id="evName"></h1>
+        <div class="ev-sub" id="evSub"></div>
+        <div class="ev-headstrip">
+          <div class="src" id="evSrc"></div>
+          <div class="truth-badge" id="evTruth"></div>
+        </div>
+        <div class="ev-stage" id="evStage"></div>
+        <div class="ev-cps" id="evCps" aria-live="polite"></div>
+        <div class="ev-gap" id="evGap" hidden></div>
+
+        <div class="ev-hatch" id="evHatch">
+          <div class="card-deck" role="tablist" aria-label="实体分面">
+            <div class="flip-card" data-facet="overview">
+              <div class="flip-card-inner">
+                <button type="button" class="flip-card-front" aria-expanded="false" aria-controls="detail-overview">
+                  <span class="card-corner tl" aria-hidden="true"><span class="rune">✦</span><span class="roman">I</span></span>
+                  <span class="card-corner br" aria-hidden="true"><span class="rune">✦</span><span class="roman">I</span></span>
+                  <span class="card-emblem" aria-hidden="true">◈</span>
+                  <span class="card-title">概览</span>
+                  <span class="card-sub">The Origin</span>
+                </button>
+                <div class="flip-card-back" id="detail-overview" role="tabpanel" aria-hidden="true">
+                  <div class="hatch-detail">
+                    <p class="ev-desc" id="evDesc"></p>
+                    <div class="path-rail" id="pathRail"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flip-card" data-facet="time">
+              <div class="flip-card-inner">
+                <button type="button" class="flip-card-front" aria-expanded="false" aria-controls="detail-time">
+                  <span class="card-corner tl" aria-hidden="true"><span class="rune">☾</span><span class="roman">II</span></span>
+                  <span class="card-corner br" aria-hidden="true"><span class="rune">☾</span><span class="roman">II</span></span>
+                  <span class="card-emblem" aria-hidden="true">⏳</span>
+                  <span class="card-title">时间</span>
+                  <span class="card-sub">The Chronicle</span>
+                </button>
+                <div class="flip-card-back" id="detail-time" role="tabpanel" aria-hidden="true">
+                  <div class="hatch-detail">
+                    <div class="ev-tlribbon" id="evTlRibbon"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flip-card" data-facet="cause">
+              <div class="flip-card-inner">
+                <button type="button" class="flip-card-front" aria-expanded="false" aria-controls="detail-cause">
+                  <span class="card-corner tl" aria-hidden="true"><span class="rune">✶</span><span class="roman">III</span></span>
+                  <span class="card-corner br" aria-hidden="true"><span class="rune">✶</span><span class="roman">III</span></span>
+                  <span class="card-emblem" aria-hidden="true">✶</span>
+                  <span class="card-title">因果</span>
+                  <span class="card-sub">The Cause</span>
+                </button>
+                <div class="flip-card-back" id="detail-cause" role="tabpanel" aria-hidden="true">
+                  <div class="hatch-detail">
+                    <div class="ev-section ai-block" id="evAIBlock">
+                      <h4 id="evAITitle">为什么你会来到这里</h4>
+                      <div class="ai-body" id="evAIBody">
+                        <div class="ai-skeleton"><i></i><i></i><i></i></div>
+                      </div>
+                      <div class="ai-meta" id="evAIMeta"></div>
+                      <div class="ai-cites" id="evAICites"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ev-foot" id="evFoot"></div>
+      </div>
+    </section>
+
+    <!-- 实体 3D 展厅：进入实体后可切到此全屏 3D 房间（拖动环视 / 第一人称走进去），与 2D 面板并存、可随时返回 -->
+    <section class="entity-room" id="entityRoom" aria-hidden="true">
+      <div class="room-top">
+        <button class="room-back" id="roomBack" type="button">← 返回 2D 面板</button>
+        <div class="room-title" id="roomTitle"></div>
+        <button class="room-mode" id="roomMode" type="button" aria-pressed="false" title="切换 环视 / 第一人称走进去">🚶 走进去</button>
+      </div>
+      <div class="room-hint" id="roomHint">拖动旋转环视 · 滚轮拉远拉近</div>
+      <canvas id="roomCanvas" aria-hidden="true"></canvas>
+    </section>
+
+    <!-- 首页氛围层：仅留标题常驻居中；旧说明文字全部收进左下分类面板（默认折叠） -->
+    <div class="landing-hero">
+      <h1>进来<span class="g">好奇</span>，离开<span class="g">更聪明</span>。</h1>
+      <div class="hero-swipe" aria-hidden="true">
+        <span class="hs-text">向上滑动 · 隐入星海</span>
+        <span class="hs-chev"><i></i><i></i></span>
+      </div>
+    </div>
+
+    <!-- 首页分类说明（§31）：左下玻璃悬浮球 → 点击展开 5 个透明玻璃胶囊（无图标、纯文字）；
+         点某胶囊 → 透明全屏 overlay 上字儿渐进式错落淡入对应分类块；浮球常驻、再点收起、点外部收起菜单 -->
+    <div class="cat-dock" id="catDock">
+      <div class="cat-menu" id="catMenu">
+        <button class="cat-btn" type="button" data-cat="quest" aria-pressed="false">玩法</button>
+        <button class="cat-btn" type="button" data-cat="truth" aria-pressed="false">真值层</button>
+        <button class="cat-btn" type="button" data-cat="explore" aria-pressed="false">探索入口</button>
+        <button class="cat-btn" type="button" data-cat="constellation" aria-pressed="false">认知星座</button>
+        <button class="cat-btn" type="button" data-cat="about" aria-pressed="false">关于</button>
+      </div>
+      <button class="cat-fab" id="catFab" type="button" aria-expanded="false" aria-controls="catMenu" aria-label="展开分类说明 · 玩法 / 真值层 / 探索入口 / 认知星座 / 关于">✦</button>
+    </div>
+
+    <div class="cat-overlay" id="infoPanel" aria-hidden="true">
+      <button class="ip-close" id="ipClose" type="button" aria-label="关闭说明">×</button>
+      <div class="ip-body">
+        <!-- 玩法 -->
+        <div class="cat-pane" data-pane="quest" hidden>
+          <div class="sec-head">
+            <div class="tag">闯关模式 · Quest</div>
+            <h2>把探索，变成一场通关冒险</h2>
+            <p>每个主题是一条主线，每一站是一次解谜。进度叫「理解度」——我们奖励你变聪明，不考你背题。</p>
+          </div>
+          <div class="quest">
+            <div class="qstep"><span class="badge">主线</span><h3>01 接任务</h3><p>选一个让你好奇的文明或主题，开启你的第一张探索包。</p></div>
+            <div class="qstep"><span class="badge">路线</span><h3>02 走路线</h3><p>顺着高亮的连续性线索，一站一站走下去，不断层。</p></div>
+            <div class="qstep"><span class="badge">解谜</span><h3>03 读因果</h3><p>点开「为什么」，看懂事件之间真正的因果与传承。</p></div>
+            <div class="qstep"><span class="badge">通关</span><h3>04 点亮星座</h3><p>走过的节点在你私人星图上亮起——这就是你长出的认知。</p></div>
+          </div>
+          <div class="quest-hall" id="questList" style="margin-top: 30px"></div>
+        </div>
+        <!-- 真值层 -->
+        <div class="cat-pane" data-pane="truth" hidden>
+          <div class="sec-head">
+            <div class="tag">真值层 · 我们的护城河</div>
+            <h2>每个说法，都标着「底气的成色」</h2>
+            <p>别处只给你知识点。我们给每个结论附上可信度：谁在争议、为什么存疑、依据来自哪里。</p>
+          </div>
+          <div class="truth-grid">
+            <div class="chip verified"><div class="ic">✓</div><h3>高可信</h3><p>多源交叉印证、学界共识，放心当作认知地基。</p></div>
+            <div class="chip debated"><div class="ic">⚑</div><h3>有争议</h3><p>主流观点并存，我们并列各方论据，把判断权还给你。</p></div>
+            <div class="chip pending"><div class="ic">?</div><h3>待核实</h3><p>线索尚弱或来源单一，明确标「待核实」，绝不伪装成定论。</p></div>
+          </div>
+        </div>
+        <!-- 探索入口 -->
+        <div class="cat-pane" data-pane="explore" hidden>
+          <div class="sec-head">
+            <div class="tag">四类探索对象</div>
+            <h2>四种入口，总有一个接住你的好奇</h2>
+          </div>
+          <div class="cards">
+            <div class="card" data-go="quest"><span class="corner">主线</span><div class="glyph">🏛️</div><h3>主题展馆</h3><p>一个文明或一个时代，像走进一座策展精良的博物馆。</p><span class="go">进入展馆 →</span></div>
+            <div class="card" data-go="graph"><span class="corner">节点</span><div class="glyph">🔭</div><h3>实体图谱</h3><p>人物、技术、文明的节点，与彼此的关系一目了然。</p><span class="go">展开关系 →</span></div>
+            <div class="card" data-go="roam"><span class="corner">路线</span><div class="glyph">🧭</div><h3>探索包</h3><p>AI 导游写好的路线，带你在时间线上顺畅穿行。</p><span class="go">开始漫游 →</span></div>
+            <div class="card" data-go="cause"><span class="corner">解谜</span><div class="glyph">💡</div><h3>因果对象</h3><p>「为什么会发生」的论证，把因果讲透讲真。</p><span class="go">追问为什么 →</span></div>
+          </div>
+        </div>
+        <!-- 认知星座 -->
+        <div class="cat-pane" data-pane="constellation" hidden>
+          <div class="sec-head">
+            <div class="tag">认知留痕 · Constellation</div>
+            <h2>你的认知星座</h2>
+            <p>离开时，你看到的不只是「看过什么」，而是自己点亮的一片星空。暗着的是还没探索的支线——随时回来，继续点亮。</p>
+          </div>
+          <div class="const-wrap">
+            <div class="const-viz" id="constViz" aria-label="你点亮的认知星座"></div>
+            <div class="const-side">
+              <div class="const-stat">
+                已点亮 <b id="constLit">0</b> / <span id="constTotal">—</span> 个真实节点
+              </div>
+              <div class="const-legend">
+                <span class="cl v">高可信</span><span class="cl d">有争议</span><span class="cl p">待核实</span><span class="cl o">未探索</span>
+              </div>
+              <h4 class="ach-title">成就徽章</h4>
+              <div class="ach-row" id="achRow"></div>
+              <div class="const-named" id="constNamed"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 关于 -->
+        <div class="cat-pane" data-pane="about" hidden>
+          <div class="sec-head">
+            <div class="tag">关于 · Article 0</div>
+            <h2>进来好奇，离开更聪明</h2>
+            <p>这是我们做 History Explorer 的唯一铁律：你离场时，应该比进来时更懂一点这个世界。每一个结论都标着可信度，绝不把推测伪装成定论。</p>
+          </div>
+          <div class="trust">
+            <div class="t"><b>3 态</b><span>真值层可信度评级</span></div>
+            <div class="t"><b>Article 0</b><span>进来好奇，离开更聪明</span></div>
+          </div>
+          <div class="final">
+            <h2>准备好，让好奇心带路了吗？</h2>
+            <p>无需注册即可开始第一关。你越探索，星空越亮。</p>
+            <div class="cta-row">
+              <button class="btn btn-primary" data-go="quest" type="button">▶ 选择一条主线</button>
+              <button class="btn btn-ghost" data-open-cat="truth" type="button">了解真值层</button>
+            </div>
+          </div>
+          <footer>
+            <div class="container">
+              <div class="brand">History Explorer</div>
+              <div>进来好奇 · 离开更聪明 · 真值层 © 2026</div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <div class="quest-done" id="questDone" aria-hidden="true">
+      <div class="qd-panel">
+        <button class="qd-close" aria-label="关闭">×</button>
+        <h2 class="qd-title"></h2>
+        <p class="qd-sub">你刚走完一条完整的文明线索。这是你连出的认知星座——每一步都基于真实图谱关系：</p>
+        <ol class="qd-chain"></ol>
+        <div class="qd-bridges" id="qdBridges"></div>
+        <div class="qd-ai">
+          <h4>这一趟，你多懂了什么</h4>
+          <div class="qd-summary ai-body"></div>
+          <div class="qd-meta ai-meta"></div>
+        </div>
+        <div class="qd-echo" id="qdEcho">
+          <h4>认知回音壁 · 你懂了什么</h4>
+          <p class="qd-gap" id="qdGap" hidden></p>
+          <div class="qd-takeaways" id="qdTakeaways"></div>
+          <div class="qd-reflect">
+            <span class="qd-reflect-q">你觉得自己变聪明了吗？</span>
+            <div class="qd-stars" id="qdStars" role="group" aria-label="自我评估">
+              <button type="button" data-v="1">更糊涂了</button>
+              <button type="button" data-v="2">略懂一点</button>
+              <button type="button" data-v="3">真的更聪明</button>
+            </div>
+          </div>
+        </div>
+        <div class="qd-name">
+          <label>给这趟星座起个名字，留痕于你的认知星座墙：</label>
+          <div class="qd-name-row">
+            <input class="qd-input" type="text" maxlength="24" placeholder="例如：孔雀长明" />
+            <button class="qd-name-btn btn btn-primary">收下这颗星座 ⭐</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="onboard-tip" id="onboardTip" hidden>
+      <span class="ob-text"></span>
+      <button class="ob-x" id="obX" type="button">知道啦</button>
+    </div>
+
+    <div class="gap-prompt" id="gapPrompt" aria-hidden="true">
+      <div class="gap-card">
+        <button class="gap-x" aria-label="关闭">×</button>
+        <h3>出发前，先抛一个问题</h3>
+        <p>这趟你想搞清楚什么？带着疑问上路，探索会更有方向。也可以空手出发，随时能改。</p>
+        <input class="gap-input" type="text" maxlength="60" placeholder="例如：孔雀王朝为什么能统一那么大的地盘？" />
+        <div class="gap-row">
+          <button class="gap-skip btn" type="button">空手出发</button>
+          <button class="gap-go btn btn-primary" type="button">带着疑问出发 →</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
