@@ -463,6 +463,7 @@ function selectEntity(gid: string, chosenScore?: number, fromHistory = false) {
     renderHudStatus(); // §9.2 frontier 刷新后，自由漫游的"下一步建议"同步更新
     if (isNew) galaxy?.spawnIgnition(gid); // M3：到达瞬间点火
     const stage = currentStageInfo();
+    galaxy?.pause(); // 实体页打开：暂停后台 Three.js 渲染，避免与 cosmos 2D 争夺 GPU
     openEntityView(
       gid,
       node,
@@ -668,6 +669,7 @@ function navigateHistory(target: string) {
     }
     disposeEntityEmblem(); // 释放实体页 3D 徽标的 WebGL 上下文
     galaxy?.flyOut(); // C：从俯冲终点拉回星图总览，恢复可自由探索 / 自转
+    galaxy?.resume(); // 回到星图：恢复后台渲染
   } else {
     selectEntity(target, undefined, true); // 历史回退：不重复入栈
   }

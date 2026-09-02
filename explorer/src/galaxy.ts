@@ -71,6 +71,7 @@ export class GalaxyView {
   private hovered = -1;
   private reduce = false;
   private disposed = false;
+  private paused = false; // 实体页打开时暂停后台渲染，释放 GPU 给 cosmos
   private flying = false; // 运镜中：暂停自转 + 让 flyTo 接管相机
   private flashIndex = -1; // M3 点火闪光：正在提亮的实例下标
   private flashUntil = 0;
@@ -1045,8 +1046,16 @@ export class GalaxyView {
     return m[type] || '✦';
   }
 
+  pause() { this.paused = true; }
+  resume() {
+    if (!this.paused || this.disposed) return;
+    this.paused = false;
+    requestAnimationFrame(() => this.animate());
+  }
+
   private animate() {
     if (this.disposed) return;
+    if (this.paused) return;
     requestAnimationFrame(() => this.animate());
     const el = performance.now() / 1000;
     this.nebulae.forEach((n, i) => {

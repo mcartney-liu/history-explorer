@@ -1060,3 +1060,134 @@ footer .brand { font-family: var(--serif); color: var(--paper); font-size: 16px;
   .qd-take, .gap-prompt.open, .gap-card { animation: none; }
 }
 
+/* ===== 实体页 · 单屏清爽宇宙展厅（覆盖旧 flip-card 布局） ===== */
+
+/* 底层宇宙画布容器：让 canvas 占满整个实体页 */
+.entity-view .ev-cosmos { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.entity-view .ev-cosmos canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* 覆盖层：让实体页背景从旧渐变切换为纯深空 #05070d（画布会绘制其余内容） */
+.entity-view { background: #05070d; }
+
+/* 导航按钮：提高层级，使用玻璃质感 */
+.entity-view .ev-back,
+.entity-view .ev-fwd,
+.entity-view .ev-toroom { background: rgba(12, 18, 33, 0.72); border-color: rgba(120, 160, 220, 0.22); }
+.entity-view .ev-back:hover,
+.entity-view .ev-fwd:hover:not(:disabled),
+.entity-view .ev-toroom:hover { border-color: var(--holo); }
+
+/* 内容外壳：去旧玻璃框，让画布从边缘透出 */
+.entity-view .ev-inner { max-width: 960px; padding: 0 20px 40px; background: transparent; border: none; box-shadow: none; }
+
+/* 英雄区：紧凑居中，标题直接在五角星下方 */
+.entity-view .ev-hero { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 68px 0 10px; text-align: center; }
+.entity-view .ev-emblem { width: 100%; height: clamp(200px, 28vh, 300px); margin: 0 auto; border-radius: 0; background: transparent; }
+.entity-view .ev-emblem-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.entity-view .ev-orbitcap { position: absolute; top: clamp(200px, 28vh, 300px); left: 0; right: 0; text-align: center; font-size: 11px; letter-spacing: 0.5px; color: rgba(238, 242, 248, 0.7); pointer-events: none; }
+.entity-view .ev-hero-text { position: relative; margin-top: 2px; text-shadow: 0 2px 24px rgba(0,0,0,0.7); pointer-events: none; }
+.entity-view .ev-cat { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--holo); margin-bottom: 4px; }
+.entity-view .ev-name { font-family: var(--serif); font-size: clamp(38px, 6vw, 64px); margin: 0; color: #e8b04b; line-height: 1.05; letter-spacing: 2px; }
+.entity-view .ev-sub { font-family: var(--sans); font-size: 14px; color: rgba(238, 242, 248, 0.9); margin-top: 8px; letter-spacing: 1px; }
+.entity-view .ev-hero-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; pointer-events: auto; }
+.entity-view .ev-hero-meta .truth-badge,
+.entity-view .ev-hero-meta .ev-stage,
+.entity-view .ev-hero-meta .ev-cps { margin-top: 0; }
+
+/* SVG 类型化科幻徽标动画 */
+.entity-view .ev-core-group,
+.entity-view .ev-core-body { transform-origin: 210px 145px; }
+.entity-view .ev-core-pulse { animation: evCorePulse 3.8s ease-in-out infinite; }
+@keyframes evCorePulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(232,176,75,0.45)); }
+  50% { transform: scale(1.035); filter: drop-shadow(0 0 24px rgba(232,176,75,0.8)); }
+}
+.entity-view .ev-halo { transform-origin: 210px 145px; }
+.entity-view .ev-halo-pulse { animation: evHaloPulse 5.2s ease-in-out infinite; }
+@keyframes evHaloPulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+.entity-view .ev-ring-drift { transform-origin: 210px 145px; animation: evRingDrift 18s ease-in-out infinite alternate; }
+@keyframes evRingDrift {
+  0% { transform: rotate(var(--ring-a, 0deg)) scale(1); opacity: 0.9; }
+  100% { transform: rotate(calc(var(--ring-a, 0deg) + 8deg)) scale(1.03); opacity: 1; }
+}
+.entity-view .ev-crystal-float { transform-origin: 210px 145px; animation: evCrystalFloat 4.8s ease-in-out infinite; }
+@keyframes evCrystalFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(1.5deg); }
+}
+.entity-view .ev-ray-fade { animation: evRayFade 3.2s ease-in-out infinite alternate; }
+@keyframes evRayFade {
+  0% { opacity: 0.35; }
+  100% { opacity: 0.85; }
+}
+.entity-view .ev-orbits { transform-origin: 210px 145px; }
+.entity-view .ev-orbit-spin { animation: evOrbitSpin 40s linear infinite; }
+@keyframes evOrbitSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 三扇玻璃质感卡片 */
+.entity-view .ev-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 18px 0 22px; }
+.entity-view .ev-card { background: rgba(12, 18, 33, 0.62); border: 1px solid rgba(120, 160, 220, 0.18); border-radius: 20px; backdrop-filter: blur(14px); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.entity-view .ev-card:hover { transform: translateY(-4px); border-color: rgba(232, 176, 75, 0.42); box-shadow: 0 28px 70px -24px rgba(0,0,0,0.55), inset 0 0 30px rgba(232, 176, 75, 0.04); }
+.entity-view .ev-card-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid rgba(120, 160, 220, 0.12); background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent); }
+.entity-view .ev-card-icon { color: #e8b04b; font-size: 18px; text-shadow: 0 0 10px rgba(232,176,75,0.35); }
+.entity-view .ev-card-title { font-family: var(--serif); font-size: 17px; color: var(--paper); letter-spacing: 1px; }
+.entity-view .ev-card-sub { margin-left: auto; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(238,242,248,0.42); }
+.entity-view .ev-card-body { padding: 16px; flex: 1; min-height: 120px; color: #eef2f8; font-family: var(--sans); font-size: 13.5px; line-height: 1.65; }
+.entity-view .ev-desc { margin: 0; font-size: 13.5px; line-height: 1.65; color: #eef2f8; }
+.entity-view .ev-tlribbon { width: 100%; }
+
+/* 关系漫游区：紧凑一屏 */
+.entity-view .ev-roam { position: relative; margin-top: 14px; padding: 18px 22px 24px; background: linear-gradient(180deg, rgba(12,18,33,0.38), rgba(10,14,26,0.22)); border: 1px solid rgba(120,160,220,0.12); border-radius: 24px; backdrop-filter: blur(10px); }
+.entity-view .ev-roam-head { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 14px; }
+.entity-view .ev-roam-head .ev-roam-title { font-family: var(--serif); font-size: 20px; color: #e8b04b; margin: 0; letter-spacing: 2px; }
+.entity-view .ev-roam-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(232,176,75,0.55); box-shadow: 0 0 6px rgba(232,176,75,0.6); }
+.entity-view .ev-constellation { position: relative; width: 100%; height: 150px; margin-bottom: 14px; }
+.entity-view .ev-constellation svg { display: block; width: 100%; height: 100%; }
+.entity-view .ev-constellation .cstar { fill: #e8b04b; filter: drop-shadow(0 0 8px rgba(232,176,75,0.8)); }
+.entity-view .ev-constellation .cline { stroke: rgba(232,176,75,0.32); stroke-width: 1.5; stroke-linecap: round; }
+.entity-view .ev-constellation .cstar-label { font-size: 11px; fill: rgba(238,242,248,0.8); text-anchor: middle; }
+
+/* 关系漫游卡片 */
+.entity-view .ev-relation-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.entity-view .ev-relation-cards:empty { display: none; }
+.entity-view .evr-card { display: flex; align-items: flex-start; gap: 12px; text-align: left; background: rgba(12,18,33,0.52); border: 1px solid rgba(120,160,220,0.14); border-radius: 16px; padding: 14px 16px; color: #eef2f8; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.2s; }
+.entity-view .evr-card:hover { border-color: rgba(232,176,75,0.38); background: rgba(20,28,48,0.62); transform: translateY(-2px); }
+.entity-view .evr-card .evr-icon { flex-shrink: 0; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: rgba(232,176,75,0.14); color: #e8b04b; font-size: 14px; }
+.entity-view .evr-card .evr-meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.entity-view .evr-card .evr-name { font-size: 14px; font-weight: 600; color: var(--paper); }
+.entity-view .evr-card .evr-prefix { display: none; }
+.entity-view .evr-card .evr-why { font-size: 12px; color: var(--paper-dim); line-height: 1.5; }
+
+.entity-view .ev-reasons[hidden], .entity-view .ev-neighbors[hidden] { display: none; }
+.entity-view .ev-darkmatter { position: absolute; right: 18px; bottom: 18px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: rgba(26, 16, 36, 0.55); border: 1px solid rgba(150, 90, 220, 0.28); backdrop-filter: blur(8px); color: rgba(220, 210, 255, 0.85); font-size: 12px; letter-spacing: 0.5px; }
+.entity-view .ev-darkmatter .ev-dm-mist { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, rgba(150,90,220,0.9), transparent 70%); box-shadow: 0 0 12px rgba(150,90,220,0.5); }
+
+/* 隐藏旧技术信息容器 */
+.entity-view .ev-src[hidden], .entity-view .ev-foot[hidden] { display: none; }
+
+/* 进场动画 */
+.entity-view.open .ev-hero { animation: evChildIn 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.12s both; }
+.entity-view.open .ev-cards { animation: evChildIn 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.24s both; }
+.entity-view.open .ev-roam { animation: evChildIn 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.34s both; }
+
+/* 旧 flip-card 布局不再使用：整屏隐藏 */
+.entity-view .ev-hatch { display: none !important; }
+
+@media (max-width: 860px) {
+  .entity-view .ev-cards { grid-template-columns: 1fr; }
+  .entity-view .ev-relation-cards { grid-template-columns: 1fr; }
+  .entity-view .ev-hero { padding-top: 74px; }
+  .entity-view .ev-darkmatter { position: static; margin-top: 14px; justify-content: center; }
+}
+@media (max-width: 560px) {
+  .entity-view .ev-name { font-size: clamp(32px, 10vw, 46px); }
+  .entity-view .ev-hero-meta { gap: 6px; }
+  .entity-view .ev-roam { padding: 18px 16px; }
+  .entity-view .ev-roam-head { gap: 8px; }
+}

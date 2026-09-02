@@ -3,6 +3,7 @@ import { ACHIEVEMENTS, CURATED_QUESTS } from './quest';
 import type { EntityNode, Progress, Quest, Truth, RelatedRec, Citation, StageInfo } from './types';
 import { createEntityEmblem, type EntityEmblemHandle, type RelNode } from './entity3d';
 import { createEntityRoom, type EntityRoomHandle, type RoomInfo } from './entityRoom';
+import { mountEntityCosmos, type CosmosMount } from './entity-cosmos';
 
 const TRUTH_ZH: Record<Truth, string> = { verified: '高可信', debated: '有争议', pending: '待核实' };
 const TRUTH_COLOR: Record<Truth, string> = { verified: '#5fd38a', debated: '#e8b04b', pending: '#6fa8dc' };
@@ -150,20 +151,95 @@ export function renderQuestHall(
 }
 
 function truthBadge(el: HTMLElement, truth: Truth) {
-  el.textContent = '真值层 · ' + TRUTH_ZH[truth];
+  el.textContent = TRUTH_ZH[truth];
   el.style.color = TRUTH_COLOR[truth];
   el.style.borderColor = TRUTH_COLOR[truth];
 }
 
+// 按实体类型生成诗意副标题（不显示技术 ID）
+function poeticSubtitle(type: string, zhType: string): string {
+  switch (type) {
+    case 'Civilization': return '文明星图 · 人类共同体的思想恒星';
+    case 'Person': return '历史人物 · 照亮文明的思想星辰';
+    case 'Technology': return '技术节点 · 改变文明进程的发明';
+    case 'Idea': return '中华文明的思想恒星';
+    case 'Location': return '地理坐标 · 文明交汇的空间锚点';
+    case 'Event': return '历史事件 · 文明演化的关键节拍';
+    case 'Religion': return '精神传统 · 超越时代的信仰之光';
+    case 'Time Period': return '时代节点 · 文明长河中的坐标';
+    default: return (zhType || '实体') + ' · 星图中的一颗真实节点';
+  }
+}
+
+// 渲染「相关星」迷你星座图：6 个金色光点 + 半透明连线
+function renderRelConstellation(container: HTMLElement | null, nodes: RelNode[]) {
+  if (!container) return;
+  container.innerHTML = '';
+  const picks = nodes.slice(0, 6);
+  if (!picks.length) {
+    container.innerHTML = '<div class="ev-graph-empty">暂无关联星</div>';
+    return;
+  }
+  const W = 360;
+  const H = 180;
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.setAttribute('role', 'img');
+  const positions = picks.map((_, i) => {
+    const t = i / Math.max(1, picks.length - 1);
+    const angle = Math.PI * 0.15 + t * Math.PI * 1.7 + (i % 2 ? 0.18 : -0.12);
+    const r = 55 + (i % 3) * 24;
+    return { x: W / 2 + Math.cos(angle) * r, y: H / 2 + Math.sin(angle) * r * 0.6 };
+  });
+  // 连线：相邻 + 跳连，形成星座感
+  for (let i = 0; i < positions.length; i++) {
+    const a = positions[i];
+    const b = positions[(i + 1) % positions.length];
+    const line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', String(a.x));
+    line.setAttribute('y1', String(a.y));
+    line.setAttribute('x2', String(b.x));
+    line.setAttribute('y2', String(b.y));
+    line.setAttribute('class', 'cline');
+    svg.appendChild(line);
+    const c = positions[(i + 2) % positions.length];
+    if (picks.length > 3) {
+      const cross = document.createElementNS(SVG_NS, 'line');
+      cross.setAttribute('x1', String(a.x)); cross.setAttribute('y1', String(a.y));
+      cross.setAttribute('x2', String(c.x)); cross.setAttribute('y2', String(c.y));
+      cross.setAttribute('class', 'cline');
+      svg.appendChild(cross);
+    }
+  }
+  picks.forEach((n, i) => {
+    const { x, y } = positions[i];
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('cx', String(x));
+    circle.setAttribute('cy', String(y));
+    circle.setAttribute('r', n.recommended ? '5' : '3.5');
+    circle.setAttribute('class', 'cstar');
+    svg.appendChild(circle);
+    const label = document.createElementNS(SVG_NS, 'text');
+    label.setAttribute('x', String(x));
+    label.setAttribute('y', String(y + 18));
+    label.setAttribute('class', 'cstar-label');
+    label.textContent = n.name.length > 5 ? n.name.slice(0, 4) + '…' : n.name;
+    svg.appendChild(label);
+  });
+  container.appendChild(svg);
+}
+
 // --- 实体页 3D 徽标 + 视差倾斜（让平面板"浮"起来，与星图 3D 风格统一）-----------
 let emblem: EntityEmblemHandle | null = null;
+let cosmos: CosmosMount | null = null;
 let tiltCleanup: (() => void) | null = null;
 
 function mountEntityEmblem(type: string, truth: Truth) {
-  const cv = document.getElementById('evEmblem') as HTMLCanvasElement | null;
-  if (!cv) return;
+  const el = document.getElementById('evEmblem') as HTMLElement | null;
+  if (!el) return;
   if (emblem) emblem.dispose();
-  emblem = createEntityEmblem(cv);
+  emblem = createEntityEmblem(el);
   emblem.setType(type, truth as string);
 }
 
@@ -192,11 +268,15 @@ function wireEntityTilt() {
   };
 }
 
-// 返回星图 / 切换实体前释放徽标的 WebGL 上下文（避免第二个 GL context 常驻）
+// 返回星图 / 切换实体前释放徽标与宇宙背景（避免多个渲染上下文常驻）
 export function disposeEntityEmblem() {
   if (emblem) {
     emblem.dispose();
     emblem = null;
+  }
+  if (cosmos) {
+    cosmos.dispose();
+    cosmos = null;
   }
   if (tiltCleanup) {
     tiltCleanup();
@@ -775,12 +855,14 @@ export async function openEntityView(
 
   (document.getElementById('evCat') as HTMLElement).textContent = (snap.zhType || '实体') + ' · 真实历史节点';
   (document.getElementById('evName') as HTMLElement).textContent = snap.n;
-  (document.getElementById('evSub') as HTMLElement).textContent = '文明星图 · ' + gid;
+  (document.getElementById('evSub') as HTMLElement).textContent = poeticSubtitle(snap.type || '', snap.zhType || '实体');
   (document.getElementById('evDesc') as HTMLElement).textContent = snap.desc || '';
   truthBadge(tb as HTMLElement, snap.truth);
-  const src = document.getElementById('evSrc') as HTMLElement;
-  src.textContent = '○ 离线快照（演示数据）';
-  src.className = 'src offline';
+  // 「宇宙展厅」背景：挂载一次、跨换站复用，离开时由 disposeEntityEmblem 释放
+  if (!cosmos) {
+    const cosmosEl = document.getElementById('evCosmos') as HTMLElement | null;
+    if (cosmosEl) cosmos = mountEntityCosmos(cosmosEl);
+  }
   (document.getElementById('evTlRibbon') as HTMLElement).innerHTML = '';
   ev.classList.add('open');
   ev.setAttribute('aria-hidden', 'false');
@@ -810,8 +892,11 @@ export async function openEntityView(
     if (ent.name) (document.getElementById('evName') as HTMLElement).textContent = ent.name;
     relData = Array.isArray(ent.relationships) ? ent.relationships : [];
     tls = Array.isArray(ent.timeline) ? ent.timeline : [];
-    src.textContent = '● 实时后端 · ' + gid + (relData.length ? ' · ' + relData.length + ' 条关系' : '');
-    src.className = 'src live';
+    const srcEl = document.getElementById('evSrc') as HTMLElement | null;
+    if (srcEl) {
+      srcEl.textContent = relData.length ? '已连上 ' + relData.length + ' 条文明脉络' : '已载入真实历史节点';
+      srcEl.className = 'src live';
+    }
   }
 
   if (ins) {
@@ -846,6 +931,8 @@ export async function openEntityView(
     emblem.setRelations(relNodes);
     emblem.onPick((gid, score) => onNext(gid, score));
   }
+  // 第三屏「相关星」迷你星座图：纯视觉呼应，不显示任何技术 ID
+  renderRelConstellation(document.getElementById('evConstellation') as HTMLElement | null, relNodes);
   const orbitCap = document.getElementById('evOrbitCap') as HTMLElement | null;
   if (orbitCap) {
     const valid = relNodes.filter((n) => n.recommended).length;
@@ -864,31 +951,27 @@ export async function openEntityView(
         : '');
     orbitCap.innerHTML = '<span class="oc-hint">' + hint + '</span>' + legend;
   }
-  // D. 下一站归因：把后端 related-entities 的 reasons（中文多理由）显式呈现，
-  // 让用户看见「为什么推这条」，而非黑箱推荐（呼应 Article 0 真值层不编造）
-  const reasonsEl = document.getElementById('evReasons');
-  if (reasonsEl) {
-    const withReason = recs.filter((r) => r.target_entity?.global_id && (r.reasons || []).length).slice(0, 4);
-    reasonsEl.innerHTML = '';
+  // D. 关系漫游卡：把后端 related-entities 的 reasons 显式呈现为 3 张清爽卡片
+  const relationCardsEl = document.getElementById('evRelationCards');
+  if (relationCardsEl) {
+    relationCardsEl.innerHTML = '';
+    const withReason = recs.filter((r) => r.target_entity?.global_id).slice(0, 3);
     if (withReason.length) {
-      const head = document.createElement('div');
-      head.className = 'evr-head';
-      head.textContent = '为什么推这条（基于你的后端关系）';
-      reasonsEl.appendChild(head);
       withReason.forEach((r) => {
         const tier = r.score && r.score >= 0.7 ? 'sure' : r.score && r.score >= 0.4 ? 'debated' : 'weak';
-        const prefix = tier === 'sure' ? '◆ ' : tier === 'debated' ? '⚑ ' : '· ';
-        const item = document.createElement('div');
-        item.className = 'evr-item';
-        const nm = document.createElement('span');
-        nm.className = 'evr-name';
-        nm.textContent = prefix + (r.target_entity.name || nameOf(r.target_entity.global_id));
-        const why = document.createElement('span');
-        why.className = 'evr-why';
-        why.textContent = (r.reasons || [])[0] || '';
-        item.appendChild(nm);
-        item.appendChild(why);
-        reasonsEl.appendChild(item);
+        const prefix = tier === 'sure' ? '◆' : tier === 'debated' ? '⚑' : '·';
+        const name = r.target_entity.name || nameOf(r.target_entity.global_id);
+        const why = (r.reasons || [])[0] || '与当前节点存在文明脉络关联';
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'evr-card';
+        card.innerHTML =
+          '<span class="evr-icon" aria-hidden="true">✦</span>' +
+          '<span class="evr-meta"><b class="evr-name">' + esc(name) + '</b>' +
+          '<span class="evr-prefix">' + prefix + '</span>' +
+          '<span class="evr-why">' + esc(why) + '</span></span>';
+        card.addEventListener('click', () => onNext(r.target_entity.global_id, typeof r.score === 'number' ? r.score : undefined));
+        relationCardsEl.appendChild(card);
       });
     }
   }
@@ -897,8 +980,7 @@ export async function openEntityView(
   // 方案A·空间邻居：列出"附近在空间上离它最近的星"，点一下平滑飞过去（以该星为新锚点）
   renderNeighbors(document.getElementById('evNeighbors') as HTMLElement | null, neighbors || [], onNext);
 
-  (document.getElementById('evFoot') as HTMLElement).textContent =
-    '数据来源：你的后端 GET /api/v1/entity/' + gid;
+  (document.getElementById('evFoot') as HTMLElement).textContent = '';
 
   await aiTask;
 }

@@ -60,88 +60,92 @@
     </div>
 
     <section class="entity-view" id="entityView" aria-hidden="true">
-      <div class="ev-cosmos" aria-hidden="true"></div>
+      <div class="ev-cosmos" id="evCosmos" aria-hidden="true"></div>
       <button class="ev-back" id="evBack">← 后退</button>
       <button class="ev-fwd" id="evFwd" type="button" title="前进一步（重做被后退取消的导航）">前进 →</button>
       <button class="ev-toroom" id="evToRoom" type="button" title="进入 3D 展厅（可拖动环视 / 第一人称走进去）">🏛️ 3D 展厅</button>
       <div class="ev-inner">
-        <canvas id="evEmblem" class="ev-emblem" aria-hidden="true"></canvas>
-        <div class="ev-orbitcap" id="evOrbitCap"></div>
-        <div class="ev-reasons" id="evReasons"></div>
-        <div class="ev-neighbors" id="evNeighbors" hidden></div>
-        <div class="ev-cat" id="evCat"></div>
-        <h1 class="ev-name" id="evName"></h1>
-        <div class="ev-sub" id="evSub"></div>
-        <div class="ev-headstrip">
-          <div class="src" id="evSrc"></div>
-          <div class="truth-badge" id="evTruth"></div>
-        </div>
-        <div class="ev-stage" id="evStage"></div>
-        <div class="ev-cps" id="evCps" aria-live="polite"></div>
-        <div class="ev-gap" id="evGap" hidden></div>
-
-        <div class="ev-hatch" id="evHatch">
-          <div class="card-deck" role="tablist" aria-label="实体分面">
-            <div class="flip-card" data-facet="overview">
-              <div class="flip-card-inner">
-                <button type="button" class="flip-card-front" aria-expanded="false" aria-controls="detail-overview">
-                  <span class="card-corner tl" aria-hidden="true"><span class="rune">✦</span><span class="roman">I</span></span>
-                  <span class="card-corner br" aria-hidden="true"><span class="rune">✦</span><span class="roman">I</span></span>
-                  <span class="card-emblem" aria-hidden="true">◈</span>
-                  <span class="card-title">概览</span>
-                  <span class="card-sub">The Origin</span>
-                </button>
-                <div class="flip-card-back" id="detail-overview" role="tabpanel" aria-hidden="true">
-                  <div class="hatch-detail">
-                    <p class="ev-desc" id="evDesc"></p>
-                    <div class="path-rail" id="pathRail"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flip-card" data-facet="time">
-              <div class="flip-card-inner">
-                <button type="button" class="flip-card-front" aria-expanded="false" aria-controls="detail-time">
-                  <span class="card-corner tl" aria-hidden="true"><span class="rune">☾</span><span class="roman">II</span></span>
-                  <span class="card-corner br" aria-hidden="true"><span class="rune">☾</span><span class="roman">II</span></span>
-                  <span class="card-emblem" aria-hidden="true">⏳</span>
-                  <span class="card-title">时间</span>
-                  <span class="card-sub">The Chronicle</span>
-                </button>
-                <div class="flip-card-back" id="detail-time" role="tabpanel" aria-hidden="true">
-                  <div class="hatch-detail">
-                    <div class="ev-tlribbon" id="evTlRibbon"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flip-card" data-facet="cause">
-              <div class="flip-card-inner">
-                <button type="button" class="flip-card-front" aria-expanded="false" aria-controls="detail-cause">
-                  <span class="card-corner tl" aria-hidden="true"><span class="rune">✶</span><span class="roman">III</span></span>
-                  <span class="card-corner br" aria-hidden="true"><span class="rune">✶</span><span class="roman">III</span></span>
-                  <span class="card-emblem" aria-hidden="true">✶</span>
-                  <span class="card-title">因果</span>
-                  <span class="card-sub">The Cause</span>
-                </button>
-                <div class="flip-card-back" id="detail-cause" role="tabpanel" aria-hidden="true">
-                  <div class="hatch-detail">
-                    <div class="ev-section ai-block" id="evAIBlock">
-                      <h4 id="evAITitle">为什么你会来到这里</h4>
-                      <div class="ai-body" id="evAIBody">
-                        <div class="ai-skeleton"><i></i><i></i><i></i></div>
-                      </div>
-                      <div class="ai-meta" id="evAIMeta"></div>
-                      <div class="ai-cites" id="evAICites"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <!-- 第一屏：英雄区 — 宇宙中的思想恒星 -->
+        <div class="ev-hero">
+          <div id="evEmblem" class="ev-emblem" aria-hidden="true"></div>
+          <div class="ev-orbitcap" id="evOrbitCap"></div>
+          <div class="ev-hero-text">
+            <div class="ev-cat" id="evCat"></div>
+            <h1 class="ev-name" id="evName"></h1>
+            <div class="ev-sub" id="evSub"></div>
+            <div class="ev-hero-meta">
+              <div class="truth-badge" id="evTruth"></div>
+              <div class="ev-stage" id="evStage"></div>
+              <div class="ev-cps" id="evCps" aria-live="polite"></div>
             </div>
           </div>
         </div>
 
-        <div class="ev-foot" id="evFoot"></div>
+        <!-- 第二屏：三扇玻璃卡片 — 概览 / 时间 / 因果 -->
+        <div class="ev-cards" role="region" aria-label="实体分面">
+          <article class="ev-card" data-facet="overview">
+            <header class="ev-card-head">
+              <span class="ev-card-icon" aria-hidden="true">◈</span>
+              <span class="ev-card-title">概览</span>
+              <span class="ev-card-sub">The Origin</span>
+            </header>
+            <div class="ev-card-body" id="evCardOverview">
+              <p class="ev-desc" id="evDesc"></p>
+              <div class="path-rail" id="pathRail"></div>
+            </div>
+          </article>
+          <article class="ev-card" data-facet="time">
+            <header class="ev-card-head">
+              <span class="ev-card-icon" aria-hidden="true">☾</span>
+              <span class="ev-card-title">时间</span>
+              <span class="ev-card-sub">The Chronicle</span>
+            </header>
+            <div class="ev-card-body" id="evCardTime">
+              <div class="ev-tlribbon" id="evTlRibbon"></div>
+            </div>
+          </article>
+          <article class="ev-card" data-facet="cause">
+            <header class="ev-card-head">
+              <span class="ev-card-icon" aria-hidden="true">✶</span>
+              <span class="ev-card-title">因果</span>
+              <span class="ev-card-sub">The Cause</span>
+            </header>
+            <div class="ev-card-body" id="evCardCause">
+              <div class="ev-section ai-block" id="evAIBlock">
+                <h4 id="evAITitle">为什么你会来到这里</h4>
+                <div class="ai-body" id="evAIBody">
+                  <div class="ai-skeleton"><i></i><i></i><i></i></div>
+                </div>
+                <div class="ai-meta" id="evAIMeta"></div>
+                <div class="ai-cites" id="evAICites"></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- 关系漫游区：星座图 + 三个关联卡 + 暗物质提示 -->
+        <div class="ev-roam" role="region" aria-label="关系漫游">
+          <div class="ev-roam-head">
+            <span class="ev-roam-dot"></span>
+            <span class="ev-roam-dot"></span>
+            <h3 class="ev-roam-title">关系漫游</h3>
+            <span class="ev-roam-dot"></span>
+            <span class="ev-roam-dot"></span>
+          </div>
+          <div class="ev-constellation" id="evConstellation" aria-label="相关星点线图"></div>
+          <div class="ev-relation-cards" id="evRelationCards"></div>
+          <div class="ev-reasons" id="evReasons" hidden></div>
+          <div class="ev-neighbors" id="evNeighbors" hidden></div>
+          <div class="ev-darkmatter" id="evDarkMatter" aria-hidden="true">
+            <span class="ev-dm-mist"></span>
+            <span class="ev-dm-text">检测到 2 个隐性关联</span>
+          </div>
+        </div>
+
+        <!-- 旧技术信息容器：保留但隐藏，避免 JS 取值报错 -->
+        <div class="ev-src" id="evSrc" hidden></div>
+        <div class="ev-foot" id="evFoot" hidden></div>
+        <div class="ev-gap" id="evGap" hidden></div>
       </div>
     </section>
 
