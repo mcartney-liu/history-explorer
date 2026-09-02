@@ -230,6 +230,132 @@ function renderRelConstellation(container: HTMLElement | null, nodes: RelNode[])
   container.appendChild(svg);
 }
 
+// ===== 实体页 · PKM 知识笔记渲染（面包屑 / frontmatter / 标签 / 关联脉络 / 双向链接）=====
+// 全部基于真实节点数据，不编造；无任何技术 ID 泄漏。
+
+// 面包屑：星图 / 类型 / 名称（末节即当前实体，作高亮）
+function renderBreadcrumb(el: HTMLElement | null, zhType: string, name: string) {
+  if (!el) return;
+  el.innerHTML = '';
+  const parts = ['星图', zhType || '实体', name];
+  parts.forEach((p, i) => {
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'bc-sep';
+      sep.textContent = '/';
+      el.appendChild(sep);
+    }
+    const span = document.createElement('span');
+    if (i === parts.length - 1) span.className = 'bc-cur';
+    span.textContent = p;
+    el.appendChild(span);
+  });
+}
+
+// frontmatter 属性条：类型 / 真值层(含 #evTruth，供下方 truthBadge 着色) / 我的理解%
+function renderFrontmatter(el: HTMLElement | null, zhType: string, truth: Truth, understanding?: number) {
+  if (!el) return;
+  el.innerHTML = '';
+  const pType = document.createElement('span');
+  pType.className = 'fm-pill';
+  pType.innerHTML = '<span class="fm-k">类型</span><span class="fm-v">' + esc(zhType) + '</span>';
+  el.appendChild(pType);
+
+  const pTruth = document.createElement('span');
+  pTruth.className = 'fm-pill';
+  pTruth.id = 'evTruth';
+  pTruth.textContent = TRUTH_ZH[truth];
+  pTruth.style.color = TRUTH_COLOR[truth];
+  pTruth.style.borderColor = TRUTH_COLOR[truth];
+  el.appendChild(pTruth);
+
+  const pUnd = document.createElement('span');
+  pUnd.className = 'fm-pill';
+  const und = typeof understanding === 'number' ? understanding + '%' : '待评估';
+  pUnd.innerHTML = '<span class="fm-k">我的理解</span><span class="fm-v">' + und + '</span>';
+  el.appendChild(pUnd);
+}
+
+// 标签：#类型 + 从时间线抽出的 #公元前/公元年份（最多 3 个）；无时间线则仅 #类型
+function renderTags(el: HTMLElement | null, zhType: string, tls: any[]) {
+  if (!el) return;
+  el.innerHTML = '';
+  const mk = (t: string) => {
+    const tag = document.createElement('span');
+    tag.className = 'ev-tag';
+    tag.textContent = t;
+    el.appendChild(tag);
+  };
+  mk('#' + (zhType || '实体'));
+  const years: number[] = [];
+  (Array.isArray(tls) ? tls : []).forEach((it: any) => {
+    const y = typeof it?.year === 'number' ? it.year : typeof it?.date === 'number' ? it.date : NaN;
+    if (!Number.isNaN(y) && !years.includes(y)) years.push(y);
+  });
+  years.slice(0, 3).forEach((y) => {
+    mk('#' + (y < 0 ? '公元前' + Math.abs(y) + '年' : '公元' + y + '年'));
+  });
+}
+
+// 侧栏「关联脉络」：真实语义关系，按 tier 标 ◆⚑·，推荐项加「推荐」徽标，点击直达
+function renderRelatedList(el: HTMLElement | null, nodes: RelNode[], onNext: (gid: string, score?: number) => void) {
+  if (!el) return;
+  el.innerHTML = '';
+  if (!nodes.length) {
+    el.innerHTML = '<div class="ev-graph-empty">暂无关联脉络</div>';
+    return;
+  }
+  const mark = (t?: RelNode['tier']) => (t === 'sure' ? '◆' : t === 'debated' ? '⚑' : '·');
+  nodes.forEach((n) => {
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'evr-row';
+    const pre = document.createElement('span');
+    pre.className = 'evr-pre ' + (n.tier || 'weak');
+    pre.textContent = mark(n.tier);
+    const name = document.createElement('span');
+    name.className = 'evr-name';
+    name.textContent = n.name;
+    row.appendChild(pre);
+    row.appendChild(name);
+    if (n.recommended) {
+      const rec = document.createElement('span');
+      rec.className = 'evr-rec';
+      rec.textContent = '推荐';
+      row.appendChild(rec);
+    }
+    row.addEventListener('click', () => onNext(n.gid, n.score));
+    el.appendChild(row);
+  });
+}
+
+// 正文「双向链接」：关联实体渲染成 [[名称]] 高亮 chip，点击跳过去
+function renderLinkFlow(el: HTMLElement | null, nodes: RelNode[], onNext: (gid: string, score?: number) => void) {
+  if (!el) return;
+  el.innerHTML = '';
+  const label = document.createElement('span');
+  label.className = 'elf-label';
+  label.textContent = '双向链接';
+  el.appendChild(label);
+  if (!nodes.length) {
+    const empty = document.createElement('span');
+    empty.className = 'ev-graph-empty';
+    empty.style.padding = '0 0 0 10px';
+    empty.textContent = '暂无关联实体';
+    el.appendChild(empty);
+    return;
+  }
+  nodes.forEach((n) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'ev-link';
+    chip.textContent = '[[' + n.name + ']]';
+    chip.title = '跳转到 ' + n.name;
+    chip.addEventListener('click', () => onNext(n.gid, n.score));
+    el.appendChild(chip);
+  });
+}
+
 // --- 实体页 3D 徽标 + 视差倾斜（让平面板"浮"起来，与星图 3D 风格统一）-----------
 let emblem: EntityEmblemHandle | null = null;
 let cosmos: CosmosMount | null = null;
@@ -847,7 +973,6 @@ export async function openEntityView(
   roomCtx = { gid, node, onNext, nameOf, nodeOf: nodeOf || (() => undefined) };
   wireEntityRoom();
   const swapping = ev.classList.contains('open'); // E. 换站：已开则不重放开场动画，原地淡入
-  const tb = document.getElementById('evTruth')!;
   const snap = node || { gid, n: gid, en: '', type: '', desc: '', truth: 'verified' as Truth, zhType: '实体' };
   let relData: any[] = [];
   let tls: any[] = [];
@@ -857,7 +982,10 @@ export async function openEntityView(
   (document.getElementById('evName') as HTMLElement).textContent = snap.n;
   (document.getElementById('evSub') as HTMLElement).textContent = poeticSubtitle(snap.type || '', snap.zhType || '实体');
   (document.getElementById('evDesc') as HTMLElement).textContent = snap.desc || '';
-  truthBadge(tb as HTMLElement, snap.truth);
+  // PKM 笔记头部：面包屑 + frontmatter（含 #evTruth，供下方 truthBadge 着色）
+  renderBreadcrumb(document.getElementById('evBreadcrumb') as HTMLElement | null, snap.zhType || '实体', snap.n);
+  renderFrontmatter(document.getElementById('evFrontmatter') as HTMLElement | null, snap.zhType || '实体', snap.truth, understanding);
+  truthBadge(document.getElementById('evTruth') as HTMLElement, snap.truth);
   // 「宇宙展厅」背景：挂载一次、跨换站复用，离开时由 disposeEntityEmblem 释放
   if (!cosmos) {
     const cosmosEl = document.getElementById('evCosmos') as HTMLElement | null;
@@ -901,7 +1029,7 @@ export async function openEntityView(
 
   if (ins) {
     const st = truthFromEvidence(ins) || snap.truth;
-    truthBadge(tb as HTMLElement, st);
+    truthBadge(document.getElementById('evTruth') as HTMLElement, st);
   }
 
   // 关系/推荐下一站 → 真 3D 轨道英雄（entity3d.ts）：相关节点作绕飞卫星，点击直达。
@@ -931,51 +1059,14 @@ export async function openEntityView(
     emblem.setRelations(relNodes);
     emblem.onPick((gid, score) => onNext(gid, score));
   }
-  // 第三屏「相关星」迷你星座图：纯视觉呼应，不显示任何技术 ID
+  // 「相关星」迷你星座图：纯视觉呼应，不显示任何技术 ID
   renderRelConstellation(document.getElementById('evConstellation') as HTMLElement | null, relNodes);
-  const orbitCap = document.getElementById('evOrbitCap') as HTMLElement | null;
-  if (orbitCap) {
-    const valid = relNodes.filter((n) => n.recommended).length;
-    const weak = relNodes.filter((n) => n.tier === 'weak').length;
-    const debated = relNodes.filter((n) => n.tier === 'debated').length;
-    const hint = valid
-      ? '此刻有 ' + valid + ' 条推荐路 · 点亮的星可直达（你选的方向决定星座长什么样）'
-      : relNodes.length
-        ? '这个节点连着这些文明脉络 · 点星直达'
-        : '图谱暂未给出确定性下一站，回星图换个方向继续探索';
-    // D. 置信度图例 + 弱关联/有争议的 Article 0 提示（踏入不确定地带 = 逼近真相）
-    const legend =
-      '<span class="oc-legend"><b class="lg-sure">◆ 确定</b><b class="lg-deb">⚑ 有争议</b><b class="lg-weak">· 弱关联</b></span>' +
-      (weak || debated
-        ? '<span class="oc-a0">冷色星 = 踏入不确定地带——真值常藏在争议里（Article 0）</span>'
-        : '');
-    orbitCap.innerHTML = '<span class="oc-hint">' + hint + '</span>' + legend;
-  }
-  // D. 关系漫游卡：把后端 related-entities 的 reasons 显式呈现为 3 张清爽卡片
-  const relationCardsEl = document.getElementById('evRelationCards');
-  if (relationCardsEl) {
-    relationCardsEl.innerHTML = '';
-    const withReason = recs.filter((r) => r.target_entity?.global_id).slice(0, 3);
-    if (withReason.length) {
-      withReason.forEach((r) => {
-        const tier = r.score && r.score >= 0.7 ? 'sure' : r.score && r.score >= 0.4 ? 'debated' : 'weak';
-        const prefix = tier === 'sure' ? '◆' : tier === 'debated' ? '⚑' : '·';
-        const name = r.target_entity.name || nameOf(r.target_entity.global_id);
-        const why = (r.reasons || [])[0] || '与当前节点存在文明脉络关联';
-        const card = document.createElement('button');
-        card.type = 'button';
-        card.className = 'evr-card';
-        card.innerHTML =
-          '<span class="evr-icon" aria-hidden="true">✦</span>' +
-          '<span class="evr-meta"><b class="evr-name">' + esc(name) + '</b>' +
-          '<span class="evr-prefix">' + prefix + '</span>' +
-          '<span class="evr-why">' + esc(why) + '</span></span>';
-        card.addEventListener('click', () => onNext(r.target_entity.global_id, typeof r.score === 'number' ? r.score : undefined));
-        relationCardsEl.appendChild(card);
-      });
-    }
-  }
+  // 侧栏「关联脉络」：真实语义关系，可点击直达；标注重度（确定/有争议/弱关联）
+  renderRelatedList(document.getElementById('evBacklinks') as HTMLElement | null, relNodes, onNext);
+  // 正文流「双向链接」：关联实体渲染成 [[名称]] 高亮 chip，点一下跳过去
+  renderLinkFlow(document.getElementById('evLinkFlow') as HTMLElement | null, relNodes, onNext);
   renderTimelineRibbon(document.getElementById('evTlRibbon') as HTMLElement, tls);
+  renderTags(document.getElementById('evTags') as HTMLElement | null, snap.zhType || '实体', tls);
 
   // 方案A·空间邻居：列出"附近在空间上离它最近的星"，点一下平滑飞过去（以该星为新锚点）
   renderNeighbors(document.getElementById('evNeighbors') as HTMLElement | null, neighbors || [], onNext);

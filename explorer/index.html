@@ -64,83 +64,77 @@
       <button class="ev-back" id="evBack">← 后退</button>
       <button class="ev-fwd" id="evFwd" type="button" title="前进一步（重做被后退取消的导航）">前进 →</button>
       <button class="ev-toroom" id="evToRoom" type="button" title="进入 3D 展厅（可拖动环视 / 第一人称走进去）">🏛️ 3D 展厅</button>
-      <div class="ev-inner">
-        <!-- 第一屏：英雄区 — 宇宙中的思想恒星 -->
-        <div class="ev-hero">
-          <div id="evEmblem" class="ev-emblem" aria-hidden="true"></div>
-          <div class="ev-orbitcap" id="evOrbitCap"></div>
-          <div class="ev-hero-text">
-            <div class="ev-cat" id="evCat"></div>
-            <h1 class="ev-name" id="evName"></h1>
-            <div class="ev-sub" id="evSub"></div>
-            <div class="ev-hero-meta">
-              <div class="truth-badge" id="evTruth"></div>
-              <div class="ev-stage" id="evStage"></div>
-              <div class="ev-cps" id="evCps" aria-live="polite"></div>
+      <div class="ev-inner ev-notes">
+        <!-- 头部：面包屑 + 标题 + 类型徽标(小 icon) + frontmatter + 标签 -->
+        <header class="ev-note-head">
+          <nav class="ev-breadcrumb" id="evBreadcrumb" aria-label="面包屑"></nav>
+          <div class="ev-note-title-row">
+            <div id="evEmblem" class="ev-emblem-mini" aria-hidden="true"></div>
+            <div class="ev-note-title-text">
+              <h1 class="ev-name" id="evName"></h1>
+              <div class="ev-sub" id="evSub"></div>
             </div>
+            <button class="ev-edit" id="evEdit" type="button" title="这是你的知识笔记 · 编辑功能即将上线">改写</button>
           </div>
-        </div>
+          <div class="ev-frontmatter" id="evFrontmatter"></div>
+          <div class="ev-tags" id="evTags"></div>
+        </header>
 
-        <!-- 第二屏：三扇玻璃卡片 — 概览 / 时间 / 因果 -->
-        <div class="ev-cards" role="region" aria-label="实体分面">
-          <article class="ev-card" data-facet="overview">
-            <header class="ev-card-head">
-              <span class="ev-card-icon" aria-hidden="true">◈</span>
-              <span class="ev-card-title">概览</span>
-              <span class="ev-card-sub">The Origin</span>
-            </header>
-            <div class="ev-card-body" id="evCardOverview">
+        <!-- 两栏：左正文流 / 右关联脉络 -->
+        <div class="ev-note-cols">
+          <main class="ev-note-main">
+            <section class="ev-note-block">
+              <h2 class="ev-note-h2">概览</h2>
               <p class="ev-desc" id="evDesc"></p>
+              <div class="ev-linkflow" id="evLinkFlow" aria-label="双向链接"></div>
               <div class="path-rail" id="pathRail"></div>
-            </div>
-          </article>
-          <article class="ev-card" data-facet="time">
-            <header class="ev-card-head">
-              <span class="ev-card-icon" aria-hidden="true">☾</span>
-              <span class="ev-card-title">时间</span>
-              <span class="ev-card-sub">The Chronicle</span>
-            </header>
-            <div class="ev-card-body" id="evCardTime">
+            </section>
+
+            <section class="ev-note-block ev-note-time">
+              <h2 class="ev-note-h2">时间脉络</h2>
               <div class="ev-tlribbon" id="evTlRibbon"></div>
-            </div>
-          </article>
-          <article class="ev-card" data-facet="cause">
-            <header class="ev-card-head">
-              <span class="ev-card-icon" aria-hidden="true">✶</span>
-              <span class="ev-card-title">因果</span>
-              <span class="ev-card-sub">The Cause</span>
-            </header>
-            <div class="ev-card-body" id="evCardCause">
-              <div class="ev-section ai-block" id="evAIBlock">
-                <h4 id="evAITitle">为什么你会来到这里</h4>
-                <div class="ai-body" id="evAIBody">
-                  <div class="ai-skeleton"><i></i><i></i><i></i></div>
-                </div>
-                <div class="ai-meta" id="evAIMeta"></div>
-                <div class="ai-cites" id="evAICites"></div>
+            </section>
+
+            <section class="ev-note-block ev-callout" id="evAIBlock">
+              <h2 class="ev-note-h2">为什么你会来到这里</h2>
+              <div class="ai-body" id="evAIBody">
+                <div class="ai-skeleton"><i></i><i></i><i></i></div>
               </div>
+              <div class="ai-meta" id="evAIMeta"></div>
+              <div class="ai-cites" id="evAICites"></div>
+            </section>
+          </main>
+
+          <aside class="ev-note-aside">
+            <div class="ev-aside-card">
+              <h3 class="ev-aside-title">关联脉络</h3>
+              <div class="ev-backlinks" id="evBacklinks"></div>
             </div>
-          </article>
+            <div class="ev-aside-card">
+              <h3 class="ev-aside-title">关系图谱</h3>
+              <div class="ev-constellation" id="evConstellation"></div>
+            </div>
+            <div class="ev-aside-card ev-aside-near">
+              <h3 class="ev-aside-title">附近的星</h3>
+              <div class="ev-neighbors" id="evNeighbors"></div>
+            </div>
+            <div class="ev-darkmatter" id="evDarkMatter" aria-hidden="true">
+              <span class="ev-dm-mist"></span>
+              <span class="ev-dm-text">检测到 2 个隐性关联</span>
+            </div>
+          </aside>
         </div>
 
-        <!-- 关系漫游区：星座图 + 三个关联卡 + 暗物质提示 -->
-        <div class="ev-roam" role="region" aria-label="关系漫游">
-          <div class="ev-roam-head">
-            <span class="ev-roam-dot"></span>
-            <span class="ev-roam-dot"></span>
-            <h3 class="ev-roam-title">关系漫游</h3>
-            <span class="ev-roam-dot"></span>
-            <span class="ev-roam-dot"></span>
-          </div>
-          <div class="ev-constellation" id="evConstellation" aria-label="相关星点线图"></div>
-          <div class="ev-relation-cards" id="evRelationCards"></div>
-          <div class="ev-reasons" id="evReasons" hidden></div>
-          <div class="ev-neighbors" id="evNeighbors" hidden></div>
-          <div class="ev-darkmatter" id="evDarkMatter" aria-hidden="true">
-            <span class="ev-dm-mist"></span>
-            <span class="ev-dm-text">检测到 2 个隐性关联</span>
-          </div>
-        </div>
+        <!-- 兼容隐藏容器：保留旧 ID，避免 JS 取值报错 -->
+        <div class="ev-cat" id="evCat" hidden></div>
+        <div class="ev-stage" id="evStage" hidden></div>
+        <div class="ev-cps" id="evCps" hidden></div>
+        <div class="ev-orbitcap" id="evOrbitCap" hidden></div>
+        <div class="ev-reasons" id="evReasons" hidden></div>
+        <div class="ev-relation-cards" id="evRelationCards" hidden></div>
+        <div class="ev-src" id="evSrc" hidden></div>
+        <div class="ev-foot" id="evFoot" hidden></div>
+        <div class="ev-gap" id="evGap" hidden></div>
 
         <!-- 旧技术信息容器：保留但隐藏，避免 JS 取值报错 -->
         <div class="ev-src" id="evSrc" hidden></div>

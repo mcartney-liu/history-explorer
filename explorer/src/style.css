@@ -1191,3 +1191,75 @@ footer .brand { font-family: var(--serif); color: var(--paper); font-size: 16px;
   .entity-view .ev-roam { padding: 18px 16px; }
   .entity-view .ev-roam-head { gap: 8px; }
 }
+
+/* ===== 实体页 · PKM 知识笔记布局（覆盖旧三屏展厅） ===== */
+.entity-view .ev-inner.ev-notes { max-width: 1080px; padding: 0 22px 56px; }
+
+/* 头部 */
+.entity-view .ev-note-head { padding-top: 70px; }
+.entity-view .ev-breadcrumb { font-size: 12px; color: rgba(238,242,248,0.55); letter-spacing: 0.3px; margin-bottom: 14px; }
+.entity-view .ev-breadcrumb .bc-sep { margin: 0 8px; color: rgba(238,242,248,0.3); }
+.entity-view .ev-breadcrumb .bc-cur { color: var(--holo); }
+.entity-view .ev-note-title-row { display: flex; align-items: center; gap: 16px; }
+.entity-view .ev-emblem-mini { width: 72px; height: 60px; flex-shrink: 0; }
+.entity-view .ev-emblem-mini .ev-orbits,
+.entity-view .ev-emblem-mini .ev-sats { display: none; }
+.entity-view .ev-emblem-mini .ev-emblem-svg { width: 100%; height: 100%; overflow: visible; }
+.entity-view .ev-note-title-text { flex: 1; min-width: 0; }
+.entity-view .ev-name { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 56px); margin: 0; color: #e8b04b; line-height: 1.06; letter-spacing: 2px; }
+.entity-view .ev-sub { font-family: var(--sans); font-size: 14px; color: rgba(238,242,248,0.86); margin-top: 6px; letter-spacing: 0.6px; }
+.entity-view .ev-edit { flex-shrink: 0; align-self: flex-start; margin-top: 8px; padding: 6px 14px; font-size: 12px; color: rgba(238,242,248,0.8); background: rgba(255,255,255,0.05); border: 1px solid rgba(120,160,220,0.22); border-radius: 999px; cursor: pointer; transition: border-color .2s, color .2s; }
+.entity-view .ev-edit:hover { border-color: var(--holo); color: #fff; }
+
+/* frontmatter 属性条 */
+.entity-view .ev-frontmatter { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.entity-view .fm-pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 999px; background: rgba(12,18,33,0.6); border: 1px solid rgba(120,160,220,0.18); font-size: 12px; }
+.entity-view .fm-k { color: rgba(238,242,248,0.5); }
+.entity-view .fm-v { color: var(--paper); font-weight: 600; }
+
+/* 标签 */
+.entity-view .ev-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.entity-view .ev-tag { font-size: 12px; color: #e8b04b; background: rgba(232,176,75,0.1); border: 1px solid rgba(232,176,75,0.24); border-radius: 6px; padding: 3px 10px; }
+
+/* 两栏 */
+.entity-view .ev-note-cols { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: 30px; margin-top: 26px; align-items: start; }
+.entity-view .ev-note-main { min-width: 0; }
+.entity-view .ev-note-block { margin-bottom: 26px; }
+.entity-view .ev-note-h2 { font-family: var(--serif); font-size: 18px; color: var(--paper); margin: 0 0 12px; letter-spacing: 1px; padding-bottom: 8px; border-bottom: 1px solid rgba(120,160,220,0.14); }
+.entity-view .ev-desc { font-size: 15px; line-height: 1.85; color: #eef2f8; margin: 0 0 14px; }
+
+/* 双向链接 */
+.entity-view .ev-linkflow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 14px 0; }
+.entity-view .ev-linkflow .elf-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: rgba(238,242,248,0.42); margin-right: 4px; }
+.entity-view .ev-link { font-family: var(--sans); font-size: 13px; color: #e8b04b; background: rgba(232,176,75,0.08); border: 1px solid rgba(232,176,75,0.26); border-radius: 8px; padding: 5px 11px; cursor: pointer; transition: background .2s, border-color .2s; }
+.entity-view .ev-link:hover { background: rgba(232,176,75,0.18); border-color: rgba(232,176,75,0.5); }
+
+/* 因果 callout */
+.entity-view .ev-callout { background: linear-gradient(180deg, rgba(232,176,75,0.07), rgba(12,18,33,0.4)); border: 1px solid rgba(232,176,75,0.2); border-radius: 16px; padding: 18px 20px; }
+.entity-view .ev-callout .ev-note-h2 { border-bottom: none; }
+
+/* 侧栏 */
+.entity-view .ev-note-aside { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 16px; }
+.entity-view .ev-aside-card { background: rgba(12,18,33,0.55); border: 1px solid rgba(120,160,220,0.16); border-radius: 16px; padding: 14px 16px; backdrop-filter: blur(10px); }
+.entity-view .ev-aside-title { font-family: var(--serif); font-size: 14px; color: var(--paper); margin: 0 0 12px; letter-spacing: 1px; }
+.entity-view .evr-row { display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; background: transparent; border: none; border-radius: 9px; padding: 7px 8px; color: #eef2f8; cursor: pointer; transition: background .18s; }
+.entity-view .evr-row:hover { background: rgba(120,170,230,0.1); }
+.entity-view .evr-pre { font-size: 11px; width: 14px; text-align: center; flex-shrink: 0; }
+.entity-view .evr-pre.sure { color: #e8b04b; }
+.entity-view .evr-pre.debated { color: #f0a84a; }
+.entity-view .evr-pre.weak { color: #7e8aa0; }
+.entity-view .evr-name { flex: 1; font-size: 13.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entity-view .evr-rec { font-size: 10px; color: #e8b04b; border: 1px solid rgba(232,176,75,0.4); border-radius: 5px; padding: 1px 6px; flex-shrink: 0; }
+
+/* 暗物质（笔记版：融入侧栏底部，不再绝对定位） */
+.entity-view .ev-notes .ev-darkmatter { position: static; margin-top: 4px; justify-content: flex-start; }
+
+/* 进场动画 */
+.entity-view.open .ev-note-head { animation: evChildIn 0.5s cubic-bezier(0.2,0.8,0.2,1) 0.1s both; }
+.entity-view.open .ev-note-cols { animation: evChildIn 0.5s cubic-bezier(0.2,0.8,0.2,1) 0.2s both; }
+
+@media (max-width: 860px) {
+  .entity-view .ev-note-cols { grid-template-columns: 1fr; }
+  .entity-view .ev-note-aside { position: static; }
+  .entity-view .ev-note-head { padding-top: 64px; }
+}
