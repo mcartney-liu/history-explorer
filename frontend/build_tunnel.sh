@@ -18,9 +18,10 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # 优先用托管的 node，找不到再退系统 node
+# 注：本机 managed node 目录已从 22.22.2 更新为 22.22.2-2（2026-09-02 核实）
 NODE_BIN="$(command -v node || true)"
-if [ -x "/c/Users/haizhi/.workbuddy/binaries/node/versions/22.22.2/node.exe" ]; then
-  NODE_BIN="/c/Users/haizhi/.workbuddy/binaries/node/versions/22.22.2/node.exe"
+if [ -x "/c/Users/haizhi/.workbuddy/binaries/node/versions/22.22.2-2/node.exe" ]; then
+  NODE_BIN="/c/Users/haizhi/.workbuddy/binaries/node/versions/22.22.2-2/node.exe"
 fi
 
 echo "[build_tunnel] VITE_API_BASE=/ (相对路径) -> vite build --outDir dist --emptyOutDir false"
