@@ -29,7 +29,7 @@ export interface ExplorationCardModel {
   meta: Record<string, string>
   /** Thumbnail / avatar image URL (optional) */
   thumbnail?: string
-  /** Static generated entity portrait URL (optional) — e.g. /entity-logos/<globalId>.png.
+  /** Static generated entity portrait URL (optional) — e.g. /entity-logos/<globalId>.webp.
    *  When set, the card renders this image in the icon slot and falls back to the
    *  type Icon on load error. Populated by callers that have a global_id. */
   image?: string

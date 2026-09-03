@@ -41,7 +41,7 @@ export function EntityHero({ identity, globalId, insightSummary, onEntityClick, 
 
   // 实体身份图（后台 entity_identity.{globalId} slot，PO 2026-08-15 B 类）：
   // 后台配的图优先渲染；未配则回退到静态生成的 184 张实体肖像
-  // （/entity-logos/<globalId>.png，由 artifacts/entity_prompts 生成）。
+  // （/entity-logos/<globalId>.webp，由 artifacts/entity_prompts 生成）。
   // useContentRevision 订阅后台改动，配图后无需刷新整页即更新。
   // 静态图若缺失（404）则 onError 隐藏整块，回退到上方类型图标。
   useContentRevision()

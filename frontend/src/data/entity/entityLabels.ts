@@ -89,8 +89,8 @@ export function entityTypeFromGlobalId(gid: string): string {
 // Entity static portrait URL — /entity-logos/
 //
 // 184 张博物馆级暗金肖像位于 frontend/public/entity-logos/，
-// 命名规则：global_id 的冒号 ':' 替换为下划线 '_' 后加 .png
-// （例 ancient_india:civ-maurya -> /entity-logos/ancient_india_civ-maurya.png）。
+// 命名规则：global_id 的冒号 ':' 替换为下划线 '_' 后加 .webp
+// （例 ancient_india:civ-maurya -> /entity-logos/ancient_india_civ-maurya.webp）。
 // 由 artifacts/entity_prompts/ 的生图提示词生成（翔哥生图、小梦接线）。
 // 无 global_id 时返回 null，调用方据此回退到类型图标（getEntityIcon）。
 // ============================================================
