@@ -88,3 +88,15 @@ _he_legacy_orphan_bak/
 _audit_*.txt
 _uninstall_*.txt
 scripts/_tmp_freeze_gb.mjs
+
+# === 2026-09-03 (PO): 工程卫生审计 — 构建产物/缓存/验证散稿 永不入库 ===
+explorer/dist_*/
+frontend/.build-lit/
+_verify/
+_gen_imgs/
+cockpit/
+_archive/
+# 引号/中文名散稿（已归档或清除，保留忽略以防回归）
+.feedback_marker
+# 注：docs/product/ 与 docs/feedback/ 含正式里程碑报告，不在此忽略，
+# 是否入库由 PO 另行决策（当前为未跟踪状态）。
